@@ -1,0 +1,169 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<div id="fxb-cta-top">
+  <div class="fxb-section">
+    <div class="fxb-row">
+      <div class="fxb-text">
+        <h2 class="fxb-h2">Запишите ребёнка на <span class="fxb-accent">бесплатную диагностику</span></h2>
+        <p class="fxb-sub">Методист проверит уровень знаний и составит индивидуальный план обучения. Это бесплатно и ни к чему не обязывает.</p>
+      </div>
+      <div class="fxb-action">
+        <button class="fxb-cta" id="fxbCtaDiag" type="button">
+          <span class="fxb-pulse"></span>
+          Записаться на диагностику
+          <svg class="fxb-arr" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <div class="fxb-choice" id="fxbCtaChoice">
+          <a href="javascript:void(0)" id="fxbOpenForm">
+            <span class="fxb-b fxb-b-site">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#662d92" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+            </span>
+            <span>Оставить заявку на сайте<small>Короткая форма — перезвоним</small></span>
+          </a>
+          <a href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">
+            <span class="fxb-b fxb-b-max">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ee7349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+            </span>
+            <span>Написать в Max<small>«Хочу записать ребёнка на диагностику»</small></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Встроенная форма-опрос -->
+  <div class="fxb-overlay" id="fxbFormOverlay">
+    <div class="fxb-form-box">
+      <button class="fxb-form-close" id="fxbFormClose" type="button">&times;</button>
+      <h3 class="fxb-form-title">Запись на бесплатную диагностику</h3>
+      <p class="fxb-form-sub">Заполните короткую форму — мы перезвоним и подберём удобное время.</p>
+      <form class="fxb-form" id="fxbDiagForm">
+        <input type="hidden" name="source" value="Главная — Записаться на бесплатную диагностику (верхний блок)">
+        <div class="fxb-field">
+          <label>Ваше имя</label>
+          <input type="text" name="parent_name" placeholder="Имя родителя" required>
+        </div>
+        <div class="fxb-field">
+          <label>Имя ребёнка</label>
+          <input type="text" name="child_name" placeholder="Имя ребёнка" required>
+        </div>
+        <div class="fxb-field">
+          <label>Возраст ребёнка</label>
+          <input type="text" name="child_age" placeholder="Например: 7 лет" required>
+        </div>
+        <div class="fxb-field">
+          <label>Телефон</label>
+          <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+        </div>
+        <button class="fxb-submit" type="submit">
+          Отправить заявку
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+      <p class="fxb-form-note">Нажимая «Отправить», вы соглашаетесь с <a href="/policy" target="_blank">политикой конфиденциальности</a></p>
+
+      <div class="fxb-success" id="fxbSuccess" style="display:none">
+        <div class="fxb-success-ic">&#x2705;</div>
+        <h3>Заявка отправлена!</h3>
+        <p>Мы перезвоним вам в ближайшее время для подбора удобного времени диагностики.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-cta-top{--purple:#392852;--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(135deg,#392852 0%,#662d92 50%,#6237a2 100%);position:relative;overflow:visible}
+  #fxb-cta-top *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-cta-top .fxb-section{max-width:1200px;margin:0 auto;padding:52px 24px 56px}
+  #fxb-cta-top .fxb-row{display:flex;align-items:center;gap:40px;flex-wrap:wrap}
+  #fxb-cta-top .fxb-text{flex:1;min-width:320px}
+  #fxb-cta-top .fxb-h2{font-weight:800;font-size:clamp(24px,3.2vw,36px);line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}
+  #fxb-cta-top .fxb-accent{position:relative;white-space:nowrap;color:#fff}
+  #fxb-cta-top .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.32em;background:var(--yellow);opacity:.35;z-index:0;border-radius:4px;transform:rotate(-1deg)}
+  #fxb-cta-top .fxb-sub{color:rgba(255,255,255,.78);font-size:15.5px;font-weight:500;max-width:520px;line-height:1.55}
+  #fxb-cta-top .fxb-action{position:relative;flex:0 0 auto}
+  #fxb-cta-top .fxb-cta{position:relative;display:inline-flex;align-items:center;gap:12px;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:17px;color:#392852;padding:20px 34px;border-radius:100px;background:linear-gradient(135deg,var(--yellow),#f5ee76);box-shadow:0 16px 36px -10px rgba(252,249,81,.5);transition:transform .3s,box-shadow .3s}
+  #fxb-cta-top .fxb-cta:hover{transform:translateY(-3px);box-shadow:0 22px 44px -10px rgba(252,249,81,.6)}
+  #fxb-cta-top .fxb-cta .fxb-arr{stroke:#392852;transition:transform .3s}
+  #fxb-cta-top .fxb-cta:hover .fxb-arr{transform:translateX(5px)}
+  #fxb-cta-top .fxb-pulse{position:absolute;inset:0;border-radius:100px;box-shadow:0 0 0 0 rgba(252,249,81,.4);animation:fxbpulse2 2.6s infinite}
+  @keyframes fxbpulse2{0%{box-shadow:0 0 0 0 rgba(252,249,81,.4)}70%{box-shadow:0 0 0 18px rgba(252,249,81,0)}100%{box-shadow:0 0 0 0 rgba(252,249,81,0)}}
+  #fxb-cta-top .fxb-choice{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(8px);background:#fff;border-radius:18px;padding:10px;box-shadow:0 24px 50px -16px rgba(57,40,82,.5);display:none;gap:8px;flex-direction:column;width:300px;border:1px solid rgba(57,40,82,.08);z-index:30}
+  #fxb-cta-top .fxb-choice.fxb-open{display:flex;animation:fxbdrop .35s cubic-bezier(.2,.8,.2,1)}
+  @keyframes fxbdrop{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  #fxb-cta-top .fxb-choice a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-weight:700;font-size:14.5px;padding:13px 14px;border-radius:12px;transition:background .2s}
+  #fxb-cta-top .fxb-choice a:hover{background:#f4f1fa}
+  #fxb-cta-top .fxb-b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto}
+  #fxb-cta-top .fxb-b-site{background:rgba(102,45,146,.12)}
+  #fxb-cta-top .fxb-b-max{background:rgba(238,115,73,.14)}
+  #fxb-cta-top .fxb-choice small{display:block;color:var(--muted);font-weight:600;font-size:11.5px;margin-top:1px}
+
+  /* Форма-попап */
+  #fxb-cta-top .fxb-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(36,26,54,.75);backdrop-filter:blur(4px)}
+  #fxb-cta-top .fxb-overlay.fxb-open{display:flex}
+  #fxb-cta-top .fxb-form-box{position:relative;width:min(460px,100%);background:#fff;border-radius:24px;padding:40px 36px;box-shadow:0 40px 80px -20px rgba(0,0,0,.5);animation:fxbpop2 .35s cubic-bezier(.2,.8,.2,1);color:var(--ink)}
+  @keyframes fxbpop2{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+  #fxb-cta-top .fxb-form-close{position:absolute;top:14px;right:16px;background:rgba(102,45,146,.08);color:var(--purple-2);border:0;width:36px;height:36px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;transition:background .2s}
+  #fxb-cta-top .fxb-form-close:hover{background:rgba(102,45,146,.18)}
+  #fxb-cta-top .fxb-form-title{font-size:22px;font-weight:800;margin-bottom:8px;color:var(--ink)}
+  #fxb-cta-top .fxb-form-sub{font-size:14.5px;color:var(--muted);font-weight:500;margin-bottom:28px;line-height:1.5}
+  #fxb-cta-top .fxb-field{margin-bottom:18px}
+  #fxb-cta-top .fxb-field label{display:block;font-size:12.5px;font-weight:700;color:var(--purple-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+  #fxb-cta-top .fxb-field input{width:100%;border:2px solid rgba(102,45,146,.15);border-radius:14px;padding:14px 16px;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);transition:border-color .2s,box-shadow .2s;outline:none;background:#faf9fc}
+  #fxb-cta-top .fxb-field input:focus{border-color:var(--purple-2);box-shadow:0 0 0 4px rgba(102,45,146,.1);background:#fff}
+  #fxb-cta-top .fxb-field input::placeholder{color:#b5afc4;font-weight:500}
+  #fxb-cta-top .fxb-submit{width:100%;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:16px;color:#fff;padding:18px 24px;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 16px 30px -12px rgba(102,45,146,.7);transition:transform .3s,box-shadow .3s;display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}
+  #fxb-cta-top .fxb-submit:hover{transform:translateY(-2px);box-shadow:0 20px 36px -12px rgba(102,45,146,.85)}
+  #fxb-cta-top .fxb-form-note{font-size:11.5px;color:#b5afc4;text-align:center;margin-top:16px;font-weight:500}
+  #fxb-cta-top .fxb-form-note a{color:var(--purple-2);text-decoration:underline}
+  #fxb-cta-top .fxb-success{text-align:center;padding:20px 0}
+  #fxb-cta-top .fxb-success-ic{font-size:48px;margin-bottom:16px}
+  #fxb-cta-top .fxb-success h3{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px}
+  #fxb-cta-top .fxb-success p{color:var(--muted);font-size:15px;font-weight:500;line-height:1.5}
+  @media(max-width:760px){#fxb-cta-top .fxb-row{flex-direction:column;text-align:center}#fxb-cta-top .fxb-sub{margin:0 auto}#fxb-cta-top .fxb-form-box{padding:32px 22px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-cta-top');if(!root)return;
+  var btn=document.getElementById('fxbCtaDiag');
+  var ch=document.getElementById('fxbCtaChoice');
+  var overlay=document.getElementById('fxbFormOverlay');
+  var openForm=document.getElementById('fxbOpenForm');
+  var closeForm=document.getElementById('fxbFormClose');
+  var form=document.getElementById('fxbDiagForm');
+  var success=document.getElementById('fxbSuccess');
+
+  btn.addEventListener('click',function(e){e.stopPropagation();ch.classList.toggle('fxb-open')});
+  document.addEventListener('click',function(){ch.classList.remove('fxb-open')});
+  ch.addEventListener('click',function(e){e.stopPropagation()});
+
+  openForm.addEventListener('click',function(e){
+    e.preventDefault();
+    ch.classList.remove('fxb-open');
+    overlay.classList.add('fxb-open');
+  });
+  closeForm.addEventListener('click',function(){overlay.classList.remove('fxb-open')});
+  overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.classList.remove('fxb-open')});
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    /* В Tilda: заменить на вызов нативной формы Tilda или AJAX к существующему endpoint */
+    form.style.display='none';
+    root.querySelector('.fxb-form-sub').style.display='none';
+    root.querySelector('.fxb-form-title').style.display='none';
+    root.querySelector('.fxb-form-note').style.display='none';
+    success.style.display='block';
+    setTimeout(function(){
+      overlay.classList.remove('fxb-open');
+      form.style.display='';
+      root.querySelector('.fxb-form-sub').style.display='';
+      root.querySelector('.fxb-form-title').style.display='';
+      root.querySelector('.fxb-form-note').style.display='';
+      success.style.display='none';
+      form.reset();
+    },3000);
+  });
+})();
+</script>
