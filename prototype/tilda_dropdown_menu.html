@@ -1,0 +1,101 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  ВЫПАДАЮЩЕЕ МЕНЮ С ПОДРАЗДЕЛАМИ
+  Вставляется в шапку Tilda как замена стандартного меню.
+  Или добавляется как отдельный блок HTML-код сразу после шапки.
+-->
+<div id="fxb-menu">
+  <nav class="fxb-nav">
+    <a class="fxb-link" href="/">Главная</a>
+
+    <div class="fxb-dropdown">
+      <button class="fxb-link fxb-has-sub" type="button">
+        Наши курсы
+        <svg class="fxb-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="fxb-sub">
+        <a href="/reading">Курс по чтению</a>
+        <a href="/grammar">Курс по грамматике</a>
+        <a href="/preparation">Подготовка к школе</a>
+      </div>
+    </div>
+
+    <div class="fxb-dropdown">
+      <button class="fxb-link fxb-has-sub" type="button">
+        Наши направления
+        <svg class="fxb-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="fxb-sub">
+        <a href="/doshkolniki">Для дошкольников <span class="fxb-age-tag">3-6 лет</span></a>
+        <a href="/mladshie-shkolniki">Для младших школьников <span class="fxb-age-tag">7-10 лет</span></a>
+        <a href="/podrostki">Для подростков <span class="fxb-age-tag">11-16 лет</span></a>
+      </div>
+    </div>
+
+    <a class="fxb-link" href="/news">Новости</a>
+    <a class="fxb-link" href="/vacant">Вакансии</a>
+    <a class="fxb-link fxb-contact" href="/kontakty">Как с нами связаться</a>
+  </nav>
+
+  <!-- Мобильное меню -->
+  <button class="fxb-burger" id="fxbBurger" type="button" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<style>
+  #fxb-menu{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;position:relative;z-index:100}
+  #fxb-menu *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-menu .fxb-nav{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+  #fxb-menu .fxb-link{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;padding:12px 16px;border-radius:12px;border:0;background:transparent;cursor:pointer;font-family:inherit;transition:background .2s,color .2s}
+  #fxb-menu .fxb-link:hover{background:rgba(102,45,146,.08);color:var(--purple-2)}
+  #fxb-menu .fxb-contact{color:var(--purple-2);background:rgba(102,45,146,.08)}
+  #fxb-menu .fxb-contact:hover{background:rgba(102,45,146,.16)}
+  #fxb-menu .fxb-chev{transition:transform .3s;flex:0 0 auto}
+  #fxb-menu .fxb-dropdown{position:relative}
+  #fxb-menu .fxb-dropdown:hover .fxb-chev,#fxb-menu .fxb-dropdown.fxb-open .fxb-chev{transform:rotate(180deg)}
+  #fxb-menu .fxb-sub{position:absolute;top:100%;left:0;background:#fff;border-radius:16px;padding:8px;box-shadow:0 20px 50px -16px rgba(57,40,82,.45);border:1px solid rgba(57,40,82,.08);min-width:260px;display:none;flex-direction:column;gap:2px;z-index:50}
+  #fxb-menu .fxb-dropdown:hover .fxb-sub,#fxb-menu .fxb-dropdown.fxb-open .fxb-sub{display:flex;animation:fxbmenu .25s ease}
+  @keyframes fxbmenu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  #fxb-menu .fxb-sub a{display:flex;align-items:center;justify-content:space-between;text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;padding:12px 16px;border-radius:10px;transition:background .15s}
+  #fxb-menu .fxb-sub a:hover{background:#f4f1fa;color:var(--purple-2)}
+  #fxb-menu .fxb-age-tag{font-size:11px;font-weight:700;color:var(--orange);background:rgba(238,115,73,.1);padding:3px 8px;border-radius:100px}
+  #fxb-menu .fxb-burger{display:none;cursor:pointer;border:0;background:transparent;padding:8px;flex-direction:column;gap:5px;position:absolute;right:24px;top:50%;transform:translateY(-50%)}
+  #fxb-menu .fxb-burger span{display:block;width:24px;height:2.5px;background:var(--ink);border-radius:2px;transition:transform .3s,opacity .3s}
+  #fxb-menu .fxb-burger.fxb-active span:nth-child(1){transform:rotate(45deg) translateY(7.5px)}
+  #fxb-menu .fxb-burger.fxb-active span:nth-child(2){opacity:0}
+  #fxb-menu .fxb-burger.fxb-active span:nth-child(3){transform:rotate(-45deg) translateY(-7.5px)}
+  @media(max-width:900px){
+    #fxb-menu .fxb-burger{display:flex}
+    #fxb-menu .fxb-nav{display:none;flex-direction:column;align-items:stretch;background:#fff;border-radius:0 0 20px 20px;box-shadow:0 20px 40px -16px rgba(57,40,82,.3);padding:12px 18px 18px;position:absolute;top:100%;left:0;right:0}
+    #fxb-menu .fxb-nav.fxb-open{display:flex}
+    #fxb-menu .fxb-sub{position:static;box-shadow:none;border:0;padding:0 0 0 20px;min-width:auto}
+    #fxb-menu .fxb-dropdown:hover .fxb-sub{display:none}
+    #fxb-menu .fxb-dropdown.fxb-open .fxb-sub{display:flex}
+  }
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-menu');if(!root)return;
+  var burger=document.getElementById('fxbBurger');
+  var nav=root.querySelector('.fxb-nav');
+
+  burger.addEventListener('click',function(){
+    burger.classList.toggle('fxb-active');
+    nav.classList.toggle('fxb-open');
+  });
+
+  root.querySelectorAll('.fxb-has-sub').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var dd=btn.parentNode;
+      var wasOpen=dd.classList.contains('fxb-open');
+      root.querySelectorAll('.fxb-dropdown').forEach(function(d){d.classList.remove('fxb-open')});
+      if(!wasOpen)dd.classList.add('fxb-open');
+    });
+  });
+  document.addEventListener('click',function(){root.querySelectorAll('.fxb-dropdown').forEach(function(d){d.classList.remove('fxb-open')})});
+})();
+</script>
