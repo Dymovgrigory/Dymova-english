@@ -1,0 +1,112 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<div id="fxb-gallery">
+  <div class="fxb-section">
+    <!--
+      КАК ДОБАВИТЬ ФОТО:
+      1. Загрузите фото в Tilda (Файловый менеджер) или на внешний хостинг
+      2. Скопируйте URL фото
+      3. Добавьте новый <div class="fxb-item"> внутрь .fxb-grid:
+         <div class="fxb-item"><img src="URL_ФОТО" alt="Описание" loading="lazy"></div>
+      4. Сохраните и опубликуйте страницу
+    -->
+    <div class="fxb-grid">
+      <!-- Пример карточек-заглушек (заменить на реальные фото) -->
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Лайтбокс для просмотра фото -->
+  <div class="fxb-lightbox" id="fxbLightbox">
+    <div class="fxb-lb-bg"></div>
+    <button class="fxb-lb-close" type="button">&times;</button>
+    <button class="fxb-lb-prev" type="button">&#x2039;</button>
+    <button class="fxb-lb-next" type="button">&#x203a;</button>
+    <div class="fxb-lb-img-wrap"><img class="fxb-lb-img" src="" alt=""></div>
+  </div>
+</div>
+
+<style>
+  #fxb-gallery{--purple-2:#662d92;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;background:#f4f1fa;-webkit-font-smoothing:antialiased}
+  #fxb-gallery *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-gallery .fxb-section{max-width:1200px;margin:0 auto;padding:0 24px 80px}
+  #fxb-gallery .fxb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  #fxb-gallery .fxb-item{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;box-shadow:0 10px 28px -12px rgba(57,40,82,.3);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+  #fxb-gallery .fxb-item:hover{transform:translateY(-6px);box-shadow:0 20px 40px -16px rgba(102,45,146,.45)}
+  #fxb-gallery .fxb-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+  #fxb-gallery .fxb-item:hover img{transform:scale(1.05)}
+  #fxb-gallery .fxb-placeholder{background:#ede8f5;border:2px dashed rgba(102,45,146,.2)}
+  #fxb-gallery .fxb-ph-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px}
+  #fxb-gallery .fxb-ph-inner span{color:#b5afc4;font-size:13px;font-weight:600}
+
+  /* Лайтбокс */
+  #fxb-gallery .fxb-lightbox{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+  #fxb-gallery .fxb-lightbox.fxb-open{display:flex}
+  #fxb-gallery .fxb-lb-bg{position:absolute;inset:0;background:rgba(36,26,54,.88);backdrop-filter:blur(6px)}
+  #fxb-gallery .fxb-lb-close{position:absolute;top:20px;right:24px;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:28px;line-height:1;cursor:pointer;transition:background .2s}
+  #fxb-gallery .fxb-lb-close:hover{background:rgba(255,255,255,.3)}
+  #fxb-gallery .fxb-lb-prev,#fxb-gallery .fxb-lb-next{position:absolute;top:50%;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:50px;height:50px;border-radius:50%;font-size:32px;line-height:1;cursor:pointer;transform:translateY(-50%);transition:background .2s}
+  #fxb-gallery .fxb-lb-prev{left:20px}
+  #fxb-gallery .fxb-lb-next{right:20px}
+  #fxb-gallery .fxb-lb-prev:hover,#fxb-gallery .fxb-lb-next:hover{background:rgba(255,255,255,.3)}
+  #fxb-gallery .fxb-lb-img-wrap{position:relative;z-index:1;max-width:90vw;max-height:85vh}
+  #fxb-gallery .fxb-lb-img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:12px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6);animation:fxblb .3s ease}
+  @keyframes fxblb{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+  @media(max-width:760px){#fxb-gallery .fxb-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+  @media(max-width:480px){#fxb-gallery .fxb-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-gallery');if(!root)return;
+  var lb=document.getElementById('fxbLightbox');
+  var lbImg=lb.querySelector('.fxb-lb-img');
+  var items=root.querySelectorAll('.fxb-item:not(.fxb-placeholder)');
+  var imgs=[];var cur=0;
+  items.forEach(function(it,i){
+    var img=it.querySelector('img');
+    if(img){imgs.push(img.src);it.addEventListener('click',function(){cur=i;openLb(imgs[cur])});}
+  });
+  function openLb(src){lbImg.src=src;lb.classList.add('fxb-open')}
+  function closeLb(){lb.classList.remove('fxb-open');lbImg.src=''}
+  lb.querySelector('.fxb-lb-close').addEventListener('click',closeLb);
+  lb.querySelector('.fxb-lb-bg').addEventListener('click',closeLb);
+  lb.querySelector('.fxb-lb-prev').addEventListener('click',function(){if(imgs.length){cur=(cur-1+imgs.length)%imgs.length;lbImg.src=imgs[cur]}});
+  lb.querySelector('.fxb-lb-next').addEventListener('click',function(){if(imgs.length){cur=(cur+1)%imgs.length;lbImg.src=imgs[cur]}});
+})();
+</script>
