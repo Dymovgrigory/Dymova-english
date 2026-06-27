@@ -1,53 +1,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
 <!--
-  ЕДИНАЯ ШАПКА ФОКСИНБУРГ v4
-  Одна шапка — единый фон, единый стиль. Включает:
-  1) Инфо-строка: адреса, телефоны, часы, Max Bot
-  2) Навигация: лого, бейдж, меню, кнопки
-  3) Летние программы (внутри шапки)
-  4) Слоган
-  Всё на одном градиентном фоне.
+  ЕДИНАЯ ШАПКА ФОКСИНБУРГ v5
+  Полностью кастомный hero-блок — единый градиент, без «полосок».
+  Включает: инфо-строку, навигацию, летние программы и слоган.
+  Всё на одном бесшовном фоне.
 -->
 <div id="fxb-hero">
   <div class="fxb-hero-bg">
     <img class="fxb-hero-decor fxb-hd1" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-1.png" alt="" loading="lazy">
     <img class="fxb-hero-decor fxb-hd2" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-zigzag-yellow.png" alt="" loading="lazy">
+    <img class="fxb-hero-decor fxb-hd3" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" loading="lazy">
   </div>
 
-  <!-- 1. Инфо-строка -->
-  <div class="fxb-info">
-    <div class="fxb-w">
-      <div class="fxb-info-left">
-        <a class="fxb-info-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
-          Лихачевский пр-кт, 76к1</a>
-        <a class="fxb-info-tel" href="tel:+79939232309">8 993 923-23-09</a>
-        <span class="fxb-info-sep"></span>
-        <a class="fxb-info-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
-          Ракетостроителей пр-кт, 9к3</a>
-        <a class="fxb-info-tel" href="tel:+79167323169">8 916 732-31-69</a>
-      </div>
-      <div class="fxb-info-right">
-        <span class="fxb-info-hours">9:00 — 21:00 ежедневно</span>
-        <a class="fxb-info-max" href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">Max Bot</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. Навигация -->
-  <div class="fxb-navbar">
-    <div class="fxb-w">
+  <div class="fxb-w">
+    <!-- Инфо + Навигация — компактная единая полоса -->
+    <div class="fxb-topline">
       <a class="fxb-logo" href="/">
-        <img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="Фоксинбург" width="36" height="36">
+        <img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="Фоксинбург" width="38" height="38">
         <span>Фоксинбург</span>
       </a>
+
       <div class="fxb-badge">
         <iframe src="https://yandex.ru/sprav/widget/rating-badge/162408588499?type=alt" width="150" height="50" frameborder="0" scrolling="no" style="pointer-events:auto"></iframe>
       </div>
+
       <button class="fxb-burger" id="fxbBurger" type="button" aria-label="Меню">
         <span></span><span></span><span></span>
       </button>
+
       <nav class="fxb-nav" id="fxbNav">
         <a href="/">Главная</a>
         <div class="fxb-dd">
@@ -59,152 +39,195 @@
           </div>
         </div>
         <div class="fxb-dd">
-          <button class="fxb-dd-btn" type="button">Наши направления <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="fxb-dd-btn" type="button">Направления <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="fxb-dd-panel">
-            <a href="/doshkolniki">Для дошкольников (3-6)</a>
-            <a href="/mladshie-shkolniki">Для младших школьников (7-10)</a>
-            <a href="/podrostki">Для подростков (11-16)</a>
+            <a href="/doshkolniki">Дошкольники (3-6)</a>
+            <a href="/mladshie-shkolniki">Младшие школьники (7-10)</a>
+            <a href="/podrostki">Подростки (11-16)</a>
           </div>
         </div>
         <a href="/news">Новости</a>
         <a href="/vacant">Вакансии</a>
         <a href="/kontakty">Контакты</a>
       </nav>
+
       <div class="fxb-actions">
-        <a class="fxb-act-link" href="https://max.ru/id611904726658_biz" target="_blank" rel="noopener">Max канал</a>
+        <a class="fxb-act-link" href="https://max.ru/id611904726658_biz" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+          Max</a>
         <a class="fxb-act-btn" href="/lmsfoxinburg">Вход в ЛК</a>
       </div>
     </div>
-  </div>
 
-  <!-- 3. Летние программы -->
-  <div class="fxb-summer">
-    <div class="fxb-w">
+    <!-- Контактная строка — бесшовно вписана -->
+    <div class="fxb-contacts">
+      <div class="fxb-contacts-group">
+        <a class="fxb-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+          Лихачевский, 76к1</a>
+        <a class="fxb-tel" href="tel:+79939232309">8 993 923-23-09</a>
+      </div>
+      <span class="fxb-csep"></span>
+      <div class="fxb-contacts-group">
+        <a class="fxb-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+          Ракетостроителей, 9к3</a>
+        <a class="fxb-tel" href="tel:+79167323169">8 916 732-31-69</a>
+      </div>
+      <span class="fxb-csep"></span>
+      <span class="fxb-hours">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        9:00 — 21:00</span>
+      <a class="fxb-maxbot" href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">Max Bot</a>
+    </div>
+
+    <!-- Летние программы — органично вписанный ряд тегов -->
+    <div class="fxb-summer">
       <span class="fxb-summer-label">
-        <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
         Летние программы</span>
-      <div class="fxb-summer-links">
+      <div class="fxb-summer-tags">
         <a href="/letnyaya-akademiya">Летняя Академия</a>
-        <a href="/reading">Курс по чтению</a>
-        <a href="/grammar">Курс по грамматике</a>
-        <a href="/online-zanyatiya">Онлайн занятия</a>
-        <a href="/podderzhivayushchie-online">Поддерживающие онлайн</a>
-        <a href="/standartnye-offline">Стандартные оффлайн</a>
+        <a href="/reading">Чтение</a>
+        <a href="/grammar">Грамматика</a>
+        <a href="/online-zanyatiya">Онлайн</a>
+        <a href="/podderzhivayushchie-online">Поддерживающие</a>
+        <a href="/standartnye-offline">Оффлайн</a>
       </div>
     </div>
-  </div>
 
-  <!-- 4. Слоган -->
-  <div class="fxb-slogan">
-    <div class="fxb-w">
-      <img class="fxb-slogan-fox" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="48" height="48" loading="lazy">
-      <h1 class="fxb-slogan-text">Английский не для школы, а для <span class="fxb-life">жизни!</span></h1>
+    <!-- Слоган — большой центральный блок с лисой -->
+    <div class="fxb-slogan">
+      <img class="fxb-slogan-fox" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="56" height="56" loading="lazy">
+      <h1 class="fxb-slogan-text">Английский не для школы,<br>а для <span class="fxb-life">жизни!</span></h1>
+      <p class="fxb-slogan-sub">Языковая школа в Долгопрудном для детей от 3 до 16 лет</p>
     </div>
   </div>
 </div>
 
 <style>
+/* ============ ЕДИНАЯ ШАПКА v5 ============ */
 #fxb-hero{
   --purple:#392852;--purple-2:#662d92;--purple-d:#241a36;--orange:#ee7349;--yellow:#fcf951;
   font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
-  background:linear-gradient(170deg,var(--purple-d) 0%,var(--purple) 30%,var(--purple-2) 70%,#7a3db0 100%);
+  background:linear-gradient(165deg,#1e1433 0%,var(--purple) 25%,var(--purple-2) 60%,#7a3db0 88%,#8f52c4 100%);
   position:relative;overflow:hidden;color:#fff;
 }
 #fxb-hero *{box-sizing:border-box;margin:0;padding:0}
 #fxb-hero a{text-decoration:none;color:inherit}
-#fxb-hero .fxb-w{max-width:1240px;margin:0 auto;padding:0 24px}
-/* Decorative background */
-#fxb-hero .fxb-hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
-#fxb-hero .fxb-hero-decor{position:absolute;opacity:.04}
-#fxb-hero .fxb-hd1{right:-100px;top:-40px;width:500px}
-#fxb-hero .fxb-hd2{left:-60px;bottom:10px;width:350px}
+#fxb-hero .fxb-w{max-width:1260px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
 
-/* HIDE all native Tilda blocks — only our T123 block (containing #fxb-hero) should be visible */
+/* Decorative background */
+#fxb-hero .fxb-hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+#fxb-hero .fxb-hero-decor{position:absolute;opacity:.035}
+#fxb-hero .fxb-hd1{right:-120px;top:-60px;width:520px;transform:rotate(15deg)}
+#fxb-hero .fxb-hd2{left:-80px;bottom:-20px;width:380px;transform:rotate(-10deg)}
+#fxb-hero .fxb-hd3{right:60px;bottom:30px;width:180px;opacity:.025;transform:rotate(12deg)}
+
+/* HIDE all native Tilda blocks */
 .r.t-rec{display:none!important}
 .r.t-rec:has(#fxb-hero){display:block!important}
-/* Fallback: hide by known IDs if :has() not supported */
 #rec2421715951,#rec2421719881,#rec2421715971,#rec2421715991,#rec2421716001,
 #rec2421716021,#rec2421716041,#rec2421716081,#rec2421716091,#rec2421809201,
 #rec2421716251,#rec2421716261,#rec2421716271,#rec2421716331,#rec2421716361,
 #rec2421716371,#rec2421716381,#rec2421716401,#rec2421716411,#rec2421716441,
 #rec2421716461{display:none!important}
 
-/* 1. Info bar */
-#fxb-hero .fxb-info{border-bottom:1px solid rgba(255,255,255,.08);position:relative;z-index:1}
-#fxb-hero .fxb-info .fxb-w{display:flex;align-items:center;justify-content:space-between;padding-top:8px;padding-bottom:8px;gap:16px;flex-wrap:wrap}
-#fxb-hero .fxb-info-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-#fxb-hero .fxb-info-addr{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:rgba(255,255,255,.7);transition:color .2s}
-#fxb-hero .fxb-info-addr:hover{color:#fff}
-#fxb-hero .fxb-info-addr svg{stroke:var(--orange);flex:0 0 auto}
-#fxb-hero .fxb-info-tel{font-size:12px;font-weight:800;color:var(--orange);padding:2px 10px;background:rgba(238,115,73,.12);border-radius:100px;transition:background .2s}
-#fxb-hero .fxb-info-tel:hover{background:rgba(238,115,73,.22)}
-#fxb-hero .fxb-info-sep{width:1px;height:14px;background:rgba(255,255,255,.12);margin:0 4px}
-#fxb-hero .fxb-info-right{display:flex;align-items:center;gap:14px}
-#fxb-hero .fxb-info-hours{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.5)}
-#fxb-hero .fxb-info-max{font-size:11px;font-weight:800;color:#fff;background:var(--orange);padding:3px 12px;border-radius:100px;transition:background .2s}
-#fxb-hero .fxb-info-max:hover{background:#d4623b}
-
-/* 2. Navbar */
-#fxb-hero .fxb-navbar{border-bottom:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
-#fxb-hero .fxb-navbar .fxb-w{display:flex;align-items:center;gap:16px;padding-top:10px;padding-bottom:10px}
-#fxb-hero .fxb-logo{display:flex;align-items:center;gap:8px;flex:0 0 auto}
-#fxb-hero .fxb-logo img{border-radius:8px}
-#fxb-hero .fxb-logo span{font-weight:900;font-size:18px;color:#fff;white-space:nowrap}
-#fxb-hero .fxb-badge{flex:0 0 auto;height:42px;overflow:hidden;border-radius:8px;opacity:.9}
+/* === TOP LINE (logo + badge + nav + actions) === */
+#fxb-hero .fxb-topline{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 0 14px;
+}
+#fxb-hero .fxb-logo{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+#fxb-hero .fxb-logo img{border-radius:10px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.2))}
+#fxb-hero .fxb-logo span{font-weight:900;font-size:19px;color:#fff;white-space:nowrap;letter-spacing:-.01em}
+#fxb-hero .fxb-badge{flex:0 0 auto;height:42px;overflow:hidden;border-radius:8px;opacity:.88}
 #fxb-hero .fxb-badge iframe{display:block}
 #fxb-hero .fxb-nav{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
-#fxb-hero .fxb-nav>a{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);padding:8px 12px;border-radius:8px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-nav>a{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.72);padding:8px 13px;border-radius:8px;transition:all .2s;white-space:nowrap}
 #fxb-hero .fxb-nav>a:hover{color:#fff;background:rgba(255,255,255,.08)}
 #fxb-hero .fxb-dd{position:relative}
-#fxb-hero .fxb-dd-btn{background:0;border:0;font-family:inherit;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-dd-btn{background:0;border:0;font-family:inherit;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.72);padding:8px 13px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
 #fxb-hero .fxb-dd-btn:hover{color:#fff;background:rgba(255,255,255,.08)}
 #fxb-hero .fxb-dd-btn svg{transition:transform .25s}
-#fxb-hero .fxb-dd-panel{display:none;position:absolute;top:100%;left:0;min-width:240px;background:#fff;border-radius:12px;box-shadow:0 16px 48px -12px rgba(0,0,0,.3);padding:8px;z-index:100}
-#fxb-hero .fxb-dd.fxb-open .fxb-dd-panel{display:block}
+#fxb-hero .fxb-dd-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:250px;background:#fff;border-radius:14px;box-shadow:0 20px 50px -12px rgba(0,0,0,.35);padding:8px;z-index:100}
+#fxb-hero .fxb-dd.fxb-open .fxb-dd-panel{display:block;animation:fxbddIn .2s ease-out}
+@keyframes fxbddIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+#fxb-hero .fxb-dd.fxb-open .fxb-dd-btn{color:#fff;background:rgba(255,255,255,.1)}
 #fxb-hero .fxb-dd.fxb-open .fxb-dd-btn svg{transform:rotate(180deg)}
-#fxb-hero .fxb-dd-panel a{display:block;padding:10px 14px;font-size:13px;font-weight:600;color:var(--purple);border-radius:8px;transition:background .15s}
+#fxb-hero .fxb-dd-panel a{display:block;padding:11px 16px;font-size:13.5px;font-weight:600;color:var(--purple);border-radius:10px;transition:background .15s}
 #fxb-hero .fxb-dd-panel a:hover{background:rgba(102,45,146,.06)}
 #fxb-hero .fxb-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
-#fxb-hero .fxb-act-link{font-size:12.5px;font-weight:700;color:rgba(255,255,255,.7);padding:7px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;transition:all .2s;white-space:nowrap}
-#fxb-hero .fxb-act-link:hover{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.06)}
-#fxb-hero .fxb-act-btn{font-size:12.5px;font-weight:800;color:var(--purple);background:var(--yellow);padding:7px 16px;border-radius:8px;transition:all .2s;white-space:nowrap}
-#fxb-hero .fxb-act-btn:hover{background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-#fxb-hero .fxb-burger{display:none;background:0;border:0;width:32px;height:24px;flex-direction:column;justify-content:space-between;cursor:pointer;padding:0}
+#fxb-hero .fxb-act-link{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:rgba(255,255,255,.72);padding:8px 14px;border:1.5px solid rgba(255,255,255,.14);border-radius:10px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-act-link:hover{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)}
+#fxb-hero .fxb-act-btn{font-size:12.5px;font-weight:800;color:var(--purple);background:var(--yellow);padding:8px 18px;border-radius:10px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-act-btn:hover{background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+#fxb-hero .fxb-burger{display:none;background:0;border:0;width:34px;height:26px;flex-direction:column;justify-content:space-between;cursor:pointer;padding:0}
 #fxb-hero .fxb-burger span{display:block;width:100%;height:2.5px;background:#fff;border-radius:2px;transition:all .3s}
 
-/* 3. Summer bar */
-#fxb-hero .fxb-summer{background:rgba(238,115,73,.15);border-bottom:1px solid rgba(255,255,255,.05);position:relative;z-index:1}
-#fxb-hero .fxb-summer .fxb-w{display:flex;align-items:center;gap:16px;padding-top:7px;padding-bottom:7px;flex-wrap:wrap;justify-content:center}
-#fxb-hero .fxb-summer-label{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:var(--orange);white-space:nowrap}
+/* === CONTACTS LINE === */
+#fxb-hero .fxb-contacts{
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  padding:10px 0;
+}
+#fxb-hero .fxb-contacts-group{display:flex;align-items:center;gap:6px}
+#fxb-hero .fxb-addr{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);transition:color .2s}
+#fxb-hero .fxb-addr:hover{color:#fff}
+#fxb-hero .fxb-addr svg{stroke:var(--orange);flex:0 0 auto}
+#fxb-hero .fxb-tel{font-size:12px;font-weight:800;color:var(--orange);padding:3px 11px;background:rgba(238,115,73,.1);border-radius:100px;transition:background .2s}
+#fxb-hero .fxb-tel:hover{background:rgba(238,115,73,.2)}
+#fxb-hero .fxb-csep{width:1px;height:12px;background:rgba(255,255,255,.1);margin:0 6px}
+#fxb-hero .fxb-hours{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.45)}
+#fxb-hero .fxb-hours svg{stroke:rgba(255,255,255,.35)}
+#fxb-hero .fxb-maxbot{font-size:11px;font-weight:800;color:#fff;background:var(--orange);padding:4px 14px;border-radius:100px;transition:background .2s;margin-left:4px}
+#fxb-hero .fxb-maxbot:hover{background:#d4623b}
+
+/* === SUMMER PROGRAMS (tags) === */
+#fxb-hero .fxb-summer{
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+  padding:12px 0 8px;
+}
+#fxb-hero .fxb-summer-label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--orange);white-space:nowrap}
 #fxb-hero .fxb-summer-label svg{stroke:var(--orange)}
-#fxb-hero .fxb-summer-links{display:flex;align-items:center;gap:2px;flex-wrap:wrap;justify-content:center}
-#fxb-hero .fxb-summer-links a{font-size:12px;font-weight:600;color:rgba(255,255,255,.6);padding:4px 10px;border-radius:100px;transition:all .2s}
-#fxb-hero .fxb-summer-links a:hover{color:#fff;background:rgba(255,255,255,.1)}
+#fxb-hero .fxb-summer-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+#fxb-hero .fxb-summer-tags a{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.55);padding:5px 12px;border-radius:100px;border:1px solid rgba(255,255,255,.08);transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-summer-tags a:hover{color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
 
-/* 4. Slogan */
-#fxb-hero .fxb-slogan{position:relative;z-index:1;padding:40px 0 48px}
-#fxb-hero .fxb-slogan .fxb-w{display:flex;align-items:center;justify-content:center;gap:16px}
-#fxb-hero .fxb-slogan-fox{flex:0 0 auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.2))}
-#fxb-hero .fxb-slogan-text{font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.15)}
+/* === SLOGAN === */
+#fxb-hero .fxb-slogan{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:44px 0 56px;gap:16px;
+}
+#fxb-hero .fxb-slogan-fox{filter:drop-shadow(0 4px 16px rgba(0,0,0,.25));animation:fxbFoxFloat 4s ease-in-out infinite}
+@keyframes fxbFoxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+#fxb-hero .fxb-slogan-text{font-size:clamp(24px,4vw,42px);font-weight:900;color:#fff;line-height:1.15;text-shadow:0 2px 20px rgba(0,0,0,.12);letter-spacing:-.01em}
 #fxb-hero .fxb-life{position:relative;display:inline-block}
-#fxb-hero .fxb-life::after{content:'';position:absolute;left:-4px;right:-4px;bottom:2px;height:35%;background:var(--yellow);opacity:.3;border-radius:4px;z-index:-1}
+#fxb-hero .fxb-life::after{content:'';position:absolute;left:-5px;right:-5px;bottom:2px;height:38%;background:var(--yellow);opacity:.28;border-radius:4px;z-index:-1}
+#fxb-hero .fxb-slogan-sub{font-size:16px;font-weight:500;color:rgba(255,255,255,.55);max-width:400px;line-height:1.5}
 
-/* Mobile */
+/* ========== MOBILE ========== */
 @media(max-width:960px){
-  #fxb-hero .fxb-info-left{display:none}
-  #fxb-hero .fxb-info-right{width:100%;justify-content:center}
+  #fxb-hero .fxb-topline{flex-wrap:wrap;padding:12px 0 10px}
+  #fxb-hero .fxb-contacts{display:none}
   #fxb-hero .fxb-badge{display:none}
-  #fxb-hero .fxb-nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--purple-d);flex-direction:column;padding:16px;gap:2px;border-top:1px solid rgba(255,255,255,.08);box-shadow:0 20px 40px rgba(0,0,0,.3)}
+  #fxb-hero .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:200;border-radius:0 0 16px 16px}
   #fxb-hero .fxb-nav.fxb-open{display:flex}
-  #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:15px;padding:12px 16px;width:100%;text-align:left}
-  #fxb-hero .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.04);margin:2px 0;border-radius:8px}
-  #fxb-hero .fxb-dd-panel a{color:rgba(255,255,255,.7)}
+  #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:15px;padding:13px 16px;width:100%;text-align:left}
+  #fxb-hero .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.04);margin:2px 0;border-radius:10px}
+  #fxb-hero .fxb-dd-panel a{color:rgba(255,255,255,.7);font-size:14px}
   #fxb-hero .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
   #fxb-hero .fxb-burger{display:flex}
   #fxb-hero .fxb-actions{display:none}
-  #fxb-hero .fxb-summer-links{gap:0}
-  #fxb-hero .fxb-slogan{padding:28px 0 36px}
-  #fxb-hero .fxb-slogan-fox{width:36px;height:36px}
+  #fxb-hero .fxb-summer{padding:10px 0 4px}
+  #fxb-hero .fxb-summer-tags{gap:4px}
+  #fxb-hero .fxb-summer-tags a{font-size:11px;padding:4px 10px}
+  #fxb-hero .fxb-slogan{padding:32px 0 42px;gap:12px}
+  #fxb-hero .fxb-slogan-fox{width:42px;height:42px}
+  #fxb-hero .fxb-slogan-sub{font-size:14px}
+}
+@media(max-width:480px){
+  #fxb-hero .fxb-summer-label{font-size:11px}
+  #fxb-hero .fxb-slogan-text{font-size:22px}
 }
 </style>
 
