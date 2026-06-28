@@ -21,7 +21,7 @@ def price_card(old, now, per, items, btn="Записаться на курс"):
     old_html = '<span class="fxb-old">%s</span>' % old if old else ""
     return ('<div class="fxb-price-card">%s<div class="fxb-now">%s</div>'
             '<div class="fxb-per">%s</div><ul class="fxb-price-list">%s</ul>'
-            '<a href="#popup:diagnostika" class="fxb-btn-main">%s</a></div>'
+            '<a class="fxb-btn-main" data-fxb-zayavka role="button" tabindex="0">%s</a></div>'
             % (old_html, now, per, lis, btn))
 
 
@@ -286,6 +286,137 @@ PAGES = {
     "page_letnyaya_akademiya.html": letnyaya_sections,
 }
 
+# Название курса для текста заявки (подставляется в сообщение WhatsApp).
+COURSES = {
+    "page_reading.html": "Курс по чтению",
+    "page_grammar.html": "Курс по грамматике",
+    "page_preparation.html": "Подготовка к школе",
+    "page_letnyaya_akademiya.html": "Летняя Академия",
+}
+
+WA_PHONE = "79939232309"        # WhatsApp + звонок
+MAX_BOT = "https://max.ru/id611904726658_bot"
+
+SEND_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+             'stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/>'
+             '<path d="M22 2 15 22l-4-9-9-4z"/></svg>')
+OK_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" '
+           'stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>')
+
+
+def _zalts():
+    return ('<div class="fxb-zalt-btns">'
+            '<a class="fxb-zchip fxb-zchip--wa" target="_blank" rel="noopener" href="https://wa.me/%s">WhatsApp</a>'
+            '<a class="fxb-zchip" target="_blank" rel="noopener" href="%s">Max</a>'
+            '<a class="fxb-zchip" href="tel:+%s">Позвонить</a>'
+            '</div>' % (WA_PHONE, MAX_BOT, WA_PHONE))
+
+
+def zayavka_modal(course):
+    return ('<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal" hidden data-fxb-course="%s">'
+            '<div class="fxb-modal__ov" data-fxb-close></div>'
+            '<div class="fxb-modal__box fxb-zbox" role="dialog" aria-modal="true" aria-label="Заявка на курс">'
+            '<button type="button" class="fxb-modal__x" data-fxb-close aria-label="Закрыть">'
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'
+            '</button>'
+            '<div class="fxb-zview fxb-zview--form">'
+            '<h3 class="fxb-ztitle">Оставить заявку</h3>'
+            '<p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём группу под уровень ребёнка.</p>'
+            '<form class="fxb-zform" novalidate>'
+            '<label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="name" required autocomplete="name" placeholder="Как к вам обращаться"></label>'
+            '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
+            '<button type="submit" class="fxb-btn-main fxb-zsubmit">%sОтправить заявку</button>'
+            '<p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p>'
+            '</form>'
+            '<div class="fxb-zalt"><span class="fxb-zalt-l">Или свяжитесь напрямую</span>%s</div>'
+            '</div>'
+            '<div class="fxb-zview fxb-zview--thanks" hidden>'
+            '<div class="fxb-zok">%s</div>'
+            '<h3 class="fxb-ztitle">Заявка сформирована!</h3>'
+            '<p class="fxb-zsub">Мы открыли WhatsApp с вашим сообщением — нажмите «Отправить» в чате, и мы свяжемся с вами. Если чат не открылся, выберите удобный способ:</p>'
+            '%s'
+            '</div></div></div>'
+            % (course, SEND_ICON, _zalts(), OK_ICON, _zalts()))
+
+
+ZAYAVKA_CSS = """
+/* ===== FXB-ZAYAVKA: попап-форма заявки ===== */
+#fxb-page [data-fxb-zayavka]{cursor:pointer}
+#fxb-page .fxb-zbox{width:min(460px,100%);padding:34px 30px 30px;text-align:left}
+#fxb-page .fxb-ztitle{font-size:22px;font-weight:900;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink)}
+#fxb-page .fxb-zsub{font-size:14px;font-weight:500;color:var(--muted);line-height:1.55;margin-bottom:22px}
+#fxb-page .fxb-zform{display:grid;gap:14px}
+#fxb-page .fxb-zfield{display:grid;gap:6px}
+#fxb-page .fxb-zfield span{font-size:12.5px;font-weight:700;color:var(--purple-2);letter-spacing:.02em}
+#fxb-page .fxb-zfield input{font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 16px;border:1.6px solid rgba(57,40,82,.14);border-radius:13px;background:#faf8fe;transition:border-color .2s,box-shadow .2s;width:100%}
+#fxb-page .fxb-zfield input:focus{outline:0;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.12)}
+#fxb-page .fxb-zfield.fxb-zerr input{border-color:#e0526a;background:#fdf2f4}
+#fxb-page .fxb-zsubmit{width:100%;justify-content:center;margin-top:4px;border:0;cursor:pointer;font-family:inherit}
+#fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:var(--purple)}
+#fxb-page .fxb-znote{font-size:11px;color:#a89fbd;font-weight:500;line-height:1.45;margin-top:2px;text-align:center}
+#fxb-page .fxb-znote a{color:var(--purple-2);text-decoration:underline}
+#fxb-page .fxb-zalt{margin-top:22px;padding-top:20px;border-top:1px solid rgba(57,40,82,.1)}
+#fxb-page .fxb-zalt-l{display:block;text-align:center;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+#fxb-page .fxb-zalt-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#fxb-page .fxb-zchip{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:100px;font-weight:800;font-size:13.5px;border:1.6px solid rgba(102,45,146,.2);color:var(--purple-2);background:#fff;transition:transform .2s,border-color .2s,background .2s;cursor:pointer}
+#fxb-page .fxb-zchip:hover{transform:translateY(-2px);border-color:var(--purple-2);background:rgba(102,45,146,.05)}
+#fxb-page .fxb-zchip--wa{border-color:rgba(43,182,115,.45);color:#1f9d63}
+#fxb-page .fxb-zchip--wa:hover{border-color:#1f9d63;background:rgba(43,182,115,.07)}
+#fxb-page .fxb-zview--thanks{text-align:center}
+#fxb-page .fxb-zok{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;background:linear-gradient(135deg,#2bb673,#7ed957);box-shadow:0 14px 30px -12px rgba(43,182,115,.7)}
+#fxb-page .fxb-zok svg{width:32px;height:32px;stroke:#fff;stroke-width:2.6}
+#fxb-page .fxb-zview--thanks .fxb-zalt-btns{margin-top:20px}
+"""
+
+ZAYAVKA_JS = """
+  var fxbZ=root.querySelector('#fxb-zayavka-modal');
+  if(fxbZ){
+    var fxbZform=fxbZ.querySelector('.fxb-zform');
+    var fxbZvForm=fxbZ.querySelector('.fxb-zview--form');
+    var fxbZvThx=fxbZ.querySelector('.fxb-zview--thanks');
+    var fxbZopen=function(){fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';
+      var f=fxbZform&&fxbZform.querySelector('input[name=name]');if(f){setTimeout(function(){f.focus();},60);}};
+    var fxbZclose=function(){fxbZ.hidden=true;document.body.style.overflow='';};
+    root.addEventListener('click',function(e){
+      var z=e.target.closest('[data-fxb-zayavka]');if(z){e.preventDefault();fxbZopen();return;}
+      var c=e.target.closest('[data-fxb-close]');if(c&&!fxbZ.hidden){fxbZclose();}});
+    root.addEventListener('keydown',function(e){var z=e.target.closest('[data-fxb-zayavka]');
+      if(z&&(e.key==='Enter'||e.key===' ')){e.preventDefault();fxbZopen();}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
+    if(fxbZform){fxbZform.addEventListener('submit',function(e){e.preventDefault();
+      var nm=fxbZform.name,ph=fxbZform.phone;
+      var name=(nm.value||'').trim(),phone=(ph.value||'').trim();
+      nm.parentNode.classList.toggle('fxb-zerr',!name);ph.parentNode.classList.toggle('fxb-zerr',!phone);
+      if(!name){nm.focus();return;}if(!phone){ph.focus();return;}
+      var course=fxbZ.getAttribute('data-fxb-course')||'выбранный курс';
+      var txt='Здравствуйте! Хочу записаться на «'+course+'». Меня зовут '+name+', телефон '+phone+'.';
+      window.open('https://wa.me/79939232309?text='+encodeURIComponent(txt),'_blank','noopener');
+      fxbZvForm.hidden=true;fxbZvThx.hidden=false;});}
+  }
+"""
+
+
+def add_zayavka(fname, course):
+    path = os.path.join(DIR, fname)
+    s = open(path, encoding="utf-8").read()
+    if 'id="fxb-zayavka-modal"' in s:
+        print("skip zayavka (уже есть):", fname)
+        return
+    # 1) кнопки заявки: #popup:diagnostika -> попап-форма
+    s = s.replace('href="#popup:diagnostika"', 'data-fxb-zayavka role="button" tabindex="0"')
+    # 2) модалка рядом с видео-модалкой
+    anchor = '</div>\n\n<style>'
+    assert s.count(anchor) == 1, fname + " zayavka modal anchor"
+    s = s.replace(anchor, zayavka_modal(course) + "\n</div>\n\n<style>", 1)
+    # 3) CSS перед </style>
+    assert s.count('</style>') == 1, fname + " zayavka style anchor"
+    s = s.replace('</style>', ZAYAVKA_CSS + "\n</style>", 1)
+    # 4) JS перед })();
+    assert s.count('})();') == 1, fname + " zayavka js anchor"
+    s = s.replace('})();', ZAYAVKA_JS + "})();", 1)
+    open(path, "w", encoding="utf-8").write(s)
+    print("OK zayavka", fname, "->", len(s), "chars")
+
 
 def strip_old(s):
     s = re.sub(r'<!--FXB-EXTRA-->[\s\S]*?<!--/FXB-EXTRA-->', '', s)
@@ -321,3 +452,5 @@ def build(fname, secfn):
 if __name__ == "__main__":
     for fn, secfn in PAGES.items():
         build(fn, secfn)
+    for fn in PAGES:
+        add_zayavka(fn, COURSES[fn])
