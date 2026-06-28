@@ -1,4 +1,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: КОНТАКТЫ И КАРТА
+  =============================================
+  Назначение: Карта Яндекс с метками филиалов + контактная информация
+  
+  Что можно менять:
+    - Координаты меток на карте (pt= в iframe src)
+    - Адреса, телефоны филиалов
+    - Электронная почта (school@foxinburg-edu.ru)
+    - Часы работы
+    - Ссылки на соцсети
+
+  Филиал 1: Лихачёвский пр-кт, 76к1 (коорд: 55.936474, 37.494072)
+  Филиал 2: Ракетостроителей пр-кт, 9к3 (коорд: 55.935022, 37.504474)
+  =============================================
+-->
 <div id="fxb-contacts">
   <div class="fxb-section">
     <h2 class="fxb-ct-title">Контакты</h2>
@@ -7,7 +24,8 @@
     <div class="fxb-ct-grid">
       <!-- Карта -->
       <div class="fxb-ct-map">
-        <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A9ad7e8c9c8b21e46fc2fa86ad14d0c8ce88c0b91a2a5c2b07d11a57d7e52f7c3&amp;source=constructor&amp;ll=37.515%2C55.935&amp;z=13&amp;pt=37.5117%2C55.9477%2Cpm2lbm~37.5283%2C55.9228%2Cpm2lbm" width="100%" height="100%" frameborder="0" allowfullscreen style="display:block;border-radius:16px"></iframe>
+        <!-- Координаты меток: Лихачёвский 76к1 и Ракетостроителей 9к3. Формат: долгота,широта -->
+        <iframe src="https://yandex.ru/map-widget/v1/?ll=37.499%2C55.936&amp;z=15&amp;pt=37.494072%2C55.936474%2Cpm2lbm~37.504474%2C55.935022%2Cpm2lbm" width="100%" height="100%" frameborder="0" allowfullscreen style="display:block;border-radius:16px"></iframe>
       </div>
 
       <!-- Инфо -->
@@ -46,7 +64,7 @@
           </div>
           <div class="fxb-ct-row">
             <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 6l-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <a href="mailto:dymova.tut@gmail.com">dymova.tut@gmail.com</a>
+            <a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a>
           </div>
         </div>
 

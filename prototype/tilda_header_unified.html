@@ -1,9 +1,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
 <!--
-  ЕДИНАЯ ШАПКА ФОКСИНБУРГ v5
-  Полностью кастомный hero-блок — единый градиент, без «полосок».
-  Включает: инфо-строку, навигацию, летние программы и слоган.
-  Всё на одном бесшовном фоне.
+  =============================================
+  БЛОК: ЕДИНАЯ ШАПКА ФОКСИНБУРГ v5
+  =============================================
+  Назначение: Полностью кастомный hero-блок — единый градиент, без видимых разделителей Tilda.
+  Включает в себя:
+    - Логотип + бейдж "Хорошее место" Яндекс
+    - Навигационное меню (с выпадающими подменю "Наши курсы" и "Направления")
+    - Контактная строка (адреса филиалов, телефоны, часы работы)
+    - Летние программы (ряд тегов-ссылок на летние курсы)
+    - Слоган с анимированной лисой
+  
+  Что можно менять:
+    - Ссылки навигации (href) — менять пункты меню и куда ведут
+    - Телефоны и адреса в контактной строке
+    - Ссылки на летние программы (добавлять/убирать теги)
+    - Текст слогана и подзаголовка (возраст, описание школы)
+    - Цвета градиента в CSS (переменные --purple, --purple-2 и т.д.)
+    - Бейдж Яндекс — type=award для "Хорошее место", type=rating для рейтинга
+
+  Возраст учеников: от 2 до 18 лет и взрослые
+  Занятия: 2 раза в неделю по 60 минут
+  =============================================
 -->
 <div id="fxb-hero">
   <div class="fxb-hero-bg">
@@ -20,8 +38,9 @@
         <span>Фоксинбург</span>
       </a>
 
+      <!-- Бейдж Яндекс "Хорошее место" — можно поменять type=award на type=rating для отображения рейтинга -->
       <div class="fxb-badge">
-        <iframe src="https://yandex.ru/sprav/widget/rating-badge/162408588499?type=alt" width="150" height="50" frameborder="0" scrolling="no" style="pointer-events:auto"></iframe>
+        <iframe src="https://yandex.ru/sprav/widget/rating-badge/162408588499?type=award" width="150" height="50" frameborder="0" scrolling="no" style="pointer-events:auto"></iframe>
       </div>
 
       <button class="fxb-burger" id="fxbBurger" type="button" aria-label="Меню">
@@ -100,7 +119,7 @@
     <div class="fxb-slogan">
       <img class="fxb-slogan-fox" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="56" height="56" loading="lazy">
       <h1 class="fxb-slogan-text">Английский не для школы,<br>а для <span class="fxb-life">жизни!</span></h1>
-      <p class="fxb-slogan-sub">Языковая школа в Долгопрудном для детей от 3 до 16 лет</p>
+      <p class="fxb-slogan-sub">Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых</p>
     </div>
   </div>
 </div>
@@ -124,9 +143,9 @@
 #fxb-hero .fxb-hd2{left:-80px;bottom:-20px;width:380px;transform:rotate(-10deg)}
 #fxb-hero .fxb-hd3{right:60px;bottom:30px;width:180px;opacity:.025;transform:rotate(12deg)}
 
-/* HIDE all native Tilda blocks */
+/* Скрываем все нативные блоки Tilda, показываем только наши кастомные (id начинается с fxb-) */
 .r.t-rec{display:none!important}
-.r.t-rec:has(#fxb-hero){display:block!important}
+.r.t-rec:has([id^="fxb-"]){display:block!important}
 #rec2421715951,#rec2421719881,#rec2421715971,#rec2421715991,#rec2421716001,
 #rec2421716021,#rec2421716041,#rec2421716081,#rec2421716091,#rec2421809201,
 #rec2421716251,#rec2421716261,#rec2421716271,#rec2421716331,#rec2421716361,
@@ -233,15 +252,11 @@
 
 <script>
 (function(){
-  /* Hide ALL native Tilda blocks except our T123 block */
-  var myBlock=document.getElementById('fxb-hero');
-  if(myBlock){
-    var myRec=myBlock.closest('.r.t-rec');
-    var allRecs=document.querySelectorAll('.r.t-rec');
-    allRecs.forEach(function(rec){
-      if(rec!==myRec) rec.style.display='none';
-    });
-  }
+  /* Скрываем все нативные блоки Tilda, кроме наших кастомных (содержащих элемент с id="fxb-...") */
+  var allRecs=document.querySelectorAll('.r.t-rec');
+  allRecs.forEach(function(rec){
+    if(!rec.querySelector('[id^="fxb-"]')) rec.style.display='none';
+  });
 
   /* Burger toggle */
   var burger=document.getElementById('fxbBurger');
