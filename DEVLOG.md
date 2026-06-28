@@ -548,6 +548,70 @@
 
 ---
 
+### Сессия 9 — Разделение кода на отдельные T123 блоки в Tilda
+
+**Дата:** 18 июня 2026 (продолжение)
+
+#### Замечание владельца:
+«В Тильда должно тоже код разделён на отдельные части! Для удобства!»
+
+#### Что сделано:
+
+1. **Разделение 2 больших T123 блоков → 14 отдельных T123**
+   - Было: 2 блока по ~58K и ~62K символов (слиты из-за лимита 116K на блок)
+   - Стало: 14 отдельных T123 блоков, каждый содержит код одной секции сайта
+   - Каждый блок минифицирован (убраны комментарии, пробелы, CSS/JS сжаты)
+
+2. **Минифицированные файлы** в `prototype/tilda_blocks_min/`:
+   | # | Файл | Размер | Секция |
+   |---|------|--------|--------|
+   | 1 | tilda_header_unified_min.html | 14.8K | Шапка (бесшовная v5) |
+   | 2 | tilda_cta_diagnostika_min.html | 11.2K | CTA диагностика |
+   | 3 | tilda_onboarding_min.html | 10.1K | Онбординг |
+   | 4 | tilda_photobank_gallery_min.html | 6.4K | Фотобанк |
+   | 5 | tilda_directions_min.html | 7.0K | Направления |
+   | 6 | tilda_team_min.html | 9.4K | Команда |
+   | 7 | tilda_languages_min.html | 15.6K | Языки |
+   | 8 | tilda_advantages_min.html | 5.6K | Преимущества |
+   | 9 | tilda_pricing_enrollment_min.html | 6.0K | Тарифы |
+   | 10 | tilda_faq_min.html | 7.4K | FAQ |
+   | 11 | tilda_svedeniya_min.html | 6.4K | Сведения |
+   | 12 | tilda_contacts_map_min.html | 8.4K | Контакты+Карта |
+   | 13 | tilda_cta_enrollment_min.html | 7.1K | CTA запись на год |
+   | 14 | tilda_footer_min.html | 6.7K | Подвал |
+
+3. **Автоматизация загрузки** (`prototype/tilda_upload_blocks.py`):
+   - Создание T123 блоков через Tilda API: `POST /page/submit/` с `comm=addnewrecord`, `tplid=131`
+   - Сохранение кода: `POST /page/submit/` с `comm=saverecord`, `onlythisfield=code`
+   - Сортировка: `POST /page/submit/` с `comm=saverecordssort`
+   - Скрипт использует Playwright CDP для доступа к Tilda API через авторизованную сессию
+
+4. **Record IDs T123 блоков на странице** (pageid 151210576):
+   | # | Record ID | Секция |
+   |---|-----------|--------|
+   | 1 | 2421794631 | Шапка |
+   | 2 | 2422504491 | CTA диагностика |
+   | 3 | 2422576651 | Онбординг |
+   | 4 | 2422576671 | Фотобанк |
+   | 5 | 2422570311 | Направления |
+   | 6 | 2422572491 | Команда |
+   | 7 | 2422572511 | Языки |
+   | 8 | 2422572521 | Преимущества |
+   | 9 | 2422572531 | Тарифы |
+   | 10 | 2422572561 | FAQ |
+   | 11 | 2422572571 | Сведения |
+   | 12 | 2422572611 | Контакты+Карта |
+   | 13 | 2422572641 | CTA запись на год |
+   | 14 | 2422572651 | Подвал |
+
+#### Технические заметки:
+- Tilda API: поле `code` для HTML-кода в T123 блоках (не `html`)
+- Скрытые (off='y') блоки не принимают контент через API — нужно создавать новые
+- Публикация через UI кнопку «Опубликовать» (API `comm=publishpage` не работает)
+- Все 14 блоков успешно отображаются на https://dymova-english.ru/index-new
+
+---
+
 ## Файловая структура репозитория
 
 ```
@@ -587,9 +651,25 @@
     ├── tilda_svedeniya.html           # Сведения (19 пунктов, полное содержание)
     ├── tilda_contacts_map.html        # Контакты + Яндекс.Карта + соцсети
     ├── tilda_footer.html              # Подвал (меню, ИП, политика, соцсети)
-    ├── tilda_cta_diagnostika.html     # [устарел] CTA диагностика
+    ├── tilda_cta_diagnostika.html     # CTA — запись на диагностику
     ├── tilda_dropdown_menu.html       # [устарел] отдельное меню
     ├── tilda_topbar.html              # [устарел] отдельная верхняя панель
+    ├── tilda_upload_blocks.py         # Скрипт автоматической загрузки блоков в Tilda
+    ├── tilda_blocks_min/              # Минифицированные блоки для загрузки в Tilda
+    │   ├── tilda_header_unified_min.html
+    │   ├── tilda_cta_diagnostika_min.html
+    │   ├── tilda_onboarding_min.html
+    │   ├── tilda_photobank_gallery_min.html
+    │   ├── tilda_directions_min.html
+    │   ├── tilda_team_min.html
+    │   ├── tilda_languages_min.html
+    │   ├── tilda_advantages_min.html
+    │   ├── tilda_pricing_enrollment_min.html
+    │   ├── tilda_faq_min.html
+    │   ├── tilda_svedeniya_min.html
+    │   ├── tilda_contacts_map_min.html
+    │   ├── tilda_cta_enrollment_min.html
+    │   └── tilda_footer_min.html
     ├── page_kontakty.html             # Страница «Контакты»
     ├── page_doshkolniki.html          # Страница «Для дошкольников»
     ├── page_mladshie_shkolniki.html   # Страница «Для младших школьников»
