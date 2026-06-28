@@ -10,21 +10,23 @@ Strategy:
 import asyncio, json, os, time, urllib.parse
 from playwright.async_api import async_playwright
 
+# Canonical block order (fixed standard, set by owner). Do not change without
+# an explicit owner request. The obsolete "CTA диагностика" block was removed.
 BLOCK_FILES = [
-    'tilda_header_unified_min.html',
-    'tilda_cta_diagnostika_min.html',
-    'tilda_onboarding_min.html',
-    'tilda_photobank_gallery_min.html',
-    'tilda_directions_min.html',
-    'tilda_team_min.html',
-    'tilda_languages_min.html',
-    'tilda_advantages_min.html',
-    'tilda_pricing_enrollment_min.html',
-    'tilda_faq_min.html',
-    'tilda_svedeniya_min.html',
-    'tilda_contacts_map_min.html',
-    'tilda_cta_enrollment_min.html',
-    'tilda_footer_min.html',
+    'tilda_header_unified_min.html',      # 1  Шапка / меню
+    'tilda_cta_enrollment_min.html',      # 2  Запись на новый учебный год (CTA)
+    'tilda_advantages_min.html',          # 3  Наши преимущества
+    'tilda_directions_min.html',          # 4  Наши направления
+    'tilda_onboarding_min.html',          # 5  Как начинается обучение
+    'tilda_team_min.html',                # 6  Команда
+    'tilda_languages_min.html',           # 7  Другие языки
+    'tilda_photobank_gallery_min.html',   # 8  Фотобанк филиалов
+    'tilda_pricing_enrollment_min.html',  # 9  Запись — 3 карточки (тарифы)
+    'tilda_reviews_min.html',             # 10 Отзывы (письменные + видео)
+    'tilda_faq_min.html',                 # 11 FAQ
+    'tilda_svedeniya_min.html',           # 12 Сведения об образовательной организации
+    'tilda_contacts_map_min.html',        # 13 Контакты
+    'tilda_footer_min.html',              # 14 Подвал
 ]
 
 BLOCK_DIR = '/home/ubuntu/Dymova-english/prototype/tilda_blocks_min'
