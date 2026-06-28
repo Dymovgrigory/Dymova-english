@@ -1,0 +1,41 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<div id="fxb-slogan">
+  <div class="fxb-slogan-bg">
+    <img class="fxb-slogan-decor fxb-decor-left" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-1.png" alt="" loading="lazy">
+    <img class="fxb-slogan-decor fxb-decor-right" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-zigzag-yellow.png" alt="" loading="lazy">
+  </div>
+  <div class="fxb-section">
+    <h2 class="fxb-text">
+      <img class="fxb-slogan-icon" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="Фоксинбург" loading="lazy">
+      Английский не для школы, а для <span class="fxb-life">жизни!</span>
+    </h2>
+  </div>
+</div>
+
+<style>
+  #fxb-slogan{--purple:#392852;--purple-2:#662d92;--yellow:#fcf951;
+    font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(135deg,#392852 0%,#4a2b6e 40%,#662d92 100%);text-align:center;padding:52px 24px;
+    position:relative;overflow:hidden}
+  #fxb-slogan *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-slogan .fxb-slogan-bg{position:absolute;inset:0;pointer-events:none}
+  #fxb-slogan .fxb-slogan-decor{position:absolute;opacity:.08;width:280px;height:auto}
+  #fxb-slogan .fxb-decor-left{left:-40px;bottom:-30px;transform:rotate(15deg)}
+  #fxb-slogan .fxb-decor-right{right:-30px;top:-20px;transform:rotate(-10deg)}
+  #fxb-slogan .fxb-section{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+  #fxb-slogan .fxb-text{font-size:clamp(22px,3.2vw,38px);font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.3;display:inline-flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
+  #fxb-slogan .fxb-slogan-icon{width:52px;height:52px;object-fit:contain;flex:0 0 auto}
+  #fxb-slogan .fxb-life{position:relative;white-space:nowrap}
+  #fxb-slogan .fxb-life::after{content:"";position:absolute;left:-4px;right:-4px;bottom:.02em;height:.38em;background:var(--yellow);opacity:.35;border-radius:6px;z-index:0;transform:rotate(-1deg)}
+  @media(max-width:600px){#fxb-slogan{padding:36px 18px}#fxb-slogan .fxb-slogan-icon{width:40px;height:40px}}
+</style>
+
+<script>
+(function(){
+  document.querySelectorAll('.t-text,.t-title,.t-cover__title,.t027__title,.t030__title').forEach(function(el){
+    if(el.textContent&&el.textContent.indexOf('Английский не для школы')!==-1){
+      var rec=el.closest('.t-rec');if(rec)rec.style.display='none';
+    }
+  });
+})();
+</script>

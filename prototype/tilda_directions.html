@@ -1,0 +1,103 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: НАПРАВЛЕНИЯ ОБУЧЕНИЯ
+  =============================================
+  Назначение: Карточки возрастных групп (дошкольники, школьники, подростки)
+  Каждая карточка — ссылка на отдельную страницу направления.
+  
+  Что можно менять:
+    - Названия направлений и описания
+    - Возрастные диапазоны
+    - Ссылки (href) на страницы направлений
+    - SVG-иконки на карточках
+  =============================================
+-->
+<div id="fxb-dir">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Наши направления</span>
+      <h2 class="fxb-h2">Программы под <span class="fxb-accent">каждый возраст</span></h2>
+      <p class="fxb-sub">Подбираем формат, пособия и темп под возраст и уровень ребенка.</p>
+    </div>
+
+    <div class="fxb-grid">
+      <a class="fxb-card" href="/doshkolniki">
+        <div class="fxb-cover fxb-cov1"><span class="fxb-icon"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><circle cx="24" cy="24" r="20" stroke="#fff" stroke-width="2.5" opacity=".9"/><path d="M16 28c0 0 3 4 8 4s8-4 8-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="18" cy="20" r="2.5" fill="#fff"/><circle cx="30" cy="20" r="2.5" fill="#fff"/><path d="M24 10v4M18 12l1 3M30 12l-1 3" stroke="#fcf951" stroke-width="2" stroke-linecap="round"/></svg></span><span class="fxb-age">3-6 лет</span></div>
+        <div class="fxb-body">
+          <h3>Для дошкольников</h3>
+          <p>Игровое погружение в язык: говорение, песни, развитие памяти и кругозора.</p>
+          <span class="fxb-more">Узнать подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <a class="fxb-card" href="/mladshie-shkolniki">
+        <div class="fxb-cover fxb-cov2"><span class="fxb-icon"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><rect x="12" y="16" width="24" height="24" rx="4" stroke="#fff" stroke-width="2.5"/><path d="M18 16V12a6 6 0 0 1 12 0v4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><rect x="20" y="22" width="8" height="6" rx="1.5" stroke="#fcf951" stroke-width="2"/><line x1="24" y1="28" x2="24" y2="34" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span><span class="fxb-age">7-10 лет</span></div>
+        <div class="fxb-body">
+          <h3>Для младших школьников</h3>
+          <p>Все аспекты языка: чтение, письмо, аудирование и уверенное говорение.</p>
+          <span class="fxb-more">Узнать подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <a class="fxb-card" href="/podrostki">
+        <div class="fxb-cover fxb-cov3"><span class="fxb-icon"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><path d="M24 8c-4 6-6 14-6 20h12c0-6-2-14-6-20z" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/><circle cx="24" cy="22" r="3" stroke="#fcf951" stroke-width="2"/><path d="M18 28l-4 6h4M30 28l4 6h-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 36h6" stroke="#ee7349" stroke-width="2.5" stroke-linecap="round"/></svg></span><span class="fxb-age">11-16 лет</span></div>
+        <div class="fxb-body">
+          <h3>Для подростков</h3>
+          <p>Язык для жизни и экзаменов: разговорная практика, грамматика, олимпиады.</p>
+          <span class="fxb-more">Узнать подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-dir{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1000px 500px at 100% 0%, rgba(102,45,146,.07), transparent 55%),#f4f1fa;}
+  #fxb-dir *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-dir .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px;}
+  #fxb-dir .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px;}
+  #fxb-dir .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-dir .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:58px}
+  #fxb-dir .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-dir .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-dir .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-dir .fxb-sub{max-width:620px;color:var(--muted);font-size:17px;font-weight:500}
+  #fxb-dir .fxb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  #fxb-dir .fxb-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:26px;overflow:hidden;box-shadow:0 18px 40px -20px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;opacity:0;transform:translateY(34px)}
+  #fxb-dir .fxb-card.fxb-in{opacity:1;transform:none}
+  #fxb-dir .fxb-card:hover{transform:translateY(-10px);box-shadow:0 34px 60px -24px rgba(102,45,146,.5)}
+  #fxb-dir .fxb-cover{position:relative;height:170px;display:grid;place-items:center;overflow:hidden}
+  #fxb-dir .fxb-cov1{background:linear-gradient(135deg,#7b4fc0,#662d92)}
+  #fxb-dir .fxb-cov2{background:linear-gradient(135deg,#f5a06f,#ee7349)}
+  #fxb-dir .fxb-cov3{background:linear-gradient(135deg,#5b8def,#6237a2)}
+  #fxb-dir .fxb-icon{display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 6px 12px rgba(0,0,0,.2));transition:transform .45s}
+  #fxb-dir .fxb-card:hover .fxb-icon{transform:scale(1.1) rotate(-3deg)}
+  #fxb-dir .fxb-age{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.92);color:#3a2058;font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:100px}
+  #fxb-dir .fxb-body{padding:26px 26px 28px}
+  #fxb-dir .fxb-body h3{font-size:20px;font-weight:800;margin-bottom:10px}
+  #fxb-dir .fxb-body p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.55;margin-bottom:18px}
+  #fxb-dir .fxb-more{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;color:var(--purple-2)}
+  #fxb-dir .fxb-more svg{transition:transform .3s}
+  #fxb-dir .fxb-card:hover .fxb-more svg{transform:translateX(5px)}
+  @media(max-width:900px){#fxb-dir .fxb-grid{grid-template-columns:1fr;max-width:460px;margin:0 auto}#fxb-dir .fxb-section{padding:64px 18px 76px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-dir');if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('fxb-in')},i*120)});io.disconnect();}})},{threshold:.2});
+    io.observe(root);
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+})();
+</script>

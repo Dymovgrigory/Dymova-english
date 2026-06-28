@@ -1,0 +1,90 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ПРЕИМУЩЕСТВА ШКОЛЫ
+  =============================================
+  Назначение: Сетка карточек с ключевыми преимуществами Фоксинбург.
+  
+  Что можно менять:
+    - Тексты преимуществ (заголовки + описания)
+    - Иконки (SVG)
+    - Количество карточек
+  =============================================
+-->
+<div id="fxb-adv">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Почему мы</span>
+      <h2 class="fxb-h2">Наши <span class="fxb-accent">преимущества</span></h2>
+      <p class="fxb-sub">Официальная школа с лицензией, сильной методикой и заботой о каждом ученике.</p>
+    </div>
+
+    <div class="fxb-grid">
+      <article class="fxb-card fxb-c1">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Образовательная лицензия</h3>
+        <p>Работаем официально, на основании государственной образовательной лицензии.</p>
+      </article>
+      <article class="fxb-card fxb-c2">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"/></svg></div>
+        <h3>Аккредитованный центр Hippo</h3>
+        <p>Официальная площадка (venue) престижной международной олимпиады по английскому Hippo.</p>
+      </article>
+      <article class="fxb-card fxb-c3">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20v-1a5 5 0 0 1 10 0v1"/><path d="M15.5 20v-.5a4 4 0 0 1 5.5-3.7"/></svg></div>
+        <h3>Мини-группы до 7 человек</h3>
+        <p>Внимание каждому ученику и живая языковая среда без перехода на русский.</p>
+      </article>
+      <article class="fxb-card fxb-c4">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Удобное расписание</h3>
+        <p>Есть утренние группы — для тех, кто учится во вторую смену. Подберем время под вас.</p>
+      </article>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-adv{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:#ffffff;}
+  #fxb-adv *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-adv .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px;}
+  #fxb-adv .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px;}
+  #fxb-adv .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-adv .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:58px}
+  #fxb-adv .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-adv .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-adv .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-adv .fxb-sub{max-width:620px;color:var(--muted);font-size:17px;font-weight:500}
+  #fxb-adv .fxb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  #fxb-adv .fxb-card{position:relative;overflow:hidden;background:#fff;border:1px solid rgba(57,40,82,.09);border-radius:24px;padding:32px 26px 30px;box-shadow:0 16px 36px -20px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s;opacity:0;transform:translateY(34px)}
+  #fxb-adv .fxb-card.fxb-in{opacity:1;transform:none}
+  #fxb-adv .fxb-card:hover{transform:translateY(-10px);box-shadow:0 30px 56px -22px rgba(102,45,146,.5);border-color:rgba(102,45,146,.22)}
+  #fxb-adv .fxb-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,var(--purple-2),var(--purple-3))}
+  #fxb-adv .fxb-c2::before{background:linear-gradient(90deg,var(--orange),#f5a06f)}
+  #fxb-adv .fxb-c3::before{background:linear-gradient(90deg,#e7c200,var(--yellow))}
+  #fxb-adv .fxb-c4::before{background:linear-gradient(90deg,#2bb673,#7ed957)}
+  #fxb-adv .fxb-ic{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;margin-bottom:20px;background:linear-gradient(135deg,rgba(102,45,146,.12),rgba(102,45,146,.04));}
+  #fxb-adv .fxb-c2 .fxb-ic{background:linear-gradient(135deg,rgba(238,115,73,.16),rgba(238,115,73,.04))}
+  #fxb-adv .fxb-c3 .fxb-ic{background:linear-gradient(135deg,rgba(231,194,0,.18),rgba(252,249,81,.06))}
+  #fxb-adv .fxb-c4 .fxb-ic{background:linear-gradient(135deg,rgba(43,182,115,.16),rgba(126,217,87,.06))}
+  #fxb-adv .fxb-ic svg{width:30px;height:30px;stroke:var(--purple-2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  #fxb-adv .fxb-c2 .fxb-ic svg{stroke:var(--orange)}
+  #fxb-adv .fxb-c3 .fxb-ic svg{stroke:#d9b400}
+  #fxb-adv .fxb-c4 .fxb-ic svg{stroke:#2bb673}
+  #fxb-adv .fxb-card h3{font-size:18px;font-weight:800;margin-bottom:10px;line-height:1.25}
+  #fxb-adv .fxb-card p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.55}
+  @media(max-width:900px){#fxb-adv .fxb-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){#fxb-adv .fxb-grid{grid-template-columns:1fr}#fxb-adv .fxb-section{padding:64px 18px 76px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-adv');if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('fxb-in')},i*110)});io.disconnect();}})},{threshold:.2});
+    io.observe(root);
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+})();
+</script>

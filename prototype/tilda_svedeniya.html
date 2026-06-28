@@ -1,0 +1,88 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: СВЕДЕНИЯ ДЛЯ ОБРАЗОВАТЕЛЬНОЙ ОРГАНИЗАЦИИ
+  =============================================
+  Назначение: Сворачиваемый блок с официальной информацией (лицензия, ИНН и т.д.)
+  Требуется по закону для образовательных организаций.
+  
+  Что можно менять:
+    - Все данные в строках (fxb-row)
+    - Ссылки на документы (лицензия, оферта)
+    - Контактные данные
+  =============================================
+-->
+<div id="fxb-sved">
+  <div class="fxb-section">
+    <button class="fxb-toggle" id="fxbSvedToggle" type="button">
+      <span class="fxb-toggle-text">
+        <svg class="fxb-toggle-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        Сведения для образовательной организации
+      </span>
+      <svg class="fxb-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="fxb-content" id="fxbSvedContent">
+      <div class="fxb-inner">
+        <div class="fxb-row"><strong>Полное наименование:</strong><span>ИП Дымова Вероника Юрьевна</span></div>
+        <div class="fxb-row"><strong>Образовательная лицензия:</strong><span>Лицензия на осуществление образовательной деятельности (указать номер и дату)</span></div>
+        <div class="fxb-row"><strong>Адрес осуществления деятельности:</strong><span>г. Долгопрудный, пр-кт Лихачевский, 76к1; пр-кт Ракетостроителей, 9к3</span></div>
+        <div class="fxb-row"><strong>Режим работы:</strong><span>Ежедневно с 9:00 до 21:00</span></div>
+        <div class="fxb-row"><strong>Контактный телефон:</strong><span><a href="tel:+79939232309">8 993 923-23-09</a>, <a href="tel:+79167323169">8 916 732-31-69</a></span></div>
+        <div class="fxb-row"><strong>Электронная почта:</strong><span><a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a></span></div>
+        <div class="fxb-row"><strong>Основные сведения:</strong><span>ИП ДЫМОВА ВЕРОНИКА АЛЕКСАНДРОВНА, ИНН 611904726658</span></div>
+        <div class="fxb-row"><strong>Структура и органы управления:</strong><span>Единоличный руководитель — Дымова Вероника Александровна</span></div>
+        <div class="fxb-row"><strong>Документы:</strong><span><a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>, <a href="https://docs.google.com/document/d/10SWEMRDFKEc" target="_blank" rel="noopener">Публичная оферта-занятия</a></span></div>
+        <div class="fxb-row"><strong>Образование:</strong><span>Дополнительное образование для детей и взрослых</span></div>
+        <div class="fxb-row"><strong>Руководство:</strong><span>Дымова Вероника Александровна — руководитель</span></div>
+        <div class="fxb-row"><strong>Педагогический состав:</strong><span>Информация о педагогическом составе доступна по запросу у администратора</span></div>
+        <div class="fxb-row"><strong>Материально-техническое обеспечение:</strong><span>Просторные оборудованные кабинеты, интерактивные доски, учебные материалы. Помещение более 200 кв. м с 2 с/у для комфортного пребывания</span></div>
+        <div class="fxb-row"><strong>Платные образовательные услуги:</strong><span>Информация о стоимости доступна на странице Цены и у администратора</span></div>
+        <div class="fxb-row"><strong>Финансово-хозяйственная деятельность:</strong><span>Информация предоставляется по запросу</span></div>
+        <div class="fxb-row"><strong>Вакантные места:</strong><span>Информация о наличии свободных мест в группах доступна у администратора по телефону <a href="tel:+79939232309">8 993 923-23-09</a></span></div>
+        <div class="fxb-row"><strong>Стипендии и меры поддержки:</strong><span>Принимается оплата материнским капиталом</span></div>
+        <div class="fxb-row"><strong>Международное сотрудничество:</strong><span>Информация отсутствует</span></div>
+        <div class="fxb-row"><strong>Организация питания:</strong><span>Питание организовано в рамках Летней Академии через специализированную организацию</span></div>
+        <p class="fxb-note">Полный перечень документов и сведений доступен по запросу у администратора школы.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-sved{--purple:#392852;--purple-2:#662d92;--ink:#1e1433;--muted:#6f6883;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;background:#f8f5fc;padding:0 24px 64px}
+#fxb-sved *{box-sizing:border-box;margin:0;padding:0}
+#fxb-sved .fxb-section{max-width:900px;margin:0 auto}
+#fxb-sved .fxb-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1.5px solid rgba(102,45,146,.1);background:#fff;border-radius:14px;padding:16px 22px;font-family:inherit;font-size:14.5px;font-weight:700;color:var(--ink);transition:background .2s,border-color .2s,box-shadow .2s;box-shadow:0 4px 14px -6px rgba(57,40,82,.1)}
+#fxb-sved .fxb-toggle:hover{background:#faf8fd;border-color:rgba(102,45,146,.2);box-shadow:0 6px 20px -8px rgba(57,40,82,.15)}
+#fxb-sved .fxb-toggle-text{display:flex;align-items:center;gap:10px}
+#fxb-sved .fxb-toggle-ic{color:var(--purple-2);flex:0 0 auto}
+#fxb-sved .fxb-arrow{color:var(--muted);flex:0 0 auto;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+#fxb-sved .fxb-toggle.fxb-expanded .fxb-arrow{transform:rotate(180deg)}
+#fxb-sved .fxb-toggle.fxb-expanded{border-radius:14px 14px 0 0;border-bottom-color:transparent}
+#fxb-sved .fxb-content{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.8,.2,1)}
+#fxb-sved .fxb-inner{background:#fff;border:1.5px solid rgba(102,45,146,.1);border-top:0;border-radius:0 0 14px 14px;padding:24px 22px 28px;box-shadow:0 8px 20px -10px rgba(57,40,82,.1)}
+#fxb-sved .fxb-row{display:grid;grid-template-columns:260px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(102,45,146,.05);font-size:13.5px;line-height:1.55}
+#fxb-sved .fxb-row:last-of-type{border-bottom:0}
+#fxb-sved .fxb-row strong{color:var(--ink);font-weight:700}
+#fxb-sved .fxb-row span{color:var(--muted);font-weight:500}
+#fxb-sved .fxb-row a{color:var(--purple-2);text-decoration:underline}
+#fxb-sved .fxb-note{margin-top:18px;font-size:12.5px;color:#b5afc4;font-weight:500;font-style:italic}
+@media(max-width:700px){
+  #fxb-sved .fxb-row{grid-template-columns:1fr;gap:4px}
+  #fxb-sved .fxb-section{padding:0}
+}
+</style>
+
+<script>
+(function(){
+  var toggle=document.getElementById('fxbSvedToggle');
+  var content=document.getElementById('fxbSvedContent');
+  if(!toggle||!content)return;
+  toggle.addEventListener('click',function(){
+    var expanded=toggle.classList.toggle('fxb-expanded');
+    if(expanded){content.style.maxHeight=content.scrollHeight+'px';}
+    else{content.style.maxHeight='0';}
+  });
+})();
+</script>

@@ -1,0 +1,2081 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ЕДИНАЯ ШАПКА ФОКСИНБУРГ v5
+  =============================================
+  Назначение: Полностью кастомный hero-блок — единый градиент, без видимых разделителей Tilda.
+  Включает в себя:
+    - Логотип + бейдж "Хорошее место" Яндекс
+    - Навигационное меню (с выпадающими подменю "Наши курсы" и "Направления")
+    - Контактная строка (адреса филиалов, телефоны, часы работы)
+    - Летние программы (ряд тегов-ссылок на летние курсы)
+    - Слоган с анимированной лисой
+  
+  Что можно менять:
+    - Ссылки навигации (href) — менять пункты меню и куда ведут
+    - Телефоны и адреса в контактной строке
+    - Ссылки на летние программы (добавлять/убирать теги)
+    - Текст слогана и подзаголовка (возраст, описание школы)
+    - Цвета градиента в CSS (переменные --purple, --purple-2 и т.д.)
+    - Бейдж Яндекс — type=award для "Хорошее место", type=rating для рейтинга
+
+  Возраст учеников: от 2 до 18 лет и взрослые
+  Занятия: 2 раза в неделю по 60 минут
+  =============================================
+-->
+<div id="fxb-hero">
+  <div class="fxb-hero-bg">
+    <img class="fxb-hero-decor fxb-hd1" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-1.png" alt="" loading="lazy">
+    <img class="fxb-hero-decor fxb-hd2" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-zigzag-yellow.png" alt="" loading="lazy">
+    <img class="fxb-hero-decor fxb-hd3" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" loading="lazy">
+  </div>
+
+  <div class="fxb-w">
+    <!-- Инфо + Навигация — компактная единая полоса -->
+    <div class="fxb-topline">
+      <a class="fxb-logo" href="/">
+        <img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="Фоксинбург" width="38" height="38">
+        <span>Фоксинбург</span>
+      </a>
+
+      <!-- Бейдж Яндекс "Хорошее место" — можно поменять type=award на type=rating для отображения рейтинга -->
+      <div class="fxb-badge">
+        <iframe src="https://yandex.ru/sprav/widget/rating-badge/162408588499?type=award" width="150" height="50" frameborder="0" scrolling="no" style="pointer-events:auto"></iframe>
+      </div>
+
+      <button class="fxb-burger" id="fxbBurger" type="button" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="fxb-nav" id="fxbNav">
+        <a href="/">Главная</a>
+        <div class="fxb-dd">
+          <button class="fxb-dd-btn" type="button">Наши курсы <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="fxb-dd-panel">
+            <a href="/reading">Курс по чтению</a>
+            <a href="/grammar">Курс по грамматике</a>
+            <a href="/preparation">Подготовка к школе</a>
+          </div>
+        </div>
+        <div class="fxb-dd">
+          <button class="fxb-dd-btn" type="button">Направления <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="fxb-dd-panel">
+            <a href="/doshkolniki">Дошкольники (3-6)</a>
+            <a href="/mladshie-shkolniki">Младшие школьники (7-10)</a>
+            <a href="/podrostki">Подростки (11-16)</a>
+          </div>
+        </div>
+        <a href="/news">Новости</a>
+        <a href="/vacant">Вакансии</a>
+        <a href="/kontakty">Контакты</a>
+      </nav>
+
+      <div class="fxb-actions">
+        <a class="fxb-act-link" href="https://max.ru/id611904726658_biz" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+          Max</a>
+        <a class="fxb-act-btn" href="/lmsfoxinburg">Вход в ЛК</a>
+      </div>
+    </div>
+
+    <!-- Контактная строка — бесшовно вписана -->
+    <div class="fxb-contacts">
+      <div class="fxb-contacts-group">
+        <a class="fxb-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+          Лихачевский, 76к1</a>
+        <a class="fxb-tel" href="tel:+79939232309">8 993 923-23-09</a>
+      </div>
+      <span class="fxb-csep"></span>
+      <div class="fxb-contacts-group">
+        <a class="fxb-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+          Ракетостроителей, 9к3</a>
+        <a class="fxb-tel" href="tel:+79167323169">8 916 732-31-69</a>
+      </div>
+      <span class="fxb-csep"></span>
+      <span class="fxb-hours">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        9:00 — 21:00</span>
+      <a class="fxb-maxbot" href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">Max Bot</a>
+    </div>
+
+    <!-- Летние программы — органично вписанный ряд тегов -->
+    <div class="fxb-summer">
+      <span class="fxb-summer-label">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
+        Летние программы</span>
+      <div class="fxb-summer-tags">
+        <a href="/letnyaya-akademiya">Летняя Академия</a>
+        <a href="/reading">Чтение</a>
+        <a href="/grammar">Грамматика</a>
+        <a href="/online-zanyatiya">Онлайн</a>
+        <a href="/podderzhivayushchie-online">Поддерживающие</a>
+        <a href="/standartnye-offline">Оффлайн</a>
+      </div>
+    </div>
+
+    <!-- Слоган — большой центральный блок с лисой -->
+    <div class="fxb-slogan">
+      <img class="fxb-slogan-fox" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="56" height="56" loading="lazy">
+      <h1 class="fxb-slogan-text">Английский не для школы,<br>а для <span class="fxb-life">жизни!</span></h1>
+      <p class="fxb-slogan-sub">Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых</p>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ============ ЕДИНАЯ ШАПКА v5 ============ */
+#fxb-hero{
+  --purple:#392852;--purple-2:#662d92;--purple-d:#241a36;--orange:#ee7349;--yellow:#fcf951;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  background:linear-gradient(165deg,#1e1433 0%,var(--purple) 25%,var(--purple-2) 60%,#7a3db0 88%,#8f52c4 100%);
+  position:relative;overflow:hidden;color:#fff;
+}
+#fxb-hero *{box-sizing:border-box;margin:0;padding:0}
+#fxb-hero a{text-decoration:none;color:inherit}
+#fxb-hero .fxb-w{max-width:1260px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+
+/* Decorative background */
+#fxb-hero .fxb-hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+#fxb-hero .fxb-hero-decor{position:absolute;opacity:.035}
+#fxb-hero .fxb-hd1{right:-120px;top:-60px;width:520px;transform:rotate(15deg)}
+#fxb-hero .fxb-hd2{left:-80px;bottom:-20px;width:380px;transform:rotate(-10deg)}
+#fxb-hero .fxb-hd3{right:60px;bottom:30px;width:180px;opacity:.025;transform:rotate(12deg)}
+
+/* Скрываем все нативные блоки Tilda, показываем только наши кастомные (id начинается с fxb-) */
+.r.t-rec{display:none!important}
+.r.t-rec:has([id^="fxb-"]){display:block!important}
+#rec2421715951,#rec2421719881,#rec2421715971,#rec2421715991,#rec2421716001,
+#rec2421716021,#rec2421716041,#rec2421716081,#rec2421716091,#rec2421809201,
+#rec2421716251,#rec2421716261,#rec2421716271,#rec2421716331,#rec2421716361,
+#rec2421716371,#rec2421716381,#rec2421716401,#rec2421716411,#rec2421716441,
+#rec2421716461{display:none!important}
+
+/* === TOP LINE (logo + badge + nav + actions) === */
+#fxb-hero .fxb-topline{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 0 14px;
+}
+#fxb-hero .fxb-logo{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+#fxb-hero .fxb-logo img{border-radius:10px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.2))}
+#fxb-hero .fxb-logo span{font-weight:900;font-size:19px;color:#fff;white-space:nowrap;letter-spacing:-.01em}
+#fxb-hero .fxb-badge{flex:0 0 auto;height:42px;overflow:hidden;border-radius:8px;opacity:.88}
+#fxb-hero .fxb-badge iframe{display:block}
+#fxb-hero .fxb-nav{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+#fxb-hero .fxb-nav>a{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.72);padding:8px 13px;border-radius:8px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-nav>a:hover{color:#fff;background:rgba(255,255,255,.08)}
+#fxb-hero .fxb-dd{position:relative}
+#fxb-hero .fxb-dd-btn{background:0;border:0;font-family:inherit;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.72);padding:8px 13px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-dd-btn:hover{color:#fff;background:rgba(255,255,255,.08)}
+#fxb-hero .fxb-dd-btn svg{transition:transform .25s}
+#fxb-hero .fxb-dd-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:250px;background:#fff;border-radius:14px;box-shadow:0 20px 50px -12px rgba(0,0,0,.35);padding:8px;z-index:100}
+#fxb-hero .fxb-dd.fxb-open .fxb-dd-panel{display:block;animation:fxbddIn .2s ease-out}
+@keyframes fxbddIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+#fxb-hero .fxb-dd.fxb-open .fxb-dd-btn{color:#fff;background:rgba(255,255,255,.1)}
+#fxb-hero .fxb-dd.fxb-open .fxb-dd-btn svg{transform:rotate(180deg)}
+#fxb-hero .fxb-dd-panel a{display:block;padding:11px 16px;font-size:13.5px;font-weight:600;color:var(--purple);border-radius:10px;transition:background .15s}
+#fxb-hero .fxb-dd-panel a:hover{background:rgba(102,45,146,.06)}
+#fxb-hero .fxb-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+#fxb-hero .fxb-act-link{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:rgba(255,255,255,.72);padding:8px 14px;border:1.5px solid rgba(255,255,255,.14);border-radius:10px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-act-link:hover{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)}
+#fxb-hero .fxb-act-btn{font-size:12.5px;font-weight:800;color:var(--purple);background:var(--yellow);padding:8px 18px;border-radius:10px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-act-btn:hover{background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+#fxb-hero .fxb-burger{display:none;background:0;border:0;width:34px;height:26px;flex-direction:column;justify-content:space-between;cursor:pointer;padding:0}
+#fxb-hero .fxb-burger span{display:block;width:100%;height:2.5px;background:#fff;border-radius:2px;transition:all .3s}
+
+/* === CONTACTS LINE === */
+#fxb-hero .fxb-contacts{
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  padding:10px 0;
+}
+#fxb-hero .fxb-contacts-group{display:flex;align-items:center;gap:6px}
+#fxb-hero .fxb-addr{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);transition:color .2s}
+#fxb-hero .fxb-addr:hover{color:#fff}
+#fxb-hero .fxb-addr svg{stroke:var(--orange);flex:0 0 auto}
+#fxb-hero .fxb-tel{font-size:12px;font-weight:800;color:var(--orange);padding:3px 11px;background:rgba(238,115,73,.1);border-radius:100px;transition:background .2s}
+#fxb-hero .fxb-tel:hover{background:rgba(238,115,73,.2)}
+#fxb-hero .fxb-csep{width:1px;height:12px;background:rgba(255,255,255,.1);margin:0 6px}
+#fxb-hero .fxb-hours{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.45)}
+#fxb-hero .fxb-hours svg{stroke:rgba(255,255,255,.35)}
+#fxb-hero .fxb-maxbot{font-size:11px;font-weight:800;color:#fff;background:var(--orange);padding:4px 14px;border-radius:100px;transition:background .2s;margin-left:4px}
+#fxb-hero .fxb-maxbot:hover{background:#d4623b}
+
+/* === SUMMER PROGRAMS (tags) === */
+#fxb-hero .fxb-summer{
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+  padding:12px 0 8px;
+}
+#fxb-hero .fxb-summer-label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--orange);white-space:nowrap}
+#fxb-hero .fxb-summer-label svg{stroke:var(--orange)}
+#fxb-hero .fxb-summer-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+#fxb-hero .fxb-summer-tags a{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.55);padding:5px 12px;border-radius:100px;border:1px solid rgba(255,255,255,.08);transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-summer-tags a:hover{color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+
+/* === SLOGAN === */
+#fxb-hero .fxb-slogan{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:44px 0 56px;gap:16px;
+}
+#fxb-hero .fxb-slogan-fox{filter:drop-shadow(0 4px 16px rgba(0,0,0,.25));animation:fxbFoxFloat 4s ease-in-out infinite}
+@keyframes fxbFoxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+#fxb-hero .fxb-slogan-text{font-size:clamp(24px,4vw,42px);font-weight:900;color:#fff;line-height:1.15;text-shadow:0 2px 20px rgba(0,0,0,.12);letter-spacing:-.01em}
+#fxb-hero .fxb-life{position:relative;display:inline-block}
+#fxb-hero .fxb-life::after{content:'';position:absolute;left:-5px;right:-5px;bottom:2px;height:38%;background:var(--yellow);opacity:.28;border-radius:4px;z-index:-1}
+#fxb-hero .fxb-slogan-sub{font-size:16px;font-weight:500;color:rgba(255,255,255,.55);max-width:400px;line-height:1.5}
+
+/* ========== MOBILE ========== */
+@media(max-width:960px){
+  #fxb-hero .fxb-topline{flex-wrap:wrap;padding:12px 0 10px}
+  #fxb-hero .fxb-contacts{display:none}
+  #fxb-hero .fxb-badge{display:none}
+  #fxb-hero .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:200;border-radius:0 0 16px 16px}
+  #fxb-hero .fxb-nav.fxb-open{display:flex}
+  #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:15px;padding:13px 16px;width:100%;text-align:left}
+  #fxb-hero .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.04);margin:2px 0;border-radius:10px}
+  #fxb-hero .fxb-dd-panel a{color:rgba(255,255,255,.7);font-size:14px}
+  #fxb-hero .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
+  #fxb-hero .fxb-burger{display:flex}
+  #fxb-hero .fxb-actions{display:none}
+  #fxb-hero .fxb-summer{padding:10px 0 4px}
+  #fxb-hero .fxb-summer-tags{gap:4px}
+  #fxb-hero .fxb-summer-tags a{font-size:11px;padding:4px 10px}
+  #fxb-hero .fxb-slogan{padding:32px 0 42px;gap:12px}
+  #fxb-hero .fxb-slogan-fox{width:42px;height:42px}
+  #fxb-hero .fxb-slogan-sub{font-size:14px}
+}
+@media(max-width:480px){
+  #fxb-hero .fxb-summer-label{font-size:11px}
+  #fxb-hero .fxb-slogan-text{font-size:22px}
+}
+</style>
+
+<script>
+(function(){
+  /* Скрываем все нативные блоки Tilda, кроме наших кастомных (содержащих элемент с id="fxb-...") */
+  var allRecs=document.querySelectorAll('.r.t-rec');
+  allRecs.forEach(function(rec){
+    if(!rec.querySelector('[id^="fxb-"]')) rec.style.display='none';
+  });
+
+  /* Burger toggle */
+  var burger=document.getElementById('fxbBurger');
+  var nav=document.getElementById('fxbNav');
+  if(burger&&nav){
+    burger.addEventListener('click',function(){
+      nav.classList.toggle('fxb-open');
+      var spans=burger.querySelectorAll('span');
+      if(nav.classList.contains('fxb-open')){
+        spans[0].style.transform='rotate(45deg) translate(5px,5px)';
+        spans[1].style.opacity='0';
+        spans[2].style.transform='rotate(-45deg) translate(6px,-6px)';
+      }else{
+        spans[0].style.transform='';spans[1].style.opacity='';spans[2].style.transform='';
+      }
+    });
+  }
+
+  /* Dropdown toggles */
+  document.querySelectorAll('#fxb-hero .fxb-dd-btn').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var dd=btn.closest('.fxb-dd');
+      var wasOpen=dd.classList.contains('fxb-open');
+      document.querySelectorAll('#fxb-hero .fxb-dd').forEach(function(d){d.classList.remove('fxb-open')});
+      if(!wasOpen)dd.classList.add('fxb-open');
+    });
+  });
+  document.addEventListener('click',function(){
+    document.querySelectorAll('#fxb-hero .fxb-dd').forEach(function(d){d.classList.remove('fxb-open')});
+  });
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: CTA — ЗАПИСЬ НА ДИАГНОСТИКУ
+  =============================================
+  Назначение: Призыв к действию с кнопкой записи и всплывающей формой.
+  После нажатия появляется выбор: оставить заявку на сайте или написать в Max.
+  
+  Что можно менять:
+    - Текст заголовка и подзаголовка
+    - Ссылка на Max Bot (href)
+    - Поля формы записи
+    - Текст кнопки CTA
+    - Скрытое поле source — для аналитики откуда пришла заявка
+  =============================================
+-->
+<div id="fxb-cta-top">
+  <div class="fxb-section">
+    <div class="fxb-row">
+      <div class="fxb-text">
+        <h2 class="fxb-h2">Запишите ребёнка на <span class="fxb-accent">бесплатную диагностику</span></h2>
+        <p class="fxb-sub">Методист проверит уровень знаний и составит индивидуальный план обучения. Это бесплатно и ни к чему не обязывает.</p>
+      </div>
+      <div class="fxb-action">
+        <button class="fxb-cta" id="fxbCtaDiag" type="button">
+          <span class="fxb-pulse"></span>
+          Записаться на диагностику
+          <svg class="fxb-arr" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <div class="fxb-choice" id="fxbCtaChoice">
+          <a href="javascript:void(0)" id="fxbOpenForm">
+            <span class="fxb-b fxb-b-site">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#662d92" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+            </span>
+            <span>Оставить заявку на сайте<small>Короткая форма — перезвоним</small></span>
+          </a>
+          <a href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">
+            <span class="fxb-b fxb-b-max">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ee7349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+            </span>
+            <span>Написать в Max<small>«Хочу записать ребёнка на диагностику»</small></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Встроенная форма-опрос -->
+  <div class="fxb-overlay" id="fxbFormOverlay">
+    <div class="fxb-form-box">
+      <button class="fxb-form-close" id="fxbFormClose" type="button">&times;</button>
+      <h3 class="fxb-form-title">Запись на бесплатную диагностику</h3>
+      <p class="fxb-form-sub">Заполните короткую форму — мы перезвоним и подберём удобное время.</p>
+      <form class="fxb-form" id="fxbDiagForm">
+        <input type="hidden" name="source" value="Главная — Записаться на бесплатную диагностику (верхний блок)">
+        <div class="fxb-field">
+          <label>Ваше имя</label>
+          <input type="text" name="parent_name" placeholder="Имя родителя" required>
+        </div>
+        <div class="fxb-field">
+          <label>Имя ребёнка</label>
+          <input type="text" name="child_name" placeholder="Имя ребёнка" required>
+        </div>
+        <div class="fxb-field">
+          <label>Возраст ребёнка</label>
+          <input type="text" name="child_age" placeholder="Например: 7 лет" required>
+        </div>
+        <div class="fxb-field">
+          <label>Телефон</label>
+          <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+        </div>
+        <button class="fxb-submit" type="submit">
+          Отправить заявку
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+      <p class="fxb-form-note">Нажимая «Отправить», вы соглашаетесь с <a href="/policy" target="_blank">политикой конфиденциальности</a></p>
+
+      <div class="fxb-success" id="fxbSuccess" style="display:none">
+        <div class="fxb-success-ic">&#x2705;</div>
+        <h3>Заявка отправлена!</h3>
+        <p>Мы перезвоним вам в ближайшее время для подбора удобного времени диагностики.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-cta-top{--purple:#392852;--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(135deg,#392852 0%,#662d92 50%,#6237a2 100%);position:relative;overflow:visible}
+  #fxb-cta-top *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-cta-top .fxb-section{max-width:1200px;margin:0 auto;padding:52px 24px 56px}
+  #fxb-cta-top .fxb-row{display:flex;align-items:center;gap:40px;flex-wrap:wrap}
+  #fxb-cta-top .fxb-text{flex:1;min-width:320px}
+  #fxb-cta-top .fxb-h2{font-weight:800;font-size:clamp(24px,3.2vw,36px);line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}
+  #fxb-cta-top .fxb-accent{position:relative;white-space:nowrap;color:#fff}
+  #fxb-cta-top .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.32em;background:var(--yellow);opacity:.35;z-index:0;border-radius:4px;transform:rotate(-1deg)}
+  #fxb-cta-top .fxb-sub{color:rgba(255,255,255,.78);font-size:15.5px;font-weight:500;max-width:520px;line-height:1.55}
+  #fxb-cta-top .fxb-action{position:relative;flex:0 0 auto}
+  #fxb-cta-top .fxb-cta{position:relative;display:inline-flex;align-items:center;gap:12px;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:17px;color:#392852;padding:20px 34px;border-radius:100px;background:linear-gradient(135deg,var(--yellow),#f5ee76);box-shadow:0 16px 36px -10px rgba(252,249,81,.5);transition:transform .3s,box-shadow .3s}
+  #fxb-cta-top .fxb-cta:hover{transform:translateY(-3px);box-shadow:0 22px 44px -10px rgba(252,249,81,.6)}
+  #fxb-cta-top .fxb-cta .fxb-arr{stroke:#392852;transition:transform .3s}
+  #fxb-cta-top .fxb-cta:hover .fxb-arr{transform:translateX(5px)}
+  #fxb-cta-top .fxb-pulse{position:absolute;inset:0;border-radius:100px;box-shadow:0 0 0 0 rgba(252,249,81,.4);animation:fxbpulse2 2.6s infinite}
+  @keyframes fxbpulse2{0%{box-shadow:0 0 0 0 rgba(252,249,81,.4)}70%{box-shadow:0 0 0 18px rgba(252,249,81,0)}100%{box-shadow:0 0 0 0 rgba(252,249,81,0)}}
+  #fxb-cta-top .fxb-choice{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(8px);background:#fff;border-radius:18px;padding:10px;box-shadow:0 24px 50px -16px rgba(57,40,82,.5);display:none;gap:8px;flex-direction:column;width:300px;border:1px solid rgba(57,40,82,.08);z-index:30}
+  #fxb-cta-top .fxb-choice.fxb-open{display:flex;animation:fxbdrop .35s cubic-bezier(.2,.8,.2,1)}
+  @keyframes fxbdrop{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  #fxb-cta-top .fxb-choice a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-weight:700;font-size:14.5px;padding:13px 14px;border-radius:12px;transition:background .2s}
+  #fxb-cta-top .fxb-choice a:hover{background:#f4f1fa}
+  #fxb-cta-top .fxb-b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto}
+  #fxb-cta-top .fxb-b-site{background:rgba(102,45,146,.12)}
+  #fxb-cta-top .fxb-b-max{background:rgba(238,115,73,.14)}
+  #fxb-cta-top .fxb-choice small{display:block;color:var(--muted);font-weight:600;font-size:11.5px;margin-top:1px}
+
+  /* Форма-попап */
+  #fxb-cta-top .fxb-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(36,26,54,.75);backdrop-filter:blur(4px)}
+  #fxb-cta-top .fxb-overlay.fxb-open{display:flex}
+  #fxb-cta-top .fxb-form-box{position:relative;width:min(460px,100%);background:#fff;border-radius:24px;padding:40px 36px;box-shadow:0 40px 80px -20px rgba(0,0,0,.5);animation:fxbpop2 .35s cubic-bezier(.2,.8,.2,1);color:var(--ink)}
+  @keyframes fxbpop2{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+  #fxb-cta-top .fxb-form-close{position:absolute;top:14px;right:16px;background:rgba(102,45,146,.08);color:var(--purple-2);border:0;width:36px;height:36px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;transition:background .2s}
+  #fxb-cta-top .fxb-form-close:hover{background:rgba(102,45,146,.18)}
+  #fxb-cta-top .fxb-form-title{font-size:22px;font-weight:800;margin-bottom:8px;color:var(--ink)}
+  #fxb-cta-top .fxb-form-sub{font-size:14.5px;color:var(--muted);font-weight:500;margin-bottom:28px;line-height:1.5}
+  #fxb-cta-top .fxb-field{margin-bottom:18px}
+  #fxb-cta-top .fxb-field label{display:block;font-size:12.5px;font-weight:700;color:var(--purple-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+  #fxb-cta-top .fxb-field input{width:100%;border:2px solid rgba(102,45,146,.15);border-radius:14px;padding:14px 16px;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);transition:border-color .2s,box-shadow .2s;outline:none;background:#faf9fc}
+  #fxb-cta-top .fxb-field input:focus{border-color:var(--purple-2);box-shadow:0 0 0 4px rgba(102,45,146,.1);background:#fff}
+  #fxb-cta-top .fxb-field input::placeholder{color:#b5afc4;font-weight:500}
+  #fxb-cta-top .fxb-submit{width:100%;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:16px;color:#fff;padding:18px 24px;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 16px 30px -12px rgba(102,45,146,.7);transition:transform .3s,box-shadow .3s;display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}
+  #fxb-cta-top .fxb-submit:hover{transform:translateY(-2px);box-shadow:0 20px 36px -12px rgba(102,45,146,.85)}
+  #fxb-cta-top .fxb-form-note{font-size:11.5px;color:#b5afc4;text-align:center;margin-top:16px;font-weight:500}
+  #fxb-cta-top .fxb-form-note a{color:var(--purple-2);text-decoration:underline}
+  #fxb-cta-top .fxb-success{text-align:center;padding:20px 0}
+  #fxb-cta-top .fxb-success-ic{font-size:48px;margin-bottom:16px}
+  #fxb-cta-top .fxb-success h3{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px}
+  #fxb-cta-top .fxb-success p{color:var(--muted);font-size:15px;font-weight:500;line-height:1.5}
+  @media(max-width:760px){#fxb-cta-top .fxb-row{flex-direction:column;text-align:center}#fxb-cta-top .fxb-sub{margin:0 auto}#fxb-cta-top .fxb-form-box{padding:32px 22px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-cta-top');if(!root)return;
+  var btn=document.getElementById('fxbCtaDiag');
+  var ch=document.getElementById('fxbCtaChoice');
+  var overlay=document.getElementById('fxbFormOverlay');
+  var openForm=document.getElementById('fxbOpenForm');
+  var closeForm=document.getElementById('fxbFormClose');
+  var form=document.getElementById('fxbDiagForm');
+  var success=document.getElementById('fxbSuccess');
+
+  btn.addEventListener('click',function(e){e.stopPropagation();ch.classList.toggle('fxb-open')});
+  document.addEventListener('click',function(){ch.classList.remove('fxb-open')});
+  ch.addEventListener('click',function(e){e.stopPropagation()});
+
+  openForm.addEventListener('click',function(e){
+    e.preventDefault();
+    ch.classList.remove('fxb-open');
+    overlay.classList.add('fxb-open');
+  });
+  closeForm.addEventListener('click',function(){overlay.classList.remove('fxb-open')});
+  overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.classList.remove('fxb-open')});
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    /* В Tilda: заменить на вызов нативной формы Tilda или AJAX к существующему endpoint */
+    form.style.display='none';
+    root.querySelector('.fxb-form-sub').style.display='none';
+    root.querySelector('.fxb-form-title').style.display='none';
+    root.querySelector('.fxb-form-note').style.display='none';
+    success.style.display='block';
+    setTimeout(function(){
+      overlay.classList.remove('fxb-open');
+      form.style.display='';
+      root.querySelector('.fxb-form-sub').style.display='';
+      root.querySelector('.fxb-form-title').style.display='';
+      root.querySelector('.fxb-form-note').style.display='';
+      success.style.display='none';
+      form.reset();
+    },3000);
+  });
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ОНБОРДИНГ — КАК НАЧИНАЕТСЯ ОБУЧЕНИЕ
+  =============================================
+  Назначение: 4 шага от записи до начала занятий (диагностика → подбор → пробный урок → старт)
+  
+  Что можно менять:
+    - Тексты шагов (заголовки и описания в article.fxb-card)
+    - Количество шагов (добавлять/удалять article.fxb-card)
+    - Теги (fxb-tag) под каждым шагом
+    - Иконки (SVG внутри div.fxb-ic)
+  =============================================
+-->
+<div id="fxb-onboarding">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Все просто и без стресса</span>
+      <h2 class="fxb-h2">Как начинается обучение <span class="fxb-accent">в Фоксинбург</span></h2>
+      <p class="fxb-sub">Четыре простых шага — от знакомства до первого занятия. Помогаем подобрать формат и группу под вашего ребенка.</p>
+    </div>
+
+    <div class="fxb-steps">
+      <article class="fxb-card">
+        <span class="fxb-num">1</span>
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>Бесплатная диагностика знаний</h3>
+        <p>Методист проверит текущий уровень и составит индивидуальный план обучения.</p>
+        <span class="fxb-tag">Бесплатно</span>
+      </article>
+      <article class="fxb-card">
+        <span class="fxb-num">2</span>
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Подбор группы</h3>
+        <p>Вместе с администратором школы подберем подходящую группу по возрасту и уровню.</p>
+        <span class="fxb-tag">Удобный график</span>
+      </article>
+      <article class="fxb-card">
+        <span class="fxb-num">3</span>
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21.4 8 14 2 9.4h7.6z"/></svg></div>
+        <h3>Пробный урок</h3>
+        <p>Необязательный шаг — ребенок знакомится с педагогом и форматом занятий.</p>
+        <span class="fxb-tag">По желанию</span>
+      </article>
+      <article class="fxb-card">
+        <span class="fxb-num">4</span>
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
+        <h3>Старт занятий</h3>
+        <p>Начинаем учиться! Регулярные занятия, отчеты родителям и видимый прогресс.</p>
+        <span class="fxb-tag">Поехали</span>
+      </article>
+    </div>
+
+    <div class="fxb-cta-wrap">
+      <button class="fxb-cta" id="fxbCtaBtn" type="button">
+        <span class="fxb-pulse"></span>
+        Записаться на диагностику
+        <svg class="fxb-arr" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <div class="fxb-choice" id="fxbChoice">
+        <a href="#popup:free">
+          <span class="fxb-b fxb-b-site">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#662d92" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+          </span>
+          <span>Оставить заявку на сайте<small>Короткая форма — перезвоним вам</small></span>
+        </a>
+        <a href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">
+          <span class="fxb-b fxb-b-max">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ee7349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+          </span>
+          <span>Написать в Max<small>«Хочу записать ребенка на диагностику»</small></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-onboarding{--purple:#392852;--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;--card:#ffffff;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1200px 600px at 80% -10%, rgba(102,45,146,.10), transparent 60%),radial-gradient(900px 500px at 0% 110%, rgba(238,115,73,.10), transparent 55%),#f4f1fa;}
+  #fxb-onboarding *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-onboarding .fxb-section{max-width:1200px;margin:0 auto;padding:96px 24px 110px;}
+  #fxb-onboarding .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px;}
+  #fxb-onboarding .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-onboarding .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:64px}
+  #fxb-onboarding .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-onboarding .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-onboarding .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-onboarding .fxb-sub{max-width:620px;color:var(--muted);font-size:17px;font-weight:500}
+  #fxb-onboarding .fxb-steps{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  #fxb-onboarding .fxb-steps::before{content:"";position:absolute;top:64px;left:9%;right:9%;height:3px;background:repeating-linear-gradient(90deg,rgba(102,45,146,.30) 0 14px,transparent 14px 26px);z-index:0}
+  #fxb-onboarding .fxb-card{position:relative;z-index:1;background:var(--card);border:1px solid rgba(57,40,82,.07);border-radius:26px;padding:30px 26px;box-shadow:0 18px 40px -18px rgba(57,40,82,.45);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s;opacity:0;transform:translateY(34px)}
+  #fxb-onboarding .fxb-card.fxb-in{opacity:1;transform:none}
+  #fxb-onboarding .fxb-card:hover{transform:translateY(-10px);box-shadow:0 30px 60px -20px rgba(102,45,146,.55);border-color:rgba(102,45,146,.25)}
+  #fxb-onboarding .fxb-num{position:absolute;top:-22px;left:26px;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 12px 22px -8px rgba(102,45,146,.7)}
+  #fxb-onboarding .fxb-ic{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;margin:14px 0 18px;background:linear-gradient(135deg,rgba(252,249,81,.30),rgba(245,238,118,.12));}
+  #fxb-onboarding .fxb-ic svg{width:30px;height:30px;stroke:var(--purple-2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  #fxb-onboarding .fxb-card h3{font-size:18px;font-weight:800;margin-bottom:9px;line-height:1.25}
+  #fxb-onboarding .fxb-card p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.55}
+  #fxb-onboarding .fxb-tag{display:inline-block;margin-top:14px;font-size:12px;font-weight:700;color:var(--orange);background:rgba(238,115,73,.10);padding:5px 12px;border-radius:100px}
+  #fxb-onboarding .fxb-cta-wrap{display:flex;justify-content:center;margin-top:60px;position:relative;z-index:6}
+  #fxb-onboarding .fxb-cta{position:relative;display:inline-flex;align-items:center;gap:12px;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:17px;color:#fff;padding:20px 34px;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 20px 36px -14px rgba(102,45,146,.8);transition:transform .3s,box-shadow .3s}
+  #fxb-onboarding .fxb-cta:hover{transform:translateY(-3px);box-shadow:0 26px 46px -14px rgba(102,45,146,.9)}
+  #fxb-onboarding .fxb-arr{transition:transform .3s}
+  #fxb-onboarding .fxb-cta:hover .fxb-arr{transform:translateX(5px)}
+  #fxb-onboarding .fxb-pulse{position:absolute;inset:0;border-radius:100px;box-shadow:0 0 0 0 rgba(238,115,73,.5);animation:fxbpulse 2.6s infinite}
+  @keyframes fxbpulse{0%{box-shadow:0 0 0 0 rgba(238,115,73,.45)}70%{box-shadow:0 0 0 16px rgba(238,115,73,0)}100%{box-shadow:0 0 0 0 rgba(238,115,73,0)}}
+  #fxb-onboarding .fxb-choice{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(8px);background:#fff;border-radius:18px;padding:10px;box-shadow:0 24px 50px -16px rgba(57,40,82,.5);display:none;gap:8px;flex-direction:column;width:300px;border:1px solid rgba(57,40,82,.08);z-index:30}
+  #fxb-onboarding .fxb-choice.fxb-open{display:flex;animation:fxbrise .35s cubic-bezier(.2,.8,.2,1)}
+  @keyframes fxbrise{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  #fxb-onboarding .fxb-choice a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-weight:700;font-size:14.5px;padding:13px 14px;border-radius:12px;transition:background .2s}
+  #fxb-onboarding .fxb-choice a:hover{background:#f4f1fa}
+  #fxb-onboarding .fxb-b{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto}
+  #fxb-onboarding .fxb-b-site{background:rgba(102,45,146,.12)}
+  #fxb-onboarding .fxb-b-max{background:rgba(238,115,73,.14)}
+  #fxb-onboarding .fxb-choice small{display:block;color:var(--muted);font-weight:600;font-size:11.5px;margin-top:1px}
+  @media(max-width:900px){#fxb-onboarding .fxb-steps{grid-template-columns:repeat(2,1fr);gap:40px 20px}#fxb-onboarding .fxb-steps::before{display:none}}
+  @media(max-width:520px){#fxb-onboarding .fxb-steps{grid-template-columns:1fr}#fxb-onboarding .fxb-section{padding:70px 18px 84px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-onboarding');
+  if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,idx){setTimeout(function(){c.classList.add('fxb-in')},idx*120)});io.disconnect();}})},{threshold:.2});
+    io.observe(root.querySelector('.fxb-steps'));
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+  var btn=document.getElementById('fxbCtaBtn'),ch=document.getElementById('fxbChoice');
+  btn.addEventListener('click',function(e){e.stopPropagation();ch.classList.toggle('fxb-open')});
+  document.addEventListener('click',function(){ch.classList.remove('fxb-open')});
+  ch.addEventListener('click',function(e){e.stopPropagation()});
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ФОТОБАНК / ГАЛЕРЕЯ
+  =============================================
+  Назначение: Галерея фотографий школы. Сейчас — заглушки, нужно заменить на реальные.
+  
+  Что можно менять:
+    - Фото (src в img) — заменить заглушки на реальные фото школы
+    - Подписи к фото (alt)
+    - Количество фото (добавлять/удалять div.fxb-gal-item)
+  =============================================
+-->
+<div id="fxb-gallery">
+  <div class="fxb-section">
+    <!--
+      КАК ДОБАВИТЬ ФОТО:
+      1. Загрузите фото в Tilda (Файловый менеджер) или на внешний хостинг
+      2. Скопируйте URL фото
+      3. Добавьте новый <div class="fxb-item"> внутрь .fxb-grid:
+         <div class="fxb-item"><img src="URL_ФОТО" alt="Описание" loading="lazy"></div>
+      4. Сохраните и опубликуйте страницу
+    -->
+    <div class="fxb-grid">
+      <!-- Пример карточек-заглушек (заменить на реальные фото) -->
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+      <div class="fxb-item fxb-placeholder">
+        <div class="fxb-ph-inner">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b5afc4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Добавьте фото</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Лайтбокс для просмотра фото -->
+  <div class="fxb-lightbox" id="fxbLightbox">
+    <div class="fxb-lb-bg"></div>
+    <button class="fxb-lb-close" type="button">&times;</button>
+    <button class="fxb-lb-prev" type="button">&#x2039;</button>
+    <button class="fxb-lb-next" type="button">&#x203a;</button>
+    <div class="fxb-lb-img-wrap"><img class="fxb-lb-img" src="" alt=""></div>
+  </div>
+</div>
+
+<style>
+  #fxb-gallery{--purple-2:#662d92;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;background:#f4f1fa;-webkit-font-smoothing:antialiased}
+  #fxb-gallery *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-gallery .fxb-section{max-width:1200px;margin:0 auto;padding:0 24px 80px}
+  #fxb-gallery .fxb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  #fxb-gallery .fxb-item{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;box-shadow:0 10px 28px -12px rgba(57,40,82,.3);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+  #fxb-gallery .fxb-item:hover{transform:translateY(-6px);box-shadow:0 20px 40px -16px rgba(102,45,146,.45)}
+  #fxb-gallery .fxb-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+  #fxb-gallery .fxb-item:hover img{transform:scale(1.05)}
+  #fxb-gallery .fxb-placeholder{background:#ede8f5;border:2px dashed rgba(102,45,146,.2)}
+  #fxb-gallery .fxb-ph-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px}
+  #fxb-gallery .fxb-ph-inner span{color:#b5afc4;font-size:13px;font-weight:600}
+
+  /* Лайтбокс */
+  #fxb-gallery .fxb-lightbox{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+  #fxb-gallery .fxb-lightbox.fxb-open{display:flex}
+  #fxb-gallery .fxb-lb-bg{position:absolute;inset:0;background:rgba(36,26,54,.88);backdrop-filter:blur(6px)}
+  #fxb-gallery .fxb-lb-close{position:absolute;top:20px;right:24px;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:28px;line-height:1;cursor:pointer;transition:background .2s}
+  #fxb-gallery .fxb-lb-close:hover{background:rgba(255,255,255,.3)}
+  #fxb-gallery .fxb-lb-prev,#fxb-gallery .fxb-lb-next{position:absolute;top:50%;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:50px;height:50px;border-radius:50%;font-size:32px;line-height:1;cursor:pointer;transform:translateY(-50%);transition:background .2s}
+  #fxb-gallery .fxb-lb-prev{left:20px}
+  #fxb-gallery .fxb-lb-next{right:20px}
+  #fxb-gallery .fxb-lb-prev:hover,#fxb-gallery .fxb-lb-next:hover{background:rgba(255,255,255,.3)}
+  #fxb-gallery .fxb-lb-img-wrap{position:relative;z-index:1;max-width:90vw;max-height:85vh}
+  #fxb-gallery .fxb-lb-img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:12px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6);animation:fxblb .3s ease}
+  @keyframes fxblb{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+  @media(max-width:760px){#fxb-gallery .fxb-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+  @media(max-width:480px){#fxb-gallery .fxb-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-gallery');if(!root)return;
+  var lb=document.getElementById('fxbLightbox');
+  var lbImg=lb.querySelector('.fxb-lb-img');
+  var items=root.querySelectorAll('.fxb-item:not(.fxb-placeholder)');
+  var imgs=[];var cur=0;
+  items.forEach(function(it,i){
+    var img=it.querySelector('img');
+    if(img){imgs.push(img.src);it.addEventListener('click',function(){cur=i;openLb(imgs[cur])});}
+  });
+  function openLb(src){lbImg.src=src;lb.classList.add('fxb-open')}
+  function closeLb(){lb.classList.remove('fxb-open');lbImg.src=''}
+  lb.querySelector('.fxb-lb-close').addEventListener('click',closeLb);
+  lb.querySelector('.fxb-lb-bg').addEventListener('click',closeLb);
+  lb.querySelector('.fxb-lb-prev').addEventListener('click',function(){if(imgs.length){cur=(cur-1+imgs.length)%imgs.length;lbImg.src=imgs[cur]}});
+  lb.querySelector('.fxb-lb-next').addEventListener('click',function(){if(imgs.length){cur=(cur+1)%imgs.length;lbImg.src=imgs[cur]}});
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: НАПРАВЛЕНИЯ ОБУЧЕНИЯ
+  =============================================
+  Назначение: Карточки возрастных групп (дошкольники, школьники, подростки)
+  Каждая карточка — ссылка на отдельную страницу направления.
+  
+  Что можно менять:
+    - Названия направлений и описания
+    - Возрастные диапазоны
+    - Ссылки (href) на страницы направлений
+    - SVG-иконки на карточках
+  =============================================
+-->
+<div id="fxb-dir">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Наши направления</span>
+      <h2 class="fxb-h2">Программы под <span class="fxb-accent">каждый возраст</span></h2>
+      <p class="fxb-sub">Подбираем формат, пособия и темп под возраст и уровень ребенка.</p>
+    </div>
+
+    <div class="fxb-grid">
+      <a class="fxb-card" href="/doshkolniki">
+        <div class="fxb-cover fxb-cov1"><span class="fxb-icon"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><circle cx="24" cy="24" r="20" stroke="#fff" stroke-width="2.5" opacity=".9"/><path d="M16 28c0 0 3 4 8 4s8-4 8-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="18" cy="20" r="2.5" fill="#fff"/><circle cx="30" cy="20" r="2.5" fill="#fff"/><path d="M24 10v4M18 12l1 3M30 12l-1 3" stroke="#fcf951" stroke-width="2" stroke-linecap="round"/></svg></span><span class="fxb-age">3-6 лет</span></div>
+        <div class="fxb-body">
+          <h3>Для дошкольников</h3>
+          <p>Игровое погружение в язык: говорение, песни, развитие памяти и кругозора.</p>
+          <span class="fxb-more">Узнать подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <a class="fxb-card" href="/mladshie-shkolniki">
+        <div class="fxb-cover fxb-cov2"><span class="fxb-icon"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><rect x="12" y="16" width="24" height="24" rx="4" stroke="#fff" stroke-width="2.5"/><path d="M18 16V12a6 6 0 0 1 12 0v4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><rect x="20" y="22" width="8" height="6" rx="1.5" stroke="#fcf951" stroke-width="2"/><line x1="24" y1="28" x2="24" y2="34" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span><span class="fxb-age">7-10 лет</span></div>
+        <div class="fxb-body">
+          <h3>Для младших школьников</h3>
+          <p>Все аспекты языка: чтение, письмо, аудирование и уверенное говорение.</p>
+          <span class="fxb-more">Узнать подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <a class="fxb-card" href="/podrostki">
+        <div class="fxb-cover fxb-cov3"><span class="fxb-icon"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><path d="M24 8c-4 6-6 14-6 20h12c0-6-2-14-6-20z" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/><circle cx="24" cy="22" r="3" stroke="#fcf951" stroke-width="2"/><path d="M18 28l-4 6h4M30 28l4 6h-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 36h6" stroke="#ee7349" stroke-width="2.5" stroke-linecap="round"/></svg></span><span class="fxb-age">11-16 лет</span></div>
+        <div class="fxb-body">
+          <h3>Для подростков</h3>
+          <p>Язык для жизни и экзаменов: разговорная практика, грамматика, олимпиады.</p>
+          <span class="fxb-more">Узнать подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-dir{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1000px 500px at 100% 0%, rgba(102,45,146,.07), transparent 55%),#f4f1fa;}
+  #fxb-dir *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-dir .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px;}
+  #fxb-dir .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px;}
+  #fxb-dir .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-dir .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:58px}
+  #fxb-dir .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-dir .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-dir .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-dir .fxb-sub{max-width:620px;color:var(--muted);font-size:17px;font-weight:500}
+  #fxb-dir .fxb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  #fxb-dir .fxb-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:26px;overflow:hidden;box-shadow:0 18px 40px -20px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;opacity:0;transform:translateY(34px)}
+  #fxb-dir .fxb-card.fxb-in{opacity:1;transform:none}
+  #fxb-dir .fxb-card:hover{transform:translateY(-10px);box-shadow:0 34px 60px -24px rgba(102,45,146,.5)}
+  #fxb-dir .fxb-cover{position:relative;height:170px;display:grid;place-items:center;overflow:hidden}
+  #fxb-dir .fxb-cov1{background:linear-gradient(135deg,#7b4fc0,#662d92)}
+  #fxb-dir .fxb-cov2{background:linear-gradient(135deg,#f5a06f,#ee7349)}
+  #fxb-dir .fxb-cov3{background:linear-gradient(135deg,#5b8def,#6237a2)}
+  #fxb-dir .fxb-icon{display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 6px 12px rgba(0,0,0,.2));transition:transform .45s}
+  #fxb-dir .fxb-card:hover .fxb-icon{transform:scale(1.1) rotate(-3deg)}
+  #fxb-dir .fxb-age{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.92);color:#3a2058;font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:100px}
+  #fxb-dir .fxb-body{padding:26px 26px 28px}
+  #fxb-dir .fxb-body h3{font-size:20px;font-weight:800;margin-bottom:10px}
+  #fxb-dir .fxb-body p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.55;margin-bottom:18px}
+  #fxb-dir .fxb-more{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;color:var(--purple-2)}
+  #fxb-dir .fxb-more svg{transition:transform .3s}
+  #fxb-dir .fxb-card:hover .fxb-more svg{transform:translateX(5px)}
+  @media(max-width:900px){#fxb-dir .fxb-grid{grid-template-columns:1fr;max-width:460px;margin:0 auto}#fxb-dir .fxb-section{padding:64px 18px 76px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-dir');if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('fxb-in')},i*120)});io.disconnect();}})},{threshold:.2});
+    io.observe(root);
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: КОМАНДА ПЕДАГОГОВ
+  =============================================
+  Назначение: Карточки педагогов с фото/аватарами и видеопрезентациями.
+  Сейчас используются заглушки (брендовый аватар лисы) — заменить на реальные фото.
+  
+  Что можно менять:
+    - Имена и описания педагогов
+    - Фото (src в img.fxb-tm-photo) — заменить заглушки на реальные
+    - Ссылки на видеопрезентации (data-video)
+    - Количество карточек
+  =============================================
+-->
+<div id="fxb-team">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Команда</span>
+      <h2 class="fxb-h2">Люди, которым вы <span class="fxb-accent">доверяете детей</span></h2>
+      <p class="fxb-sub">Педагоги, методисты, администраторы и руководители Фоксинбург. Скоро здесь появятся фото и видео каждого специалиста.</p>
+    </div>
+
+    <div class="fxb-grid">
+      <!-- КАРТОЧКА ПЕДАГОГА. Чтобы заменить фото — задайте url в style="background-image:url(...)". Видео — в data-video впишите ссылку с Яндекс.Диска -->
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:linear-gradient(135deg,#7b4fc0,#662d92)"><img class="fxb-ava" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="54" height="54"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-teacher">Педагог</span>
+          <h3>Имя педагога</h3>
+          <p>Преподаватель английского языка</p>
+          <div class="fxb-btns">
+            <button class="fxb-vbtn" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Видеовизитка</button>
+            <button class="fxb-vbtn fxb-vbtn-2" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Фрагмент урока</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:linear-gradient(135deg,#f5a06f,#ee7349)"><img class="fxb-ava" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="54" height="54"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-teacher">Педагог</span>
+          <h3>Имя педагога</h3>
+          <p>Преподаватель английского языка</p>
+          <div class="fxb-btns">
+            <button class="fxb-vbtn" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Видеовизитка</button>
+            <button class="fxb-vbtn fxb-vbtn-2" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Фрагмент урока</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:linear-gradient(135deg,#5b8def,#6237a2)"><img class="fxb-ava" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="54" height="54"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-method">Методист</span>
+          <h3>Имя методиста</h3>
+          <p>Контроль качества и программы обучения</p>
+        </div>
+      </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:linear-gradient(135deg,#2bb673,#7ed957)"><img class="fxb-ava" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="54" height="54"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-admin">Администратор</span>
+          <h3>Имя администратора</h3>
+          <p>Поможет с расписанием и записью</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="fxb-modal" id="fxbVideoModal">
+    <div class="fxb-modal-bg"></div>
+    <div class="fxb-modal-box">
+      <button class="fxb-modal-close" type="button" aria-label="Закрыть">&times;</button>
+      <div class="fxb-modal-frame"><div class="fxb-modal-empty">Видео появится здесь после добавления ссылки с Яндекс.Диска</div></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-team{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:#ffffff;}
+  #fxb-team *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-team .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px;}
+  #fxb-team .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px;}
+  #fxb-team .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-team .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:58px}
+  #fxb-team .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-team .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-team .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-team .fxb-sub{max-width:660px;color:var(--muted);font-size:17px;font-weight:500}
+  #fxb-team .fxb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  #fxb-team .fxb-card{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:24px;overflow:hidden;box-shadow:0 18px 40px -22px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;opacity:0;transform:translateY(34px)}
+  #fxb-team .fxb-card.fxb-in{opacity:1;transform:none}
+  #fxb-team .fxb-card:hover{transform:translateY(-8px);box-shadow:0 30px 56px -24px rgba(102,45,146,.5)}
+  #fxb-team .fxb-photo{position:relative;height:210px;background-size:cover;background-position:center;display:grid;place-items:center}
+  #fxb-team .fxb-ava{opacity:.85;filter:drop-shadow(0 6px 12px rgba(0,0,0,.25));border-radius:12px}
+  #fxb-team .fxb-body{padding:20px 20px 24px}
+  #fxb-team .fxb-role{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:100px;margin-bottom:12px}
+  #fxb-team .fxb-r-teacher{color:var(--purple-2);background:rgba(102,45,146,.10)}
+  #fxb-team .fxb-r-method{color:var(--orange);background:rgba(238,115,73,.12)}
+  #fxb-team .fxb-r-admin{color:#2bb673;background:rgba(43,182,115,.12)}
+  #fxb-team .fxb-body h3{font-size:17.5px;font-weight:800;margin-bottom:5px}
+  #fxb-team .fxb-body p{color:var(--muted);font-size:13.5px;font-weight:500;line-height:1.5;margin-bottom:16px}
+  #fxb-team .fxb-btns{display:flex;flex-direction:column;gap:9px}
+  #fxb-team .fxb-vbtn{cursor:pointer;border:0;font-family:inherit;font-weight:700;font-size:13.5px;color:#fff;padding:11px 14px;border-radius:12px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));transition:transform .25s,box-shadow .25s;text-align:center}
+  #fxb-team .fxb-vbtn-2{background:linear-gradient(135deg,var(--orange),#f5a06f)}
+  #fxb-team .fxb-vbtn:hover{transform:translateY(-2px);box-shadow:0 12px 22px -10px rgba(102,45,146,.7)}
+  #fxb-team .fxb-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+  #fxb-team .fxb-modal.fxb-open{display:flex}
+  #fxb-team .fxb-modal-bg{position:absolute;inset:0;background:rgba(36,26,54,.78);backdrop-filter:blur(4px)}
+  #fxb-team .fxb-modal-box{position:relative;width:min(900px,100%);background:#0e0a16;border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.7);animation:fxbpop .35s cubic-bezier(.2,.8,.2,1)}
+  @keyframes fxbpop{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
+  #fxb-team .fxb-modal-close{position:absolute;top:10px;right:14px;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:38px;height:38px;border-radius:50%;font-size:24px;line-height:1;cursor:pointer}
+  #fxb-team .fxb-modal-frame{position:relative;aspect-ratio:16/9;width:100%;background:#0e0a16;display:grid;place-items:center}
+  #fxb-team .fxb-modal-frame iframe{width:100%;height:100%;border:0}
+  #fxb-team .fxb-modal-empty{color:#b9aee0;font-size:15px;font-weight:600;text-align:center;padding:24px;max-width:420px}
+  @media(max-width:900px){#fxb-team .fxb-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){#fxb-team .fxb-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}#fxb-team .fxb-section{padding:64px 18px 76px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-team');if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('fxb-in')},i*100)});io.disconnect();}})},{threshold:.15});
+    io.observe(root);
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+  var modal=document.getElementById('fxbVideoModal');
+  var frame=modal.querySelector('.fxb-modal-frame');
+  function open(url){
+    if(url){frame.innerHTML='<iframe src="'+url+'" allow="autoplay; fullscreen" allowfullscreen></iframe>';}
+    else{frame.innerHTML='<div class="fxb-modal-empty">Видео появится здесь после добавления ссылки с Яндекс.Диска</div>';}
+    modal.classList.add('fxb-open');
+  }
+  function close(){modal.classList.remove('fxb-open');frame.innerHTML='<div class="fxb-modal-empty">Видео появится здесь после добавления ссылки с Яндекс.Диска</div>';}
+  root.querySelectorAll('.fxb-vbtn').forEach(function(b){b.addEventListener('click',function(){open(b.getAttribute('data-video'));});});
+  modal.querySelector('.fxb-modal-close').addEventListener('click',close);
+  modal.querySelector('.fxb-modal-bg').addEventListener('click',close);
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ДРУГИЕ ЯЗЫКИ (НЕМЕЦКИЙ, КИТАЙСКИЙ)
+  =============================================
+  Назначение: Описание дополнительных языковых программ помимо английского.
+  
+  Что можно менять:
+    - Названия языков и описания программ
+    - Возраст учеников
+    - Текстовые бейджи (DE, CN)
+    - Добавлять новые языковые карточки
+  =============================================
+-->
+<div id="fxb-lang">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Другие языки</span>
+      <h2 class="fxb-h2">Изучайте <span class="fxb-accent">новые языки</span> в Фоксинбург</h2>
+      <p class="fxb-sub">Помимо английского, мы обучаем немецкому и китайскому — по той же проверенной методике, в мини-группах.</p>
+    </div>
+
+    <div class="fxb-grid">
+      <!-- Немецкий язык -->
+      <article class="fxb-card fxb-de">
+        <div class="fxb-cover">
+          <span class="fxb-flag">DE</span>
+          <span class="fxb-lang-name">Немецкий язык</span>
+        </div>
+        <div class="fxb-body">
+          <div class="fxb-teacher">
+            <div class="fxb-teacher-photo" style="background:linear-gradient(135deg,#7b4fc0,#662d92)"><img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="32" height="32" style="border-radius:6px;opacity:.85"></div>
+            <div>
+              <h3>Саляхова Алина</h3>
+              <span class="fxb-role">Педагог немецкого языка</span>
+            </div>
+          </div>
+          <div class="fxb-info">
+            <div class="fxb-info-row"><span class="fxb-info-label">Формат</span><span>2 раза в неделю по 60 мин</span></div>
+            <div class="fxb-info-row"><span class="fxb-info-label">Группа</span><span class="fxb-price">9 000 &#8381;/мес</span></div>
+            <div class="fxb-info-row"><span class="fxb-info-label">Индивидуально</span><span class="fxb-price">2 500 &#8381;/час</span></div>
+            <div class="fxb-info-row fxb-morning"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ee7349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg><span>Есть утренние группы (для 2-й смены)</span></div>
+          </div>
+          <div class="fxb-btns">
+            <button class="fxb-btn-primary" type="button" data-lang="Немецкий">Записаться на курс</button>
+            <button class="fxb-btn-trial" type="button" data-lang="Немецкий">Пробный урок — 1 125 &#8381;</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Китайский язык -->
+      <article class="fxb-card fxb-cn">
+        <div class="fxb-cover">
+          <span class="fxb-flag">CN</span>
+          <span class="fxb-lang-name">Китайский язык</span>
+        </div>
+        <div class="fxb-body">
+          <div class="fxb-teacher">
+            <div class="fxb-teacher-photo" style="background:linear-gradient(135deg,#f5a06f,#ee7349)"><img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="32" height="32" style="border-radius:6px;opacity:.85"></div>
+            <div>
+              <h3>Шевченко Дарья</h3>
+              <span class="fxb-role">Педагог китайского языка</span>
+            </div>
+          </div>
+          <div class="fxb-info">
+            <div class="fxb-info-row"><span class="fxb-info-label">Формат</span><span>2 раза в неделю по 60 мин</span></div>
+            <div class="fxb-info-row"><span class="fxb-info-label">Группа</span><span class="fxb-price">9 000 &#8381;/мес</span></div>
+            <div class="fxb-info-row"><span class="fxb-info-label">Индивидуально</span><span class="fxb-price">2 500 &#8381;/час</span></div>
+            <div class="fxb-info-row fxb-morning"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ee7349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg><span>Есть утренние группы (для 2-й смены)</span></div>
+          </div>
+          <div class="fxb-btns">
+            <button class="fxb-btn-primary" type="button" data-lang="Китайский">Записаться на курс</button>
+            <button class="fxb-btn-trial" type="button" data-lang="Китайский">Пробный урок — 1 125 &#8381;</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Попап записи на курс (3 варианта) -->
+  <div class="fxb-modal" id="fxbLangModal">
+    <div class="fxb-modal-bg"></div>
+    <div class="fxb-modal-box">
+      <button class="fxb-modal-close" type="button">&times;</button>
+      <h3 class="fxb-modal-title" id="fxbLangModalTitle">Записаться на курс</h3>
+      <div class="fxb-modal-options">
+        <a class="fxb-opt" href="#popup:course">
+          <span class="fxb-opt-ic fxb-opt-form">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#662d92" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+          </span>
+          <div><strong>Оставить заявку на сайте</strong><small>Короткая форма — перезвоним</small></div>
+        </a>
+        <a class="fxb-opt" id="fxbLangMax" href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">
+          <span class="fxb-opt-ic fxb-opt-max">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ee7349" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+          </span>
+          <div><strong>Написать в Max</strong><small id="fxbLangMaxText">«Хочу записаться на курс»</small></div>
+        </a>
+        <a class="fxb-opt" href="tel:+79939232309">
+          <span class="fxb-opt-ic fxb-opt-call">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2bb673" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
+          </span>
+          <div><strong>Позвонить</strong><small>8 993 923-23-09</small></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Попап пробного урока -->
+  <div class="fxb-modal" id="fxbTrialModal">
+    <div class="fxb-modal-bg"></div>
+    <div class="fxb-modal-box">
+      <button class="fxb-modal-close" type="button">&times;</button>
+      <h3 class="fxb-modal-title" id="fxbTrialTitle">Пробный урок</h3>
+      <div class="fxb-trial-info">
+        <div class="fxb-trial-row"><span>Стоимость</span><strong>1 125 &#8381;</strong></div>
+        <div class="fxb-trial-row"><span>Длительность</span><strong>60 минут</strong></div>
+        <div class="fxb-trial-row"><span>Формат</span><strong>Индивидуально с педагогом</strong></div>
+      </div>
+      <p class="fxb-trial-note">После оплаты с вами свяжется администратор для подбора удобного времени.</p>
+      <a class="fxb-pay-btn" href="#popup:payment">
+        Оплатить 1 125 &#8381;
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <p class="fxb-trial-alt">Или <a href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">напишите в Max</a> — поможем записаться</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-lang{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(900px 500px at 20% 0%,rgba(102,45,146,.07),transparent 55%),#f4f1fa}
+  #fxb-lang *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-lang .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px}
+  #fxb-lang .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px}
+  #fxb-lang .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-lang .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:58px}
+  #fxb-lang .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-lang .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-lang .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-lang .fxb-sub{max-width:620px;color:var(--muted);font-size:17px;font-weight:500}
+  #fxb-lang .fxb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+  #fxb-lang .fxb-card{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:26px;overflow:hidden;box-shadow:0 18px 40px -20px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;opacity:0;transform:translateY(34px)}
+  #fxb-lang .fxb-card.fxb-in{opacity:1;transform:none}
+  #fxb-lang .fxb-card:hover{transform:translateY(-8px);box-shadow:0 30px 56px -24px rgba(102,45,146,.5)}
+  #fxb-lang .fxb-cover{height:100px;display:flex;align-items:center;justify-content:center;gap:16px;position:relative}
+  #fxb-lang .fxb-de .fxb-cover{background:linear-gradient(135deg,#1a1a2e,#16213e)}
+  #fxb-lang .fxb-cn .fxb-cover{background:linear-gradient(135deg,#8b0000,#c41e3a)}
+  #fxb-lang .fxb-flag{font-size:20px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);padding:8px 16px;border-radius:10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.3))}
+  #fxb-lang .fxb-lang-name{color:#fff;font-size:22px;font-weight:800;letter-spacing:.01em}
+  #fxb-lang .fxb-body{padding:28px 28px 30px}
+  #fxb-lang .fxb-teacher{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  #fxb-lang .fxb-teacher-photo{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto}
+  #fxb-lang .fxb-teacher-photo img{display:block}
+  #fxb-lang .fxb-teacher h3{font-size:18px;font-weight:800;margin-bottom:3px}
+  #fxb-lang .fxb-role{font-size:12.5px;font-weight:600;color:var(--muted)}
+  #fxb-lang .fxb-info{margin-bottom:22px}
+  #fxb-lang .fxb-info-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(102,45,146,.06);font-size:14px;font-weight:600;color:var(--ink)}
+  #fxb-lang .fxb-info-row:last-child{border-bottom:0}
+  #fxb-lang .fxb-info-label{color:var(--muted);font-weight:500}
+  #fxb-lang .fxb-price{color:var(--purple-2);font-weight:800}
+  #fxb-lang .fxb-morning{gap:8px;justify-content:flex-start;color:var(--orange);font-size:13px;font-weight:700;border-bottom:0;padding-top:14px}
+  #fxb-lang .fxb-btns{display:flex;flex-direction:column;gap:10px}
+  #fxb-lang .fxb-btn-primary{cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:15px;color:#fff;padding:16px 20px;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 14px 28px -10px rgba(102,45,146,.7);transition:transform .3s,box-shadow .3s;text-align:center}
+  #fxb-lang .fxb-btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 34px -10px rgba(102,45,146,.85)}
+  #fxb-lang .fxb-btn-trial{cursor:pointer;border:2px solid rgba(102,45,146,.2);font-family:inherit;font-weight:700;font-size:14px;color:var(--purple-2);padding:14px 20px;border-radius:100px;background:#fff;transition:background .2s,border-color .2s;text-align:center}
+  #fxb-lang .fxb-btn-trial:hover{background:#f4f1fa;border-color:rgba(102,45,146,.35)}
+
+  /* Модалки */
+  #fxb-lang .fxb-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+  #fxb-lang .fxb-modal.fxb-open{display:flex}
+  #fxb-lang .fxb-modal-bg{position:absolute;inset:0;background:rgba(36,26,54,.78);backdrop-filter:blur(4px)}
+  #fxb-lang .fxb-modal-box{position:relative;width:min(440px,100%);background:#fff;border-radius:24px;padding:36px 32px;box-shadow:0 40px 80px -20px rgba(0,0,0,.5);animation:fxblpop .35s cubic-bezier(.2,.8,.2,1)}
+  @keyframes fxblpop{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+  #fxb-lang .fxb-modal-close{position:absolute;top:14px;right:16px;background:rgba(102,45,146,.08);color:var(--purple-2);border:0;width:36px;height:36px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer}
+  #fxb-lang .fxb-modal-title{font-size:22px;font-weight:800;margin-bottom:22px;color:var(--ink)}
+  #fxb-lang .fxb-modal-options{display:flex;flex-direction:column;gap:8px}
+  #fxb-lang .fxb-opt{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);padding:14px 16px;border-radius:14px;border:1px solid rgba(57,40,82,.08);transition:background .2s,border-color .2s}
+  #fxb-lang .fxb-opt:hover{background:#f4f1fa;border-color:rgba(102,45,146,.2)}
+  #fxb-lang .fxb-opt-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto}
+  #fxb-lang .fxb-opt-form{background:rgba(102,45,146,.1)}
+  #fxb-lang .fxb-opt-max{background:rgba(238,115,73,.12)}
+  #fxb-lang .fxb-opt-call{background:rgba(43,182,115,.1)}
+  #fxb-lang .fxb-opt strong{font-size:14.5px;font-weight:700;display:block}
+  #fxb-lang .fxb-opt small{font-size:12px;color:var(--muted);font-weight:500}
+
+  /* Пробный урок */
+  #fxb-lang .fxb-trial-info{margin-bottom:20px}
+  #fxb-lang .fxb-trial-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(102,45,146,.06);font-size:15px}
+  #fxb-lang .fxb-trial-row:last-child{border-bottom:0}
+  #fxb-lang .fxb-trial-row span{color:var(--muted);font-weight:500}
+  #fxb-lang .fxb-trial-row strong{color:var(--ink);font-weight:800}
+  #fxb-lang .fxb-trial-note{font-size:13.5px;color:var(--muted);font-weight:500;margin-bottom:22px;line-height:1.5;background:rgba(238,115,73,.06);padding:14px 16px;border-radius:12px;border-left:3px solid var(--orange)}
+  #fxb-lang .fxb-pay-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;text-decoration:none;font-family:inherit;font-weight:800;font-size:16px;color:#fff;padding:18px 24px;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 16px 30px -12px rgba(102,45,146,.7);transition:transform .3s,box-shadow .3s}
+  #fxb-lang .fxb-pay-btn:hover{transform:translateY(-2px);box-shadow:0 20px 36px -12px rgba(102,45,146,.85)}
+  #fxb-lang .fxb-trial-alt{text-align:center;margin-top:14px;font-size:13px;color:var(--muted);font-weight:500}
+  #fxb-lang .fxb-trial-alt a{color:var(--purple-2);font-weight:700}
+  @media(max-width:760px){#fxb-lang .fxb-grid{grid-template-columns:1fr}#fxb-lang .fxb-section{padding:64px 18px 76px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-lang');if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('fxb-in')},i*140)});io.disconnect();}})},{threshold:.15});
+    io.observe(root);
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+
+  var langModal=document.getElementById('fxbLangModal');
+  var trialModal=document.getElementById('fxbTrialModal');
+  var langTitle=document.getElementById('fxbLangModalTitle');
+  var trialTitle=document.getElementById('fxbTrialTitle');
+  var maxText=document.getElementById('fxbLangMaxText');
+
+  function openModal(m){m.classList.add('fxb-open')}
+  function closeModal(m){m.classList.remove('fxb-open')}
+
+  root.querySelectorAll('.fxb-btn-primary').forEach(function(b){
+    b.addEventListener('click',function(){
+      var lang=b.getAttribute('data-lang');
+      langTitle.textContent='Записаться на курс — '+lang+' язык';
+      maxText.textContent='«Хочу записаться на курс '+lang.toLowerCase()+' языка»';
+      openModal(langModal);
+    });
+  });
+  root.querySelectorAll('.fxb-btn-trial').forEach(function(b){
+    b.addEventListener('click',function(){
+      var lang=b.getAttribute('data-lang');
+      trialTitle.textContent='Пробный урок — '+lang+' язык';
+      openModal(trialModal);
+    });
+  });
+
+  [langModal,trialModal].forEach(function(m){
+    m.querySelector('.fxb-modal-close').addEventListener('click',function(){closeModal(m)});
+    m.querySelector('.fxb-modal-bg').addEventListener('click',function(){closeModal(m)});
+  });
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ПРЕИМУЩЕСТВА ШКОЛЫ
+  =============================================
+  Назначение: Сетка карточек с ключевыми преимуществами Фоксинбург.
+  
+  Что можно менять:
+    - Тексты преимуществ (заголовки + описания)
+    - Иконки (SVG)
+    - Количество карточек
+  =============================================
+-->
+<div id="fxb-adv">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Почему мы</span>
+      <h2 class="fxb-h2">Наши <span class="fxb-accent">преимущества</span></h2>
+      <p class="fxb-sub">Официальная школа с лицензией, сильной методикой и заботой о каждом ученике.</p>
+    </div>
+
+    <div class="fxb-grid">
+      <article class="fxb-card fxb-c1">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Образовательная лицензия</h3>
+        <p>Работаем официально, на основании государственной образовательной лицензии.</p>
+      </article>
+      <article class="fxb-card fxb-c2">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"/></svg></div>
+        <h3>Аккредитованный центр Hippo</h3>
+        <p>Официальная площадка (venue) престижной международной олимпиады по английскому Hippo.</p>
+      </article>
+      <article class="fxb-card fxb-c3">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20v-1a5 5 0 0 1 10 0v1"/><path d="M15.5 20v-.5a4 4 0 0 1 5.5-3.7"/></svg></div>
+        <h3>Мини-группы до 7 человек</h3>
+        <p>Внимание каждому ученику и живая языковая среда без перехода на русский.</p>
+      </article>
+      <article class="fxb-card fxb-c4">
+        <div class="fxb-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Удобное расписание</h3>
+        <p>Есть утренние группы — для тех, кто учится во вторую смену. Подберем время под вас.</p>
+      </article>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-adv{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:#ffffff;}
+  #fxb-adv *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-adv .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px;}
+  #fxb-adv .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px;}
+  #fxb-adv .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-adv .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:58px}
+  #fxb-adv .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-adv .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-adv .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-adv .fxb-sub{max-width:620px;color:var(--muted);font-size:17px;font-weight:500}
+  #fxb-adv .fxb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  #fxb-adv .fxb-card{position:relative;overflow:hidden;background:#fff;border:1px solid rgba(57,40,82,.09);border-radius:24px;padding:32px 26px 30px;box-shadow:0 16px 36px -20px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s;opacity:0;transform:translateY(34px)}
+  #fxb-adv .fxb-card.fxb-in{opacity:1;transform:none}
+  #fxb-adv .fxb-card:hover{transform:translateY(-10px);box-shadow:0 30px 56px -22px rgba(102,45,146,.5);border-color:rgba(102,45,146,.22)}
+  #fxb-adv .fxb-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,var(--purple-2),var(--purple-3))}
+  #fxb-adv .fxb-c2::before{background:linear-gradient(90deg,var(--orange),#f5a06f)}
+  #fxb-adv .fxb-c3::before{background:linear-gradient(90deg,#e7c200,var(--yellow))}
+  #fxb-adv .fxb-c4::before{background:linear-gradient(90deg,#2bb673,#7ed957)}
+  #fxb-adv .fxb-ic{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;margin-bottom:20px;background:linear-gradient(135deg,rgba(102,45,146,.12),rgba(102,45,146,.04));}
+  #fxb-adv .fxb-c2 .fxb-ic{background:linear-gradient(135deg,rgba(238,115,73,.16),rgba(238,115,73,.04))}
+  #fxb-adv .fxb-c3 .fxb-ic{background:linear-gradient(135deg,rgba(231,194,0,.18),rgba(252,249,81,.06))}
+  #fxb-adv .fxb-c4 .fxb-ic{background:linear-gradient(135deg,rgba(43,182,115,.16),rgba(126,217,87,.06))}
+  #fxb-adv .fxb-ic svg{width:30px;height:30px;stroke:var(--purple-2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  #fxb-adv .fxb-c2 .fxb-ic svg{stroke:var(--orange)}
+  #fxb-adv .fxb-c3 .fxb-ic svg{stroke:#d9b400}
+  #fxb-adv .fxb-c4 .fxb-ic svg{stroke:#2bb673}
+  #fxb-adv .fxb-card h3{font-size:18px;font-weight:800;margin-bottom:10px;line-height:1.25}
+  #fxb-adv .fxb-card p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.55}
+  @media(max-width:900px){#fxb-adv .fxb-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){#fxb-adv .fxb-grid{grid-template-columns:1fr}#fxb-adv .fxb-section{padding:64px 18px 76px}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('fxb-adv');if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('fxb-in')},i*110)});io.disconnect();}})},{threshold:.2});
+    io.observe(root);
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ТАРИФЫ И ЗАПИСЬ НА НОВЫЙ УЧЕБНЫЙ ГОД
+  =============================================
+  Назначение: Карточки с тарифами (офлайн, онлайн, пробное занятие)
+  
+  Что можно менять:
+    - Цены (fxb-price) — сейчас: от 8 200 ₽ при оплате за учебный год
+    - Количество занятий в неделю (2 раза по 60 мин)
+    - Возраст учеников (от 2 до 18 + взрослые)
+    - Список преимуществ в каждой карточке
+    - Стоимость пробного занятия (1 125 ₽, 60 минут)
+    - Ссылка на форму записи (href="#fxb-enrollment")
+  =============================================
+-->
+<div id="fxb-pricing">
+  <div class="fxb-pricing-bg">
+    <img class="fxb-pricing-decor fxb-pd1" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-2.png" alt="" loading="lazy">
+  </div>
+  <div class="fxb-section">
+    <span class="fxb-pricing-badge">Запись открыта</span>
+    <h2 class="fxb-pricing-title">Запись на новый учебный год</h2>
+    <p class="fxb-pricing-sub">Выберите формат занятий, который подходит вашему ребёнку</p>
+
+    <div class="fxb-cards">
+      <!-- Офлайн мини-группы -->
+      <div class="fxb-card">
+        <div class="fxb-card-head">
+          <h3>Офлайн мини-группы</h3>
+          <span class="fxb-card-loc">Лихачевский / Ракетостроителей</span>
+        </div>
+        <div class="fxb-card-body">
+          <ul class="fxb-feat-list">
+            <li>До 7 человек в группе</li>
+            <li>2 занятия в неделю по 60 мин</li>
+            <li>Утренние, дневные и вечерние группы</li>
+            <li>Возраст: от 2 до 18 лет и взрослые</li>
+            <li>Интерактивное мобильное приложение</li>
+          </ul>
+          <div class="fxb-price-row">
+            <span class="fxb-price">от 8 200 &#8381;/мес</span>
+            <span class="fxb-price-note">при оплате за учебный год</span>
+          </div>
+          <a class="fxb-card-btn" href="#fxb-enrollment">Записаться</a>
+        </div>
+      </div>
+
+      <!-- Онлайн занятия -->
+      <div class="fxb-card fxb-card-accent">
+        <div class="fxb-card-popular">Популярное</div>
+        <div class="fxb-card-head">
+          <h3>Онлайн занятия</h3>
+          <span class="fxb-card-loc">Из любой точки мира</span>
+        </div>
+        <div class="fxb-card-body">
+          <ul class="fxb-feat-list">
+            <li>Индивидуально или мини-группа</li>
+            <li>2 занятия в неделю по 60 мин</li>
+            <li>Гибкое расписание</li>
+            <li>Интерактивное мобильное приложение</li>
+            <li>Домашние задания в приложении</li>
+          </ul>
+          <div class="fxb-price-row">
+            <span class="fxb-price">от 8 200 &#8381;/мес</span>
+            <span class="fxb-price-note">при оплате за учебный год</span>
+          </div>
+          <a class="fxb-card-btn fxb-btn-accent" href="#fxb-enrollment">Записаться</a>
+        </div>
+      </div>
+
+      <!-- Пробное занятие -->
+      <div class="fxb-card">
+        <div class="fxb-card-head">
+          <h3>Пробное занятие</h3>
+          <span class="fxb-card-loc">Знакомство с методикой</span>
+        </div>
+        <div class="fxb-card-body">
+          <ul class="fxb-feat-list">
+            <li>Диагностика уровня ребёнка</li>
+            <li>Знакомство с педагогом</li>
+            <li>Подбор группы и расписания</li>
+            <li>Рекомендации по обучению</li>
+            <li>Длительность — 60 мин</li>
+          </ul>
+          <div class="fxb-price-row">
+            <span class="fxb-price">1 125 &#8381;</span>
+            <span class="fxb-price-note">60 минут</span>
+          </div>
+          <a class="fxb-card-btn" href="#fxb-enrollment">Записаться</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-pricing{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;--yellow:#fcf951;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  background:#fff;padding:72px 24px;position:relative;overflow:hidden}
+#fxb-pricing *{box-sizing:border-box;margin:0;padding:0;list-style:none}
+#fxb-pricing .fxb-pricing-bg{position:absolute;inset:0;pointer-events:none}
+#fxb-pricing .fxb-pricing-decor{position:absolute;opacity:.05;width:400px;height:auto}
+#fxb-pricing .fxb-pd1{right:-80px;top:-40px}
+#fxb-pricing .fxb-section{max-width:1200px;margin:0 auto;position:relative;z-index:1;text-align:center}
+#fxb-pricing .fxb-pricing-badge{display:inline-block;background:var(--purple-2);color:#fff;font-weight:800;font-size:11px;padding:5px 16px;border-radius:100px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+#fxb-pricing .fxb-pricing-title{font-size:clamp(22px,3vw,34px);font-weight:900;color:var(--purple);margin-bottom:10px}
+#fxb-pricing .fxb-pricing-sub{font-size:15px;color:#7a6d90;font-weight:500;margin-bottom:40px}
+#fxb-pricing .fxb-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:left}
+#fxb-pricing .fxb-card{background:#faf8fd;border:1.5px solid rgba(102,45,146,.08);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:transform .25s,box-shadow .25s}
+#fxb-pricing .fxb-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px -12px rgba(57,40,82,.15)}
+#fxb-pricing .fxb-card-accent{border-color:var(--purple-2);box-shadow:0 8px 32px -8px rgba(102,45,146,.2)}
+#fxb-pricing .fxb-card-popular{position:absolute;top:16px;right:16px;background:var(--orange);color:#fff;font-weight:800;font-size:10px;padding:4px 12px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em}
+#fxb-pricing .fxb-card-head{padding:28px 24px 0;min-height:90px}
+#fxb-pricing .fxb-card-head h3{font-size:18px;font-weight:800;color:var(--purple);margin-bottom:4px}
+#fxb-pricing .fxb-card-loc{font-size:12.5px;color:#7a6d90;font-weight:600}
+#fxb-pricing .fxb-card-body{padding:20px 24px 28px;flex:1;display:flex;flex-direction:column}
+#fxb-pricing .fxb-feat-list{margin-bottom:24px;flex:1}
+#fxb-pricing .fxb-feat-list li{padding:7px 0 7px 24px;font-size:13.5px;color:#4a3d5e;font-weight:500;position:relative;border-bottom:1px solid rgba(102,45,146,.04)}
+#fxb-pricing .fxb-feat-list li::before{content:"";position:absolute;left:0;top:12px;width:14px;height:14px;border-radius:50%;background:rgba(102,45,146,.08);border:2px solid var(--purple-2)}
+#fxb-pricing .fxb-feat-list li:last-child{border-bottom:0}
+#fxb-pricing .fxb-price-row{margin-bottom:18px}
+#fxb-pricing .fxb-price{font-size:22px;font-weight:900;color:var(--purple)}
+#fxb-pricing .fxb-free{color:var(--orange)}
+#fxb-pricing .fxb-price-note{display:block;font-size:12px;color:#b5afc4;font-weight:500;margin-top:2px}
+#fxb-pricing .fxb-card-btn{display:block;text-align:center;padding:13px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px;color:var(--purple-2);background:rgba(102,45,146,.08);transition:all .2s}
+#fxb-pricing .fxb-card-btn:hover{background:rgba(102,45,146,.14);color:var(--purple)}
+#fxb-pricing .fxb-btn-accent{color:#fff;background:linear-gradient(135deg,var(--purple-2),#7a3db0);box-shadow:0 6px 18px -6px rgba(102,45,146,.4)}
+#fxb-pricing .fxb-btn-accent:hover{transform:translateY(-1px);box-shadow:0 10px 24px -6px rgba(102,45,146,.5)}
+@media(max-width:860px){
+  #fxb-pricing .fxb-cards{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+}
+</style>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ (FAQ)
+  =============================================
+  Назначение: Аккордеон с вопросами и ответами от родителей.
+  Открывается по клику, одновременно отображается только один ответ.
+  
+  Что можно менять:
+    - Добавлять/удалять вопросы (копировать div.fxb-faq-item)
+    - Тексты вопросов и ответов
+    - Количество вопросов не ограничено
+  =============================================
+-->
+<div id="fxb-faq">
+  <div class="fxb-section">
+    <h2 class="fxb-faq-title">Часто задаваемые вопросы</h2>
+    <p class="fxb-faq-sub">Ответы на самые популярные вопросы от родителей</p>
+    <div class="fxb-faq-list" id="fxbFaqList">
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Я не уверена, понравится ли моему ребенку?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Мы приглашаем на бесплатную пробную диагностику, где ребёнок познакомится с педагогом и атмосферой занятий. Более 90% детей после пробного урока хотят продолжить обучение!</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Мой даже букв не знает. Как он будет заниматься, если все только на английском?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Мы работаем с детьми с нулевого уровня. Педагоги используют игровую методику, TPR (полное физическое реагирование) и визуальные материалы. Ребёнок начинает понимать и говорить естественно, как осваивал родной язык.</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>А ваша программа совпадает со школьной? Ребенок не запутается?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Наша программа дополняет школьную и идёт глубже. Мы не просто учим грамматику — мы развиваем все четыре навыка: говорение, аудирование, чтение и письмо. Благодаря этому дети чувствуют себя увереннее и в школе.</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Как проходят занятия?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Занятия проходят в мини-группах до 7 человек. Каждый урок включает разговорную практику, игровые активности, работу с учебными материалами и закрепление через интерактивное приложение. Длительность — 45–60 минут в зависимости от возраста.</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Сколько раз в неделю проходят занятия?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Занятия проходят 2 раза в неделю по 60 минут. Мы предлагаем утренние, дневные и вечерние группы, чтобы подобрать удобное расписание для вашей семьи.</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Как оплачиваются занятия?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Оплата производится помесячно или за семестр (со скидкой). Принимаем банковские карты, переводы, а также маткапитал. Подробную информацию о ценах можно узнать у администратора.</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Задаете ли вы домашние задания? Я не смогу помогать, так как не знаю языка.</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Да, домашние задания выполняются через наше мобильное приложение. Они разработаны так, чтобы ребёнок мог делать их самостоятельно — в игровом формате с подсказками. Помощь родителей не требуется!</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Как я пойму, что у ребенка появился результат?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Мы предоставляем: еженедельные видео-отчёты, отчёты о том, что было на уроке, открытые уроки, регулярные тестирования с обратной связью. Вы всегда будете в курсе прогресса ребёнка.</p>
+        </div>
+      </div>
+
+      <div class="fxb-faq-item">
+        <button class="fxb-faq-q" type="button">
+          <span>Как вы обучаете чтению?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fxb-faq-a">
+          <p>Мы используем метод фониксов (Phonics) — ребёнок учится читать через звуки, а не через зубрёжку букв. Это естественный и эффективный подход, который позволяет детям начать читать уже через несколько месяцев.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-faq{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  background:#f8f5fc;padding:64px 24px}
+#fxb-faq *{box-sizing:border-box;margin:0;padding:0}
+#fxb-faq .fxb-section{max-width:820px;margin:0 auto}
+#fxb-faq .fxb-faq-title{text-align:center;font-size:clamp(22px,3vw,32px);font-weight:900;color:var(--purple);margin-bottom:8px}
+#fxb-faq .fxb-faq-sub{text-align:center;font-size:14px;color:#7a6d90;font-weight:500;margin-bottom:36px}
+#fxb-faq .fxb-faq-list{display:flex;flex-direction:column;gap:8px}
+#fxb-faq .fxb-faq-item{background:#fff;border-radius:14px;border:1px solid rgba(102,45,146,.06);overflow:hidden;transition:box-shadow .2s}
+#fxb-faq .fxb-faq-item:hover{box-shadow:0 4px 16px -6px rgba(57,40,82,.1)}
+#fxb-faq .fxb-faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border:0;background:transparent;cursor:pointer;font-family:inherit;font-size:14.5px;font-weight:700;color:var(--purple);text-align:left;transition:background .15s}
+#fxb-faq .fxb-faq-q:hover{background:rgba(102,45,146,.03)}
+#fxb-faq .fxb-faq-q svg{flex:0 0 auto;color:#b5afc4;transition:transform .35s cubic-bezier(.2,.8,.2,1),color .2s}
+#fxb-faq .fxb-faq-item.fxb-faq-open .fxb-faq-q svg{transform:rotate(180deg);color:var(--purple-2)}
+#fxb-faq .fxb-faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1)}
+#fxb-faq .fxb-faq-a p{padding:0 22px 18px;font-size:14px;line-height:1.65;color:#5a4d6e;font-weight:500}
+</style>
+
+<script>
+(function(){
+  var list=document.getElementById('fxbFaqList');if(!list)return;
+  list.querySelectorAll('.fxb-faq-q').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var item=btn.closest('.fxb-faq-item');
+      var answer=item.querySelector('.fxb-faq-a');
+      var wasOpen=item.classList.contains('fxb-faq-open');
+      list.querySelectorAll('.fxb-faq-item').forEach(function(i){
+        i.classList.remove('fxb-faq-open');
+        i.querySelector('.fxb-faq-a').style.maxHeight='0';
+      });
+      if(!wasOpen){
+        item.classList.add('fxb-faq-open');
+        answer.style.maxHeight=answer.scrollHeight+'px';
+      }
+    });
+  });
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: СВЕДЕНИЯ ДЛЯ ОБРАЗОВАТЕЛЬНОЙ ОРГАНИЗАЦИИ
+  =============================================
+  Назначение: Сворачиваемый блок с официальной информацией (лицензия, ИНН и т.д.)
+  Требуется по закону для образовательных организаций.
+  
+  Что можно менять:
+    - Все данные в строках (fxb-row)
+    - Ссылки на документы (лицензия, оферта)
+    - Контактные данные
+  =============================================
+-->
+<div id="fxb-sved">
+  <div class="fxb-section">
+    <button class="fxb-toggle" id="fxbSvedToggle" type="button">
+      <span class="fxb-toggle-text">
+        <svg class="fxb-toggle-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        Сведения для образовательной организации
+      </span>
+      <svg class="fxb-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="fxb-content" id="fxbSvedContent">
+      <div class="fxb-inner">
+        <div class="fxb-row"><strong>Полное наименование:</strong><span>ИП Дымова Вероника Юрьевна</span></div>
+        <div class="fxb-row"><strong>Образовательная лицензия:</strong><span>Лицензия на осуществление образовательной деятельности (указать номер и дату)</span></div>
+        <div class="fxb-row"><strong>Адрес осуществления деятельности:</strong><span>г. Долгопрудный, пр-кт Лихачевский, 76к1; пр-кт Ракетостроителей, 9к3</span></div>
+        <div class="fxb-row"><strong>Режим работы:</strong><span>Ежедневно с 9:00 до 21:00</span></div>
+        <div class="fxb-row"><strong>Контактный телефон:</strong><span><a href="tel:+79939232309">8 993 923-23-09</a>, <a href="tel:+79167323169">8 916 732-31-69</a></span></div>
+        <div class="fxb-row"><strong>Электронная почта:</strong><span><a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a></span></div>
+        <div class="fxb-row"><strong>Основные сведения:</strong><span>ИП ДЫМОВА ВЕРОНИКА АЛЕКСАНДРОВНА, ИНН 611904726658</span></div>
+        <div class="fxb-row"><strong>Структура и органы управления:</strong><span>Единоличный руководитель — Дымова Вероника Александровна</span></div>
+        <div class="fxb-row"><strong>Документы:</strong><span><a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>, <a href="https://docs.google.com/document/d/10SWEMRDFKEc" target="_blank" rel="noopener">Публичная оферта-занятия</a></span></div>
+        <div class="fxb-row"><strong>Образование:</strong><span>Дополнительное образование для детей и взрослых</span></div>
+        <div class="fxb-row"><strong>Руководство:</strong><span>Дымова Вероника Александровна — руководитель</span></div>
+        <div class="fxb-row"><strong>Педагогический состав:</strong><span>Информация о педагогическом составе доступна по запросу у администратора</span></div>
+        <div class="fxb-row"><strong>Материально-техническое обеспечение:</strong><span>Просторные оборудованные кабинеты, интерактивные доски, учебные материалы. Помещение более 200 кв. м с 2 с/у для комфортного пребывания</span></div>
+        <div class="fxb-row"><strong>Платные образовательные услуги:</strong><span>Информация о стоимости доступна на странице Цены и у администратора</span></div>
+        <div class="fxb-row"><strong>Финансово-хозяйственная деятельность:</strong><span>Информация предоставляется по запросу</span></div>
+        <div class="fxb-row"><strong>Вакантные места:</strong><span>Информация о наличии свободных мест в группах доступна у администратора по телефону <a href="tel:+79939232309">8 993 923-23-09</a></span></div>
+        <div class="fxb-row"><strong>Стипендии и меры поддержки:</strong><span>Принимается оплата материнским капиталом</span></div>
+        <div class="fxb-row"><strong>Международное сотрудничество:</strong><span>Информация отсутствует</span></div>
+        <div class="fxb-row"><strong>Организация питания:</strong><span>Питание организовано в рамках Летней Академии через специализированную организацию</span></div>
+        <p class="fxb-note">Полный перечень документов и сведений доступен по запросу у администратора школы.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-sved{--purple:#392852;--purple-2:#662d92;--ink:#1e1433;--muted:#6f6883;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;background:#f8f5fc;padding:0 24px 64px}
+#fxb-sved *{box-sizing:border-box;margin:0;padding:0}
+#fxb-sved .fxb-section{max-width:900px;margin:0 auto}
+#fxb-sved .fxb-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1.5px solid rgba(102,45,146,.1);background:#fff;border-radius:14px;padding:16px 22px;font-family:inherit;font-size:14.5px;font-weight:700;color:var(--ink);transition:background .2s,border-color .2s,box-shadow .2s;box-shadow:0 4px 14px -6px rgba(57,40,82,.1)}
+#fxb-sved .fxb-toggle:hover{background:#faf8fd;border-color:rgba(102,45,146,.2);box-shadow:0 6px 20px -8px rgba(57,40,82,.15)}
+#fxb-sved .fxb-toggle-text{display:flex;align-items:center;gap:10px}
+#fxb-sved .fxb-toggle-ic{color:var(--purple-2);flex:0 0 auto}
+#fxb-sved .fxb-arrow{color:var(--muted);flex:0 0 auto;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+#fxb-sved .fxb-toggle.fxb-expanded .fxb-arrow{transform:rotate(180deg)}
+#fxb-sved .fxb-toggle.fxb-expanded{border-radius:14px 14px 0 0;border-bottom-color:transparent}
+#fxb-sved .fxb-content{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.8,.2,1)}
+#fxb-sved .fxb-inner{background:#fff;border:1.5px solid rgba(102,45,146,.1);border-top:0;border-radius:0 0 14px 14px;padding:24px 22px 28px;box-shadow:0 8px 20px -10px rgba(57,40,82,.1)}
+#fxb-sved .fxb-row{display:grid;grid-template-columns:260px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(102,45,146,.05);font-size:13.5px;line-height:1.55}
+#fxb-sved .fxb-row:last-of-type{border-bottom:0}
+#fxb-sved .fxb-row strong{color:var(--ink);font-weight:700}
+#fxb-sved .fxb-row span{color:var(--muted);font-weight:500}
+#fxb-sved .fxb-row a{color:var(--purple-2);text-decoration:underline}
+#fxb-sved .fxb-note{margin-top:18px;font-size:12.5px;color:#b5afc4;font-weight:500;font-style:italic}
+@media(max-width:700px){
+  #fxb-sved .fxb-row{grid-template-columns:1fr;gap:4px}
+  #fxb-sved .fxb-section{padding:0}
+}
+</style>
+
+<script>
+(function(){
+  var toggle=document.getElementById('fxbSvedToggle');
+  var content=document.getElementById('fxbSvedContent');
+  if(!toggle||!content)return;
+  toggle.addEventListener('click',function(){
+    var expanded=toggle.classList.toggle('fxb-expanded');
+    if(expanded){content.style.maxHeight=content.scrollHeight+'px';}
+    else{content.style.maxHeight='0';}
+  });
+})();
+</script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: КОНТАКТЫ И КАРТА
+  =============================================
+  Назначение: Карта Яндекс с метками филиалов + контактная информация
+  
+  Что можно менять:
+    - Координаты меток на карте (pt= в iframe src)
+    - Адреса, телефоны филиалов
+    - Электронная почта (school@foxinburg-edu.ru)
+    - Часы работы
+    - Ссылки на соцсети
+
+  Филиал 1: Лихачёвский пр-кт, 76к1 (коорд: 55.936474, 37.494072)
+  Филиал 2: Ракетостроителей пр-кт, 9к3 (коорд: 55.935022, 37.504474)
+  =============================================
+-->
+<div id="fxb-contacts">
+  <div class="fxb-section">
+    <h2 class="fxb-ct-title">Контакты</h2>
+    <p class="fxb-ct-sub">Два филиала в Долгопрудном — выберите ближайший</p>
+
+    <div class="fxb-ct-grid">
+      <!-- Карта -->
+      <div class="fxb-ct-map">
+        <!-- Координаты меток: Лихачёвский 76к1 и Ракетостроителей 9к3. Формат: долгота,широта -->
+        <iframe src="https://yandex.ru/map-widget/v1/?ll=37.499%2C55.936&amp;z=15&amp;pt=37.494072%2C55.936474%2Cpm2lbm~37.504474%2C55.935022%2Cpm2lbm" width="100%" height="100%" frameborder="0" allowfullscreen style="display:block;border-radius:16px"></iframe>
+      </div>
+
+      <!-- Инфо -->
+      <div class="fxb-ct-info">
+        <!-- Филиал 1 -->
+        <div class="fxb-ct-branch">
+          <h3>Филиал Лихачевский</h3>
+          <a class="fxb-ct-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            г. Долгопрудный, Лихачевский пр-кт, 76к1
+          </a>
+          <a class="fxb-ct-phone" href="tel:+79939232309">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.1 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            8 993 923-23-09
+          </a>
+        </div>
+
+        <!-- Филиал 2 -->
+        <div class="fxb-ct-branch">
+          <h3>Филиал Ракетостроителей</h3>
+          <a class="fxb-ct-addr" href="https://yandex.ru/maps/org/foxinburg/1234567890/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            г. Долгопрудный, Ракетостроителей пр-кт, 9к3
+          </a>
+          <a class="fxb-ct-phone" href="tel:+79167323169">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.1 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            8 916 732-31-69
+          </a>
+        </div>
+
+        <!-- Общая info -->
+        <div class="fxb-ct-general">
+          <div class="fxb-ct-row">
+            <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span>Ежедневно с 9:00 до 21:00</span>
+          </div>
+          <div class="fxb-ct-row">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 6l-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a>
+          </div>
+        </div>
+
+        <!-- Соцсети -->
+        <div class="fxb-ct-social">
+          <span class="fxb-social-label">Мы в соцсетях:</span>
+          <div class="fxb-social-links">
+            <a class="fxb-social-btn" href="https://vk.com/foxyfoxclub" target="_blank" rel="noopener" title="ВКонтакте">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12.78 19.83c-7 0-11-4.83-11.17-12.83h3.5c.12 5.93 2.73 8.43 4.8 8.95V7h3.3v5.1c2.04-.22 4.18-2.57 4.9-5.1h3.3c-.55 1.97-2.27 4.32-3.57 5.08 1.3.6 3.27 2.65 4.03 5.75h-3.63c-.6-1.87-2.08-3.95-4.73-4.23v4.23h-.73z" fill="currentColor"/></svg>
+            </a>
+            <a class="fxb-social-btn" href="https://max.ru/id611904726658_biz" target="_blank" rel="noopener" title="Max канал">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="fxb-social-btn" href="https://t.me/foxinburg" target="_blank" rel="noopener" title="Telegram">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M21.2 4.4L2.4 11.1c-.6.3-.6.7 0 .9l4.8 1.5 1.8 5.8c.2.5.7.5 1 .2l2.6-2.1 5.1 3.7c.5.3 1 .1 1.1-.5L22.5 5.3c.2-.7-.4-1.2-1.3-.9zM9.6 13.7l-.3 3.4-.1.1-1-3.2 9.1-5.6-7.7 5.3z" fill="currentColor"/></svg>
+            </a>
+            <a class="fxb-social-btn" href="https://wa.me/79939232309" target="_blank" rel="noopener" title="WhatsApp">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.7 1.9-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3zM12 21.5c-1.8 0-3.4-.5-4.8-1.3l-.3-.2-3.5.9.9-3.4-.2-.3A9.4 9.4 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zM12 1C6 1 1 6 1 12c0 1.9.5 3.8 1.4 5.4L1 23l5.7-1.5c1.6.9 3.4 1.4 5.3 1.4 6 0 11-5 11-11S18 1 12 1z" fill="currentColor"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-contacts{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  background:#fff;padding:64px 24px}
+#fxb-contacts *{box-sizing:border-box;margin:0;padding:0}
+#fxb-contacts .fxb-section{max-width:1200px;margin:0 auto}
+#fxb-contacts .fxb-ct-title{text-align:center;font-size:clamp(22px,3vw,32px);font-weight:900;color:var(--purple);margin-bottom:8px}
+#fxb-contacts .fxb-ct-sub{text-align:center;font-size:14px;color:#7a6d90;font-weight:500;margin-bottom:40px}
+#fxb-contacts .fxb-ct-grid{display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:stretch}
+#fxb-contacts .fxb-ct-map{min-height:400px;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px -10px rgba(57,40,82,.15);border:1px solid rgba(102,45,146,.06)}
+#fxb-contacts .fxb-ct-map iframe{width:100%;height:100%;min-height:400px}
+#fxb-contacts .fxb-ct-info{display:flex;flex-direction:column;gap:24px}
+#fxb-contacts .fxb-ct-branch{background:#faf8fd;border-radius:16px;padding:24px;border:1px solid rgba(102,45,146,.06)}
+#fxb-contacts .fxb-ct-branch h3{font-size:16px;font-weight:800;color:var(--purple);margin-bottom:12px}
+#fxb-contacts .fxb-ct-addr{display:flex;align-items:flex-start;gap:8px;text-decoration:none;color:#5a4d6e;font-weight:600;font-size:13.5px;margin-bottom:8px;transition:color .2s}
+#fxb-contacts .fxb-ct-addr:hover{color:var(--purple-2)}
+#fxb-contacts .fxb-ct-addr svg{stroke:var(--purple-2);flex:0 0 auto;margin-top:1px}
+#fxb-contacts .fxb-ct-phone{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--purple);font-weight:800;font-size:15px;transition:color .2s}
+#fxb-contacts .fxb-ct-phone:hover{color:var(--orange)}
+#fxb-contacts .fxb-ct-phone svg{stroke:var(--orange);flex:0 0 auto}
+#fxb-contacts .fxb-ct-general{display:flex;flex-direction:column;gap:10px}
+#fxb-contacts .fxb-ct-row{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#5a4d6e;font-weight:600}
+#fxb-contacts .fxb-ct-row svg{stroke:var(--purple-2);flex:0 0 auto}
+#fxb-contacts .fxb-ct-row a{color:var(--purple-2);text-decoration:none}
+#fxb-contacts .fxb-ct-row a:hover{text-decoration:underline}
+#fxb-contacts .fxb-ct-social{padding-top:8px}
+#fxb-contacts .fxb-social-label{display:block;font-size:12px;font-weight:700;color:#b5afc4;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+#fxb-contacts .fxb-social-links{display:flex;gap:8px}
+#fxb-contacts .fxb-social-btn{width:42px;height:42px;border-radius:12px;background:rgba(102,45,146,.06);color:var(--purple-2);display:grid;place-items:center;text-decoration:none;transition:all .2s}
+#fxb-contacts .fxb-social-btn:hover{background:var(--purple-2);color:#fff;transform:translateY(-2px);box-shadow:0 6px 16px -6px rgba(102,45,146,.4)}
+@media(max-width:860px){
+  #fxb-contacts .fxb-ct-grid{grid-template-columns:1fr}
+  #fxb-contacts .fxb-ct-map{min-height:300px}
+}
+</style>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ФОРМА ЗАПИСИ НА НОВЫЙ УЧЕБНЫЙ ГОД
+  =============================================
+  Назначение: Блок с формой записи + преимущества школы
+  
+  Что можно менять:
+    - Текст заголовка и описания
+    - Год набора (сейчас 2026/27)
+    - Преимущества в левой колонке
+    - Поля формы (добавить/убрать)
+    - Варианты в select (форматы занятий)
+
+  Занятия: 2 раза в неделю по 60 минут
+  =============================================
+-->
+<div id="fxb-enrollment">
+  <div class="fxb-enroll-bg">
+    <img class="fxb-enroll-decor fxb-edl" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-blob-yellow.png" alt="" loading="lazy">
+    <img class="fxb-enroll-decor fxb-edr" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" loading="lazy">
+  </div>
+  <div class="fxb-section">
+    <div class="fxb-enroll-grid">
+      <div class="fxb-enroll-info">
+        <span class="fxb-enroll-tag">Набор открыт</span>
+        <h2 class="fxb-enroll-title">Запись на новый<br>учебный год 2026/27</h2>
+        <p class="fxb-enroll-desc">Успейте забронировать место в группе с удобным расписанием! Мини-группы до 7 человек — места ограничены.</p>
+        <div class="fxb-enroll-features">
+          <div class="fxb-ef">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><strong>Занятия 2 раза в неделю по 60 мин</strong><span>Утренние, дневные и вечерние группы</span></div>
+          </div>
+          <div class="fxb-ef">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><strong>Мини-группы до 7 человек</strong><span>Индивидуальный подход к каждому</span></div>
+          </div>
+          <div class="fxb-ef">
+            <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+            <div><strong>Старт занятий — сентябрь</strong><span>Бесплатная диагностика до начала</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="fxb-enroll-form-wrap">
+        <div class="fxb-enroll-card">
+          <h3 class="fxb-form-title">Оставьте заявку</h3>
+          <p class="fxb-form-sub">Мы свяжемся и подберём удобное расписание</p>
+          <form class="fxb-form" id="fxbEnrollForm" onsubmit="return false;">
+            <input type="text" name="name" placeholder="Имя родителя" required class="fxb-input">
+            <input type="text" name="child" placeholder="Имя и возраст ребёнка" required class="fxb-input">
+            <input type="tel" name="phone" placeholder="Телефон" required class="fxb-input">
+            <select name="format" class="fxb-input fxb-select">
+              <option value="" disabled selected>Формат занятий</option>
+              <option value="offline-likh">Офлайн — Лихачевский</option>
+              <option value="offline-rak">Офлайн — Ракетостроителей</option>
+              <option value="online">Онлайн</option>
+            </select>
+            <button type="submit" class="fxb-submit">Забронировать место</button>
+          </form>
+          <p class="fxb-form-note">Нажимая кнопку, вы соглашаетесь с <a href="/policy">политикой конфиденциальности</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-enrollment{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;--yellow:#fcf951;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  background:linear-gradient(135deg,#f8f4fe 0%,#efe7fb 100%);padding:60px 24px;position:relative;overflow:hidden}
+#fxb-enrollment *{box-sizing:border-box;margin:0;padding:0}
+#fxb-enrollment .fxb-enroll-bg{position:absolute;inset:0;pointer-events:none}
+#fxb-enrollment .fxb-enroll-decor{position:absolute;opacity:.06;width:300px;height:auto}
+#fxb-enrollment .fxb-edl{left:-60px;top:50%;transform:translateY(-50%)}
+#fxb-enrollment .fxb-edr{right:-40px;bottom:-30px;width:350px}
+#fxb-enrollment .fxb-section{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+#fxb-enrollment .fxb-enroll-grid{display:grid;grid-template-columns:1fr 420px;gap:48px;align-items:start}
+#fxb-enrollment .fxb-enroll-tag{display:inline-block;background:var(--orange);color:#fff;font-weight:800;font-size:12px;padding:6px 16px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
+#fxb-enrollment .fxb-enroll-title{font-size:clamp(24px,3vw,36px);font-weight:900;color:var(--purple);line-height:1.15;margin-bottom:16px}
+#fxb-enrollment .fxb-enroll-desc{font-size:15px;color:#5a4d6e;line-height:1.6;font-weight:500;margin-bottom:28px}
+#fxb-enrollment .fxb-enroll-features{display:flex;flex-direction:column;gap:16px}
+#fxb-enrollment .fxb-ef{display:flex;gap:14px;align-items:flex-start}
+#fxb-enrollment .fxb-ef svg{stroke:var(--purple-2);flex:0 0 auto;margin-top:2px}
+#fxb-enrollment .fxb-ef strong{display:block;font-weight:700;font-size:14px;color:var(--purple);margin-bottom:2px}
+#fxb-enrollment .fxb-ef span{font-size:13px;color:#7a6d90;font-weight:500}
+#fxb-enrollment .fxb-enroll-card{background:#fff;border-radius:20px;padding:32px;box-shadow:0 16px 48px -16px rgba(57,40,82,.18);border:1px solid rgba(102,45,146,.06)}
+#fxb-enrollment .fxb-form-title{font-size:20px;font-weight:800;color:var(--purple);margin-bottom:6px}
+#fxb-enrollment .fxb-form-sub{font-size:13px;color:#7a6d90;font-weight:500;margin-bottom:20px}
+#fxb-enrollment .fxb-form{display:flex;flex-direction:column;gap:12px}
+#fxb-enrollment .fxb-input{width:100%;padding:13px 16px;border:1.5px solid rgba(102,45,146,.12);border-radius:12px;font-family:inherit;font-size:14px;font-weight:500;color:var(--purple);background:#faf8fd;transition:border-color .2s,box-shadow .2s;outline:none}
+#fxb-enrollment .fxb-input:focus{border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.1)}
+#fxb-enrollment .fxb-input::placeholder{color:#b5afc4}
+#fxb-enrollment .fxb-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23662d92' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+#fxb-enrollment .fxb-submit{width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--orange),#f5a06f);color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 20px -8px rgba(238,115,73,.5)}
+#fxb-enrollment .fxb-submit:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(238,115,73,.6)}
+#fxb-enrollment .fxb-form-note{margin-top:12px;font-size:11px;color:#b5afc4;font-weight:500;text-align:center}
+#fxb-enrollment .fxb-form-note a{color:var(--purple-2);text-decoration:underline}
+@media(max-width:860px){
+  #fxb-enrollment .fxb-enroll-grid{grid-template-columns:1fr;gap:32px}
+  #fxb-enrollment .fxb-enroll-card{max-width:480px}
+}
+</style>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ПОДВАЛ САЙТА (FOOTER)
+  =============================================
+  Назначение: Нижний блок с навигацией, контактами, соцсетями и юр. информацией
+  
+  Что можно менять:
+    - Описание школы (fxb-ft-desc)
+    - Ссылки навигации
+    - Контактные данные (телефоны, почта)
+    - Ссылки на соцсети
+    - Юридическая информация (ИП, ИНН)
+    - Ссылки на политику и оферту
+  =============================================
+-->
+<div id="fxb-footer">
+  <div class="fxb-ft-bg">
+    <img class="fxb-ft-decor" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" loading="lazy">
+  </div>
+  <div class="fxb-section">
+    <div class="fxb-ft-grid">
+      <!-- Колонка 1: Логотип + описание -->
+      <div class="fxb-ft-brand">
+        <a class="fxb-ft-logo" href="/">
+          <img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="Фоксинбург" width="40" height="40">
+          <span>Фоксинбург</span>
+        </a>
+        <p class="fxb-ft-desc">Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.</p>
+        <div class="fxb-ft-socials">
+          <a href="https://vk.com/foxyfoxclub" target="_blank" rel="noopener" title="ВКонтакте">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12.78 19.83c-7 0-11-4.83-11.17-12.83h3.5c.12 5.93 2.73 8.43 4.8 8.95V7h3.3v5.1c2.04-.22 4.18-2.57 4.9-5.1h3.3c-.55 1.97-2.27 4.32-3.57 5.08 1.3.6 3.27 2.65 4.03 5.75h-3.63c-.6-1.87-2.08-3.95-4.73-4.23v4.23h-.73z" fill="currentColor"/></svg>
+          </a>
+          <a href="https://max.ru/id611904726658_biz" target="_blank" rel="noopener" title="Max">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://t.me/foxinburg" target="_blank" rel="noopener" title="Telegram">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21.2 4.4L2.4 11.1c-.6.3-.6.7 0 .9l4.8 1.5 1.8 5.8c.2.5.7.5 1 .2l2.6-2.1 5.1 3.7c.5.3 1 .1 1.1-.5L22.5 5.3c.2-.7-.4-1.2-1.3-.9zM9.6 13.7l-.3 3.4-.1.1-1-3.2 9.1-5.6-7.7 5.3z" fill="currentColor"/></svg>
+          </a>
+          <a href="https://wa.me/79939232309" target="_blank" rel="noopener" title="WhatsApp">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.7 1.9-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3zM12 21.5c-1.8 0-3.4-.5-4.8-1.3l-.3-.2-3.5.9.9-3.4-.2-.3A9.4 9.4 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zM12 1C6 1 1 6 1 12c0 1.9.5 3.8 1.4 5.4L1 23l5.7-1.5c1.6.9 3.4 1.4 5.3 1.4 6 0 11-5 11-11S18 1 12 1z" fill="currentColor"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Колонка 2: Навигация -->
+      <div class="fxb-ft-col">
+        <h4>Навигация</h4>
+        <a href="/">Главная</a>
+        <a href="/reading">Курс по чтению</a>
+        <a href="/grammar">Курс по грамматике</a>
+        <a href="/preparation">Подготовка к школе</a>
+        <a href="/doshkolniki">Для дошкольников</a>
+        <a href="/mladshie-shkolniki">Для младших школьников</a>
+        <a href="/podrostki">Для подростков</a>
+      </div>
+
+      <!-- Колонка 3: О школе -->
+      <div class="fxb-ft-col">
+        <h4>О школе</h4>
+        <a href="/news">Новости</a>
+        <a href="/vacant">Вакансии</a>
+        <a href="/kontakty">Контакты</a>
+        <a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>
+        <a href="/letnyaya-akademiya">Летняя Академия</a>
+        <a href="/lmsfoxinburg">Личный кабинет</a>
+      </div>
+
+      <!-- Колонка 4: Контакты -->
+      <div class="fxb-ft-col">
+        <h4>Контакты</h4>
+        <a href="tel:+79939232309">8 993 923-23-09</a>
+        <a href="tel:+79167323169">8 916 732-31-69</a>
+        <a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a>
+        <span class="fxb-ft-text">Ежедневно 9:00 — 21:00</span>
+      </div>
+    </div>
+
+    <!-- Нижняя полоса -->
+    <div class="fxb-ft-bottom">
+      <div class="fxb-ft-legal">
+        <span>ИП Дымова Вероника Александровна</span>
+        <span>ИНН 611904726658</span>
+      </div>
+      <div class="fxb-ft-links">
+        <a href="/policy">Политика конфиденциальности</a>
+        <a href="https://docs.google.com/document/d/10SWEMRDFKEc" target="_blank" rel="noopener">Публичная оферта</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-footer{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;--yellow:#fcf951;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  background:linear-gradient(135deg,#1e1433,#2e1a47,#392852);color:rgba(255,255,255,.8);padding:56px 24px 0;position:relative;overflow:hidden}
+#fxb-footer *{box-sizing:border-box;margin:0;padding:0}
+#fxb-footer .fxb-ft-bg{position:absolute;inset:0;pointer-events:none}
+#fxb-footer .fxb-ft-decor{position:absolute;right:-60px;bottom:-40px;width:300px;opacity:.04}
+#fxb-footer .fxb-section{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+#fxb-footer .fxb-ft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
+#fxb-footer .fxb-ft-logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:900;font-size:18px;margin-bottom:12px}
+#fxb-footer .fxb-ft-logo img{border-radius:8px}
+#fxb-footer .fxb-ft-desc{font-size:13px;line-height:1.6;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:16px}
+#fxb-footer .fxb-ft-socials{display:flex;gap:8px}
+#fxb-footer .fxb-ft-socials a{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);display:grid;place-items:center;text-decoration:none;transition:all .2s}
+#fxb-footer .fxb-ft-socials a:hover{background:var(--purple-2);color:#fff;transform:translateY(-2px)}
+#fxb-footer .fxb-ft-col{display:flex;flex-direction:column;gap:8px}
+#fxb-footer .fxb-ft-col h4{font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+#fxb-footer .fxb-ft-col a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+#fxb-footer .fxb-ft-col a:hover{color:var(--yellow)}
+#fxb-footer .fxb-ft-text{color:rgba(255,255,255,.4);font-size:12px;font-weight:500;margin-top:4px}
+#fxb-footer .fxb-ft-bottom{display:flex;align-items:center;justify-content:space-between;padding:20px 0;flex-wrap:wrap;gap:12px}
+#fxb-footer .fxb-ft-legal{display:flex;gap:16px;font-size:11.5px;color:rgba(255,255,255,.3);font-weight:500}
+#fxb-footer .fxb-ft-links{display:flex;gap:16px}
+#fxb-footer .fxb-ft-links a{font-size:11.5px;color:rgba(255,255,255,.35);text-decoration:none;font-weight:500;transition:color .2s}
+#fxb-footer .fxb-ft-links a:hover{color:rgba(255,255,255,.7)}
+@media(max-width:860px){
+  #fxb-footer .fxb-ft-grid{grid-template-columns:1fr 1fr;gap:28px}
+}
+@media(max-width:600px){
+  #fxb-footer .fxb-ft-grid{grid-template-columns:1fr;gap:24px}
+  #fxb-footer .fxb-ft-bottom{flex-direction:column;align-items:flex-start}
+}
+</style>
