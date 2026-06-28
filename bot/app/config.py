@@ -1,0 +1,63 @@
+"""Конфигурация бота MAX для языковой школы «Фоксинбург».
+
+Все значения берутся из переменных окружения (см. .env.example).
+Секреты никогда не хранятся в коде.
+"""
+from functools import lru_cache
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    # --- MAX Bot API ---
+    MAX_BOT_TOKEN: str = ""
+    # Актуальный домен MAX Bot API (с июля 2026 — platform-api2.max.ru).
+    MAX_BOT_API_URL: str = "https://platform-api2.max.ru"
+    MAX_WEBHOOK_SECRET: str = ""
+
+    # --- LLM (провайдер-агностик, OpenAI-совместимый) ---
+    # По умолчанию OpenRouter (бесплатные модели). Можно заменить на Groq,
+    # локальный Ollama и т.д., поменяв LLM_BASE_URL / LLM_MODEL / LLM_API_KEY.
+    LLM_API_KEY: str = ""
+    LLM_BASE_URL: str = "https://openrouter.ai/api/v1"
+    LLM_MODEL: str = "meta-llama/llama-3.3-70b-instruct:free"
+    LLM_TEMPERATURE: float = 0.4
+    LLM_MAX_TOKENS: int = 700
+    LLM_TIMEOUT: int = 40
+
+    # --- BigBen CRM ---
+    # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
+    BIGBEN_API_URL: str = ""
+    BIGBEN_API_KEY: str = ""
+    BIGBEN_PIPELINE_ID: str = ""
+    BIGBEN_PIPELINE_STATUS_ID: str = ""
+
+    # --- Передача администратору ---
+    # ID администраторов в MAX (через запятую), куда дублируется контекст диалога.
+    ADMIN_MAX_IDS: str = ""
+
+    # --- Мини-приложение ---
+    MINIAPP_BASE_URL: str = ""
+
+    # --- Прочее ---
+    BOT_NAME: str = "Фоксинбург"
+    DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
+    STATE_FILE: str = ""  # путь к файлу персистентности диалогов (опц.)
+
+    @property
+    def admin_ids(self) -> list[str]:
+        return [x.strip() for x in self.ADMIN_MAX_IDS.split(",") if x.strip()]
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
+
+
+settings = get_settings()
