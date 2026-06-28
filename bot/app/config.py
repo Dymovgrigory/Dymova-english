@@ -17,8 +17,11 @@ class Settings(BaseSettings):
 
     # --- MAX Bot API ---
     MAX_BOT_TOKEN: str = ""
-    # Актуальный домен MAX Bot API (с июля 2026 — platform-api2.max.ru).
-    MAX_BOT_API_URL: str = "https://platform-api2.max.ru"
+    # Рабочий домен MAX Bot API. botapi.max.ru работает без доп. сертификатов.
+    # Новый домен platform-api2.max.ru (миграция до 19.07.2026) требует установки
+    # корневого сертификата Минцифры в доверенные — переключайтесь на него только
+    # после установки сертификата на хосте.
+    MAX_BOT_API_URL: str = "https://botapi.max.ru"
     MAX_WEBHOOK_SECRET: str = ""
 
     # --- LLM (провайдер-агностик, OpenAI-совместимый) ---
