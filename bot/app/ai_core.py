@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import logging
+from urllib.parse import parse_qs
 
 from app import intent as I
 from app.bigben import get_bigben
@@ -31,6 +32,29 @@ from app import lead_manager
 from app.admin_router import hand_off
 
 logger = logging.getLogger(__name__)
+
+_UTM_KEYS = (
+    "utm_source", "utm_medium", "utm_campaign", "utm_term",
+    "utm_content", "fbclid", "fbp", "fbc",
+)
+
+
+def parse_utm(start_param: str) -> dict:
+    """Разбирает нагрузку deep-link в UTM-метки.
+
+    Поддерживает строку запроса («utm_source=vk&utm_campaign=spring») и
+    короткое значение («vk» → utm_source=vk, utm_medium=referral).
+    """
+    raw = (start_param or "").strip()
+    if not raw:
+        return {}
+    if "=" in raw:
+        parsed = parse_qs(raw.lstrip("?"), keep_blank_values=False)
+        utm = {k: v[0][:300] for k, v in parsed.items() if k in _UTM_KEYS and v}
+        if utm:
+            return utm
+    token = raw[:300]
+    return {"utm_source": token, "utm_medium": "referral"}
 
 
 def _capture_entities(conv: Conversation, text: str) -> None:
@@ -155,11 +179,18 @@ def _handoff_reply() -> str:
     )
 
 
-async def handle_start(user_id: str) -> str:
-    """Ответ на команду /start или событие bot_started."""
+async def handle_start(user_id: str, start_param: str = "") -> str:
+    """Ответ на команду /start или событие bot_started.
+
+    start_param — необязательная нагрузка deep-link (например
+    «utm_source=vk&utm_campaign=spring» или просто «vk»), из которой
+    извлекаются UTM-метки для атрибуции заявки в CRM.
+    """
     store = get_store()
     conv = store.reset(user_id)
     conv.stage = STAGE_DISCOVERY
+    if start_param:
+        conv.utm = parse_utm(start_param)
     reply = (
         "Здравствуйте! 🦊 Я — консультант языковой школы «Фоксинбург» в "
         "Долгопрудном. Помогу подобрать курс, расскажу о ценах, филиалах и "

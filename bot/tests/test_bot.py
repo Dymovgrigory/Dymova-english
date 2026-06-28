@@ -2,10 +2,11 @@
 import pytest
 
 from app import intent as I
-from app.ai_core import handle_message, handle_start
+from app.ai_core import handle_message, handle_start, parse_utm
+from app.bigben import build_params
 from app.course_selector import recommend
 from app.knowledge.kb import get_kb
-from app.memory import STAGE_DONE, STAGE_HANDOFF, STAGE_LEAD, get_store
+from app.memory import Lead, STAGE_DONE, STAGE_HANDOFF, STAGE_LEAD, get_store
 
 
 # ---------- извлечение сущностей ----------
@@ -34,6 +35,35 @@ def test_intents():
     assert I.detect_intent("хочу записаться на пробное") == I.WANT_SIGNUP
     assert I.detect_intent("соедините с администратором") == I.HANDOFF
     assert I.detect_intent("это дорого для нас") == I.OBJECTION
+
+
+# ---------- UTM / атрибуция заявки ----------
+
+def test_parse_utm_query_string():
+    utm = parse_utm("utm_source=vk&utm_campaign=spring&foo=bar")
+    assert utm == {"utm_source": "vk", "utm_campaign": "spring"}
+
+
+def test_parse_utm_short_token():
+    assert parse_utm("vk") == {"utm_source": "vk", "utm_medium": "referral"}
+    assert parse_utm("") == {}
+
+
+def test_build_params_includes_utm_and_contacts():
+    lead = Lead(
+        fio_parent="Иванова Анна", fio_child="Иванов Миша", phone="+79991234567",
+        email="a@b.ru", city="Долгопрудный", course="Английский",
+    )
+    params = build_params(
+        lead, source="MAX мини-приложение", note="заметка",
+        utm={"utm_source": "vk", "utm_medium": "miniapp", "unknown": "x"},
+    )
+    assert params["email"] == "a@b.ru"
+    assert params["city"] == "Долгопрудный"
+    assert params["utm_source"] == "vk"
+    assert params["utm_medium"] == "miniapp"
+    assert "unknown" not in params
+    assert params["user_note"] == "заметка"
 
 
 # ---------- база знаний ----------

@@ -142,8 +142,12 @@ async def _submit(conv: Conversation, bigben: BigBenClient, max_client: MaxClien
     lead.course = conv.selected_course or lead.course
     lead.branch = lead.branch or conv.selected_branch
     source = f"MAX-бот Фоксинбург — запись ({lead.course or 'диагностика'})"
+    note = _lead_note(conv)
+    utm = {**(conv.utm or {})}
+    utm.setdefault("utm_source", "max")
+    utm.setdefault("utm_medium", "bot")
 
-    ok = await bigben.create_lead(lead, source=source)
+    ok = await bigben.create_lead(lead, source=source, note=note, utm=utm)
     conv.stage = STAGE_DONE
 
     # уведомляем администратора о новой заявке (без переключения в режим handoff)
@@ -166,6 +170,19 @@ async def _submit(conv: Conversation, bigben: BigBenClient, max_client: MaxClien
         "вами в ближайшее время. Если удобно, можете также позвонить нам: "
         "8 993 923-23-09. Спасибо! 🦊"
     )
+
+
+def _lead_note(conv: Conversation) -> str:
+    """Полный контекст для администратора: резюме + выбор + концовка диалога."""
+    parts = [conv.summary()]
+    if conv.selected_format:
+        parts.append(f"Формат: {conv.selected_format}")
+    tail = [m for m in conv.history if m.get("role") == "user"][-4:]
+    if tail:
+        quoted = "; ".join(m["content"][:120] for m in tail)
+        parts.append(f"Реплики клиента: {quoted}")
+    parts.append("Источник: MAX-бот Фоксинбург")
+    return ". ".join(p for p in parts if p)
 
 
 def _match_branch(kb: KnowledgeBase, text: str) -> str | None:
