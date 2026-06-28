@@ -36,10 +36,14 @@ class Settings(BaseSettings):
 
     # --- BigBen CRM ---
     # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
-    BIGBEN_API_URL: str = ""
+    # Хост panel.bigbencrm.ru общий для всех школ BigBen, поэтому URL задан
+    # значением по умолчанию. Ключ (секрет) обязательно из окружения.
+    # Воронка «Бот Макс» (id 1924), этап «Входящие» (id 1) — куда падают
+    # новые заявки от бота. См. .env.example.
+    BIGBEN_API_URL: str = "https://panel.bigbencrm.ru/api/leads/add"
     BIGBEN_API_KEY: str = ""
-    BIGBEN_PIPELINE_ID: str = ""
-    BIGBEN_PIPELINE_STATUS_ID: str = ""
+    BIGBEN_PIPELINE_ID: str = "1924"
+    BIGBEN_PIPELINE_STATUS_ID: str = "1"
 
     # --- Передача администратору ---
     # ID администраторов в MAX (через запятую), куда дублируется контекст диалога.
