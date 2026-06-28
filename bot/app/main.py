@@ -11,10 +11,11 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
+from app import insights
 from app.ai_core import handle_message, handle_start, parse_utm
 from app.bigben import get_bigben
 from app.config import settings
@@ -211,11 +212,38 @@ if _MINIAPP_DIR.exists():
     app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
 
 
+def _check_admin(token: str | None) -> None:
+    """Защита служебных эндпоинтов. Если ADMIN_TOKEN задан — требуем его."""
+    if settings.ADMIN_TOKEN and token != settings.ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="admin token required")
+
+
 @app.post("/admin/set-webhook")
-async def admin_set_webhook(data: dict) -> dict:
+async def admin_set_webhook(
+    data: dict, x_admin_token: str | None = Header(default=None)
+) -> dict:
     """Регистрирует webhook бота в MAX. Тело: {"url": "https://.../webhook"}."""
+    _check_admin(x_admin_token)
     url = data.get("url")
     if not url:
         return {"ok": False, "error": "url required"}
     ok = await get_max().set_webhook(url, settings.MAX_WEBHOOK_SECRET or None)
     return {"ok": ok}
+
+
+@app.get("/admin/insights")
+async def admin_insights(
+    days: int = 30, top: int = 20, x_admin_token: str | None = Header(default=None)
+) -> dict:
+    """Отчёт цикла улучшения: топ вопросов, где бот отвечал неуверенно."""
+    _check_admin(x_admin_token)
+    return insights.summarize(days=days, top=top)
+
+
+@app.get("/admin/insights/digest", response_class=PlainTextResponse)
+async def admin_insights_digest(
+    days: int = 7, top: int = 10, x_admin_token: str | None = Header(default=None)
+) -> str:
+    """Готовый текст-дайджест «слабых мест» за период."""
+    _check_admin(x_admin_token)
+    return insights.digest(days=days, top=top)

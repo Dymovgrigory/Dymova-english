@@ -37,6 +37,40 @@ def test_intents():
     assert I.detect_intent("это дорого для нас") == I.OBJECTION
 
 
+def test_greeting_not_false_positive():
+    # «ку» внутри «ребёнку» не должно распознаваться как приветствие
+    assert I.detect_intent("По каким учебникам занимаетесь? Ребёнку 9 лет") != I.GREETING
+    assert I.detect_intent("ку") == I.GREETING
+
+
+def test_kb_has_textbooks():
+    kb = get_kb()
+    docs = kb.search("по каким учебникам английский My Level")
+    assert docs
+    assert any("My Level" in (d.title + d.text) for d in docs)
+
+
+# ---------- цикл улучшения (insights) ----------
+
+def test_insights_log_and_summarize(tmp_path, monkeypatch):
+    from app import insights
+    from app.config import settings
+
+    monkeypatch.setattr(settings, "INSIGHTS_FILE", str(tmp_path / "insights.jsonl"))
+    insights.log_gap("Есть ли парковка у филиала?", reason="no_kb", score=0.0, user_id="u1")
+    insights.log_gap("есть ли парковка у филиала", reason="no_kb", score=0.1, user_id="u2")
+    insights.log_gap("Можно ли оплатить картой?", reason="low_score", score=0.2, user_id="u1")
+
+    s = insights.summarize(days=30, top=10)
+    assert s["total_weak_answers"] == 3
+    # две формулировки про парковку схлопываются в одну тему с count=2 и 2 юзерами
+    top = s["gaps"][0]
+    assert top["count"] == 2
+    assert top["users"] == 2
+    assert "digest" not in s
+    assert "парков" in insights.digest(days=30).lower()
+
+
 # ---------- UTM / атрибуция заявки ----------
 
 def test_parse_utm_query_string():

@@ -12,8 +12,10 @@ from __future__ import annotations
 import logging
 from urllib.parse import parse_qs
 
+from app import insights
 from app import intent as I
 from app.bigben import get_bigben
+from app.config import settings
 from app.course_selector import format_recommendations, recommend
 from app.knowledge.kb import get_kb
 from app.llm import get_llm
@@ -77,6 +79,16 @@ async def _consult(conv: Conversation, text: str) -> str:
     kb = get_kb()
     llm = get_llm()
     kb_context = kb.context_for(text, limit=5)
+
+    # Цикл улучшения: если база знаний почти не покрывает вопрос — фиксируем пробел.
+    score = kb.best_score(text)
+    if score < settings.INSIGHTS_MIN_SCORE:
+        insights.log_gap(
+            text,
+            reason="no_kb" if not kb_context else "low_score",
+            score=score,
+            user_id=conv.user_id,
+        )
 
     if llm.enabled:
         system = sales.build_system_prompt(kb, conv, kb_context)
@@ -156,6 +168,13 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             "помогу выбрать подходящую программу. Или сразу запишу на бесплатную "
             "диагностику. 😊"
         )
+
+    # 6b. Конкретные вопросы про содержание (учебники/материалы/методика) —
+    #     отвечаем из базы знаний (RAG + LLM), а не подбором программ.
+    if any(k in text.lower() for k in ("учебник", "пособи", "умк", "материал")):
+        if conv.stage not in (STAGE_DONE,):
+            conv.stage = STAGE_DISCOVERY
+        return await _consult(conv, text)
 
     # 7. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор.
     if intent == I.COURSES and conv.lead.age:

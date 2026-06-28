@@ -115,6 +115,21 @@ class KnowledgeBase:
             self._add("courses", c.get("name", ""),
                       " ".join([p for p in parts if p]) + " " + "; ".join(meta))
 
+        tb = r.get("textbooks")
+        if tb:
+            levels = tb.get("levels", [])
+            overview = tb.get("summary", "") + " Уровни: " + "; ".join(
+                f"{lv.get('level','')} ({lv.get('age','')}, {lv.get('year','')}, {lv.get('cefr','')})"
+                for lv in levels
+            )
+            self._add("textbooks", tb.get("name", "Учебники"), overview)
+            for lv in levels:
+                self._add(
+                    "textbooks",
+                    f"{lv.get('level','')} — {lv.get('age','')}",
+                    f"{lv.get('year','')}, уровень {lv.get('cefr','')}. {lv.get('detail','')}",
+                )
+
         sa = r.get("summer_academy")
         if sa:
             self._add("summer_academy", sa.get("name", "Летняя Академия"),
@@ -138,7 +153,7 @@ class KnowledgeBase:
                       f"MAX-канал: {social.get('max_channel','')}")
 
     # ---------- поиск ----------
-    def search(self, query: str, limit: int = 5) -> list[Document]:
+    def search_scored(self, query: str, limit: int = 5) -> list[tuple[float, Document]]:
         q_tokens = set(_tokens(query))
         if not q_tokens:
             return []
@@ -155,7 +170,14 @@ class KnowledgeBase:
                 score += 0.1
             scored.append((score, doc))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [d for _, d in scored[:limit]]
+        return scored[:limit]
+
+    def search(self, query: str, limit: int = 5) -> list[Document]:
+        return [d for _, d in self.search_scored(query, limit=limit)]
+
+    def best_score(self, query: str) -> float:
+        scored = self.search_scored(query, limit=1)
+        return scored[0][0] if scored else 0.0
 
     def context_for(self, query: str, limit: int = 5) -> str:
         docs = self.search(query, limit=limit)

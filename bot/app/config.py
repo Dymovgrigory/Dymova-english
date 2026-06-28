@@ -25,11 +25,11 @@ class Settings(BaseSettings):
     MAX_WEBHOOK_SECRET: str = ""
 
     # --- LLM (провайдер-агностик, OpenAI-совместимый) ---
-    # По умолчанию OpenRouter (бесплатные модели). Можно заменить на Groq,
+    # По умолчанию Groq (бесплатно, быстро). Можно заменить на OpenRouter,
     # локальный Ollama и т.д., поменяв LLM_BASE_URL / LLM_MODEL / LLM_API_KEY.
     LLM_API_KEY: str = ""
-    LLM_BASE_URL: str = "https://openrouter.ai/api/v1"
-    LLM_MODEL: str = "meta-llama/llama-3.3-70b-instruct:free"
+    LLM_BASE_URL: str = "https://api.groq.com/openai/v1"
+    LLM_MODEL: str = "llama-3.3-70b-versatile"
     LLM_TEMPERATURE: float = 0.4
     LLM_MAX_TOKENS: int = 700
     LLM_TIMEOUT: int = 40
@@ -56,6 +56,16 @@ class Settings(BaseSettings):
     BOT_NAME: str = "Фоксинбург"
     DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
     STATE_FILE: str = ""  # путь к файлу персистентности диалогов (опц.)
+
+    # --- Цикл улучшения ---
+    # Журнал «пробелов»: вопросы, на которые бот ответил неуверенно
+    # (низкое совпадение с базой знаний). JSONL-файл, по строке на запись.
+    INSIGHTS_FILE: str = ""
+    # Порог релевантности поиска: ниже — считаем ответ «слабым» и логируем пробел.
+    INSIGHTS_MIN_SCORE: float = 0.34
+    # Токен для служебных эндпоинтов /admin/* (если задан — требуется заголовок
+    # X-Admin-Token). Защищает отчёт об улучшениях и регистрацию webhook.
+    ADMIN_TOKEN: str = ""
 
     @property
     def admin_ids(self) -> list[str]:
