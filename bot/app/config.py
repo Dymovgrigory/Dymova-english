@@ -67,9 +67,19 @@ class Settings(BaseSettings):
     # X-Admin-Token). Защищает отчёт об улучшениях и регистрацию webhook.
     ADMIN_TOKEN: str = ""
 
+    # --- Ежедневный отчёт администраторам ---
+    DIGEST_ENABLED: bool = True
+    DIGEST_HOUR: int = 21          # час отправки (в часовом поясе DIGEST_TZ_OFFSET)
+    DIGEST_MINUTE: int = 0
+    DIGEST_TZ_OFFSET: int = 3      # смещение от UTC (Москва = +3)
+    DIGEST_DAYS: int = 1           # за какой период собирать дайджест
+
     @property
     def admin_ids(self) -> list[str]:
         return [x.strip() for x in self.ADMIN_MAX_IDS.split(",") if x.strip()]
+
+    def is_admin(self, user_id: str | int) -> bool:
+        return str(user_id) in self.admin_ids
 
 
 @lru_cache

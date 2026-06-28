@@ -71,6 +71,34 @@ def test_insights_log_and_summarize(tmp_path, monkeypatch):
     assert "парков" in insights.digest(days=30).lower()
 
 
+def test_digest_schedule_timing():
+    from datetime import datetime, timedelta, timezone
+
+    from app import scheduler
+    from app.config import settings
+
+    tz = timezone(timedelta(hours=settings.DIGEST_TZ_OFFSET))
+    # за час до 21:00 -> примерно 3600 секунд
+    before = datetime(2026, 6, 28, 20, 0, 0, tzinfo=tz)
+    assert abs(scheduler._seconds_until_next_run(before) - 3600) < 2
+    # после 21:00 -> переносится на следующий день (близко к 24ч)
+    after = datetime(2026, 6, 28, 21, 30, 0, tzinfo=tz)
+    assert scheduler._seconds_until_next_run(after) > 23 * 3600
+
+
+def test_admin_commands(monkeypatch):
+    from app import main
+    from app.config import settings
+
+    monkeypatch.setattr(settings, "ADMIN_MAX_IDS", "555,777")
+    # /myid доступна всем
+    assert "555" in main._admin_command("/myid", "555")
+    assert "обычный" in main._admin_command("/myid", "111")
+    # отчёт: админу — дайджест, обычному пользователю — None (как обычный вопрос)
+    assert main._admin_command("/отчёт", "111") is None
+    assert main._admin_command("/отчёт", "555").startswith("🛠 Админ-панель")
+
+
 # ---------- UTM / атрибуция заявки ----------
 
 def test_parse_utm_query_string():
