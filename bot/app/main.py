@@ -9,12 +9,14 @@
 from __future__ import annotations
 
 import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
+from app import insights, scheduler
 from app.ai_core import handle_message, handle_start, parse_utm
 from app.bigben import get_bigben
 from app.config import settings
@@ -26,7 +28,13 @@ from app.memory import Lead, get_store
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Foxinburg MAX Bot")
+@asynccontextmanager
+async def _lifespan(_: FastAPI):
+    scheduler.start()
+    yield
+
+
+app = FastAPI(title="Foxinburg MAX Bot", lifespan=_lifespan)
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
 
@@ -42,6 +50,26 @@ def _main_menu() -> list[list[dict]]:
     if settings.MINIAPP_BASE_URL:
         rows.insert(0, [link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
     return rows
+
+
+_ADMIN_REPORT_CMDS = {"/админ", "/admin", "админ", "/отчет", "/отчёт", "отчет",
+                      "отчёт", "/report", "report", "/insights", "статистика",
+                      "/статистика", "дайджест", "/дайджест"}
+_MYID_CMDS = {"/myid", "myid", "мой id", "/id"}
+
+
+def _admin_command(low: str, user_id: str) -> str | None:
+    """Команды администратора в чате. Возвращает текст ответа или None."""
+    if low in _MYID_CMDS:
+        role = "администратор" if settings.is_admin(user_id) else "обычный пользователь"
+        return f"Ваш MAX ID: {user_id}\nСтатус: {role}."
+    if low in _ADMIN_REPORT_CMDS:
+        if not settings.is_admin(user_id):
+            return None  # для не-админов это обычный вопрос → обрабатывается ботом
+        report = insights.digest(days=settings.DIGEST_DAYS)
+        return ("🛠 Админ-панель\n\n" + report +
+                "\n\nКоманды: /отчёт — дайджест за день, /myid — ваш ID.")
+    return None
 
 
 _CALLBACK_TEXT = {
@@ -108,7 +136,10 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         if not text:
             return
         low = text.lower()
-        if low.split(maxsplit=1)[0] in ("/start", "start"):
+        admin_reply = _admin_command(low, user_id)
+        if admin_reply is not None:
+            await max_client.send_message(user_id, admin_reply)
+        elif low.split(maxsplit=1)[0] in ("/start", "start"):
             parts = text.split(maxsplit=1)
             start_param = parts[1].strip() if len(parts) > 1 else ""
             reply = await handle_start(user_id, start_param=start_param)
@@ -211,11 +242,46 @@ if _MINIAPP_DIR.exists():
     app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
 
 
+def _check_admin(token: str | None) -> None:
+    """Защита служебных эндпоинтов. Если ADMIN_TOKEN задан — требуем его."""
+    if settings.ADMIN_TOKEN and token != settings.ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="admin token required")
+
+
 @app.post("/admin/set-webhook")
-async def admin_set_webhook(data: dict) -> dict:
+async def admin_set_webhook(
+    data: dict, x_admin_token: str | None = Header(default=None)
+) -> dict:
     """Регистрирует webhook бота в MAX. Тело: {"url": "https://.../webhook"}."""
+    _check_admin(x_admin_token)
     url = data.get("url")
     if not url:
         return {"ok": False, "error": "url required"}
     ok = await get_max().set_webhook(url, settings.MAX_WEBHOOK_SECRET or None)
     return {"ok": ok}
+
+
+@app.get("/admin/insights")
+async def admin_insights(
+    days: int = 30, top: int = 20, x_admin_token: str | None = Header(default=None)
+) -> dict:
+    """Отчёт цикла улучшения: топ вопросов, где бот отвечал неуверенно."""
+    _check_admin(x_admin_token)
+    return insights.summarize(days=days, top=top)
+
+
+@app.get("/admin/insights/digest", response_class=PlainTextResponse)
+async def admin_insights_digest(
+    days: int = 7, top: int = 10, x_admin_token: str | None = Header(default=None)
+) -> str:
+    """Готовый текст-дайджест «слабых мест» за период."""
+    _check_admin(x_admin_token)
+    return insights.digest(days=days, top=top)
+
+
+@app.post("/admin/digest/send")
+async def admin_digest_send(x_admin_token: str | None = Header(default=None)) -> dict:
+    """Немедленно разослать дайджест администраторам (для проверки расписания)."""
+    _check_admin(x_admin_token)
+    sent = await scheduler.send_digest_now()
+    return {"ok": True, "sent": sent, "admins": len(settings.admin_ids)}

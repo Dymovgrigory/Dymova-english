@@ -20,9 +20,15 @@ OBJECTION = "objection"
 HANDOFF = "handoff"
 QUESTION = "question"
 
+# Приветствие проверяем отдельным regex по границам слов: короткие токены вроде
+# «ку»/«hi» иначе ложно срабатывают внутри слов («ребёнку», «уроки»).
+_GREETING_RE = re.compile(
+    r"\b(привет\w*|здравств\w*|здравуй\w*|здравейте|хелло\w*|hello|hi|hey|ку)\b"
+    r"|добрый день|добрый вечер|доброе утро",
+    re.IGNORECASE,
+)
+
 _PATTERNS: list[tuple[str, list[str]]] = [
-    (GREETING, ["привет", "здравств", "добрый день", "добрый вечер", "доброе утро",
-                "здравейте", "хеллоу", "hello", "hi ", "ку "]),
     (HANDOFF, ["оператор", "администратор", "менеджер", "жалоб", "директор",
                "возврат", "договор", "претензи", "живой человек", "человек",
                "позвоните мне", "перезвоните"]),
@@ -66,11 +72,11 @@ def detect_intent(text: str) -> str:
     low = text.lower().strip()
     if detect_objection(low):
         return OBJECTION
+    if _GREETING_RE.search(low):
+        return GREETING
     for intent, words in _PATTERNS:
         if any(w in low for w in words):
             return intent
-    if "?" in low:
-        return QUESTION
     return QUESTION
 
 

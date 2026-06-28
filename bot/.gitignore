@@ -4,3 +4,6 @@ __pycache__/
 .env
 state.json
 .pytest_cache/
+insights.jsonl
+uvicorn.log
+.admin_token.txt
