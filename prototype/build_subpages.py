@@ -118,6 +118,8 @@ CSS = """
 #fxb-page .fxb-book{display:flex;gap:18px;align-items:flex-start;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:18px;padding:22px;box-shadow:0 10px 24px -16px rgba(57,40,82,.3)}
 #fxb-page .fxb-book-cover{width:62px;height:82px;border-radius:10px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));display:grid;place-items:center;flex:0 0 auto;box-shadow:0 8px 18px -8px rgba(102,45,146,.6)}
 #fxb-page .fxb-book-cover svg{width:28px;height:28px;stroke:#fff}
+#fxb-page .fxb-book-cover--img{width:74px;height:98px;background:#fff;border:1px solid rgba(57,40,82,.1);padding:5px;box-shadow:0 9px 20px -8px rgba(57,40,82,.45)}
+#fxb-page .fxb-book-cover--img img{width:100%;height:100%;object-fit:contain;border-radius:6px}
 #fxb-page .fxb-book h4{font-size:15.5px;font-weight:800;margin-bottom:6px}
 #fxb-page .fxb-book p{color:var(--muted);font-size:13.5px;font-weight:500;line-height:1.5}
 #fxb-page .fxb-note{margin-top:22px;font-size:13px;color:#a89fbd;font-weight:600;text-align:center;font-style:italic}
@@ -157,6 +159,7 @@ JS = """
 
 DECOR_SWIRL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-1.png"
 DECOR_FOX = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png"
+MYLEVEL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/"
 MAX_BOT = "https://max.ru/id611904726658_bot"
 
 
@@ -170,9 +173,14 @@ def fact(icon, value, label):
             '</div><b>' + value + '</b><span>' + label + '</span></div>')
 
 
-def book(title, text):
-    return ('<div class="fxb-book"><div class="fxb-book-cover">' + svg("book") +
-            '</div><div><h4>' + title + '</h4><p>' + text + '</p></div></div>')
+def book(title, text, cover=None):
+    if cover:
+        inner = ('<div class="fxb-book-cover fxb-book-cover--img"><img src="' + cover +
+                 '" alt="' + title + '" loading="lazy"></div>')
+    else:
+        inner = '<div class="fxb-book-cover">' + svg("book") + '</div>'
+    return ('<div class="fxb-book">' + inner +
+            '<div><h4>' + title + '</h4><p>' + text + '</p></div></div>')
 
 
 def render_page(p):
@@ -220,7 +228,8 @@ def render_page(p):
         h.append('<div class="fxb-books">')
         for b in p["books"]:
             h.append(book(*b))
-        h.append('</div><p class="fxb-note">Фотографии пособий будут добавлены позже. Все материалы включены в стоимость курса.</p>')
+        note = p.get("books_note", "Фотографии пособий будут добавлены позже. Все материалы включены в стоимость курса.")
+        h.append('</div><p class="fxb-note">' + note + '</p>')
         h.append('</div></section>')
     # CTA
     h.append('<section class="fxb-cta" id="fxb-cta">')
@@ -290,15 +299,18 @@ PAGES["page_mladshie_shkolniki.html"] = {
     "facts": [
         ("calendar", "2 раза / нед", "Стабильный ритм обучения"),
         ("clock", "60 минут", "Полноценное занятие с практикой"),
-        ("sun", "Утренние группы", "Для учеников второй смены"),
+        ("sun", "Утро, день, вечер", "Дневные, вечерние и утренние группы — подойдут и тем, кто учится во вторую смену"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
     "books": [
-        ("Family and Friends", "Комплексный курс: чтение, аудирование, грамматика и говорение в одном пособии."),
-        ("Kid's Box", "Игровой курс Cambridge с подготовкой к экзаменам YLE (Starters / Movers)."),
+        ("My Level 1", "6–8 лет, 1-й год обучения. Уровень Pre-A1. Старт с азов: алфавит, фоника и первые фразы, чтение по Read with Richie.", MYLEVEL + "mylevel-1.png"),
+        ("My Level 2", "8–9 лет, 2-й год обучения. Уровень Pre-A1 → A1. Расширяем лексику и грамматику, больше чтения с Richie's Adventures.", MYLEVEL + "mylevel-2.png"),
+        ("My Level 3", "9–10 лет, 3-й год обучения. Уровень A1. Уверенное чтение и грамматика, отработка лексики по Move It 1.", MYLEVEL + "mylevel-3.png"),
+        ("My Level 4", "10–11 лет, 4-й год обучения. Уровень A1 → A2. Сложнее тексты и грамматика по Move It 2, мягкая подготовка к Кембриджским экзаменам YLE.", MYLEVEL + "mylevel-4.png"),
     ],
-    "books_title": "Пособия и материалы",
-    "books_lead": "Учебники Oxford и Cambridge, проверенные тысячами учеников по всему миру.",
+    "books_title": "Учебники My Level",
+    "books_lead": "Занимаемся по современным оригинальным УМК My Level — с 1 по 4 уровень, по возрасту и подготовке ребёнка.",
+    "books_note": "Комплекты учебников My Level приобретаются в нашей школе отдельно.",
     "cta_title": 'Начните с <span class="fxb-accent">бесплатной диагностики</span>',
     "cta_text": "Методист оценит уровень ребёнка и предложит индивидуальный план обучения.",
 }
