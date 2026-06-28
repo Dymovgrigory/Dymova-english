@@ -988,3 +988,19 @@
 2. `python3 prototype/tilda_upload_copies.py` — reading-new / grammar-new / preparation-new (попап + шапка/подвал).
 3. Новости/Вакансии: контент `page_novosti.html`/`page_vakansii.html` залить на страницы. ВНИМАНИЕ: `/news` использует динамический Feed-блок Tilda (от него зависят посты `/news/<slug>`) — удалять его рискованно. Решение уточнить с владельцем: либо конвертировать `/vacant` (статичная, безопасно) и создать отдельную `/novosti`, либо принять статичный слепок.
 4. Кабинет 2053071 → «Опубликовать все» → проверить на лайве (Ctrl+F5).
+
+---
+
+### Сессия 18 — Публикация Новостей/Вакансий + попапа на лайв (ЗАВЕРШЕНО)
+
+**Tilda-публикация выполнена полностью:**
+- Меню в `tilda_shapka.html` / `tilda_footer.html`: `/news` → `/novosti`, `/vacant` → `/vakansii`.
+- Созданы 2 новые страницы Tilda: `/novosti` (pageid 151324806), `/vakansii` (pageid 151324866) — заголовки/алиасы заданы через `_set_settings.py`.
+- `_inject_new_pages.py`: на пустые страницы залиты 3 T123-блока (шапка + контент `page_novosti.html`/`page_vakansii.html` + подвал) через `/page/submit/` (addnewrecord → saverecord → saverecordssort).
+- Перезалиты `tilda_upload_subpages.py` (8 подстраниц) и `tilda_upload_copies.py` (reading/grammar/preparation-new) с обновлённым меню.
+- Кабинет 2053071 → «Опубликовать все»: «Все страницы опубликованы успешно» (24 стр.).
+
+**Проверка на лайве (запись экрана, все тесты PASS):**
+- `/novosti` 200 — hero + 3 карточки (ссылки на живые `/news/<slug>`) + CTA ВК, единый стиль, меню ведёт на `/novosti` `/vakansii`.
+- `/vakansii` 200 — hero + «почему мы» + 2 вакансии + 4 шага найма, отклик → Telegram `t.me/m/Zl_g5u6BMWZi`.
+- Попап заявки на `reading-new` (и grammar/preparation/letnyaya — по 5 кнопок + модалка, 0 `popup:diagnostika`): открытие → форма (валидация) → submit открыл WhatsApp с текстом `Здравствуйте! Хочу записаться на «Курс по чтению». Меня зовут …, телефон …` → экран «Заявка сформирована!».
