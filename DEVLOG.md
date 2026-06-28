@@ -924,3 +924,39 @@
 Все 4 страницы опубликованы и проверены на лайве. Источники контента — оригиналы
 /reading, /grammar, /preparation и страница летней академии. Оригиналы не тронуты.
 Порядок блоков /index-new не менялся (остаётся зафиксированным).
+
+## Сессия 16 — HANDOFF (передача другому агенту)
+
+**Ветка:** `devin/1782653000-course-content` (запушена). Последний коммит: тест + правка ссылок шапки/подвала.
+
+### Что сделано в этой сессии
+1. Полный тест страниц курсов на лайве — отчёт `prototype/test-report-course-pages.md`, комментарий в PR #13.
+   Итог: 8 PASS, 2 FAIL.
+2. **FAIL #2 (ссылки шапки) — ИСПРАВЛЕНО в коде, НО ЕЩЁ НЕ ОПУБЛИКОВАНО:**
+   - `prototype/tilda_shapka.html`: меню «Наши курсы» (стр. 45-47) и топбар «Летние программы» (стр. 98-99) → /reading-new, /grammar-new, /preparation-new.
+   - `prototype/tilda_footer.html`: «Навигация» (стр. 50-52) → -new.
+
+### Что ОСТАЛОСЬ доделать (по запросу владельца «исправь»)
+- **FAIL #1 (кнопки заявки не открывают форму)** — НЕ начато.
+  Факт: на ВСЁМ сайте форма заявки `onsubmit="return false;"` — бэкенда нет (см. tilda_cta_enrollment.html, main_combined_v7.html). Кнопки `href="#popup:diagnostika"` (в page_*.html стр. 32 и 37) ведут в никуда — попап-блока нет.
+  План: добавить рабочий попап-форму на 4 страницы курсов (идемпотентно, маркеры FXB-EXTRA), на submit — маршрутизировать лид в WhatsApp (wa.me/79939232309 с префилл-текстом) + кнопки Max/звонок; показать «спасибо». Заменить `href="#popup:diagnostika"` на `data-fxb-zayavka`.
+  Файлы: page_reading.html, page_grammar.html, page_preparation.html, page_letnyaya_akademiya.html (+ build_course_pages.py для воспроизводимости).
+
+### ПОСЛЕ правок — ОБЯЗАТЕЛЬНО опубликовать в Tilda (иначе на лайве не изменится):
+1. Залить обновлённую шапку/подвал/контент:
+   - `python3 prototype/tilda_upload_subpages.py` (8 доп. страниц: шапка+подвал)
+   - `python3 prototype/tilda_upload_copies.py` (reading-new 151292376 / grammar-new 151292406 / preparation-new 151292476)
+   - letnyaya-akademiya pageid 151229566 входит в upload_subpages.
+   Требуется авторизованный Chrome с CDP :29229 (Tilda-логин уже сохранён, секрет TILDA_PASSWORD в орг).
+2. Опубликовать: кабинет проекта 2053071 → «Опубликовать все» (API публикации в Tilda ненадёжен; см. tilda_publish_pages.py как опцию).
+3. Проверить на лайве (Ctrl+F5): меню «Наши курсы» в шапке подстраниц → -new; кнопка заявки открывает форму.
+
+### Важные ограничения от владельца
+- Оригиналы /reading, /grammar, /preparation НЕ трогать (работаем на -new).
+- Порядок блоков на /index-new НЕ менять.
+
+### Ключевые значения
+- projectid 2053071; /index-new pageid 151210576
+- reading-new 151292376 · grammar-new 151292406 · preparation-new 151292476 · letnyaya-akademiya 151229566
+- VK видео урока: oid -191733680, id 456239500
+- WhatsApp школы: wa.me/79939232309 ; Max bot: https://max.ru/id611904726658_bot
