@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+state.json
+insights.jsonl
+uvicorn.log
+.admin_token.txt
+tests/
+data/

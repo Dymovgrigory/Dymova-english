@@ -1,0 +1,13 @@
+# Caddy выпускает HTTPS-сертификат автоматически. Замените домен на свой
+# (A-запись домена должна указывать на IP сервера).
+#
+# Вариант для docker compose (бот доступен по имени сервиса bot):
+bot.dymova-english.ru {
+    reverse_proxy bot:8000
+}
+
+# Если разворачиваете БЕЗ Docker (systemd) — бот слушает localhost:8000,
+# тогда используйте такой блок вместо верхнего:
+# bot.dymova-english.ru {
+#     reverse_proxy localhost:8000
+# }

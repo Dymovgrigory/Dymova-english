@@ -1,0 +1,32 @@
+# Поднимает бота + Caddy (обратный прокси с автоматическим HTTPS Let's Encrypt).
+# Перед запуском: заполнить .env и указать домен в deploy/Caddyfile.
+services:
+  bot:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Персистентные данные складываем в смонтированный том /data.
+      STATE_FILE: /data/state.json
+      INSIGHTS_FILE: /data/insights.jsonl
+    volumes:
+      - ./data:/data
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - bot
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
