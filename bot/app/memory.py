@@ -36,6 +36,8 @@ class Lead:
     course: str = ""
     branch: str = ""
     comment: str = ""
+    email: str = ""
+    city: str = ""
 
     def missing_required(self) -> list[str]:
         required = {
@@ -60,6 +62,8 @@ class Conversation:
     selected_format: str = ""
     lead_step: str = ""        # какое поле сейчас собираем
     handed_off: bool = False
+    # UTM-метки/источник (из deep-link при /start или из мини-приложения).
+    utm: dict = field(default_factory=dict)
 
     def add(self, role: str, content: str) -> None:
         self.history.append({"role": role, "content": content})
@@ -77,7 +81,8 @@ class Conversation:
         for key, label in (
             ("fio_parent", "Родитель"), ("phone", "Телефон"),
             ("fio_child", "Ребёнок"), ("age", "Возраст"),
-            ("birthday", "Дата рождения"), ("comment", "Комментарий"),
+            ("birthday", "Дата рождения"), ("email", "E-mail"),
+            ("city", "Город"), ("comment", "Комментарий"),
         ):
             val = getattr(l, key)
             if val:
@@ -151,6 +156,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         selected_format=d.get("selected_format", ""),
         lead_step=d.get("lead_step", ""),
         handed_off=d.get("handed_off", False),
+        utm=d.get("utm", {}) or {},
     )
 
 

@@ -15,7 +15,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.ai_core import handle_message, handle_start
+from app.ai_core import handle_message, handle_start, parse_utm
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
@@ -92,7 +92,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
     if update_type == "bot_started":
         user_id = _extract_user_id(update)
         if user_id:
-            reply = await handle_start(user_id)
+            reply = await handle_start(user_id, start_param=_extract_start_param(update))
             await max_client.send_message(user_id, reply, buttons=_main_menu())
         return
 
@@ -108,8 +108,10 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         if not text:
             return
         low = text.lower()
-        if low in ("/start", "start"):
-            reply = await handle_start(user_id)
+        if low.split(maxsplit=1)[0] in ("/start", "start"):
+            parts = text.split(maxsplit=1)
+            start_param = parts[1].strip() if len(parts) > 1 else ""
+            reply = await handle_start(user_id, start_param=start_param)
             await max_client.send_message(user_id, reply, buttons=_main_menu())
         elif low in ("/menu", "меню"):
             await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
@@ -129,6 +131,15 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
             await max_client.send_message(user_id, reply)
         return
+
+
+def _extract_start_param(update: dict) -> str:
+    """Нагрузка deep-link из события bot_started (MAX: поле payload)."""
+    for key in ("payload", "start_payload", "start_param"):
+        val = update.get(key)
+        if val:
+            return str(val)
+    return ""
 
 
 def _extract_user_id(update: dict):
@@ -178,11 +189,20 @@ async def miniapp_lead(data: dict) -> dict:
         branch=str(data.get("branch", "")),
         course=str(data.get("course", "")),
         comment=str(data.get("comment", ""))[:255],
+        email=str(data.get("email", ""))[:255],
+        city=str(data.get("city", ""))[:255],
     )
     if not lead.fio_parent or not lead.phone:
         return {"ok": False, "error": "Укажите имя и телефон"}
-    source = "MAX мини-приложение Фоксинбург"
-    ok = await get_bigben().create_lead(lead, source=source)
+    course = lead.course or "диагностика"
+    source = f"MAX мини-приложение Фоксинбург ({course})"
+    utm = parse_utm(str(data.get("start_param", "")))
+    raw_utm = data.get("utm")
+    if isinstance(raw_utm, dict):
+        utm.update({k: str(v)[:300] for k, v in raw_utm.items() if v})
+    utm.setdefault("utm_source", "max")
+    utm.setdefault("utm_medium", "miniapp")
+    ok = await get_bigben().create_lead(lead, source=source, utm=utm)
     return {"ok": ok}
 
 

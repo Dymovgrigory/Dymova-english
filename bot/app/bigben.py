@@ -27,31 +27,18 @@ class BigBenClient:
             and settings.BIGBEN_PIPELINE_STATUS_ID
         )
 
-    async def create_lead(self, lead: Lead, source: str, note: str = "") -> bool:
+    async def create_lead(
+        self,
+        lead: Lead,
+        source: str,
+        note: str = "",
+        utm: dict | None = None,
+    ) -> bool:
         if not self.configured:
             logger.warning("BigBen не настроен — заявка не отправлена (lead=%s)", lead.fio_parent)
             return False
 
-        params = {
-            "key": settings.BIGBEN_API_KEY,
-            "pipeline_id": settings.BIGBEN_PIPELINE_ID,
-            "pipeline_status_id": settings.BIGBEN_PIPELINE_STATUS_ID,
-            "source": source[:255],
-        }
-        if lead.fio_child:
-            params["fio"] = lead.fio_child[:255]
-        if lead.fio_parent:
-            params["fio_parent"] = lead.fio_parent[:255]
-        if lead.phone:
-            params["phone"] = lead.phone[:20]
-        if lead.birthday:
-            params["birthday"] = lead.birthday
-        if lead.comment:
-            params["phone_comment"] = lead.comment[:255]
-
-        user_note = note or _build_note(lead)
-        if user_note:
-            params["user_note"] = user_note[:1000]
+        params = build_params(lead, source, note, utm)
 
         try:
             async with httpx.AsyncClient(timeout=30) as client:
@@ -64,6 +51,47 @@ class BigBenClient:
         except Exception:
             logger.exception("BigBen запрос не удался")
             return False
+
+
+_UTM_KEYS = (
+    "utm_source", "utm_medium", "utm_campaign", "utm_term",
+    "utm_content", "fbclid", "fbp", "fbc",
+)
+
+
+def build_params(lead: Lead, source: str, note: str = "", utm: dict | None = None) -> dict:
+    """Формирует словарь GET-параметров для BigBen API (без секретов в логах)."""
+    params = {
+        "key": settings.BIGBEN_API_KEY,
+        "pipeline_id": settings.BIGBEN_PIPELINE_ID,
+        "pipeline_status_id": settings.BIGBEN_PIPELINE_STATUS_ID,
+        "source": source[:255],
+    }
+    if lead.fio_child:
+        params["fio"] = lead.fio_child[:255]
+    if lead.fio_parent:
+        params["fio_parent"] = lead.fio_parent[:255]
+    if lead.phone:
+        params["phone"] = lead.phone[:20]
+    if lead.birthday:
+        params["birthday"] = lead.birthday
+    if lead.email:
+        params["email"] = lead.email[:255]
+    if lead.city:
+        params["city"] = lead.city[:255]
+    if lead.comment:
+        params["phone_comment"] = lead.comment[:255]
+
+    # UTM-метки/атрибуция — пробрасываем только поддерживаемые ключи.
+    for key in _UTM_KEYS:
+        val = (utm or {}).get(key)
+        if val:
+            params[key] = str(val)[:300]
+
+    user_note = note or _build_note(lead)
+    if user_note:
+        params["user_note"] = user_note[:1000]
+    return params
 
 
 def _build_note(lead: Lead) -> str:

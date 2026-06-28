@@ -17,6 +17,20 @@ async function postJSON(url, body) {
 }
 
 let INFO = null;
+let SELECTED_COURSE = "";
+
+// UTM/источник перехода: из ?startapp=/?start_param= или из initData MAX.
+function startParam() {
+  const q = new URLSearchParams(window.location.search);
+  const fromUrl = q.get("startapp") || q.get("start_param") || q.get("tgWebAppStartParam");
+  if (fromUrl) return fromUrl;
+  try {
+    const wa = window.WebApp || (window.max && window.max.WebApp);
+    return (wa && (wa.initDataUnsafe?.start_param || wa.initDataUnsafe?.startParam)) || "";
+  } catch (e) {
+    return "";
+  }
+}
 
 // --- Вкладки ---
 document.querySelectorAll(".tab").forEach((t) => {
@@ -106,6 +120,7 @@ function openLeadForm(prefill = {}) {
   const form = document.getElementById("lead-form");
   form.classList.remove("hidden");
   if (prefill.age) document.getElementById("lf-age").value = prefill.age;
+  if (prefill.course) SELECTED_COURSE = prefill.course;
   form.scrollIntoView({ behavior: "smooth" });
 }
 
@@ -120,6 +135,8 @@ document.getElementById("lf-submit").addEventListener("click", async () => {
     phone: document.getElementById("lf-phone").value.trim(),
     branch: document.getElementById("lf-branch").value,
     comment: document.getElementById("lf-comment").value.trim(),
+    course: SELECTED_COURSE,
+    start_param: startParam(),
   };
   if (!body.fio_parent || !body.phone) {
     showStatus("Пожалуйста, укажите имя и телефон.", false);
