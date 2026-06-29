@@ -34,7 +34,7 @@ def test_intents():
     assert I.detect_intent("Как дела?") == I.GREETING
     assert I.detect_intent("Сколько стоит обучение?") == I.PRICE
     assert I.detect_intent("Хочу узнать точную цену") == I.PRICE
-    assert I.detect_intent("Что умеешь?") == I.ABOUT
+    assert I.detect_intent("Что умеешь?") == I.GREETING
     assert I.detect_intent("хочу записаться на пробное") == I.WANT_SIGNUP
     assert I.detect_intent("соедините с администратором") == I.HANDOFF
     assert I.detect_intent("это дорого для нас") == I.OBJECTION

@@ -50,6 +50,7 @@ class Document:
     title: str
     text: str
     tokens: set[str] = field(default_factory=set)
+    title_tokens: set[str] = field(default_factory=set)
 
     def render(self) -> str:
         return f"[{self.title}]\n{self.text}".strip()
@@ -77,6 +78,7 @@ class KnowledgeBase:
             return
         doc = Document(category=category, title=title, text=text)
         doc.tokens = set(_tokens(f"{title} {text}"))
+        doc.title_tokens = set(_tokens(title))
         self.documents.append(doc)
 
     def _build_documents(self) -> None:
@@ -178,6 +180,13 @@ class KnowledgeBase:
             score = len(overlap) / len(q_tokens)
             if doc.category in ("faq", "courses", "formats"):
                 score += 0.1
+            # бонус за совпадение с заголовком: профильные документы
+            # («Летняя Академия», конкретные FAQ) поднимаются выше болтливых.
+            title_overlap = q_tokens & doc.title_tokens
+            if title_overlap:
+                score += 0.4 * len(title_overlap) / len(q_tokens)
+                if doc.category != "faq":
+                    score += 0.3
             scored.append((score, doc))
         scored.sort(key=lambda x: x[0], reverse=True)
         return scored[:limit]
