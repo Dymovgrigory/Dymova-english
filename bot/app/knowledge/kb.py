@@ -120,6 +120,8 @@ class KnowledgeBase:
             for k, label in _COURSE_LABELS.items():
                 if c.get(k):
                     meta.append(f"{label}: {c[k]}")
+            if c.get("url"):
+                meta.append(f"Подробнее на сайте: {c['url']}")
             self._add("courses", c.get("name", ""),
                       " ".join([p for p in parts if p]) + " " + "; ".join(meta))
 
