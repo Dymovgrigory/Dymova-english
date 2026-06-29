@@ -17,14 +17,14 @@ from app.memory import Conversation, STAGE_DONE, STAGE_LEAD
 logger = logging.getLogger(__name__)
 
 # Порядок сбора полей и вопросы к клиенту.
-STEPS = ["fio_parent", "fio_child", "age", "phone", "branch", "confirm"]
+STEPS = ["fio_parent", "fio_child", "birthday", "phone", "branch", "confirm"]
 
 PROMPTS = {
-    "fio_parent": "Отлично! 😊 Давайте оформлю запись. Как вас зовут (ФИО родителя)?",
+    "fio_parent": "Отлично! 😊 Давайте оформлю запись.\n\nКак вас зовут (ФИО родителя)?",
     "fio_child": "Спасибо! А как зовут ребёнка (ФИО)?",
-    "age": "Сколько лет ребёнку? Можно указать возраст или дату рождения (дд.мм.гггг).",
+    "birthday": "Подскажите дату рождения ребёнка 🎂\n\nНапример: 15.03.2016",
     "phone": "По какому номеру телефона с вами связаться?",
-    "branch": "Какой формат удобнее: Лихачевский, Ракетостроителей или онлайн?",
+    "branch": "Какой филиал удобнее?\n\n• Лихачевский 76к1\n• Ракетостроителей 9к3\n• Онлайн",
 }
 
 
@@ -39,8 +39,8 @@ def _next_step(conv: Conversation) -> str:
         return "fio_parent"
     if not lead.fio_child:
         return "fio_child"
-    if not lead.age and not lead.birthday:
-        return "age"
+    if not lead.birthday:
+        return "birthday"
     if not lead.phone:
         return "phone"
     if not lead.branch and not conv.selected_branch:
@@ -59,14 +59,14 @@ def _ask_next(conv: Conversation) -> str:
 def _confirmation_text(conv: Conversation) -> str:
     lead = conv.lead
     branch = lead.branch or conv.selected_branch or "—"
-    when = lead.birthday or (f"{lead.age} лет" if lead.age else "—")
+    when = lead.birthday or "—"
     return (
-        "Проверьте, пожалуйста, заявку:\n"
+        "Проверьте, пожалуйста, заявку:\n\n"
         f"• Родитель: {lead.fio_parent}\n"
         f"• Ребёнок: {lead.fio_child}\n"
-        f"• Возраст/дата рождения: {when}\n"
+        f"• Дата рождения: {when}\n"
         f"• Телефон: {lead.phone}\n"
-        f"• Формат/филиал: {branch}\n\n"
+        f"• Филиал: {branch}\n\n"
         "Всё верно? Напишите «да» — и я отправлю заявку, или поправьте данные."
     )
 
@@ -93,21 +93,13 @@ async def step(
             return "Как зовут ребёнка?", False
         lead.fio_child = clean[:255]
 
-    elif current == "age":
+    elif current == "birthday":
         birthday = extract_birthday(clean)
-        age = extract_age(clean)
         if birthday:
             lead.birthday = birthday
-        elif age:
-            lead.age = age
         else:
-            # просто число?
-            digits = "".join(c for c in clean if c.isdigit())
-            if digits and len(digits) <= 2:
-                lead.age = digits
-            else:
-                return ("Не понял возраст. Укажите числом, например «9», "
-                        "или дату рождения в формате дд.мм.гггг."), False
+            return ("\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u0443\u043a\u0430\u0436\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u0440\u043e\u0436\u0434\u0435\u043d\u0438\u044f \u0432 \u0444\u043e\u0440\u043c\u0430\u0442\u0435 \u0434\u0434.\u043c\u043c.\u0433\u0433\u0433\u0433 \ud83d\ude0a\n\n"
+                    "\u041d\u0430\u043f\u0440\u0438\u043c\u0435\u0440: 15.03.2016"), False
 
     elif current == "phone":
         phone = extract_phone(clean)
