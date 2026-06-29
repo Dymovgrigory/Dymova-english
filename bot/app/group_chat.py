@@ -5,9 +5,9 @@ import logging
 import re
 from typing import Any
 
-from app import ai_core
 from app import intent as I
 from app.config import settings
+from app.knowledge.kb import get_kb
 from app.memory import Conversation, STAGE_DISCOVERY
 
 logger = logging.getLogger(__name__)
@@ -108,6 +108,43 @@ def _needs_private_dialog(text: str, intent: str) -> bool:
     return any(cue in low for cue in _PRIVATE_CUES)
 
 
+def _kb_reply(text: str) -> str:
+    kb = get_kb()
+    low = text.lower()
+
+    if "сколько" in low and ("филиал" in low or "филиалов" in low):
+        branches = kb.branches
+        if not branches:
+            return "У школы сейчас есть филиалы, но точные данные не загрузились 🦊"
+        names = ", ".join(b.get("name", "Филиал") for b in branches)
+        return f"У школы {len(branches)} филиала: {names}."
+
+    if any(p in low for p in ("где", "адрес", "находит", "филиал")):
+        branches = kb.branches
+        if branches:
+            lines = []
+            for b in branches:
+                name = b.get("name", "Филиал")
+                address = b.get("address", "")
+                phone = b.get("phone", "")
+                hours = b.get("work_hours", "")
+                line = f"• {name}: {address}"
+                if phone:
+                    line += f", тел. {phone}"
+                if hours:
+                    line += f", часы {hours}"
+                lines.append(line)
+            return "Вот наши филиалы:\n" + "\n".join(lines)
+
+    docs = kb.search(text, limit=3)
+    if docs:
+        parts = [d.render() for d in docs[:2] if d.render().strip()]
+        if parts:
+            return "Вот что нашёл в базе:\n\n" + "\n\n".join(parts)
+
+    return "Я могу подсказать по филиалам, ценам, расписанию и курсам 🦊"
+
+
 async def _notify_admins(max_client, chat_id: int | None, sender: dict[str, Any], text: str) -> None:
     sender_name = sender.get("name") or sender.get("username") or sender.get("user_id") or "—"
     sender_id = sender.get("user_id") or "—"
@@ -161,7 +198,5 @@ async def handle_group_message(message: dict[str, Any], max_client) -> None:
 
     conv = Conversation(user_id=f"group:{chat_id}")
     conv.stage = STAGE_DISCOVERY
-    reply = await ai_core._consult(conv, text)
-    if not reply:
-        reply = "Могу подсказать по школе, курсам, филиалам и ценам 🦊"
+    reply = _kb_reply(text)
     await max_client.send_to_chat(chat_id, reply)
