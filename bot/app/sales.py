@@ -119,6 +119,19 @@ SPIN-продажи — задавай вопросы на опережение:
 
 def build_system_prompt(kb: KnowledgeBase, conv: Conversation, kb_context: str) -> str:
     parts = [SYSTEM_PROMPT]
+    facts = []
+    for b in kb.branches:
+        name = b.get("name", "Филиал")
+        address = b.get("address", "")
+        phone = b.get("phone", "")
+        work_hours = b.get("work_hours", "")
+        facts.append(f"• {name}: {address}, тел. {phone}, часы {work_hours}".strip())
+    if facts:
+        parts.append(
+            "\nТОЧНЫЕ ДАННЫЕ ФИЛИАЛОВ (бери адреса/телефоны ТОЛЬКО отсюда, НЕ выдумывай):\n"
+            + "\n".join(facts)
+            + "\n• Онлайн формат тоже доступен."
+        )
     if kb_context:
         parts.append("\nКОНТЕКСТ ИЗ БАЗЫ ЗНАНИЙ (используй только эти факты):\n" + kb_context)
     state_bits = []

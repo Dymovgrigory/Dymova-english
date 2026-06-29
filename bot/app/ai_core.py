@@ -92,13 +92,9 @@ def _smalltalk_reply(conv: Conversation, text: str) -> str | None:
     return None
 
 
-async def _consult(conv: Conversation, text: str) -> str:
-    """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
+async def _consult_with_context(conv: Conversation, text: str, kb_context: str) -> str:
     kb = get_kb()
     llm = get_llm()
-    kb_context = kb.context_for(text, limit=5)
-
-    # Цикл улучшения: если база знаний почти не покрывает вопрос — фиксируем пробел.
     score = kb.best_score(text)
     if score < settings.INSIGHTS_MIN_SCORE:
         insights.log_gap(
@@ -116,18 +112,52 @@ async def _consult(conv: Conversation, text: str) -> str:
         if reply:
             return reply
 
-    # Fallback без LLM — отдаём найденные факты + мягкий призыв.
     if kb_context:
-        # Убираем технические скобки из заголовков документов KB.
-        import re
-        clean_ctx = re.sub(r"\[([^\]]+)\]\n", r"📌 \1\n", kb_context)
-        return (f"Вот что могу рассказать:\n\n{clean_ctx}\n\n"
-                + sales.sales_nudge(conv))
+        lines = []
+        seen = set()
+        for block in kb_context.split("\n\n"):
+            block = block.strip()
+            if not block or block in seen:
+                continue
+            seen.add(block)
+            lines.append(block)
+        if lines:
+            return "Вот что могу рассказать:\n\n" + "\n\n".join(lines) + "\n\n" + sales.sales_nudge(conv)
+
     return (
-        "Хороший вопрос! Чтобы ответить точно, подскажите, пожалуйста, возраст "
-        "ребёнка и удобный формат (онлайн/офлайн). А можно сразу записаться на "
-        "бесплатную диагностику — администратор всё подробно расскажет. 😊"
+        "Пока не нашёл точный ответ в базе, но я помогу разобраться 😊\n\n"
+        + sales.sales_nudge(conv)
     )
+
+
+async def _consult(conv: Conversation, text: str) -> str:
+    """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
+    kb = get_kb()
+    return await _consult_with_context(conv, text, kb.context_for(text, limit=5))
+
+
+def _looks_like_postpone(text: str) -> bool:
+    low = text.lower().strip()
+    return any(p in low for p in (
+        "попозже", "позже напишу", "потом напишу", "напишу позже",
+        "не сейчас", "в другой раз", "потом", "позже",
+        "подумаю", "перезвоните потом",
+    ))
+
+
+def _complaint_handoff_reply() -> str:
+    return (
+        "Мне очень жаль, что так вышло 🙏 Я уже передал ваше обращение руководителю и администратору — "
+        "они свяжутся с вами как можно скорее.\n\n"
+        "Если срочно, позвоните:\n"
+        "• Лихачевский: 8 993 923-23-09\n"
+        "• Ракетостроителей: 8 916 732-31-69"
+    )
+
+
+def _complaint_reason(text: str) -> str:
+    key = I.detect_objection(text) or "жалоба"
+    return f"жалоба: {key}" if key and key != "жалоба" else "жалоба"
 
 
 def _is_question_during_lead(conv: Conversation, text: str, intent: str) -> bool:
@@ -207,8 +237,16 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     if conv.stage == STAGE_LEAD:
         intent = I.detect_intent(text)
         if intent == I.HANDOFF:
-            await hand_off(max_client, conv, reason="запрос оператора")
-            return _handoff_reply()
+            complaint = I.detect_complaint(text)
+            reason = _complaint_reason(text) if complaint else "запрос оператора"
+            await hand_off(max_client, conv, reason=reason)
+            return _complaint_handoff_reply() if complaint else _handoff_reply()
+        if _looks_like_postpone(text):
+            conv.stage = STAGE_DISCOVERY
+            return (
+                "Конечно, без проблем! 😊 Я сохранил то, что вы уже указали — напишите, когда будет удобно продолжить. "
+                "Если появятся вопросы, я на связи 🦊"
+            )
         # Если пользователь задаёт вопрос вместо ответа на поле — отвечаем
         # через LLM и мягко продолжаем сбор (без навязчивого «возвращаемся»).
         if _is_question_during_lead(conv, text, intent):
@@ -230,13 +268,19 @@ async def _route(conv: Conversation, text: str, kb) -> str:
 
     # 3. Запрос живого человека / нестандартная ситуация.
     if intent == I.HANDOFF:
-        await hand_off(max_client, conv, reason="запрос оператора")
-        return _handoff_reply()
+        complaint = I.detect_complaint(text)
+        reason = _complaint_reason(text) if complaint else "запрос оператора"
+        await hand_off(max_client, conv, reason=reason)
+        return _complaint_handoff_reply() if complaint else _handoff_reply()
 
     # 4. Возражение — отрабатываем по сценарию и подталкиваем к диагностике.
     if intent == I.OBJECTION:
         conv.stage = STAGE_OBJECTION
         key = I.detect_objection(text) or "подумаю"
+        kb_context = "\n\n".join(filter(None, [kb.objection(key), kb.context_for(text, limit=5)]))
+        reply = await _consult_with_context(conv, text, kb_context)
+        if reply:
+            return reply
         return sales.handle_objection(kb, key)
 
     # 5. Явное намерение записаться — запускаем сбор лида в чате.
@@ -257,7 +301,11 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             return smalltalk
         reply = await _consult(conv, text)
         # Если LLM вернул дежурный fallback — заменяем на тёплое приветствие.
-        if "подскажите, пожалуйста, возраст" in reply.lower():
+        if (
+            "подскажите, пожалуйста, возраст" in reply.lower()
+            or "пока не нашёл" in reply.lower()
+            or "помогу разобраться" in reply.lower()
+        ):
             reply = (
                 "Привет! 🦊 Я Фокси из Фоксинбурга, рад вас слышать!\n\n"
                 "Чем могу помочь? Расскажу о курсах, ценах, запишу "
