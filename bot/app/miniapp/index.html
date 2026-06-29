@@ -144,10 +144,11 @@
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     /* Advantage badge */
-    .adv-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
-    .adv-icon { font-size: 22px; flex-shrink: 0; }
-    .adv-text h4 { font-size: 13px; color: var(--purple); }
-    .adv-text p { font-size: 12px; color: var(--muted); }
+    .adv-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+    .adv-icon { font-size: 22px; flex-shrink: 0; width: 28px; }
+    .adv-text { flex: 1; min-width: 0; display: block !important; }
+    .adv-text h4 { font-size: 13px; font-weight: 700; color: var(--purple); margin-bottom: 2px; }
+    .adv-text p { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
     /* Footer stamp */
     .footer-stamp {
