@@ -62,6 +62,7 @@ class Conversation:
     selected_format: str = ""
     lead_step: str = ""        # какое поле сейчас собираем
     handed_off: bool = False
+    recs_shown: bool = False   # уже показывали подборку курсов
     # UTM-метки/источник (из deep-link при /start или из мини-приложения).
     utm: dict = field(default_factory=dict)
 
@@ -156,6 +157,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         selected_format=d.get("selected_format", ""),
         lead_step=d.get("lead_step", ""),
         handed_off=d.get("handed_off", False),
+        recs_shown=d.get("recs_shown", False),
         utm=d.get("utm", {}) or {},
     )
 

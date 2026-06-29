@@ -171,12 +171,14 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             conv.stage = STAGE_DISCOVERY
         return await _consult(conv, text)
 
-    # 7. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор.
-    if intent == I.COURSES and conv.lead.age:
+    # 7. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор,
+    #    но только если ещё не показывали рекомендацию (иначе — через LLM).
+    if intent == I.COURSES and conv.lead.age and not conv.recs_shown:
         items = recommend(kb, conv.lead.age, conv.selected_format)
         recs = format_recommendations(items)
         if recs:
             conv.stage = STAGE_DISCOVERY
+            conv.recs_shown = True
             return recs + "\n\n" + sales.sales_nudge(conv)
 
     # 8. Во всех прочих случаях — консультативный ответ по базе знаний.

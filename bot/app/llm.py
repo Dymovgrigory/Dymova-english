@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 import httpx
 
@@ -56,10 +57,31 @@ class LLMClient:
             if not choices:
                 return None
             content = choices[0].get("message", {}).get("content", "")
-            return (content or "").strip() or None
+            return _clean_response(content) or None
         except Exception:
             logger.exception("LLM request failed")
             return None
+
+
+# Паттерны мусорных токенов LLM (заголовки чата Llama, роли).
+_JUNK_RE = re.compile(
+    r"<\|(?:end_header_id|start_header_id|eot_id|begin_of_text)\|>"
+    r"|^assistant\s*$",
+    re.MULTILINE,
+)
+# Китайские/японские/корейские иероглифы — Llama иногда вставляет.
+_CJK_RE = re.compile(r"[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]+")
+
+
+def _clean_response(text: str) -> str:
+    """Strip LLM artifacts: chat header tokens, CJK characters, extra whitespace."""
+    if not text:
+        return ""
+    text = _JUNK_RE.sub("", text)
+    text = _CJK_RE.sub("", text)
+    # Collapse multiple blank lines to max 1
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
 
 
 _client: LLMClient | None = None
