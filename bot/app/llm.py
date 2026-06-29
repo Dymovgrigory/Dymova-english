@@ -24,31 +24,34 @@ class LLMClient:
         self.api_key = settings.LLM_API_KEY
         self.base_url = settings.LLM_BASE_URL.rstrip("/")
         self.model = settings.LLM_MODEL
+        self.vision_model = settings.VISION_MODEL
 
     @property
     def enabled(self) -> bool:
         return bool(self.api_key)
 
-    async def complete(self, messages: list[dict], temperature: float | None = None) -> str | None:
-        if not self.enabled:
-            return None
-        url = f"{self.base_url}/chat/completions"
-        payload = {
-            "model": self.model,
-            "messages": messages,
-            "temperature": settings.LLM_TEMPERATURE if temperature is None else temperature,
-            "max_tokens": settings.LLM_MAX_TOKENS,
-        }
-        headers = {
+    def _headers(self) -> dict:
+        return {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
             # OpenRouter рекомендует указывать источник запроса.
             "HTTP-Referer": "https://dymova-english.ru",
             "X-Title": "Foxinburg MAX Bot",
         }
+
+    async def _chat_completion(self, model: str, messages: list[dict], temperature: float | None = None) -> str | None:
+        if not self.enabled:
+            return None
+        url = f"{self.base_url}/chat/completions"
+        payload = {
+            "model": model,
+            "messages": messages,
+            "temperature": settings.LLM_TEMPERATURE if temperature is None else temperature,
+            "max_tokens": settings.LLM_MAX_TOKENS,
+        }
         try:
             async with httpx.AsyncClient(timeout=settings.LLM_TIMEOUT) as client:
-                resp = await client.post(url, headers=headers, json=payload)
+                resp = await client.post(url, headers=self._headers(), json=payload)
             if resp.status_code != 200:
                 logger.error("LLM error status=%s body=%s", resp.status_code, resp.text[:500])
                 return None
@@ -61,6 +64,12 @@ class LLMClient:
         except Exception:
             logger.exception("LLM request failed")
             return None
+
+    async def complete(self, messages: list[dict], temperature: float | None = None) -> str | None:
+        return await self._chat_completion(self.model, messages, temperature=temperature)
+
+    async def complete_vision(self, messages: list[dict], temperature: float | None = None) -> str | None:
+        return await self._chat_completion(self.vision_model, messages, temperature=temperature)
 
 
 # Паттерны мусорных токенов LLM (заголовки чата Llama, роли).

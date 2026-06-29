@@ -3,6 +3,7 @@
 
 const API = "";
 let INFO = null;
+let homeworkPreviewUrl = "";
 
 async function getJSON(url) {
   const r = await fetch(API + url);
@@ -15,6 +16,15 @@ async function postJSON(url, body) {
     body: JSON.stringify(body),
   });
   return r.json();
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 // --- Navigation ---
@@ -291,6 +301,92 @@ function showStatus(msg, ok) {
   s.className = "status " + (ok ? "status-ok" : "status-err");
 }
 
+// --- Homework helper ---
+
+function homeworkStatus(msg, ok) {
+  const s = document.getElementById("hw-status");
+  s.textContent = msg;
+  s.style.display = "block";
+  s.className = "status " + (ok ? "status-ok" : "status-err");
+}
+
+function homeworkPreview(file) {
+  const wrap = document.getElementById("hw-preview-wrap");
+  const img = document.getElementById("hw-preview");
+  if (homeworkPreviewUrl) {
+    URL.revokeObjectURL(homeworkPreviewUrl);
+    homeworkPreviewUrl = "";
+  }
+  if (!file) {
+    wrap.style.display = "none";
+    img.removeAttribute("src");
+    return;
+  }
+  homeworkPreviewUrl = URL.createObjectURL(file);
+  img.src = homeworkPreviewUrl;
+  wrap.style.display = "block";
+}
+
+function setHomeworkLoading(loading) {
+  const btn = document.getElementById("hw-submit");
+  const file = document.getElementById("hw-file");
+  const note = document.getElementById("hw-note");
+  btn.disabled = loading;
+  file.disabled = loading;
+  note.disabled = loading;
+  btn.textContent = loading ? "Обрабатываю..." : "Объяснить";
+}
+
+async function submitHomework() {
+  const fileInput = document.getElementById("hw-file");
+  const note = document.getElementById("hw-note").value.trim();
+  const file = fileInput.files && fileInput.files[0];
+  const result = document.getElementById("hw-result");
+  if (!file) {
+    result.style.display = "none";
+    homeworkStatus("Пожалуйста, выберите фото домашнего задания.", false);
+    return;
+  }
+  result.style.display = "none";
+  result.textContent = "";
+  homeworkStatus("Смотрю фото и готовлю объяснение...", true);
+  setHomeworkLoading(true);
+
+  const form = new FormData();
+  form.append("image", file);
+  if (note) form.append("note", note);
+
+  try {
+    const resp = await fetch("/api/miniapp/homework", {
+      method: "POST",
+      body: form,
+    });
+    let data = null;
+    try {
+      data = await resp.json();
+    } catch {
+      data = null;
+    }
+    if (!resp.ok) {
+      throw new Error((data && (data.detail || data.error)) || "Не удалось разобрать фото");
+    }
+    const explanation = (data && data.explanation) ? String(data.explanation) : "Сейчас не удалось получить объяснение. Попробуйте ещё раз.";
+    result.textContent = explanation;
+    result.style.display = "block";
+    homeworkStatus("Готово ✅", true);
+  } catch (e) {
+    homeworkStatus(`Не получилось объяснить домашку: ${e.message}`, false);
+  } finally {
+    setHomeworkLoading(false);
+  }
+}
+
+document.getElementById("hw-file").addEventListener("change", (e) => {
+  homeworkPreview(e.target.files && e.target.files[0]);
+});
+
+document.getElementById("hw-submit").addEventListener("click", submitHomework);
+
 // --- MAX Mini App bridge ---
 
 function initMaxBridge() {
@@ -318,7 +414,7 @@ function initMaxBridge() {
 
   // Handle deep link
   const sp = startParam();
-  if (sp && ["courses","signup","summer","branches","faq"].includes(sp)) {
+  if (sp && ["courses","signup","summer","branches","faq","homework"].includes(sp)) {
     goTo(sp);
   }
   handleHash();

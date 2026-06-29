@@ -8,11 +8,12 @@
 """
 from __future__ import annotations
 
+import base64
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi import FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -25,6 +26,7 @@ from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
 from app.knowledge.kb import get_kb
+from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
 from app.memory import Lead, get_store
 
@@ -315,6 +317,59 @@ def _extract_user_id(update: dict):
     return None
 
 
+_HOMEWORK_MAX_BYTES = 5 * 1024 * 1024
+_HOMEWORK_ALLOWED_TYPES = {
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/heic",
+    "image/heif",
+}
+
+
+def _homework_fallback(note: str = "") -> str:
+    extra = " Пришлите, пожалуйста, более чёткое фото, если это не помогло."
+    if note.strip():
+        return (
+            "Пока я не смогла уверенно разобрать фото домашки. "
+            "Попробуйте прислать снимок покрупнее и без размытия."
+            + extra
+        )
+    return (
+        "Сейчас я не смогла разобрать фото домашки. "
+        "Пришлите, пожалуйста, более чёткое изображение, и я попробую ещё раз."
+        + extra
+    )
+
+
+def _homework_system_prompt() -> str:
+    return (
+        "Ты — AI-помощник по домашнему заданию по английскому для родителей, "
+        "которые не знают английский. Отвечай только по-русски, понятно и доброжелательно. "
+        "Объясняй: 1) что именно просит задание, 2) как его выполнить, 3) правильный пример "
+        "или ответ, 4) короткий поддерживающий совет. "
+        "Пиши кратко и структурированно. Это подсказка, поэтому обязательно советуй "
+        "проверить ответ с учителем. Если фото неразборчиво, прямо скажи об этом и попроси "
+        "прислать более чёткое фото. Не выдумывай то, чего не видно на изображении."
+    )
+
+
+def _homework_user_prompt(note: str) -> str:
+    note = note.strip()
+    lines = [
+        "Пожалуйста, помоги разобрать фото домашнего задания по английскому.",
+    ]
+    if note:
+        lines.append(f"Заметка родителя: {note}")
+    lines.extend(
+        [
+            "Нужно объяснить простыми словами, что требуется в задании.",
+            "Покажи, как это сделать, и дай правильный пример или ответ.",
+            "Добавь один короткий тёплый совет для родителя и ребёнка.",
+        ]
+    )
+    return "\n".join(lines)
+
 # --------- Мини-приложение: API ---------
 
 @app.get("/api/miniapp/info")
@@ -369,6 +424,45 @@ async def miniapp_lead(data: dict) -> dict:
     utm.setdefault("utm_medium", "miniapp")
     ok = await get_bigben().create_lead(lead, source=source, utm=utm)
     return {"ok": ok}
+
+
+@app.post("/api/miniapp/homework")
+async def miniapp_homework(
+    image: UploadFile | None = File(default=None),
+    note: str = Form(default=""),
+) -> dict:
+    if image is None:
+        raise HTTPException(status_code=400, detail="Прикрепите фото домашнего задания")
+    content_type = (image.content_type or "").lower().strip()
+    if content_type not in _HOMEWORK_ALLOWED_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail="Разрешены только фото в формате JPEG, PNG, WEBP, HEIC или HEIF",
+        )
+    image_bytes = await image.read()
+    if not image_bytes:
+        raise HTTPException(status_code=400, detail="Файл пустой")
+    if len(image_bytes) > _HOMEWORK_MAX_BYTES:
+        raise HTTPException(status_code=400, detail="Файл слишком большой. Максимум 5 МБ")
+
+    data_uri = f"data:{content_type};base64,{base64.b64encode(image_bytes).decode('ascii')}"
+    llm = get_llm()
+    system_prompt = _homework_system_prompt()
+    user_prompt = _homework_user_prompt(note)
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": user_prompt},
+                {"type": "image_url", "image_url": {"url": data_uri}},
+            ],
+        },
+    ]
+    explanation = await llm.complete_vision(messages, temperature=0.2)
+    if not explanation:
+        explanation = _homework_fallback(note)
+    return {"explanation": explanation}
 
 
 # Статика мини-приложения (если каталог есть).

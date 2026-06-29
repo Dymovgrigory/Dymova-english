@@ -196,6 +196,10 @@
           <div class="qicon">📍</div>
           <div class="qlabel">Филиалы</div>
         </div>
+        <div class="quick-card" onclick="goTo('homework')">
+          <div class="qicon">📸</div>
+          <div class="qlabel">Домашка</div>
+        </div>
       </div>
 
       <!-- Promos on home -->
@@ -245,6 +249,24 @@
         <input type="hidden" id="lf-course" value="" />
         <button class="btn btn-orange" id="lf-submit" style="margin-top:14px;">Отправить заявку</button>
         <div id="lf-status" class="status" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- HOMEWORK HELPER -->
+    <div class="section" id="sec-homework">
+      <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;">📸 Помощь с домашкой</h2>
+      <div class="card">
+        <p class="meta">Загрузите фото задания по английскому — мы объясним его по-русски простыми словами.</p>
+        <label for="hw-file">Фото домашки *</label>
+        <input id="hw-file" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" capture="environment" />
+        <div id="hw-preview-wrap" style="display:none; margin-top:12px;">
+          <img id="hw-preview" alt="Предпросмотр фото" style="width:100%; max-height:280px; object-fit:contain; border-radius:14px; background:#faf7ff; border:1px solid #e3dcf0;" />
+        </div>
+        <label for="hw-note">Заметка (необязательно)</label>
+        <textarea id="hw-note" rows="3" placeholder="Например: ребёнок не понимает, как читать это задание"></textarea>
+        <button class="btn btn-orange" id="hw-submit" style="margin-top:14px;">Объяснить</button>
+        <div id="hw-status" class="status" style="display:none;"></div>
+        <div id="hw-result" class="card" style="display:none; margin-top:12px; white-space:pre-wrap; line-height:1.6;"></div>
       </div>
     </div>
 
@@ -298,6 +320,7 @@
     border-radius:14px; box-shadow:0 8px 30px rgba(0,0,0,.15); padding:8px 0; z-index:200; min-width:180px;">
     <div class="more-item" onclick="goTo('branches')" style="padding:12px 18px; cursor:pointer; font-size:14px;">📍 Филиалы</div>
     <div class="more-item" onclick="goTo('faq')" style="padding:12px 18px; cursor:pointer; font-size:14px;">❓ Частые вопросы</div>
+    <div class="more-item" onclick="goTo('homework')" style="padding:12px 18px; cursor:pointer; font-size:14px;">📸 Помощь с домашкой</div>
   </div>
 
   <script src="app.js"></script>
