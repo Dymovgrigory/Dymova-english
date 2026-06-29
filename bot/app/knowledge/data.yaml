@@ -43,6 +43,7 @@ branches:
     address: "г. Долгопрудный, пр-кт Лихачевский, 76к1"
     phone: "8 993 923-23-09"
     phone_tel: "+79939232309"
+    admin_contact_url: "tel:+79939232309"
     maps: "https://yandex.ru/maps/?text=Долгопрудный%2C%20проспект%20Лихачевский%2C%2076к1&rtt=auto"
     work_hours: "9:00 — 21:00"
   - id: "raketostroiteley"
@@ -50,6 +51,7 @@ branches:
     address: "г. Долгопрудный, пр-кт Ракетостроителей, 9к3"
     phone: "8 916 732-31-69"
     phone_tel: "+79167323169"
+    admin_contact_url: "tel:+79167323169"
     maps: "https://yandex.ru/maps/?text=Долгопрудный%2C%20проспект%20Ракетостроителей%2C%209к3&rtt=auto"
     work_hours: "9:00 — 21:00"
 
