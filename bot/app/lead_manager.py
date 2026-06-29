@@ -22,7 +22,7 @@ STEPS = ["fio_parent", "fio_child", "birthday", "phone", "branch", "confirm"]
 PROMPTS = {
     "fio_parent": "Как вас зовут (ФИО родителя)?",
     "fio_child": "А как зовут ребёнка (ФИО)?",
-    "birthday": "Подскажите полную дату рождения ребёнка 🎂\n\nНапример: 15.03.2016",
+    "birthday": "Подскажите возраст или полную дату рождения ребёнка 🎂\n\nНапример: 9 лет или 15.03.2016",
     "phone": "По какому номеру телефона с вами связаться?",
     "branch": "Какой филиал удобнее?\n\n• Лихачевский 76к1\n• Ракетостроителей 9к3\n• Онлайн",
 }
@@ -46,11 +46,14 @@ def _extract_name_from_text(text: str) -> str:
     _short = ("да", "давайте", "давай", "хорошо", "хочу", "можно",
               "конечно", "ок", "окей", "ладно", "ага", "yes", "+",
               "записаться", "запишите", "запиши", "записать")
+    _reject = ("курс", "заним", "учиться", "пробн", "запис", "подобрат",
+               "диагностик")
     low_name = name_part.lower().strip(" .!?")
     if (len(name_part) >= 2
             and not any(c.isdigit() for c in name_part)
             and "?" not in name_part
-            and low_name not in _short):
+            and low_name not in _short
+            and not any(w in low_name for w in _reject)):
         return name_part[:255]
     return ""
 
@@ -72,7 +75,7 @@ def _next_step(conv: Conversation) -> str:
         return "fio_parent"
     if not lead.fio_child:
         return "fio_child"
-    if not lead.birthday:
+    if not lead.birthday and not lead.age:
         return "birthday"
     if not lead.phone:
         return "phone"
@@ -92,7 +95,7 @@ def _ask_next(conv: Conversation) -> str:
 def _confirmation_text(conv: Conversation) -> str:
     lead = conv.lead
     branch = lead.branch or conv.selected_branch or "—"
-    when = lead.birthday or "—"
+    when = lead.birthday or (f"{lead.age} лет" if lead.age else "—")
     return (
         "Проверьте, пожалуйста, заявку:\n\n"
         f"• Родитель: {lead.fio_parent}\n"
@@ -131,8 +134,14 @@ async def step(
         if birthday:
             lead.birthday = birthday
         else:
-            return ("\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u0443\u043a\u0430\u0436\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u0440\u043e\u0436\u0434\u0435\u043d\u0438\u044f \u0432 \u0444\u043e\u0440\u043c\u0430\u0442\u0435 \u0434\u0434.\u043c\u043c.\u0433\u0433\u0433\u0433 \ud83d\ude0a\n\n"
-                    "\u041d\u0430\u043f\u0440\u0438\u043c\u0435\u0440: 15.03.2016"), False
+            age = extract_age(clean)
+            if not age and clean.isdigit() and 1 <= len(clean) <= 2:
+                age = clean
+            if age:
+                lead.age = age
+            else:
+                return ("Пожалуйста, укажите возраст или дату рождения в "
+                        "формате дд.мм.гггг 😊\n\nНапример: 9 лет или 15.03.2016"), False
 
     elif current == "phone":
         phone = extract_phone(clean)

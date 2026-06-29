@@ -74,6 +74,24 @@ def _capture_entities(conv: Conversation, text: str) -> None:
         conv.selected_format = "Офлайн"
 
 
+def _smalltalk_reply(conv: Conversation, text: str) -> str | None:
+    """Короткие ответы на приветствия и общие вопросы о возможностях бота."""
+    low = text.lower()
+    if any(p in low for p in ("как дела", "как пожива", "что нового")):
+        return (
+            "Всё отлично, спасибо! 🦊 Я как раз люблю такие диалоги — "
+            "сразу помогаю подобрать подходящий курс.\n\n"
+            f"{sales.sales_nudge(conv)}"
+        )
+    if any(p in low for p in ("что умеешь", "чем можешь", "чем помож", "что ты умеешь")):
+        return (
+            "Я могу подобрать курс, рассказать о ценах, филиалах и летней "
+            "академии, а ещё записать на диагностику и довести до заявки.\n\n"
+            f"{sales.sales_nudge(conv)}"
+        )
+    return None
+
+
 async def _consult(conv: Conversation, text: str) -> str:
     """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
     kb = get_kb()
@@ -122,7 +140,7 @@ def _is_question_during_lead(conv: Conversation, text: str, intent: str) -> bool
     current_step = conv.lead_step or "fio_parent"
 
     # Явные интенты-вопросы — всегда отвечаем
-    if intent in (I.COURSES, I.PRICE, I.ABOUT, I.QUESTION):
+    if intent in (I.COURSES, I.PRICE, I.ABOUT):
         return True
 
     # Вопросительные слова / знак вопроса
@@ -234,11 +252,14 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     # 6. Приветствие — пропускаем через LLM для естественного ответа.
     if intent == I.GREETING:
         conv.stage = STAGE_DISCOVERY
+        smalltalk = _smalltalk_reply(conv, text)
+        if smalltalk:
+            return smalltalk
         reply = await _consult(conv, text)
         # Если LLM вернул дежурный fallback — заменяем на тёплое приветствие.
         if "подскажите, пожалуйста, возраст" in reply.lower():
             reply = (
-                "Привет! 🦊 Рад вас слышать, у нас всё отлично!\n\n"
+                "Привет! 🦊 Я Фокси из Фоксинбурга, рад вас слышать!\n\n"
                 "Чем могу помочь? Расскажу о курсах, ценах, запишу "
                 "на бесплатную диагностику — спрашивайте! 😊"
             )
