@@ -121,6 +121,10 @@ def _is_question_during_lead(conv: Conversation, text: str, intent: str) -> bool
     low = text.lower().strip()
     current_step = conv.lead_step or "fio_parent"
 
+    # На шаге consent не считаем ответ вопросом
+    if current_step == "consent":
+        return False
+
     # Явные интенты-вопросы — всегда отвечаем
     if intent in (I.COURSES, I.PRICE, I.ABOUT, I.QUESTION):
         return True
@@ -224,12 +228,12 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     # 5. Явное намерение записаться — запускаем сбор лида в чате.
     #    Бот также предложит кнопку мини-приложения (через main.py).
     if intent == I.WANT_SIGNUP:
-        return lead_manager.start(conv)
+        return lead_manager.start(conv, user_text=text)
 
     # 5b. Если бот предложил записаться в предыдущем сообщении, а клиент
     #     согласился (давайте, да, хорошо, можно, хочу) — бесшовно начинаем сбор.
     if _user_agrees_to_signup(conv, text):
-        return lead_manager.start(conv)
+        return lead_manager.start(conv, user_text=text)
 
     # 6. Приветствие — пропускаем через LLM для естественного ответа.
     if intent == I.GREETING:

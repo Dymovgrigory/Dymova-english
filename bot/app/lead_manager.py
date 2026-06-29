@@ -17,24 +17,67 @@ from app.memory import Conversation, STAGE_DONE, STAGE_LEAD
 logger = logging.getLogger(__name__)
 
 # Порядок сбора полей и вопросы к клиенту.
-STEPS = ["fio_parent", "fio_child", "birthday", "phone", "branch", "confirm"]
+STEPS = ["consent", "fio_parent", "fio_child", "birthday", "phone", "branch", "confirm"]
+
+_CONSENT_TEXT = (
+    "Для оформления заявки мне понадобятся ваши контактные данные.\n\n"
+    "Нажимая «да», вы соглашаетесь на обработку персональных данных "
+    "в соответствии с ФЗ-152.\n\n"
+    "Согласны? 😊"
+)
 
 PROMPTS = {
-    "fio_parent": "Отлично! 😊 Давайте оформлю запись прямо здесь.\n\nКак вас зовут (ФИО родителя)?",
-    "fio_child": "Спасибо! А как зовут ребёнка (ФИО)?",
-    "birthday": "Подскажите дату рождения ребёнка 🎂\n\nНапример: 15.03.2016",
+    "consent": _CONSENT_TEXT,
+    "fio_parent": "Как вас зовут (ФИО родителя)?",
+    "fio_child": "А как зовут ребёнка (ФИО)?",
+    "birthday": "Подскажите полную дату рождения ребёнка 🎂\n\nНапример: 15.03.2016",
     "phone": "По какому номеру телефона с вами связаться?",
     "branch": "Какой филиал удобнее?\n\n• Лихачевский 76к1\n• Ракетостроителей 9к3\n• Онлайн",
 }
 
 
-def start(conv: Conversation) -> str:
+def _extract_name_from_text(text: str) -> str:
+    """Извлекает ФИО из текста, убирая слова-согласия из начала."""
+    clean = text.strip()
+    if not clean:
+        return ""
+    _prefixes = ("да ", "давайте ", "давай ", "хорошо ", "можно ",
+                  "конечно ", "ок ", "окей ", "ладно ", "ага ",
+                  "хочу ", "да, ", "давайте, ", "меня зовут ",
+                  "я ", "это ")
+    name_part = clean
+    low = clean.lower()
+    for prefix in _prefixes:
+        if low.startswith(prefix):
+            name_part = clean[len(prefix):].strip(" ,.-!")
+            break
+    _short = ("да", "давайте", "давай", "хорошо", "хочу", "можно",
+              "конечно", "ок", "окей", "ладно", "ага", "yes", "+",
+              "записаться", "запишите", "запиши", "записать")
+    low_name = name_part.lower().strip(" .!?")
+    if (len(name_part) >= 2
+            and not any(c.isdigit() for c in name_part)
+            and "?" not in name_part
+            and low_name not in _short):
+        return name_part[:255]
+    return ""
+
+
+def start(conv: Conversation, user_text: str = "") -> str:
+    """Начинает сбор лида. Если user_text содержит ФИО — сразу записывает."""
     conv.stage = STAGE_LEAD
+    # Попробуем извлечь ФИО из текста пользователя
+    if user_text and not conv.lead.fio_parent:
+        name = _extract_name_from_text(user_text)
+        if name:
+            conv.lead.fio_parent = name
     return _ask_next(conv)
 
 
 def _next_step(conv: Conversation) -> str:
     lead = conv.lead
+    if not conv.consent_given:
+        return "consent"
     if not lead.fio_parent:
         return "fio_parent"
     if not lead.fio_child:
@@ -83,7 +126,13 @@ async def step(
     lead = conv.lead
     clean = text.strip()
 
-    if current == "fio_parent":
+    if current == "consent":
+        if _is_yes(clean):
+            conv.consent_given = True
+        else:
+            return "Для оформления заявки нужно ваше согласие. Напишите «да», чтобы продолжить 😊", False
+
+    elif current == "fio_parent":
         if len(clean) < 2:
             return "Подскажите, пожалуйста, как вас зовут?", False
         lead.fio_parent = clean[:255]
