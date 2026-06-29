@@ -112,6 +112,31 @@ async def _consult(conv: Conversation, text: str) -> str:
     )
 
 
+def _is_question_during_lead(conv: Conversation, text: str, intent: str) -> bool:
+    """Определяет, задаёт ли пользователь вопрос вместо ответа на поле заявки.
+
+    Если текущий шаг — ожидание конкретных данных (ФИО, дата, телефон, филиал),
+    а пользователь пишет что-то похожее на вопрос — возвращаем True.
+    """
+    low = text.lower().strip()
+    current_step = conv.lead_step or "fio_parent"
+
+    # Явные интенты-вопросы — всегда отвечаем
+    if intent in (I.COURSES, I.PRICE, I.ABOUT, I.QUESTION):
+        return True
+
+    # Вопросительные слова / знак вопроса
+    question_markers = ("?", "сколько", "какие", "когда", "где ", "как ",
+                        "почему", "зачем", "можно ли", "есть ли", "а что",
+                        "расскажи", "подскажи", "что включ", "что входит")
+    if any(m in low for m in question_markers):
+        # Но не на шаге confirm — там "?" может быть уточнением данных
+        if current_step != "confirm":
+            return True
+
+    return False
+
+
 async def handle_message(user_id: str, text: str) -> str:
     """Главная точка входа: принимает сообщение пользователя, возвращает ответ бота."""
     store = get_store()
@@ -132,11 +157,21 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     bigben = get_bigben()
 
     # 1. Если уже идёт сбор данных для заявки — продолжаем его,
-    #    но позволяем выйти к оператору.
+    #    но позволяем выйти к оператору или задать вопрос.
     if conv.stage == STAGE_LEAD:
-        if I.detect_intent(text) == I.HANDOFF:
+        intent = I.detect_intent(text)
+        if intent == I.HANDOFF:
             await hand_off(max_client, conv, reason="запрос оператора")
             return _handoff_reply()
+        # Если пользователь задаёт вопрос вместо ответа на поле — отвечаем
+        # через LLM и напоминаем, где остановились.
+        if _is_question_during_lead(conv, text, intent):
+            answer = await _consult(conv, text)
+            current_step = conv.lead_step or lead_manager._next_step(conv)
+            reminder = lead_manager.PROMPTS.get(current_step, "")
+            if reminder:
+                return answer + "\n\n---\n\n" + "Возвращаемся к заявке 😊\n" + reminder
+            return answer
         reply, _submitted = await lead_manager.step(conv, text, kb, bigben, max_client)
         return reply
 
