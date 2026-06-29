@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     LLM_API_KEY: str = ""
     LLM_BASE_URL: str = "https://api.groq.com/openai/v1"
     LLM_MODEL: str = "llama-3.3-70b-versatile"
-    VISION_MODEL: str = "google/gemini-flash-1.5"
+    VISION_MODEL: str = "google/gemini-3.5-flash"
     LLM_TEMPERATURE: float = 0.4
     LLM_MAX_TOKENS: int = 700
     LLM_TIMEOUT: int = 40
