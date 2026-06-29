@@ -192,13 +192,13 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             await hand_off(max_client, conv, reason="запрос оператора")
             return _handoff_reply()
         # Если пользователь задаёт вопрос вместо ответа на поле — отвечаем
-        # через LLM и напоминаем, где остановились.
+        # через LLM и мягко продолжаем сбор (без навязчивого «возвращаемся»).
         if _is_question_during_lead(conv, text, intent):
             answer = await _consult(conv, text)
             current_step = conv.lead_step or lead_manager._next_step(conv)
             reminder = lead_manager.PROMPTS.get(current_step, "")
             if reminder:
-                return answer + "\n\n---\n\n" + "Возвращаемся к заявке 😊\n" + reminder
+                return answer + "\n\n" + reminder
             return answer
         reply, _submitted = await lead_manager.step(conv, text, kb, bigben, max_client)
         return reply
