@@ -17,19 +17,55 @@ from app.memory import Conversation, STAGE_DONE, STAGE_LEAD
 logger = logging.getLogger(__name__)
 
 # Порядок сбора полей и вопросы к клиенту.
-STEPS = ["fio_parent", "fio_child", "age", "phone", "branch", "confirm"]
+STEPS = ["fio_parent", "fio_child", "birthday", "phone", "branch", "confirm"]
 
 PROMPTS = {
-    "fio_parent": "Отлично! 😊 Давайте оформлю запись. Как вас зовут (ФИО родителя)?",
-    "fio_child": "Спасибо! А как зовут ребёнка (ФИО)?",
-    "age": "Сколько лет ребёнку? Можно указать возраст или дату рождения (дд.мм.гггг).",
+    "fio_parent": "Как вас зовут (ФИО родителя)?",
+    "fio_child": "А как зовут ребёнка (ФИО)?",
+    "birthday": "Подскажите возраст или полную дату рождения ребёнка 🎂\n\nНапример: 9 лет или 15.03.2016",
     "phone": "По какому номеру телефона с вами связаться?",
-    "branch": "Какой формат удобнее: Лихачевский, Ракетостроителей или онлайн?",
+    "branch": "Какой филиал удобнее?\n\n• Лихачевский 76к1\n• Ракетостроителей 9к3\n• Онлайн",
 }
 
 
-def start(conv: Conversation) -> str:
+def _extract_name_from_text(text: str) -> str:
+    """Извлекает ФИО из текста, убирая слова-согласия из начала."""
+    clean = text.strip()
+    if not clean:
+        return ""
+    _prefixes = ("да ", "давайте ", "давай ", "хорошо ", "можно ",
+                  "конечно ", "ок ", "окей ", "ладно ", "ага ",
+                  "хочу ", "да, ", "давайте, ", "меня зовут ",
+                  "я ", "это ")
+    name_part = clean
+    low = clean.lower()
+    for prefix in _prefixes:
+        if low.startswith(prefix):
+            name_part = clean[len(prefix):].strip(" ,.-!")
+            break
+    _short = ("да", "давайте", "давай", "хорошо", "хочу", "можно",
+              "конечно", "ок", "окей", "ладно", "ага", "yes", "+",
+              "записаться", "запишите", "запиши", "записать")
+    _reject = ("курс", "заним", "учиться", "пробн", "запис", "подобрат",
+               "диагностик")
+    low_name = name_part.lower().strip(" .!?")
+    if (len(name_part) >= 2
+            and not any(c.isdigit() for c in name_part)
+            and "?" not in name_part
+            and low_name not in _short
+            and not any(w in low_name for w in _reject)):
+        return name_part[:255]
+    return ""
+
+
+def start(conv: Conversation, user_text: str = "") -> str:
+    """Начинает сбор лида. Если user_text содержит ФИО — сразу записывает."""
     conv.stage = STAGE_LEAD
+    # Попробуем извлечь ФИО из текста пользователя
+    if user_text and not conv.lead.fio_parent:
+        name = _extract_name_from_text(user_text)
+        if name:
+            conv.lead.fio_parent = name
     return _ask_next(conv)
 
 
@@ -39,8 +75,8 @@ def _next_step(conv: Conversation) -> str:
         return "fio_parent"
     if not lead.fio_child:
         return "fio_child"
-    if not lead.age and not lead.birthday:
-        return "age"
+    if not lead.birthday and not lead.age:
+        return "birthday"
     if not lead.phone:
         return "phone"
     if not lead.branch and not conv.selected_branch:
@@ -61,12 +97,12 @@ def _confirmation_text(conv: Conversation) -> str:
     branch = lead.branch or conv.selected_branch or "—"
     when = lead.birthday or (f"{lead.age} лет" if lead.age else "—")
     return (
-        "Проверьте, пожалуйста, заявку:\n"
+        "Проверьте, пожалуйста, заявку:\n\n"
         f"• Родитель: {lead.fio_parent}\n"
         f"• Ребёнок: {lead.fio_child}\n"
-        f"• Возраст/дата рождения: {when}\n"
+        f"• Дата рождения: {when}\n"
         f"• Телефон: {lead.phone}\n"
-        f"• Формат/филиал: {branch}\n\n"
+        f"• Филиал: {branch}\n\n"
         "Всё верно? Напишите «да» — и я отправлю заявку, или поправьте данные."
     )
 
@@ -93,21 +129,19 @@ async def step(
             return "Как зовут ребёнка?", False
         lead.fio_child = clean[:255]
 
-    elif current == "age":
+    elif current == "birthday":
         birthday = extract_birthday(clean)
-        age = extract_age(clean)
         if birthday:
             lead.birthday = birthday
-        elif age:
-            lead.age = age
         else:
-            # просто число?
-            digits = "".join(c for c in clean if c.isdigit())
-            if digits and len(digits) <= 2:
-                lead.age = digits
+            age = extract_age(clean)
+            if not age and clean.isdigit() and 1 <= len(clean) <= 2:
+                age = clean
+            if age:
+                lead.age = age
             else:
-                return ("Не понял возраст. Укажите числом, например «9», "
-                        "или дату рождения в формате дд.мм.гггг."), False
+                return ("Пожалуйста, укажите возраст или дату рождения в "
+                        "формате дд.мм.гггг 😊\n\nНапример: 9 лет или 15.03.2016"), False
 
     elif current == "phone":
         phone = extract_phone(clean)
@@ -161,14 +195,17 @@ async def _submit(conv: Conversation, bigben: BigBenClient, max_client: MaxClien
 
     if ok:
         return (
-            "Готово! ✅ Заявка отправлена, администратор свяжется с вами в "
-            "ближайшее время, чтобы подобрать удобное время диагностики. "
-            "Спасибо, что выбираете Фоксинбург! 🦊"
+            "Готово! ✅ Заявка отправлена!\n\n"
+            "Администратор в ближайшее время свяжется с вами "
+            "для подтверждения. Спасибо, что выбираете Фоксинбург! 🦊"
         )
     return (
-        "Я сохранил вашу заявку и передал её администратору — он свяжется с "
-        "вами в ближайшее время. Если удобно, можете также позвонить нам: "
-        "8 993 923-23-09. Спасибо! 🦊"
+        "Заявка принята! Администратор свяжется с вами "
+        "в ближайшее время для подтверждения.\n\n"
+        "Если удобно, можете также позвонить нам:\n"
+        "• 8 993 923-23-09 (Лихачевский)\n"
+        "• 8 916 732-31-69 (Ракетостроителей)\n\n"
+        "Спасибо! 🦊"
     )
 
 

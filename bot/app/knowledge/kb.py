@@ -106,12 +106,22 @@ class KnowledgeBase:
             self._add("age_programs", p.get("name", ""),
                       f"Возраст {p.get('age','')}. {p.get('text','')} Подробнее: {p.get('url','')}")
 
+        _COURSE_LABELS = {
+            "language": "Язык",
+            "ages": "Возраст",
+            "teacher": "Преподаватель",
+            "format": "Формат",
+            "price": "Стоимость",
+            "trial_price": "Пробный урок",
+        }
         for c in r.get("courses", []):
             parts = [c.get("description", ""), c.get("note", "")]
             meta = []
-            for k in ("language", "ages", "teacher", "format", "price", "trial_price"):
+            for k, label in _COURSE_LABELS.items():
                 if c.get(k):
-                    meta.append(f"{k}: {c[k]}")
+                    meta.append(f"{label}: {c[k]}")
+            if c.get("url"):
+                meta.append(f"Подробнее на сайте: {c['url']}")
             self._add("courses", c.get("name", ""),
                       " ".join([p for p in parts if p]) + " " + "; ".join(meta))
 
@@ -207,6 +217,26 @@ class KnowledgeBase:
     @property
     def company(self) -> dict:
         return self.raw.get("company", {})
+
+    @property
+    def faq(self) -> list[dict]:
+        return self.raw.get("faq", [])
+
+    @property
+    def promos(self) -> list:
+        return self.raw.get("promos", [])
+
+    @property
+    def summer_academy(self) -> dict:
+        return self.raw.get("summer_academy", {})
+
+    @property
+    def enrollment_steps(self) -> list[dict]:
+        return self.raw.get("enrollment_steps", [])
+
+    @property
+    def advantages(self) -> list[dict]:
+        return self.raw.get("advantages", [])
 
     def objection(self, key: str) -> str | None:
         for o in self.raw.get("objections", []):

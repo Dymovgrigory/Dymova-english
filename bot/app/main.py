@@ -39,6 +39,15 @@ app = FastAPI(title="Foxinburg MAX Bot", lifespan=_lifespan)
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
 
 
+def _miniapp_url(section: str = "") -> str:
+    base = settings.MINIAPP_BASE_URL.rstrip("/") if settings.MINIAPP_BASE_URL else ""
+    if not base:
+        return ""
+    if section:
+        return f"{base}#{section}"
+    return base
+
+
 def _main_menu() -> list[list[dict]]:
     rows = [
         [callback_button("🎓 Подобрать курс", "menu:courses")],
@@ -47,8 +56,50 @@ def _main_menu() -> list[list[dict]]:
         [callback_button("🏫 Наши филиалы", "menu:branches")],
         [callback_button("☎ Связаться с администратором", "menu:admin")],
     ]
-    if settings.MINIAPP_BASE_URL:
-        rows.insert(0, [link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
+    base = _miniapp_url()
+    if base:
+        rows.insert(0, [link_button("📱 Открыть приложение", base)])
+    return rows
+
+
+def _contextual_buttons(question: str, reply: str) -> list[list[dict]]:
+    """Добавляет кнопку мини-приложения в зависимости от контекста вопроса/ответа."""
+    base = _miniapp_url()
+    if not base:
+        return []
+    low_q = question.lower()
+    low_r = reply.lower()
+    rows = []
+
+    # Course-related
+    if any(w in low_q for w in ("курс", "программ", "обучен", "язык", "стоимость",
+                                  "цен", "прайс", "сколько стоит")):
+        rows.append([link_button("📚 Каталог курсов", _miniapp_url("courses"))])
+
+    # Summer academy
+    if any(w in low_q for w in ("лет", "академи", "смен", "каникул")):
+        rows.append([link_button("☀️ Летняя Академия", _miniapp_url("summer"))])
+
+    # Branches
+    if any(w in low_q for w in ("филиал", "адрес", "добрат", "где вы", "офлайн",
+                                  "ракетостр", "лихачев")):
+        rows.append([link_button("📍 Филиалы", _miniapp_url("branches"))])
+
+    # Signup
+    if any(w in low_q for w in ("запис", "пробн", "диагност")):
+        rows.append([link_button("📋 Записаться онлайн", _miniapp_url("signup"))])
+
+    # If nothing matched from question, check reply
+    if not rows:
+        if any(w in low_r for w in ("курс", "программ")):
+            rows.append([link_button("📚 Подробнее о курсах", _miniapp_url("courses"))])
+
+    # If bot offers signup in reply — add button
+    if not any("Записаться" in str(r) for r in rows):
+        if any(w in low_r for w in ("записать", "диагностик", "пробн",
+                                      "запишу", "записаться", "заявк")):
+            rows.append([link_button("📋 Записаться онлайн", _miniapp_url("signup"))])
+
     return rows
 
 
@@ -148,7 +199,8 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
         else:
             reply = await handle_message(user_id, text)
-            await max_client.send_message(user_id, reply)
+            btns = _contextual_buttons(text, reply)
+            await max_client.send_message(user_id, reply, buttons=btns or None)
         return
 
     if update_type == "message_callback":
@@ -160,7 +212,8 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             await max_client.answer_callback(callback_id)
         if user_id and payload in _CALLBACK_TEXT:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
-            await max_client.send_message(user_id, reply)
+            btns = _contextual_buttons(_CALLBACK_TEXT[payload], reply)
+            await max_client.send_message(user_id, reply, buttons=btns or None)
         return
 
 
@@ -198,6 +251,11 @@ async def miniapp_info() -> dict:
         "age_programs": kb.age_programs,
         "courses": kb.courses,
         "social": kb.social,
+        "faq": kb.faq,
+        "promos": kb.promos,
+        "summer_academy": kb.summer_academy,
+        "enrollment_steps": kb.enrollment_steps,
+        "advantages": kb.advantages,
     }
 
 

@@ -74,6 +74,24 @@ def _capture_entities(conv: Conversation, text: str) -> None:
         conv.selected_format = "Офлайн"
 
 
+def _smalltalk_reply(conv: Conversation, text: str) -> str | None:
+    """Короткие ответы на приветствия и общие вопросы о возможностях бота."""
+    low = text.lower()
+    if any(p in low for p in ("как дела", "как пожива", "что нового")):
+        return (
+            "Всё отлично, спасибо! 🦊 Я как раз люблю такие диалоги — "
+            "сразу помогаю подобрать подходящий курс.\n\n"
+            f"{sales.sales_nudge(conv)}"
+        )
+    if any(p in low for p in ("что умеешь", "чем можешь", "чем помож", "что ты умеешь")):
+        return (
+            "Я могу подобрать курс, рассказать о ценах, филиалах и летней "
+            "академии, а ещё записать на диагностику и довести до заявки.\n\n"
+            f"{sales.sales_nudge(conv)}"
+        )
+    return None
+
+
 async def _consult(conv: Conversation, text: str) -> str:
     """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
     kb = get_kb()
@@ -100,13 +118,69 @@ async def _consult(conv: Conversation, text: str) -> str:
 
     # Fallback без LLM — отдаём найденные факты + мягкий призыв.
     if kb_context:
-        return (f"Вот что у меня есть по вашему вопросу:\n\n{kb_context}\n\n"
+        # Убираем технические скобки из заголовков документов KB.
+        import re
+        clean_ctx = re.sub(r"\[([^\]]+)\]\n", r"📌 \1\n", kb_context)
+        return (f"Вот что могу рассказать:\n\n{clean_ctx}\n\n"
                 + sales.sales_nudge(conv))
     return (
         "Хороший вопрос! Чтобы ответить точно, подскажите, пожалуйста, возраст "
         "ребёнка и удобный формат (онлайн/офлайн). А можно сразу записаться на "
         "бесплатную диагностику — администратор всё подробно расскажет. 😊"
     )
+
+
+def _is_question_during_lead(conv: Conversation, text: str, intent: str) -> bool:
+    """Определяет, задаёт ли пользователь вопрос вместо ответа на поле заявки.
+
+    Если текущий шаг — ожидание конкретных данных (ФИО, дата, телефон, филиал),
+    а пользователь пишет что-то похожее на вопрос — возвращаем True.
+    """
+    low = text.lower().strip()
+    current_step = conv.lead_step or "fio_parent"
+
+    # Явные интенты-вопросы — всегда отвечаем
+    if intent in (I.COURSES, I.PRICE, I.ABOUT):
+        return True
+
+    # Вопросительные слова / знак вопроса
+    question_markers = ("?", "сколько", "какие", "когда", "где ", "как ",
+                        "почему", "зачем", "можно ли", "есть ли", "а что",
+                        "расскажи", "подскажи", "что включ", "что входит")
+    if any(m in low for m in question_markers):
+        # Но не на шаге confirm — там "?" может быть уточнением данных
+        if current_step != "confirm":
+            return True
+
+    return False
+
+
+def _user_agrees_to_signup(conv: Conversation, text: str) -> bool:
+    """Проверяет, согласился ли пользователь на запись после предложения бота.
+
+    Возвращает True, если:
+    1) Последний ответ бота содержал предложение записаться/диагностику
+    2) Пользователь ответил согласием (да, давайте, хочу, и т.п.)
+    """
+    low = text.lower().strip(" .!?")
+    agreement_words = (
+        "да", "давайте", "давай", "хорошо", "хочу", "можно", "конечно",
+        "ок", "окей", "ладно", "ага", "запишите", "запиши", "записать",
+        "готов", "готова", "согласен", "согласна", "yes", "+",
+    )
+    if low not in agreement_words and not any(low.startswith(w) for w in agreement_words):
+        return False
+
+    # Проверяем, предлагал ли бот записаться в последнем сообщении
+    last_bot_msgs = [m for m in conv.history if m.get("role") == "assistant"]
+    if not last_bot_msgs:
+        return False
+    last_bot = last_bot_msgs[-1].get("content", "").lower()
+    signup_cues = (
+        "записать", "диагностик", "пробн", "запишу", "подобрать время",
+        "удобное время", "бесплатн", "записаться", "оставить заявку",
+    )
+    return any(cue in last_bot for cue in signup_cues)
 
 
 async def handle_message(user_id: str, text: str) -> str:
@@ -129,11 +203,21 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     bigben = get_bigben()
 
     # 1. Если уже идёт сбор данных для заявки — продолжаем его,
-    #    но позволяем выйти к оператору.
+    #    но позволяем выйти к оператору или задать вопрос.
     if conv.stage == STAGE_LEAD:
-        if I.detect_intent(text) == I.HANDOFF:
+        intent = I.detect_intent(text)
+        if intent == I.HANDOFF:
             await hand_off(max_client, conv, reason="запрос оператора")
             return _handoff_reply()
+        # Если пользователь задаёт вопрос вместо ответа на поле — отвечаем
+        # через LLM и мягко продолжаем сбор (без навязчивого «возвращаемся»).
+        if _is_question_during_lead(conv, text, intent):
+            answer = await _consult(conv, text)
+            current_step = conv.lead_step or lead_manager._next_step(conv)
+            reminder = lead_manager.PROMPTS.get(current_step, "")
+            if reminder:
+                return answer + "\n\n" + reminder
+            return answer
         reply, _submitted = await lead_manager.step(conv, text, kb, bigben, max_client)
         return reply
 
@@ -155,19 +239,31 @@ async def _route(conv: Conversation, text: str, kb) -> str:
         key = I.detect_objection(text) or "подумаю"
         return sales.handle_objection(kb, key)
 
-    # 5. Явное намерение записаться — запускаем сбор лида.
+    # 5. Явное намерение записаться — запускаем сбор лида в чате.
+    #    Бот также предложит кнопку мини-приложения (через main.py).
     if intent == I.WANT_SIGNUP:
-        return lead_manager.start(conv)
+        return lead_manager.start(conv, user_text=text)
 
-    # 6. Приветствие — короткое, человеческое, без простыни про школу.
-    if intent == I.GREETING and len(conv.history) <= 2:
+    # 5b. Если бот предложил записаться в предыдущем сообщении, а клиент
+    #     согласился (давайте, да, хорошо, можно, хочу) — бесшовно начинаем сбор.
+    if _user_agrees_to_signup(conv, text):
+        return lead_manager.start(conv, user_text=text)
+
+    # 6. Приветствие — пропускаем через LLM для естественного ответа.
+    if intent == I.GREETING:
         conv.stage = STAGE_DISCOVERY
-        return (
-            "Здравствуйте! 🦊 Рады видеть вас в школе «Фоксинбург».\n"
-            "Подскажите, для кого подбираете занятия и сколько лет ребёнку — "
-            "помогу выбрать подходящую программу. Или сразу запишу на бесплатную "
-            "диагностику. 😊"
-        )
+        smalltalk = _smalltalk_reply(conv, text)
+        if smalltalk:
+            return smalltalk
+        reply = await _consult(conv, text)
+        # Если LLM вернул дежурный fallback — заменяем на тёплое приветствие.
+        if "подскажите, пожалуйста, возраст" in reply.lower():
+            reply = (
+                "Привет! 🦊 Я Фокси из Фоксинбурга, рад вас слышать!\n\n"
+                "Чем могу помочь? Расскажу о курсах, ценах, запишу "
+                "на бесплатную диагностику — спрашивайте! 😊"
+            )
+        return reply
 
     # 6b. Конкретные вопросы про содержание (учебники/материалы/методика) —
     #     отвечаем из базы знаний (RAG + LLM), а не подбором программ.
@@ -176,12 +272,14 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             conv.stage = STAGE_DISCOVERY
         return await _consult(conv, text)
 
-    # 7. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор.
-    if intent == I.COURSES and conv.lead.age:
+    # 7. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор,
+    #    но только если ещё не показывали рекомендацию (иначе — через LLM).
+    if intent == I.COURSES and conv.lead.age and not conv.recs_shown:
         items = recommend(kb, conv.lead.age, conv.selected_format)
         recs = format_recommendations(items)
         if recs:
             conv.stage = STAGE_DISCOVERY
+            conv.recs_shown = True
             return recs + "\n\n" + sales.sales_nudge(conv)
 
     # 8. Во всех прочих случаях — консультативный ответ по базе знаний.
@@ -192,9 +290,11 @@ async def _route(conv: Conversation, text: str, kb) -> str:
 
 def _handoff_reply() -> str:
     return (
-        "Конечно, подключаю администратора — он скоро напишет вам здесь. 🙌\n"
-        "Если вопрос срочный, можно позвонить: 8 993 923-23-09 "
-        "(Лихачевский) или 8 916 732-31-69 (Ракетостроителей)."
+        "Конечно, сейчас подключу нашего администратора — "
+        "он скоро напишет вам прямо сюда! 🙌\n\n"
+        "Если вопрос срочный, можете позвонить:\n"
+        "• Лихачевский: 8 993 923-23-09\n"
+        "• Ракетостроителей: 8 916 732-31-69"
     )
 
 
@@ -211,10 +311,12 @@ async def handle_start(user_id: str, start_param: str = "") -> str:
     if start_param:
         conv.utm = parse_utm(start_param)
     reply = (
-        "Здравствуйте! 🦊 Я — консультант языковой школы «Фоксинбург» в "
-        "Долгопрудном. Помогу подобрать курс, расскажу о ценах, филиалах и "
-        "запишу на бесплатную диагностику.\n\n"
-        "С чего начнём? Можете написать, например: «Сыну 9 лет, ищем английский»."
+        "Привет! 🦊 Я — Фокси из языковой школы «Фоксинбург» в "
+        "Долгопрудном!\n\n"
+        "Помогу подобрать курс, расскажу о ценах и филиалах, "
+        "запишу на бесплатную диагностику 😊\n\n"
+        "Напишите, например: «Сыну 9 лет, ищем английский» — и я подберу "
+        "лучшую программу!"
     )
     conv.add("assistant", reply)
     store.save(conv)
