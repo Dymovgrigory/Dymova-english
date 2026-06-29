@@ -72,7 +72,14 @@ class LLMClient:
             return None
 
     async def complete(self, messages: list[dict], temperature: float | None = None) -> str | None:
-        return await self._chat_completion(self.model, messages, temperature=temperature)
+        reply = await self._chat_completion(self.model, messages, temperature=temperature)
+        if reply and not _mostly_russian(reply):
+            logger.warning("LLM reply looks non-Russian, retrying once")
+            retry = await self._chat_completion(self.model, messages, temperature=temperature)
+            if retry and not _mostly_russian(retry):
+                return None
+            return retry
+        return reply
 
     async def complete_vision(
         self,
@@ -83,6 +90,15 @@ class LLMClient:
         return await self._chat_completion(
             self.vision_model, messages, temperature=temperature, max_tokens=max_tokens
         )
+
+
+def _mostly_russian(text: str) -> bool:
+    cyr = len(re.findall(r"[А-Яа-яЁё]", text or ""))
+    lat = len(re.findall(r"[A-Za-z]", text or ""))
+    total = cyr + lat
+    if total < 8:
+        return True
+    return (cyr / total) >= 0.35
 
 
 # Паттерны мусорных токенов LLM (заголовки чата Llama, роли).

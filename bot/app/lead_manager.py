@@ -28,6 +28,29 @@ PROMPTS = {
 }
 
 
+def _looks_like_name(text: str) -> bool:
+    clean = text.strip()
+    if len(clean) < 2:
+        return False
+    if any(c.isdigit() for c in clean):
+        return False
+    if extract_age(clean):
+        return False
+    if "?" in clean:
+        return False
+    low = clean.lower().strip(" .!?")
+    _short = ("да", "давайте", "давай", "хорошо", "хочу", "можно",
+              "конечно", "ок", "окей", "ладно", "ага", "yes", "+",
+              "записаться", "запишите", "запиши", "записать")
+    if any(low.startswith(prefix) for prefix in _short):
+        return False
+    _reject = ("запис", "пробн", "курс", "диагностик", "заняти",
+               "english", "англ", "хочу")
+    if any(w in low for w in _reject):
+        return False
+    return True
+
+
 def _extract_name_from_text(text: str) -> str:
     """Извлекает ФИО из текста, убирая слова-согласия из начала."""
     clean = text.strip()
@@ -43,17 +66,7 @@ def _extract_name_from_text(text: str) -> str:
         if low.startswith(prefix):
             name_part = clean[len(prefix):].strip(" ,.-!")
             break
-    _short = ("да", "давайте", "давай", "хорошо", "хочу", "можно",
-              "конечно", "ок", "окей", "ладно", "ага", "yes", "+",
-              "записаться", "запишите", "запиши", "записать")
-    _reject = ("курс", "заним", "учиться", "пробн", "запис", "подобрат",
-               "диагностик")
-    low_name = name_part.lower().strip(" .!?")
-    if (len(name_part) >= 2
-            and not any(c.isdigit() for c in name_part)
-            and "?" not in name_part
-            and low_name not in _short
-            and not any(w in low_name for w in _reject)):
+    if _looks_like_name(name_part):
         return name_part[:255]
     return ""
 
@@ -120,13 +133,18 @@ async def step(
     clean = text.strip()
 
     if current == "fio_parent":
-        if len(clean) < 2:
-            return "Подскажите, пожалуйста, как вас зовут?", False
+        if not _looks_like_name(clean):
+            return (
+                "Кажется, это не похоже на имя 😊 Напишите, пожалуйста, как вас зовут (имя и фамилия)."
+            ), False
         lead.fio_parent = clean[:255]
 
     elif current == "fio_child":
-        if len(clean) < 2:
-            return "Как зовут ребёнка?", False
+        if not _looks_like_name(clean):
+            age = extract_age(clean)
+            if age and not lead.age:
+                lead.age = age
+            return "Напишите, пожалуйста, имя ребёнка.", False
         lead.fio_child = clean[:255]
 
     elif current == "birthday":
