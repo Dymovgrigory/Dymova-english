@@ -218,6 +218,26 @@ class KnowledgeBase:
     def company(self) -> dict:
         return self.raw.get("company", {})
 
+    @property
+    def faq(self) -> list[dict]:
+        return self.raw.get("faq", [])
+
+    @property
+    def promos(self) -> list:
+        return self.raw.get("promos", [])
+
+    @property
+    def summer_academy(self) -> dict:
+        return self.raw.get("summer_academy", {})
+
+    @property
+    def enrollment_steps(self) -> list[dict]:
+        return self.raw.get("enrollment_steps", [])
+
+    @property
+    def advantages(self) -> list[dict]:
+        return self.raw.get("advantages", [])
+
     def objection(self, key: str) -> str | None:
         for o in self.raw.get("objections", []):
             if o.get("key") == key:
