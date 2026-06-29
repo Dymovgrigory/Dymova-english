@@ -17,17 +17,9 @@ from app.memory import Conversation, STAGE_DONE, STAGE_LEAD
 logger = logging.getLogger(__name__)
 
 # Порядок сбора полей и вопросы к клиенту.
-STEPS = ["consent", "fio_parent", "fio_child", "birthday", "phone", "branch", "confirm"]
-
-_CONSENT_TEXT = (
-    "Для оформления заявки мне понадобятся ваши контактные данные.\n\n"
-    "Нажимая «да», вы соглашаетесь на обработку персональных данных "
-    "в соответствии с ФЗ-152.\n\n"
-    "Согласны? 😊"
-)
+STEPS = ["fio_parent", "fio_child", "birthday", "phone", "branch", "confirm"]
 
 PROMPTS = {
-    "consent": _CONSENT_TEXT,
     "fio_parent": "Как вас зовут (ФИО родителя)?",
     "fio_child": "А как зовут ребёнка (ФИО)?",
     "birthday": "Подскажите полную дату рождения ребёнка 🎂\n\nНапример: 15.03.2016",
@@ -76,8 +68,6 @@ def start(conv: Conversation, user_text: str = "") -> str:
 
 def _next_step(conv: Conversation) -> str:
     lead = conv.lead
-    if not conv.consent_given:
-        return "consent"
     if not lead.fio_parent:
         return "fio_parent"
     if not lead.fio_child:
@@ -126,13 +116,7 @@ async def step(
     lead = conv.lead
     clean = text.strip()
 
-    if current == "consent":
-        if _is_yes(clean):
-            conv.consent_given = True
-        else:
-            return "Для оформления заявки нужно ваше согласие. Напишите «да», чтобы продолжить 😊", False
-
-    elif current == "fio_parent":
+    if current == "fio_parent":
         if len(clean) < 2:
             return "Подскажите, пожалуйста, как вас зовут?", False
         lead.fio_parent = clean[:255]

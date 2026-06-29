@@ -121,10 +121,6 @@ def _is_question_during_lead(conv: Conversation, text: str, intent: str) -> bool
     low = text.lower().strip()
     current_step = conv.lead_step or "fio_parent"
 
-    # На шаге consent не считаем ответ вопросом
-    if current_step == "consent":
-        return False
-
     # Явные интенты-вопросы — всегда отвечаем
     if intent in (I.COURSES, I.PRICE, I.ABOUT, I.QUESTION):
         return True
