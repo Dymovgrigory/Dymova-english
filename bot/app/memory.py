@@ -119,6 +119,10 @@ class MemoryStore:
             self._persist()
             return conv
 
+    def all_conversations(self) -> list[Conversation]:
+        with self._lock:
+            return list(self._data.values())
+
     # ---------- персистентность ----------
     def _persist(self) -> None:
         if not self._file:
