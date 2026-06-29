@@ -77,8 +77,10 @@ def _clean_response(text: str) -> str:
         return ""
     # Remove special tokens
     text = _JUNK_TOKENS.sub("", text)
-    # Remove CJK characters
-    text = _CJK_RE.sub("", text)
+    # Remove CJK characters (replace with space to avoid broken words like "нымиами")
+    text = _CJK_RE.sub(" ", text)
+    # Collapse multiple spaces
+    text = re.sub(r" {2,}", " ", text)
     # Remove lines that are just "assistant" or "user" (role leaks)
     lines = text.split("\n")
     cleaned = [ln for ln in lines if ln.strip().lower() not in ("assistant", "user", "system")]

@@ -100,7 +100,10 @@ async def _consult(conv: Conversation, text: str) -> str:
 
     # Fallback без LLM — отдаём найденные факты + мягкий призыв.
     if kb_context:
-        return (f"Вот что у меня есть по вашему вопросу:\n\n{kb_context}\n\n"
+        # Убираем технические скобки из заголовков документов KB.
+        import re
+        clean_ctx = re.sub(r"\[([^\]]+)\]\n", r"📌 \1\n", kb_context)
+        return (f"Вот что могу рассказать:\n\n{clean_ctx}\n\n"
                 + sales.sales_nudge(conv))
     return (
         "Хороший вопрос! Чтобы ответить точно, подскажите, пожалуйста, возраст "
@@ -162,7 +165,15 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     # 6. Приветствие — пропускаем через LLM для естественного ответа.
     if intent == I.GREETING:
         conv.stage = STAGE_DISCOVERY
-        return await _consult(conv, text)
+        reply = await _consult(conv, text)
+        # Если LLM вернул дежурный fallback — заменяем на тёплое приветствие.
+        if "подскажите, пожалуйста, возраст" in reply.lower():
+            reply = (
+                "Привет! 🦊 Рада вас слышать, у нас всё отлично!\n\n"
+                "Чем могу помочь? Расскажу о курсах, ценах, запишу "
+                "на бесплатную диагностику — спрашивайте! 😊"
+            )
+        return reply
 
     # 6b. Конкретные вопросы про содержание (учебники/материалы/методика) —
     #     отвечаем из базы знаний (RAG + LLM), а не подбором программ.
