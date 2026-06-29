@@ -9,8 +9,8 @@ class FakeVisionLLM:
         self.reply = reply
         self.calls = []
 
-    async def complete_vision(self, messages, temperature=None):
-        self.calls.append((messages, temperature))
+    async def complete_vision(self, messages, temperature=None, max_tokens=None):
+        self.calls.append((messages, temperature, max_tokens))
         return self.reply
 
 
@@ -48,8 +48,9 @@ async def test_homework_success_uses_vision_llm(monkeypatch, client):
     data = resp.json()
     assert data["explanation"].startswith("1) Это задание")
     assert fake.calls
-    messages, temperature = fake.calls[0]
+    messages, temperature, max_tokens = fake.calls[0]
     assert temperature == 0.2
+    assert max_tokens and max_tokens >= 1000
     assert messages[0]["role"] == "system"
     assert messages[1]["role"] == "user"
     parts = messages[1]["content"]

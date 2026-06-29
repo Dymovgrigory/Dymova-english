@@ -39,7 +39,13 @@ class LLMClient:
             "X-Title": "Foxinburg MAX Bot",
         }
 
-    async def _chat_completion(self, model: str, messages: list[dict], temperature: float | None = None) -> str | None:
+    async def _chat_completion(
+        self,
+        model: str,
+        messages: list[dict],
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+    ) -> str | None:
         if not self.enabled:
             return None
         url = f"{self.base_url}/chat/completions"
@@ -47,7 +53,7 @@ class LLMClient:
             "model": model,
             "messages": messages,
             "temperature": settings.LLM_TEMPERATURE if temperature is None else temperature,
-            "max_tokens": settings.LLM_MAX_TOKENS,
+            "max_tokens": settings.LLM_MAX_TOKENS if max_tokens is None else max_tokens,
         }
         try:
             async with httpx.AsyncClient(timeout=settings.LLM_TIMEOUT) as client:
@@ -68,8 +74,15 @@ class LLMClient:
     async def complete(self, messages: list[dict], temperature: float | None = None) -> str | None:
         return await self._chat_completion(self.model, messages, temperature=temperature)
 
-    async def complete_vision(self, messages: list[dict], temperature: float | None = None) -> str | None:
-        return await self._chat_completion(self.vision_model, messages, temperature=temperature)
+    async def complete_vision(
+        self,
+        messages: list[dict],
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+    ) -> str | None:
+        return await self._chat_completion(
+            self.vision_model, messages, temperature=temperature, max_tokens=max_tokens
+        )
 
 
 # Паттерны мусорных токенов LLM (заголовки чата Llama, роли).
