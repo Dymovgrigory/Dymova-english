@@ -106,12 +106,20 @@ class KnowledgeBase:
             self._add("age_programs", p.get("name", ""),
                       f"Возраст {p.get('age','')}. {p.get('text','')} Подробнее: {p.get('url','')}")
 
+        _COURSE_LABELS = {
+            "language": "Язык",
+            "ages": "Возраст",
+            "teacher": "Преподаватель",
+            "format": "Формат",
+            "price": "Стоимость",
+            "trial_price": "Пробный урок",
+        }
         for c in r.get("courses", []):
             parts = [c.get("description", ""), c.get("note", "")]
             meta = []
-            for k in ("language", "ages", "teacher", "format", "price", "trial_price"):
+            for k, label in _COURSE_LABELS.items():
                 if c.get(k):
-                    meta.append(f"{k}: {c[k]}")
+                    meta.append(f"{label}: {c[k]}")
             self._add("courses", c.get("name", ""),
                       " ".join([p for p in parts if p]) + " " + "; ".join(meta))
 
