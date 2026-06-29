@@ -20,11 +20,18 @@
     /* Header */
     .header {
       background: linear-gradient(135deg, var(--purple), var(--purple3));
-      color: #fff; padding: 20px 16px 16px; text-align: center;
+      color: #fff; padding: 24px 16px 18px; text-align: center;
+      position: relative; overflow: hidden;
     }
-    .header .logo { font-size: 36px; }
+    .header .logo-img { width: 64px; height: auto; margin-bottom: 4px; }
     .header h1 { font-size: 20px; margin: 4px 0 2px; }
     .header .slogan { opacity: .8; font-size: 13px; }
+    .header .decor-left {
+      position: absolute; left: -10px; top: 10px; width: 60px; opacity: .15;
+    }
+    .header .decor-right {
+      position: absolute; right: -10px; bottom: 5px; width: 50px; opacity: .12;
+    }
 
     /* Bottom nav */
     .bottom-nav {
@@ -141,13 +148,27 @@
     .adv-icon { font-size: 22px; flex-shrink: 0; }
     .adv-text h4 { font-size: 13px; color: var(--purple); }
     .adv-text p { font-size: 12px; color: var(--muted); }
+
+    /* Footer stamp */
+    .footer-stamp {
+      text-align: center; padding: 16px 0 8px; opacity: .4;
+    }
+    .footer-stamp img { width: 48px; height: auto; }
+
+    /* Section decor */
+    .sec-decor {
+      position: absolute; z-index: 0; opacity: .06; pointer-events: none;
+    }
+    .section { position: relative; }
   </style>
 </head>
 <body>
 
   <!-- Header -->
   <div class="header">
-    <div class="logo">🦊</div>
+    <img src="img/decor-swirl-yellow-1.png" class="decor-left" alt="" />
+    <img src="img/decor-wave-small-1.png" class="decor-right" alt="" />
+    <img src="img/fox-head-yellow.png" class="logo-img" alt="Фоксинбург" />
     <h1>Фоксинбург</h1>
     <div class="slogan">Английский не для школы, а для жизни!</div>
   </div>
@@ -156,6 +177,7 @@
 
     <!-- HOME -->
     <div class="section active" id="sec-home">
+      <img src="img/decor-blob-yellow.png" class="sec-decor" style="right:-20px; top:10px; width:100px;" alt="" />
       <div class="quick-grid">
         <div class="quick-card" onclick="goTo('courses')">
           <div class="qicon">📚</div>
@@ -192,7 +214,8 @@
 
     <!-- COURSES -->
     <div class="section" id="sec-courses">
-      <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;">📚 Наши курсы</h2>
+      <img src="img/decor-swirl-yellow-2.png" class="sec-decor" style="right:-30px; top:40px; width:90px;" alt="" />
+      <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;"><img src="img/fox-head-purple.png" style="width:24px; vertical-align:middle; margin-right:6px;" alt="" /> Наши курсы</h2>
       <div id="courses-list"></div>
     </div>
 
@@ -226,20 +249,26 @@
 
     <!-- SUMMER ACADEMY -->
     <div class="section" id="sec-summer">
+      <img src="img/decor-zigzag-yellow.png" class="sec-decor" style="left:-20px; top:60px; width:70px;" alt="" />
       <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;">☀️ Летняя Академия</h2>
       <div id="summer-info"></div>
     </div>
 
     <!-- BRANCHES -->
     <div class="section" id="sec-branches">
-      <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;">📍 Наши филиалы</h2>
+      <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;"><img src="img/fox-head-purple.png" style="width:24px; vertical-align:middle; margin-right:6px;" alt="" /> Наши филиалы</h2>
       <div id="branches-list"></div>
     </div>
 
     <!-- FAQ -->
     <div class="section" id="sec-faq">
-      <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;">❓ Частые вопросы</h2>
+      <h2 style="font-size:18px; color:var(--purple); margin-bottom:12px;"><img src="img/fox-head-purple.png" style="width:24px; vertical-align:middle; margin-right:6px;" alt="" /> Частые вопросы</h2>
       <div class="card" id="faq-list"></div>
+    </div>
+
+    <!-- Footer stamp -->
+    <div class="footer-stamp">
+      <img src="img/logo-stamp-dark.png" alt="Фоксинбург" />
     </div>
 
   </div>
