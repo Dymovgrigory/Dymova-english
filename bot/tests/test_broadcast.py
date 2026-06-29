@@ -2,9 +2,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import memory
-from app.broadcast import audience_counts, resolve_recipients
+from app.broadcast import audience_counts, get_user_detail, list_users, resolve_recipients
 import app.main as main
-from app.memory import Conversation, Lead, STAGE_DONE, get_store
+from app.memory import Conversation, Lead, STAGE_DONE, _conv_from_dict, get_store
 from app import config
 
 
@@ -106,3 +106,114 @@ def test_broadcast_endpoints_auth_and_send(monkeypatch, fresh_store):
     assert send_resp.status_code == 200
     assert send_resp.json() == {"total": 1, "delivered": 1, "failed": 0}
     assert [call[0] for call in fake.calls] == ["u1"]
+
+
+def test_conversation_add_tracks_transcript_and_history():
+    conv = Conversation(user_id="u1")
+    for i in range(13):
+        conv.add("user" if i % 2 == 0 else "assistant", f"msg-{i}")
+    assert len(conv.history) == 12
+    assert len(conv.transcript) == 13
+    assert all("ts" in item for item in conv.transcript)
+
+    for i in range(1000):
+        conv.add("user", f"extra-{i}")
+    assert len(conv.transcript) == 1000
+    assert len(conv.history) == 12
+
+
+def test_conv_from_dict_backward_compatibility():
+    conv = _conv_from_dict(
+        {
+            "user_id": "legacy",
+            "stage": "greeting",
+            "lead": {},
+            "history": [{"role": "user", "content": "Привет"}],
+        }
+    )
+    assert conv.user_id == "legacy"
+    assert conv.created_at == ""
+    assert conv.updated_at == ""
+    assert conv.transcript == []
+
+
+def test_list_users_includes_first_question_and_sorted(fresh_store):
+    old = Conversation(
+        user_id="old",
+        stage="lead",
+        lead=Lead(fio_parent="Иван", fio_child="Миша", phone="+79990000000"),
+        selected_course="Английский",
+        selected_branch="Лихачевский",
+        selected_format="Офлайн",
+        created_at="2026-06-01T10:00:00+00:00",
+        updated_at="2026-06-01T11:00:00+00:00",
+        transcript=[
+            {"role": "user", "content": "Расскажите про летнюю академию", "ts": "2026-06-01T10:00:00+00:00"},
+            {"role": "assistant", "content": "Конечно", "ts": "2026-06-01T10:00:05+00:00"},
+        ],
+        history=[
+            {"role": "user", "content": "Расскажите про летнюю академию"},
+            {"role": "assistant", "content": "Конечно"},
+        ],
+        utm={"source": "vk", "utm_campaign": "spring"},
+    )
+    partial = Conversation(
+        user_id="partial",
+        stage="discovery",
+        lead=Lead(fio_parent="Анна"),
+        selected_course="Немецкий",
+        created_at="2026-06-02T10:00:00+00:00",
+        updated_at="2026-06-03T09:00:00+00:00",
+        transcript=[
+            {"role": "user", "content": "Чем занимаетесь?", "ts": "2026-06-02T10:00:00+00:00"},
+        ],
+        history=[{"role": "user", "content": "Чем занимаетесь?"}],
+        utm={"utm_medium": "miniapp"},
+    )
+    blank = Conversation(
+        user_id="blank",
+        stage="greeting",
+        created_at="2026-06-04T10:00:00+00:00",
+        updated_at="",
+        transcript=[],
+        history=[],
+    )
+    fresh_store._data = {"old": old, "partial": partial, "blank": blank}
+
+    rows = list_users()
+    assert [row["user_id"] for row in rows] == ["partial", "old", "blank"]
+    assert rows[0]["lead_status"] == "partial"
+    assert rows[1]["lead_status"] == "complete"
+    assert rows[1]["first_question"] == "Расскажите про летнюю академию"
+    assert rows[1]["first_at"] == "2026-06-01T10:00:00+00:00"
+    assert rows[1]["last_message"] == "Конечно"
+    assert rows[1]["source"] == "vk"
+    assert rows[2]["first_question"] == ""
+    assert rows[2]["first_at"] == "2026-06-04T10:00:00+00:00"
+
+
+def test_admin_users_endpoints_and_detail_auth(monkeypatch, fresh_store):
+    fresh_store._data = {
+        "u1": Conversation(
+            user_id="u1",
+            created_at="2026-06-01T10:00:00+00:00",
+            updated_at="2026-06-01T11:00:00+00:00",
+            transcript=[{"role": "user", "content": "Привет", "ts": "2026-06-01T10:00:00+00:00"}],
+            history=[{"role": "user", "content": "Привет"}],
+        )
+    }
+    monkeypatch.setattr(config.settings, "ADMIN_TOKEN", "")
+    client = TestClient(main.app)
+    assert client.get("/admin/users").status_code == 401
+    assert client.get("/admin/users/u1").status_code == 401
+
+    monkeypatch.setattr(config.settings, "ADMIN_TOKEN", "secret")
+    assert client.get("/admin/users", headers={"X-Admin-Token": "wrong"}).status_code == 401
+    assert client.get("/admin/users/u1", headers={"X-Admin-Token": "wrong"}).status_code == 401
+
+    rows = client.get("/admin/users", headers={"X-Admin-Token": "secret"}).json()["rows"]
+    assert len(rows) == 1
+    detail = client.get("/admin/users/u1", headers={"X-Admin-Token": "secret"}).json()
+    assert detail["header"]["user_id"] == "u1"
+    assert detail["transcript"][0]["content"] == "Привет"
+    assert client.get("/admin/users/unknown", headers={"X-Admin-Token": "secret"}).status_code == 404

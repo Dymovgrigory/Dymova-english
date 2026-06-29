@@ -167,13 +167,71 @@
       font-size: 12px;
       color: var(--muted);
     }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .tab {
+      border: 1px solid #e3dced;
+      background: #fff;
+      color: var(--purple2);
+      border-radius: 999px;
+      padding: 11px 16px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: var(--purple2);
+      color: #fff;
+      border-color: var(--purple2);
+    }
+    .panel { margin-top: 16px; }
     .login {
       max-width: 540px;
       margin: 42px auto 0;
     }
     .hidden { display: none !important; }
+    .table-shell {
+      overflow-x: auto;
+      border-radius: 18px;
+      border: 1px solid #e5dbf2;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 920px;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0e9fa;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th {
+      background: #f7f2ff;
+      color: var(--purple);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+    tr:hover td { background: #fcfaff; }
+    .users-filters {
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      gap: 12px;
+      align-items: end;
+      margin: 12px 0;
+    }
+    .users-filters .actions { display: flex; gap: 10px; flex-wrap: wrap; }
     @media (max-width: 820px) {
       .grid, .row, .row3 { grid-template-columns: 1fr; }
+      .users-filters { grid-template-columns: 1fr; }
       .hero h1 { font-size: 22px; }
     }
   </style>
@@ -201,77 +259,148 @@
     </div>
 
     <div id="app-shell" class="hidden">
-      <div class="grid">
-        <div class="card">
-          <div class="split">
-            <h2>Сообщение рассылки</h2>
-            <button id="change-token" class="btn btn-soft" type="button">Сменить токен</button>
+      <div class="tabs">
+        <button class="tab active" type="button" data-tab="broadcast">Рассылка</button>
+        <button class="tab" type="button" data-tab="users">Пользователи</button>
+        <div style="flex:1;"></div>
+        <button id="change-token" class="btn btn-soft" type="button">Сменить токен</button>
+      </div>
+
+      <div id="panel-broadcast" class="panel">
+        <div class="grid">
+          <div class="card">
+            <div class="split">
+              <h2>Сообщение рассылки</h2>
+            </div>
+            <div class="stack">
+              <div>
+                <label class="label" for="message-text">Текст сообщения</label>
+                <textarea id="message-text" placeholder="Напишите текст рассылки..."></textarea>
+              </div>
+              <div class="row">
+                <div>
+                  <label class="label" for="button-text">Кнопка (необязательно)</label>
+                  <input id="button-text" type="text" placeholder="Например: Записаться" />
+                </div>
+                <div>
+                  <label class="label" for="button-url">Ссылка кнопки</label>
+                  <input id="button-url" type="url" placeholder="https://..." />
+                </div>
+              </div>
+              <div class="card" style="background:#fcfbff;border-radius:18px;">
+                <div class="split">
+                  <span class="pill">Предпросмотр</span>
+                  <span id="recipient-count" class="pill">Получателей: 0</span>
+                </div>
+                <div id="preview" class="preview"></div>
+              </div>
+            </div>
           </div>
-          <div class="stack">
-            <div>
-              <label class="label" for="message-text">Текст сообщения</label>
-              <textarea id="message-text" placeholder="Напишите текст рассылки..."></textarea>
+
+          <div class="card">
+            <h2>Сегмент аудитории</h2>
+            <div class="seg" id="segment-box">
+              <label><input type="radio" name="segment" value="all" checked /> Все</label>
+              <label><input type="radio" name="segment" value="leads" /> Заявки</label>
+              <label><input type="radio" name="segment" value="course" /> По курсу</label>
+              <label><input type="radio" name="segment" value="branch" /> По филиалу</label>
             </div>
-            <div class="row">
+            <div id="course-wrap" class="stack" style="margin-top:12px; display:none;">
               <div>
-                <label class="label" for="button-text">Кнопка (необязательно)</label>
-                <input id="button-text" type="text" placeholder="Например: Записаться" />
-              </div>
-              <div>
-                <label class="label" for="button-url">Ссылка кнопки</label>
-                <input id="button-url" type="url" placeholder="https://..." />
+                <label class="label" for="course-select">Курс</label>
+                <select id="course-select"></select>
               </div>
             </div>
-            <div class="card" style="background:#fcfbff;border-radius:18px;">
-              <div class="split">
-                <span class="pill">Предпросмотр</span>
-                <span id="recipient-count" class="pill">Получателей: 0</span>
+            <div id="branch-wrap" class="stack" style="margin-top:12px; display:none;">
+              <div>
+                <label class="label" for="branch-select">Филиал</label>
+                <select id="branch-select"></select>
               </div>
-              <div id="preview" class="preview"></div>
+            </div>
+            <div class="card" style="margin-top:16px;background:#f8f4ff;">
+              <div class="mini">Сегмент и количество получателей обновляются автоматически.</div>
+              <div id="audience-summary" style="margin-top:10px;line-height:1.6;"></div>
             </div>
           </div>
         </div>
 
-        <div class="card">
-          <h2>Сегмент аудитории</h2>
-          <div class="seg" id="segment-box">
-            <label><input type="radio" name="segment" value="all" checked /> Все</label>
-            <label><input type="radio" name="segment" value="leads" /> Заявки</label>
-            <label><input type="radio" name="segment" value="course" /> По курсу</label>
-            <label><input type="radio" name="segment" value="branch" /> По филиалу</label>
-          </div>
-          <div id="course-wrap" class="stack" style="margin-top:12px; display:none;">
-            <div>
-              <label class="label" for="course-select">Курс</label>
-              <select id="course-select"></select>
+        <div class="grid" style="margin-top:16px;">
+          <div class="card">
+            <h2>Проверка</h2>
+            <p class="muted" style="margin-top:0;">Тестовая отправка уходит только администраторам, указанным в настройках.</p>
+            <div class="row">
+              <button id="send-test" class="btn btn-soft" type="button">Отправить тест себе</button>
+              <button id="send-broadcast" class="btn btn-orange" type="button">Отправить рассылку</button>
             </div>
           </div>
-          <div id="branch-wrap" class="stack" style="margin-top:12px; display:none;">
-            <div>
-              <label class="label" for="branch-select">Филиал</label>
-              <select id="branch-select"></select>
-            </div>
-          </div>
-          <div class="card" style="margin-top:16px;background:#f8f4ff;">
-            <div class="mini">Сегмент и количество получателей обновляются автоматически.</div>
-            <div id="audience-summary" style="margin-top:10px;line-height:1.6;"></div>
+          <div class="card">
+            <h2>Результат</h2>
+            <div id="result" class="ok" style="display:block;background:#f8f4ff;color:var(--purple);border-color:#e3d2fb;">Готов к отправке.</div>
+            <div class="mini" style="margin-top:10px;">Перед отправкой можно проверить текст, кнопку и выбранный сегмент.</div>
           </div>
         </div>
       </div>
 
-      <div class="grid" style="margin-top:16px;">
+      <div id="panel-users" class="panel hidden">
         <div class="card">
-          <h2>Проверка</h2>
-          <p class="muted" style="margin-top:0;">Тестовая отправка уходит только администраторам, указанным в настройках.</p>
-          <div class="row">
-            <button id="send-test" class="btn btn-soft" type="button">Отправить тест себе</button>
-            <button id="send-broadcast" class="btn btn-orange" type="button">Отправить рассылку</button>
+          <div class="split">
+            <div>
+              <h2>Пользователи</h2>
+              <div class="mini">Все, кто когда-либо писал боту. Сортировка — по последней активности.</div>
+            </div>
+            <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button id="users-export" class="btn btn-soft" type="button">Экспорт CSV</button>
+              <button id="users-refresh" class="btn btn-soft" type="button">Обновить</button>
+            </div>
+          </div>
+
+          <div class="users-filters">
+            <div>
+              <label class="label" for="user-stage-filter">Этап</label>
+              <select id="user-stage-filter"></select>
+            </div>
+            <div>
+              <label class="label" for="user-interest-filter">Интерес</label>
+              <input id="user-interest-filter" type="text" placeholder="Например: летняя, Лихачевский, онлайн" />
+            </div>
+            <div class="actions">
+              <span id="users-count" class="pill">Всего: 0 / Показано: 0</span>
+            </div>
+          </div>
+
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th>Пришёл</th>
+                  <th>Первый вопрос</th>
+                  <th>Интерес</th>
+                  <th>Этап</th>
+                  <th>Заявка</th>
+                  <th>Сообщений</th>
+                  <th>Последняя активность</th>
+                  <th>Источник</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body"></tbody>
+            </table>
           </div>
         </div>
-        <div class="card">
-          <h2>Результат</h2>
-          <div id="result" class="ok" style="display:block;background:#f8f4ff;color:var(--purple);border-color:#e3d2fb;">Готов к отправке.</div>
-          <div class="mini" style="margin-top:10px;">Перед отправкой можно проверить текст, кнопку и выбранный сегмент.</div>
+      </div>
+
+      <div id="user-modal" class="hidden" style="position:fixed;inset:0;background:rgba(36,26,54,.55);z-index:50;padding:16px;overflow:auto;">
+        <div class="card" style="max-width:920px;margin:32px auto;position:relative;">
+          <div class="split">
+            <div>
+              <h2 id="user-modal-title">Переписка</h2>
+              <div id="user-modal-subtitle" class="mini"></div>
+            </div>
+            <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button id="user-download" class="btn btn-soft" type="button">Скачать переписку</button>
+              <button id="user-close" class="btn btn-primary" type="button">Закрыть</button>
+            </div>
+          </div>
+          <div id="user-modal-body" class="stack" style="gap:10px;"></div>
         </div>
       </div>
     </div>

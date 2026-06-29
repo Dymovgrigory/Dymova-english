@@ -18,7 +18,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app import insights, scheduler
 from app.ai_core import handle_message, handle_start, parse_utm
-from app.broadcast import audience_counts, resolve_recipients, send_broadcast
+from app.broadcast import audience_counts, get_user_detail, list_users, resolve_recipients, send_broadcast
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
@@ -358,6 +358,26 @@ async def admin_broadcast_audience(
 ) -> dict:
     _require_admin_token(x_admin_token)
     return audience_counts()
+
+
+@app.get("/admin/users")
+async def admin_users(
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    _require_admin_token(x_admin_token)
+    return {"rows": list_users()}
+
+
+@app.get("/admin/users/{user_id}")
+async def admin_user_detail(
+    user_id: str,
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    _require_admin_token(x_admin_token)
+    detail = get_user_detail(user_id)
+    if detail is None:
+        raise HTTPException(status_code=404, detail="user not found")
+    return detail
 
 
 @app.post("/admin/broadcast/test")
