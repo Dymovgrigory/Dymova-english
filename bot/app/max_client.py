@@ -37,6 +37,8 @@ class MaxClient:
     def __init__(self) -> None:
         self.token = settings.MAX_BOT_TOKEN
         self.base = settings.MAX_BOT_API_URL.rstrip("/")
+        self.bot_user_id: str | None = None
+        self.bot_username: str | None = None
 
     @property
     def configured(self) -> bool:
@@ -57,6 +59,23 @@ class MaxClient:
         except Exception:
             logger.exception("MAX /me failed")
         return None
+
+    async def ensure_bot_identity(self) -> bool:
+        if self.bot_user_id or self.bot_username:
+            return True
+        info = await self.get_bot_info()
+        if not info:
+            return False
+        user = info.get("user") if isinstance(info, dict) else info
+        if not isinstance(user, dict):
+            return False
+        user_id = user.get("user_id") or user.get("id")
+        username = user.get("username") or user.get("name")
+        if user_id:
+            self.bot_user_id = str(user_id)
+        if username:
+            self.bot_username = str(username).lstrip("@").lower()
+        return bool(self.bot_user_id or self.bot_username)
 
     async def send_message(
         self,
@@ -84,6 +103,34 @@ class MaxClient:
             logger.error("MAX send error status=%s body=%s", resp.status_code, resp.text[:300])
         except Exception:
             logger.exception("MAX send failed")
+        return False
+
+    async def send_to_chat(
+        self,
+        chat_id: int | str,
+        text: str,
+        buttons: Optional[list[list[dict]]] = None,
+    ) -> bool:
+        if not self.configured:
+            logger.warning("MAX бот не настроен — сообщение в чат не отправлено")
+            return False
+        params = {"chat_id": chat_id}
+        body: dict = {"text": text}
+        if buttons:
+            body["attachments"] = keyboard(buttons)
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                resp = await client.post(
+                    f"{self.base}/messages",
+                    params=params,
+                    headers=self._headers(),
+                    json=body,
+                )
+            if resp.status_code == 200:
+                return True
+            logger.error("MAX send chat error status=%s body=%s", resp.status_code, resp.text[:300])
+        except Exception:
+            logger.exception("MAX send_to_chat failed")
         return False
 
     async def answer_callback(self, callback_id: str, notification: Optional[str] = None) -> bool:

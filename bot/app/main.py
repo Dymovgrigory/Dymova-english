@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import base64
+import json
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -25,6 +26,7 @@ from app.admin_router import hand_off
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
+from app import group_chat
 from app.knowledge.kb import get_kb
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
@@ -222,6 +224,11 @@ async def webhook(request: Request):
 
 
 async def _process_update(update: dict, update_type: str, max_client) -> None:
+    if update_type == "bot_added":
+        chat_id = group_chat.extract_chat_id(update)
+        logger.info("BOT ADDED: chat_id=%s", chat_id)
+        return
+
     if update_type == "bot_started":
         user_id = _extract_user_id(update)
         if user_id:
@@ -233,6 +240,10 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         message = update.get("message") or update
         sender = message.get("sender") or {}
         if sender.get("is_bot"):
+            return
+        if group_chat.is_group_message(message):
+            logger.info("GROUP MSG: %s", json.dumps(message, ensure_ascii=False))
+            await group_chat.handle_group_message(message, max_client)
             return
         user_id = str(sender.get("user_id")) if sender.get("user_id") else None
         if not user_id:
