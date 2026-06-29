@@ -18,6 +18,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app import insights, scheduler
 from app.ai_core import handle_message, handle_start, parse_utm
+from app.broadcast import audience_counts, resolve_recipients, send_broadcast
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
@@ -306,6 +307,12 @@ def _check_admin(token: str | None) -> None:
         raise HTTPException(status_code=401, detail="admin token required")
 
 
+def _require_admin_token(token: str | None) -> None:
+    """Жёсткая защита для рассылок: токен обязателен всегда."""
+    if not settings.ADMIN_TOKEN or token != settings.ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="admin token required")
+
+
 @app.post("/admin/set-webhook")
 async def admin_set_webhook(
     data: dict, x_admin_token: str | None = Header(default=None)
@@ -343,3 +350,65 @@ async def admin_digest_send(x_admin_token: str | None = Header(default=None)) ->
     _check_admin(x_admin_token)
     sent = await scheduler.send_digest_now()
     return {"ok": True, "sent": sent, "admins": len(settings.admin_ids)}
+
+
+@app.get("/admin/broadcast/audience")
+async def admin_broadcast_audience(
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    _require_admin_token(x_admin_token)
+    return audience_counts()
+
+
+@app.post("/admin/broadcast/test")
+async def admin_broadcast_test(
+    data: dict,
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    _require_admin_token(x_admin_token)
+    text = str(data.get("text", "")).strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="text required")
+    button_text = str(data.get("button_text", "")).strip()
+    button_url = str(data.get("button_url", "")).strip()
+    if bool(button_text) != bool(button_url):
+        raise HTTPException(status_code=400, detail="button_text and button_url must be provided together")
+    return await send_broadcast(
+        get_max(),
+        settings.admin_ids,
+        text,
+        button_text=button_text or None,
+        button_url=button_url or None,
+    )
+
+
+@app.post("/admin/broadcast/send")
+async def admin_broadcast_send(
+    data: dict,
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    _require_admin_token(x_admin_token)
+    text = str(data.get("text", "")).strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="text required")
+    segment = str(data.get("segment", "")).strip()
+    course = str(data.get("course", "")).strip() or None
+    branch = str(data.get("branch", "")).strip() or None
+    button_text = str(data.get("button_text", "")).strip()
+    button_url = str(data.get("button_url", "")).strip()
+    if bool(button_text) != bool(button_url):
+        raise HTTPException(status_code=400, detail="button_text and button_url must be provided together")
+    if segment not in {"all", "leads", "course", "branch"}:
+        raise HTTPException(status_code=400, detail="segment required")
+    if segment == "course" and not course:
+        raise HTTPException(status_code=400, detail="course required")
+    if segment == "branch" and not branch:
+        raise HTTPException(status_code=400, detail="branch required")
+    recipients = resolve_recipients(segment, course=course, branch=branch)
+    return await send_broadcast(
+        get_max(),
+        recipients,
+        text,
+        button_text=button_text or None,
+        button_url=button_url or None,
+    )

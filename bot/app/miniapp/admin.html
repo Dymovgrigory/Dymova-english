@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Админ-рассылка — Фоксинбург</title>
+  <style>
+    :root {
+      --purple: #392852;
+      --purple2: #662d92;
+      --orange: #ee7349;
+      --yellow: #fcf951;
+      --text: #241a36;
+      --muted: #6f6883;
+      --bg: #f4f1fa;
+      --white: #fff;
+      --green: #2ecc71;
+      --red: #e74c3c;
+      --shadow: 0 10px 30px rgba(57,40,82,.12);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Montserrat", -apple-system, system-ui, sans-serif;
+      background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 16px 36px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
+      color: #fff;
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .hero h1 { margin: 0 0 8px; font-size: 24px; }
+    .hero p { margin: 0; opacity: .92; line-height: 1.5; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      border: 1px solid rgba(102,45,146,.08);
+    }
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: var(--purple);
+    }
+    .label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    textarea, input, select {
+      width: 100%;
+      border: 1px solid #e3dced;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font: inherit;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+    textarea:focus, input:focus, select:focus {
+      border-color: var(--purple2);
+      box-shadow: 0 0 0 4px rgba(102,45,146,.08);
+    }
+    textarea { min-height: 140px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .stack { display: grid; gap: 12px; }
+    .preview {
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff 0%, #f7f2ff 100%);
+      border: 1px dashed rgba(102,45,146,.25);
+      padding: 14px;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      min-height: 120px;
+    }
+    .btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 16px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.03); }
+    .btn-primary { background: var(--purple2); color: #fff; }
+    .btn-orange { background: var(--orange); color: #fff; }
+    .btn-soft { background: #efe9f7; color: var(--purple2); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #efe9f7;
+      color: var(--purple2);
+    }
+    .muted { color: var(--muted); }
+    .error {
+      color: #7b1e1e;
+      background: #fff1f1;
+      border: 1px solid #ffd2d2;
+      padding: 12px 14px;
+      border-radius: 16px;
+      display: none;
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+    .ok {
+      color: #0f5132;
+      background: #edf9f0;
+      border: 1px solid #c7eed3;
+      padding: 12px 14px;
+      border-radius: 16px;
+      display: none;
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+    .seg {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .seg label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #f7f2ff;
+      border-radius: 999px;
+      cursor: pointer;
+      border: 1px solid #e5dbf2;
+      color: var(--purple);
+      font-weight: 700;
+    }
+    .seg input { width: auto; }
+    .split {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .mini {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .login {
+      max-width: 540px;
+      margin: 42px auto 0;
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 820px) {
+      .grid, .row, .row3 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>🦊 Админ-рассылка Фоксинбурга</h1>
+      <p>Закрытый конструктор рассылок для пользователей, которые уже общались с ботом в MAX.</p>
+    </div>
+
+    <div id="auth-error" class="error" style="margin-top:16px;"></div>
+    <div id="auth-ok" class="ok" style="margin-top:16px;"></div>
+
+    <div id="login-card" class="card login">
+      <h2>Вход для администратора</h2>
+      <p class="muted" style="margin-top:0;">Введите служебный токен доступа. Он сохранится в браузере.</p>
+      <div class="stack">
+        <div>
+          <label class="label" for="token-input">X-Admin-Token</label>
+          <input id="token-input" type="password" placeholder="Введите токен" autocomplete="off" />
+        </div>
+        <button id="token-save" class="btn btn-primary">Открыть конструктор</button>
+      </div>
+    </div>
+
+    <div id="app-shell" class="hidden">
+      <div class="grid">
+        <div class="card">
+          <div class="split">
+            <h2>Сообщение рассылки</h2>
+            <button id="change-token" class="btn btn-soft" type="button">Сменить токен</button>
+          </div>
+          <div class="stack">
+            <div>
+              <label class="label" for="message-text">Текст сообщения</label>
+              <textarea id="message-text" placeholder="Напишите текст рассылки..."></textarea>
+            </div>
+            <div class="row">
+              <div>
+                <label class="label" for="button-text">Кнопка (необязательно)</label>
+                <input id="button-text" type="text" placeholder="Например: Записаться" />
+              </div>
+              <div>
+                <label class="label" for="button-url">Ссылка кнопки</label>
+                <input id="button-url" type="url" placeholder="https://..." />
+              </div>
+            </div>
+            <div class="card" style="background:#fcfbff;border-radius:18px;">
+              <div class="split">
+                <span class="pill">Предпросмотр</span>
+                <span id="recipient-count" class="pill">Получателей: 0</span>
+              </div>
+              <div id="preview" class="preview"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Сегмент аудитории</h2>
+          <div class="seg" id="segment-box">
+            <label><input type="radio" name="segment" value="all" checked /> Все</label>
+            <label><input type="radio" name="segment" value="leads" /> Заявки</label>
+            <label><input type="radio" name="segment" value="course" /> По курсу</label>
+            <label><input type="radio" name="segment" value="branch" /> По филиалу</label>
+          </div>
+          <div id="course-wrap" class="stack" style="margin-top:12px; display:none;">
+            <div>
+              <label class="label" for="course-select">Курс</label>
+              <select id="course-select"></select>
+            </div>
+          </div>
+          <div id="branch-wrap" class="stack" style="margin-top:12px; display:none;">
+            <div>
+              <label class="label" for="branch-select">Филиал</label>
+              <select id="branch-select"></select>
+            </div>
+          </div>
+          <div class="card" style="margin-top:16px;background:#f8f4ff;">
+            <div class="mini">Сегмент и количество получателей обновляются автоматически.</div>
+            <div id="audience-summary" style="margin-top:10px;line-height:1.6;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:16px;">
+        <div class="card">
+          <h2>Проверка</h2>
+          <p class="muted" style="margin-top:0;">Тестовая отправка уходит только администраторам, указанным в настройках.</p>
+          <div class="row">
+            <button id="send-test" class="btn btn-soft" type="button">Отправить тест себе</button>
+            <button id="send-broadcast" class="btn btn-orange" type="button">Отправить рассылку</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Результат</h2>
+          <div id="result" class="ok" style="display:block;background:#f8f4ff;color:var(--purple);border-color:#e3d2fb;">Готов к отправке.</div>
+          <div class="mini" style="margin-top:10px;">Перед отправкой можно проверить текст, кнопку и выбранный сегмент.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js" defer></script>
+</body>
+</html>
