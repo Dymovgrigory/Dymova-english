@@ -85,12 +85,12 @@ function renderAdvantages() {
   const items = (INFO && INFO.advantages) || [];
   const icons = ["📜", "🏆", "👥", "👩‍🏫", "📊", "📱"];
   el.innerHTML = items.map((a, i) =>
-    `<div class="adv-item">
-      <div class="adv-icon">${icons[i] || "✨"}</div>
-      <div class="adv-text">
-        <h4>${a.title || ""}</h4>
-        <p>${a.text || ""}</p>
-      </div>
+    `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;">
+      <span style="font-size:22px;flex-shrink:0;width:28px;">${icons[i] || "✨"}</span>
+      <span style="flex:1;min-width:0;">
+        <b style="font-size:13px;color:#392852;display:block;margin-bottom:2px;">${a.title || ""}</b>
+        <span style="font-size:12px;color:#6f6883;line-height:1.4;">${a.text || ""}</span>
+      </span>
     </div>`
   ).join("");
 }
