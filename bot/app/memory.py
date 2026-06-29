@@ -9,12 +9,14 @@ from __future__ import annotations
 
 import json
 import threading
+from datetime import datetime, timezone
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from app.config import settings
 
 MAX_HISTORY = 12
+MAX_TRANSCRIPT = 1000
 
 # Этапы воронки продаж — синхронны «мышлению» бота из ТЗ.
 STAGE_GREETING = "greeting"        # начало общения
@@ -64,6 +66,9 @@ class Conversation:
     handed_off: bool = False
     recs_shown: bool = False   # уже показывали подборку курсов
     consent_given: bool = False # согласие на обработку ПД
+    created_at: str = ""
+    updated_at: str = ""
+    transcript: list[dict] = field(default_factory=list)
     # UTM-метки/источник (из deep-link при /start или из мини-приложения).
     utm: dict = field(default_factory=dict)
 
@@ -71,6 +76,15 @@ class Conversation:
         self.history.append({"role": role, "content": content})
         if len(self.history) > MAX_HISTORY:
             self.history = self.history[-MAX_HISTORY:]
+        self.transcript.append(
+            {
+                "role": role,
+                "content": content,
+                "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            }
+        )
+        if len(self.transcript) > MAX_TRANSCRIPT:
+            self.transcript = self.transcript[-MAX_TRANSCRIPT:]
 
     def summary(self) -> str:
         """Краткое резюме для передачи администратору."""
@@ -104,17 +118,24 @@ class MemoryStore:
             conv = self._data.get(user_id)
             if conv is None:
                 conv = Conversation(user_id=user_id)
+                if not conv.created_at:
+                    conv.created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
                 self._data[user_id] = conv
             return conv
 
     def save(self, conv: Conversation) -> None:
         with self._lock:
+            if not conv.created_at:
+                conv.created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            conv.updated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
             self._data[conv.user_id] = conv
             self._persist()
 
     def reset(self, user_id: str) -> Conversation:
         with self._lock:
             conv = Conversation(user_id=user_id)
+            if not conv.created_at:
+                conv.created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
             self._data[user_id] = conv
             self._persist()
             return conv
@@ -164,6 +185,9 @@ def _conv_from_dict(d: dict) -> Conversation:
         handed_off=d.get("handed_off", False),
         recs_shown=d.get("recs_shown", False),
         consent_given=d.get("consent_given", False),
+        created_at=d.get("created_at", ""),
+        updated_at=d.get("updated_at", ""),
+        transcript=d.get("transcript", []),
         utm=d.get("utm", {}) or {},
     )
 
