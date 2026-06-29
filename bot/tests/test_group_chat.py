@@ -149,3 +149,24 @@ async def test_group_whitelist_blocks_other_chats(monkeypatch, fresh_store):
     await group_chat.handle_group_message(_group_message("@foxy сколько стоит?", mention=True), fake)
 
     assert fake.chat_sent == []
+
+
+@pytest.mark.asyncio
+async def test_ensure_bot_identity_parses_flat_me_response(monkeypatch):
+    from app.max_client import MaxClient
+
+    client = MaxClient()
+
+    async def fake_me():
+        return {
+            "user_id": 299985016,
+            "first_name": "Фоксинбург",
+            "username": "id611904726658_bot",
+            "is_bot": True,
+        }
+
+    monkeypatch.setattr(client, "get_bot_info", fake_me)
+
+    assert await client.ensure_bot_identity() is True
+    assert client.bot_user_id == "299985016"
+    assert client.bot_username == "id611904726658_bot"

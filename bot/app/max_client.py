@@ -66,11 +66,11 @@ class MaxClient:
         info = await self.get_bot_info()
         if not info:
             return False
-        user = info.get("user") if isinstance(info, dict) else info
-        if not isinstance(user, dict):
+        if not isinstance(info, dict):
             return False
+        user = info.get("user") if isinstance(info.get("user"), dict) else info
         user_id = user.get("user_id") or user.get("id")
-        username = user.get("username") or user.get("name")
+        username = user.get("username")
         if user_id:
             self.bot_user_id = str(user_id)
         if username:
