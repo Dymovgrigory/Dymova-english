@@ -64,10 +64,8 @@ class LLMClient:
 
 
 # Паттерны мусорных токенов LLM (заголовки чата Llama, роли).
-_JUNK_RE = re.compile(
-    r"<\|(?:end_header_id|start_header_id|eot_id|begin_of_text)\|>"
-    r"|^assistant\s*$",
-    re.MULTILINE,
+_JUNK_TOKENS = re.compile(
+    r"<\|(?:end_header_id|start_header_id|eot_id|begin_of_text|im_start|im_end)[^>]*\|>",
 )
 # Китайские/японские/корейские иероглифы — Llama иногда вставляет.
 _CJK_RE = re.compile(r"[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]+")
@@ -77,8 +75,14 @@ def _clean_response(text: str) -> str:
     """Strip LLM artifacts: chat header tokens, CJK characters, extra whitespace."""
     if not text:
         return ""
-    text = _JUNK_RE.sub("", text)
+    # Remove special tokens
+    text = _JUNK_TOKENS.sub("", text)
+    # Remove CJK characters
     text = _CJK_RE.sub("", text)
+    # Remove lines that are just "assistant" or "user" (role leaks)
+    lines = text.split("\n")
+    cleaned = [ln for ln in lines if ln.strip().lower() not in ("assistant", "user", "system")]
+    text = "\n".join(cleaned)
     # Collapse multiple blank lines to max 1
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
