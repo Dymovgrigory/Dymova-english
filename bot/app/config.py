@@ -50,6 +50,10 @@ class Settings(BaseSettings):
     # ID администраторов в MAX (через запятую), куда дублируется контекст диалога.
     ADMIN_MAX_IDS: str = ""
 
+    # --- Group chat mode ---
+    GROUP_CHAT_WHITELIST: str = ""
+    GROUP_MODE_ENABLED: bool = True
+
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
 
@@ -81,6 +85,18 @@ class Settings(BaseSettings):
 
     def is_admin(self, user_id: str | int) -> bool:
         return str(user_id) in self.admin_ids
+
+    def group_chat_whitelist(self) -> set[int]:
+        values: set[int] = set()
+        for raw in self.GROUP_CHAT_WHITELIST.split(","):
+            item = raw.strip()
+            if not item:
+                continue
+            try:
+                values.add(int(item))
+            except ValueError:
+                continue
+        return values
 
 
 @lru_cache
