@@ -17,8 +17,10 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from app import insights, scheduler
+from app import intent as I
 from app.ai_core import handle_message, handle_start, parse_utm
 from app.broadcast import audience_counts, get_user_detail, list_users, resolve_recipients, send_broadcast
+from app.admin_router import hand_off
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
@@ -133,6 +135,55 @@ _CALLBACK_TEXT = {
 }
 
 
+def _branch_by_key(branch_key: str | None) -> dict | None:
+    key = (branch_key or "").strip().lower()
+    if not key:
+        return None
+    branches = get_kb().branches
+    for branch in branches:
+        bid = str(branch.get("id", "")).lower()
+        name = str(branch.get("name", "")).lower()
+        if key == bid or key == name:
+            return branch
+    for branch in branches:
+        bid = str(branch.get("id", "")).lower()
+        name = str(branch.get("name", "")).lower()
+        if key in bid or key in name:
+            return branch
+    return None
+
+
+def _branch_contact_buttons() -> list[list[dict]]:
+    rows: list[list[dict]] = []
+    for branch in get_kb().branches:
+        branch_id = str(branch.get("id", "")).strip()
+        if not branch_id:
+            continue
+        rows.append([callback_button(str(branch.get("name", branch_id)), f"contact:{branch_id}")])
+    return rows
+
+
+async def _admin_contact_flow(max_client, conv, branch_key: str | None = None) -> tuple[str, list[list[dict]] | None]:
+    branch = _branch_by_key(branch_key or conv.selected_branch or conv.lead.branch)
+    if not branch:
+        return (
+            "Подскажите, пожалуйста, какой филиал вам удобнее — и я сразу передам ваш вопрос нужному администратору.",
+            _branch_contact_buttons(),
+        )
+
+    branch_name = str(branch.get("name", branch.get("id", "филиал"))).strip()
+    branch_phone = str(branch.get("phone", "")).strip()
+    contact_url = str(branch.get("admin_contact_url", "")).strip()
+    conv.selected_branch = branch_name
+    await hand_off(max_client, conv, reason=f"контакт с администратором: {branch_name}")
+    reply = (
+        f"Свяжу вас с администратором {branch_name}.\n"
+        f"Телефон филиала: {branch_phone}."
+    )
+    buttons = [[link_button(f"✍️ Написать администратору ({branch_name})", contact_url)]] if contact_url else None
+    return reply, buttons
+
+
 @app.get("/health")
 async def health() -> dict:
     max_client = get_max()
@@ -191,6 +242,14 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         admin_reply = _admin_command(low, user_id)
         if admin_reply is not None:
             await max_client.send_message(user_id, admin_reply)
+        elif I.detect_intent(text) == I.HANDOFF:
+            store = get_store()
+            conv = store.get(user_id)
+            conv.add("user", text)
+            reply, buttons = await _admin_contact_flow(max_client, conv)
+            conv.add("assistant", reply)
+            store.save(conv)
+            await max_client.send_message(user_id, reply, buttons=buttons)
         elif low.split(maxsplit=1)[0] in ("/start", "start"):
             parts = text.split(maxsplit=1)
             start_param = parts[1].strip() if len(parts) > 1 else ""
@@ -211,10 +270,26 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         user_id = _extract_user_id(update) or _extract_user_id(callback)
         if callback_id:
             await max_client.answer_callback(callback_id)
-        if user_id and payload in _CALLBACK_TEXT:
+        if user_id and payload == "menu:admin":
+            store = get_store()
+            conv = store.get(user_id)
+            conv.add("user", _CALLBACK_TEXT[payload])
+            reply, buttons = await _admin_contact_flow(max_client, conv)
+            conv.add("assistant", reply)
+            store.save(conv)
+            await max_client.send_message(user_id, reply, buttons=buttons)
+        elif user_id and payload in _CALLBACK_TEXT:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
             btns = _contextual_buttons(_CALLBACK_TEXT[payload], reply)
             await max_client.send_message(user_id, reply, buttons=btns or None)
+        elif user_id and str(payload).startswith("contact:"):
+            branch_key = str(payload).split(":", 1)[1].strip()
+            store = get_store()
+            conv = store.get(user_id)
+            reply, buttons = await _admin_contact_flow(max_client, conv, branch_key=branch_key)
+            conv.add("assistant", reply)
+            store.save(conv)
+            await max_client.send_message(user_id, reply, buttons=buttons)
         return
 
 
