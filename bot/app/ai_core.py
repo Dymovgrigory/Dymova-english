@@ -137,6 +137,34 @@ def _is_question_during_lead(conv: Conversation, text: str, intent: str) -> bool
     return False
 
 
+def _user_agrees_to_signup(conv: Conversation, text: str) -> bool:
+    """Проверяет, согласился ли пользователь на запись после предложения бота.
+
+    Возвращает True, если:
+    1) Последний ответ бота содержал предложение записаться/диагностику
+    2) Пользователь ответил согласием (да, давайте, хочу, и т.п.)
+    """
+    low = text.lower().strip(" .!?")
+    agreement_words = (
+        "да", "давайте", "давай", "хорошо", "хочу", "можно", "конечно",
+        "ок", "окей", "ладно", "ага", "запишите", "запиши", "записать",
+        "готов", "готова", "согласен", "согласна", "yes", "+",
+    )
+    if low not in agreement_words and not any(low.startswith(w) for w in agreement_words):
+        return False
+
+    # Проверяем, предлагал ли бот записаться в последнем сообщении
+    last_bot_msgs = [m for m in conv.history if m.get("role") == "assistant"]
+    if not last_bot_msgs:
+        return False
+    last_bot = last_bot_msgs[-1].get("content", "").lower()
+    signup_cues = (
+        "записать", "диагностик", "пробн", "запишу", "подобрать время",
+        "удобное время", "бесплатн", "записаться", "оставить заявку",
+    )
+    return any(cue in last_bot for cue in signup_cues)
+
+
 async def handle_message(user_id: str, text: str) -> str:
     """Главная точка входа: принимает сообщение пользователя, возвращает ответ бота."""
     store = get_store()
@@ -193,8 +221,14 @@ async def _route(conv: Conversation, text: str, kb) -> str:
         key = I.detect_objection(text) or "подумаю"
         return sales.handle_objection(kb, key)
 
-    # 5. Явное намерение записаться — запускаем сбор лида.
+    # 5. Явное намерение записаться — запускаем сбор лида в чате.
+    #    Бот также предложит кнопку мини-приложения (через main.py).
     if intent == I.WANT_SIGNUP:
+        return lead_manager.start(conv)
+
+    # 5b. Если бот предложил записаться в предыдущем сообщении, а клиент
+    #     согласился (давайте, да, хорошо, можно, хочу) — бесшовно начинаем сбор.
+    if _user_agrees_to_signup(conv, text):
         return lead_manager.start(conv)
 
     # 6. Приветствие — пропускаем через LLM для естественного ответа.

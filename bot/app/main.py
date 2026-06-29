@@ -87,12 +87,18 @@ def _contextual_buttons(question: str, reply: str) -> list[list[dict]]:
 
     # Signup
     if any(w in low_q for w in ("запис", "пробн", "диагност")):
-        rows.append([link_button("📋 Записаться", _miniapp_url("signup"))])
+        rows.append([link_button("📋 Записаться онлайн", _miniapp_url("signup"))])
 
     # If nothing matched from question, check reply
     if not rows:
         if any(w in low_r for w in ("курс", "программ")):
             rows.append([link_button("📚 Подробнее о курсах", _miniapp_url("courses"))])
+
+    # If bot offers signup in reply — add button
+    if not any("Записаться" in str(r) for r in rows):
+        if any(w in low_r for w in ("записать", "диагностик", "пробн",
+                                      "запишу", "записаться", "заявк")):
+            rows.append([link_button("📋 Записаться онлайн", _miniapp_url("signup"))])
 
     return rows
 
