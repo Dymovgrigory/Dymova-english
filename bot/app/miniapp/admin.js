@@ -281,6 +281,10 @@ function rowInterest(row) {
   return [row.course, row.branch, row.format].filter(Boolean).join(" / ");
 }
 
+function rowLeadCell(value) {
+  return value ? value : "—";
+}
+
 function filteredUsers() {
   const stage = els.userStageFilter.value || "all";
   const query = (els.userInterestFilter.value || "").trim().toLowerCase();
@@ -295,7 +299,7 @@ function renderUsers() {
   const rows = filteredUsers();
   els.usersCount.textContent = `Всего: ${usersRows.length} / Показано: ${rows.length}`;
   if (!rows.length) {
-    els.usersTableBody.innerHTML = `<tr><td colspan="8" class="muted">Пользователи не найдены.</td></tr>`;
+    els.usersTableBody.innerHTML = `<tr><td colspan="13" class="muted">Пользователи не найдены.</td></tr>`;
     return;
   }
   els.usersTableBody.innerHTML = rows.map(row => `
@@ -303,6 +307,11 @@ function renderUsers() {
       <td>${escapeHtml(formatDateRu(row.first_at))}</td>
       <td>${escapeHtml(row.first_question || "—")}</td>
       <td>${escapeHtml(rowInterest(row) || "—")}</td>
+      <td>${escapeHtml(rowLeadCell(row.fio_parent))}</td>
+      <td>${escapeHtml(rowLeadCell(row.fio_child))}</td>
+      <td>${escapeHtml(rowLeadCell(row.birthday))}</td>
+      <td>${escapeHtml(rowLeadCell(row.phone))}</td>
+      <td>${escapeHtml(rowLeadCell(row.branch))}</td>
       <td>${escapeHtml(stageLabel(row.stage))}</td>
       <td>${escapeHtml(leadLabel(row.lead_status))}</td>
       <td>${escapeHtml(String(row.msg_count ?? 0))}</td>
@@ -344,6 +353,11 @@ function downloadCsv(filename, rows) {
     "first_at",
     "first_question",
     "interest",
+    "fio_parent",
+    "fio_child",
+    "birthday",
+    "phone",
+    "branch",
     "stage",
     "lead_status",
     "msg_count",
@@ -357,6 +371,11 @@ function downloadCsv(filename, rows) {
       row.first_at,
       row.first_question,
       rowInterest(row),
+      row.fio_parent,
+      row.fio_child,
+      row.birthday,
+      row.phone,
+      row.branch,
       row.stage,
       row.lead_status,
       row.msg_count,

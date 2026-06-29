@@ -183,7 +183,17 @@ def test_list_users_includes_first_question_and_sorted(fresh_store):
     rows = list_users()
     assert [row["user_id"] for row in rows] == ["partial", "old", "blank"]
     assert rows[0]["lead_status"] == "partial"
+    assert rows[0]["fio_parent"] == "Анна"
+    assert rows[0]["fio_child"] == ""
+    assert rows[0]["birthday"] == ""
+    assert rows[0]["age"] == ""
+    assert rows[0]["phone"] == ""
     assert rows[1]["lead_status"] == "complete"
+    assert rows[1]["fio_parent"] == "Иван"
+    assert rows[1]["fio_child"] == "Миша"
+    assert rows[1]["birthday"] == ""
+    assert rows[1]["age"] == ""
+    assert rows[1]["phone"] == "+79990000000"
     assert rows[1]["first_question"] == "Расскажите про летнюю академию"
     assert rows[1]["first_at"] == "2026-06-01T10:00:00+00:00"
     assert rows[1]["last_message"] == "Конечно"
