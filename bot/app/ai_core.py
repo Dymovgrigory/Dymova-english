@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from urllib.parse import parse_qs
 
 from app import insights
@@ -92,7 +93,9 @@ def _smalltalk_reply(conv: Conversation, text: str) -> str | None:
     return None
 
 
-async def _consult_with_context(conv: Conversation, text: str, kb_context: str) -> str:
+async def _consult_with_context(
+    conv: Conversation, text: str, kb_context: str, during_lead: bool = False
+) -> str:
     kb = get_kb()
     llm = get_llm()
     score = kb.best_score(text)
@@ -106,6 +109,12 @@ async def _consult_with_context(conv: Conversation, text: str, kb_context: str) 
 
     if llm.enabled:
         system = sales.build_system_prompt(kb, conv, kb_context)
+        if during_lead:
+            system += (
+                "\nСЕЙЧАС ИДЁТ ОФОРМЛЕНИЕ ЗАЯВКИ: ответь на вопрос клиента КРАТКО "
+                "(1–2 предложения) и НЕ задавай встречных вопросов — следующий "
+                "вопрос для заявки задаст система."
+            )
         messages = [{"role": "system", "content": system}]
         messages.extend(conv.history[-8:])
         reply = await llm.complete(messages)
@@ -130,10 +139,12 @@ async def _consult_with_context(conv: Conversation, text: str, kb_context: str) 
     )
 
 
-async def _consult(conv: Conversation, text: str) -> str:
+async def _consult(conv: Conversation, text: str, during_lead: bool = False) -> str:
     """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
     kb = get_kb()
-    return await _consult_with_context(conv, text, kb.context_for(text, limit=5))
+    return await _consult_with_context(
+        conv, text, kb.context_for(text, limit=5), during_lead=during_lead
+    )
 
 
 def _looks_like_postpone(text: str) -> bool:
@@ -153,6 +164,47 @@ def _complaint_handoff_reply() -> str:
         "• Лихачевский: 8 993 923-23-09\n"
         "• Ракетостроителей: 8 916 732-31-69"
     )
+
+
+_HANDOFF_FOLLOWUPS = (
+    "Понимаю. Передал администратору, он свяжется с вами в ближайшее время 🙏 "
+    "Если хотите, опишите подробнее — я добавлю к обращению.",
+    "Спасибо, что написали. Ваше обращение уже у администратора, он на связи скоро. "
+    "Могу пока чем-то помочь по школе?",
+    "Я зафиксировал и передал дальше. Администратор ответит вам лично — "
+    "немного подождите, пожалуйста 😊",
+)
+
+
+def _drop_trailing_question(text: str) -> str:
+    """Убирает завершающие предложения-вопросы из ответа.
+
+    Используется, когда мы сами добавим следующий вопрос (шаг заявки),
+    чтобы клиенту не приходило два вопроса подряд.
+    """
+    parts = re.split(r"(?<=[.!?])\s+", text.strip())
+    while parts and parts[-1].rstrip().endswith("?"):
+        parts.pop()
+    return " ".join(parts).strip() or text.strip()
+
+
+def _wants_manager(text: str) -> bool:
+    low = text.lower()
+    return any(w in low for w in ("руководител", "директор", "начальник", "владелец", "главн"))
+
+
+def _handoff_followup_reply(conv: Conversation, text: str) -> str:
+    """Подтверждение после передачи администратору — без дословных повторов."""
+    if _wants_manager(text):
+        return (
+            "Передал ваш запрос руководителю — он свяжется с вами лично 🙏\n\n"
+            "Если срочно, можно позвонить:\n"
+            "• Лихачевский: 8 993 923-23-09\n"
+            "• Ракетостроителей: 8 916 732-31-69"
+        )
+    # выбираем вариант по числу уже отправленных ответов, чтобы не повторяться
+    idx = sum(1 for m in conv.history if m.get("role") == "assistant") % len(_HANDOFF_FOLLOWUPS)
+    return _HANDOFF_FOLLOWUPS[idx]
 
 
 def _complaint_reason(text: str) -> str:
@@ -250,19 +302,20 @@ async def _route(conv: Conversation, text: str, kb) -> str:
         # Если пользователь задаёт вопрос вместо ответа на поле — отвечаем
         # через LLM и мягко продолжаем сбор (без навязчивого «возвращаемся»).
         if _is_question_during_lead(conv, text, intent):
-            answer = await _consult(conv, text)
+            answer = await _consult(conv, text, during_lead=True)
             current_step = conv.lead_step or lead_manager._next_step(conv)
             reminder = lead_manager.PROMPTS.get(current_step, "")
             if reminder:
-                return answer + "\n\n" + reminder
+                # Убираем встречный вопрос модели, чтобы не было двух вопросов подряд
+                # — следующий вопрос задаёт сама заявка (reminder).
+                return _drop_trailing_question(answer) + "\n\n" + reminder
             return answer
         reply, _submitted = await lead_manager.step(conv, text, kb, bigben, max_client)
         return reply
 
-    # 2. Уже передан администратору — не перебиваем, но подтверждаем.
+    # 2. Уже передан администратору — не перебиваем, но подтверждаем (без повторов).
     if conv.stage == STAGE_HANDOFF:
-        return ("Я уже передал ваш вопрос администратору — он скоро ответит. "
-                "Если нужно что-то ещё, напишите, я помогу. 😊")
+        return _handoff_followup_reply(conv, text)
 
     intent = I.detect_intent(text)
 

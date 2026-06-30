@@ -208,8 +208,16 @@ async def step(
     elif current == "phone":
         phone = extract_phone(clean)
         if not phone:
-            return ("Кажется, номер указан не полностью. Напишите телефон в "
-                    "формате +7XXXXXXXXXX или 8XXXXXXXXXX."), False
+            # Клиент мог прислать не телефон, а другое поле (дата/возраст) —
+            # оно уже подхвачено выше, поэтому не ругаемся, а мягко переспрашиваем.
+            if extract_birthday(clean):
+                prefix = "Дату рождения записал ✅ "
+            elif extract_age(clean):
+                prefix = "Возраст записал ✅ "
+            else:
+                prefix = ""
+            return (prefix + "Остался телефон — напишите, пожалуйста, в формате "
+                    "+7XXXXXXXXXX или 8XXXXXXXXXX, и я оформлю заявку."), False
         lead.phone = phone
 
     elif current == "branch":
