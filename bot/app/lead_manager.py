@@ -245,6 +245,7 @@ async def _submit(conv: Conversation, bigben: BigBenClient, max_client: MaxClien
 
     ok = await bigben.create_lead(lead, source=source, note=note, utm=utm)
     conv.stage = STAGE_DONE
+    conv.lead_submitted = True
 
     # уведомляем администратора о новой заявке (без переключения в режим handoff)
     if max_client.configured:

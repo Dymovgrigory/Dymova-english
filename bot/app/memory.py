@@ -73,6 +73,8 @@ class Conversation:
     handed_off: bool = False
     recs_shown: bool = False   # уже показывали подборку курсов
     consent_given: bool = False # согласие на обработку ПД
+    last_objection: str = ""    # последнее возражение клиента
+    lead_submitted: bool = False # заявка уже отправлялась
     created_at: str = ""
     updated_at: str = ""
     transcript: list[dict] = field(default_factory=list)
@@ -92,6 +94,57 @@ class Conversation:
         )
         if len(self.transcript) > MAX_TRANSCRIPT:
             self.transcript = self.transcript[-MAX_TRANSCRIPT:]
+
+    def child_label(self) -> str:
+        """Имя ребёнка для обращения (без фамилии, если можно отделить)."""
+        name = (self.lead.fio_child or "").strip()
+        if not name:
+            return ""
+        parts = name.split()
+        # «Иванов Миша» → «Миша»: берём более короткую часть как имя.
+        return parts[-1] if len(parts) > 1 else parts[0]
+
+    def hours_since_update(self) -> float | None:
+        if not self.updated_at:
+            return None
+        try:
+            last = datetime.fromisoformat(self.updated_at)
+        except ValueError:
+            return None
+        if last.tzinfo is None:
+            last = last.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - last).total_seconds() / 3600.0
+
+    def client_card(self) -> str:
+        """Карточка клиента для персонализации ответов LLM.
+
+        Возвращает компактный список того, что уже известно о клиенте, чтобы
+        бот не переспрашивал и обращался персонально. Пусто, если ничего нет.
+        """
+        bits: list[str] = []
+        child = self.child_label()
+        if child:
+            bits.append(f"имя ребёнка: {child}")
+        if self.lead.age:
+            bits.append(f"возраст ребёнка: {self.lead.age}")
+        interest = self.selected_course or self.lead.course or self.lead.interest_label()
+        if interest:
+            bits.append(f"интересует: {interest}")
+        if self.selected_format:
+            bits.append(f"формат: {self.selected_format}")
+        branch = self.selected_branch or self.lead.branch
+        if branch:
+            bits.append(f"филиал: {branch}")
+        if self.last_objection:
+            bits.append(f"ранее сомневался: {self.last_objection}")
+        if self.lead_submitted:
+            bits.append("заявка уже оставлена ранее")
+        return "; ".join(bits)
+
+    def is_returning(self) -> bool:
+        """Клиент возвращается после паузы, и о нём уже что-то известно."""
+        hours = self.hours_since_update()
+        return bool(hours and hours >= 12 and self.client_card())
 
     def summary(self) -> str:
         """Краткое резюме для передачи администратору."""
@@ -195,6 +248,8 @@ def _conv_from_dict(d: dict) -> Conversation:
         handed_off=d.get("handed_off", False),
         recs_shown=d.get("recs_shown", False),
         consent_given=d.get("consent_given", False),
+        last_objection=d.get("last_objection", ""),
+        lead_submitted=d.get("lead_submitted", False),
         created_at=d.get("created_at", ""),
         updated_at=d.get("updated_at", ""),
         transcript=d.get("transcript", []),

@@ -134,15 +134,21 @@ def build_system_prompt(kb: KnowledgeBase, conv: Conversation, kb_context: str) 
         )
     if kb_context:
         parts.append("\nКОНТЕКСТ ИЗ БАЗЫ ЗНАНИЙ (используй только эти факты):\n" + kb_context)
-    state_bits = []
-    if conv.lead.age:
-        state_bits.append(f"возраст ребёнка: {conv.lead.age}")
-    if conv.selected_format:
-        state_bits.append(f"формат: {conv.selected_format}")
-    if conv.selected_branch:
-        state_bits.append(f"филиал: {conv.selected_branch}")
-    if state_bits:
-        parts.append("\nЧто уже известно о клиенте: " + ", ".join(state_bits) + ".")
+    card = conv.client_card()
+    if card:
+        parts.append(
+            "\nКАРТОЧКА КЛИЕНТА (уже известно — НЕ переспрашивай это, "
+            "обращайся персонально и опирайся на эти факты): " + card + "."
+        )
+        if conv.child_label():
+            parts.append(
+                "Если уместно, обращайся к ребёнку по имени из карточки."
+            )
+        if conv.is_returning():
+            parts.append(
+                "Клиент возвращается после паузы — тепло поприветствуй его снова "
+                "и мягко продолжи с того, на чём остановились, не начиная всё заново."
+            )
     return "\n".join(parts)
 
 
