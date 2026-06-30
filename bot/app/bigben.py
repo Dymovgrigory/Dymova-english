@@ -100,10 +100,9 @@ def _build_note(lead: Lead) -> str:
         parts.append(f"Курс: {lead.course}")
     if lead.branch:
         parts.append(f"Филиал: {lead.branch}")
-    if lead.interest_type or lead.interest_value:
-        interest = " / ".join(part for part in (lead.interest_type, lead.interest_value) if part)
-        if interest:
-            parts.append(f"Интерес: {interest}")
+    interest = lead.interest_label()
+    if interest:
+        parts.append(f"Интерес: {interest}")
     if lead.age:
         parts.append(f"Возраст ребёнка: {lead.age}")
     parts.append("Заявка из MAX-бота Фоксинбург")
