@@ -277,6 +277,7 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     if intent == I.OBJECTION:
         conv.stage = STAGE_OBJECTION
         key = I.detect_objection(text) or "подумаю"
+        conv.last_objection = key
         kb_context = "\n\n".join(filter(None, [kb.objection(key), kb.context_for(text, limit=5)]))
         reply = await _consult_with_context(conv, text, kb_context)
         if reply:
@@ -354,18 +355,48 @@ async def handle_start(user_id: str, start_param: str = "") -> str:
     извлекаются UTM-метки для атрибуции заявки в CRM.
     """
     store = get_store()
+    prev = store.get(user_id)
+    returning = prev.is_returning()
+    child = prev.child_label()
+    # Сохраняем карточку клиента между сессиями: сбрасываем диалог, но переносим
+    # то, что уже знаем о клиенте, чтобы не начинать общение с чистого листа.
+    saved_lead = prev.lead
+    saved_course = prev.selected_course
+    saved_branch = prev.selected_branch
+    saved_format = prev.selected_format
+    saved_objection = prev.last_objection
+    saved_submitted = prev.lead_submitted
+    saved_created = prev.created_at
+
     conv = store.reset(user_id)
+    if returning:
+        conv.lead = saved_lead
+        conv.selected_course = saved_course
+        conv.selected_branch = saved_branch
+        conv.selected_format = saved_format
+        conv.last_objection = saved_objection
+        conv.lead_submitted = saved_submitted
+        conv.created_at = saved_created
     conv.stage = STAGE_DISCOVERY
     if start_param:
         conv.utm = parse_utm(start_param)
-    reply = (
-        "Привет! 🦊 Я — Фокси из языковой школы «Фоксинбург» в "
-        "Долгопрудном!\n\n"
-        "Помогу подобрать курс, расскажу о ценах и филиалах, "
-        "запишу на бесплатную диагностику 😊\n\n"
-        "Напишите, например: «Сыну 9 лет, ищем английский» — и я подберу "
-        "лучшую программу!"
-    )
+
+    if returning:
+        whom = f" {child}" if child else ""
+        reply = (
+            f"С возвращением! 🦊 Рад снова вас видеть.\n\n"
+            f"Мы уже общались — если хотите, продолжим с того, на чём "
+            f"остановились{(' по' + whom) if whom else ''}. Чем могу помочь сейчас? 😊"
+        )
+    else:
+        reply = (
+            "Привет! 🦊 Я — Фокси из языковой школы «Фоксинбург» в "
+            "Долгопрудном!\n\n"
+            "Помогу подобрать курс, расскажу о ценах и филиалах, "
+            "запишу на бесплатную диагностику 😊\n\n"
+            "Напишите, например: «Сыну 9 лет, ищем английский» — и я подберу "
+            "лучшую программу!"
+        )
     conv.add("assistant", reply)
     store.save(conv)
     return reply
