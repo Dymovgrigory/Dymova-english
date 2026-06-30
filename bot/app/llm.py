@@ -108,6 +108,16 @@ _JUNK_TOKENS = re.compile(
 # Китайские/японские/корейские иероглифы — Llama иногда вставляет.
 _CJK_RE = re.compile(r"[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]+")
 
+# Английские слова-вставки, которые модель иногда роняет в русский текст
+# («Цена indeed важна»). Удаляем как отдельные слова, не трогая бренды
+# (My Level, Hippo, Foxinburg) и фактические латинские токены.
+_EN_FILLER = re.compile(
+    r"\b(?:indeed|actually|however|basically|literally|obviously|honestly|"
+    r"frankly|anyway|essentially|certainly|definitely|absolutely|seriously|"
+    r"really|kind of|sort of|you know|i mean|well|okay|sure)\b",
+    re.IGNORECASE,
+)
+
 
 def _clean_response(text: str) -> str:
     """Strip LLM artifacts: chat header tokens, CJK characters, extra whitespace."""
@@ -117,6 +127,12 @@ def _clean_response(text: str) -> str:
     text = _JUNK_TOKENS.sub("", text)
     # Remove CJK characters (replace with space to avoid broken words like "нымиами")
     text = _CJK_RE.sub(" ", text)
+    # Вырезаем английские слова-вставки только если текст в основном русский
+    # (чтобы не трогать ответы, которые легитимно содержат английский).
+    if _mostly_russian(text):
+        text = _EN_FILLER.sub("", text)
+        # подчищаем пунктуацию, оставшуюся после удаления слова: «Цена , важна»
+        text = re.sub(r"\s+([,.!?;:])", r"\1", text)
     # Collapse multiple spaces
     text = re.sub(r" {2,}", " ", text)
     # Remove lines that are just "assistant" or "user" (role leaks)
