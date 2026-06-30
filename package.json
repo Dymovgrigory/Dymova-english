@@ -1,0 +1,19 @@
+{
+  "name": "dymova-english",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:js": "jest --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Foxinburg English school — Tilda custom blocks",
+  "devDependencies": {
+    "@jest/globals": "^30.4.1",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "jsdom": "^28.1.0"
+  }
+}

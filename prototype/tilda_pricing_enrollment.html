@@ -1,0 +1,133 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ТАРИФЫ И ЗАПИСЬ НА НОВЫЙ УЧЕБНЫЙ ГОД
+  =============================================
+  Назначение: Карточки с тарифами (офлайн, онлайн, пробное занятие)
+  
+  Что можно менять:
+    - Цены (fxb-price) — сейчас: от 8 200 ₽ при оплате за учебный год
+    - Количество занятий в неделю (2 раза по 60 мин)
+    - Возраст учеников (от 2 до 18 + взрослые)
+    - Список преимуществ в каждой карточке
+    - Стоимость пробного занятия (1 125 ₽, 60 минут)
+    - Ссылка на форму записи (href="#fxb-enrollment")
+  =============================================
+-->
+<div id="fxb-pricing">
+  <div class="fxb-pricing-bg">
+    <img class="fxb-pricing-decor fxb-pd1" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-2.png" alt="" loading="lazy">
+  </div>
+  <div class="fxb-section">
+    <span class="fxb-pricing-badge">Запись открыта</span>
+    <h2 class="fxb-pricing-title">Запись на новый учебный год</h2>
+    <p class="fxb-pricing-sub">Выберите формат занятий, который подходит вашему ребёнку</p>
+
+    <div class="fxb-cards">
+      <!-- Офлайн мини-группы -->
+      <div class="fxb-card">
+        <div class="fxb-card-head">
+          <h3>Офлайн мини-группы</h3>
+          <span class="fxb-card-loc">Лихачевский / Ракетостроителей</span>
+        </div>
+        <div class="fxb-card-body">
+          <ul class="fxb-feat-list">
+            <li>До 7 человек в группе</li>
+            <li>2 занятия в неделю по 60 мин</li>
+            <li>Утренние, дневные и вечерние группы</li>
+            <li>Возраст: от 2 до 18 лет и взрослые</li>
+            <li>Интерактивное мобильное приложение</li>
+          </ul>
+          <div class="fxb-price-row">
+            <span class="fxb-price">от 8 200 &#8381;/мес</span>
+            <span class="fxb-price-note">при оплате за учебный год</span>
+          </div>
+          <a class="fxb-card-btn" href="#fxb-enrollment">Записаться</a>
+        </div>
+      </div>
+
+      <!-- Онлайн занятия -->
+      <div class="fxb-card fxb-card-accent">
+        <div class="fxb-card-popular">Популярное</div>
+        <div class="fxb-card-head">
+          <h3>Онлайн занятия</h3>
+          <span class="fxb-card-loc">Из любой точки мира</span>
+        </div>
+        <div class="fxb-card-body">
+          <ul class="fxb-feat-list">
+            <li>Индивидуально или мини-группа</li>
+            <li>2 занятия в неделю по 60 мин</li>
+            <li>Гибкое расписание</li>
+            <li>Интерактивное мобильное приложение</li>
+            <li>Домашние задания в приложении</li>
+          </ul>
+          <div class="fxb-price-row">
+            <span class="fxb-price">от 8 200 &#8381;/мес</span>
+            <span class="fxb-price-note">при оплате за учебный год</span>
+          </div>
+          <a class="fxb-card-btn fxb-btn-accent" href="#fxb-enrollment">Записаться</a>
+        </div>
+      </div>
+
+      <!-- Пробное занятие -->
+      <div class="fxb-card">
+        <div class="fxb-card-head">
+          <h3>Пробное занятие</h3>
+          <span class="fxb-card-loc">Знакомство с методикой</span>
+        </div>
+        <div class="fxb-card-body">
+          <ul class="fxb-feat-list">
+            <li>Диагностика уровня ребёнка</li>
+            <li>Знакомство с педагогом</li>
+            <li>Подбор группы и расписания</li>
+            <li>Рекомендации по обучению</li>
+            <li>Длительность — 60 мин</li>
+          </ul>
+          <div class="fxb-price-row">
+            <span class="fxb-price">1 125 &#8381;</span>
+            <span class="fxb-price-note">60 минут</span>
+          </div>
+          <a class="fxb-card-btn" href="#fxb-enrollment">Записаться</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-pricing{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;--yellow:#fcf951;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  background:#fff;padding:72px 24px;position:relative;overflow:hidden}
+#fxb-pricing *{box-sizing:border-box;margin:0;padding:0;list-style:none}
+#fxb-pricing .fxb-pricing-bg{position:absolute;inset:0;pointer-events:none}
+#fxb-pricing .fxb-pricing-decor{position:absolute;opacity:.05;width:400px;height:auto}
+#fxb-pricing .fxb-pd1{right:-80px;top:-40px}
+#fxb-pricing .fxb-section{max-width:1200px;margin:0 auto;position:relative;z-index:1;text-align:center}
+#fxb-pricing .fxb-pricing-badge{display:inline-block;background:var(--purple-2);color:#fff;font-weight:800;font-size:11px;padding:5px 16px;border-radius:100px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+#fxb-pricing .fxb-pricing-title{font-size:clamp(22px,3vw,34px);font-weight:900;color:var(--purple);margin-bottom:10px}
+#fxb-pricing .fxb-pricing-sub{font-size:15px;color:#7a6d90;font-weight:500;margin-bottom:40px}
+#fxb-pricing .fxb-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:left}
+#fxb-pricing .fxb-card{background:#faf8fd;border:1.5px solid rgba(102,45,146,.08);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:transform .25s,box-shadow .25s}
+#fxb-pricing .fxb-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px -12px rgba(57,40,82,.15)}
+#fxb-pricing .fxb-card-accent{border-color:var(--purple-2);box-shadow:0 8px 32px -8px rgba(102,45,146,.2)}
+#fxb-pricing .fxb-card-popular{position:absolute;top:16px;right:16px;background:var(--orange);color:#fff;font-weight:800;font-size:10px;padding:4px 12px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em}
+#fxb-pricing .fxb-card-head{padding:28px 24px 0;min-height:90px}
+#fxb-pricing .fxb-card-head h3{font-size:18px;font-weight:800;color:var(--purple);margin-bottom:4px}
+#fxb-pricing .fxb-card-loc{font-size:12.5px;color:#7a6d90;font-weight:600}
+#fxb-pricing .fxb-card-body{padding:20px 24px 28px;flex:1;display:flex;flex-direction:column}
+#fxb-pricing .fxb-feat-list{margin-bottom:24px;flex:1}
+#fxb-pricing .fxb-feat-list li{padding:7px 0 7px 24px;font-size:13.5px;color:#4a3d5e;font-weight:500;position:relative;border-bottom:1px solid rgba(102,45,146,.04)}
+#fxb-pricing .fxb-feat-list li::before{content:"";position:absolute;left:0;top:12px;width:14px;height:14px;border-radius:50%;background:rgba(102,45,146,.08);border:2px solid var(--purple-2)}
+#fxb-pricing .fxb-feat-list li:last-child{border-bottom:0}
+#fxb-pricing .fxb-price-row{margin-bottom:18px}
+#fxb-pricing .fxb-price{font-size:22px;font-weight:900;color:var(--purple)}
+#fxb-pricing .fxb-free{color:var(--orange)}
+#fxb-pricing .fxb-price-note{display:block;font-size:12px;color:#b5afc4;font-weight:500;margin-top:2px}
+#fxb-pricing .fxb-card-btn{display:block;text-align:center;padding:13px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px;color:var(--purple-2);background:rgba(102,45,146,.08);transition:all .2s}
+#fxb-pricing .fxb-card-btn:hover{background:rgba(102,45,146,.14);color:var(--purple)}
+#fxb-pricing .fxb-btn-accent{color:#fff;background:linear-gradient(135deg,var(--purple-2),#7a3db0);box-shadow:0 6px 18px -6px rgba(102,45,146,.4)}
+#fxb-pricing .fxb-btn-accent:hover{transform:translateY(-1px);box-shadow:0 10px 24px -6px rgba(102,45,146,.5)}
+@media(max-width:860px){
+  #fxb-pricing .fxb-cards{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+}
+</style>
