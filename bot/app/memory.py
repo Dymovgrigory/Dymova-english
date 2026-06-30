@@ -37,6 +37,8 @@ class Lead:
     age: str = ""
     course: str = ""
     branch: str = ""
+    interest_type: str = ""
+    interest_value: str = ""
     comment: str = ""
     email: str = ""
     city: str = ""
@@ -103,6 +105,11 @@ class Conversation:
             val = getattr(l, key)
             if val:
                 lines.append(f"{label}: {val}")
+        if l.interest_type or l.interest_value:
+            lines.append(
+                "Интерес: "
+                + " / ".join(part for part in (l.interest_type, l.interest_value) if part)
+            )
         return "\n".join(lines)
 
 

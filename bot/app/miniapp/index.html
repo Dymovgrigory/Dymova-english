@@ -244,9 +244,13 @@
           <option value="Ракетостроителей 9к3">Ракетостроителей 9к3</option>
           <option value="Онлайн">Онлайн</option>
         </select>
+        <label>Что выбрано</label>
+        <input id="lf-interest" placeholder="Курс / смена / филиал / формат" readonly />
         <label>Комментарий</label>
         <textarea id="lf-comment" rows="2" placeholder="Удобное время, пожелания..."></textarea>
         <input type="hidden" id="lf-course" value="" />
+        <input type="hidden" id="lf-interest-type" value="" />
+        <input type="hidden" id="lf-interest-value" value="" />
         <button class="btn btn-orange" id="lf-submit" style="margin-top:14px;">Отправить заявку</button>
         <div id="lf-status" class="status" style="display:none;"></div>
       </div>

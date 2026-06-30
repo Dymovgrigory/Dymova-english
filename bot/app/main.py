@@ -424,6 +424,8 @@ async def miniapp_lead(data: dict) -> dict:
         age=str(data.get("age", "")),
         branch=str(data.get("branch", "")),
         course=str(data.get("course", "")),
+        interest_type=str(data.get("interest_type", "")),
+        interest_value=str(data.get("interest_value", "")),
         comment=str(data.get("comment", ""))[:255],
         email=str(data.get("email", ""))[:255],
         city=str(data.get("city", ""))[:255],
