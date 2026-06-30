@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 
 class LLMClient:
     def __init__(self) -> None:
-        self.api_key = settings.LLM_API_KEY
-        self.base_url = settings.LLM_BASE_URL.rstrip("/")
-        self.model = settings.LLM_MODEL
+        self.api_key = settings.LLM_API_KEY.strip()
+        self.base_url = settings.LLM_BASE_URL.strip().rstrip("/")
+        self.model = settings.LLM_MODEL.strip()
         self.vision_model = settings.VISION_MODEL
 
     @property

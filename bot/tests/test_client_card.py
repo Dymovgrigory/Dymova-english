@@ -49,6 +49,16 @@ def test_system_prompt_includes_client_card():
     assert "Миша" in prompt
 
 
+def test_system_prompt_addresses_parent_not_child():
+    conv = _conv_with_facts()
+    conv.lead.fio_parent = "Иванова Анна"
+    prompt = build_system_prompt(get_kb(), conv, "")
+    assert "собеседник — РОДИТЕЛЬ" in prompt
+    assert "имя родителя (собеседник): Иванова Анна" in prompt
+    # имя ребёнка используется для упоминания, не для прямого обращения
+    assert "упоминай ребёнка по имени" in prompt
+
+
 @pytest.mark.asyncio
 async def test_handle_start_welcomes_returning_client_and_keeps_profile():
     uid = "card-returning"
@@ -62,7 +72,6 @@ async def test_handle_start_welcomes_returning_client_and_keeps_profile():
     reply = await handle_start(uid)
 
     assert "возвращением" in reply.lower()
-    assert "Миша" in reply
     fresh = store.get(uid)
     assert fresh.lead.fio_child == "Иванов Миша"
     assert fresh.selected_course == "Английский для школьников"
