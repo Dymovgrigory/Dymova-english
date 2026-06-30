@@ -54,6 +54,11 @@ class Lead:
     def is_complete(self) -> bool:
         return not self.missing_required()
 
+    def interest_label(self) -> str:
+        return " / ".join(
+            part for part in (self.interest_type, self.interest_value) if part
+        )
+
 
 @dataclass
 class Conversation:
@@ -105,11 +110,9 @@ class Conversation:
             val = getattr(l, key)
             if val:
                 lines.append(f"{label}: {val}")
-        if l.interest_type or l.interest_value:
-            lines.append(
-                "Интерес: "
-                + " / ".join(part for part in (l.interest_type, l.interest_value) if part)
-            )
+        interest = l.interest_label()
+        if interest:
+            lines.append(f"Интерес: {interest}")
         return "\n".join(lines)
 
 

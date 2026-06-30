@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from app.bigben import BigBenClient
 from app.intent import extract_age, extract_birthday, extract_phone
@@ -51,24 +52,60 @@ def _looks_like_name(text: str) -> bool:
     return True
 
 
-def _extract_name_from_text(text: str) -> str:
-    """Извлекает ФИО из текста, убирая слова-согласия из начала."""
-    clean = text.strip()
-    if not clean:
-        return ""
+def _strip_name_prefix(clean: str) -> str:
     _prefixes = ("да ", "давайте ", "давай ", "хорошо ", "можно ",
                   "конечно ", "ок ", "окей ", "ладно ", "ага ",
                   "хочу ", "да, ", "давайте, ", "меня зовут ",
-                  "я ", "это ")
-    name_part = clean
+                  "зовут ", "имя ", "я ", "это ")
     low = clean.lower()
     for prefix in _prefixes:
         if low.startswith(prefix):
-            name_part = clean[len(prefix):].strip(" ,.-!")
+            return clean[len(prefix):].strip(" ,.-!")
+    return clean
+
+
+# Слово состоит из букв (рус/лат), допускаем дефис: Анна-Мария, Smith.
+_NAME_WORD_RE = re.compile(r"^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z\-]*$")
+_AGE_HINT_WORDS = ("лет", "год", "года", "годик", "сын", "доч", "ребен",
+                   "ребён", "мальчик", "девочк", "телефон", "тел")
+
+
+def _extract_leading_name(text: str) -> str:
+    """Берёт начальную последовательность слов-имён, отбрасывая возраст/телефон.
+
+    Позволяет вытащить «Иванова Анна» из «Иванова Анна, ребёнку 9» или
+    «зовут Анна 8 999 ...».
+    """
+    clean = _strip_name_prefix(text.strip())
+    if not clean:
+        return ""
+    words: list[str] = []
+    for raw in clean.replace(",", " ").split():
+        word = raw.strip(" ,.!?")
+        if not word:
+            continue
+        if not _NAME_WORD_RE.match(word):
             break
+        if any(hint in word.lower() for hint in _AGE_HINT_WORDS):
+            break
+        words.append(word)
+        if len(words) >= 3:
+            break
+    candidate = " ".join(words)
+    if candidate and _looks_like_name(candidate):
+        return candidate[:255]
+    return ""
+
+
+def _extract_name_from_text(text: str) -> str:
+    """Извлекает ФИО из текста, убирая слова-согласия и лишний «шум»."""
+    clean = text.strip()
+    if not clean:
+        return ""
+    name_part = _strip_name_prefix(clean)
     if _looks_like_name(name_part):
         return name_part[:255]
-    return ""
+    return _extract_leading_name(clean)
 
 
 def start(conv: Conversation, user_text: str = "") -> str:
@@ -132,20 +169,27 @@ async def step(
     lead = conv.lead
     clean = text.strip()
 
+    # На каждом шаге подбираем «лишние» данные, которые клиент дал вперёд/вперемешку
+    # (телефон, дату, возраст, филиал) — чтобы не терять их и не переспрашивать.
+    if current not in ("fio_parent", "fio_child"):
+        _opportunistic_fill(conv, clean, kb)
+
     if current == "fio_parent":
-        if not _looks_like_name(clean):
+        name = _extract_name_from_text(clean)
+        if not name:
             return (
                 "Кажется, это не похоже на имя 😊 Напишите, пожалуйста, как вас зовут (имя и фамилия)."
             ), False
-        lead.fio_parent = clean[:255]
+        lead.fio_parent = name
 
     elif current == "fio_child":
-        if not _looks_like_name(clean):
+        name = _extract_name_from_text(clean)
+        if not name:
             age = extract_age(clean)
             if age and not lead.age:
                 lead.age = age
             return "Напишите, пожалуйста, имя ребёнка.", False
-        lead.fio_child = clean[:255]
+        lead.fio_child = name
 
     elif current == "birthday":
         birthday = extract_birthday(clean)

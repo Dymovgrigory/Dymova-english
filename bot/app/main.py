@@ -9,7 +9,6 @@
 from __future__ import annotations
 
 import base64
-import json
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -242,7 +241,6 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         if sender.get("is_bot"):
             return
         if group_chat.is_group_message(message):
-            logger.info("GROUP MSG: %s", json.dumps(message, ensure_ascii=False))
             await group_chat.handle_group_message(message, max_client)
             return
         user_id = str(sender.get("user_id")) if sender.get("user_id") else None
@@ -441,7 +439,39 @@ async def miniapp_lead(data: dict) -> dict:
     utm.setdefault("utm_source", "max")
     utm.setdefault("utm_medium", "miniapp")
     ok = await get_bigben().create_lead(lead, source=source, utm=utm)
+    await _notify_admins_new_lead(lead, crm_ok=ok)
     return {"ok": ok}
+
+
+async def _notify_admins_new_lead(lead: Lead, crm_ok: bool) -> None:
+    """Дублирует новую заявку из мини-приложения администраторам в личку."""
+    if not settings.admin_ids:
+        return
+    lines = ["🆕 Новая заявка из мини-приложения"]
+    if lead.fio_parent:
+        lines.append(f"Родитель: {lead.fio_parent}")
+    if lead.fio_child:
+        lines.append(f"Ребёнок: {lead.fio_child}")
+    if lead.birthday:
+        lines.append(f"Дата рождения: {lead.birthday}")
+    if lead.phone:
+        lines.append(f"Телефон: {lead.phone}")
+    if lead.branch:
+        lines.append(f"Филиал: {lead.branch}")
+    interest = lead.interest_label() or lead.course
+    if interest:
+        lines.append(f"Интерес: {interest}")
+    if lead.comment:
+        lines.append(f"Комментарий: {lead.comment}")
+    if not crm_ok:
+        lines.append("⚠️ В CRM заявка не ушла — свяжитесь с клиентом вручную.")
+    text = "\n".join(lines)
+    max_client = get_max()
+    for admin_id in settings.admin_ids:
+        try:
+            await max_client.send_message(admin_id, text)
+        except Exception:
+            logger.exception("Не удалось уведомить администратора %s о заявке", admin_id)
 
 
 @app.post("/api/miniapp/homework")
