@@ -1,10 +1,12 @@
 """Тесты логики бота (без сети: LLM/MAX/BigBen не сконфигурированы)."""
 import pytest
+from fastapi.testclient import TestClient
 
 from app import intent as I
 from app.ai_core import handle_message, handle_start, parse_utm
 from app.bigben import build_params
 from app.course_selector import recommend
+from app import main
 from app.knowledge.kb import get_kb
 from app.memory import Lead, STAGE_DONE, STAGE_HANDOFF, STAGE_LEAD, get_store
 
@@ -129,6 +131,57 @@ def test_build_params_includes_utm_and_contacts():
     assert params["utm_medium"] == "miniapp"
     assert "unknown" not in params
     assert params["user_note"] == "заметка"
+
+
+def test_build_params_includes_interest_details():
+    lead = Lead(
+        fio_parent="Иванова Анна",
+        phone="+79991234567",
+        course="Летняя Академия — 2 смена",
+        interest_type="summer",
+        interest_value="2 смена",
+        branch="Лихачевский 76к1",
+    )
+    params = build_params(lead, source="MAX мини-приложение")
+    assert "Интерес: summer / 2 смена" in params["user_note"]
+    assert "Курс: Летняя Академия — 2 смена" in params["user_note"]
+    assert "Филиал: Лихачевский 76к1" in params["user_note"]
+
+
+def test_miniapp_lead_propagates_interest_details(monkeypatch):
+    captured = {}
+
+    class FakeBigBen:
+        configured = True
+
+        async def create_lead(self, lead, source, note="", utm=None):
+            captured["lead"] = lead
+            captured["source"] = source
+            captured["note"] = note
+            captured["utm"] = utm
+            return True
+
+    monkeypatch.setattr(main, "get_bigben", lambda: FakeBigBen())
+
+    client = TestClient(main.app)
+    resp = client.post(
+        "/api/miniapp/lead",
+        json={
+            "fio_parent": "Иванова Анна",
+            "phone": "+79991234567",
+            "branch": "Лихачевский 76к1",
+            "course": "Летняя Академия — 2 смена",
+            "interest_type": "summer",
+            "interest_value": "2 смена",
+            "start_param": "vk",
+        },
+    )
+
+    assert resp.status_code == 200
+    assert resp.json() == {"ok": True}
+    assert captured["lead"].interest_type == "summer"
+    assert captured["lead"].interest_value == "2 смена"
+    assert "Летняя Академия — 2 смена" in captured["source"]
 
 
 # ---------- база знаний ----------

@@ -120,7 +120,7 @@ function renderCourses() {
       <h3 style="margin-top:6px;">${p.name || ""}</h3>
       <p class="meta">${p.text || ""}</p>
       ${p.url ? `<a href="${p.url}" target="_blank" style="font-size:13px;">Подробнее на сайте →</a>` : ""}
-      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('${(p.name||"").replace(/'/g,"\\'")}')">Записаться</button>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('course', '${(p.name||"").replace(/'/g,"\\'")}', 'Курс')">Записаться</button>
     </div>`
   ).join("");
 
@@ -137,7 +137,7 @@ function renderCourses() {
       ${c.teacher ? `<p class="meta">Педагог: ${c.teacher}</p>` : ""}
       ${c.trial_price ? `<p class="meta">${c.trial_price}</p>` : ""}
       ${c.url ? `<a href="${c.url}" target="_blank" style="font-size:13px; display:block; margin-top:6px;">Подробнее →</a>` : ""}
-      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('${(c.name||"").replace(/'/g,"\\'")}')">Записаться</button>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('course', '${(c.name||"").replace(/'/g,"\\'")}', 'Курс')">Записаться</button>
     </div>`;
   }).join("");
 
@@ -184,9 +184,10 @@ function renderSummer() {
       return `<div class="card shift-card">
         <h3>${title}</h3>
         ${desc ? `<p class="meta">${desc}</p>` : ""}
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('summer', '${title.replace(/'/g,"\\'")}', 'Смена')">Записаться на эту смену</button>
       </div>`;
     }).join("")}
-    <button class="btn btn-orange" style="margin-top:4px;" onclick="signupFor('Летняя Академия')">
+    <button class="btn btn-orange" style="margin-top:4px;" onclick="signupFor('summer', '${(sa.name||"Летняя Академия").replace(/'/g,"\\'")}', 'Летняя Академия')">
       Записаться в Академию ☀️
     </button>
   `;
@@ -203,13 +204,14 @@ function renderBranches() {
       <p style="margin:6px 0;">📍 ${b.address || ""}</p>
       <p>☎️ <a href="tel:${b.phone_tel || ""}">${b.phone || ""}</a></p>
       <p class="meta">🕐 ${b.work_hours || ""}</p>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('branch', '${(b.name||"").replace(/'/g,"\'")}', 'Филиал')">Записаться в этот филиал</button>
       ${b.maps ? `<a href="${b.maps}" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:10px;">Построить маршрут 🗺</a>` : ""}
     </div>`
   ).join("") + `
     <div class="card">
       <h3>Онлайн</h3>
       <p class="meta">Занятия из любой точки мира</p>
-      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('Онлайн')">Записаться онлайн</button>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="signupFor('format', 'Онлайн', 'Формат')">Записаться онлайн</button>
     </div>
   `;
 }
@@ -236,8 +238,21 @@ function toggleFaq(i) {
 
 // --- Signup form ---
 
-function signupFor(course) {
-  document.getElementById("lf-course").value = course || "";
+function signupFor(kind, value, label) {
+  const courseInput = document.getElementById("lf-course");
+  const interestType = document.getElementById("lf-interest-type");
+  const interestValue = document.getElementById("lf-interest-value");
+  const interest = document.getElementById("lf-interest");
+  const branch = document.getElementById("lf-branch");
+
+  interestType.value = kind || "";
+  interestValue.value = value || "";
+  courseInput.value = kind === "branch" ? "" : (value || "");
+  interest.value = label && value ? `${label}: ${value}` : (value || "");
+
+  if (kind === "branch" && value) {
+    branch.value = value;
+  }
   goTo("signup");
 }
 
@@ -271,6 +286,8 @@ document.getElementById("lf-submit").addEventListener("click", async () => {
     birthday: document.getElementById("lf-birthday").value.trim(),
     phone: phone,
     branch: document.getElementById("lf-branch").value,
+    interest_type: document.getElementById("lf-interest-type").value,
+    interest_value: document.getElementById("lf-interest-value").value,
     comment: document.getElementById("lf-comment").value.trim(),
     course: document.getElementById("lf-course").value,
     start_param: startParam(),
@@ -284,6 +301,9 @@ document.getElementById("lf-submit").addEventListener("click", async () => {
       ["lf-parent","lf-child","lf-birthday","lf-phone","lf-comment"].forEach(id => {
         document.getElementById(id).value = "";
       });
+      document.getElementById("lf-interest").value = "";
+      document.getElementById("lf-interest-type").value = "";
+      document.getElementById("lf-interest-value").value = "";
       document.getElementById("lf-branch").selectedIndex = 0;
       document.getElementById("lf-course").value = "";
     } else {
