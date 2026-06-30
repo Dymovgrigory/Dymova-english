@@ -357,7 +357,6 @@ async def handle_start(user_id: str, start_param: str = "") -> str:
     store = get_store()
     prev = store.get(user_id)
     returning = prev.is_returning()
-    child = prev.child_label()
     # Сохраняем карточку клиента между сессиями: сбрасываем диалог, но переносим
     # то, что уже знаем о клиенте, чтобы не начинать общение с чистого листа.
     saved_lead = prev.lead
@@ -382,11 +381,10 @@ async def handle_start(user_id: str, start_param: str = "") -> str:
         conv.utm = parse_utm(start_param)
 
     if returning:
-        whom = f" {child}" if child else ""
         reply = (
-            f"С возвращением! 🦊 Рад снова вас видеть.\n\n"
-            f"Мы уже общались — если хотите, продолжим с того, на чём "
-            f"остановились{(' по' + whom) if whom else ''}. Чем могу помочь сейчас? 😊"
+            "С возвращением! 🦊 Рад снова вас видеть.\n\n"
+            "Мы уже общались — если хотите, продолжим с того, на чём "
+            "остановились. Чем могу помочь сейчас? 😊"
         )
     else:
         reply = (

@@ -122,6 +122,8 @@ class Conversation:
         бот не переспрашивал и обращался персонально. Пусто, если ничего нет.
         """
         bits: list[str] = []
+        if self.lead.fio_parent:
+            bits.append(f"имя родителя (собеседник): {self.lead.fio_parent}")
         child = self.child_label()
         if child:
             bits.append(f"имя ребёнка: {child}")
