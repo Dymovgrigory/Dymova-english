@@ -8,6 +8,7 @@ from typing import Any
 from app import intent as I
 from app.config import settings
 from app.knowledge.kb import get_kb
+from app.llm import get_llm
 from app.memory import Conversation, STAGE_DISCOVERY
 
 logger = logging.getLogger(__name__)
@@ -108,7 +109,7 @@ def _needs_private_dialog(text: str, intent: str) -> bool:
     return any(cue in low for cue in _PRIVATE_CUES)
 
 
-def _kb_reply(text: str) -> str:
+def _fallback_reply(text: str) -> str:
     kb = get_kb()
     low = text.lower()
 
@@ -143,6 +144,45 @@ def _kb_reply(text: str) -> str:
             return "Вот что нашёл в базе:\n\n" + "\n\n".join(parts)
 
     return "Я могу подсказать по филиалам, ценам, расписанию и курсам 🦊"
+
+
+async def _ai_reply(text: str) -> str | None:
+    kb = get_kb()
+    llm = get_llm()
+    if not llm.enabled:
+        return None
+    context = kb.context_for(text, limit=4)
+    branches = kb.branches
+    facts = []
+    for b in branches:
+        name = b.get("name", "Филиал")
+        address = b.get("address", "")
+        phone = b.get("phone", "")
+        hours = b.get("work_hours", "")
+        facts.append(f"• {name}: {address}, тел. {phone}, часы {hours}".strip())
+    system = (
+        "Ты короткий помощник школы английского в групповом чате родителей.\n"
+        "Отвечай по-русски, естественно и по-человечески, 2-4 предложения.\n"
+        "Используй только факты из КОНТЕКСТА и ТОЧНЫХ ДАННЫХ ФИЛИАЛОВ.\n"
+        "Не упоминай, что ты ИИ, не продавай, не собирай телефон или ФИО, "
+        "не уводи в личные сообщения без причины.\n"
+        "Если точного ответа нет в контексте, задай один короткий уточняющий вопрос "
+        "или скажи, что уточнишь у администрации.\n"
+    )
+    if facts:
+        system += "\nТОЧНЫЕ ДАННЫЕ ФИЛИАЛОВ:\n" + "\n".join(facts) + "\n"
+    if context:
+        system += "\nКОНТЕКСТ ИЗ БАЗЫ ЗНАНИЙ:\n" + context + "\n"
+    reply = await llm.complete(
+        [
+            {"role": "system", "content": system},
+            {"role": "user", "content": text},
+        ],
+        temperature=0.3,
+    )
+    if reply:
+        return reply
+    return None
 
 
 async def _notify_admins(max_client, chat_id: int | None, sender: dict[str, Any], text: str) -> None:
@@ -198,5 +238,7 @@ async def handle_group_message(message: dict[str, Any], max_client) -> None:
 
     conv = Conversation(user_id=f"group:{chat_id}")
     conv.stage = STAGE_DISCOVERY
-    reply = _kb_reply(text)
+    reply = await _ai_reply(text)
+    if not reply:
+        reply = _fallback_reply(text)
     await max_client.send_to_chat(chat_id, reply)
