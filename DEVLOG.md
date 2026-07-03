@@ -18,6 +18,61 @@
 
 ## Хронология работы
 
+### Сессия 18 — НАСТРОЙКА ПРИЁМА ЗАЯВОК (ПЕРЕДАЧА НОВОМУ БОТУ) — НЕЗАВЕРШЕНО
+
+**Дата:** 3 июля 2026. Ветка работы по формам — конфигурация в Tilda (не код).
+
+#### ЗАДАЧА ВЛАДЕЛЬЦА (дословно):
+«Настроить кому и куда будут приходить заявки: почта **kidsfoxclub@yandex.ru**, Telegram по номеру **89996960441**, почта **dymovgrigory@gmail.com**. Протестировать ВСЕ формы реальными заявками — чтобы владелец увидел информацию на почтах и в Telegram.» Старые почты (dymova.tut@gmail.com, Dymova.eng.club@gmail.com) — убрать. Курсовые формы: «Переключить полностью на email+Telegram (убрать WhatsApp)».
+
+#### ✅ УЖЕ СДЕЛАНО:
+1. **Добавлены и активированы 3 новых приёмника** в Tilda (Настройки → Формы):
+   - Email **kidsfoxclub@yandex.ru** — подтверждён владельцем.
+   - Email **dymovgrigory@gmail.com** — подтверждён владельцем.
+   - **Telegram** app-id-**749445545** (API Key 749445545, Secret Key 34ecffd44d456d5b06d49f336471b202) — активирован, тел. 89996960441.
+2. **Все 3 приёмника привязаны ко всем формам** через «Подключить сервис ко всем формам на сайте».
+3. **Удалены старые email-приёмники** dymova.tut@gmail.com и Dymova.eng.club@gmail.com.
+4. **Переопубликованы все живые страницы** (native-формы теперь шлют на новые приёмники). Команда:
+   `python3 prototype/tilda_publish_pages.py <pageid...>` (CDP :29229, секрет TILDA_PASSWORD).
+
+#### КЛЮЧЕВЫЕ ЗНАЧЕНИЯ (проверено на живом HTML после переопубликации):
+- **6 хэшей сервисов (`formservices[]`)** на native-формах главной страницы:
+  - `aa53a2a49933944f1fb9c3aaf4590622`, `30ef9df34728007db12c86a2e7cf58b6`, `b7967c40cba6f8680cc7a33c7d4a3bd1` (СТАРЫЕ — CRM/Sheets/webhook/старый telegram)
+  - `406ce69659f99227298278ae7b0939c9`, `111d799a5db07bce252609cabd29b3e0`, `7c1b855d6fc4254f9b2a189ae11b7360` (**НОВЫЕ 3 = новый Telegram 749445545 + kidsfoxclub + dymovgrigory**)
+- **formskey** (per-page, из `#allrecords data-tilda-formskey`): у главной 151210576 = `9b188d4c6f6f7968354f49a20b2be85f`. **ВНИМАНИЕ: у каждой страницы свой formskey — читать со страницы.**
+
+#### ⏳ ОСТАЛОСЬ СДЕЛАТЬ (для нового бота):
+1. **Hero-форма `#fxbEnrollForm`** на главной (файл `prototype/tilda_cta_enrollment.html`, блок T123 на pageid 151210576) — сейчас `onsubmit="return false;"`, БЕЗ обработчика → заявки теряются. Запитать на Tilda.
+2. **Курсовые формы `.fxb-zform`** на `/reading` (151292376), `/grammar` (151292406), `/preparation` (151292476), `/letnyaya-akademiya` (151229566) — файлы `prototype/page_reading.html`, `page_grammar.html`, `page_preparation.html`, `page_letnyaya_akademiya.html`. Сейчас JS-submit открывает `wa.me/79939232309` (WhatsApp). Переключить на Tilda (email+Telegram).
+3. **Опубликовать** изменённые страницы.
+4. **Отправить реальные тестовые заявки** со всех форм, проверить приход на 2 почты + Telegram, показать владельцу пруфы.
+
+#### КАК TILDA ПРИНИМАЕТ ЗАЯВКИ (реверс forms.js — `https://static.tildacdn.com/js/tilda-forms-1.0.min.js`):
+- forms.js вешает submit на формы с классом **`js-form-proccess`** и атрибутом **`data-formactiontype="2"`**.
+- POST на **`https://forms.tildacdn.com/procces/`**, `Content-Type: application/x-www-form-urlencoded`.
+- Тело = `t_serializeArray(form)` — ВСЕ named inputs/select/textarea (кроме file/reset/submit/button), **включая скрытые `formservices[]`**. Сериализация читает СЫРОЙ атрибут `name` — НЕ зависит от `.t-input-group`/`data-field-name` (те нужны только для валидации/вывода ошибок).
+- forms.js дополнительно добавляет скрытые поля: `tildaspec-cookie`, `tildaspec-referer`, `tildaspec-formid`(=id формы), `tildaspec-formskey`(=`#allrecords data-tilda-formskey`), `tildaspec-version-lib`, `tildaspec-pageid`, `tildaspec-projectid`, `tildaspec-lang`.
+
+#### ДВА ВАРИАНТА КОНВЕРТАЦИИ КАСТОМНЫХ ФОРМ (рекомендация — Вариант A):
+- **A) Минимальные хуки на существующую кастомную форму:** добавить форме класс `js-form-proccess` + `data-formactiontype="2"` + `data-inputbox=".t-input-group"`, вставить 6 скрытых `<input type="hidden" name="formservices[]" value="…" class="js-formaction-services">` (6 хэшей выше), добавить `<div class="js-successbox" style="display:none"></div>`. Поля формы оставить с осмысленными `name` (напр. `Name`, `Phone`, и доп. поля hero: `Ребёнок`, `Формат`). Т.к. страница — Tilda, forms.js уже подключён и сам обработает submit. **Убрать текущий `onsubmit="return false;"` и кастомный wa.me-обработчик.** Проверить, что forms.js биндится к форме внутри T123-блока (может требоваться, чтобы форма была в DOM при инициализации — она есть).
+- **B) Свой fetch:** повторить POST на `/procces/` вручную со всеми полями + tildaspec-* (см. выше). Сложнее, но полный контроль.
+- ВАЖНО: имена доп. полей hero (`Ребёнок`, `Формат`) станут подписями в письме/Telegram — назвать читабельно кириллицей или латиницей без пробелов.
+
+#### ШАБЛОН РАБОЧЕЙ NATIVE-ФОРМЫ сохранён на VM: `/tmp/native_form_template.html` (полная разметка формы `form2421715981` с 6 хэшами, .js-successbox, .t-input-group, errorbox, submit). Живой HTML главной: `/tmp/live_main2.html`.
+
+#### ПОЛНЫЙ СПИСОК СТРАНИЦ (24, projectid 2053071) — из кабинета:
+- ЖИВЫЕ (новый дизайн): `/`=**151210576**(alias index-new), `/kontakty`=151228006, `/doshkolniki`=151228606, `/mladshie-shkolniki`=151228676, `/podrostki`=151228746, `/letnyaya-akademiya`=151229566, `/online-zanyatiya`=151229606, `/podderzhivayushchie-online`=151229676, `/standartnye-offline`=151229756, `/reading`=**151292376**, `/grammar`=**151292406**, `/preparation`=**151292476**, `/novosti`=151324806, `/vakansii`=151324866, `/lmsfoxinburg`=135877726, `/news`(легаси-лента, не трогать)=132317976.
+- СНЯТЫ С ПУБЛИКАЦИИ (-old, НЕ переопубликовывать): index-old=32889798, reading-old=137726126, grammar-old=137739566, preparation-old=130390566, vacant-old=146080046.
+- Системные: 11025377 (спасибо), 11026209 (политика), 11025828 (404).
+
+#### ИНСТРУМЕНТЫ/ДОСТУП:
+- Chrome CDP: `http://localhost:29229` (авторизованная сессия Tilda). Секрет **TILDA_PASSWORD** (org-scope). Логин vkrivobokova4@gmail.com.
+- Публикация: `python3 prototype/tilda_publish_pages.py <pageid> [<pageid>...]`.
+- Редактор страницы: `https://tilda.ru/page/?pageid=<id>&projectid=2053071&edit=y`.
+- Загрузка HTML в T123-блок: см. `tilda_upload_copies.py` / `tilda_update_*.py` (POST `/page/submit/` comm=saverecord, onlythisfield=code).
+
+---
+
 ### Сессия 1 (предыдущий агент — Opus 4.8 / Devin)
 
 **Дата:** 18 июня 2026
