@@ -14,7 +14,7 @@
 Запуск:  python3 build_subpages.py
 """
 import os
-from build_course_pages import FORMS_JS_TAG, ZAYAVKA_CSS, ZAYAVKA_JS, zayavka_modal
+from build_course_pages import zayavka_unit
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 
@@ -240,13 +240,10 @@ def render_page(p):
     h.append('<a data-fxb-zayavka data-fxb-subject="' + p["lead_subject"] + '" data-fxb-window="' + p["lead_final_window"] + '" role="button" tabindex="0" class="fxb-btn-main">Оставить заявку на сайте</a>')
     h.append('<a href="' + MAX_BOT + '" target="_blank" rel="noopener" class="fxb-btn-max">' + svg("chat") + 'Написать в Max</a>')
     h.append('</div></div></section>')
-    h.append(zayavka_modal())
+    h.append(zayavka_unit())
     h.append('</div>')
     h.append(CSS)
-    h.append(ZAYAVKA_CSS)
     h.append(JS)
-    h.append(ZAYAVKA_JS)
-    h.append(FORMS_JS_TAG)
     return "\n".join(h)
 
 

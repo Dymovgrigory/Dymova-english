@@ -130,6 +130,13 @@
 <style>
 /* ===== FXB-ZAYAVKA: попап-форма заявки ===== */
 #fxb-page [data-fxb-zayavka]{cursor:pointer}
+#fxb-page .fxb-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
+#fxb-page .fxb-modal[hidden]{display:none}
+#fxb-page .fxb-modal__ov{position:absolute;inset:0;background:rgba(20,12,36,.72);backdrop-filter:blur(4px)}
+#fxb-page .fxb-modal__box{position:relative;z-index:1;width:min(900px,100%);background:#fff;border-radius:20px;padding:14px 14px 10px;box-shadow:0 40px 90px -30px rgba(0,0,0,.6);animation:fxbpop .3s ease}
+#fxb-page .fxb-modal__x{position:absolute;top:-16px;right:-16px;width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;background:#fff;color:var(--ink);display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(0,0,0,.4)}
+#fxb-page .fxb-modal__x svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.2}
+@keyframes fxbpop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
 #fxb-page .fxb-zbox{width:min(460px,100%);padding:34px 30px 30px;text-align:left}
 #fxb-page .fxb-ztitle{font-size:22px;font-weight:900;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink)}
 #fxb-page .fxb-zsub{font-size:14px;font-weight:500;color:var(--muted);line-height:1.55;margin-bottom:22px}

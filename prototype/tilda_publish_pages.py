@@ -12,7 +12,8 @@ PAGEIDS = sys.argv[1:] or ["151292376", "151292406", "151292476"]
 async def main():
     async with async_playwright() as p:
         browser = await p.chromium.connect_over_cdp(CDP)
-        page = browser.contexts[0].pages[0]
+        ctx = browser.contexts[0]
+        page = ctx.pages[0] if ctx.pages else await ctx.new_page()
         page.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
         await page.goto("https://tilda.ru/projects/?projectid=%s" % PROJECTID,
                         wait_until="load", timeout=90000)

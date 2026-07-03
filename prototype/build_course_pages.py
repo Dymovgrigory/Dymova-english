@@ -353,6 +353,13 @@ def zayavka_modal():
 ZAYAVKA_CSS = """
 /* ===== FXB-ZAYAVKA: попап-форма заявки ===== */
 #fxb-page [data-fxb-zayavka]{cursor:pointer}
+#fxb-page .fxb-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
+#fxb-page .fxb-modal[hidden]{display:none}
+#fxb-page .fxb-modal__ov{position:absolute;inset:0;background:rgba(20,12,36,.72);backdrop-filter:blur(4px)}
+#fxb-page .fxb-modal__box{position:relative;z-index:1;width:min(900px,100%);background:#fff;border-radius:20px;padding:14px 14px 10px;box-shadow:0 40px 90px -30px rgba(0,0,0,.6);animation:fxbpop .3s ease}
+#fxb-page .fxb-modal__x{position:absolute;top:-16px;right:-16px;width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;background:#fff;color:var(--ink);display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(0,0,0,.4)}
+#fxb-page .fxb-modal__x svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.2}
+@keyframes fxbpop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
 #fxb-page .fxb-zbox{width:min(460px,100%);padding:34px 30px 30px;text-align:left}
 #fxb-page .fxb-ztitle{font-size:22px;font-weight:900;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink)}
 #fxb-page .fxb-zsub{font-size:14px;font-weight:500;color:var(--muted);line-height:1.55;margin-bottom:22px}
@@ -380,6 +387,10 @@ ZAYAVKA_CSS = """
 """
 
 ZAYAVKA_JS = """
+(function(){
+  if(window.__fxbZayavkaBound)return;
+  window.__fxbZayavkaBound=true;
+  var root=document;
   var fxbZ=root.querySelector('#fxb-zayavka-modal');
   if(fxbZ){
     var fxbZvForm=fxbZ.querySelector('.fxb-zview--form');
@@ -415,7 +426,37 @@ ZAYAVKA_JS = """
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
   }
   window.fxbZSuccess=function(){var m=document.getElementById('fxb-zayavka-modal');if(!m)return;var vf=m.querySelector('.fxb-zview--form');var vt=m.querySelector('.fxb-zview--thanks');if(vf)vf.hidden=true;if(vt)vt.hidden=false;};
+})();
 """
+
+
+def zayavka_unit():
+    return ('<!--FXB-ZAYAVKA-START-->'
+            + zayavka_modal()
+            + '<style>'
+            + ZAYAVKA_CSS
+            + '</style>'
+            + '<script>'
+            + ZAYAVKA_JS
+            + '</script>'
+            + FORMS_JS_TAG
+            + '<!--FXB-ZAYAVKA-END-->')
+
+
+def strip_zayavka_artifacts(s):
+    # 1) new self-contained unit
+    s = re.sub(r'\s*<!--FXB-ZAYAVKA-START-->[\s\S]*?<!--FXB-ZAYAVKA-END-->', '', s)
+    # 2) legacy modal div: match up to its own outer </div> (the one right before the #fxb-page close)
+    s = re.sub(r'\s*<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal"[\s\S]*?</div>(?=\s*</div>\s*<style>)', '', s)
+    # 3) legacy orphaned ZAYAVKA CSS chunk (comment .. its last rule); never crosses into main <script>
+    s = re.sub(r'\s*/\* ===== FXB-ZAYAVKA[\s\S]*?\.fxb-zalt-btns\{margin-top:20px\}', '', s)
+    # 4) legacy orphaned ZAYAVKA JS (wrapped IIFE or bare); never crosses into main </script>
+    s = re.sub(r'\s*\(function\(\)\{\s*if\(window\.__fxbZayavkaBound\)[\s\S]*?window\.fxbZSuccess=function\(\)\{[\s\S]*?\};\s*\}\)\(\);', '', s)
+    s = re.sub(r'\s*var fxbZ=root\.querySelector[\s\S]*?window\.fxbZSuccess=function\(\)\{[\s\S]*?if\(vt\)vt\.hidden=false;\};', '', s)
+    # 5) forms.js tag
+    s = s.replace(FORMS_JS_TAG, '')
+    s = re.sub(r'\s*<script src="https://static\.tildacdn\.com/js/tilda-forms-1\.0\.min\.js" async></script>', '', s)
+    return s
 
 
 def lead_attrs(subject, window):
@@ -441,15 +482,13 @@ def patch_course_leads(s, subject):
 
 
 def patch_zayavka_block(s):
-    modal_re = re.compile(r'<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal"[\s\S]*?\n</div>\n\n<style>', re.S)
-    if modal_re.search(s):
-        s = modal_re.sub(zayavka_modal() + '\n</div>\n\n<style>', s, count=1)
+    s = strip_zayavka_artifacts(s)
+    anchor = '</div>\n\n<style>'
+    if anchor in s:
+        # inject INSIDE #fxb-page (before its closing </div>) so #fxb-page-scoped CSS/vars apply to the modal
+        s = s.replace(anchor, zayavka_unit() + '\n</div>\n\n<style>', 1)
     else:
-        s = s.replace('</div>\n\n<style>', zayavka_modal() + '\n</div>\n\n<style>', 1)
-    if FORMS_JS_TAG not in s:
-        s = s.replace('})();\n</script>', ZAYAVKA_JS + '})();\n</script>\n' + FORMS_JS_TAG, 1)
-    else:
-        s = re.sub(r'  var fxbZ=root\.querySelector\(\'#fxb-zayavka-modal\'\);[\s\S]*?window\.fxbZSuccess=function\(\)\{var m=document\.getElementById\(\'fxb-zayavka-modal\'\);if\(!m\)return;var vf=m\.querySelector\(\'\.fxb-zview--form\'\);var vt=m\.querySelector\(\'\.fxb-zview--thanks\'\);if\(vf\)vf\.hidden=true;if\(vt\)vt\.hidden=false;\};\n', ZAYAVKA_JS, s, count=1)
+        s = s.rstrip() + '\n' + zayavka_unit() + '\n'
     return s
 
 
@@ -465,22 +504,9 @@ def sync_course_page(fname):
 def add_zayavka(fname, course):
     path = os.path.join(DIR, fname)
     s = open(path, encoding="utf-8").read()
-    if 'id="fxb-zayavka-modal"' in s:
-        print("skip zayavka (уже есть):", fname)
-        return
-    # 1) кнопки заявки: #popup:diagnostika -> попап-форма
+    s = strip_zayavka_artifacts(s)
     s = s.replace('href="#popup:diagnostika"', 'data-fxb-zayavka role="button" tabindex="0"')
-    # 2) модалка рядом с видео-модалкой
-    anchor = '</div>\n\n<style>'
-    assert s.count(anchor) == 1, fname + " zayavka modal anchor"
-    s = s.replace(anchor, zayavka_modal(course) + "\n</div>\n\n<style>", 1)
-    # 3) CSS перед </style>
-    assert s.count('</style>') == 1, fname + " zayavka style anchor"
-    s = s.replace('</style>', ZAYAVKA_CSS + "\n</style>", 1)
-    # 4) JS перед })();
-    assert s.count('})();') == 1, fname + " zayavka js anchor"
-    s = s.replace('})();\n</script>', ZAYAVKA_JS + '})();\n</script>\n' + FORMS_JS_TAG, 1)
-    open(path, "w", encoding="utf-8").write(s)
+    open(path, "w", encoding="utf-8").write(s.rstrip() + '\n' + zayavka_unit() + '\n')
     print("OK zayavka", fname, "->", len(s), "chars")
 
 
