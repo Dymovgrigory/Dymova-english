@@ -194,8 +194,8 @@
   var root=document.getElementById('fxb-team');if(!root)return;
   var cards=root.querySelectorAll('.fxb-card');
   if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('fxb-in')},i*100)});io.disconnect();}})},{threshold:.15});
-    io.observe(root);
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('fxb-in');io.unobserve(e.target);}})},{threshold:.12});
+    cards.forEach(function(c){io.observe(c);});
   } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
   var modal=document.getElementById('fxbVideoModal');
   var frame=modal.querySelector('.fxb-modal-frame');
