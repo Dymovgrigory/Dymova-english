@@ -16,9 +16,9 @@ SITE = "https://dymova-english.ru"
 RECORDS = ["2421794631", "2422572651"]
 
 REPL = [
-    ('href="/reading"', 'href="/reading-new"'),
-    ('href="/grammar"', 'href="/grammar-new"'),
-    ('href="/preparation"', 'href="/preparation-new"'),
+    ('href="/reading-new"', 'href="/reading"'),
+    ('href="/grammar-new"', 'href="/grammar"'),
+    ('href="/preparation-new"', 'href="/preparation"'),
 ]
 
 
