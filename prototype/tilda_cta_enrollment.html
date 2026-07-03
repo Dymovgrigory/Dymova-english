@@ -45,18 +45,27 @@
         <div class="fxb-enroll-card">
           <h3 class="fxb-form-title">Оставьте заявку</h3>
           <p class="fxb-form-sub">Мы свяжемся и подберём удобное расписание</p>
-          <form class="fxb-form" id="fxbEnrollForm" onsubmit="return false;">
-            <input type="text" name="name" placeholder="Имя родителя" required class="fxb-input">
-            <input type="text" name="child" placeholder="Имя и возраст ребёнка" required class="fxb-input">
-            <input type="tel" name="phone" placeholder="Телефон" required class="fxb-input">
-            <select name="format" class="fxb-input fxb-select">
+          <form class="fxb-form js-form-proccess" id="fxbEnrollForm" name="fxbEnrollForm" role="form" method="POST" data-formactiontype="2" data-inputbox=".t-input-group" data-success-callback="fxbEnrollSuccess">
+            <input type="hidden" name="formservices[]" value="aa53a2a49933944f1fb9c3aaf4590622" class="js-formaction-services">
+            <input type="hidden" name="formservices[]" value="30ef9df34728007db12c86a2e7cf58b6" class="js-formaction-services">
+            <input type="hidden" name="formservices[]" value="b7967c40cba6f8680cc7a33c7d4a3bd1" class="js-formaction-services">
+            <input type="hidden" name="formservices[]" value="406ce69659f99227298278ae7b0939c9" class="js-formaction-services">
+            <input type="hidden" name="formservices[]" value="111d799a5db07bce252609cabd29b3e0" class="js-formaction-services">
+            <input type="hidden" name="formservices[]" value="7c1b855d6fc4254f9b2a189ae11b7360" class="js-formaction-services">
+            <input type="hidden" name="tildaspec-formname" value="Заявка с сайта — запись на учебный год">
+            <div class="t-input-group"><input type="text" name="Name" placeholder="Имя родителя" aria-required="true" class="fxb-input js-tilda-rule" data-tilda-req="1" data-tilda-rule="name"></div>
+            <div class="t-input-group"><input type="text" name="Ребёнок" placeholder="Имя и возраст ребёнка" aria-required="true" class="fxb-input js-tilda-rule" data-tilda-req="1"></div>
+            <div class="t-input-group"><input type="tel" name="Phone" placeholder="Телефон" aria-required="true" class="fxb-input js-tilda-rule" data-tilda-req="1" data-tilda-rule="phone"></div>
+            <div class="t-input-group"><select name="Формат" class="fxb-input fxb-select">
               <option value="" disabled selected>Формат занятий</option>
               <option value="offline-likh">Офлайн — Лихачевский</option>
               <option value="offline-rak">Офлайн — Ракетостроителей</option>
               <option value="online">Онлайн</option>
-            </select>
+            </select></div>
             <button type="submit" class="fxb-submit">Забронировать место</button>
           </form>
+          <div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-top:8px"></div></div>
+          <div class="fxb-form-thanks" id="fxbEnrollThanks" hidden style="text-align:center;padding:12px 0"><div style="font-size:18px;font-weight:800;color:var(--purple);margin-bottom:6px">Заявка отправлена!</div><div style="font-size:14px;color:#7a6d90;font-weight:500">Спасибо! Мы свяжемся с вами и подберём удобное расписание.</div></div>
           <p class="fxb-form-note">Нажимая кнопку, вы соглашаетесь с <a href="/policy">политикой конфиденциальности</a></p>
         </div>
       </div>
@@ -87,6 +96,7 @@
 #fxb-enrollment .fxb-form-title{font-size:20px;font-weight:800;color:var(--purple);margin-bottom:6px}
 #fxb-enrollment .fxb-form-sub{font-size:13px;color:#7a6d90;font-weight:500;margin-bottom:20px}
 #fxb-enrollment .fxb-form{display:flex;flex-direction:column;gap:12px}
+#fxb-enrollment .t-input-group{width:100%}
 #fxb-enrollment .fxb-input{width:100%;padding:13px 16px;border:1.5px solid rgba(102,45,146,.12);border-radius:12px;font-family:inherit;font-size:14px;font-weight:500;color:var(--purple);background:#faf8fd;transition:border-color .2s,box-shadow .2s;outline:none}
 #fxb-enrollment .fxb-input:focus{border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.1)}
 #fxb-enrollment .fxb-input::placeholder{color:#b5afc4}
@@ -100,3 +110,5 @@
   #fxb-enrollment .fxb-enroll-card{max-width:480px}
 }
 </style>
+
+<script>window.fxbEnrollSuccess=function(){var f=document.getElementById('fxbEnrollForm');if(f)f.style.display='none';var t=document.getElementById('fxbEnrollThanks');if(t)t.hidden=false;};</script>

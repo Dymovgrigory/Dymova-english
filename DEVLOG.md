@@ -18,6 +18,26 @@
 
 ## Хронология работы
 
+### Сессия 19 — КОНВЕРТАЦИЯ КАСТОМНЫХ ФОРМ НА ПРИЁМ TILDA (Вариант A)
+
+**Дата:** 3 июля 2026. Продолжение Сессии 18. Ветка: `devin/…-forms-to-tilda`.
+
+#### ЧТО СДЕЛАНО (код):
+Все 5 «мёртвых» форм переведены на приём Tilda (заявки → 6 сервисов: 2 почты kidsfoxclub@yandex.ru + dymovgrigory@gmail.com и Telegram 89996960441). Использован **Вариант A** — минимальные хуки на существующую кастомную разметку, submit обрабатывает `forms.js`.
+1. **Hero-форма** `#fxbEnrollForm` (`prototype/tilda_cta_enrollment.html`): убран `onsubmit="return false;"`; добавлены `js-form-proccess` + `data-formactiontype="2"` + `data-inputbox=".t-input-group"` + `data-success-callback="fxbEnrollSuccess"`; 6 скрытых `formservices[]`; `tildaspec-formname`; поля переименованы в осмысленные `name` (`Name`, `Ребёнок`, `Phone`, `Формат`) с `data-tilda-req`/`data-tilda-rule`; блок «спасибо» + `js-errorbox-all`; success-callback прячет форму и показывает благодарность. (Главная уже грузит forms.js — доп. скрипт не нужен.)
+2. **4 курсовые формы** `.fxb-zform` (`page_reading/grammar/preparation/letnyaya_akademiya.html` + генератор `build_course_pages.py`): удалён wa.me-обработчик; форма получила те же хуки + 6 `formservices[]` + `tildaspec-formname` + скрытое `Курс`; поля `Name`/`Phone` с валидацией; success-callback `fxbZSuccess` переключает на view «Заявка сформирована»; из альтернативных контактов убрана кнопка WhatsApp; **на каждую курсовую добавлен `<script src=".../tilda-forms-1.0.min.js" async>`** (курсовые страницы native-форм не имели, forms.js на них не грузился).
+
+#### КАК ЭТО РАБОТАЕТ (проверено реверсом на живом сайте):
+- forms.js читает `#allrecords[data-tilda-root-zone]` → endpoint `forms.tildaapi.com`, биндит формы `js-form-proccess` внутри записей `.r.t-rec` (курсовая форма в модалке в DOM с загрузки — биндится; подтверждено: forms.js дописывает `form-spec-comments`).
+- На submit forms.js валидирует `js-tilda-rule`, затем POST на `/procces/`. **Прямой POST без forms.js → `{"needcaptcha":1}`** — поэтому курсовым обязательно нужен forms.js.
+- Приём защищён **Yandex SmartCaptcha** (та же капча, что у существующих native-форм): при отправке показывается «Я не робот» → после прохождения заявка уходит во все 6 сервисов. Это штатное поведение, не баг.
+
+#### ⏳ ОСТАЛОСЬ (деплой + приёмочный тест):
+1. Залить hero-блок в T123 главной (151210576) и 4 курсовые страницы, **опубликовать** (`tilda_publish_pages.py 151210576 151292376 151292406 151292476 151229566`).
+2. Реальные тестовые заявки со всех 5 форм (пройти капчу), проверить приход на 2 почты + Telegram, показать владельцу пруфы.
+
+---
+
 ### Сессия 18 — НАСТРОЙКА ПРИЁМА ЗАЯВОК (ПЕРЕДАЧА НОВОМУ БОТУ) — НЕЗАВЕРШЕНО
 
 **Дата:** 3 июля 2026. Ветка работы по формам — конфигурация в Tilda (не код).
