@@ -14,6 +14,7 @@
 Запуск:  python3 build_subpages.py
 """
 import os
+from build_course_pages import FORMS_JS_TAG, ZAYAVKA_CSS, ZAYAVKA_JS, zayavka_modal
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 
@@ -197,7 +198,7 @@ def render_page(p):
     h.append('<h1 class="fxb-h1">' + p["h1"] + '</h1>')
     h.append('<p class="fxb-sub">' + p["sub"] + '</p>')
     h.append('<div class="fxb-hero-btns">')
-    h.append('<a href="#fxb-cta" class="fxb-btn-main">' + p["cta_label"] + '</a>')
+    h.append('<a data-fxb-zayavka data-fxb-subject="' + p["lead_subject"] + '" data-fxb-window="' + p["lead_hero_window"] + '" role="button" tabindex="0" class="fxb-btn-main">' + p["cta_label"] + '</a>')
     h.append('<a href="#fxb-program" class="fxb-btn-sec">Подробнее о программе</a>')
     h.append('</div></div></section>')
     # FEATURES
@@ -236,12 +237,16 @@ def render_page(p):
     h.append('<div class="fxb-cta-bg"><img src="' + DECOR_FOX + '" alt="" loading="lazy"></div>')
     h.append('<div class="fxb-cta-box"><h2>' + p["cta_title"] + '</h2><p>' + p["cta_text"] + '</p>')
     h.append('<div class="fxb-cta-btns">')
-    h.append('<a href="#popup:diagnostika" class="fxb-btn-main">Оставить заявку на сайте</a>')
+    h.append('<a data-fxb-zayavka data-fxb-subject="' + p["lead_subject"] + '" data-fxb-window="' + p["lead_final_window"] + '" role="button" tabindex="0" class="fxb-btn-main">Оставить заявку на сайте</a>')
     h.append('<a href="' + MAX_BOT + '" target="_blank" rel="noopener" class="fxb-btn-max">' + svg("chat") + 'Написать в Max</a>')
     h.append('</div></div></section>')
+    h.append(zayavka_modal())
     h.append('</div>')
     h.append(CSS)
+    h.append(ZAYAVKA_CSS)
     h.append(JS)
+    h.append(ZAYAVKA_JS)
+    h.append(FORMS_JS_TAG)
     return "\n".join(h)
 
 
@@ -270,6 +275,9 @@ PAGES["page_doshkolniki.html"] = {
         ("sun", "Утренние группы", "Для тех, кто ходит в сад во вторую смену"),
         ("group", "До 6 человек", "Камерные группы по возрасту и уровню"),
     ],
+    "lead_subject": "Английский для дошкольников",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "books": [
         ("Cookie and Friends", "Яркие картинки, песни и истории с персонажами. Идеально для первого знакомства с языком."),
         ("Happy House", "Развитие слухового восприятия и произношения через диалоги и ролевые игры."),
@@ -302,6 +310,9 @@ PAGES["page_mladshie_shkolniki.html"] = {
         ("sun", "Утро, день, вечер", "Дневные, вечерние и утренние группы — подойдут и тем, кто учится во вторую смену"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "lead_subject": "Английский для младших школьников",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "books": [
         ("My Level 1", "6–8 лет, 1-й год обучения. Уровень Pre-A1. Старт с азов: алфавит, фоника и первые фразы, чтение по Read with Richie.", MYLEVEL + "mylevel-1.png"),
         ("My Level 2", "8–9 лет, 2-й год обучения. Уровень Pre-A1 → A1. Расширяем лексику и грамматику, больше чтения с Richie's Adventures.", MYLEVEL + "mylevel-2.png"),
@@ -337,6 +348,9 @@ PAGES["page_podrostki.html"] = {
         ("sun", "Утренние группы", "Удобно для учащихся во вторую смену"),
         ("group", "До 7 человек", "Группы по уровню и целям"),
     ],
+    "lead_subject": "Английский для подростков",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "books": [
         ("Solutions (Oxford)", "Курс для подростков с упором на коммуникацию и подготовку к экзаменам."),
         ("Prepare! (Cambridge)", "Подготовка к экзаменам Cambridge и развитие всех языковых навыков."),
@@ -370,6 +384,9 @@ PAGES["page_letnyaya_akademiya.html"] = {
         ("group", "До 8 человек", "Группы по возрасту и уровню"),
         ("target", "Без потери формы", "Поддерживаем уровень за лето"),
     ],
+    "lead_subject": "Летняя Академия",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "cta_title": 'Запишитесь в <span class="fxb-accent">Летнюю Академию</span>',
     "cta_text": "Количество мест ограничено — бронируйте заранее, чтобы попасть в удобную смену.",
 }
@@ -396,6 +413,9 @@ PAGES["page_online_zanyatiya.html"] = {
         ("monitor", "Zoom / онлайн", "Подключение по ссылке"),
         ("group", "Мини-группы", "По уровню и возрасту"),
     ],
+    "lead_subject": "Онлайн-занятия",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "cta_title": 'Запишитесь на <span class="fxb-accent">онлайн-занятия</span>',
     "cta_text": "Подберём удобное время и группу под уровень вашего ребёнка.",
 }
@@ -422,6 +442,9 @@ PAGES["page_podderzhivayushchie_online.html"] = {
         ("monitor", "Онлайн", "Из любой точки"),
         ("group", "Мини-группы", "По уровню"),
     ],
+    "lead_subject": "Поддерживающие онлайн-занятия",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "cta_title": 'Поддержите уровень <span class="fxb-accent">за лето</span>',
     "cta_text": "Запишитесь на лёгкий онлайн-формат — и сентябрь начнётся без стресса.",
 }
@@ -448,6 +471,9 @@ PAGES["page_standartnye_offline.html"] = {
         ("compass", "2 филиала", "Долгопрудный"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "lead_subject": "Стандартные оффлайн-занятия",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "cta_title": 'Запишитесь на <span class="fxb-accent">занятия в филиале</span>',
     "cta_text": "Подберём удобный филиал, время и группу под уровень ученика.",
 }
@@ -475,6 +501,9 @@ PAGES["page_reading.html"] = {
         ("cap", "Младшие школьники", "Для учеников начальной школы"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "lead_subject": "Курс по чтению",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "cta_title": 'Подготовьте ребёнка к школьному английскому <span class="fxb-accent">за лето</span>',
     "cta_text": "Оставьте заявку — расскажем расписание курса и подберём группу под уровень ребёнка.",
 }
@@ -501,6 +530,9 @@ PAGES["page_grammar.html"] = {
         ("target", "Без пробелов", "Закрываем слабые темы"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "lead_subject": "Курс по грамматике",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "cta_title": 'Закройте пробелы и <span class="fxb-accent">подготовьтесь к году</span>',
     "cta_text": "Запишитесь на бесплатную диагностику — определим пробелы и составим план занятий.",
 }
@@ -527,6 +559,9 @@ PAGES["page_preparation.html"] = {
         ("group", "Мини-группы", "Внимание каждому ребёнку"),
         ("chart", "Видимый прогресс", "Регулярные отчёты родителям"),
     ],
+    "lead_subject": "Подготовка к школе",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
     "cta_title": 'Проведите <span class="fxb-accent">лето с пользой</span>',
     "cta_text": "Оставьте заявку и получите купон на комплексную диагностику ребёнка.",
 }

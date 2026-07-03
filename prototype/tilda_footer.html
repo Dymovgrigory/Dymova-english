@@ -123,3 +123,77 @@
   #fxb-footer .fxb-ft-bottom{flex-direction:column;align-items:flex-start}
 }
 </style>
+
+<div id="fxb-page">
+<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal" hidden><div class="fxb-modal__ov" data-fxb-close></div><div class="fxb-modal__box fxb-zbox" role="dialog" aria-modal="true" aria-label="Заявка"><button type="button" class="fxb-modal__x" data-fxb-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="fxb-zview fxb-zview--form"><h3 class="fxb-ztitle">Оставить заявку</h3><p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём удобный формат.</p><form class="fxb-zform js-form-proccess" id="fxbZform" name="fxbZform" role="form" method="POST" data-formactiontype="2" data-inputbox=".fxb-zfield" data-success-callback="fxbZSuccess"><input type="hidden" name="formservices[]" value="aa53a2a49933944f1fb9c3aaf4590622" class="js-formaction-services"><input type="hidden" name="formservices[]" value="30ef9df34728007db12c86a2e7cf58b6" class="js-formaction-services"><input type="hidden" name="formservices[]" value="b7967c40cba6f8680cc7a33c7d4a3bd1" class="js-formaction-services"><input type="hidden" name="formservices[]" value="406ce69659f99227298278ae7b0939c9" class="js-formaction-services"><input type="hidden" name="formservices[]" value="111d799a5db07bce252609cabd29b3e0" class="js-formaction-services"><input type="hidden" name="formservices[]" value="7c1b855d6fc4254f9b2a189ae11b7360" class="js-formaction-services"><input type="hidden" name="tildaspec-formname" value=""><input type="hidden" name="Предмет" value=""><input type="hidden" name="Раздел" value=""><input type="hidden" name="Страница" value=""><label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="name" aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label><label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="phone" aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label><button type="submit" class="fxb-btn-main fxb-zsubmit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Отправить заявку</button><p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p><div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-top:6px"></div></div></form><div class="fxb-zalt"><span class="fxb-zalt-l">Или свяжитесь напрямую</span><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div><div class="fxb-zview fxb-zview--thanks" hidden><div class="fxb-zok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3 class="fxb-ztitle">Заявка сформирована!</h3><p class="fxb-zsub">Спасибо! Заявка отправлена — мы свяжемся с вами. Можно также написать нам:</p><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div></div>
+</div>
+<style>
+/* ===== FXB-ZAYAVKA: попап-форма заявки ===== */
+#fxb-page [data-fxb-zayavka]{cursor:pointer}
+#fxb-page .fxb-zbox{width:min(460px,100%);padding:34px 30px 30px;text-align:left}
+#fxb-page .fxb-ztitle{font-size:22px;font-weight:900;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink)}
+#fxb-page .fxb-zsub{font-size:14px;font-weight:500;color:var(--muted);line-height:1.55;margin-bottom:22px}
+#fxb-page .fxb-zform{display:grid;gap:14px}
+#fxb-page .fxb-zfield{display:grid;gap:6px}
+#fxb-page .fxb-zfield span{font-size:12.5px;font-weight:700;color:var(--purple-2);letter-spacing:.02em}
+#fxb-page .fxb-zfield input{font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 16px;border:1.6px solid rgba(57,40,82,.14);border-radius:13px;background:#faf8fe;transition:border-color .2s,box-shadow .2s;width:100%}
+#fxb-page .fxb-zfield input:focus{outline:0;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.12)}
+#fxb-page .fxb-zfield.fxb-zerr input{border-color:#e0526a;background:#fdf2f4}
+#fxb-page .fxb-zsubmit{width:100%;justify-content:center;margin-top:4px;border:0;cursor:pointer;font-family:inherit}
+#fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:var(--purple)}
+#fxb-page .fxb-znote{font-size:11px;color:#a89fbd;font-weight:500;line-height:1.45;margin-top:2px;text-align:center}
+#fxb-page .fxb-znote a{color:var(--purple-2);text-decoration:underline}
+#fxb-page .fxb-zalt{margin-top:22px;padding-top:20px;border-top:1px solid rgba(57,40,82,.1)}
+#fxb-page .fxb-zalt-l{display:block;text-align:center;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+#fxb-page .fxb-zalt-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#fxb-page .fxb-zchip{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:100px;font-weight:800;font-size:13.5px;border:1.6px solid rgba(102,45,146,.2);color:var(--purple-2);background:#fff;transition:transform .2s,border-color .2s,background .2s;cursor:pointer}
+#fxb-page .fxb-zchip:hover{transform:translateY(-2px);border-color:var(--purple-2);background:rgba(102,45,146,.05)}
+#fxb-page .fxb-zchip--wa{border-color:rgba(43,182,115,.45);color:#1f9d63}
+#fxb-page .fxb-zchip--wa:hover{border-color:#1f9d63;background:rgba(43,182,115,.07)}
+#fxb-page .fxb-zview--thanks{text-align:center}
+#fxb-page .fxb-zok{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;background:linear-gradient(135deg,#2bb673,#7ed957);box-shadow:0 14px 30px -12px rgba(43,182,115,.7)}
+#fxb-page .fxb-zok svg{width:32px;height:32px;stroke:#fff;stroke-width:2.6}
+#fxb-page .fxb-zview--thanks .fxb-zalt-btns{margin-top:20px}
+</style>
+<script>
+(function(){
+  if(window.__fxbMainZayavkaBound)return;
+  window.__fxbMainZayavkaBound=true;
+  var root=document;
+  var fxbZ=root.querySelector('#fxb-zayavka-modal');
+  if(fxbZ){
+    var fxbZvForm=fxbZ.querySelector('.fxb-zview--form');
+    var fxbZvThx=fxbZ.querySelector('.fxb-zview--thanks');
+    var fxbZtitle=fxbZ.querySelector('.fxb-ztitle');
+    var fxbZsub=fxbZ.querySelector('.fxb-zsub');
+    var fxbZformname=fxbZ.querySelector('[name="tildaspec-formname"]');
+    var fxbZsubject=fxbZ.querySelector('[name="Предмет"]');
+    var fxbZwindow=fxbZ.querySelector('[name="Раздел"]');
+    var fxbZpage=fxbZ.querySelector('[name="Страница"]');
+    var fxbZwrite=function(el,v){if(el)el.value=v;};
+    var fxbZtext=function(el,v){if(el)el.textContent=v;};
+    var fxbZopen=function(z){
+      var subject=(z&&z.getAttribute('data-fxb-subject')||'').trim();
+      var win=(z&&z.getAttribute('data-fxb-window')||'').trim();
+      if(!subject)subject=document.title||'Заявка';
+      if(!win)win='Главная';
+      var title='Заявка — '+subject;
+      fxbZwrite(fxbZsubject,subject);
+      fxbZwrite(fxbZwindow,win);
+      fxbZwrite(fxbZpage,(document.title||location.pathname)+' ['+location.pathname+']');
+      fxbZwrite(fxbZformname,title);
+      fxbZtext(fxbZtitle,title);
+      fxbZtext(fxbZsub,'Оставьте имя и телефон — перезвоним, расскажем подробности и подберём удобный формат.');
+      fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';
+    };
+    var fxbZclose=function(){fxbZ.hidden=true;document.body.style.overflow='';};
+    root.addEventListener('click',function(e){
+      var z=e.target.closest('[data-fxb-zayavka]');if(z){e.preventDefault();fxbZopen(z);return;}
+      var c=e.target.closest('[data-fxb-close]');if(c&&!fxbZ.hidden){fxbZclose();}});
+    root.addEventListener('keydown',function(e){var z=e.target.closest('[data-fxb-zayavka]');
+      if(z&&(e.key==='Enter'||e.key===' ')){e.preventDefault();fxbZopen(z);}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
+  }
+  window.fxbZSuccess=function(){var m=document.getElementById('fxb-zayavka-modal');if(!m)return;var vf=m.querySelector('.fxb-zview--form');var vt=m.querySelector('.fxb-zview--thanks');if(vf)vf.hidden=true;if(vt)vt.hidden=false;};
+})();
+</script>
