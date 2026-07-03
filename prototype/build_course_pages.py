@@ -312,16 +312,16 @@ def _zalts():
             '</div>' % (MAX_BOT, WA_PHONE))
 
 
-def zayavka_modal(course):
-    return ('<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal" hidden data-fxb-course="%s">'
+def zayavka_modal():
+    return ('<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal" hidden>'
             '<div class="fxb-modal__ov" data-fxb-close></div>'
-            '<div class="fxb-modal__box fxb-zbox" role="dialog" aria-modal="true" aria-label="Заявка на курс">'
+            '<div class="fxb-modal__box fxb-zbox" role="dialog" aria-modal="true" aria-label="Заявка">'
             '<button type="button" class="fxb-modal__x" data-fxb-close aria-label="Закрыть">'
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'
             '</button>'
             '<div class="fxb-zview fxb-zview--form">'
             '<h3 class="fxb-ztitle">Оставить заявку</h3>'
-            '<p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём группу под уровень ребёнка.</p>'
+            '<p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём удобный формат.</p>'
             '<form class="fxb-zform js-form-proccess" id="fxbZform" name="fxbZform" role="form" method="POST" data-formactiontype="2" data-inputbox=".fxb-zfield" data-success-callback="fxbZSuccess">'
             '<input type="hidden" name="formservices[]" value="aa53a2a49933944f1fb9c3aaf4590622" class="js-formaction-services">'
             '<input type="hidden" name="formservices[]" value="30ef9df34728007db12c86a2e7cf58b6" class="js-formaction-services">'
@@ -329,8 +329,10 @@ def zayavka_modal(course):
             '<input type="hidden" name="formservices[]" value="406ce69659f99227298278ae7b0939c9" class="js-formaction-services">'
             '<input type="hidden" name="formservices[]" value="111d799a5db07bce252609cabd29b3e0" class="js-formaction-services">'
             '<input type="hidden" name="formservices[]" value="7c1b855d6fc4254f9b2a189ae11b7360" class="js-formaction-services">'
-            '<input type="hidden" name="tildaspec-formname" value="Заявка — %s">'
-            '<input type="hidden" name="Курс" value="%s">'
+            '<input type="hidden" name="tildaspec-formname" value="">'
+            '<input type="hidden" name="Предмет" value="">'
+            '<input type="hidden" name="Раздел" value="">'
+            '<input type="hidden" name="Страница" value="">'
             '<label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="name" aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label>'
             '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="phone" aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
             '<button type="submit" class="fxb-btn-main fxb-zsubmit">%sОтправить заявку</button>'
@@ -345,7 +347,7 @@ def zayavka_modal(course):
             '<p class="fxb-zsub">Спасибо! Заявка отправлена — мы свяжемся с вами. Можно также написать нам:</p>'
             '%s'
             '</div></div></div>'
-            % (course, course, SEND_ICON, _zalts(), OK_ICON, _zalts()))
+            % (SEND_ICON, _zalts(), OK_ICON, _zalts()))
 
 
 ZAYAVKA_CSS = """
@@ -382,17 +384,82 @@ ZAYAVKA_JS = """
   if(fxbZ){
     var fxbZvForm=fxbZ.querySelector('.fxb-zview--form');
     var fxbZvThx=fxbZ.querySelector('.fxb-zview--thanks');
-    var fxbZopen=function(){fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';};
+    var fxbZtitle=fxbZ.querySelector('.fxb-ztitle');
+    var fxbZsub=fxbZ.querySelector('.fxb-zsub');
+    var fxbZformname=fxbZ.querySelector('[name="tildaspec-formname"]');
+    var fxbZsubject=fxbZ.querySelector('[name="Предмет"]');
+    var fxbZwindow=fxbZ.querySelector('[name="Раздел"]');
+    var fxbZpage=fxbZ.querySelector('[name="Страница"]');
+    var fxbZwrite=function(el,v){if(el)el.value=v;};
+    var fxbZtext=function(el,v){if(el)el.textContent=v;};
+    var fxbZopen=function(z){
+      var subject=(z&&z.getAttribute('data-fxb-subject')||'').trim();
+      var win=(z&&z.getAttribute('data-fxb-window')||'').trim();
+      if(!subject)subject=document.title||'Заявка';
+      if(!win)win='Страница';
+      var title=subject ? 'Заявка — '+subject : 'Оставить заявку';
+      fxbZwrite(fxbZsubject,subject);
+      fxbZwrite(fxbZwindow,win);
+      fxbZwrite(fxbZpage,(document.title||location.pathname)+' ['+location.pathname+']');
+      fxbZwrite(fxbZformname,title);
+      fxbZtext(fxbZtitle,title);
+      fxbZtext(fxbZsub,'Оставьте имя и телефон — перезвоним, расскажем подробности и подберём удобный формат.');
+      fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';
+    };
     var fxbZclose=function(){fxbZ.hidden=true;document.body.style.overflow='';};
     root.addEventListener('click',function(e){
-      var z=e.target.closest('[data-fxb-zayavka]');if(z){e.preventDefault();fxbZopen();return;}
+      var z=e.target.closest('[data-fxb-zayavka]');if(z){e.preventDefault();fxbZopen(z);return;}
       var c=e.target.closest('[data-fxb-close]');if(c&&!fxbZ.hidden){fxbZclose();}});
     root.addEventListener('keydown',function(e){var z=e.target.closest('[data-fxb-zayavka]');
-      if(z&&(e.key==='Enter'||e.key===' ')){e.preventDefault();fxbZopen();}});
+      if(z&&(e.key==='Enter'||e.key===' ')){e.preventDefault();fxbZopen(z);}});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
   }
   window.fxbZSuccess=function(){var m=document.getElementById('fxb-zayavka-modal');if(!m)return;var vf=m.querySelector('.fxb-zview--form');var vt=m.querySelector('.fxb-zview--thanks');if(vf)vf.hidden=true;if(vt)vt.hidden=false;};
 """
+
+
+def lead_attrs(subject, window):
+    return 'data-fxb-zayavka data-fxb-subject="%s" data-fxb-window="%s" role="button" tabindex="0"' % (subject, window)
+
+
+def patch_course_leads(s, subject):
+    s = s.replace('<a href="#fxb-cta" class="fxb-btn-main">Узнать расписание курса</a>',
+                  '<a %s class="fxb-btn-main">Узнать расписание курса</a>' % lead_attrs(subject, "Блок героя"))
+    s = s.replace('<a href="#fxb-cta" class="fxb-btn-main">Записаться на диагностику</a>',
+                  '<a %s class="fxb-btn-main">Записаться на диагностику</a>' % lead_attrs(subject, "Блок героя"))
+    s = s.replace('<a href="#fxb-cta" class="fxb-btn-main">Оставить заявку</a>',
+                  '<a %s class="fxb-btn-main">Оставить заявку</a>' % lead_attrs(subject, "Блок героя"))
+    s = s.replace('<a href="#fxb-cta" class="fxb-btn-main">Записаться в Академию</a>',
+                  '<a %s class="fxb-btn-main">Записаться в Академию</a>' % lead_attrs(subject, "Блок героя"))
+    s = s.replace('<a data-fxb-zayavka role="button" tabindex="0" class="fxb-btn-main">Записаться на курс</a>',
+                  '<a %s class="fxb-btn-main">Записаться на курс</a>' % lead_attrs(subject, "Блок цены"))
+    s = s.replace('<a data-fxb-zayavka role="button" tabindex="0" class="fxb-btn-main">Забронировать место</a>',
+                  '<a %s class="fxb-btn-main">Забронировать место</a>' % lead_attrs(subject, "Блок цены"))
+    s = s.replace('<a data-fxb-zayavka role="button" tabindex="0" class="fxb-btn-main">Оставить заявку на сайте</a>',
+                  '<a %s class="fxb-btn-main">Оставить заявку на сайте</a>' % lead_attrs(subject, "Финальный блок"))
+    return s
+
+
+def patch_zayavka_block(s):
+    modal_re = re.compile(r'<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal"[\s\S]*?\n</div>\n\n<style>', re.S)
+    if modal_re.search(s):
+        s = modal_re.sub(zayavka_modal() + '\n</div>\n\n<style>', s, count=1)
+    else:
+        s = s.replace('</div>\n\n<style>', zayavka_modal() + '\n</div>\n\n<style>', 1)
+    if FORMS_JS_TAG not in s:
+        s = s.replace('})();\n</script>', ZAYAVKA_JS + '})();\n</script>\n' + FORMS_JS_TAG, 1)
+    else:
+        s = re.sub(r'  var fxbZ=root\.querySelector\(\'#fxb-zayavka-modal\'\);[\s\S]*?window\.fxbZSuccess=function\(\)\{var m=document\.getElementById\(\'fxb-zayavka-modal\'\);if\(!m\)return;var vf=m\.querySelector\(\'\.fxb-zview--form\'\);var vt=m\.querySelector\(\'\.fxb-zview--thanks\'\);if\(vf\)vf\.hidden=true;if\(vt\)vt\.hidden=false;\};\n', ZAYAVKA_JS, s, count=1)
+    return s
+
+
+def sync_course_page(fname):
+    path = os.path.join(DIR, fname)
+    s = open(path, encoding="utf-8").read()
+    s = patch_course_leads(s, COURSES[fname])
+    s = patch_zayavka_block(s)
+    open(path, "w", encoding="utf-8").write(s)
+    print("SYNC", fname, "->", len(s), "chars")
 
 
 def add_zayavka(fname, course):
@@ -449,7 +516,5 @@ def build(fname, secfn):
 
 
 if __name__ == "__main__":
-    for fn, secfn in PAGES.items():
-        build(fn, secfn)
     for fn in PAGES:
-        add_zayavka(fn, COURSES[fn])
+        sync_course_page(fn)
