@@ -296,6 +296,7 @@ COURSES = {
 
 WA_PHONE = "79939232309"        # WhatsApp + звонок
 MAX_BOT = "https://max.ru/id611904726658_bot"
+FORMS_JS_TAG = '<script src="https://static.tildacdn.com/js/tilda-forms-1.0.min.js" async></script>'
 
 SEND_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
              'stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/>'
@@ -306,10 +307,9 @@ OK_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-li
 
 def _zalts():
     return ('<div class="fxb-zalt-btns">'
-            '<a class="fxb-zchip fxb-zchip--wa" target="_blank" rel="noopener" href="https://wa.me/%s">WhatsApp</a>'
             '<a class="fxb-zchip" target="_blank" rel="noopener" href="%s">Max</a>'
             '<a class="fxb-zchip" href="tel:+%s">Позвонить</a>'
-            '</div>' % (WA_PHONE, MAX_BOT, WA_PHONE))
+            '</div>' % (MAX_BOT, WA_PHONE))
 
 
 def zayavka_modal(course):
@@ -322,21 +322,30 @@ def zayavka_modal(course):
             '<div class="fxb-zview fxb-zview--form">'
             '<h3 class="fxb-ztitle">Оставить заявку</h3>'
             '<p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём группу под уровень ребёнка.</p>'
-            '<form class="fxb-zform" novalidate>'
-            '<label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="name" required autocomplete="name" placeholder="Как к вам обращаться"></label>'
-            '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
+            '<form class="fxb-zform js-form-proccess" id="fxbZform" name="fxbZform" role="form" method="POST" data-formactiontype="2" data-inputbox=".fxb-zfield" data-success-callback="fxbZSuccess">'
+            '<input type="hidden" name="formservices[]" value="aa53a2a49933944f1fb9c3aaf4590622" class="js-formaction-services">'
+            '<input type="hidden" name="formservices[]" value="30ef9df34728007db12c86a2e7cf58b6" class="js-formaction-services">'
+            '<input type="hidden" name="formservices[]" value="b7967c40cba6f8680cc7a33c7d4a3bd1" class="js-formaction-services">'
+            '<input type="hidden" name="formservices[]" value="406ce69659f99227298278ae7b0939c9" class="js-formaction-services">'
+            '<input type="hidden" name="formservices[]" value="111d799a5db07bce252609cabd29b3e0" class="js-formaction-services">'
+            '<input type="hidden" name="formservices[]" value="7c1b855d6fc4254f9b2a189ae11b7360" class="js-formaction-services">'
+            '<input type="hidden" name="tildaspec-formname" value="Заявка — %s">'
+            '<input type="hidden" name="Курс" value="%s">'
+            '<label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="name" aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label>'
+            '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="phone" aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
             '<button type="submit" class="fxb-btn-main fxb-zsubmit">%sОтправить заявку</button>'
             '<p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p>'
+            '<div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-top:6px"></div></div>'
             '</form>'
             '<div class="fxb-zalt"><span class="fxb-zalt-l">Или свяжитесь напрямую</span>%s</div>'
             '</div>'
             '<div class="fxb-zview fxb-zview--thanks" hidden>'
             '<div class="fxb-zok">%s</div>'
             '<h3 class="fxb-ztitle">Заявка сформирована!</h3>'
-            '<p class="fxb-zsub">Мы открыли WhatsApp с вашим сообщением — нажмите «Отправить» в чате, и мы свяжемся с вами. Если чат не открылся, выберите удобный способ:</p>'
+            '<p class="fxb-zsub">Спасибо! Заявка отправлена — мы свяжемся с вами. Можно также написать нам:</p>'
             '%s'
             '</div></div></div>'
-            % (course, SEND_ICON, _zalts(), OK_ICON, _zalts()))
+            % (course, course, SEND_ICON, _zalts(), OK_ICON, _zalts()))
 
 
 ZAYAVKA_CSS = """
@@ -371,11 +380,9 @@ ZAYAVKA_CSS = """
 ZAYAVKA_JS = """
   var fxbZ=root.querySelector('#fxb-zayavka-modal');
   if(fxbZ){
-    var fxbZform=fxbZ.querySelector('.fxb-zform');
     var fxbZvForm=fxbZ.querySelector('.fxb-zview--form');
     var fxbZvThx=fxbZ.querySelector('.fxb-zview--thanks');
-    var fxbZopen=function(){fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';
-      var f=fxbZform&&fxbZform.querySelector('input[name=name]');if(f){setTimeout(function(){f.focus();},60);}};
+    var fxbZopen=function(){fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';};
     var fxbZclose=function(){fxbZ.hidden=true;document.body.style.overflow='';};
     root.addEventListener('click',function(e){
       var z=e.target.closest('[data-fxb-zayavka]');if(z){e.preventDefault();fxbZopen();return;}
@@ -383,16 +390,8 @@ ZAYAVKA_JS = """
     root.addEventListener('keydown',function(e){var z=e.target.closest('[data-fxb-zayavka]');
       if(z&&(e.key==='Enter'||e.key===' ')){e.preventDefault();fxbZopen();}});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
-    if(fxbZform){fxbZform.addEventListener('submit',function(e){e.preventDefault();
-      var nm=fxbZform.name,ph=fxbZform.phone;
-      var name=(nm.value||'').trim(),phone=(ph.value||'').trim();
-      nm.parentNode.classList.toggle('fxb-zerr',!name);ph.parentNode.classList.toggle('fxb-zerr',!phone);
-      if(!name){nm.focus();return;}if(!phone){ph.focus();return;}
-      var course=fxbZ.getAttribute('data-fxb-course')||'выбранный курс';
-      var txt='Здравствуйте! Хочу записаться на «'+course+'». Меня зовут '+name+', телефон '+phone+'.';
-      window.open('https://wa.me/79939232309?text='+encodeURIComponent(txt),'_blank','noopener');
-      fxbZvForm.hidden=true;fxbZvThx.hidden=false;});}
   }
+  window.fxbZSuccess=function(){var m=document.getElementById('fxb-zayavka-modal');if(!m)return;var vf=m.querySelector('.fxb-zview--form');var vt=m.querySelector('.fxb-zview--thanks');if(vf)vf.hidden=true;if(vt)vt.hidden=false;};
 """
 
 
@@ -413,7 +412,7 @@ def add_zayavka(fname, course):
     s = s.replace('</style>', ZAYAVKA_CSS + "\n</style>", 1)
     # 4) JS перед })();
     assert s.count('})();') == 1, fname + " zayavka js anchor"
-    s = s.replace('})();', ZAYAVKA_JS + "})();", 1)
+    s = s.replace('})();\n</script>', ZAYAVKA_JS + '})();\n</script>\n' + FORMS_JS_TAG, 1)
     open(path, "w", encoding="utf-8").write(s)
     print("OK zayavka", fname, "->", len(s), "chars")
 
@@ -444,7 +443,7 @@ def build(fname, secfn):
     s = s.replace('</style>', CSS_ADD + "\n</style>", 1)
     # 4) js before })(); of IIFE
     assert s.count('})();') == 1, fname + " js anchor"
-    s = s.replace('})();', JS_ADD + "})();", 1)
+    s = s.replace('})();\n</script>', JS_ADD + '})();\n</script>\n' + FORMS_JS_TAG, 1)
     open(path, "w", encoding="utf-8").write(s)
     print("OK", fname, "->", len(s), "chars")
 
