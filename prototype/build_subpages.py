@@ -172,6 +172,14 @@ LADDER_CSS = """
 </style>
 """
 
+VIDEO_CSS = """
+<style>
+#fxb-page .fxb-video-wrap{max-width:400px;margin:0 auto}
+#fxb-page .fxb-video{position:relative;width:100%;border-radius:24px;overflow:hidden;background:#241a36;box-shadow:0 30px 60px -30px rgba(57,40,82,.6);border:1px solid rgba(57,40,82,.1)}
+#fxb-page .fxb-video video{display:block;width:100%;height:auto}
+</style>
+"""
+
 JS = """
 <script>
 (function(){
@@ -268,6 +276,20 @@ def ladder_section(kicker, title, lead, groups, light=False):
     return "\n".join(h)
 
 
+def video_section(kicker, title, lead, src, poster, light=False):
+    bg = " fxb-bg-light" if light else ""
+    h = ['<section class="fxb-section' + bg + '"><div class="fxb-wrap">']
+    h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>' + kicker + '</span>')
+    h.append('<h2 class="fxb-h2">' + title + '</h2>')
+    if lead:
+        h.append('<p class="fxb-lead">' + lead + '</p>')
+    h.append('</div><div class="fxb-video-wrap"><div class="fxb-video">')
+    h.append('<video controls playsinline preload="metadata" poster="' + escape(poster, quote=True) + '">')
+    h.append('<source src="' + escape(src, quote=True) + '" type="video/mp4">')
+    h.append('</video></div></div></div></section>')
+    return "\n".join(h)
+
+
 def render_page(p):
     """p: dict with page content."""
     grad = p["hero_grad"]
@@ -309,6 +331,9 @@ def render_page(p):
         h.append(card_grid_section("Педагоги", p["team_title"], p.get("team_lead"), p["team"], light=True))
     if p.get("ladder"):
         h.append(ladder_section(p.get("ladder_kicker", "Лестница знаний"), p["ladder_title"], p.get("ladder_lead"), p["ladder"], light=False))
+    if p.get("video"):
+        v = p["video"]
+        h.append(video_section(v.get("kicker", "Видео"), v["title"], v.get("lead"), v["src"], v["poster"], light=True))
     # BOOKS (optional)
     if p.get("books"):
         bg = "" if p.get("books_on_light") else " fxb-bg-light"
@@ -337,6 +362,8 @@ def render_page(p):
     h.append(CSS)
     if p.get("ladder"):
         h.append(LADDER_CSS)
+    if p.get("video"):
+        h.append(VIDEO_CSS)
     h.append(JS)
     return "\n".join(h)
 
@@ -505,6 +532,13 @@ PAGES["page_letnyaya_akademiya.html"] = {
         ("group", "До 8 человек", "Группы по возрасту и уровню"),
         ("target", "Без потери формы", "Поддерживаем уровень за лето"),
     ],
+    "video": {
+        "kicker": "Как это проходит",
+        "title": 'Летняя Академия — <span class="fxb-accent">вживую</span>',
+        "lead": "Атмосфера смены: как проходят занятия, проекты и общение в Академии.",
+        "src": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy.mp4",
+        "poster": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy-poster.jpg",
+    },
     "lead_subject": "Летняя Академия",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
