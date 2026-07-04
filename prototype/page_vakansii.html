@@ -58,7 +58,7 @@
     <div class="fxb-head">
       <span class="fxb-eyebrow"><span class="fxb-dot"></span>Открытые вакансии</span>
       <h2 class="fxb-h2">Кого мы <span class="fxb-accent">ищем</span></h2>
-      <p class="fxb-sub">Активный набор. Откликнуться можно в один клик — напишите нам в Telegram или позвоните.</p>
+      <p class="fxb-sub">Активный набор. Откликнуться можно в один клик — заполните форму с резюме ниже.</p>
     </div>
     <div class="fxb-vac-grid">
       <div class="fxb-vac-card">
@@ -86,7 +86,7 @@
             </ul>
           </div>
         </div>
-        <a class="fxb-btn-main fxb-vac-btn" href="https://t.me/m/Zl_g5u6BMWZi" target="_blank" rel="noopener">Откликнуться на вакансию</a>
+        <a class="fxb-btn-main fxb-vac-btn" href="#fxb-otklik">Откликнуться на вакансию</a>
       </div>
 
       <div class="fxb-vac-card">
@@ -113,9 +113,37 @@
             </ul>
           </div>
         </div>
-        <a class="fxb-btn-main fxb-vac-btn" href="https://t.me/m/Zl_g5u6BMWZi" target="_blank" rel="noopener">Откликнуться на вакансию</a>
+        <a class="fxb-btn-main fxb-vac-btn" href="#fxb-otklik">Откликнуться на вакансию</a>
       </div>
     </div>
+  </section>
+
+  <!-- ФОРМА ОТКЛИКА -->
+  <section class="fxb-section" id="fxb-otklik">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Отклик на вакансию</span>
+      <h2 class="fxb-h2">Оставьте <span class="fxb-accent">заявку</span></h2>
+      <p class="fxb-sub">Заполните форму и прикрепите резюме — мы свяжемся с вами в течение 2 рабочих дней.</p>
+    </div>
+    <form class="fxb-form" action="https://formsubmit.co/school@foxinburg-edu.ru" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_subject" value="Отклик на вакансию — сайт Фоксинбург">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="https://dymova-english.ru/vakansii">
+      <input type="text" name="_honey" style="display:none">
+      <div class="fxb-form-row">
+        <label class="fxb-field"><span>Имя <b>*</b></span><input type="text" name="Имя" required placeholder="Как к вам обращаться"></label>
+        <label class="fxb-field"><span>Телефон <b>*</b></span><input type="tel" name="Телефон" required placeholder="+7 900 000-00-00"></label>
+      </div>
+      <div class="fxb-form-row">
+        <label class="fxb-field"><span>E-mail</span><input type="email" name="E-mail" placeholder="you@example.com"></label>
+        <label class="fxb-field"><span>Вакансия</span><select name="Вакансия"><option>Преподаватель английского языка</option><option>Администратор языковой школы</option><option>Другое</option></select></label>
+      </div>
+      <label class="fxb-field"><span>Сообщение</span><textarea name="Сообщение" rows="4" placeholder="Коротко о себе и опыте"></textarea></label>
+      <label class="fxb-field fxb-file"><span>Резюме (PDF, DOC — до 5 МБ)</span><input type="file" name="Резюме" accept=".pdf,.doc,.docx,.rtf,.odt"></label>
+      <button type="submit" class="fxb-btn-main fxb-form-btn">Отправить отклик</button>
+      <p class="fxb-form-note">Нажимая «Отправить отклик», вы соглашаетесь с <a href="/policy">политикой конфиденциальности</a>.</p>
+    </form>
   </section>
 
   <!-- КАК ПОПАСТЬ -->
@@ -125,7 +153,7 @@
       <h2 class="fxb-h2">Как попасть <span class="fxb-accent">в команду</span></h2>
     </div>
     <div class="fxb-steps">
-      <div class="fxb-step"><span class="fxb-step-num">1</span><h4>Отправьте резюме</h4><p>Напишите нам в Telegram или позвоните — расскажите о себе.</p></div>
+      <div class="fxb-step"><span class="fxb-step-num">1</span><h4>Отправьте резюме</h4><p>Заполните форму отклика на сайте и прикрепите резюме — расскажите о себе.</p></div>
       <div class="fxb-step"><span class="fxb-step-num">2</span><h4>Знакомство</h4><p>Презентация о школе и посещение урока действующего педагога.</p></div>
       <div class="fxb-step"><span class="fxb-step-num">3</span><h4>Собеседование с методистом</h4><p>Короткое собеседование с методистом школы (для педагогов).</p></div>
       <div class="fxb-step"><span class="fxb-step-num">4</span><h4>Встреча с руководителем</h4><p>Финальное собеседование с руководителем школы.</p></div>
@@ -136,10 +164,9 @@
   <section class="fxb-cta-wrap">
     <div class="fxb-cta">
       <h2>Готовы к новым вершинам?</h2>
-      <p>Отправьте резюме или просто напишите нам — мы ответим в течение 2 рабочих дней.</p>
+      <p>Отправьте резюме через форму на сайте — мы ответим в течение 2 рабочих дней.</p>
       <div class="fxb-cta-btns">
-        <a class="fxb-btn-main" href="https://t.me/m/Zl_g5u6BMWZi" target="_blank" rel="noopener">Написать в Telegram</a>
-        <a class="fxb-btn-ghost" href="tel:+79939232309">8 (993) 923-23-09</a>
+        <a class="fxb-btn-main" href="#fxb-otklik">Оставить отклик</a>
       </div>
     </div>
   </section>
@@ -208,6 +235,19 @@
   #fxb-page .fxb-cta p{color:rgba(255,255,255,.85);font-size:16px;font-weight:500;max-width:520px;position:relative}
   #fxb-page .fxb-cta-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;position:relative;margin-top:6px}
 
+  #fxb-page .fxb-form{max-width:760px;margin:0 auto;background:#fff;border-radius:26px;border:1px solid rgba(57,40,82,.08);padding:36px 34px;box-shadow:0 16px 36px -20px rgba(57,40,82,.4);display:flex;flex-direction:column;gap:18px}
+  #fxb-page .fxb-form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  #fxb-page .fxb-field{display:flex;flex-direction:column;gap:8px}
+  #fxb-page .fxb-field>span{font-size:13px;font-weight:700;color:var(--ink)}
+  #fxb-page .fxb-field b{color:var(--orange)}
+  #fxb-page .fxb-field input,#fxb-page .fxb-field select,#fxb-page .fxb-field textarea{font-family:inherit;font-size:15px;color:var(--ink);background:#f7f5fb;border:1.6px solid rgba(57,40,82,.12);border-radius:14px;padding:13px 16px;transition:border-color .2s,background .2s;width:100%}
+  #fxb-page .fxb-field input:focus,#fxb-page .fxb-field select:focus,#fxb-page .fxb-field textarea:focus{outline:none;border-color:var(--purple-2);background:#fff}
+  #fxb-page .fxb-field textarea{resize:vertical;min-height:110px}
+  #fxb-page .fxb-file input{padding:11px 16px;cursor:pointer}
+  #fxb-page .fxb-form-btn{align-self:flex-start;margin-top:6px;border:none;cursor:pointer}
+  #fxb-page .fxb-form-note{font-size:12.5px;color:var(--muted);text-align:center}
+  #fxb-page .fxb-form-note a{color:var(--purple-2);text-decoration:underline}
+
   @media(max-width:960px){#fxb-page .fxb-why-grid{grid-template-columns:1fr 1fr}#fxb-page .fxb-vac-grid{grid-template-columns:1fr}#fxb-page .fxb-steps{grid-template-columns:1fr 1fr}}
-  @media(max-width:620px){#fxb-page .fxb-why-grid{grid-template-columns:1fr}#fxb-page .fxb-steps{grid-template-columns:1fr}#fxb-page .fxb-vac-cols{grid-template-columns:1fr}#fxb-page .fxb-hero-inner{padding:72px 18px 76px}#fxb-page .fxb-section{padding:60px 18px 0}#fxb-page .fxb-cta{padding:46px 22px}}
+  @media(max-width:620px){#fxb-page .fxb-why-grid{grid-template-columns:1fr}#fxb-page .fxb-steps{grid-template-columns:1fr}#fxb-page .fxb-vac-cols{grid-template-columns:1fr}#fxb-page .fxb-form-row{grid-template-columns:1fr}#fxb-page .fxb-form{padding:26px 20px}#fxb-page .fxb-hero-inner{padding:72px 18px 76px}#fxb-page .fxb-section{padding:60px 18px 0}#fxb-page .fxb-cta{padding:46px 22px}}
 </style>
