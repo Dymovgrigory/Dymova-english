@@ -214,6 +214,7 @@
   var allRecs=document.querySelectorAll('.r.t-rec');
   allRecs.forEach(function(rec){
     if(!rec.querySelector('[id^="fxb-"]')) rec.style.display='none';
+    else if(rec.querySelector('#fxb-shapka')){rec.style.position='relative';rec.style.zIndex='9000';}
   });
   var burger=document.getElementById('fxbBurger');
   var nav=document.getElementById('fxbNav');

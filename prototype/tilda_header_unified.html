@@ -277,6 +277,7 @@
   var allRecs=document.querySelectorAll('.r.t-rec');
   allRecs.forEach(function(rec){
     if(!rec.querySelector('[id^="fxb-"]')) rec.style.display='none';
+    else if(rec.querySelector('#fxb-hero')){rec.style.position='relative';rec.style.zIndex='9000';}
   });
 
   /* Burger toggle */
