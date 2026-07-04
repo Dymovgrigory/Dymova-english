@@ -1073,3 +1073,91 @@
 2. `python3 prototype/tilda_upload_copies.py` — reading-new / grammar-new / preparation-new (попап + шапка/подвал).
 3. Новости/Вакансии: контент `page_novosti.html`/`page_vakansii.html` залить на страницы. ВНИМАНИЕ: `/news` использует динамический Feed-блок Tilda (от него зависят посты `/news/<slug>`) — удалять его рискованно. Решение уточнить с владельцем: либо конвертировать `/vacant` (статичная, безопасно) и создать отдельную `/novosti`, либо принять статичный слепок.
 4. Кабинет 2053071 → «Опубликовать все» → проверить на лайве (Ctrl+F5).
+
+---
+
+### Сессия 20 (Devin) — формы на всех страницах + SEO/аналитика
+
+**Ветки:** `devin/1783116748-zayavka-modal-fix` (формы, PR #66 merged) → `devin/1783120271-seo-setup` (SEO)
+
+#### 1. Формы «Оставить заявку»/«Записаться» — ИСПРАВЛЕНО и задеплоено (PR #66, merged)
+Проблема (от владельца): кнопки заявки не работали на страницах направлений (дошкольники/младшие/подростки/онлайн/поддерживающие/стандартные) и курсов; на главной кнопка просто скроллила вверх; нужно, чтобы в лид попадали предмет + название окна/раздела.
+
+Причины и фиксы:
+- **BUG A:** на 10 генерируемых страницах CSS/JS модалки вставлялись ВНЕ тегов `<style>`/`<script>` → модалка была инертна. Плюс не хватало overlay-CSS (`#fxb-page .fxb-modal{position:fixed;inset:0;z-index:99999;...}`).
+- **BUG B (регресс при рефакторинге):** жадный regex в `strip_zayavka_artifacts()` вырезал основной CSS/JS дизайна → 10 страниц уехали «раздетыми». `build_subpages.render_page()` перестал добавлять основной `CSS`/`JS`.
+- Решение: `build_course_pages.py` — `zayavka_unit()` (самодостаточный блок: модалка + `<style>` + `<script>` + forms.js), `strip_zayavka_artifacts()` переписан на 4 НЕпересекающих regex, инжект внутрь `#fxb-page` (перед его `</div>`). `build_subpages.render_page()` снова добавляет `zayavka_unit()` + основной `CSS`/`JS`.
+- Главная: восстановлены 6 карточек цен + метка «ПОПУЛЯРНОЕ»; каждая кнопка открывает модалку с предметом/разделом (`data-fxb-subject`/`data-fxb-window` → скрытые поля Предмет/Раздел/Страница).
+- Инвариант на всех 10 live-страницах: `.fxb-card`>0, `IntersectionObserver` есть, ровно 1 `id="fxb-zayavka-modal"`, ровно 1 forms.js, есть `#fxb-page .fxb-modal{position:fixed`, нет «осиротевших» CSS/JS.
+- Протестировано вживую (запись): /doshkolniki, /reading (hero+финал), главная (карточка цены) → модалка-оверлей с верным предметом.
+- Мелочь (не блокер): на главной кнопка «Отправить заявку» в модалке без жёлтой заливки (косметика).
+
+#### 2. SEO — Яндекс: ГОТОВО
+- **Метрика:** на сайте стоял ЧУЖОЙ счётчик №76154395 (не в аккаунте владельца). По решению владельца заменён в Tilda (Настройки → Аналитика) на **№109945462 «Dymova-english»** (аккаунт kidsfoxclub). Вебвизор + карта кликов + авто-цели ВКЛ. Live подтверждён: `mainMetrikaId='109945462'`, старый убран. (GTM-NTM62R9 оставлен.)
+- **Вебмастер:** сайт уже подтверждён, ошибок нет. Sitemap: sitemap.xml (21), sitemap-feeds.xml, sitemap-store.xml — статус «ок». Флаг: 6 дублей title / 5 дублей description (см. п.4).
+
+#### 3. SEO — Google: ГОТОВО (аккаунт dymovateacher@gmail.com / «Вероника Дымова»)
+- **Search Console:** подключён через OAuth-интеграцию Tilda (SEO → Google Search Console → Подключить) → «Домен подтверждён», sitemap.xml и sitemap-feeds.xml отправлены автоматически.
+- **GA4:** создан аккаунт «Фоксинбург» + ресурс «dymova-english.ru» (Москва, RUB), веб-поток (stream 15197140431). **Measurement ID = G-9XMYR6MJGL**. Внесён в Tilda (Настройки → Аналитика → Google Analytics), сайт переопубликован (24/24).
+
+#### 4. SEO — ОСТАЛОСЬ (ветка seo-setup, без участия владельца)
+- Дубли: legacy-страницы `/index-old,/grammar-old,/preparation-old,/reading-old,/vacant-old` и `/news` (дубль `/novosti`) отдают 200 → источник 6 дублей title / 5 description. План: в Tilda «Редиректы (301)» (работает только с НЕсуществующих страниц → сперва снять с публикации old-страницы), редиректы: index-old→/, grammar-old→/grammar, preparation-old→/preparation, reading-old→/reading, vacant-old→/vakansii, news→/novosti. `/lmsfoxinburg` → noindex.
+- Пустые description: `/novosti`, `/vakansii` — заполнить.
+- Метатеги money-страниц (главная, 6 направлений, 4 курса) — по `SEO_meta_recommendations.md` (гео «Долгопрудный» + ключи).
+- Schema.org (LocalBusiness/Course/FAQ/BreadcrumbList) + хлебные крошки; внутренняя перелинковка.
+
+#### Ключевые значения (Сессия 20)
+- Метрика: **109945462** (заменил чужой 76154395) · GTM: GTM-NTM62R9
+- GA4 Measurement ID: **G-9XMYR6MJGL** · GA stream: 15197140431 · GA аккаунт «Фоксинбург»
+- Google: dymovateacher@gmail.com · Яндекс: kidsfoxclub@yandex.ru
+- PR #66 (формы) merged. Файлы SEO-аудита: `SEO_semantic_core.md`, `SEO_meta_recommendations.md`
+
+---
+
+### Сессия 21 (Devin) — on-page SEO задеплоено + полная настройка Яндекс.Вебмастера
+
+**Ветка:** `devin/1783120271-seo-setup`. Вся правка контента — в кабинете Tilda (2053071), в репозитории — исходники Schema.org + документация.
+
+#### 1. Метатеги title/description — ГОТОВО (14 money-страниц)
+По `SEO_meta_recommendations.md` проставлены уникальные title/description с гео «Долгопрудный» и ключами на всех 14 страницах (главная, 6 направлений, 4 курса, /kontakty, /novosti, /vakansii). Заполнены ранее пустые description на `/novosti` и `/vakansii`. Исправлен баг прошлого прогона (у `/vakansii` описание начиналось с «акансии»). Подтверждено на лайве.
+
+#### 2. noindex техстраницы — ГОТОВО
+`/lmsfoxinburg` (LMS-платформа) → `<meta robots noindex>` через настройку страницы Tilda (`nosearch`). Подтверждено на лайве.
+
+#### 3. Дубли и 301-редиректы — ГОТОВО
+- Удалены 5 устаревших страниц-дублей (`index-old, reading-old, grammar-old, preparation-old, vacant-old`). Нюанс Tilda: 301 срабатывает только с УДАЛЁННЫХ страниц (не со снятых с публикации). После удаления 301 заработали: `index-old→/, reading-old→/reading, grammar-old→/grammar, preparation-old→/preparation, vacant-old→/vakansii`. Проверено на лайве (301).
+- Sitemap очищен: `sitemap.xml` = 14 money-страниц + `/news`. `sitemap-store.xml`, `sitemap-feeds.xml` — «ок».
+
+#### 4. `/news` vs `/novosti` — консолидация (решение владельца: основная — /novosti)
+`/news` — динамический Feed Tilda с 3 постами (`/news/school`, `/news/sydhatdsd1-...`, `/news/u3yp7rk1i1-2-smena`), которые нужно сохранить. Прямой 301/удаление невозможны (сломают посты). Настройка noindex на самой Feed-странице КАСКАДИРУЕТ на посты (проверено: посты получали лишний `noindex`) — откатил.
+- **Решение:** path-exact `noindex,follow` для РОВНО `/news` через JS-инжектор в общем `<head>` (проверка `location.pathname === '/news'`). Посты `/news/<slug>` не затрагиваются (у них свой `index,follow`). Проверено рендером: `/news`→`noindex`, `/news/school`→`index,follow`.
+
+#### 5. Schema.org — ГОТОВО (общий `<head>` сайта)
+- Статически (@graph): `EducationalOrganization`+`LocalBusiness` (2 филиала: Лихачевский 76к1 — +7 993 923-23-09, 141701; Ракетостроителей 9к3 — +7 916 732-31-69, 141707), `WebSite`.
+- По-страничный JS-инжектор (pathname→JSON-LD): `FAQPage` (главная), `Course`+`BreadcrumbList` (reading/grammar/preparation/letnyaya-akademiya), `BreadcrumbList` (остальные разделы). Проверено рендером на `/`, `/reading`, `/kontakty`, `/novosti`.
+- Исходники: `prototype/seo_schema/` (org_localbusiness.html, course_*.html, breadcrumb_*.html, faq.html, DEPLOY_MAP.md).
+
+#### 6. Яндекс.Вебмастер — ПОЛНАЯ НАСТРОЙКА (аккаунт kidsfoxclub@yandex.ru)
+- **Диагностика:** «Ошибок нет». 2 рекомендации — некритичные (уведомления/сбор запросов).
+- **Переобход страниц:** отправлен 21 URL (14 money + 7 устаревших `/vacant, /news, *-old` для ускоренного выпадения из индекса). Дневной лимит 560.
+- **Региональность:** Долгопрудный (из Яндекс.Бизнес, карточка «Фокси Фокс» ★4.2 привязана) + Москва и МО (Вебмастер) — оставлено (широкий + точный охват).
+- **JS-рендеринг:** переключён на «Рекомендую рендерить» — критично, т.к. по-страничная Schema и `/news`-noindex инжектятся через JS.
+- **Обход по счётчикам:** счётчик Метрики **109945462** привязан к сайту, обход **включён** (робот быстрее видит изменения).
+- **Sitemap:** все 3 карты зарегистрированы, статус «ок».
+- **Зеркала (переезд):** HTTPS уже главное зеркало — без изменений.
+- **robots.txt:** валиден, содержит 3 директивы Sitemap.
+- **Быстрые ссылки:** доступный кандидат «Занятия» включён к показу (остальные сгенерируются после переобхода новой структуры/схемы).
+- **Дубли title/description (6/5):** остаточные от удалённых страниц; выпадут после переобхода (Яндекс обновляет в течение недели).
+
+#### 7. Аудит H1 — НАЙДЕНЫ 2 замечания (правка структуры дизайна, к владельцу)
+- Главная — **2 H1** («Английский не для школы,» + «Курсы английского языка в Долгопрудном»).
+- `/kontakty` — **0 H1** (верхний заголовок — H2).
+- Остальные 12 страниц — по 1 H1 (ок). Правка тегов заголовков в Zero-блоках Tilda рискует вёрсткой → согласовать с владельцем.
+
+#### 8. Google Search Console — ТРЕБУЕТСЯ ДОСТУП
+Ресурс `sc-domain:dymova-english.ru` подтверждён НЕ под `dymovateacher@gmail.com` (у него нет прав), а вероятно под `vkrivobokova4@gmail.com` (OAuth-аккаунт Tilda). Чтобы сделать `dymovateacher` владельцем — нужен вход под `vkrivobokova4` (пароль) либо доступ к DNS домена. Ожидает данных от владельца.
+
+#### Ключевые значения (Сессия 21)
+- Метрика **109945462** (привязана к Вебмастеру, обход вкл) · GA4 **G-9XMYR6MJGL** · GTM-NTM62R9
+- Яндекс: kidsfoxclub@yandex.ru · Google: dymovateacher@gmail.com (нужен доступ vkrivobokova4 для GSC)
+- Money-страницы (14): /, /doshkolniki, /mladshie-shkolniki, /podrostki, /reading, /grammar, /preparation, /online-zanyatiya, /podderzhivayushchie-online, /standartnye-offline, /letnyaya-akademiya, /kontakty, /novosti, /vakansii

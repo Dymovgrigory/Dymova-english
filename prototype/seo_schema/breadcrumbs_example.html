@@ -1,0 +1,37 @@
+<p>Шаблон хлебных крошек для внутренних страниц: <strong>Главная → &lt;Раздел&gt;</strong>.</p>
+<p>Переиспользуйте этот JSON-LD на каждой странице, подставляя свой URL и последний элемент списка. Для всех страниц из SEO_meta_recommendations.md схема одинаковая: сначала Главная, затем целевой раздел.</p>
+<ul>
+  <li>/doshkolniki → Главная → Дошкольники</li>
+  <li>/mladshie-shkolniki → Главная → Младшие школьники</li>
+  <li>/podrostki → Главная → Подростки</li>
+  <li>/reading → Главная → Курс по чтению</li>
+  <li>/grammar → Главная → Курс по грамматике</li>
+  <li>/preparation → Главная → Подготовка к школе</li>
+  <li>/online-zanyatiya → Главная → Онлайн-занятия</li>
+  <li>/podderzhivayushchie-online → Главная → Поддерживающие онлайн</li>
+  <li>/standartnye-offline → Главная → Стандартные оффлайн</li>
+  <li>/letnyaya-akademiya → Главная → Летняя Академия</li>
+  <li>/kontakty → Главная → Контакты</li>
+  <li>/novosti → Главная → Новости</li>
+  <li>/vakansii → Главная → Вакансии</li>
+</ul>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Главная",
+      "item": "https://dymova-english.ru/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "<Раздел>",
+      "item": "https://dymova-english.ru/<slug>"
+    }
+  ]
+}
+</script>
