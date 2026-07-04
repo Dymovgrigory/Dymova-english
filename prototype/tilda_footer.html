@@ -129,6 +129,7 @@
 </div>
 <style>
 /* ===== FXB-ZAYAVKA: попап-форма заявки ===== */
+#fxb-page{--purple:#392852;--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;font-family:'Montserrat',Arial,sans-serif;color:var(--ink)}
 #fxb-page [data-fxb-zayavka]{cursor:pointer}
 #fxb-page .fxb-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
 #fxb-page .fxb-modal[hidden]{display:none}
@@ -146,8 +147,9 @@
 #fxb-page .fxb-zfield input{font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 16px;border:1.6px solid rgba(57,40,82,.14);border-radius:13px;background:#faf8fe;transition:border-color .2s,box-shadow .2s;width:100%}
 #fxb-page .fxb-zfield input:focus{outline:0;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.12)}
 #fxb-page .fxb-zfield.fxb-zerr input{border-color:#e0526a;background:#fdf2f4}
-#fxb-page .fxb-zsubmit{width:100%;justify-content:center;margin-top:4px;border:0;cursor:pointer;font-family:inherit}
-#fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:var(--purple)}
+#fxb-page .fxb-btn-main,#fxb-page .fxb-zsubmit{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:6px;padding:16px 28px;border:0;cursor:pointer;font-family:inherit;font-weight:800;font-size:15.5px;color:#fff;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 16px 34px -12px rgba(102,45,146,.8);transition:transform .25s,box-shadow .25s}
+#fxb-page .fxb-btn-main:hover,#fxb-page .fxb-zsubmit:hover{transform:translateY(-2px);box-shadow:0 22px 44px -12px rgba(102,45,146,.95)}
+#fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:#fff}
 #fxb-page .fxb-znote{font-size:11px;color:#a89fbd;font-weight:500;line-height:1.45;margin-top:2px;text-align:center}
 #fxb-page .fxb-znote a{color:var(--purple-2);text-decoration:underline}
 #fxb-page .fxb-zalt{margin-top:22px;padding-top:20px;border-top:1px solid rgba(57,40,82,.1)}
