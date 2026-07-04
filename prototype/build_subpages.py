@@ -196,6 +196,93 @@ VIDEO_CSS = """
 </style>
 """
 
+PRICE_CSS = """
+<style>
+#fxb-page .fxb-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+#fxb-page .fxb-price-card{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:22px;padding:26px 24px;box-shadow:0 16px 34px -22px rgba(57,40,82,.4);display:flex;flex-direction:column;gap:12px;transition:transform .35s,box-shadow .35s,border-color .35s}
+#fxb-page .fxb-price-card:hover{transform:translateY(-5px);box-shadow:0 28px 50px -26px rgba(102,45,146,.5);border-color:rgba(102,45,146,.2)}
+#fxb-page .fxb-price-card--main{background:linear-gradient(180deg,#fff 0%,#faf8fe 100%)}
+#fxb-page .fxb-price-tag{display:inline-flex;align-items:center;align-self:flex-start;padding:7px 12px;border-radius:100px;background:rgba(102,45,146,.08);color:var(--purple-2);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+#fxb-page .fxb-price-tag--orange{background:rgba(238,115,73,.12);color:var(--orange)}
+#fxb-page .fxb-price-card h3{font-size:clamp(28px,3vw,38px);line-height:1.05;font-weight:900;color:var(--ink)}
+#fxb-page .fxb-price-card h3 span{font-size:15px;font-weight:800;color:var(--muted)}
+#fxb-page .fxb-price-card p{font-size:14.5px;font-weight:500;color:var(--muted);line-height:1.55}
+#fxb-page .fxb-price-note{margin-top:18px;color:var(--muted);font-size:13px;font-weight:600;text-align:center}
+@media(max-width:860px){#fxb-page .fxb-price-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page .fxb-price-grid{grid-template-columns:1fr}}
+</style>
+"""
+
+TEAM_CSS = """
+<style>
+#fxb-team{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:#ffffff}
+#fxb-team *{box-sizing:border-box;margin:0;padding:0}
+#fxb-team .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px}
+#fxb-team .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px}
+#fxb-team .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+#fxb-team .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:58px}
+#fxb-team .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+#fxb-team .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+#fxb-team .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+#fxb-team .fxb-sub{max-width:660px;color:var(--muted);font-size:17px;font-weight:500}
+#fxb-team .fxb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+#fxb-team .fxb-card{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:24px;overflow:hidden;box-shadow:0 18px 40px -22px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;opacity:0;transform:translateY(34px)}
+#fxb-team .fxb-card.fxb-in{opacity:1;transform:none}
+#fxb-team .fxb-card:hover{transform:translateY(-8px);box-shadow:0 30px 56px -24px rgba(102,45,146,.5)}
+#fxb-team .fxb-photo{position:relative;aspect-ratio:3/4;background-size:cover;background-position:center top;display:grid;place-items:center}
+#fxb-team .fxb-ava{opacity:.85;filter:drop-shadow(0 6px 12px rgba(0,0,0,.25));border-radius:12px}
+#fxb-team .fxb-body{padding:20px 20px 24px}
+#fxb-team .fxb-role{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:100px;margin-bottom:12px}
+#fxb-team .fxb-r-teacher{color:var(--purple-2);background:rgba(102,45,146,.10)}
+#fxb-team .fxb-r-method{color:var(--orange);background:rgba(238,115,73,.12)}
+#fxb-team .fxb-r-admin{color:#2bb673;background:rgba(43,182,115,.12)}
+#fxb-team .fxb-r-head{color:var(--purple-2);background:rgba(252,249,81,.28)}
+#fxb-team .fxb-body h3{font-size:17.5px;font-weight:800;margin-bottom:5px}
+#fxb-team .fxb-body p{color:var(--muted);font-size:13.5px;font-weight:500;line-height:1.5;margin-bottom:16px}
+#fxb-team .fxb-btns{display:flex;flex-direction:column;gap:9px}
+#fxb-team .fxb-vbtn{cursor:pointer;border:0;font-family:inherit;font-weight:700;font-size:13.5px;color:#fff;padding:11px 14px;border-radius:12px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));transition:transform .25s,box-shadow .25s;text-align:center}
+#fxb-team .fxb-vbtn-2{background:linear-gradient(135deg,var(--orange),#f5a06f)}
+#fxb-team .fxb-vbtn:hover{transform:translateY(-2px);box-shadow:0 12px 22px -10px rgba(102,45,146,.7)}
+#fxb-team .fxb-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+#fxb-team .fxb-modal.fxb-open{display:flex}
+#fxb-team .fxb-modal-bg{position:absolute;inset:0;background:rgba(36,26,54,.78);backdrop-filter:blur(4px)}
+#fxb-team .fxb-modal-box{position:relative;width:auto;max-width:min(900px,96vw);background:#0e0a16;border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.7);animation:fxbpop .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes fxbpop{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
+#fxb-team .fxb-modal-close{position:absolute;top:10px;right:14px;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:38px;height:38px;border-radius:50%;font-size:24px;line-height:1;cursor:pointer}
+#fxb-team .fxb-modal-frame{position:relative;width:100%;min-height:220px;background:#0e0a16;display:grid;place-items:center}
+#fxb-team .fxb-modal-frame video{display:block;max-width:min(900px,96vw);max-height:82vh;width:auto;height:auto;background:#000}
+#fxb-team .fxb-modal-frame iframe{width:100%;height:100%;border:0}
+#fxb-team .fxb-modal-empty{color:#b9aee0;font-size:15px;font-weight:600;text-align:center;padding:24px;max-width:420px}
+@media(max-width:900px){#fxb-team .fxb-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){#fxb-team .fxb-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}#fxb-team .fxb-section{padding:64px 18px 76px}}
+</style>
+"""
+
+TEAM_JS = """
+<script>
+(function(){
+  var root=document.getElementById('fxb-team');if(!root)return;
+  var cards=root.querySelectorAll('.fxb-card');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('fxb-in');io.unobserve(e.target);}})},{threshold:.12});
+    cards.forEach(function(c){io.observe(c);});
+  } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
+  var modal=document.getElementById('fxbVideoModal');
+  var frame=modal.querySelector('.fxb-modal-frame');
+  var EMPTY='<div class="fxb-modal-empty">Видео появится здесь после добавления ссылки</div>';
+  function open(url){
+    if(url){frame.innerHTML='<video src="'+url+'" controls autoplay playsinline></video>';}
+    else{frame.innerHTML=EMPTY;}
+    modal.classList.add('fxb-open');
+  }
+  function close(){var v=frame.querySelector('video');if(v){try{v.pause();}catch(e){}}modal.classList.remove('fxb-open');frame.innerHTML=EMPTY;}
+  root.querySelectorAll('.fxb-vbtn').forEach(function(b){b.addEventListener('click',function(){open(b.getAttribute('data-video'));});});
+  modal.querySelector('.fxb-modal-close').addEventListener('click',close);
+  modal.querySelector('.fxb-modal-bg').addEventListener('click',close);
+})();
+</script>
+"""
+
 ARTICLE_CSS = """
 <style>
 #fxb-page.fxb-blog-page .fxb-hero{padding:66px 24px 44px}
@@ -271,6 +358,21 @@ DECOR_FOX = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin
 MYLEVEL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/"
 MAX_BOT = "https://max.ru/id611904726658_bot"
 ROADMAP = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/"
+TEAM_MEDIA = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/4dcc1ef1b977038bfb8bdc22ea40385e0429f78c/prototype/team-media/"
+FOX_AVATAR = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png"
+
+ENGLISH_TEACHERS = [
+    {"name": "Дмитроченко Юлия", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "dmitrochenko.jpg", "video": TEAM_MEDIA + "dmitrochenko.mp4", "lesson": TEAM_MEDIA + "dmitrochenko_lesson.mp4"},
+    {"name": "Птицын Владислав", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "ptitsyn.jpg", "video": TEAM_MEDIA + "ptitsyn.mp4", "lesson": TEAM_MEDIA + "ptitsyn_lesson.mp4"},
+    {"name": "Анохин Роман", "role": "Педагог английского языка", "placeholder": True},
+    {"name": "Саляхова Алина", "role": "Педагог английского и немецкого языков", "photo": TEAM_MEDIA + "salyahova.jpg", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
+]
+GERMAN_TEACHERS = [
+    {"name": "Саляхова Алина", "role": "Педагог немецкого языка", "photo": TEAM_MEDIA + "salyahova.jpg", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
+]
+CHINESE_TEACHERS = [
+    {"name": "Шевченко Дарья", "role": "Педагог китайского языка", "photo": TEAM_MEDIA + "shevchenko.jpg", "video": TEAM_MEDIA + "shevchenko.mp4"},
+]
 
 
 def feature_card(icon, title, text):
@@ -289,6 +391,57 @@ def card_grid_section(kicker, title, lead, cards, light=False):
     for c in cards:
         h.append(feature_card(*c))
     h.append('</div></div></section>')
+    return "\n".join(h)
+
+
+def teacher_team_section(title, lead, teachers):
+    h = ['<section id="fxb-team">']
+    h.append('<div class="fxb-section">')
+    h.append('<div class="fxb-head">')
+    h.append('<span class="fxb-eyebrow"><span class="fxb-dot"></span>Педагоги</span>')
+    h.append('<h2 class="fxb-h2">' + title + '</h2>')
+    if lead:
+        h.append('<p class="fxb-sub">' + lead + '</p>')
+    h.append('</div>')
+    h.append('<div class="fxb-grid">')
+    for t in teachers:
+        h.append('<article class="fxb-card">')
+        if t.get("photo"):
+            h.append('<div class="fxb-photo" style="background-image:url(' + escape(t["photo"], quote=True) + ')"></div>')
+        else:
+            h.append('<div class="fxb-photo" style="background-image:linear-gradient(135deg,#2bb673,#7ed957)"><img class="fxb-ava" src="' + FOX_AVATAR + '" alt="" width="54" height="54"></div>')
+        h.append('<div class="fxb-body">')
+        h.append('<span class="fxb-role fxb-r-teacher">Педагог</span>')
+        h.append('<h3>' + escape(t["name"]) + '</h3>')
+        h.append('<p>' + escape(t["role"]) + '</p>')
+        buttons = []
+        if t.get("video"):
+            buttons.append('<button class="fxb-vbtn" type="button" data-video="' + escape(t["video"], quote=True) + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Видеовизитка</button>')
+        if t.get("lesson"):
+            buttons.append('<button class="fxb-vbtn fxb-vbtn-2" type="button" data-video="' + escape(t["lesson"], quote=True) + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Фрагмент урока</button>')
+        if buttons:
+            h.append('<div class="fxb-btns">' + "".join(buttons) + '</div>')
+        h.append('</div></article>')
+    h.append('</div></div>')
+    h.append('<div class="fxb-modal" id="fxbVideoModal"><div class="fxb-modal-bg"></div><div class="fxb-modal-box"><button class="fxb-modal-close" type="button" aria-label="Закрыть">&times;</button><div class="fxb-modal-frame"><div class="fxb-modal-empty">Видео появится здесь после добавления ссылки</div></div></div></div>')
+    h.append('</section>')
+    return "\n".join(h)
+
+
+def price_section(title, lead):
+    h = ['<section class="fxb-section fxb-bg-light"><div class="fxb-wrap">']
+    h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Стоимость</span>')
+    h.append('<h2 class="fxb-h2">' + title + '</h2>')
+    if lead:
+        h.append('<p class="fxb-lead">' + lead + '</p>')
+    h.append('</div>')
+    h.append('<div class="fxb-price-grid">')
+    h.append('<article class="fxb-price-card fxb-price-card--main"><span class="fxb-price-tag">Группа</span><h3>9 000 ₽<span>/мес</span></h3><p>2 занятия в неделю · 60 минут · мини-группа</p></article>')
+    h.append('<article class="fxb-price-card"><span class="fxb-price-tag fxb-price-tag--orange">Индивидуально</span><h3>2 500 ₽<span>/час</span></h3><p>Индивидуальный темп и гибкий график</p></article>')
+    h.append('<article class="fxb-price-card"><span class="fxb-price-tag">Пробный урок</span><h3>1 125 ₽</h3><p>Знакомство с педагогом и подбор формата</p></article>')
+    h.append('</div>')
+    h.append('<p class="fxb-price-note">Оплата материнским капиталом и налоговый вычет 13%.</p>')
+    h.append('</div></section>')
     return "\n".join(h)
 
 
@@ -430,10 +583,14 @@ def landing_page(p):
     h.append('</div></div></section>')
     if p.get("advantages"):
         h.append(card_grid_section(p.get("adv_kicker", "Почему мы"), p["adv_title"], p.get("adv_lead"), p["advantages"], light=False))
-    if p.get("team"):
+    if p.get("teachers"):
+        h.append(teacher_team_section(p.get("team_title", "Наши <span class=\"fxb-accent\">педагоги</span>"), p.get("team_lead", "Команда преподавателей, которые ведут уроки в мини-группах и на индивидуальных занятиях."), p["teachers"]))
+    elif p.get("team"):
         h.append(card_grid_section("Педагоги", p["team_title"], p.get("team_lead"), p["team"], light=True))
     if p.get("formats"):
         h.append(card_grid_section(p.get("formats_kicker", "Варианты обучения"), p.get("formats_title", "Форматы занятий"), p.get("formats_lead"), p["formats"], light=False))
+    if p.get("prices"):
+        h.append(price_section(p.get("price_title", "Стоимость обучения"), p.get("price_lead", "Прозрачные тарифы и удобные форматы оплаты.")))
     if p.get("ladder"):
         h.append(ladder_section(p.get("ladder_kicker", "Лестница знаний"), p["ladder_title"], p.get("ladder_lead"), p["ladder"], light=False))
     if p.get("video"):
@@ -469,6 +626,11 @@ def landing_page(p):
         h.append(LADDER_CSS)
     if p.get("video"):
         h.append(VIDEO_CSS)
+    if p.get("teachers"):
+        h.append(TEAM_CSS)
+        h.append(TEAM_JS)
+    if p.get("prices"):
+        h.append(PRICE_CSS)
     h.append(JS)
     return "\n".join(h)
 
@@ -615,6 +777,8 @@ PAGES["page_doshkolniki.html"] = {
         "src": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/doshkolniki.mp4",
         "poster": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/doshkolniki-poster.jpg",
     },
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "lead_subject": "Английский для дошкольников",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -650,6 +814,8 @@ PAGES["page_mladshie_shkolniki.html"] = {
         ("sun", "Утро, день, вечер", "Дневные, вечерние и утренние группы — подойдут и тем, кто учится во вторую смену"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "ladder_title": 'Лестница знаний — программа по <span class="fxb-accent">годам</span>',
     "ladder_lead": "Наши курсы для младших школьников по ступеням: посмотрите подробную карту тем на учебный год по каждому уровню.",
     "ladder": [
@@ -718,6 +884,8 @@ PAGES["page_podrostki.html"] = {
            ("Открывая Китай", "5 класс + · 中文 HSK 1–2", ROADMAP+"otkryvaya-kitaj-5-klass.png"),
         ]},
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "lead_subject": "Английский для подростков",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -790,6 +958,7 @@ PAGES["page_online_zanyatiya.html"] = {
         ("monitor", "Zoom / онлайн", "Подключение по ссылке"),
         ("group", "Мини-группы", "По уровню и возрасту"),
     ],
+    "prices": True,
     "lead_subject": "Онлайн-занятия",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -819,6 +988,7 @@ PAGES["page_podderzhivayushchie_online.html"] = {
         ("monitor", "Онлайн", "Из любой точки"),
         ("group", "Мини-группы", "По уровню"),
     ],
+    "prices": True,
     "lead_subject": "Поддерживающие онлайн-занятия",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -848,6 +1018,7 @@ PAGES["page_standartnye_offline.html"] = {
         ("compass", "2 филиала", "Долгопрудный"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "prices": True,
     "lead_subject": "Стандартные оффлайн-занятия",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -878,6 +1049,8 @@ PAGES["page_reading.html"] = {
         ("cap", "Младшие школьники", "Для учеников начальной школы"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "lead_subject": "Курс по чтению",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -907,6 +1080,8 @@ PAGES["page_grammar.html"] = {
         ("target", "Без пробелов", "Закрываем слабые темы"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "lead_subject": "Курс по грамматике",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -936,6 +1111,8 @@ PAGES["page_preparation.html"] = {
         ("group", "Мини-группы", "Внимание каждому ребёнку"),
         ("chart", "Видимый прогресс", "Регулярные отчёты родителям"),
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "lead_subject": "Подготовка к школе",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -974,6 +1151,8 @@ PAGES["page_oge_anglijskij.html"] = {
         ("group", "Мини-группы по уровню", "Подбираем группу по текущему уровню, чтобы отрабатывать формат без спешки."),
         ("cap", "Подготовка к экзамену", "Диагностика, разбор критериев, пробные варианты и стратегия на сам экзамен."),
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
     "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
     "advantages": [
@@ -1037,6 +1216,8 @@ PAGES["page_ege_anglijskij.html"] = {
         ("group", "Мини-группы по уровню", "Работаем в мини-группах, чтобы держать темп и отрабатывать все разделы."),
         ("target", "Под ЕГЭ и высокий балл", "Диагностика, критерии, пробники и стратегия на нужный результат."),
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
     "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
     "advantages": [
@@ -1100,6 +1281,8 @@ PAGES["page_anglijskij_dlya_vzroslyh.html"] = {
         ("group", "Мини-группы по уровню", "Удобно тем, кто хочет говорить больше и учиться в комфортном темпе."),
         ("chat", "Индивидуальные занятия", "Личный маршрут, гибкий график и максимум разговорной практики."),
     ],
+    "teachers": ENGLISH_TEACHERS,
+    "prices": True,
     "adv_title": 'Почему взрослым удобно в <span class="fxb-accent">Фоксинбурге</span>',
     "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, гибким графиком и акцентом на разговор.",
     "advantages": [
@@ -1163,6 +1346,8 @@ PAGES["page_nemeckij_yazyk.html"] = {
         ("group", "Мини-группы по уровню", "Группы подбираем по возрасту и уровню, чтобы каждый успевал говорить."),
         ("chat", "Индивидуальные занятия", "Персональный темп, гибкий график и фокус на вашей цели."),
     ],
+    "teachers": GERMAN_TEACHERS,
+    "prices": True,
     "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
     "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
     "advantages": [
@@ -1226,6 +1411,8 @@ PAGES["page_kitajskij_yazyk.html"] = {
         ("group", "Мини-группы по уровню", "Группы подбираем по возрасту и уровню, чтобы каждый успевал говорить."),
         ("chat", "Индивидуальные занятия", "Персональный темп, гибкий график и фокус на вашей цели."),
     ],
+    "teachers": CHINESE_TEACHERS,
+    "prices": True,
     "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
     "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
     "advantages": [
