@@ -243,16 +243,16 @@ TEAM_CSS = """
 #fxb-team .fxb-vbtn{cursor:pointer;border:0;font-family:inherit;font-weight:700;font-size:13.5px;color:#fff;padding:11px 14px;border-radius:12px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));transition:transform .25s,box-shadow .25s;text-align:center}
 #fxb-team .fxb-vbtn-2{background:linear-gradient(135deg,var(--orange),#f5a06f)}
 #fxb-team .fxb-vbtn:hover{transform:translateY(-2px);box-shadow:0 12px 22px -10px rgba(102,45,146,.7)}
-#fxb-team .fxb-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
-#fxb-team .fxb-modal.fxb-open{display:flex}
-#fxb-team .fxb-modal-bg{position:absolute;inset:0;background:rgba(36,26,54,.78);backdrop-filter:blur(4px)}
-#fxb-team .fxb-modal-box{position:relative;width:auto;max-width:min(900px,96vw);background:#0e0a16;border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.7);animation:fxbpop .35s cubic-bezier(.2,.8,.2,1)}
+#fxb-team .fxb-tvmod{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+#fxb-team .fxb-tvmod.fxb-tvopen{display:flex}
+#fxb-team .fxb-tvmod-bg{position:absolute;inset:0;background:rgba(36,26,54,.78);backdrop-filter:blur(4px)}
+#fxb-team .fxb-tvmod-box{position:relative;width:auto;max-width:min(900px,96vw);background:#0e0a16;border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.7);animation:fxbpop .35s cubic-bezier(.2,.8,.2,1)}
 @keyframes fxbpop{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
-#fxb-team .fxb-modal-close{position:absolute;top:10px;right:14px;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:38px;height:38px;border-radius:50%;font-size:24px;line-height:1;cursor:pointer}
-#fxb-team .fxb-modal-frame{position:relative;width:100%;min-height:220px;background:#0e0a16;display:grid;place-items:center}
-#fxb-team .fxb-modal-frame video{display:block;max-width:min(900px,96vw);max-height:82vh;width:auto;height:auto;background:#000}
-#fxb-team .fxb-modal-frame iframe{width:100%;height:100%;border:0}
-#fxb-team .fxb-modal-empty{color:#b9aee0;font-size:15px;font-weight:600;text-align:center;padding:24px;max-width:420px}
+#fxb-team .fxb-tvmod-close{position:absolute;top:10px;right:14px;z-index:2;background:rgba(255,255,255,.15);color:#fff;border:0;width:38px;height:38px;border-radius:50%;font-size:24px;line-height:1;cursor:pointer}
+#fxb-team .fxb-tvmod-frame{position:relative;width:100%;min-height:220px;background:#0e0a16;display:grid;place-items:center}
+#fxb-team .fxb-tvmod-frame video{display:block;max-width:min(900px,96vw);max-height:82vh;width:auto;height:auto;background:#000}
+#fxb-team .fxb-tvmod-frame iframe{width:100%;height:100%;border:0}
+#fxb-team .fxb-tvmod-empty{color:#b9aee0;font-size:15px;font-weight:600;text-align:center;padding:24px;max-width:420px}
 @media(max-width:900px){#fxb-team .fxb-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){#fxb-team .fxb-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}#fxb-team .fxb-section{padding:64px 18px 76px}}
 </style>
@@ -267,18 +267,18 @@ TEAM_JS = """
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('fxb-in');io.unobserve(e.target);}})},{threshold:.12});
     cards.forEach(function(c){io.observe(c);});
   } else { cards.forEach(function(c){c.classList.add('fxb-in')}); }
-  var modal=document.getElementById('fxbVideoModal');
-  var frame=modal.querySelector('.fxb-modal-frame');
-  var EMPTY='<div class="fxb-modal-empty">Видео появится здесь после добавления ссылки</div>';
+  var modal=document.getElementById('fxbTeacherVideoModal');
+  var frame=modal.querySelector('.fxb-tvmod-frame');
+  var EMPTY='<div class="fxb-tvmod-empty">Видео появится здесь после добавления ссылки</div>';
   function open(url){
     if(url){frame.innerHTML='<video src="'+url+'" controls autoplay playsinline></video>';}
     else{frame.innerHTML=EMPTY;}
-    modal.classList.add('fxb-open');
+    modal.classList.add('fxb-tvopen');
   }
-  function close(){var v=frame.querySelector('video');if(v){try{v.pause();}catch(e){}}modal.classList.remove('fxb-open');frame.innerHTML=EMPTY;}
+  function close(){var v=frame.querySelector('video');if(v){try{v.pause();}catch(e){}}modal.classList.remove('fxb-tvopen');frame.innerHTML=EMPTY;}
   root.querySelectorAll('.fxb-vbtn').forEach(function(b){b.addEventListener('click',function(){open(b.getAttribute('data-video'));});});
-  modal.querySelector('.fxb-modal-close').addEventListener('click',close);
-  modal.querySelector('.fxb-modal-bg').addEventListener('click',close);
+  modal.querySelector('.fxb-tvmod-close').addEventListener('click',close);
+  modal.querySelector('.fxb-tvmod-bg').addEventListener('click',close);
 })();
 </script>
 """
@@ -423,7 +423,7 @@ def teacher_team_section(title, lead, teachers):
             h.append('<div class="fxb-btns">' + "".join(buttons) + '</div>')
         h.append('</div></article>')
     h.append('</div></div>')
-    h.append('<div class="fxb-modal" id="fxbVideoModal"><div class="fxb-modal-bg"></div><div class="fxb-modal-box"><button class="fxb-modal-close" type="button" aria-label="Закрыть">&times;</button><div class="fxb-modal-frame"><div class="fxb-modal-empty">Видео появится здесь после добавления ссылки</div></div></div></div>')
+    h.append('<div class="fxb-tvmod" id="fxbTeacherVideoModal"><div class="fxb-tvmod-bg"></div><div class="fxb-tvmod-box"><button class="fxb-tvmod-close" type="button" aria-label="Закрыть">&times;</button><div class="fxb-tvmod-frame"><div class="fxb-tvmod-empty">Видео появится здесь после добавления ссылки</div></div></div></div>')
     h.append('</section>')
     return "\n".join(h)
 
