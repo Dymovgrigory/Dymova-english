@@ -14,6 +14,7 @@
 Запуск:  python3 build_subpages.py
 """
 import os
+from html import escape
 from build_course_pages import zayavka_unit
 
 OUT = os.path.dirname(os.path.abspath(__file__))
@@ -125,6 +126,16 @@ CSS = """
 #fxb-page .fxb-book p{color:var(--muted);font-size:13.5px;font-weight:500;line-height:1.5}
 #fxb-page .fxb-note{margin-top:22px;font-size:13px;color:#a89fbd;font-weight:600;text-align:center;font-style:italic}
 
+/* FAQ */
+#fxb-page .fxb-faq{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+#fxb-page .fxb-faq details{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:16px;padding:2px 24px;box-shadow:0 12px 28px -20px rgba(57,40,82,.35);transition:border-color .25s}
+#fxb-page .fxb-faq details[open]{border-color:rgba(102,45,146,.22)}
+#fxb-page .fxb-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;font-weight:800;font-size:15.5px;line-height:1.35;padding:20px 0;color:var(--ink)}
+#fxb-page .fxb-faq summary::-webkit-details-marker{display:none}
+#fxb-page .fxb-faq summary::after{content:"+";font-size:24px;font-weight:700;color:var(--purple-2);flex:0 0 auto;line-height:1;transition:transform .25s}
+#fxb-page .fxb-faq details[open] summary::after{content:"\\2013"}
+#fxb-page .fxb-faq p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.6;padding:0 0 22px}
+
 /* CTA */
 #fxb-page .fxb-cta{position:relative;overflow:hidden;background:linear-gradient(135deg,#392852,#662d92);padding:74px 24px;text-align:center;color:#fff}
 #fxb-page .fxb-cta-bg{position:absolute;inset:0;pointer-events:none}
@@ -140,6 +151,24 @@ CSS = """
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+</style>
+"""
+
+LADDER_CSS = """
+<style>
+#fxb-page .fxb-ladder-sub{font-weight:800;font-size:15px;color:var(--purple-2);margin:26px 4px 16px;display:flex;align-items:center;gap:9px}
+#fxb-page .fxb-ladder-sub::before{content:"";width:22px;height:3px;border-radius:3px;background:var(--orange)}
+#fxb-page .fxb-ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+#fxb-page .fxb-step{display:flex;flex-direction:column;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:18px;overflow:hidden;box-shadow:0 14px 32px -22px rgba(57,40,82,.45);transition:transform .35s,box-shadow .35s,border-color .35s}
+#fxb-page .fxb-step:hover{transform:translateY(-6px);box-shadow:0 28px 50px -26px rgba(102,45,146,.5);border-color:rgba(102,45,146,.25)}
+#fxb-page .fxb-step-prev{height:150px;overflow:hidden;background:#241a36}
+#fxb-page .fxb-step-prev img{width:100%;display:block;object-fit:cover;object-position:top center}
+#fxb-page .fxb-step-body{padding:16px 18px 18px}
+#fxb-page .fxb-step-body h4{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:5px;line-height:1.2}
+#fxb-page .fxb-step-body>span{display:block;color:var(--muted);font-size:13px;font-weight:600}
+#fxb-page .fxb-step-link{margin-top:12px;color:var(--purple-2)!important;font-weight:800;font-size:13.5px}
+@media(max-width:860px){#fxb-page .fxb-ladder{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page .fxb-ladder{grid-template-columns:1fr}}
 </style>
 """
 
@@ -162,11 +191,26 @@ DECOR_SWIRL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/dev
 DECOR_FOX = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png"
 MYLEVEL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/"
 MAX_BOT = "https://max.ru/id611904726658_bot"
+ROADMAP = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/"
 
 
 def feature_card(icon, title, text):
     return ('<article class="fxb-card"><div class="fxb-ic">' + svg(icon) +
             '</div><h3>' + title + '</h3><p>' + text + '</p></article>')
+
+
+def card_grid_section(kicker, title, lead, cards, light=False):
+    bg = " fxb-bg-light" if light else ""
+    h = ['<section class="fxb-section' + bg + '"><div class="fxb-wrap">']
+    h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>' + kicker + '</span>')
+    h.append('<h2 class="fxb-h2">' + title + '</h2>')
+    if lead:
+        h.append('<p class="fxb-lead">' + lead + '</p>')
+    h.append('</div><div class="fxb-grid">')
+    for c in cards:
+        h.append(feature_card(*c))
+    h.append('</div></div></section>')
+    return "\n".join(h)
 
 
 def fact(icon, value, label):
@@ -182,6 +226,46 @@ def book(title, text, cover=None):
         inner = '<div class="fxb-book-cover">' + svg("book") + '</div>'
     return ('<div class="fxb-book">' + inner +
             '<div><h4>' + title + '</h4><p>' + text + '</p></div></div>')
+
+
+def faq_section(title, items, light=False):
+    bg = " fxb-bg-light" if light else ""
+    h = ['<section class="fxb-section' + bg + '"><div class="fxb-wrap">']
+    h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Вопросы и ответы</span>')
+    h.append('<h2 class="fxb-h2">' + title + '</h2></div>')
+    h.append('<div class="fxb-faq">')
+    for q, a in items:
+        h.append('<details><summary>' + q + '</summary><p>' + a + '</p></details>')
+    h.append('</div></div></section>')
+    return "\n".join(h)
+
+
+def ladder_section(kicker, title, lead, groups, light=False):
+    bg = " fxb-bg-light" if light else ""
+    h = ['<section class="fxb-section' + bg + '"><div class="fxb-wrap">']
+    h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>' + kicker + '</span>')
+    h.append('<h2 class="fxb-h2">' + title + '</h2>')
+    if lead:
+        h.append('<p class="fxb-lead">' + lead + '</p>')
+    h.append('</div>')
+    for g in groups:
+        group_name = g.get("group", "")
+        if group_name:
+            h.append('<h3 class="fxb-ladder-sub">' + escape(group_name) + '</h3>')
+        h.append('<div class="fxb-ladder">')
+        for level_title, meta, img in g["items"]:
+            level_title_e = escape(level_title)
+            meta_e = escape(meta)
+            img_e = escape(img, quote=True)
+            h.append(
+                '<a class="fxb-step" href="' + img_e + '" target="_blank" rel="noopener">'
+                '<div class="fxb-step-prev"><img src="' + img_e + '" alt="' + level_title_e + '" loading="lazy"></div>'
+                '<div class="fxb-step-body"><h4>' + level_title_e + '</h4><span>' + meta_e + '</span>'
+                '<span class="fxb-step-link">Открыть программу →</span></div></a>'
+            )
+        h.append('</div>')
+    h.append('</div></section>')
+    return "\n".join(h)
 
 
 def render_page(p):
@@ -219,6 +303,12 @@ def render_page(p):
     for f in p["facts"]:
         h.append(fact(*f))
     h.append('</div></div></section>')
+    if p.get("advantages"):
+        h.append(card_grid_section(p.get("adv_kicker", "Почему мы"), p["adv_title"], p.get("adv_lead"), p["advantages"], light=False))
+    if p.get("team"):
+        h.append(card_grid_section("Педагоги", p["team_title"], p.get("team_lead"), p["team"], light=True))
+    if p.get("ladder"):
+        h.append(ladder_section(p.get("ladder_kicker", "Лестница знаний"), p["ladder_title"], p.get("ladder_lead"), p["ladder"], light=False))
     # BOOKS (optional)
     if p.get("books"):
         bg = "" if p.get("books_on_light") else " fxb-bg-light"
@@ -232,6 +322,8 @@ def render_page(p):
         note = p.get("books_note", "Фотографии пособий будут добавлены позже. Все материалы включены в стоимость курса.")
         h.append('</div><p class="fxb-note">' + note + '</p>')
         h.append('</div></section>')
+    if p.get("faq"):
+        h.append(faq_section(p.get("faq_title", "Частые вопросы"), p["faq"], light=False))
     # CTA
     h.append('<section class="fxb-cta" id="fxb-cta">')
     h.append('<div class="fxb-cta-bg"><img src="' + DECOR_FOX + '" alt="" loading="lazy"></div>')
@@ -243,6 +335,8 @@ def render_page(p):
     h.append(zayavka_unit())
     h.append('</div>')
     h.append(CSS)
+    if p.get("ladder"):
+        h.append(LADDER_CSS)
     h.append(JS)
     return "\n".join(h)
 
@@ -307,6 +401,25 @@ PAGES["page_mladshie_shkolniki.html"] = {
         ("sun", "Утро, день, вечер", "Дневные, вечерние и утренние группы — подойдут и тем, кто учится во вторую смену"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "ladder_title": 'Лестница знаний — программа по <span class="fxb-accent">годам</span>',
+    "ladder_lead": "Наши курсы для младших школьников по ступеням: посмотрите подробную карту тем на учебный год по каждому уровню.",
+    "ladder": [
+        {"group":"Английский · My level", "items":[
+           ("My level 1", "6–8 лет · Pre-A1", ROADMAP+"my-level-1.png"),
+           ("My level 2", "8–9 лет · Pre-A1 → A1", ROADMAP+"my-level-2.png"),
+           ("My level 3", "9–10 лет · A1", ROADMAP+"my-level-3.png"),
+           ("My level 4", "10–11 лет · A1 → A2", ROADMAP+"my-level-4.png"),
+        ]},
+        {"group":"Английский · Super Minds", "items":[
+           ("Super Minds 1", "7–8 лет · Pre-A1", ROADMAP+"super-minds-1.png"),
+           ("Super Minds 2", "8–9 лет · A1", ROADMAP+"super-minds-2.png"),
+           ("Super Minds 3", "9–10 лет · A1–A2", ROADMAP+"super-minds-3.png"),
+           ("Super Minds 4", "10–11 лет · A2", ROADMAP+"super-minds-4.png"),
+        ]},
+        {"group":"Китайский язык", "items":[
+           ("Веселый урок", "1–4 класс · 中文 HSK 1", ROADMAP+"veselyj-urok-1-4-klass.png"),
+        ]},
+    ],
     "lead_subject": "Английский для младших школьников",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -344,6 +457,17 @@ PAGES["page_podrostki.html"] = {
         ("clock", "60 минут", "Интенсивная практика на каждом занятии"),
         ("sun", "Утренние группы", "Удобно для учащихся во вторую смену"),
         ("group", "До 7 человек", "Группы по уровню и целям"),
+    ],
+    "ladder_title": 'Лестница знаний — программа по <span class="fxb-accent">годам</span>',
+    "ladder_lead": "Курсы для подростков по ступеням: откройте карту тем на учебный год по каждому уровню.",
+    "ladder": [
+        {"group":"Английский · Get involved", "items":[
+           ("Get involved A1", "11–13 лет · A1", ROADMAP+"get-involved-a1.png"),
+           ("Get involved A2", "12–14 лет · A2", ROADMAP+"get-involved-a2.png"),
+        ]},
+        {"group":"Китайский язык", "items":[
+           ("Открывая Китай", "5 класс + · 中文 HSK 1–2", ROADMAP+"otkryvaya-kitaj-5-klass.png"),
+        ]},
     ],
     "lead_subject": "Английский для подростков",
     "lead_hero_window": "Блок героя",
@@ -586,6 +710,32 @@ PAGES["page_oge_anglijskij.html"] = {
         ("clock", "60 минут", "Полноценное занятие с практикой"),
         ("group", "До 7 человек", "Мини-группы по уровню и целям"),
     ],
+    "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
+    "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
+    "advantages": [
+        ("shield", "Лицензия и опыт с 2020 года", "Официальная образовательная лицензия и годы практики в обучении детей и взрослых."),
+        ("check", "Маткапитал и налоговый вычет", "Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
+        ("group", "Мини-группы", "Небольшие группы по уровню и возрасту — педагог видит и слышит каждого ученика."),
+        ("chart", "Ежемесячный отчёт", "Каждый месяц — подробный индивидуальный отчёт от педагога об успеваемости ребёнка."),
+        ("monitor", "Оффлайн и онлайн", "Два филиала в Долгопрудном рядом с МФТИ и удобный онлайн-формат — как вам удобно."),
+        ("star", "Рейтинг 4,8 и своё приложение", "Высокие оценки родителей и мобильное приложение, где дети тренируют слова и копят награды."),
+    ],
+    "team_title": 'Кто готовит к <span class="fxb-accent">ОГЭ</span>',
+    "team_lead": "Подготовку ведут преподаватели, которые знают формат ОГЭ и критерии оценивания — и умеют объяснять понятно.",
+    "team": [
+        ("cap", "Знают формат экзамена", "Разбираемся в структуре ОГЭ и критериях — учим набирать баллы, а не просто «знать язык»."),
+        ("rocket", "Постоянно развиваются", "Своя система подготовки педагогов: регулярное повышение квалификации по методике школы."),
+        ("chat", "Снимают страх экзамена", "Поддерживают, разбирают ошибки без давления — на экзамен ученик идёт спокойно."),
+        ("chart", "Держат связь с родителями", "Индивидуальный подход и регулярная обратная связь о прогрессе подготовки."),
+    ],
+    "faq_title": "Частые вопросы про подготовку к ОГЭ",
+    "faq": [
+        ("С какого класса начинать подготовку к ОГЭ?", "Оптимально — за год-полтора до экзамена, с 8–9 класса. Но подключиться можно на любом этапе: начнём с диагностики и составим план."),
+        ("А если у ребёнка слабый уровень?", "Начнём с бесплатной диагностики, подберём группу по уровню и подтянем базу параллельно с отработкой формата экзамена."),
+        ("Можно ли оплатить материнским капиталом?", "Да. Занятия можно оплатить материнским капиталом, а также вернуть 13% стоимости налоговым вычетом."),
+        ("Занятия очно или онлайн?", "Есть оба формата: очно в Долгопрудном (два филиала рядом с МФТИ) и онлайн."),
+        ("Сколько человек в группе?", "Занимаемся в мини-группах до 7 человек, подобранных по уровню и целям."),
+    ],
     "lead_subject": "Подготовка к ОГЭ по английскому",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -614,6 +764,32 @@ PAGES["page_ege_anglijskij.html"] = {
         ("calendar", "2 раза / нед", "Системная подготовка"),
         ("clock", "60–90 минут", "Интенсивные занятия"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
+    ],
+    "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
+    "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
+    "advantages": [
+        ("shield", "Лицензия и опыт с 2020 года", "Официальная образовательная лицензия и годы практики в обучении детей и взрослых."),
+        ("check", "Маткапитал и налоговый вычет", "Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
+        ("group", "Мини-группы", "Небольшие группы по уровню и возрасту — педагог видит и слышит каждого ученика."),
+        ("chart", "Ежемесячный отчёт", "Каждый месяц — подробный индивидуальный отчёт от педагога об успеваемости ребёнка."),
+        ("monitor", "Оффлайн и онлайн", "Два филиала в Долгопрудном рядом с МФТИ и удобный онлайн-формат — как вам удобно."),
+        ("star", "Рейтинг 4,8 и своё приложение", "Высокие оценки родителей и мобильное приложение, где дети тренируют слова и копят награды."),
+    ],
+    "team_title": 'Кто готовит к <span class="fxb-accent">ЕГЭ</span>',
+    "team_lead": "Готовят преподаватели, которые знают формат ЕГЭ и критерии — и доводят каждый раздел до нужного балла.",
+    "team": [
+        ("cap", "Разбираются в критериях ЕГЭ", "Учим писать эссе и отвечать в устной части строго по критериям — без потери баллов на формальностях."),
+        ("rocket", "Постоянно развиваются", "Своя система подготовки педагогов: регулярное повышение квалификации по методике школы."),
+        ("target", "Ведут к результату", "Ставим цель по баллу и выстраиваем маршрут подготовки под конкретного ученика."),
+        ("chart", "Держат связь с родителями", "Индивидуальный подход и регулярная обратная связь о прогрессе."),
+    ],
+    "faq_title": "Частые вопросы про подготовку к ЕГЭ",
+    "faq": [
+        ("Когда начинать подготовку к ЕГЭ?", "Лучше за 1,5–2 года, с 10 класса. Подключиться можно и позже — начнём с диагностики и составим реалистичный план до нужного балла."),
+        ("Поможете с эссе и устной частью?", "Да. Отдельно отрабатываем письмо и развёрнутое высказывание по критериям, а также все задания говорения по формату и таймингу ЕГЭ."),
+        ("Можно ли оплатить материнским капиталом?", "Да. Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
+        ("Занятия очно или онлайн?", "Есть оба формата: очно в Долгопрудном (два филиала рядом с МФТИ) и онлайн."),
+        ("Сколько человек в группе?", "Мини-группы до 7 человек, подобранные по уровню."),
     ],
     "lead_subject": "Подготовка к ЕГЭ по английскому",
     "lead_hero_window": "Блок героя",
@@ -644,6 +820,32 @@ PAGES["page_anglijskij_dlya_vzroslyh.html"] = {
         ("clock", "Утро / вечер", "Под ваш график"),
         ("monitor", "Оффлайн и онлайн", "Как удобно вам"),
     ],
+    "adv_title": 'Почему взрослым удобно в <span class="fxb-accent">Фоксинбурге</span>',
+    "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, гибким графиком и акцентом на разговор.",
+    "advantages": [
+        ("shield", "Лицензия и опыт с 2020 года", "Официальная образовательная лицензия и годы практики обучения взрослых и детей."),
+        ("check", "Налоговый вычет 13%", "За обучение можно вернуть 13% стоимости социальным налоговым вычетом."),
+        ("clock", "Утро и вечер", "Группы в удобное время под рабочий график, а также онлайн-формат."),
+        ("group", "Мини-группы по уровню", "Небольшие группы взрослых со схожим уровнем — без стеснения и в своём темпе."),
+        ("monitor", "Оффлайн и онлайн", "Два филиала в Долгопрудном рядом с МФТИ или занятия из дома — как удобно."),
+        ("chat", "Акцент на разговор", "Много живой речевой практики с первого занятия, а не молчаливая грамматика."),
+    ],
+    "team_title": 'Наши <span class="fxb-accent">преподаватели</span>',
+    "team_lead": "Взрослые группы ведут преподаватели, которые умеют разговорить с нуля и не перегружают теорией.",
+    "team": [
+        ("cap", "Сильные преподаватели", "Профессиональные педагоги с уровнем не ниже B2 и любовью к своему делу."),
+        ("rocket", "Постоянно развиваются", "Своя система развития педагогов: регулярное повышение квалификации по методике школы."),
+        ("chat", "Помогают заговорить", "Создают комфортную атмосферу без страха ошибиться — говорить начинают даже «молчуны»."),
+        ("chart", "Индивидуальный подход", "Учитывают вашу цель — работа, путешествия, переезд — и подстраивают программу."),
+    ],
+    "faq_title": "Частые вопросы",
+    "faq": [
+        ("Можно начать с полного нуля?", "Да. Берём с любого уровня — от первых слов до свободного общения. Начнём с бесплатной диагностики."),
+        ("В какое время занятия?", "Есть утренние и вечерние группы под рабочий график, а также онлайн-формат."),
+        ("Сколько человек в группе?", "Занимаемся в небольших группах взрослых со схожим уровнем. Есть и индивидуальные занятия."),
+        ("Как понять свой уровень?", "Приходите на бесплатную диагностику — определим уровень и цель и подберём формат."),
+        ("Можно заниматься индивидуально?", "Да, доступны индивидуальные занятия — очно и онлайн."),
+    ],
     "lead_subject": "Английский для взрослых",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -673,6 +875,32 @@ PAGES["page_nemeckij_yazyk.html"] = {
         ("calendar", "2 раза / нед", "Регулярные занятия"),
         ("monitor", "Оффлайн и онлайн", "Удобный формат"),
     ],
+    "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
+    "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
+    "advantages": [
+        ("shield", "Лицензия и опыт с 2020 года", "Официальная образовательная лицензия и годы практики в обучении детей и взрослых."),
+        ("check", "Маткапитал и налоговый вычет", "Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
+        ("group", "Мини-группы", "Небольшие группы по уровню и возрасту — педагог видит и слышит каждого ученика."),
+        ("chart", "Ежемесячный отчёт", "Каждый месяц — подробный индивидуальный отчёт от педагога об успеваемости ребёнка."),
+        ("monitor", "Оффлайн и онлайн", "Два филиала в Долгопрудном рядом с МФТИ и удобный онлайн-формат — как вам удобно."),
+        ("star", "Рейтинг 4,8 и своё приложение", "Высокие оценки родителей и мобильное приложение, где дети тренируют слова и копят награды."),
+    ],
+    "team_title": 'Кто ведёт <span class="fxb-accent">немецкий</span>',
+    "team_lead": "Немецкий ведём по той же методике Фоксинбург, что и английский: понятная система языка и живая практика. С преподавателем познакомим на пробном уроке.",
+    "team": [
+        ("cap", "Сильные преподаватели", "Профессиональные педагоги, которые понятно объясняют грамматику и произношение."),
+        ("rocket", "Проверенная методика", "Та же система, что и в английском: от азов — к живому общению шаг за шагом."),
+        ("chat", "Живое общение", "С первых занятий — говорение и понимание речи, а не только правила и списки слов."),
+        ("chart", "Обратная связь", "Мини-группы, индивидуальный подход и регулярная связь с родителями."),
+    ],
+    "faq_title": "Частые вопросы про немецкий",
+    "faq": [
+        ("Нужна ли база по немецкому?", "Нет. Начинаем с нуля — подойдёт тем, кто раньше не учил немецкий."),
+        ("Для какого возраста курсы?", "Для детей, школьников и взрослых. Группы подбираем по возрасту и уровню."),
+        ("Занятия очно или онлайн?", "Есть оба формата: очно в Долгопрудном (два филиала рядом с МФТИ) и онлайн."),
+        ("Можно оплатить материнским капиталом?", "Да. Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
+        ("Как проходит пробный урок?", "Познакомим с преподавателем и методикой, определим уровень и подберём группу — без обязательств."),
+    ],
     "lead_subject": "Немецкий язык",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -701,6 +929,32 @@ PAGES["page_kitajskij_yazyk.html"] = {
         ("group", "Мини-группы", "По уровню и возрасту"),
         ("calendar", "2 раза / нед", "Регулярные занятия"),
         ("monitor", "Оффлайн и онлайн", "Удобный формат"),
+    ],
+    "adv_title": 'Почему выбирают <span class="fxb-accent">Фоксинбург</span>',
+    "adv_lead": "Языковая школа в Долгопрудном с 2020 года — с лицензией, своей методикой и вниманием к каждому ученику.",
+    "advantages": [
+        ("shield", "Лицензия и опыт с 2020 года", "Официальная образовательная лицензия и годы практики в обучении детей и взрослых."),
+        ("check", "Маткапитал и налоговый вычет", "Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
+        ("group", "Мини-группы", "Небольшие группы по уровню и возрасту — педагог видит и слышит каждого ученика."),
+        ("chart", "Ежемесячный отчёт", "Каждый месяц — подробный индивидуальный отчёт от педагога об успеваемости ребёнка."),
+        ("monitor", "Оффлайн и онлайн", "Два филиала в Долгопрудном рядом с МФТИ и удобный онлайн-формат — как вам удобно."),
+        ("star", "Рейтинг 4,8 и своё приложение", "Высокие оценки родителей и мобильное приложение, где дети тренируют слова и копят награды."),
+    ],
+    "team_title": 'Кто ведёт <span class="fxb-accent">китайский</span>',
+    "team_lead": "Китайский ведём по методике Фоксинбург: от тонов и иероглифики — к живой речи. С преподавателем познакомим на пробном уроке.",
+    "team": [
+        ("cap", "Сильные преподаватели", "Профессиональные педагоги, которые пошагово ведут от азов к уверенной речи."),
+        ("mic", "Ставят произношение и тоны", "С самого начала уделяем внимание тонам и произношению — это фундамент китайского."),
+        ("palette", "Иероглифика без страха", "Учим писать и узнавать иероглифы постепенно, по понятной системе."),
+        ("chart", "Обратная связь", "Мини-группы, индивидуальный подход и регулярная связь с родителями."),
+    ],
+    "faq_title": "Частые вопросы про китайский",
+    "faq": [
+        ("Сложно ли учить китайский с нуля?", "Идём пошагово: сначала тоны и произношение, затем иероглифы и разговорная практика. Начинаем с нуля."),
+        ("Для какого возраста курсы?", "Для детей, школьников и взрослых. Группы подбираем по возрасту и уровню."),
+        ("Занятия очно или онлайн?", "Есть оба формата: очно в Долгопрудном (два филиала рядом с МФТИ) и онлайн."),
+        ("Можно оплатить материнским капиталом?", "Да. Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
+        ("Как проходит пробный урок?", "Познакомим с преподавателем и методикой, определим цель обучения и подберём группу."),
     ],
     "lead_subject": "Китайский язык",
     "lead_hero_window": "Блок героя",

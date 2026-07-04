@@ -204,7 +204,10 @@ async def main():
     async with async_playwright() as p:
         browser = await p.chromium.connect_over_cdp(CDP)
         page = browser.contexts[0].pages[0]
+        only = set(__import__("sys").argv[1:])
         for pageid, cfile, alias in PAGES:
+            if only and alias not in only:
+                continue
             try:
                 r = await process_page(page, pageid, cfile, alias, shapka, footer)
                 results.append(r)
