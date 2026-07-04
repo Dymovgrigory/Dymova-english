@@ -131,6 +131,10 @@
   var btn=document.getElementById('fxbCtaBtn'),ch=document.getElementById('fxbChoice');
   btn.addEventListener('click',function(e){e.stopPropagation();ch.classList.toggle('fxb-open')});
   document.addEventListener('click',function(){ch.classList.remove('fxb-open')});
-  ch.addEventListener('click',function(e){e.stopPropagation()});
+  ch.addEventListener('click',function(e){
+    var link=e.target.closest&&e.target.closest('a');
+    if(link){ch.classList.remove('fxb-open');return;}
+    e.stopPropagation();
+  });
 })();
 </script>
