@@ -6,7 +6,7 @@ from playwright.async_api import async_playwright
 
 PROJECTID = "2053071"
 CDP = "http://localhost:29229"
-PAGEIDS = sys.argv[1:] or ["151292376", "151292406", "151292476"]
+PAGEIDS = sys.argv[1:] or ["151292376", "151292406", "151292476", "152445956", "152446216", "152446236", "152446286", "152446296"]
 
 
 async def main():
