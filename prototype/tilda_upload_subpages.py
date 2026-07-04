@@ -44,6 +44,10 @@ PAGES = [
     ("152446236", "page_anglijskij_dlya_vzroslyh.html", "anglijskij-dlya-vzroslyh"),
     ("152446286", "page_nemeckij_yazyk.html", "nemeckij-yazyk"),
     ("152446296", "page_kitajskij_yazyk.html", "kitajskij-yazyk"),
+    ("151324806", "page_novosti.html", "novosti"),
+    ("152463826", "page_novosti_so_skolki_let_uchit_anglijskij.html", "novosti-so-skolki-let-uchit-anglijskij"),
+    ("152464166", "page_novosti_kak_podgotovitsya_k_oge_anglijskij.html", "novosti-kak-podgotovitsya-k-oge-anglijskij"),
+    ("152464306", "page_novosti_kak_prohodyat_smeny_letnej_akademii.html", "novosti-kak-prohodyat-smeny-letnej-akademii"),
 ]
 
 CONTENT_MARKERS = ['id="fxb-page"', 'id="fxb-age-page"', 'id="fxb-summer-page"', 'id="fxb-contacts"']
