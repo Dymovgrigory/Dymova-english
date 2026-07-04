@@ -36,7 +36,7 @@
         <set-ids>s-reading</set-ids>
         <price>12400</price>
         <currencyId>RUR</currencyId>
-        <param name="Продолжительность" unit="занятие">12</param>
+        <param name="Продолжительность" unit="час">24</param>
         <param name="План" order="1" unit="Фоника и техника чтения" hours="8"><![CDATA[Формируем базу чтения, отрабатываем звуки и слоги.]]></param>
         <param name="План" order="2" unit="Чтение слов и текстов" hours="8"><![CDATA[Переходим к чтению слов, коротких текстов и пониманию смысла.]]></param>
         <param name="План" order="3" unit="Мини-группа и обратная связь" hours="8"><![CDATA[Занимаемся в мини-группе и даём регулярные отчёты родителям.]]></param>
@@ -48,7 +48,7 @@
         <set-ids>s-grammar</set-ids>
         <price>14200</price>
         <currencyId>RUR</currencyId>
-        <param name="Продолжительность" unit="занятие">16</param>
+        <param name="Продолжительность" unit="час">30</param>
         <param name="Длительность занятия" unit="минута">60</param>
         <param name="План" order="1" unit="Школьные правила" hours="10"><![CDATA[Закрываем пробелы по школьной грамматике и повторяем базовые правила.]]></param>
         <param name="План" order="2" unit="Практика по темам" hours="10"><![CDATA[Систематизируем материал и закрепляем темы на упражнениях.]]></param>
