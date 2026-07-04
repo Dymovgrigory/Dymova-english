@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<yml_catalog date="2026-07-04 00:00">
+  <shop>
+    <name>Языковая школа «Фоксинбург»</name>
+    <company>ИП Дымова Вероника Александровна</company>
+    <url>https://dymova-english.ru/</url>
+    <email>school@foxinburg-edu.ru</email>
+    <picture>https://static.tildacdn.com/tild6463-3833-4439-a164-666264333534/result_favicon.jpg</picture>
+    <description>Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.</description>
+    <currencies>
+      <currency id="RUR" rate="1" />
+    </currencies>
+    <sets>
+      <set id="s-reading">
+        <name>Чтение</name>
+        <url>https://dymova-english.ru/reading</url>
+      </set>
+      <set id="s-grammar">
+        <name>Грамматика</name>
+        <url>https://dymova-english.ru/grammar</url>
+      </set>
+      <set id="s-preparation">
+        <name>Подготовка к школе</name>
+        <url>https://dymova-english.ru/preparation</url>
+      </set>
+      <set id="s-summer">
+        <name>Летняя Академия</name>
+        <url>https://dymova-english.ru/letnyaya-akademiya</url>
+      </set>
+    </sets>
+    <offers>
+      <offer id="course-reading">
+        <name>Курс по чтению на английском</name>
+        <url>https://dymova-english.ru/reading</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-reading</set-ids>
+        <price>12400</price>
+        <currencyId>RUR</currencyId>
+        <param name="Продолжительность" unit="час">24</param>
+        <param name="План" order="1" unit="Фоника и техника чтения" hours="8"><![CDATA[Формируем базу чтения, отрабатываем звуки и слоги.]]></param>
+        <param name="План" order="2" unit="Чтение слов и текстов" hours="8"><![CDATA[Переходим к чтению слов, коротких текстов и пониманию смысла.]]></param>
+        <param name="План" order="3" unit="Мини-группа и обратная связь" hours="8"><![CDATA[Занимаемся в мини-группе и даём регулярные отчёты родителям.]]></param>
+      </offer>
+      <offer id="course-grammar">
+        <name>Курс по школьной грамматике</name>
+        <url>https://dymova-english.ru/grammar</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-grammar</set-ids>
+        <price>14200</price>
+        <currencyId>RUR</currencyId>
+        <param name="Продолжительность" unit="час">30</param>
+        <param name="Длительность занятия" unit="минута">60</param>
+        <param name="План" order="1" unit="Школьные правила" hours="10"><![CDATA[Закрываем пробелы по школьной грамматике и повторяем базовые правила.]]></param>
+        <param name="План" order="2" unit="Практика по темам" hours="10"><![CDATA[Систематизируем материал и закрепляем темы на упражнениях.]]></param>
+        <param name="План" order="3" unit="Подготовка к учебному году" hours="10"><![CDATA[Доводим знания до уверенного уровня перед новым учебным годом.]]></param>
+      </offer>
+      <offer id="course-preparation">
+        <name>Подготовка к школе в Долгопрудном</name>
+        <url>https://dymova-english.ru/preparation</url>
+        <categoryId>10099</categoryId>
+        <set-ids>s-preparation</set-ids>
+        <price>5400</price>
+        <currencyId>RUR</currencyId>
+        <param name="Продолжительность" unit="месяц">1</param>
+        <param name="План" order="1" unit="Комплексные занятия" hours="10"><![CDATA[Чтение, счёт, логика и базовые навыки для старта в школе.]]></param>
+        <param name="План" order="2" unit="Английский и развитие" hours="10"><![CDATA[Добавляем английский и развиваем внимание, память и мышление.]]></param>
+        <param name="План" order="3" unit="Диагностика и обратная связь" hours="10"><![CDATA[Проводим диагностику и отправляем отчёты родителям.]]></param>
+      </offer>
+      <offer id="course-summer-academy">
+        <name>Летняя Академия английского</name>
+        <url>https://dymova-english.ru/letnyaya-akademiya</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-summer</set-ids>
+        <price>46000</price>
+        <currencyId>RUR</currencyId>
+        <param name="Продолжительность" unit="день">10</param>
+        <param name="Смены"><![CDATA[03.08–14.08 и 17.08–28.08, ежедневно 10:00–18:00]]></param>
+        <param name="План" order="1" unit="Тематические недели" hours="8"><![CDATA[Смена — 10 рабочих дней тематических занятий с языковой практикой.]]></param>
+        <param name="План" order="2" unit="Проекты и спектакли" hours="8"><![CDATA[Делаем поделки, готовим спектакли и работаем на английском.]]></param>
+        <param name="План" order="3" unit="Полный день и мини-группы" hours="8"><![CDATA[Формат полного дня 10:00–18:00 в мини-группах до 8 человек.]]></param>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>
