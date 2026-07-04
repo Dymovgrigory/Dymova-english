@@ -57,6 +57,9 @@ PAGES = [
     ("152446236", "anglijskij-dlya-vzroslyh",  'id="fxb-shapka"', SHAPKA, FOOTER),
     ("152446286", "nemeckij-yazyk",            'id="fxb-shapka"', SHAPKA, FOOTER),
     ("152446296", "kitajskij-yazyk",           'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152463826", "novosti-so-skolki-let-uchit-anglijskij", 'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152464166", "novosti-kak-podgotovitsya-k-oge-anglijskij", 'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152464306", "novosti-kak-prohodyat-smeny-letnej-akademii", 'id="fxb-shapka"', SHAPKA, FOOTER),
 ]
 
 
