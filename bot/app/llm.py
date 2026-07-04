@@ -9,8 +9,12 @@
 """
 from __future__ import annotations
 
+import asyncio
+import json
 import logging
 import re
+from dataclasses import dataclass
+from urllib.parse import urlparse
 
 import httpx
 
@@ -18,29 +22,85 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
+_INITIAL_BACKOFF = 0.25
+_MAX_ATTEMPTS_PER_PROVIDER = 3
+
+
+@dataclass(frozen=True)
+class ProviderConfig:
+    base_url: str
+    api_key: str
+    model: str
+
+    @property
+    def label(self) -> str:
+        host = urlparse(self.base_url).netloc or self.base_url
+        return f"{host}::{self.model}"
+
+
+_http_client: httpx.AsyncClient | None = None
+_client: "LLMClient" | None = None
+
+
+def _build_providers() -> list[ProviderConfig]:
+    providers: list[ProviderConfig] = [
+        ProviderConfig(
+            base_url=settings.LLM_BASE_URL.strip(),
+            api_key=settings.LLM_API_KEY.strip(),
+            model=settings.LLM_MODEL.strip(),
+        )
+    ]
+    raw = (settings.LLM_FALLBACKS or "").strip()
+    if raw:
+        try:
+            items = json.loads(raw)
+        except Exception:
+            logger.exception("LLM_FALLBACKS contains invalid JSON")
+            items = []
+        if isinstance(items, list):
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                providers.append(
+                    ProviderConfig(
+                        base_url=str(item.get("base_url", "")).strip(),
+                        api_key=str(item.get("api_key", "")).strip(),
+                        model=str(item.get("model", "")).strip(),
+                    )
+                )
+    return [p for p in providers if p.base_url and p.api_key and p.model]
+
+
+async def _get_http_client() -> httpx.AsyncClient:
+    global _http_client
+    if _http_client is None:
+        _http_client = httpx.AsyncClient(timeout=settings.LLM_TIMEOUT)
+    return _http_client
+
 
 class LLMClient:
     def __init__(self) -> None:
-        self.api_key = settings.LLM_API_KEY.strip()
-        self.base_url = settings.LLM_BASE_URL.strip().rstrip("/")
-        self.model = settings.LLM_MODEL.strip()
+        self.providers = _build_providers()
         self.vision_model = settings.VISION_MODEL
 
     @property
     def enabled(self) -> bool:
-        return bool(self.api_key)
+        return bool(self.providers)
 
-    def _headers(self) -> dict:
-        return {
-            "Authorization": f"Bearer {self.api_key}",
+    def _headers(self, provider: ProviderConfig) -> dict[str, str]:
+        headers = {
+            "Authorization": f"Bearer {provider.api_key}",
             "Content-Type": "application/json",
-            # OpenRouter рекомендует указывать источник запроса.
-            "HTTP-Referer": "https://dymova-english.ru",
-            "X-Title": "Foxinburg MAX Bot",
         }
+        host = urlparse(provider.base_url).netloc.lower()
+        if "openrouter.ai" in host:
+            headers["HTTP-Referer"] = "https://dymova-english.ru"
+            headers["X-Title"] = "Foxinburg MAX Bot"
+        return headers
 
-    async def _chat_completion(
+    async def _complete_once(
         self,
+        provider: ProviderConfig,
         model: str,
         messages: list[dict],
         temperature: float | None = None,
@@ -48,38 +108,133 @@ class LLMClient:
     ) -> str | None:
         if not self.enabled:
             return None
-        url = f"{self.base_url}/chat/completions"
+        client = await _get_http_client()
+        url = f"{provider.base_url.rstrip('/')}/chat/completions"
         payload = {
             "model": model,
             "messages": messages,
             "temperature": settings.LLM_TEMPERATURE if temperature is None else temperature,
             "max_tokens": settings.LLM_MAX_TOKENS if max_tokens is None else max_tokens,
         }
-        try:
-            async with httpx.AsyncClient(timeout=settings.LLM_TIMEOUT) as client:
-                resp = await client.post(url, headers=self._headers(), json=payload)
-            if resp.status_code != 200:
-                logger.error("LLM error status=%s body=%s", resp.status_code, resp.text[:500])
+        delay = _INITIAL_BACKOFF
+        for attempt in range(1, _MAX_ATTEMPTS_PER_PROVIDER + 1):
+            try:
+                resp = await client.post(url, headers=self._headers(provider), json=payload)
+            except httpx.RequestError:
+                logger.warning(
+                    "LLM provider=%s attempt=%s network/timeout error",
+                    provider.label,
+                    attempt,
+                    exc_info=True,
+                )
+                if attempt < _MAX_ATTEMPTS_PER_PROVIDER:
+                    await asyncio.sleep(delay)
+                    delay *= 2
+                    continue
                 return None
-            data = resp.json()
-            choices = data.get("choices") or []
-            if not choices:
+            except Exception:
+                logger.exception("LLM provider=%s attempt=%s unexpected error", provider.label, attempt)
+                if attempt < _MAX_ATTEMPTS_PER_PROVIDER:
+                    await asyncio.sleep(delay)
+                    delay *= 2
+                    continue
                 return None
-            content = choices[0].get("message", {}).get("content", "")
-            return _clean_response(content) or None
-        except Exception:
-            logger.exception("LLM request failed")
+
+            if resp.status_code == 200:
+                try:
+                    data = resp.json()
+                except Exception:
+                    logger.exception("LLM provider=%s invalid JSON response", provider.label)
+                    return None
+                choices = data.get("choices") or []
+                if not choices:
+                    logger.error("LLM provider=%s returned no choices", provider.label)
+                    return None
+                content = choices[0].get("message", {}).get("content", "")
+                reply = _clean_response(content)
+                if reply:
+                    logger.info("LLM provider=%s model=%s succeeded", provider.label, model)
+                return reply or None
+
+            if resp.status_code == 429 or 500 <= resp.status_code <= 599:
+                logger.warning(
+                    "LLM provider=%s model=%s attempt=%s retryable status=%s body=%s",
+                    provider.label,
+                    model,
+                    attempt,
+                    resp.status_code,
+                    resp.text[:300],
+                )
+                if attempt < _MAX_ATTEMPTS_PER_PROVIDER:
+                    await asyncio.sleep(delay)
+                    delay *= 2
+                    continue
+                return None
+
+            logger.error(
+                "LLM provider=%s model=%s non-retryable status=%s body=%s",
+                provider.label,
+                model,
+                resp.status_code,
+                resp.text[:300],
+            )
             return None
+        return None
+
+    async def _complete_with_fallbacks(
+        self,
+        messages: list[dict],
+        model: str | None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        apply_russian_guard: bool = False,
+    ) -> str | None:
+        if not self.enabled:
+            return None
+        for provider in self.providers:
+            provider_model = provider.model if model is None else model
+            reply = await self._complete_once(
+                provider,
+                provider_model,
+                messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            if not reply:
+                continue
+            if apply_russian_guard and not _mostly_russian(reply):
+                logger.warning(
+                    "LLM provider=%s model=%s reply looks non-Russian, retrying once",
+                    provider.label,
+                    provider_model,
+                )
+                retry = await self._complete_once(
+                    provider,
+                    provider_model,
+                    messages,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                )
+                if retry and _mostly_russian(retry):
+                    return retry
+                if retry:
+                    logger.warning(
+                        "LLM provider=%s model=%s still non-Russian after retry",
+                        provider.label,
+                        provider_model,
+                    )
+                continue
+            return reply
+        logger.error("LLM cascade exhausted all providers for model=%s", model or "provider-model")
+        return None
 
     async def complete(self, messages: list[dict], temperature: float | None = None) -> str | None:
-        reply = await self._chat_completion(self.model, messages, temperature=temperature)
-        if reply and not _mostly_russian(reply):
-            logger.warning("LLM reply looks non-Russian, retrying once")
-            retry = await self._chat_completion(self.model, messages, temperature=temperature)
-            if retry and not _mostly_russian(retry):
-                return None
-            return retry
-        return reply
+        return await self._complete_with_fallbacks(
+            messages,
+            None,
+            temperature=temperature,
+            apply_russian_guard=True,
+        )
 
     async def complete_vision(
         self,
@@ -87,8 +242,12 @@ class LLMClient:
         temperature: float | None = None,
         max_tokens: int | None = None,
     ) -> str | None:
-        return await self._chat_completion(
-            self.vision_model, messages, temperature=temperature, max_tokens=max_tokens
+        return await self._complete_with_fallbacks(
+            messages,
+            self.vision_model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            apply_russian_guard=False,
         )
 
 
@@ -106,7 +265,7 @@ _JUNK_TOKENS = re.compile(
     r"<\|(?:end_header_id|start_header_id|eot_id|begin_of_text|im_start|im_end)[^>]*\|>",
 )
 # Китайские/японские/корейские иероглифы — Llama иногда вставляет.
-_CJK_RE = re.compile(r"[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]+")
+_CJK_RE = re.compile(r"[一-鿿㐀-䶿぀-ゟ゠-ヿ]+")
 
 # Английские слова-вставки, которые модель иногда роняет в русский текст
 # («Цена indeed важна»). Удаляем как отдельные слова, не трогая бренды
@@ -143,8 +302,6 @@ def _clean_response(text: str) -> str:
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
 
-
-_client: LLMClient | None = None
 
 
 def get_llm() -> LLMClient:
