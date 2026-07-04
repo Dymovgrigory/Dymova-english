@@ -14,6 +14,7 @@
 Запуск:  python3 build_subpages.py
 """
 import os
+from html import escape
 from build_course_pages import zayavka_unit
 
 OUT = os.path.dirname(os.path.abspath(__file__))
@@ -132,7 +133,7 @@ CSS = """
 #fxb-page .fxb-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;font-weight:800;font-size:15.5px;line-height:1.35;padding:20px 0;color:var(--ink)}
 #fxb-page .fxb-faq summary::-webkit-details-marker{display:none}
 #fxb-page .fxb-faq summary::after{content:"+";font-size:24px;font-weight:700;color:var(--purple-2);flex:0 0 auto;line-height:1;transition:transform .25s}
-#fxb-page .fxb-faq details[open] summary::after{content:"\2013"}
+#fxb-page .fxb-faq details[open] summary::after{content:"\\2013"}
 #fxb-page .fxb-faq p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.6;padding:0 0 22px}
 
 /* CTA */
@@ -150,6 +151,24 @@ CSS = """
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+</style>
+"""
+
+LADDER_CSS = """
+<style>
+#fxb-page .fxb-ladder-sub{font-weight:800;font-size:15px;color:var(--purple-2);margin:26px 4px 16px;display:flex;align-items:center;gap:9px}
+#fxb-page .fxb-ladder-sub::before{content:"";width:22px;height:3px;border-radius:3px;background:var(--orange)}
+#fxb-page .fxb-ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+#fxb-page .fxb-step{display:flex;flex-direction:column;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:18px;overflow:hidden;box-shadow:0 14px 32px -22px rgba(57,40,82,.45);transition:transform .35s,box-shadow .35s,border-color .35s}
+#fxb-page .fxb-step:hover{transform:translateY(-6px);box-shadow:0 28px 50px -26px rgba(102,45,146,.5);border-color:rgba(102,45,146,.25)}
+#fxb-page .fxb-step-prev{height:150px;overflow:hidden;background:#241a36}
+#fxb-page .fxb-step-prev img{width:100%;display:block;object-fit:cover;object-position:top center}
+#fxb-page .fxb-step-body{padding:16px 18px 18px}
+#fxb-page .fxb-step-body h4{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:5px;line-height:1.2}
+#fxb-page .fxb-step-body>span{display:block;color:var(--muted);font-size:13px;font-weight:600}
+#fxb-page .fxb-step-link{margin-top:12px;color:var(--purple-2)!important;font-weight:800;font-size:13.5px}
+@media(max-width:860px){#fxb-page .fxb-ladder{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page .fxb-ladder{grid-template-columns:1fr}}
 </style>
 """
 
@@ -172,6 +191,7 @@ DECOR_SWIRL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/dev
 DECOR_FOX = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png"
 MYLEVEL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/"
 MAX_BOT = "https://max.ru/id611904726658_bot"
+ROADMAP = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/"
 
 
 def feature_card(icon, title, text):
@@ -220,6 +240,34 @@ def faq_section(title, items, light=False):
     return "\n".join(h)
 
 
+def ladder_section(kicker, title, lead, groups, light=False):
+    bg = " fxb-bg-light" if light else ""
+    h = ['<section class="fxb-section' + bg + '"><div class="fxb-wrap">']
+    h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>' + kicker + '</span>')
+    h.append('<h2 class="fxb-h2">' + title + '</h2>')
+    if lead:
+        h.append('<p class="fxb-lead">' + lead + '</p>')
+    h.append('</div>')
+    for g in groups:
+        group_name = g.get("group", "")
+        if group_name:
+            h.append('<h3 class="fxb-ladder-sub">' + escape(group_name) + '</h3>')
+        h.append('<div class="fxb-ladder">')
+        for level_title, meta, img in g["items"]:
+            level_title_e = escape(level_title)
+            meta_e = escape(meta)
+            img_e = escape(img, quote=True)
+            h.append(
+                '<a class="fxb-step" href="' + img_e + '" target="_blank" rel="noopener">'
+                '<div class="fxb-step-prev"><img src="' + img_e + '" alt="' + level_title_e + '" loading="lazy"></div>'
+                '<div class="fxb-step-body"><h4>' + level_title_e + '</h4><span>' + meta_e + '</span>'
+                '<span class="fxb-step-link">Открыть программу →</span></div></a>'
+            )
+        h.append('</div>')
+    h.append('</div></section>')
+    return "\n".join(h)
+
+
 def render_page(p):
     """p: dict with page content."""
     grad = p["hero_grad"]
@@ -259,6 +307,8 @@ def render_page(p):
         h.append(card_grid_section(p.get("adv_kicker", "Почему мы"), p["adv_title"], p.get("adv_lead"), p["advantages"], light=False))
     if p.get("team"):
         h.append(card_grid_section("Педагоги", p["team_title"], p.get("team_lead"), p["team"], light=True))
+    if p.get("ladder"):
+        h.append(ladder_section(p.get("ladder_kicker", "Лестница знаний"), p["ladder_title"], p.get("ladder_lead"), p["ladder"], light=False))
     # BOOKS (optional)
     if p.get("books"):
         bg = "" if p.get("books_on_light") else " fxb-bg-light"
@@ -285,6 +335,8 @@ def render_page(p):
     h.append(zayavka_unit())
     h.append('</div>')
     h.append(CSS)
+    if p.get("ladder"):
+        h.append(LADDER_CSS)
     h.append(JS)
     return "\n".join(h)
 
@@ -349,6 +401,25 @@ PAGES["page_mladshie_shkolniki.html"] = {
         ("sun", "Утро, день, вечер", "Дневные, вечерние и утренние группы — подойдут и тем, кто учится во вторую смену"),
         ("group", "До 7 человек", "Мини-группы по уровню"),
     ],
+    "ladder_title": 'Лестница знаний — программа по <span class="fxb-accent">годам</span>',
+    "ladder_lead": "Наши курсы для младших школьников по ступеням: посмотрите подробную карту тем на учебный год по каждому уровню.",
+    "ladder": [
+        {"group":"Английский · My level", "items":[
+           ("My level 1", "6–8 лет · Pre-A1", ROADMAP+"my-level-1.png"),
+           ("My level 2", "8–9 лет · Pre-A1 → A1", ROADMAP+"my-level-2.png"),
+           ("My level 3", "9–10 лет · A1", ROADMAP+"my-level-3.png"),
+           ("My level 4", "10–11 лет · A1 → A2", ROADMAP+"my-level-4.png"),
+        ]},
+        {"group":"Английский · Super Minds", "items":[
+           ("Super Minds 1", "7–8 лет · Pre-A1", ROADMAP+"super-minds-1.png"),
+           ("Super Minds 2", "8–9 лет · A1", ROADMAP+"super-minds-2.png"),
+           ("Super Minds 3", "9–10 лет · A1–A2", ROADMAP+"super-minds-3.png"),
+           ("Super Minds 4", "10–11 лет · A2", ROADMAP+"super-minds-4.png"),
+        ]},
+        {"group":"Китайский язык", "items":[
+           ("Веселый урок", "1–4 класс · 中文 HSK 1", ROADMAP+"veselyj-urok-1-4-klass.png"),
+        ]},
+    ],
     "lead_subject": "Английский для младших школьников",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -386,6 +457,17 @@ PAGES["page_podrostki.html"] = {
         ("clock", "60 минут", "Интенсивная практика на каждом занятии"),
         ("sun", "Утренние группы", "Удобно для учащихся во вторую смену"),
         ("group", "До 7 человек", "Группы по уровню и целям"),
+    ],
+    "ladder_title": 'Лестница знаний — программа по <span class="fxb-accent">годам</span>',
+    "ladder_lead": "Курсы для подростков по ступеням: откройте карту тем на учебный год по каждому уровню.",
+    "ladder": [
+        {"group":"Английский · Get involved", "items":[
+           ("Get involved A1", "11–13 лет · A1", ROADMAP+"get-involved-a1.png"),
+           ("Get involved A2", "12–14 лет · A2", ROADMAP+"get-involved-a2.png"),
+        ]},
+        {"group":"Китайский язык", "items":[
+           ("Открывая Китай", "5 класс + · 中文 HSK 1–2", ROADMAP+"otkryvaya-kitaj-5-klass.png"),
+        ]},
     ],
     "lead_subject": "Английский для подростков",
     "lead_hero_window": "Блок героя",

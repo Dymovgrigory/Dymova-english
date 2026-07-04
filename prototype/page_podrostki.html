@@ -29,6 +29,21 @@
 <div class="fxb-fact"><div class="fxb-fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M16.9 16.9l2.1 2.1M2 12h3M19 12h3M4.9 19.1l2.1-2.1M16.9 7.1l2.1-2.1"/></svg></div><b>Утренние группы</b><span>Удобно для учащихся во вторую смену</span></div>
 <div class="fxb-fact"><div class="fxb-fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20v-1a5 5 0 0 1 10 0v1"/><path d="M15.5 20v-.5a4 4 0 0 1 5.5-3.7"/></svg></div><b>До 7 человек</b><span>Группы по уровню и целям</span></div>
 </div></div></section>
+<section class="fxb-section"><div class="fxb-wrap">
+<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Лестница знаний</span>
+<h2 class="fxb-h2">Лестница знаний — программа по <span class="fxb-accent">годам</span></h2>
+<p class="fxb-lead">Курсы для подростков по ступеням: откройте карту тем на учебный год по каждому уровню.</p>
+</div>
+<h3 class="fxb-ladder-sub">Английский · Get involved</h3>
+<div class="fxb-ladder">
+<a class="fxb-step" href="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/get-involved-a1.png" target="_blank" rel="noopener"><div class="fxb-step-prev"><img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/get-involved-a1.png" alt="Get involved A1" loading="lazy"></div><div class="fxb-step-body"><h4>Get involved A1</h4><span>11–13 лет · A1</span><span class="fxb-step-link">Открыть программу →</span></div></a>
+<a class="fxb-step" href="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/get-involved-a2.png" target="_blank" rel="noopener"><div class="fxb-step-prev"><img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/get-involved-a2.png" alt="Get involved A2" loading="lazy"></div><div class="fxb-step-body"><h4>Get involved A2</h4><span>12–14 лет · A2</span><span class="fxb-step-link">Открыть программу →</span></div></a>
+</div>
+<h3 class="fxb-ladder-sub">Китайский язык</h3>
+<div class="fxb-ladder">
+<a class="fxb-step" href="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/otkryvaya-kitaj-5-klass.png" target="_blank" rel="noopener"><div class="fxb-step-prev"><img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/otkryvaya-kitaj-5-klass.png" alt="Открывая Китай" loading="lazy"></div><div class="fxb-step-body"><h4>Открывая Китай</h4><span>5 класс + · 中文 HSK 1–2</span><span class="fxb-step-link">Открыть программу →</span></div></a>
+</div>
+</div></section>
 <section class="fxb-section fxb-bg-light"><div class="fxb-wrap">
 <div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Материалы</span>
 <h2 class="fxb-h2">Пособия и материалы</h2>
@@ -194,6 +209,16 @@
 #fxb-page .fxb-book p{color:var(--muted);font-size:13.5px;font-weight:500;line-height:1.5}
 #fxb-page .fxb-note{margin-top:22px;font-size:13px;color:#a89fbd;font-weight:600;text-align:center;font-style:italic}
 
+/* FAQ */
+#fxb-page .fxb-faq{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+#fxb-page .fxb-faq details{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:16px;padding:2px 24px;box-shadow:0 12px 28px -20px rgba(57,40,82,.35);transition:border-color .25s}
+#fxb-page .fxb-faq details[open]{border-color:rgba(102,45,146,.22)}
+#fxb-page .fxb-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;font-weight:800;font-size:15.5px;line-height:1.35;padding:20px 0;color:var(--ink)}
+#fxb-page .fxb-faq summary::-webkit-details-marker{display:none}
+#fxb-page .fxb-faq summary::after{content:"+";font-size:24px;font-weight:700;color:var(--purple-2);flex:0 0 auto;line-height:1;transition:transform .25s}
+#fxb-page .fxb-faq details[open] summary::after{content:"\2013"}
+#fxb-page .fxb-faq p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.6;padding:0 0 22px}
+
 /* CTA */
 #fxb-page .fxb-cta{position:relative;overflow:hidden;background:linear-gradient(135deg,#392852,#662d92);padding:74px 24px;text-align:center;color:#fff}
 #fxb-page .fxb-cta-bg{position:absolute;inset:0;pointer-events:none}
@@ -209,6 +234,23 @@
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+</style>
+
+
+<style>
+#fxb-page .fxb-ladder-sub{font-weight:800;font-size:15px;color:var(--purple-2);margin:26px 4px 16px;display:flex;align-items:center;gap:9px}
+#fxb-page .fxb-ladder-sub::before{content:"";width:22px;height:3px;border-radius:3px;background:var(--orange)}
+#fxb-page .fxb-ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+#fxb-page .fxb-step{display:flex;flex-direction:column;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:18px;overflow:hidden;box-shadow:0 14px 32px -22px rgba(57,40,82,.45);transition:transform .35s,box-shadow .35s,border-color .35s}
+#fxb-page .fxb-step:hover{transform:translateY(-6px);box-shadow:0 28px 50px -26px rgba(102,45,146,.5);border-color:rgba(102,45,146,.25)}
+#fxb-page .fxb-step-prev{height:150px;overflow:hidden;background:#241a36}
+#fxb-page .fxb-step-prev img{width:100%;display:block;object-fit:cover;object-position:top center}
+#fxb-page .fxb-step-body{padding:16px 18px 18px}
+#fxb-page .fxb-step-body h4{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:5px;line-height:1.2}
+#fxb-page .fxb-step-body>span{display:block;color:var(--muted);font-size:13px;font-weight:600}
+#fxb-page .fxb-step-link{margin-top:12px;color:var(--purple-2)!important;font-weight:800;font-size:13.5px}
+@media(max-width:860px){#fxb-page .fxb-ladder{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page .fxb-ladder{grid-template-columns:1fr}}
 </style>
 
 
