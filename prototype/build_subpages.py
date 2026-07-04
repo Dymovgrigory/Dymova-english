@@ -14,10 +14,26 @@
 Запуск:  python3 build_subpages.py
 """
 import os
+import json
 from html import escape
 from build_course_pages import zayavka_unit
 
 OUT = os.path.dirname(os.path.abspath(__file__))
+SITE = "https://dymova-english.ru"
+RU_MONTHS = {
+    1: "января",
+    2: "февраля",
+    3: "марта",
+    4: "апреля",
+    5: "мая",
+    6: "июня",
+    7: "июля",
+    8: "августа",
+    9: "сентября",
+    10: "октября",
+    11: "ноября",
+    12: "декабря",
+}
 
 # ---------------------------------------------------------------- SVG иконки
 # Линейные иконки в фирменном стиле (stroke, без заливки), как в блоке преимуществ.
@@ -180,6 +196,61 @@ VIDEO_CSS = """
 </style>
 """
 
+ARTICLE_CSS = """
+<style>
+#fxb-page.fxb-blog-page .fxb-hero{padding:66px 24px 44px}
+#fxb-page.fxb-blog-page .fxb-hero-inner{max-width:980px}
+#fxb-page.fxb-blog-page .fxb-h1{font-size:clamp(30px,4.4vw,48px);margin-bottom:14px}
+#fxb-page.fxb-blog-page .fxb-sub{max-width:760px;font-size:16px;margin-bottom:18px}
+#fxb-page.fxb-blog-page .fxb-article-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 14px;color:rgba(255,255,255,.82);font-weight:700;font-size:14px;letter-spacing:.01em}
+#fxb-page.fxb-blog-page .fxb-article-meta span{display:inline-flex;align-items:center;gap:8px}
+#fxb-page.fxb-blog-page .fxb-article-meta span+span::before{content:"•";margin-right:14px;color:rgba(255,255,255,.5)}
+#fxb-page.fxb-blog-page .fxb-article-body{max-width:760px;margin:0 auto;color:var(--ink);font-size:17px;line-height:1.78;font-weight:500}
+#fxb-page.fxb-blog-page .fxb-article-body h2{font-size:clamp(24px,3vw,34px);line-height:1.18;margin:44px 0 14px;font-weight:800;color:var(--ink)}
+#fxb-page.fxb-blog-page .fxb-article-body h3{font-size:clamp(19px,2.4vw,24px);line-height:1.25;margin:34px 0 12px;font-weight:800;color:var(--purple-2)}
+#fxb-page.fxb-blog-page .fxb-article-body p{margin:0 0 18px;color:var(--ink)}
+#fxb-page.fxb-blog-page .fxb-article-body p:last-child{margin-bottom:0}
+#fxb-page.fxb-blog-page .fxb-article-body ul{margin:0 0 18px 20px;padding-left:18px}
+#fxb-page.fxb-blog-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
+#fxb-page.fxb-blog-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
+#fxb-page.fxb-blog-page .fxb-article-body a:hover{color:var(--orange)}
+#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
+#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
+#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.44)}
+#fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
+#fxb-page .fxb-related h2{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:14px}
+#fxb-page .fxb-related-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+#fxb-page .fxb-related-list a{display:block;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:16px;padding:16px 18px;box-shadow:0 12px 28px -20px rgba(57,40,82,.35);color:var(--purple-2);font-weight:800;line-height:1.35}
+#fxb-page .fxb-related-list a:hover{border-color:rgba(102,45,146,.22);color:var(--orange)}
+@media(max-width:860px){#fxb-page .fxb-related-list{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page.fxb-blog-page .fxb-hero{padding:56px 18px 38px}#fxb-page .fxb-related-list{grid-template-columns:1fr}}
+</style>
+"""
+
+FEED_CSS = """
+<style>
+#fxb-page.fxb-feed-page .fxb-hero{padding:66px 24px 48px}
+#fxb-page.fxb-feed-page .fxb-hero-inner{max-width:940px}
+#fxb-page.fxb-feed-page .fxb-h1{font-size:clamp(30px,4.4vw,48px);margin-bottom:14px}
+#fxb-page.fxb-feed-page .fxb-sub{max-width:720px;font-size:16px;margin-bottom:0}
+#fxb-page .fxb-feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+#fxb-page .fxb-news-card{display:flex;flex-direction:column;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:20px;overflow:hidden;box-shadow:0 16px 36px -22px rgba(57,40,82,.4);transition:transform .35s,box-shadow .35s,border-color .35s}
+#fxb-page .fxb-news-card>a{display:block;color:inherit;height:100%}
+#fxb-page .fxb-news-card:hover{transform:translateY(-6px);box-shadow:0 28px 50px -26px rgba(102,45,146,.5);border-color:rgba(102,45,146,.22)}
+#fxb-page .fxb-news-card-body{padding:22px}
+#fxb-page .fxb-news-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#fxb-page .fxb-news-badge{display:inline-flex;align-items:center;padding:7px 12px;border-radius:100px;background:rgba(102,45,146,.08);color:var(--purple-2);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+#fxb-page .fxb-news-date{color:var(--muted);font-size:13px;font-weight:600}
+#fxb-page .fxb-news-card h2{font-size:20px;line-height:1.25;font-weight:800;margin:12px 0 10px;color:var(--ink)}
+#fxb-page .fxb-news-card p{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:16px}
+#fxb-page .fxb-news-link{display:inline-flex;align-items:center;gap:8px;color:var(--purple-2);font-weight:800}
+#fxb-page .fxb-news-link:hover{color:var(--orange)}
+@media(max-width:980px){#fxb-page .fxb-feed-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page.fxb-feed-page .fxb-hero{padding:56px 18px 40px}#fxb-page .fxb-feed-grid{grid-template-columns:1fr}}
+</style>
+"""
+
 JS = """
 <script>
 (function(){
@@ -290,7 +361,39 @@ def video_section(kicker, title, lead, src, poster, light=False):
     return "\n".join(h)
 
 
-def render_page(p):
+def format_date_ru(date_str):
+    y, m, d = map(int, date_str.split("-"))
+    return f"{d} {RU_MONTHS[m]} {y}"
+
+
+def render_article_body(items):
+    parts = []
+    pre = []
+    prose = []
+    for kind, value in items:
+        if kind == "video":
+            pre.append(video_section(
+                value.get("kicker", "Видео"),
+                value["title"],
+                value.get("lead"),
+                value["src"],
+                value["poster"],
+                light=True,
+            ))
+        elif kind in ("h2", "h3"):
+            prose.append(f"<{kind}>{value}</{kind}>")
+        elif kind == "p":
+            prose.append(f"<p>{value}</p>")
+        elif kind == "ul":
+            prose.append("<ul>" + "".join(f"<li>{li}</li>" for li in value) + "</ul>")
+        elif kind == "html":
+            prose.append(value)
+    if prose:
+        parts.append('<div class="fxb-article-body">' + "\n".join(prose) + '</div>')
+    return pre, "\n".join(parts)
+
+
+def landing_page(p):
     """p: dict with page content."""
     grad = p["hero_grad"]
     h = []
@@ -366,6 +469,116 @@ def render_page(p):
         h.append(VIDEO_CSS)
     h.append(JS)
     return "\n".join(h)
+
+
+def article_jsonld(p):
+    url = SITE + "/" + p["alias"]
+    article = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": p["title"],
+        "description": p["description"],
+        "datePublished": p["date"],
+        "author": {"@type": "Organization", "name": "Языковая школа Фоксинбург"},
+        "publisher": {"@type": "Organization", "name": "Языковая школа Фоксинбург"},
+        "mainEntityOfPage": {"@type": "WebPage", "@id": url, "url": url},
+    }
+    breadcrumb = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Новости", "item": SITE + "/novosti"},
+            {"@type": "ListItem", "position": 3, "name": p["title"], "item": url},
+        ],
+    }
+    return (
+        '<script type="application/ld+json">' + json.dumps(article, ensure_ascii=False) + '</script>\n'
+        '<script type="application/ld+json">' + json.dumps(breadcrumb, ensure_ascii=False) + '</script>'
+    )
+
+
+def news_card(p):
+    return (
+        '<article class="fxb-news-card">'
+        '<a href="/' + escape(p["alias"], quote=True) + '">'
+        '<div class="fxb-news-card-body">'
+        '<div class="fxb-news-badges"><span class="fxb-news-badge">' + escape(p["category"]) + '</span>'
+        '<span class="fxb-news-date">' + escape(format_date_ru(p["date"])) + ' · ' + escape(p["reading_time"]) + '</span></div>'
+        '<h2>' + escape(p["title"]) + '</h2>'
+        '<p>' + escape(p["description"]) + '</p>'
+        '<span class="fxb-news-link">Читать →</span>'
+        '</div></a></article>'
+    )
+
+
+def feed_page(p):
+    h = []
+    h.append('<div id="fxb-page" class="fxb-feed-page">')
+    h.append('<section class="fxb-hero" style="background:' + p["hero_grad"] + '">')
+    h.append('<div class="fxb-hero-bg"><img class="fxb-hd1" src="' + DECOR_SWIRL + '" alt="" loading="lazy"><img class="fxb-hd2" src="' + DECOR_FOX + '" alt="" loading="lazy"></div>')
+    h.append('<div class="fxb-hero-inner">')
+    h.append('<span class="fxb-eyebrow"><span class="fxb-dot"></span>' + p["eyebrow"] + '</span>')
+    h.append('<h1 class="fxb-h1">' + p["h1"] + '</h1>')
+    h.append('<p class="fxb-sub">' + p["sub"] + '</p>')
+    h.append('</div></section>')
+    h.append('<section class="fxb-section"><div class="fxb-wrap">')
+    h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Архив</span>')
+    h.append('<h2 class="fxb-h2">Последние статьи</h2>')
+    if p.get("lead"):
+        h.append('<p class="fxb-lead">' + p["lead"] + '</p>')
+    h.append('</div>')
+    h.append('<div class="fxb-feed-grid">')
+    for art in sorted(p["articles"], key=lambda a: a["date"], reverse=True):
+        h.append(news_card(art))
+    h.append('</div></div></section>')
+    h.append('</div>')
+    h.append(CSS)
+    h.append(FEED_CSS)
+    h.append(JS)
+    return "\n".join(h)
+
+
+def article_page(p):
+    h = []
+    h.append('<div id="fxb-page" class="fxb-blog-page">')
+    h.append('<section class="fxb-hero" style="background:' + p["hero_grad"] + '">')
+    h.append('<div class="fxb-hero-bg"><img class="fxb-hd1" src="' + DECOR_SWIRL + '" alt="" loading="lazy"><img class="fxb-hd2" src="' + DECOR_FOX + '" alt="" loading="lazy"></div>')
+    h.append('<div class="fxb-hero-inner">')
+    h.append('<span class="fxb-eyebrow"><span class="fxb-dot"></span>' + escape(p["category"]) + '</span>')
+    h.append('<h1 class="fxb-h1">' + p["title"] + '</h1>')
+    h.append('<div class="fxb-article-meta"><span>' + escape(format_date_ru(p["date"])) + '</span><span>' + escape(p["reading_time"]) + '</span></div>')
+    h.append('</div></section>')
+    h.append('<section class="fxb-section"><div class="fxb-wrap">')
+    h.append('<nav class="fxb-breadcrumbs"><a href="/">Главная</a><span>→</span><a href="/novosti">Новости</a><span>→</span><span>' + escape(p["title"]) + '</span></nav>')
+    pre_blocks, prose_html = render_article_body(p["body"])
+    for block in pre_blocks:
+        h.append(block)
+    h.append(prose_html)
+    if p.get("related"):
+        h.append('<div class="fxb-related"><h2>Читайте также</h2><div class="fxb-related-list">')
+        for label, href in p["related"]:
+            h.append('<a href="' + escape(href, quote=True) + '">' + escape(label) + '</a>')
+        h.append('</div></div>')
+    h.append('</div></section>')
+    h.append('<section class="fxb-cta" id="fxb-cta"><div class="fxb-cta-bg"><img src="' + DECOR_FOX + '" alt="" loading="lazy"></div><div class="fxb-cta-box"><h2>Читайте также и запишитесь на <span class="fxb-accent">бесплатную диагностику</span></h2><p>Если хотите подобрать подходящий курс или задать вопросы по программе, оставьте заявку — мы свяжемся с вами.</p><div class="fxb-cta-btns"><a data-fxb-zayavka data-fxb-subject="Бесплатная диагностика" data-fxb-window="Блог" role="button" tabindex="0" class="fxb-btn-main">Оставить заявку</a><a href="' + MAX_BOT + '" target="_blank" rel="noopener" class="fxb-btn-max">' + svg("chat") + 'Написать в Max</a></div></div></section>')
+    h.append(article_jsonld(p))
+    h.append(zayavka_unit())
+    h.append('</div>')
+    h.append(CSS)
+    h.append(ARTICLE_CSS)
+    if p.get("video") or any(k == "video" for k, _ in p.get("body", [])):
+        h.append(VIDEO_CSS)
+    h.append(JS)
+    return "\n".join(h)
+
+
+def render_page(p):
+    if p.get("type") == "article":
+        return article_page(p)
+    if p.get("type") == "feed":
+        return feed_page(p)
+    return landing_page(p)
 
 
 # ---------------------------------------------------------------- контент
@@ -996,6 +1209,141 @@ PAGES["page_kitajskij_yazyk.html"] = {
     "cta_title": 'Запишитесь на <span class="fxb-accent">пробный урок</span> китайского',
     "cta_text": "Познакомим с преподавателем и методикой, определим цель обучения и подберём группу.",
 }
+
+NEWS_POST_1 = {
+    "type": "article",
+    "alias": "novosti-so-skolki-let-uchit-anglijskij",
+    "title": "Со скольки лет учить английский ребёнку",
+    "description": "Разбираем, когда начинать английский с ребёнком, что даёт ранний старт и как подать язык без перегрузки и стресса.",
+    "category": "Полезное для родителей",
+    "date": "2025-06-15",
+    "reading_time": "8 минут чтения",
+    "hero_grad": "linear-gradient(135deg,#2e1a47 0%,#662d92 55%,#8a4fb8 100%)",
+    "body": [
+        ("h2", "Короткий ответ: начинать можно раньше, чем кажется"),
+        ("p", "На вопрос «со скольки лет учить английский ребёнку» нет одной правильной цифры. Всё зависит от того, как вы хотите знакомить малыша с языком. В раннем возрасте важнее не объём правил, а мягкое, регулярное присутствие английской речи вокруг ребёнка. Уже в 3–4 года дети легко воспринимают песни, рифмовки, короткие команды и игровые задания, а в 5–7 лет можно подключать более осознанные занятия, если они построены через движение, сюжет и игру."),
+        ("p", "Часто родители ждут, пока ребёнок «созреет» для языка, и переживают, что раньше будет слишком сложно. На практике сложность определяется не возрастом, а форматом. Если урок напоминает маленькое приключение, где есть картинка, движение, повторение и понятный результат, ребёнок включается спокойно. Поэтому ранний старт не означает раннюю зубрёжку. Он означает раннее знакомство с языком как с естественной частью мира."),
+        ("h2", "Что даёт ранний старт"),
+        ("ul", [
+            "Ребёнок быстрее привыкает к звучанию английской речи и перестаёт воспринимать язык как «что-то чужое».",
+            "Появляется база произношения: интонации, ритм, звуки и простые речевые модели усваиваются легче.",
+            "Язык входит в жизнь без давления, поэтому у ребёнка меньше страха ошибиться и больше интереса к занятиям.",
+            "Когда в школе начинается системное обучение, английский уже не кажется совершенно новым и неизвестным предметом.",
+        ]),
+        ("p", "Важный бонус раннего старта — уверенность. Ребёнок не обязан сразу говорить длинными фразами или читать тексты. Достаточно того, что он узнаёт слова, откликается на знакомые инструкции, повторяет песенки и с интересом смотрит на английский как на понятную игру. Такой опыт потом очень помогает на школьных уроках: ребёнок не пугается нового материала, потому что уже однажды убедился, что язык можно изучать спокойно и с удовольствием."),
+        ("h2", "Когда стоит начинать именно занятия"),
+        ("p", "Если вы хотите не только познакомить малыша с языком, но и получить устойчивый результат, то ориентируйтесь на его готовность к формату занятий. Ребёнок должен хотя бы немного уметь слушать взрослого, включаться в короткое задание и оставаться в мини-группе без сильного утомления. Для кого-то это случается в 4 года, для кого-то ближе к 6. Именно поэтому у нас так хорошо работают <a href=\"/doshkolniki\">программы для дошкольников</a>: там английский идёт через игру, движение и повторение, а не через школьную нагрузку."),
+        ("p", "Дальше вступает в силу ещё один момент — темп развития. Один ребёнок в 5 лет уже легко запоминает названия цветов и животных, другому в этом же возрасте комфортнее слушать песенки и постепенно привыкать к английской речи. Оба варианта нормальны. Важно не сравнивать детей между собой, а смотреть на их интерес, концентрацию и эмоциональную готовность."),
+        ("h3", "Как понять, что пора идти на занятия"),
+        ("p", "Есть несколько простых признаков: ребёнок с удовольствием повторяет слова и рифмовки, спокойно воспринимает короткие инструкции на слух, любит карточки, песенки и настольные игры, а ещё готов приходить на занятие без длительной адаптации. Это хороший момент, чтобы попробовать регулярный формат. Для младших школьников уже можно переходить к более структурной базе — чтению, письму, словарю и первым грамматическим моделям. В этом хорошо помогают наши <a href=\"/mladshie-shkolniki\">занятия для младших школьников</a>."),
+        ("h2", "Как мы подаём английский маленьким детям"),
+        ("p", "В Фоксинбурге мы не торопим ребёнка и не перегружаем его правилами. На старте важнее не список тем, а комфортная языковая среда. Дети много двигаются, слушают, отвечают хором и индивидуально, играют в короткие сюжетные задания и постепенно собирают свой первый словарь. Педагог следит, чтобы новый материал не копился тяжёлым комом, а ложился слоями: сегодня одно слово, завтра короткая фраза, потом мини-диалог."),
+        ("p", "Такой подход особенно важен в дошкольном и младшем школьном возрасте. В этот период формируется отношение к учёбе вообще: будет ли ребёнок ждать занятия с интересом или воспринимать их как обязательную нагрузку. Поэтому наш ответ на вопрос «со скольки лет» простой: начинать можно тогда, когда формат подходит ребёнку, а материал подан бережно и понятно. В этом случае английский становится не гонкой за результатом, а частью хорошей учебной привычки."),
+    ],
+    "related": [
+        ("Английский для дошкольников", "/doshkolniki"),
+        ("Английский для младших школьников", "/mladshie-shkolniki"),
+        ("Новости и статьи", "/novosti"),
+    ],
+}
+
+NEWS_POST_2 = {
+    "type": "article",
+    "alias": "novosti-kak-podgotovitsya-k-oge-anglijskij",
+    "title": "Как подготовиться к ОГЭ по английскому: пошаговый план",
+    "description": "Пошагово разбираем подготовку к ОГЭ по английскому: сроки, навыки, типичные ошибки и как выстроить спокойный маршрут к экзамену.",
+    "category": "Экзамены",
+    "date": "2025-06-20",
+    "reading_time": "9 минут чтения",
+    "hero_grad": "linear-gradient(135deg,#241a36 0%,#5a2d8f 55%,#8a4fb8 100%)",
+    "body": [
+        ("h2", "С чего начинается подготовка"),
+        ("p", "Подготовка к ОГЭ по английскому редко начинается с тестов. Гораздо полезнее сначала понять структуру экзамена и честно оценить текущий уровень. В ОГЭ проверяются аудирование, чтение, грамматика и лексика, письмо и говорение — и каждый из этих блоков требует своей тренировки. Если ребёнок просто «много занимается английским», но не видит сам формат, на экзамене он легко теряет баллы на мелочах. Поэтому первый шаг — не наращивать объём любой ценой, а выстроить маршрут."),
+        ("p", "Оптимально начинать за год-полтора до экзамена, с 8–9 класса. Это даёт время спокойно пройти базу, укрепить слабые места и несколько раз потренироваться в формате, близком к реальному. Но если время уже поджимает, не стоит опускать руки: даже за несколько месяцев можно заметно улучшить результат, если заниматься системно. Главное — не прыгать между темами хаотично."),
+        ("h2", "Какие навыки важно тренировать"),
+        ("ul", [
+            "Аудирование — чтобы ребёнок привыкал быстро схватывать смысл и не паниковал, если не понял каждое слово.",
+            "Чтение — для уверенного поиска информации, понимания текста и работы с вопросами по содержанию.",
+            "Грамматика и лексика — чтобы задания на формы слов и языковые конструкции не отнимали баллы «по привычке».",
+            "Письмо — для аккуратного, понятного ответа в рамках нужного объёма и структуры.",
+            "Говорение — чтобы в устной части ученик не зависал от волнения и мог спокойно ответить по теме.",
+        ]),
+        ("p", "Лучше всего работает сочетание коротких регулярных блоков. Один день — аудирование и повторение слов, другой — чтение и грамматика, третий — письмо или говорение. Так подготовка становится живой системой, а не длинным списком упражнений. Важно и то, что навыки не существуют отдельно: хороший словарь помогает читать, а чтение — писать и говорить. Поэтому план должен быть связным."),
+        ("h2", "Типичные ошибки перед экзаменом"),
+        ("p", "Самая частая ошибка — готовиться только к тому, что ребёнок уже и так умеет. Например, если школьник любит читать, он может бесконечно проходить тексты и при этом избегать говорения. Но на ОГЭ слабое звено всё равно станет заметным. Другая ошибка — слишком поздно знакомиться с критериями оценивания. Экзамен проверяет не вообще «знание языка», а конкретный формат ответа. Если ребёнок этого не понимает, он теряет баллы даже при неплохом уровне."),
+        ("p", "Ещё одна проблема — перегрузка. Когда подготовка превращается в марафон без пауз, мотивация быстро падает. Гораздо полезнее стабильный график, где есть место для повторения, контроля и небольших побед. Именно так обычно строится работа на программе <a href=\"/oge-anglijskij\">подготовки к ОГЭ по английскому</a>: от диагностики и разбора ошибок до регулярной практики формата и отслеживания прогресса. Для тех, кто думает уже о будущем, полезно помнить, что похожая логика нужна и на <a href=\"/ege-anglijskij\">ЕГЭ</a> — только с более высоким уровнем требований."),
+        ("h3", "Пошаговый план, который помогает держать темп"),
+        ("html", "<ul><li>Сначала диагностика и определение слабых тем.</li><li>Потом повторение базы: словарь, грамматика, типовые конструкции.</li><li>После этого — отдельная тренировка каждого экзаменационного раздела.</li><li>Дальше — пробные варианты с разбором ошибок и временем на исправление.</li><li>В финале — повторение, настрой и работа над уверенностью.</li></ul>"),
+        ("p", "Если план выстроен заранее, экзамен перестаёт казаться чем-то неуправляемым. Ребёнок понимает, что у него есть последовательность действий: сначала разобраться в структуре, потом подтянуть навыки, затем отработать формат и в конце спокойно пройти пробник. Такой подход снимает лишнее напряжение и делает подготовку предсказуемой. А именно предсказуемость и спокойствие часто оказываются важнее, чем разовые рывки."),
+        ("h2", "Как школа помогает пройти путь без хаоса"),
+        ("p", "В хорошей подготовке к ОГЭ всегда есть педагог, который держит маршрут: объясняет, что делать сейчас, что повторить дома и где уже виден прогресс. Это особенно ценно для семей, где у ребёнка много занятий и мало свободного времени. Когда процесс прозрачен, родители понимают, что именно тренируется, а школьник видит смысл каждой новой темы. В результате английский становится не набором случайных упражнений, а понятной системой с логичным завершением."),
+        ("p", "Если подойти к экзамену спокойно и последовательно, результат обычно чувствуется не только в баллах. У ребёнка появляется уверенность: он знает, как читать задания, как распределять время, как отвечать устно и как не теряться в письме. Это и есть настоящая подготовка — когда ученик не просто «натаскан», а умеет действовать по плану."),
+    ],
+    "related": [
+        ("Подготовка к ОГЭ по английскому", "/oge-anglijskij"),
+        ("Подготовка к ЕГЭ по английскому", "/ege-anglijskij"),
+        ("Новости и статьи", "/novosti"),
+    ],
+}
+
+NEWS_POST_3 = {
+    "type": "article",
+    "alias": "novosti-kak-prohodyat-smeny-letnej-akademii",
+    "title": "Как проходят смены Летней Академии",
+    "description": "Рассказываем, как устроены смены Летней Академии: тематические недели, проекты, мини-группы и комфортный утренний формат.",
+    "category": "События школы",
+    "date": "2025-06-25",
+    "reading_time": "7 минут чтения",
+    "hero_grad": "linear-gradient(135deg,#ee7349 0%,#f7971e 50%,#fcc419 100%)",
+    "body": [
+        ("video", {
+            "kicker": "Видео",
+            "title": "Летняя Академия — вживую",
+            "lead": "Короткий ролик показывает атмосферу смен: как дети занимаются, общаются и включаются в проекты.",
+            "src": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy.mp4",
+            "poster": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy-poster.jpg",
+        }),
+        ("h2", "Что такое смена Летней Академии"),
+        ("p", "Летняя Академия — это не просто «занятия летом», а короткий интенсивный формат, в котором английский живёт в течение дня. Ребёнок приходит в комфортное время, погружается в тему смены и каждый день видит, как язык нужен для общения, игры, мини-проектов и творческих заданий. Летом у детей обычно появляется больше свободы, и наша задача — направить эту энергию в полезное русло без ощущения школьной нагрузки."),
+        ("p", "Мы делаем ставку на живую среду: здесь язык не существует отдельно от действий. Если тема недели связана с путешествиями, дети обсуждают маршруты, собирают словарь, рисуют постеры и представляют свои идеи. Если тема про природу или технологии, появляются другие слова, другие роли и другие мини-задачи. Благодаря этому английский запоминается не в виде сухого списка, а через впечатления и практику."),
+        ("h2", "Как устроены недели и занятия"),
+        ("p", "Каждая смена строится вокруг нескольких тематических недель. Это помогает удерживать интерес и не превращать лето в бесконечные одинаковые уроки. Внутри недели могут быть мини-проекты, игры, творческие задания, короткие презентации и задания на общение. Дети пробуют себя в ролях, договариваются друг с другом, слушают педагога и постепенно начинают говорить свободнее. Для многих именно такой формат становится тем самым моментом, когда английский перестаёт пугать."),
+        ("ul", [
+            "тематические недели дают ощущение новизны и помогают легче запоминать слова;",
+            "мини-проекты связывают речь, письмо, слушание и творчество в одном занятии;",
+            "мини-группы позволяют педагогу видеть каждого ребёнка и давать обратную связь;",
+            "утренние занятия оставляют свободным остаток дня для прогулок и отдыха;",
+        ]),
+        ("h3", "Почему мини-группы так важны летом"),
+        ("p", "Летом детям особенно нужна лёгкость. Поэтому мы делаем группы небольшими и собираем их по возрасту и уровню. В такой атмосфере проще говорить, задавать вопросы и включаться в задания без стеснения. Педагог успевает не только объяснить материал, но и подхватить инициативу ребёнка, поддержать его идею и помочь выразить мысль по-английски. Это создаёт ощущение маленького языкового клуба, а не формального урока."),
+        ("p", "Утренняя часть дня тоже играет важную роль: ребёнок ещё не устал, настроение обычно лучше, а после занятия остаётся время на летние дела. Именно поэтому смены Летней Академии хорошо подходят семьям, которым важно сохранить баланс между полезным занятием и полноценными каникулами. Формат даёт структуру, но не забирает лето."),
+        ("h2", "Что ребёнок уносит с собой после смены"),
+        ("p", "Главная ценность летней программы — не только новый словарь, но и ощущение, что английский может быть частью интересной жизни. Ребёнок становится смелее в речи, быстрее включается в задания, легче взаимодействует в группе и не теряет контакт с языком за длинные каникулы. Когда осенью начинается учебный год, старт оказывается заметно мягче. Это особенно заметно у детей, которые летом успели не «отдохнуть от языка», а использовать его в живом, вдохновляющем формате."),
+        ("p", "Ещё один важный результат — привычка думать на языке и не бояться высказаться. На смене дети не просто повторяют слова, а пробуют объяснять, уточнять, договариваться и представлять свои идеи. Это полезно и для тех, кто потом вернётся в обычную школьную группу, и для тех, кто осенью пойдёт дальше по своей программе. Летний опыт часто становится точкой роста: ребёнок замечает, что английский можно не только учить, но и использовать."),
+        ("h3", "Почему летний формат запоминается"),
+        ("p", "Летом у детей больше свободы, а значит — больше внутреннего ресурса для нового. Именно поэтому смены Летней Академии часто оставляют очень тёплое впечатление: здесь есть и общение, и движение, и творчество, и ощущение маленького события. Когда обучение связано с приятными эмоциями, знания лучше закрепляются, а желание продолжать заниматься осенью только растёт. В этом и состоит смысл хорошей летней программы."),
+        ("p", "Подробнее о самом направлении можно посмотреть на странице <a href=\"/letnyaya-akademiya\">Летней Академии</a>. А если хочется быть в курсе школьных новостей и полезных материалов, заглядывайте в <a href=\"/novosti\">новости и статьи</a> — там мы собираем короткие разборы, ответы на частые вопросы и рассказы о наших программах. Это удобный способ не потерять летний настрой и выбрать следующий шаг заранее."),
+    ],
+    "related": [
+        ("Летняя Академия", "/letnyaya-akademiya"),
+        ("Новости и статьи", "/novosti"),
+        ("Онлайн-занятия летом", "/online-zanyatiya"),
+    ],
+}
+
+PAGES["page_novosti.html"] = {
+    "type": "feed",
+    "hero_grad": "linear-gradient(135deg,#2e1a47 0%,#662d92 55%,#8a4fb8 100%)",
+    "eyebrow": "Новости школы",
+    "h1": "Новости и статьи",
+    "sub": "Полезные материалы для родителей, разборы экзаменов и новости о наших программах. Всё, что помогает ориентироваться в обучении и выбирать подходящий курс.",
+    "lead": "Последние публикации Фоксинбурга — о языке, школе и летних программах.",
+    "articles": [NEWS_POST_3, NEWS_POST_2, NEWS_POST_1],
+}
+
+PAGES["page_novosti_so_skolki_let_uchit_anglijskij.html"] = NEWS_POST_1
+PAGES["page_novosti_kak_podgotovitsya_k_oge_anglijskij.html"] = NEWS_POST_2
+PAGES["page_novosti_kak_prohodyat_smeny_letnej_akademii.html"] = NEWS_POST_3
 
 
 def main():
