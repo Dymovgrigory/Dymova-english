@@ -52,6 +52,11 @@ PAGES = [
     ("151228006", "kontakty",                  'id="fxb-shapka"', SHAPKA, FOOTER),
     ("151324806", "novosti",                   'id="fxb-shapka"', SHAPKA, FOOTER),
     ("151324866", "vakansii",                  'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152445956", "oge-anglijskij",            'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152446216", "ege-anglijskij",            'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152446236", "anglijskij-dlya-vzroslyh",  'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152446286", "nemeckij-yazyk",            'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("152446296", "kitajskij-yazyk",           'id="fxb-shapka"', SHAPKA, FOOTER),
 ]
 
 
