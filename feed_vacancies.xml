@@ -51,8 +51,9 @@
         <categoryId>1</categoryId>
         <set-ids>s-vacancies</set-ids>
         <picture>https://static.tildacdn.com/tild6463-3833-4439-a164-666264333534/result_favicon.jpg</picture>
-        <param name="График работы">TODO: подтвердить</param>
-        <description>TODO: подтвердить реальную вакансию и условия у бизнеса.</description>
+        <param name="График работы">Гибкий график</param>
+        <param name="Тип занятости">Частичная</param>
+        <description>Занятия французским языком для детей и подростков в языковой школе «Фоксинбург». Официальное трудоустройство, дружный коллектив и поддержка методиста.</description>
       </offer>
     </offers>
   </shop>
