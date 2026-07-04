@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     LLM_API_KEY: str = ""
     LLM_BASE_URL: str = "https://openrouter.ai/api/v1"
     LLM_MODEL: str = "meta-llama/llama-3.3-70b-instruct:free"
+    # Запасные провайдеры в порядке попыток. JSON-массив объектов
+    # {"base_url": "...", "api_key": "...", "model": "..."}.
+    LLM_FALLBACKS: str = "[]"
     LLM_TEMPERATURE: float = 0.4
     LLM_MAX_TOKENS: int = 700
     LLM_TIMEOUT: int = 40
@@ -51,7 +54,8 @@ class Settings(BaseSettings):
     # --- Прочее ---
     BOT_NAME: str = "Фоксинбург"
     DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
-    STATE_FILE: str = ""  # путь к файлу персистентности диалогов (опц.)
+    DB_PATH: str = "./data/bot.db"
+    STATE_FILE: str = ""  # legacy alias для DB_PATH
 
     @property
     def admin_ids(self) -> list[str]:

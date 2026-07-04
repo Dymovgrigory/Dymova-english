@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 from pathlib import Path
 
@@ -20,15 +21,20 @@ from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
 from app.knowledge.kb import get_kb
+from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
 from app.memory import Lead, get_store
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Foxinburg MAX Bot")
+APP_VERSION = "0.1.0"
+PLATFORM = "max"
+
+app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
+_BACKGROUND_TASKS: set[asyncio.Task] = set()
 
 
 def _main_menu() -> list[list[dict]]:
@@ -55,12 +61,33 @@ _CALLBACK_TEXT = {
 
 @app.get("/health")
 async def health() -> dict:
+    store = get_store()
+    llm = get_llm()
     max_client = get_max()
     return {
         "status": "ok",
+        "version": APP_VERSION,
+        "db_ok": store.ping(),
+        "db_path": getattr(store, "_db_path", ""),
+        "llm_configured": llm.enabled,
+        "llm_providers": len(llm.providers),
         "max_configured": max_client.configured,
         "bigben_configured": get_bigben().configured,
         "kb_documents": len(get_kb().documents),
+    }
+
+
+@app.get("/ready")
+async def ready() -> dict:
+    store = get_store()
+    llm = get_llm()
+    db_ok = store.ping()
+    llm_ok = llm.enabled
+    return {
+        "ready": db_ok and llm_ok,
+        "version": APP_VERSION,
+        "db_ok": db_ok,
+        "llm_configured": llm_ok,
     }
 
 
@@ -80,12 +107,31 @@ async def webhook(request: Request):
 
     for update in updates:
         update_type = update.get("type") or update.get("update_type")
-        try:
-            await _process_update(update, update_type, max_client)
-        except Exception:
-            logger.exception("Ошибка обработки update_type=%s", update_type)
+        _schedule_update(update, update_type, max_client)
 
     return {"status": "ok"}
+
+
+def _schedule_update(update: dict, update_type: str, max_client) -> bool:
+    update_id = _extract_update_id(update)
+    user_id = _extract_user_id(update) or _extract_user_id(update.get("message") or {}) or _extract_user_id(update.get("callback") or {})
+    if update_id:
+        store = get_store()
+        if not store.mark_event_seen(update_id, platform=PLATFORM, user_id=user_id or "", event_type=update_type or ""):
+            logger.info("Duplicate update skipped id=%s type=%s", update_id, update_type)
+            return False
+
+    task = asyncio.create_task(_process_update_safe(update, update_type, max_client))
+    _BACKGROUND_TASKS.add(task)
+    task.add_done_callback(_BACKGROUND_TASKS.discard)
+    return True
+
+
+async def _process_update_safe(update: dict, update_type: str, max_client) -> None:
+    try:
+        await _process_update(update, update_type, max_client)
+    except Exception:
+        logger.exception("Ошибка обработки update_type=%s", update_type)
 
 
 async def _process_update(update: dict, update_type: str, max_client) -> None:
@@ -129,6 +175,24 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
             await max_client.send_message(user_id, reply)
         return
+
+
+def _extract_update_id(update: dict):
+    for key in ("id", "update_id", "event_id"):
+        value = update.get(key)
+        if value:
+            return str(value)
+    message = update.get("message") or {}
+    for key in ("id", "message_id"):
+        value = message.get(key)
+        if value:
+            return str(value)
+    callback = update.get("callback") or {}
+    for key in ("callback_id", "id"):
+        value = callback.get(key)
+        if value:
+            return str(value)
+    return None
 
 
 def _extract_user_id(update: dict):
