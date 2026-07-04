@@ -188,8 +188,11 @@
 #fxb-shapka .fxb-summer-label:hover{background:rgba(238,115,73,.12);border-color:rgba(238,115,73,.5)}
 
 @media(max-width:960px){
-  #fxb-shapka .fxb-topline{flex-wrap:wrap;padding:12px 0 10px}
-  #fxb-shapka .fxb-contacts{display:none}
+  #fxb-shapka{overflow:visible}
+  #fxb-shapka .fxb-topline{position:relative;flex-wrap:wrap;padding:12px 0 10px}
+  #fxb-shapka .fxb-contacts{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 4px}
+  #fxb-shapka .fxb-contacts-group{width:100%;justify-content:center;flex-wrap:wrap;gap:5px}
+  #fxb-shapka .fxb-csep{display:none}
   #fxb-shapka .fxb-badge{display:none}
   #fxb-shapka .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:200;border-radius:0 0 16px 16px}
   #fxb-shapka .fxb-nav.fxb-open{display:flex}
@@ -197,7 +200,7 @@
   #fxb-shapka .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.04);margin:2px 0;border-radius:10px}
   #fxb-shapka .fxb-dd-panel a{color:rgba(255,255,255,.7);font-size:14px}
   #fxb-shapka .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
-  #fxb-shapka .fxb-burger{display:flex}
+  #fxb-shapka .fxb-burger{display:flex;margin-left:auto}
   #fxb-shapka .fxb-actions{display:none}
   #fxb-shapka .fxb-summer{padding:6px 0 4px;max-width:100%;flex-direction:column;align-items:center}
   #fxb-shapka .fxb-summer-label{padding:10px 20px;font-size:13px;border-radius:14px}
