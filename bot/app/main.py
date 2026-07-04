@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import asyncio
 import base64
 import logging
 from contextlib import asynccontextmanager
@@ -19,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app import insights, scheduler
 from app import intent as I
+from app.dedup import mark_seen
 from app.ai_core import handle_message, handle_start, parse_utm
 from app.broadcast import audience_counts, get_user_detail, list_users, resolve_recipients, send_broadcast
 from app.admin_router import hand_off
@@ -34,6 +36,8 @@ from app.memory import Lead, get_store
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+APP_VERSION = "0.1.0"
+
 @asynccontextmanager
 async def _lifespan(_: FastAPI):
     scheduler.start()
@@ -43,6 +47,7 @@ async def _lifespan(_: FastAPI):
 app = FastAPI(title="Foxinburg MAX Bot", lifespan=_lifespan)
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
+_BACKGROUND_TASKS: set[asyncio.Task] = set()
 
 
 def _miniapp_url(section: str = "") -> str:
@@ -190,12 +195,22 @@ async def _admin_contact_flow(max_client, conv, branch_key: str | None = None) -
 @app.get("/health")
 async def health() -> dict:
     max_client = get_max()
+    llm = get_llm()
     return {
         "status": "ok",
+        "version": APP_VERSION,
         "max_configured": max_client.configured,
         "bigben_configured": get_bigben().configured,
         "kb_documents": len(get_kb().documents),
+        "llm_configured": llm.enabled,
+        "llm_providers": len(llm.providers),
     }
+
+
+@app.get("/ready")
+async def ready() -> dict:
+    llm = get_llm()
+    return {"ready": llm.enabled, "llm_configured": llm.enabled}
 
 
 @app.post("/webhook")
@@ -214,12 +229,27 @@ async def webhook(request: Request):
 
     for update in updates:
         update_type = update.get("type") or update.get("update_type")
-        try:
-            await _process_update(update, update_type, max_client)
-        except Exception:
-            logger.exception("Ошибка обработки update_type=%s", update_type)
+        _schedule_update(update, update_type, max_client)
 
     return {"status": "ok"}
+
+
+def _schedule_update(update: dict, update_type: str, max_client) -> bool:
+    event_id = _extract_event_id(update)
+    if event_id and not mark_seen(event_id):
+        logger.info("Duplicate webhook event skipped id=%s type=%s", event_id, update_type)
+        return False
+    task = asyncio.create_task(_process_update_safe(update, update_type, max_client))
+    _BACKGROUND_TASKS.add(task)
+    task.add_done_callback(_BACKGROUND_TASKS.discard)
+    return True
+
+
+async def _process_update_safe(update: dict, update_type: str, max_client) -> None:
+    try:
+        await _process_update(update, update_type, max_client)
+    except Exception:
+        logger.exception("Ошибка обработки update_type=%s", update_type)
 
 
 async def _process_update(update: dict, update_type: str, max_client) -> None:
@@ -323,6 +353,24 @@ def _extract_user_id(update: dict):
             uid = node.get("user_id") or node.get("id")
             if uid:
                 return str(uid)
+    return None
+
+
+def _extract_event_id(update: dict) -> str | None:
+    for key in ("id", "update_id", "event_id"):
+        value = update.get(key)
+        if value:
+            return str(value)
+    message = update.get("message") or {}
+    for key in ("id", "message_id"):
+        value = message.get(key)
+        if value:
+            return str(value)
+    callback = update.get("callback") or {}
+    for key in ("callback_id", "id"):
+        value = callback.get(key)
+        if value:
+            return str(value)
     return None
 
 
