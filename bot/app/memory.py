@@ -1,13 +1,12 @@
 """Память диалогов: состояние по каждому пользователю MAX.
 
 Хранит этап продажи, собранные данные лида, краткую историю сообщений и
-выбранный курс/филиал. По умолчанию — потокобезопасное хранилище в памяти
-процесса; при указании STATE_FILE состояние дополнительно сохраняется на диск
-в JSON, чтобы пережить перезапуск.
+выбранный курс/филиал. Бэкенд — SQLite, чтобы переживать перезапуски процесса.
 """
 from __future__ import annotations
 
 import json
+import sqlite3
 import threading
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -52,6 +51,7 @@ class Lead:
 @dataclass
 class Conversation:
     user_id: str
+    platform: str = "max"
     stage: str = STAGE_GREETING
     lead: Lead = field(default_factory=Lead)
     history: list[dict] = field(default_factory=list)  # [{role, content}]
@@ -86,62 +86,107 @@ class Conversation:
 
 
 class MemoryStore:
-    def __init__(self) -> None:
-        self._data: dict[str, Conversation] = {}
-        self._lock = threading.Lock()
-        self._file = Path(settings.STATE_FILE) if settings.STATE_FILE else None
-        self._load()
+    def __init__(self, db_path: str | Path | None = None) -> None:
+        self._db_path = str(db_path or _resolve_db_path())
+        self._lock = threading.RLock()
+        self._conn = self._connect()
+        self._init_schema()
 
-    def get(self, user_id: str) -> Conversation:
+    def get(self, user_id: str, platform: str = "max") -> Conversation:
         with self._lock:
-            conv = self._data.get(user_id)
+            conv = self._load_conversation(platform, user_id)
             if conv is None:
-                conv = Conversation(user_id=user_id)
-                self._data[user_id] = conv
+                conv = Conversation(platform=platform, user_id=user_id)
             return conv
 
     def save(self, conv: Conversation) -> None:
         with self._lock:
-            self._data[conv.user_id] = conv
-            self._persist()
+            self._conn.execute(
+                """
+                INSERT INTO conversations(platform, user_id, payload, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(platform, user_id)
+                DO UPDATE SET payload=excluded.payload, updated_at=CURRENT_TIMESTAMP
+                """,
+                (conv.platform, conv.user_id, json.dumps(asdict(conv), ensure_ascii=False)),
+            )
 
-    def reset(self, user_id: str) -> Conversation:
+    def reset(self, user_id: str, platform: str = "max") -> Conversation:
         with self._lock:
-            conv = Conversation(user_id=user_id)
-            self._data[user_id] = conv
-            self._persist()
+            conv = Conversation(platform=platform, user_id=user_id)
+            self.save(conv)
             return conv
 
-    # ---------- персистентность ----------
-    def _persist(self) -> None:
-        if not self._file:
-            return
+    def mark_event_seen(self, event_id: str, platform: str = "max", user_id: str = "", event_type: str = "") -> bool:
+        with self._lock:
+            cur = self._conn.execute(
+                """
+                INSERT OR IGNORE INTO processed_events(platform, event_id, user_id, event_type, created_at)
+                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                """,
+                (platform, event_id, user_id, event_type),
+            )
+            return cur.rowcount == 1
+
+    def ping(self) -> bool:
+        with self._lock:
+            self._conn.execute("SELECT 1")
+        return True
+
+    # ---------- internal ----------
+    def _connect(self) -> sqlite3.Connection:
+        db_path = self._db_path
+        uri = db_path.startswith("file:")
+        if db_path not in (":memory:",) and not uri:
+            Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(db_path, check_same_thread=False, uri=uri, isolation_level=None)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys = ON")
         try:
-            payload = {uid: _conv_to_dict(c) for uid, c in self._data.items()}
-            self._file.parent.mkdir(parents=True, exist_ok=True)
-            self._file.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        except Exception:
+            conn.execute("PRAGMA journal_mode = WAL")
+        except sqlite3.Error:
             pass
+        conn.execute("PRAGMA synchronous = NORMAL")
+        conn.execute("PRAGMA busy_timeout = 5000")
+        return conn
 
-    def _load(self) -> None:
-        if not self._file or not self._file.exists():
-            return
-        try:
-            raw = json.loads(self._file.read_text(encoding="utf-8"))
-            for uid, c in raw.items():
-                self._data[uid] = _conv_from_dict(c)
-        except Exception:
-            pass
+    def _init_schema(self) -> None:
+        with self._lock:
+            self._conn.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS conversations (
+                    platform TEXT NOT NULL,
+                    user_id TEXT NOT NULL,
+                    payload TEXT NOT NULL,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (platform, user_id)
+                );
 
+                CREATE TABLE IF NOT EXISTS processed_events (
+                    platform TEXT NOT NULL,
+                    event_id TEXT NOT NULL,
+                    user_id TEXT NOT NULL DEFAULT '',
+                    event_type TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (platform, event_id)
+                );
+                """
+            )
 
-def _conv_to_dict(c: Conversation) -> dict:
-    d = asdict(c)
-    return d
+    def _load_conversation(self, platform: str, user_id: str) -> Conversation | None:
+        row = self._conn.execute(
+            "SELECT payload FROM conversations WHERE platform = ? AND user_id = ?",
+            (platform, user_id),
+        ).fetchone()
+        if row is None:
+            return None
+        return _conv_from_dict(json.loads(row["payload"]))
 
 
 def _conv_from_dict(d: dict) -> Conversation:
     lead = Lead(**d.get("lead", {}))
     return Conversation(
+        platform=d.get("platform", "max"),
         user_id=d["user_id"],
         stage=d.get("stage", STAGE_GREETING),
         lead=lead,
@@ -152,6 +197,14 @@ def _conv_from_dict(d: dict) -> Conversation:
         lead_step=d.get("lead_step", ""),
         handed_off=d.get("handed_off", False),
     )
+
+
+def _resolve_db_path() -> str:
+    if settings.DB_PATH:
+        return settings.DB_PATH
+    if settings.STATE_FILE:
+        return settings.STATE_FILE
+    return "./data/bot.db"
 
 
 _store: MemoryStore | None = None
