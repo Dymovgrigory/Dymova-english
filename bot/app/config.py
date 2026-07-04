@@ -62,6 +62,7 @@ class Settings(BaseSettings):
     BOT_NAME: str = "Фоксинбург"
     DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
     STATE_FILE: str = ""  # путь к файлу персистентности диалогов (опц.)
+    CONV_LOG_FILE: str = ""  # JSONL-лог диалогов (опц.)
 
     # --- Цикл улучшения ---
     # Журнал «пробелов»: вопросы, на которые бот ответил неуверенно
