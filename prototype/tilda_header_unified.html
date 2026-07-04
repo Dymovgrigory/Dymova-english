@@ -242,8 +242,11 @@
 
 /* ========== MOBILE ========== */
 @media(max-width:960px){
-  #fxb-hero .fxb-topline{flex-wrap:wrap;padding:12px 0 10px}
-  #fxb-hero .fxb-contacts{display:none}
+  #fxb-hero{overflow:visible}
+  #fxb-hero .fxb-topline{position:relative;flex-wrap:wrap;padding:12px 0 10px}
+  #fxb-hero .fxb-contacts{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 4px}
+  #fxb-hero .fxb-contacts-group{width:100%;justify-content:center;flex-wrap:wrap;gap:5px}
+  #fxb-hero .fxb-csep{display:none}
   #fxb-hero .fxb-badge{display:none}
   #fxb-hero .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:200;border-radius:0 0 16px 16px}
   #fxb-hero .fxb-nav.fxb-open{display:flex}
@@ -251,7 +254,7 @@
   #fxb-hero .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.04);margin:2px 0;border-radius:10px}
   #fxb-hero .fxb-dd-panel a{color:rgba(255,255,255,.7);font-size:14px}
   #fxb-hero .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
-  #fxb-hero .fxb-burger{display:flex}
+  #fxb-hero .fxb-burger{display:flex;margin-left:auto}
   #fxb-hero .fxb-actions{display:none}
   #fxb-hero .fxb-summer{padding:10px 0 4px}
   #fxb-hero .fxb-summer-dd{width:100%}
