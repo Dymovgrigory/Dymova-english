@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<yml_catalog date="2026-07-04 00:00">
+  <shop>
+    <name>Языковая школа «Фоксинбург»</name>
+    <company>ИП Дымова Вероника Александровна</company>
+    <url>https://dymova-english.ru/</url>
+    <email>school@foxinburg-edu.ru</email>
+    <picture>https://static.tildacdn.com/tild6463-3833-4439-a164-666264333534/result_favicon.jpg</picture>
+    <description>Карьера в языковой школе в Долгопрудном: преподаватели и администраторы.</description>
+    <currencies>
+      <currency id="RUR" rate="1" />
+    </currencies>
+    <categories>
+      <category id="1">Вакансия</category>
+      <category id="2">Работодатель</category>
+    </categories>
+    <sets>
+      <set id="s-vacancies">
+        <name>Вакансии Фоксинбург</name>
+        <url>https://dymova-english.ru/vakansii</url>
+      </set>
+    </sets>
+    <offers>
+      <offer id="vac-teacher-english">
+        <name>Преподаватель английского языка</name>
+        <vendor>Языковая школа «Фоксинбург»</vendor>
+        <url>https://dymova-english.ru/vakansii#teacher-english</url>
+        <categoryId>1</categoryId>
+        <set-ids>s-vacancies</set-ids>
+        <picture>https://static.tildacdn.com/tild6463-3833-4439-a164-666264333534/result_favicon.jpg</picture>
+        <param name="График работы">Гибкий график</param>
+        <param name="Тип занятости">Полная</param>
+        <description>Авторская программа для дошкольников и младших школьников. Официальное трудоустройство, оплачиваемое обучение методике, дружный коллектив и поддержка методиста.</description>
+      </offer>
+      <offer id="vac-admin-school">
+        <name>Администратор языковой школы</name>
+        <vendor>Языковая школа «Фоксинбург»</vendor>
+        <url>https://dymova-english.ru/vakansii#admin-school</url>
+        <categoryId>1</categoryId>
+        <set-ids>s-vacancies</set-ids>
+        <picture>https://static.tildacdn.com/tild6463-3833-4439-a164-666264333534/result_favicon.jpg</picture>
+        <param name="График работы">Сменный график</param>
+        <param name="График смен">9:00–15:00 и 15:00–21:00</param>
+        <param name="Тип занятости">Полная</param>
+        <description>Филиал на пр. Ракетостроителей 9к3 или Лихачевский 76к1. Встреча клиентов, консультирование по программам, документооборот и расписание, коммуникация с родителями.</description>
+      </offer>
+      <offer id="vac-teacher-french">
+        <name>Преподаватель французского языка</name>
+        <vendor>Языковая школа «Фоксинбург»</vendor>
+        <url>https://dymova-english.ru/vakansii#teacher-french</url>
+        <categoryId>1</categoryId>
+        <set-ids>s-vacancies</set-ids>
+        <picture>https://static.tildacdn.com/tild6463-3833-4439-a164-666264333534/result_favicon.jpg</picture>
+        <param name="График работы">Гибкий график</param>
+        <param name="Тип занятости">Частичная</param>
+        <description>Занятия французским языком для детей и подростков в языковой школе «Фоксинбург». Официальное трудоустройство, дружный коллектив и поддержка методиста.</description>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>
