@@ -358,7 +358,7 @@ DECOR_FOX = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin
 MYLEVEL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/"
 MAX_BOT = "https://max.ru/id611904726658_bot"
 ROADMAP = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/"
-TEAM_MEDIA = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/4dcc1ef1b977038bfb8bdc22ea40385e0429f78c/prototype/team-media/"
+TEAM_MEDIA = "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@4dcc1ef1b977038bfb8bdc22ea40385e0429f78c/prototype/team-media/"
 FOX_AVATAR = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png"
 
 ENGLISH_TEACHERS = [
