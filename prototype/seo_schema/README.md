@@ -5,6 +5,7 @@ These files are ready to paste into Tilda page settings → **HTML-код для
 
 ## What goes where
 
+- `head_schema_injector.html` — canonical page-by-page JS injector for Tilda `<head>`; paste it manually into the project head.
 - `org_localbusiness.html` — sitewide, on every public page HEAD.
 - `course_reading.html` — page `/reading` (`pageid 151292376`).
 - `course_grammar.html` — page `/grammar` (`pageid 151292406`).
@@ -24,6 +25,11 @@ These files are ready to paste into Tilda page settings → **HTML-код для
 - `breadcrumb_kontakty.html` — page `/kontakty` (`pageid 151228006`).
 - `breadcrumb_novosti.html` — page `/novosti` (`pageid 151324806`).
 - `breadcrumb_vakansii.html` — page `/vakansii` (`pageid 151324866`).
+- `breadcrumb_oge-anglijskij.html` — page `/oge-anglijskij` (`pageid 152445956`).
+- `breadcrumb_ege-anglijskij.html` — page `/ege-anglijskij` (`pageid 152446216`).
+- `breadcrumb_anglijskij-dlya-vzroslyh.html` — page `/anglijskij-dlya-vzroslyh` (`pageid 152446236`).
+- `breadcrumb_nemeckij-yazyk.html` — page `/nemeckij-yazyk` (`pageid 152446286`).
+- `breadcrumb_kitajskij-yazyk.html` — page `/kitajskij-yazyk` (`pageid 152446296`).
 
 ## Breadcrumb pattern
 

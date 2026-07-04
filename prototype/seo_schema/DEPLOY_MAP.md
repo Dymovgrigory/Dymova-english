@@ -2,6 +2,7 @@
 
 ## Sitewide / project HEAD
 
+- `head_schema_injector.html` — canonical per-path schema injector source for the project `<head>`.
 - `org_localbusiness.html` — project-level HEAD, every public page.
 
 ## Homepage
@@ -26,3 +27,8 @@
 - `/standartnye-offline` (`pageid 151229756`) — `breadcrumb_standartnye-offline.html`
 - `/novosti` (`pageid 151324806`) — `breadcrumb_novosti.html`
 - `/vakansii` (`pageid 151324866`) — `breadcrumb_vakansii.html`
+- `/oge-anglijskij` (`pageid 152445956`) — `breadcrumb_oge-anglijskij.html`
+- `/ege-anglijskij` (`pageid 152446216`) — `breadcrumb_ege-anglijskij.html`
+- `/anglijskij-dlya-vzroslyh` (`pageid 152446236`) — `breadcrumb_anglijskij-dlya-vzroslyh.html`
+- `/nemeckij-yazyk` (`pageid 152446286`) — `breadcrumb_nemeckij-yazyk.html`
+- `/kitajskij-yazyk` (`pageid 152446296`) — `breadcrumb_kitajskij-yazyk.html`

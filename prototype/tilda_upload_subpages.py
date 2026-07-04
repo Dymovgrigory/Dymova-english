@@ -39,6 +39,11 @@ PAGES = [
     ("151229676", "page_podderzhivayushchie_online.html", "podderzhivayushchie-online"),
     ("151229756", "page_standartnye_offline.html", "standartnye-offline"),
     ("151228006", "page_kontakty.html", "kontakty"),
+    ("152445956", "page_oge_anglijskij.html", "oge-anglijskij"),
+    ("152446216", "page_ege_anglijskij.html", "ege-anglijskij"),
+    ("152446236", "page_anglijskij_dlya_vzroslyh.html", "anglijskij-dlya-vzroslyh"),
+    ("152446286", "page_nemeckij_yazyk.html", "nemeckij-yazyk"),
+    ("152446296", "page_kitajskij_yazyk.html", "kitajskij-yazyk"),
 ]
 
 CONTENT_MARKERS = ['id="fxb-page"', 'id="fxb-age-page"', 'id="fxb-summer-page"', 'id="fxb-contacts"']
