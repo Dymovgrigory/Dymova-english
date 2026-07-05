@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -42,14 +44,19 @@ class FakeTask:
 
 
 class FakeHttpxResponse:
-    def __init__(self, status_code=200, text="ok"):
+    def __init__(self, status_code=200, text="ok", json_data=None):
         self.status_code = status_code
         self.text = text
+        self._json_data = json_data or {}
+
+    def json(self):
+        return self._json_data
 
 
 class FakeHttpxAsyncClient:
     created_kwargs = []
     posted = []
+    next_response = FakeHttpxResponse()
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
@@ -63,7 +70,7 @@ class FakeHttpxAsyncClient:
 
     async def post(self, url, data=None):
         self.__class__.posted.append({"url": url, "data": data, "kwargs": self.kwargs})
-        return FakeHttpxResponse()
+        return self.__class__.next_response
 
 
 @pytest.fixture(autouse=True)
@@ -74,6 +81,7 @@ def reset_state():
     telegram_module._client = None
     FakeHttpxAsyncClient.created_kwargs = []
     FakeHttpxAsyncClient.posted = []
+    FakeHttpxAsyncClient.next_response = FakeHttpxResponse()
     yield
     main_module._BACKGROUND_TASKS.clear()
     dedup_module._store = None
@@ -81,6 +89,7 @@ def reset_state():
     telegram_module._client = None
     FakeHttpxAsyncClient.created_kwargs = []
     FakeHttpxAsyncClient.posted = []
+    FakeHttpxAsyncClient.next_response = FakeHttpxResponse()
 
 
 def test_telegram_webhook_secret_guard(monkeypatch):
@@ -265,3 +274,77 @@ async def test_telegram_client_omits_proxy_kwarg_when_empty(monkeypatch):
 
     assert result is True
     assert "proxy" not in FakeHttpxAsyncClient.created_kwargs[-1]
+
+
+@pytest.mark.asyncio
+async def test_telegram_get_updates_uses_proxy_and_parses_result(monkeypatch):
+    monkeypatch.setattr(settings, "TELEGRAM_BOT_TOKEN", "token", raising=False)
+    monkeypatch.setattr(settings, "TELEGRAM_PROXY_URL", "http://host:3128", raising=False)
+    FakeHttpxAsyncClient.next_response = FakeHttpxResponse(
+        status_code=200,
+        json_data={"ok": True, "result": [{"update_id": 10}, {"update_id": 11}]},
+    )
+    monkeypatch.setattr(telegram_module.httpx, "AsyncClient", FakeHttpxAsyncClient)
+
+    client = telegram_module.TelegramClient()
+    updates = await client.get_updates(offset=9, timeout=25)
+
+    assert updates == [{"update_id": 10}, {"update_id": 11}]
+    kwargs = FakeHttpxAsyncClient.created_kwargs[-1]
+    assert kwargs["proxy"] == "http://host:3128"
+    assert isinstance(kwargs["timeout"], telegram_module.httpx.Timeout)
+    assert kwargs["timeout"].connect == 40
+    post = FakeHttpxAsyncClient.posted[-1]
+    assert post["url"].endswith("/getUpdates")
+    assert post["data"]["offset"] == "9"
+    assert post["data"]["timeout"] == "25"
+    assert post["data"]["allowed_updates"] == '["message"]'
+
+
+@pytest.mark.asyncio
+async def test_telegram_get_updates_non_200_returns_empty(monkeypatch):
+    monkeypatch.setattr(settings, "TELEGRAM_BOT_TOKEN", "token", raising=False)
+    monkeypatch.setattr(settings, "TELEGRAM_PROXY_URL", "", raising=False)
+    FakeHttpxAsyncClient.next_response = FakeHttpxResponse(status_code=500, text="boom")
+    monkeypatch.setattr(telegram_module.httpx, "AsyncClient", FakeHttpxAsyncClient)
+
+    client = telegram_module.TelegramClient()
+    updates = await client.get_updates(offset=None, timeout=25)
+
+    assert updates == []
+    assert "proxy" not in FakeHttpxAsyncClient.created_kwargs[-1]
+
+
+@pytest.mark.asyncio
+async def test_telegram_poll_loop_dispatches_update_and_deletes_webhook(monkeypatch):
+    deleted = []
+    scheduled = []
+
+    class PollTelegramClient:
+        def __init__(self):
+            self.calls = 0
+
+        async def delete_webhook(self):
+            deleted.append(True)
+            return True
+
+        async def get_updates(self, offset, timeout=25):
+            self.calls += 1
+            if self.calls == 1:
+                return [{"update_id": 10, "message": {"chat": {"id": 1}, "text": "hi"}}]
+            raise asyncio.CancelledError
+
+    def fake_schedule(update, telegram_client):
+        scheduled.append((update, telegram_client))
+        return True
+
+    monkeypatch.setattr(main_module, "_schedule_telegram_update", fake_schedule)
+    client = PollTelegramClient()
+
+    with pytest.raises(asyncio.CancelledError):
+        await main_module._telegram_poll_loop(client)
+
+    assert deleted == [True]
+    assert len(scheduled) == 1
+    assert scheduled[0][0]["update_id"] == 10
+    assert scheduled[0][1] is client

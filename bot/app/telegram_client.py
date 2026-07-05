@@ -29,8 +29,8 @@ def _normalize_buttons(buttons: list[list[dict]] | None) -> list[list[dict]]:
     return rows
 
 
-def _client_kwargs() -> dict:
-    kwargs: dict = {"timeout": 30}
+def _client_kwargs(timeout: int = 30) -> dict:
+    kwargs: dict = {"timeout": timeout}
     proxy_url = settings.TELEGRAM_PROXY_URL.strip()
     if proxy_url:
         kwargs["proxy"] = proxy_url
@@ -93,6 +93,32 @@ class TelegramClient:
         except Exception:
             logger.exception("Telegram delete_webhook failed")
             return False
+
+    async def get_updates(self, offset: int | None, timeout: int = 25) -> list[dict]:
+        if not self.configured:
+            return []
+        data: dict[str, str] = {
+            "timeout": str(timeout),
+            "allowed_updates": json.dumps(["message"], ensure_ascii=False),
+        }
+        if offset is not None:
+            data["offset"] = str(offset)
+        kwargs = _client_kwargs(timeout + 15)
+        kwargs["timeout"] = httpx.Timeout(timeout + 15)
+        try:
+            async with httpx.AsyncClient(**kwargs) as client:
+                resp = await client.post(f"{self.base}/getUpdates", data=data)
+            if resp.status_code != 200:
+                logger.warning("Telegram getUpdates error status=%s body=%s", resp.status_code, resp.text[:300])
+                return []
+            payload = resp.json()
+            result = payload.get("result") if isinstance(payload, dict) else None
+            if isinstance(result, list):
+                return result
+            logger.warning("Telegram getUpdates unexpected payload: %s", payload)
+        except Exception:
+            logger.warning("Telegram get_updates failed", exc_info=True)
+        return []
 
 
 _client: TelegramClient | None = None

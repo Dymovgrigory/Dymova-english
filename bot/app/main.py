@@ -43,11 +43,25 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 APP_VERSION = "0.1.0"
+_TELEGRAM_POLL_TASK: asyncio.Task | None = None
 
 @asynccontextmanager
 async def _lifespan(_: FastAPI):
+    global _TELEGRAM_POLL_TASK
     scheduler.start()
+    if settings.TELEGRAM_POLLING and get_telegram().configured:
+        _TELEGRAM_POLL_TASK = asyncio.create_task(_telegram_poll_loop(get_telegram()))
     yield
+    task = _TELEGRAM_POLL_TASK
+    _TELEGRAM_POLL_TASK = None
+    if task is not None:
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass
+        except Exception:
+            logger.exception("Telegram polling task stopped with error")
 
 
 app = FastAPI(title="Foxinburg MAX Bot", lifespan=_lifespan)
@@ -450,6 +464,32 @@ async def _process_telegram_update(update: dict, telegram_client) -> None:
     await telegram_client.send_message(chat_id, reply, buttons=btns or None)
     conv = get_store().get(user_id)
     log_turn(user_id, text, reply, intent, conv.stage, _dialogue_result(conv))
+
+
+async def _telegram_poll_loop(telegram_client) -> None:
+    offset: int | None = None
+    while True:
+        try:
+            await telegram_client.delete_webhook()
+            while True:
+                updates = await telegram_client.get_updates(offset, timeout=25)
+                for update in updates:
+                    if not isinstance(update, dict):
+                        continue
+                    update_id = update.get("update_id")
+                    if isinstance(update_id, int):
+                        offset = update_id + 1
+                    else:
+                        try:
+                            offset = int(update_id) + 1
+                        except Exception:
+                            pass
+                    _schedule_telegram_update(update, telegram_client)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            logger.exception("Ошибка Telegram polling")
+            await asyncio.sleep(3)
 
 
 def _schedule_update(update: dict, update_type: str, max_client) -> bool:
