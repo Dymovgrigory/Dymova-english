@@ -658,9 +658,36 @@ bot/
 
 ---
 
+### Сессия 15 (агент — Devin) — Telegram: исходящий прокси (api.telegram.org заблокирован с VPS)
+
+**Дата:** 2026-07-04
+**PR:** feat(bot): поддержка исходящего прокси для Telegram Bot API (`devin/1783244161-telegram-proxy` → main)
+**Запрос владельца:** «подключай Telegram через прокси» → затем «найди/возьми платный прокси». Итог: владелец купил SOCKS5-прокси (Proxy6-подобный), строка вида `IP:порт:логин:пароль`.
+
+**Проблема:** после деплоя Telegram-адаптера (Сессия 14) обнаружено, что с прод-VPS (Yandex Cloud, РФ) исходящие вызовы к `https://api.telegram.org` таймаутятся (`curl -m12` → 000/exit 28; в контейнере `httpcore.ConnectTimeout`). Общий HTTPS-egress работает (LLM через ProxyAPI отвечает) — блокируется именно диапазон Telegram (РКН). Входящие вебхуки Telegram→VPS проходят. Значит бот получает сообщения, но не может отправить ответ. Вебхук был снят, чтобы не было «немых» ответов.
+
+**Что сделано (только `bot/`):**
+- `bot/app/config.py`: добавлен `TELEGRAM_PROXY_URL: str = ""` (пусто = напрямую).
+- `bot/app/telegram_client.py`: helper `_client_kwargs()` — если `TELEGRAM_PROXY_URL` задан, передаёт `proxy=...` в `httpx.AsyncClient`. Применён во всех 3 методах (`send_message`, `set_webhook`, `delete_webhook`). Прокси только для Telegram-клиента (max_client/llm не тронуты). httpx 0.28.1 → параметр `proxy=`.
+- `bot/requirements.txt`: `httpx>=0.26,<1.0` → `httpx[socks]>=0.26,<1.0` (для `socks5://` нужен `socksio`).
+- `bot/.env.example`: задокументирован `TELEGRAM_PROXY_URL` (пример `socks5://user:pass@host:port`).
+- `bot/tests/test_telegram_adapter.py`: юнит-тесты, что при заданном `TELEGRAM_PROXY_URL` клиент создаётся с `proxy=...`, а без него — без; параметризованы по всем 3 методам.
+
+**Как проверено:**
+- тесты: `cd bot && python3 -m pytest -q` → 94 passed.
+- живая проверка прокси с VPS: `curl --socks5-hostname <user>@<ip:port> https://api.telegram.org/` → 302 за ~1 сек (и HTTP CONNECT тоже 302). До прокси — таймаут.
+
+**Решения и нюансы:** MTProto-прокси (`tg://proxy?...&secret=...`) НЕ подходит — это протокол для клиентов Telegram, а не для Bot API по HTTPS; нужен именно SOCKS5/HTTP. Бесплатные публичные прокси отвергнуты как нестабильные. Прокси-строка хранится в прод `.env` (`TELEGRAM_PROXY_URL`), не коммитится.
+**Деплой:** после мёрджа — редеплой прод `bot` из `main` (нужен ребилд ради `httpx[socks]`); в прод `.env` добавить `TELEGRAM_PROXY_URL=socks5://<user:pass>@<ip:port>`; затем `setWebhook` (url + secret_token) и сквозной тест в @foxinburg_bot.
+**Осталось / следующий шаг:** сквозной живой тест в Telegram на стороне владельца; прокси бесплатным не заменять — при протухании платного Telegram снова замолчит.
+
+---
+
 ## Текущий статус / Где остановились
 
-**Последний влитый PR:** **#92** (маршрутизация ДЗ + запись диалогов + отчёт 21:00) — в `main`, прод редеплоен, `CONV_LOG_FILE` включён. Ранее #91, #90. Открыт PR Этапа 2 (живой диалог) — 82 теста.
+**Последний влитый PR:** **#95** (Telegram-адаптер) — в `main`, задеплоен. Ранее #94 (веб-виджет, задеплоен + вставлен на сайт Тильда), #93 (Этап 2 живой диалог), #92/#91/#90. Открыт PR поддержки прокси для Telegram (`devin/1783244161-telegram-proxy`).
+
+**Telegram:** @foxinburg_bot подключён через тот же «мозг». api.telegram.org с VPS заблокирован → добавлен `TELEGRAM_PROXY_URL` (SOCKS5, зарубежный, куплен владельцем). После мёрджа PR-прокси: редеплой + `setWebhook` + живой тест. Секреты: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_PROXY_URL` — в прод `.env`.
 
 **Прод:** бот «Фоксинбург» в MAX на ВМ Yandex Cloud (`yc-user@89.169.132.104`), развёрнут из `main`. LLM: основной — ProxyAPI (gpt-4o-mini, оплата из РФ), запас — OpenRouter (`LLM_FALLBACKS`), `llm_providers:2`, `/health`=ok. Вебхук `https://bot.dymova-english.ru/webhook` активен. **BigBen CRM:** ключ обновлён, лиды доходят (тест → 200). SSH-ключ `~/.ssh/foxinburg_vps` (секрет `VPS_SSH_PRIVATE_KEY_OWNER`).
 

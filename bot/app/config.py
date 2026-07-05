@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_WEBHOOK_SECRET: str = ""
     TELEGRAM_WEBHOOK_URL: str = ""
+    TELEGRAM_PROXY_URL: str = ""
 
     # --- LLM (провайдер-агностик, OpenAI-совместимый) ---
     # По умолчанию Groq (бесплатно, быстро). Можно заменить на OpenRouter,

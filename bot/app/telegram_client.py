@@ -29,6 +29,14 @@ def _normalize_buttons(buttons: list[list[dict]] | None) -> list[list[dict]]:
     return rows
 
 
+def _client_kwargs() -> dict:
+    kwargs: dict = {"timeout": 30}
+    proxy_url = settings.TELEGRAM_PROXY_URL.strip()
+    if proxy_url:
+        kwargs["proxy"] = proxy_url
+    return kwargs
+
+
 class TelegramClient:
     def __init__(self) -> None:
         self.token = settings.TELEGRAM_BOT_TOKEN
@@ -52,7 +60,7 @@ class TelegramClient:
         if rows:
             data["reply_markup"] = json.dumps({"inline_keyboard": rows}, ensure_ascii=False)
         try:
-            async with httpx.AsyncClient(timeout=30) as client:
+            async with httpx.AsyncClient(**_client_kwargs()) as client:
                 resp = await client.post(f"{self.base}/sendMessage", data=data)
             if resp.status_code == 200:
                 return True
@@ -68,7 +76,7 @@ class TelegramClient:
         if secret:
             data["secret_token"] = secret
         try:
-            async with httpx.AsyncClient(timeout=30) as client:
+            async with httpx.AsyncClient(**_client_kwargs()) as client:
                 resp = await client.post(f"{self.base}/setWebhook", data=data)
             return resp.status_code == 200
         except Exception:
@@ -79,7 +87,7 @@ class TelegramClient:
         if not self.configured:
             return False
         try:
-            async with httpx.AsyncClient(timeout=30) as client:
+            async with httpx.AsyncClient(**_client_kwargs()) as client:
                 resp = await client.post(f"{self.base}/deleteWebhook")
             return resp.status_code == 200
         except Exception:

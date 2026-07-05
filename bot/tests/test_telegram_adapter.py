@@ -41,17 +41,46 @@ class FakeTask:
         callback(self)
 
 
+class FakeHttpxResponse:
+    def __init__(self, status_code=200, text="ok"):
+        self.status_code = status_code
+        self.text = text
+
+
+class FakeHttpxAsyncClient:
+    created_kwargs = []
+    posted = []
+
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+        self.__class__.created_kwargs.append(kwargs)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb):
+        return False
+
+    async def post(self, url, data=None):
+        self.__class__.posted.append({"url": url, "data": data, "kwargs": self.kwargs})
+        return FakeHttpxResponse()
+
+
 @pytest.fixture(autouse=True)
 def reset_state():
     main_module._BACKGROUND_TASKS.clear()
     dedup_module._store = None
     memory_module._store = None
     telegram_module._client = None
+    FakeHttpxAsyncClient.created_kwargs = []
+    FakeHttpxAsyncClient.posted = []
     yield
     main_module._BACKGROUND_TASKS.clear()
     dedup_module._store = None
     memory_module._store = None
     telegram_module._client = None
+    FakeHttpxAsyncClient.created_kwargs = []
+    FakeHttpxAsyncClient.posted = []
 
 
 def test_telegram_webhook_secret_guard(monkeypatch):
@@ -200,3 +229,39 @@ def test_admin_telegram_set_webhook(monkeypatch):
     assert telegram.webhooks == [
         {"url": "https://bot.example/telegram/webhook", "secret": "secret"}
     ]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("method_name", "args", "url_suffix"),
+    [
+        ("send_message", (123, "Привет"), "/sendMessage"),
+        ("set_webhook", ("https://bot.example/hook", "secret"), "/setWebhook"),
+        ("delete_webhook", tuple(), "/deleteWebhook"),
+    ],
+)
+async def test_telegram_client_passes_proxy_kwarg(monkeypatch, method_name, args, url_suffix):
+    monkeypatch.setattr(settings, "TELEGRAM_BOT_TOKEN", "token", raising=False)
+    monkeypatch.setattr(settings, "TELEGRAM_PROXY_URL", "socks5://user:pass@host:1080", raising=False)
+    monkeypatch.setattr(telegram_module.httpx, "AsyncClient", FakeHttpxAsyncClient)
+
+    client = telegram_module.TelegramClient()
+    method = getattr(client, method_name)
+    result = await method(*args)
+
+    assert result is True
+    assert FakeHttpxAsyncClient.created_kwargs[-1]["proxy"] == "socks5://user:pass@host:1080"
+    assert FakeHttpxAsyncClient.posted[-1]["url"].endswith(url_suffix)
+
+
+@pytest.mark.asyncio
+async def test_telegram_client_omits_proxy_kwarg_when_empty(monkeypatch):
+    monkeypatch.setattr(settings, "TELEGRAM_BOT_TOKEN", "token", raising=False)
+    monkeypatch.setattr(settings, "TELEGRAM_PROXY_URL", "", raising=False)
+    monkeypatch.setattr(telegram_module.httpx, "AsyncClient", FakeHttpxAsyncClient)
+
+    client = telegram_module.TelegramClient()
+    result = await client.send_message(321, "Привет")
+
+    assert result is True
+    assert "proxy" not in FakeHttpxAsyncClient.created_kwargs[-1]
