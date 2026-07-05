@@ -38,6 +38,35 @@ async def test_phone_step_acknowledges_birthday_instead_of_error():
     assert conv.lead.birthday == "2018-05-12"
 
 
+@pytest.mark.asyncio
+async def test_consult_uses_configured_history_window(monkeypatch):
+    from app import ai_core
+    from app.config import settings
+
+    monkeypatch.setattr(settings, "LLM_HISTORY_TURNS", 4)
+
+    conv = Conversation(user_id="h1")
+    conv.history = [
+        {"role": "user" if i % 2 == 0 else "assistant", "content": f"msg-{i}"}
+        for i in range(10)
+    ]
+    captured = {}
+
+    class FakeLLM:
+        enabled = True
+
+        async def complete(self, messages, temperature=None):
+            captured["messages"] = messages
+            return "Готово"
+
+    monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
+
+    reply = await ai_core._consult_with_context(conv, "Сколько стоит обучение?", "")
+    assert reply == "Готово"
+    assert len(captured["messages"]) == 5
+    assert captured["messages"][1:] == conv.history[-4:]
+
+
 # --- D: жалоба без дословных повторов + руководитель ---
 
 def test_handoff_followup_reacts_to_manager_request():

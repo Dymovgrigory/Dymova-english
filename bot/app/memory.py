@@ -15,7 +15,7 @@ from pathlib import Path
 
 from app.config import settings
 
-MAX_HISTORY = 12
+MAX_HISTORY = 20
 MAX_TRANSCRIPT = 1000
 
 # Этапы воронки продаж — синхронны «мышлению» бота из ТЗ.

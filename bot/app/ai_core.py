@@ -75,24 +75,6 @@ def _capture_entities(conv: Conversation, text: str) -> None:
         conv.selected_format = "Офлайн"
 
 
-def _smalltalk_reply(conv: Conversation, text: str) -> str | None:
-    """Короткие ответы на приветствия и общие вопросы о возможностях бота."""
-    low = text.lower()
-    if any(p in low for p in ("как дела", "как пожива", "что нового")):
-        return (
-            "Всё отлично, спасибо! 🦊 Я как раз люблю такие диалоги — "
-            "сразу помогаю подобрать подходящий курс.\n\n"
-            f"{sales.sales_nudge(conv)}"
-        )
-    if any(p in low for p in ("что умеешь", "чем можешь", "чем помож", "что ты умеешь")):
-        return (
-            "Я могу подобрать курс, рассказать о ценах, филиалах и летней "
-            "академии, а ещё записать на диагностику и довести до заявки.\n\n"
-            f"{sales.sales_nudge(conv)}"
-        )
-    return None
-
-
 async def _consult_with_context(
     conv: Conversation, text: str, kb_context: str, during_lead: bool = False
 ) -> str:
@@ -116,7 +98,7 @@ async def _consult_with_context(
                 "вопрос для заявки задаст система."
             )
         messages = [{"role": "system", "content": system}]
-        messages.extend(conv.history[-8:])
+        messages.extend(conv.history[-settings.LLM_HISTORY_TURNS:])
         reply = await llm.complete(messages)
         if reply:
             return reply
@@ -350,9 +332,6 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     # 6. Приветствие — пропускаем через LLM для естественного ответа.
     if intent == I.GREETING:
         conv.stage = STAGE_DISCOVERY
-        smalltalk = _smalltalk_reply(conv, text)
-        if smalltalk:
-            return smalltalk
         reply = await _consult(conv, text)
         # Если LLM вернул дежурный fallback — заменяем на тёплое приветствие.
         if (

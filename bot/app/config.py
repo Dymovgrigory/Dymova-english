@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     LLM_BASE_URL: str = "https://api.groq.com/openai/v1"
     LLM_MODEL: str = "llama-3.3-70b-versatile"
     LLM_FALLBACKS: str = "[]"
+    LLM_HISTORY_TURNS: int = 16
     VISION_MODEL: str = "openai/gpt-4o-mini"
     LLM_TEMPERATURE: float = 0.4
     LLM_MAX_TOKENS: int = 700

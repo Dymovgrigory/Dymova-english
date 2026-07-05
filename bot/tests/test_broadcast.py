@@ -110,16 +110,16 @@ def test_broadcast_endpoints_auth_and_send(monkeypatch, fresh_store):
 
 def test_conversation_add_tracks_transcript_and_history():
     conv = Conversation(user_id="u1")
-    for i in range(13):
+    for i in range(21):
         conv.add("user" if i % 2 == 0 else "assistant", f"msg-{i}")
-    assert len(conv.history) == 12
-    assert len(conv.transcript) == 13
+    assert len(conv.history) == 20
+    assert len(conv.transcript) == 21
     assert all("ts" in item for item in conv.transcript)
 
     for i in range(1000):
         conv.add("user", f"extra-{i}")
     assert len(conv.transcript) == 1000
-    assert len(conv.history) == 12
+    assert len(conv.history) == 20
 
 
 def test_conv_from_dict_backward_compatibility():
