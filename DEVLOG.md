@@ -639,6 +639,25 @@ bot/
 
 ---
 
+### Сессия 14 (агент — Devin) — Этап 3 (канал 2): Telegram-адаптер
+
+**Дата:** 2026-07-04
+**PR:** feat(bot): Telegram-адаптер — тот же «мозг» в @foxinburg_bot (`devin/1783242923-telegram-adapter` → main)
+**Запрос владельца:** Этап 3 «единый бот» — подключить Telegram (@foxinburg_bot) к тому же ядру; токен сохранён как секрет `TELEGRAM_BOT_TOKEN`.
+
+**Что сделано (только `bot/`):**
+- `bot/app/telegram_client.py` (новый): клиент Telegram Bot API по образцу `max_client` — `send_message(chat_id, text, buttons)` (inline-кнопки-ссылки через `reply_markup.inline_keyboard`; `_normalize_buttons` принимает и `{text,url}`, и `{title,url}`, callback-кнопки без url отбрасываются), `set_webhook(url, secret)`, `delete_webhook()`, singleton `get_telegram()` (включён только при заданном токене).
+- `bot/app/main.py`: `POST /telegram/webhook` — проверка заголовка `X-Telegram-Bot-Api-Secret-Token` (403 при несовпадении, если секрет задан), быстрый 200 + фоновая обработка (`_BACKGROUND_TASKS`), дедуп по `tg:<update_id>` через `dedup`. `_process_telegram_update`: `user_id = tg:<chat_id>`; `/start [param]` → `handle_start`; `HOMEWORK` → бесплатный ответ + кнопка мини-аппа; `HANDOFF` → уведомление админов **через MAX-клиент** (`_admin_contact_flow(get_max(), conv)`), ответ пользователю — через telegram_client; иначе — `handle_message` + контекстные кнопки. `log_turn` во всех ветках. Нетекстовые апдейты игнорируются без падения. Добавлен `telegram_configured` в `/health` и `POST /admin/telegram/set-webhook` (защита `_check_admin`, регистрирует вебхук на `TELEGRAM_WEBHOOK_URL` c секретом).
+- `bot/app/config.py` + `bot/.env.example`: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_WEBHOOK_URL`.
+- `bot/tests/test_telegram_adapter.py` (новый): защита секретом (403), обычный текст → send_message с reply, `/start`, homework-кнопка, дедуп по `update_id`, `/admin/telegram/set-webhook`, и (ключевое) `test_telegram_handoff_uses_max_for_admins` — при HANDOFF админ уведомляется через MAX-клиент (admin MAX-id), а ответ пользователю — через telegram_client.
+
+**Как проверено:** `cd bot && python3 -m pytest -q` → 90 passed. Сети в тестах замоканы.
+**Решения и нюансы:** админы сидят в MAX, поэтому хэндофф из любого канала (MAX/веб/Telegram) уведомляет их через MAX-клиент; кросс-канальный ответ админа Telegram-пользователю — ограничение платформы, вне объёма. Namespacing user_id: MAX «как есть», веб `web:`, Telegram `tg:` — все видны в едином логе/отчёте 21:00.
+**Деплой:** после мёрджа — редеплой прод `bot` из `main`; в прод `.env` добавить `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` (случайная строка) и `TELEGRAM_WEBHOOK_URL=https://bot.dymova-english.ru/telegram/webhook`; затем дернуть `POST /admin/telegram/set-webhook` для регистрации вебхука.
+**Осталось / следующий шаг:** деплой Telegram на прод + регистрация вебхука; вставка виджета на сайт Тильда.
+
+---
+
 ## Текущий статус / Где остановились
 
 **Последний влитый PR:** **#92** (маршрутизация ДЗ + запись диалогов + отчёт 21:00) — в `main`, прод редеплоен, `CONV_LOG_FILE` включён. Ранее #91, #90. Открыт PR Этапа 2 (живой диалог) — 82 теста.

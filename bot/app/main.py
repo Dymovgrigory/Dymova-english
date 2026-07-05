@@ -37,6 +37,7 @@ from app.knowledge.kb import get_kb
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
 from app.memory import Lead, STAGE_DONE, STAGE_HANDOFF, get_store
+from app.telegram_client import get_telegram
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -282,6 +283,7 @@ async def health() -> dict:
         "status": "ok",
         "version": APP_VERSION,
         "max_configured": max_client.configured,
+        "telegram_configured": get_telegram().configured,
         "bigben_configured": get_bigben().configured,
         "kb_documents": len(get_kb().documents),
         "llm_configured": llm.enabled,
@@ -331,6 +333,24 @@ async def api_chat(data: dict) -> dict:
     return {"session_id": session_id, "reply": reply, "buttons": buttons}
 
 
+@app.post("/telegram/webhook")
+async def telegram_webhook(request: Request):
+    if settings.TELEGRAM_WEBHOOK_SECRET:
+        header = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
+        if header != settings.TELEGRAM_WEBHOOK_SECRET:
+            return JSONResponse({"error": "forbidden"}, status_code=403)
+
+    try:
+        payload = await request.json()
+    except Exception:
+        return JSONResponse({"error": "invalid json"}, status_code=400)
+    if not isinstance(payload, dict):
+        return JSONResponse({"error": "invalid json"}, status_code=400)
+
+    _schedule_telegram_update(payload, get_telegram())
+    return {"status": "ok"}
+
+
 @app.post("/webhook")
 async def webhook(request: Request):
     if settings.MAX_WEBHOOK_SECRET:
@@ -352,6 +372,86 @@ async def webhook(request: Request):
     return {"status": "ok"}
 
 
+def _schedule_telegram_update(update: dict, telegram_client) -> bool:
+    event_id = _extract_telegram_event_id(update)
+    if event_id and not mark_seen(event_id):
+        logger.info("Duplicate Telegram webhook event skipped id=%s", event_id)
+        return False
+    task = asyncio.create_task(_process_telegram_update_safe(update, telegram_client))
+    _BACKGROUND_TASKS.add(task)
+    task.add_done_callback(_BACKGROUND_TASKS.discard)
+    return True
+
+
+async def _process_telegram_update_safe(update: dict, telegram_client) -> None:
+    try:
+        await _process_telegram_update(update, telegram_client)
+    except Exception:
+        logger.exception("Ошибка обработки Telegram update")
+
+
+async def _process_telegram_update(update: dict, telegram_client) -> None:
+    message = update.get("message")
+    if not isinstance(message, dict):
+        return
+    sender = message.get("from") or {}
+    if sender.get("is_bot"):
+        return
+
+    chat = message.get("chat") or {}
+    chat_id = chat.get("id")
+    if chat_id is None:
+        return
+
+    text = message.get("text")
+    if not isinstance(text, str):
+        return
+    text = text.strip()
+    if not text:
+        return
+
+    user_id = f"tg:{chat_id}"
+    low = text.lower()
+    if low.startswith("/start") or low.startswith("start"):
+        parts = text.split(maxsplit=1)
+        start_param = parts[1].strip() if len(parts) > 1 else ""
+        reply = await handle_start(user_id, start_param=start_param)
+        await telegram_client.send_message(chat_id, reply)
+        conv = get_store().get(user_id)
+        log_turn(user_id, text, reply, I.GREETING, conv.stage, _dialogue_result(conv))
+        return
+
+    intent = I.detect_intent(text)
+    if intent == I.HOMEWORK:
+        conv = get_store().get(user_id)
+        reply = (
+            "Помощь с домашкой у нас бесплатная 📸 Откройте приложение, "
+            "загрузите фото задания — объясню, что нужно сделать и как, на примере. "
+            "Решать ребёнок будет сам 🙂"
+        )
+        buttons = _homework_button()
+        await telegram_client.send_message(chat_id, reply, buttons=buttons or None)
+        log_turn(user_id, text, reply, intent, conv.stage, "homework")
+        return
+
+    if intent == I.HANDOFF:
+        store = get_store()
+        conv = store.get(user_id)
+        conv.add("user", text)
+        reply, buttons = await _admin_contact_flow(get_max(), conv)
+        conv.add("assistant", reply)
+        store.save(conv)
+        await telegram_client.send_message(chat_id, reply, buttons=buttons)
+        log_turn(user_id, text, reply, intent, conv.stage, "handoff")
+        return
+
+    reply = await handle_message(user_id, text)
+    btns = _contextual_buttons(text, reply)
+    await telegram_client.send_message(chat_id, reply, buttons=btns or None)
+    conv = get_store().get(user_id)
+    log_turn(user_id, text, reply, intent, conv.stage, _dialogue_result(conv))
+
+
 def _schedule_update(update: dict, update_type: str, max_client) -> bool:
     event_id = _extract_event_id(update)
     if event_id and not mark_seen(event_id):
@@ -361,6 +461,13 @@ def _schedule_update(update: dict, update_type: str, max_client) -> bool:
     _BACKGROUND_TASKS.add(task)
     task.add_done_callback(_BACKGROUND_TASKS.discard)
     return True
+
+
+def _extract_telegram_event_id(update: dict) -> str | None:
+    update_id = update.get("update_id")
+    if update_id is not None:
+        return f"tg:{update_id}"
+    return None
 
 
 async def _process_update_safe(update: dict, update_type: str, max_client) -> None:
@@ -734,6 +841,21 @@ async def admin_set_webhook(
     if not url:
         return {"ok": False, "error": "url required"}
     ok = await get_max().set_webhook(url, settings.MAX_WEBHOOK_SECRET or None)
+    return {"ok": ok}
+
+
+@app.post("/admin/telegram/set-webhook")
+async def admin_telegram_set_webhook(
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    """Регистрирует webhook Telegram-бота на публичном URL из настроек."""
+    _check_admin(x_admin_token)
+    if not settings.TELEGRAM_WEBHOOK_URL:
+        return {"ok": False, "error": "telegram webhook url required"}
+    ok = await get_telegram().set_webhook(
+        settings.TELEGRAM_WEBHOOK_URL,
+        settings.TELEGRAM_WEBHOOK_SECRET or None,
+    )
     return {"ok": ok}
 
 
