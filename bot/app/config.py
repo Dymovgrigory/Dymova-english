@@ -58,6 +58,11 @@ class Settings(BaseSettings):
 
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
+    WEB_CHAT_ORIGINS: str = (
+        "https://dymova-english.ru,"
+        "https://www.dymova-english.ru,"
+        "http://localhost:*"
+    )
 
     # --- Прочее ---
     BOT_NAME: str = "Фоксинбург"
