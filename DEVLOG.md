@@ -658,71 +658,48 @@ bot/
 
 ---
 
-### Сессия 15 (агент — Devin) — Telegram: исходящий прокси (api.telegram.org заблокирован с VPS)
-
-**Дата:** 2026-07-04
-**PR:** feat(bot): поддержка исходящего прокси для Telegram Bot API (`devin/1783244161-telegram-proxy` → main)
-**Запрос владельца:** «подключай Telegram через прокси» → затем «найди/возьми платный прокси». Итог: владелец купил SOCKS5-прокси (Proxy6-подобный), строка вида `IP:порт:логин:пароль`.
-
-**Проблема:** после деплоя Telegram-адаптера (Сессия 14) обнаружено, что с прод-VPS (Yandex Cloud, РФ) исходящие вызовы к `https://api.telegram.org` таймаутятся (`curl -m12` → 000/exit 28; в контейнере `httpcore.ConnectTimeout`). Общий HTTPS-egress работает (LLM через ProxyAPI отвечает) — блокируется именно диапазон Telegram (РКН). Входящие вебхуки Telegram→VPS проходят. Значит бот получает сообщения, но не может отправить ответ. Вебхук был снят, чтобы не было «немых» ответов.
-
-**Что сделано (только `bot/`):**
-- `bot/app/config.py`: добавлен `TELEGRAM_PROXY_URL: str = ""` (пусто = напрямую).
-- `bot/app/telegram_client.py`: helper `_client_kwargs()` — если `TELEGRAM_PROXY_URL` задан, передаёт `proxy=...` в `httpx.AsyncClient`. Применён во всех 3 методах (`send_message`, `set_webhook`, `delete_webhook`). Прокси только для Telegram-клиента (max_client/llm не тронуты). httpx 0.28.1 → параметр `proxy=`.
-- `bot/requirements.txt`: `httpx>=0.26,<1.0` → `httpx[socks]>=0.26,<1.0` (для `socks5://` нужен `socksio`).
-- `bot/.env.example`: задокументирован `TELEGRAM_PROXY_URL` (пример `socks5://user:pass@host:port`).
-- `bot/tests/test_telegram_adapter.py`: юнит-тесты, что при заданном `TELEGRAM_PROXY_URL` клиент создаётся с `proxy=...`, а без него — без; параметризованы по всем 3 методам.
-
-**Как проверено:**
-- тесты: `cd bot && python3 -m pytest -q` → 94 passed.
-- живая проверка прокси с VPS: `curl --socks5-hostname <user>@<ip:port> https://api.telegram.org/` → 302 за ~1 сек (и HTTP CONNECT тоже 302). До прокси — таймаут.
-
-**Решения и нюансы:** MTProto-прокси (`tg://proxy?...&secret=...`) НЕ подходит — это протокол для клиентов Telegram, а не для Bot API по HTTPS; нужен именно SOCKS5/HTTP. Бесплатные публичные прокси отвергнуты как нестабильные. Прокси-строка хранится в прод `.env` (`TELEGRAM_PROXY_URL`), не коммитится.
-**Деплой:** после мёрджа — редеплой прод `bot` из `main` (нужен ребилд ради `httpx[socks]`); в прод `.env` добавить `TELEGRAM_PROXY_URL=socks5://<user:pass>@<ip:port>`; затем `setWebhook` (url + secret_token) и сквозной тест в @foxinburg_bot.
-**Осталось / следующий шаг:** сквозной живой тест в Telegram на стороне владельца; прокси бесплатным не заменять — при протухании платного Telegram снова замолчит.
-
----
-
-### Сессия 16 (агент — Devin) — Telegram: переход с webhook на long-polling (inbound тоже заблокирован)
+### Сессия 15 (агент — Devin) — Возврат недозаявок: тёплые напоминания для незавершённых лидов
 
 **Дата:** 2026-07-05
-**PR:** feat(bot): Telegram long-polling через прокси (`devin/1783249695-telegram-polling` → main)
-**Запрос владельца:** после включения прокси и вебхука бот всё равно «молчит».
-
-**Диагноз:** прокси решил OUTBOUND (VPS→api.telegram.org). Но `getWebhookInfo` показал `last_error_message: "Connection timed out"` и `pending_update_count>0` — Telegram НЕ может доставить вебхук на наш прод-VPS (РФ): INBOUND от серверов Telegram к российскому IP тоже блокируется. Сообщения владельца висели в очереди у Telegram, до бота не доходили. (MAX-вебхук работает, т.к. серверы MAX в РФ.)
-
-**Решение:** переключить Telegram-канал с webhook на long-polling — бот сам тянет апдейты `getUpdates` через тот же SOCKS5-прокси (исходящее соединение работает), обходя блокировку входящего. Вебхук снят (`deleteWebhook`).
+**PR:** feat(bot): тёплые напоминания — возврат недозаявок (пользователь начал диалог, но не оставил заявку) (`devin/1783248777-nudge-incomplete-leads` → main)
+**Запрос владельца:** п.№ 3 из плана — «Возврат недозаявок: кто начал и не закончил — тёплое напоминание через 1–2 дня».
 
 **Что сделано (только `bot/`):**
-- `bot/app/telegram_client.py`: `get_updates(offset, timeout=25)` — long-poll `getUpdates` через прокси (`_client_kwargs(timeout)` теперь принимает таймаут; httpx-таймаут = telegram-таймаут + 15, иначе httpx рвёт соединение раньше); при не-200/ошибке → `[]` (warning, без падения).
-- `bot/app/main.py`: `_telegram_poll_loop(telegram_client)` — сначала `delete_webhook()`, затем бесконечный цикл `get_updates` → диспетч каждого апдейта через существующий `_schedule_telegram_update` (дедуп `tg:<update_id>` + фоновая обработка), `offset=update_id+1`; при ошибке — лог + `sleep(3)` и продолжение; корректная реакция на `CancelledError`. Запуск/остановка в `_lifespan` при `TELEGRAM_POLLING=true` и настроенном клиенте (на shutdown таск отменяется и дожидается). Webhook-эндпоинт оставлен как есть.
-- `bot/app/config.py` + `bot/.env.example`: `TELEGRAM_POLLING: bool = False` (на прод-РФ ставим `true`).
+- `bot/app/nudge.py` (новый): модуль тёплых напоминаний. `is_nudgeable(conv)` — проверка конверсации на пригодность (этап discovery/selection/objection/lead, не отправлено ранее, не done/handoff, не web, неактивность ≥ NUDGE_DELAY_HOURS и ≤ NUDGE_MAX_AGE_HOURS, есть хотя бы одно сообщение пользователя). `compose_message(conv)` — персонализированное сообщение от Фокси с учётом имени родителя, ребёнка, курса, филиала и предложением бесплатной диагностики. `send_nudge(conv)` — отправка через нужный канал (MAX или Telegram, по префиксу user_id; web пропускается — нет push). `run_nudges()` — скан всех конверсаций, отправка, возврат статистики `{eligible, sent, failed, skipped_web}`. `preview()` — сухой прогон (кто получит напоминание). Однократность гарантирована флагом `nudge_sent`.
+- `bot/app/memory.py`: новое поле `nudge_sent: bool = False` в `Conversation`, сериализация/десериализация добавлена.
+- `bot/app/config.py` + `bot/.env.example`: `NUDGE_ENABLED` (bool, default true), `NUDGE_DELAY_HOURS` (int, default 36), `NUDGE_MAX_AGE_HOURS` (int, default 336 = 14д), `NUDGE_HOUR` (int, default 11), `NUDGE_MINUTE` (int, default 0), `NUDGE_PROXY_URL` (прокси для TG).
+- `bot/app/scheduler.py`: новая фоновая задача `_nudge_loop()` (ежедневно в NUDGE_HOUR:NUDGE_MINUTE МСК) рядом с дайджестом; после отправки уведомляет админов о результатах. `start()` теперь возвращает `list[Task]`.
+- `bot/app/main.py`: `GET /admin/nudge/preview` (сухой прогон: кто получит напоминание), `POST /admin/nudge/send` (немедленный запуск напоминаний); `nudge_enabled` в `/health`.
+- `bot/tests/test_nudge.py` (новый, 31 тест): is_nudgeable по всем этапам/условиям, compose_message с персонализацией, send_nudge MAX/Telegram/web, run_nudges с дедупликацией, админ-эндпоинты.
 
-**Как проверено:** тесты `cd bot && python3 -m pytest -q` → 97 passed (добавлены тесты `get_updates` и одной итерации poll-loop с выходом по `CancelledError`).
-**Решения и нюансы:** webhook в РФ для Telegram нежизнеспособен (двусторонняя блокировка) — polling обязателен. Дедуп переиспользован из webhook-пути, поэтому двойной обработки нет. Прокси нужен и для polling (getUpdates идёт через него).
-**Деплой:** редеплой прод `bot` из `main`; в прод `.env` `TELEGRAM_POLLING=true` (+ уже есть `TELEGRAM_PROXY_URL`, `TELEGRAM_BOT_TOKEN`); вебхук снят. Живой тест в @foxinburg_bot.
-**Осталось / следующий шаг:** живой тест владельца; следить за сроком платного прокси (истечёт — Telegram снова замолчит).
+**Как проверено:** `cd bot && python3 -m pytest -q` → 121 passed. Сети в тестах замоканы.
+**Решения и нюансы:**
+- Напоминание отправляется ровно один раз (`nudge_sent=True`) — никакого спама.
+- Web-пользователи пропускаются (push невозможен).
+- По умолчанию 36 ч неактивности (= полтора дня), максимум 14 дней давности.
+- Проверка в 11:00 МСК (утро удобнее для родителей).
+- После отправки — админы получают сводку в MAX.
+- Нулевой риск: не меняет лид-менеджер/CRM/LLM — только отправляет сообщение.
+**Деплой:** после мёрджа — редеплой прод `bot` из `main`. Опционально: настроить `NUDGE_DELAY_HOURS`, `NUDGE_HOUR` в прод `.env`.
+**Осталось / следующий шаг:** п.№ 4 — сбор отзывов после первых занятий; п.№ 5 — голосовые сообщения; деплой Telegram + виджета на прод.
 
 ---
 
 ## Текущий статус / Где остановились
 
-**Последний влитый PR:** **#96** (Telegram прокси). Открыт PR long-polling (`devin/1783249695-telegram-polling`). Ранее **#95** (Telegram-адаптер) — в `main`, задеплоен. Ранее #94 (веб-виджет, задеплоен + вставлен на сайт Тильда), #93 (Этап 2 живой диалог), #92/#91/#90. Открыт PR поддержки прокси для Telegram (`devin/1783244161-telegram-proxy`).
+**Последний влитый PR:** **#95** (Telegram-адаптер) — в `main`. Ранее: #94 (чат-виджет), #93 (живой диалог), #92, #91, #90.
 
-**Telegram:** @foxinburg_bot подключён через тот же «мозг». api.telegram.org с VPS заблокирован → добавлен `TELEGRAM_PROXY_URL` (SOCKS5, зарубежный, куплен владельцем). После мёрджа PR-прокси: редеплой + `setWebhook` + живой тест. Секреты: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_PROXY_URL` — в прод `.env`.
-
-**Прод:** бот «Фоксинбург» в MAX на ВМ Yandex Cloud (`yc-user@89.169.132.104`), развёрнут из `main`. LLM: основной — ProxyAPI (gpt-4o-mini, оплата из РФ), запас — OpenRouter (`LLM_FALLBACKS`), `llm_providers:2`, `/health`=ok. Вебхук `https://bot.dymova-english.ru/webhook` активен. **BigBen CRM:** ключ обновлён, лиды доходят (тест → 200). SSH-ключ `~/.ssh/foxinburg_vps` (секрет `VPS_SSH_PRIVATE_KEY_OWNER`).
+**Прод:** бот «Фоксинбург» в MAX на ВМ Yandex Cloud (`yc-user@89.169.132.104`), развёрнут из `main`. LLM: основной — ProxyAPI (gpt-4o-mini, оплата из РФ), запас — OpenRouter (`LLM_FALLBACKS`). Вебхук `https://bot.dymova-english.ru/webhook` активен. SSH-ключ `~/.ssh/foxinburg_vps` (секрет `VPS_SSH_PRIVATE_KEY_OWNER`).
 
 **Незакрытые хвосты:**
-- Смёржить #92 → редеплой прода из `main`; добавить `CONV_LOG_FILE=/data/conversations.jsonl` в прод `.env` (иначе запись диалогов пишется рядом со `STATE_FILE`) и проверить `/отчёт`.
-- Сквозной тест в живом MAX-чате на стороне владельца (Этап 1).
-- Сохранить handoff в knowledge-заметку (см. п.4 skill session-journal).
-- Групповой режим на проде для всех чатов (вариант Б) — правка `.env` (`GROUP_CHAT_WHITELIST`).
+- Редеплой прода из `main` (включая Telegram-адаптер, виджет, напоминания); добавить TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET, TELEGRAM_WEBHOOK_URL, NUDGE_* в прод `.env`.
+- Вставка `<script src="https://bot.dymova-english.ru/widget/foxi.js"></script>` на сайт Тильда.
+- Регистрация Telegram-вебхука: `POST /admin/telegram/set-webhook`.
 
 **План фич от владельца (по приоритету, из переписки):**
-1. №12 — тот же «мозг» бота виджетом на сайте Тильда (24/7 консультант, единая база/лиды).
-2. №13 — подключить WhatsApp/Telegram тем же ядром.
-3. Возврат «недозаявок» (кто начал и не закончил — тёплое напоминание через 1–2 дня).
+1. ✅ №12 — чат-виджет на сайте (PR #94).
+2. ✅ №13 — Telegram-адаптер (PR #95).
+3. ✅ Возврат «недозаявок» — тёплые напоминания (PR этой сессии).
 4. Сбор отзывов после первых занятий (довольных — на Яндекс/2ГИС, недовольных — админу в личку).
 5. Голосовые сообщения (распознавание голоса клиента).
 
