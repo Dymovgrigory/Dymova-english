@@ -683,9 +683,31 @@ bot/
 
 ---
 
+### Сессия 16 (агент — Devin) — Telegram: переход с webhook на long-polling (inbound тоже заблокирован)
+
+**Дата:** 2026-07-05
+**PR:** feat(bot): Telegram long-polling через прокси (`devin/1783249695-telegram-polling` → main)
+**Запрос владельца:** после включения прокси и вебхука бот всё равно «молчит».
+
+**Диагноз:** прокси решил OUTBOUND (VPS→api.telegram.org). Но `getWebhookInfo` показал `last_error_message: "Connection timed out"` и `pending_update_count>0` — Telegram НЕ может доставить вебхук на наш прод-VPS (РФ): INBOUND от серверов Telegram к российскому IP тоже блокируется. Сообщения владельца висели в очереди у Telegram, до бота не доходили. (MAX-вебхук работает, т.к. серверы MAX в РФ.)
+
+**Решение:** переключить Telegram-канал с webhook на long-polling — бот сам тянет апдейты `getUpdates` через тот же SOCKS5-прокси (исходящее соединение работает), обходя блокировку входящего. Вебхук снят (`deleteWebhook`).
+
+**Что сделано (только `bot/`):**
+- `bot/app/telegram_client.py`: `get_updates(offset, timeout=25)` — long-poll `getUpdates` через прокси (`_client_kwargs(timeout)` теперь принимает таймаут; httpx-таймаут = telegram-таймаут + 15, иначе httpx рвёт соединение раньше); при не-200/ошибке → `[]` (warning, без падения).
+- `bot/app/main.py`: `_telegram_poll_loop(telegram_client)` — сначала `delete_webhook()`, затем бесконечный цикл `get_updates` → диспетч каждого апдейта через существующий `_schedule_telegram_update` (дедуп `tg:<update_id>` + фоновая обработка), `offset=update_id+1`; при ошибке — лог + `sleep(3)` и продолжение; корректная реакция на `CancelledError`. Запуск/остановка в `_lifespan` при `TELEGRAM_POLLING=true` и настроенном клиенте (на shutdown таск отменяется и дожидается). Webhook-эндпоинт оставлен как есть.
+- `bot/app/config.py` + `bot/.env.example`: `TELEGRAM_POLLING: bool = False` (на прод-РФ ставим `true`).
+
+**Как проверено:** тесты `cd bot && python3 -m pytest -q` → 97 passed (добавлены тесты `get_updates` и одной итерации poll-loop с выходом по `CancelledError`).
+**Решения и нюансы:** webhook в РФ для Telegram нежизнеспособен (двусторонняя блокировка) — polling обязателен. Дедуп переиспользован из webhook-пути, поэтому двойной обработки нет. Прокси нужен и для polling (getUpdates идёт через него).
+**Деплой:** редеплой прод `bot` из `main`; в прод `.env` `TELEGRAM_POLLING=true` (+ уже есть `TELEGRAM_PROXY_URL`, `TELEGRAM_BOT_TOKEN`); вебхук снят. Живой тест в @foxinburg_bot.
+**Осталось / следующий шаг:** живой тест владельца; следить за сроком платного прокси (истечёт — Telegram снова замолчит).
+
+---
+
 ## Текущий статус / Где остановились
 
-**Последний влитый PR:** **#95** (Telegram-адаптер) — в `main`, задеплоен. Ранее #94 (веб-виджет, задеплоен + вставлен на сайт Тильда), #93 (Этап 2 живой диалог), #92/#91/#90. Открыт PR поддержки прокси для Telegram (`devin/1783244161-telegram-proxy`).
+**Последний влитый PR:** **#96** (Telegram прокси). Открыт PR long-polling (`devin/1783249695-telegram-polling`). Ранее **#95** (Telegram-адаптер) — в `main`, задеплоен. Ранее #94 (веб-виджет, задеплоен + вставлен на сайт Тильда), #93 (Этап 2 живой диалог), #92/#91/#90. Открыт PR поддержки прокси для Telegram (`devin/1783244161-telegram-proxy`).
 
 **Telegram:** @foxinburg_bot подключён через тот же «мозг». api.telegram.org с VPS заблокирован → добавлен `TELEGRAM_PROXY_URL` (SOCKS5, зарубежный, куплен владельцем). После мёрджа PR-прокси: редеплой + `setWebhook` + живой тест. Секреты: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_PROXY_URL` — в прод `.env`.
 
