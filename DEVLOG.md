@@ -619,6 +619,26 @@ bot/
 
 ---
 
+### Сессия 13 (агент — Devin) — Этап 3 (канал 1): чат-виджет на сайте
+
+**Дата:** 2026-07-04
+**PR:** feat(bot): чат-виджет на сайте — тот же «мозг» на dymova-english.ru (`devin/1783242369-web-chat-widget` → main)
+**Запрос владельца:** Этап 3 «единый бот на всех платформах» — начали с виджета на сайте (Тильда): один и тот же диалог/знания/лиды, что и в MAX.
+
+**Что сделано (только `bot/`):**
+- `bot/app/main.py`: новый `POST /api/chat` — вход `{session_id?, text}`, внутренний `user_id = web:<session_id>` (веб-диалоги отдельны от MAX). Роутинг как в MAX: `HOMEWORK` → короткий ответ + кнопка мини-аппа (без LLM), иначе `handle_message()`. Логирование через `convlog.log_turn`. Ответ `{session_id, reply, buttons:[{title,url}]}`. Валидация: пустой/слишком длинный text → 400. Общая классификация результата вынесена в helper `_dialogue_result()` и переиспользована в MAX-ветке (DRY). Конвертация link-кнопок → `_response_buttons()`. Добавлен `CORSMiddleware` (origin'ы сайта + `localhost:*`). Статика виджета монтируется на `/widget`.
+- `bot/app/config.py` + `bot/.env.example`: `WEB_CHAT_ORIGINS` (CSV; дефолт — `dymova-english.ru`, `www.`, `localhost:*`).
+- `bot/app/widget/foxi.js` (новый): самодостаточный встраиваемый виджет (ванильный JS, без зависимостей). Плавающая кнопка-🦊 + панель чата, `session_id` в localStorage, base URL из `document.currentScript.src`, поддержка кнопок-ссылок, адаптив под мобильные. Встраивание на сайт: `<script src="https://bot.dymova-english.ru/widget/foxi.js"></script>`.
+- `bot/tests/test_web_chat.py` (новый): валидация text→400, генерация/переиспользование `session_id`, homework-кнопка, устойчивость при выключенном LLM.
+
+**Как проверено:** `cd bot && python3 -m pytest -q` → 84 passed; `node --check foxi.js` — ок; ручная проверка `/api/chat` через TestClient (200, есть `session_id`+`reply`).
+**Решения и нюансы:** веб-канал использует то же ядро `ai_core.handle_message`, поэтому знания/продажи/логи/отчёт 21:00 общие; веб-пользователи видны в отчёте с префиксом `web:`. Хэндофф к админам всё так же уходит в MAX (админы там).
+**Отдельно:** по просьбе владельца выполнен полный сброс Telegram-бота **@foxinburg_bot** (id 8211576531): очищены описание/short description, удалены команды (все scope), снят вебхук с `drop_pending_updates`.
+**Деплой:** после мёрджа — редеплой прод-стека `bot` из `main`; затем вставить `<script src="https://bot.dymova-english.ru/widget/foxi.js"></script>` на сайт Тильда. При необходимости уточнить `WEB_CHAT_ORIGINS` в прод `.env`.
+**Осталось / следующий шаг:** Этап 3 (канал 2) — Telegram-адаптер на том же ядре (токен `TELEGRAM_BOT_TOKEN` уже сохранён).
+
+---
+
 ## Текущий статус / Где остановились
 
 **Последний влитый PR:** **#92** (маршрутизация ДЗ + запись диалогов + отчёт 21:00) — в `main`, прод редеплоен, `CONV_LOG_FILE` включён. Ранее #91, #90. Открыт PR Этапа 2 (живой диалог) — 82 теста.

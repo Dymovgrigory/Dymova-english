@@ -11,10 +11,13 @@ from __future__ import annotations
 import asyncio
 import base64
 import logging
+import re
 from contextlib import asynccontextmanager
 from pathlib import Path
+from uuid import uuid4
 
 from fastapi import FastAPI, File, Form, Header, HTTPException, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -49,7 +52,36 @@ async def _lifespan(_: FastAPI):
 app = FastAPI(title="Foxinburg MAX Bot", lifespan=_lifespan)
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
+_WIDGET_DIR = Path(__file__).with_name("widget")
 _BACKGROUND_TASKS: set[asyncio.Task] = set()
+
+
+def _parse_web_chat_origins(raw: str) -> tuple[list[str], str | None]:
+    origins: list[str] = []
+    regex_parts: list[str] = []
+    for item in raw.split(","):
+        origin = item.strip()
+        if not origin:
+            continue
+        if "*" in origin:
+            escaped = re.escape(origin).replace(r"\*", r"\d+")
+            regex_parts.append(f"^{escaped}$")
+            continue
+        origins.append(origin)
+    allow_origin_regex = "|".join(f"(?:{part})" for part in regex_parts) if regex_parts else None
+    return origins, allow_origin_regex
+
+
+_WEB_CHAT_ORIGINS, _WEB_CHAT_ORIGIN_REGEX = _parse_web_chat_origins(settings.WEB_CHAT_ORIGINS)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_WEB_CHAT_ORIGINS,
+    allow_origin_regex=_WEB_CHAT_ORIGIN_REGEX,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def _miniapp_url(section: str = "") -> str:
@@ -83,6 +115,22 @@ def _homework_button() -> list[list[dict]]:
     if not url:
         return []
     return [[link_button("📸 Помощь с домашкой (бесплатно)", url)]]
+
+
+def _response_buttons(rows: list[list[dict]] | None) -> list[dict]:
+    buttons: list[dict] = []
+    seen_urls: set[str] = set()
+    for row in rows or []:
+        for button in row:
+            if button.get("type") != "link":
+                continue
+            url = str(button.get("url", "")).strip()
+            title = str(button.get("text", "")).strip()
+            if not url or url in seen_urls:
+                continue
+            seen_urls.add(url)
+            buttons.append({"title": title, "url": url})
+    return buttons
 
 
 def _contextual_buttons(question: str, reply: str) -> list[list[dict]]:
@@ -129,6 +177,14 @@ def _contextual_buttons(question: str, reply: str) -> list[list[dict]]:
             rows.append([link_button("📋 Записаться онлайн", _miniapp_url("signup"))])
 
     return rows
+
+
+def _dialogue_result(conv, default: str = "consultation") -> str:
+    if conv.lead_submitted or conv.stage == STAGE_DONE:
+        return "lead"
+    if conv.handed_off or conv.stage == STAGE_HANDOFF:
+        return "handoff"
+    return default
 
 
 _ADMIN_REPORT_CMDS = {"/админ", "/admin", "админ", "/отчет", "/отчёт", "отчет",
@@ -239,6 +295,42 @@ async def ready() -> dict:
     return {"ready": llm.enabled, "llm_configured": llm.enabled}
 
 
+@app.post("/api/chat")
+async def api_chat(data: dict) -> dict:
+    raw_text = data.get("text")
+    if not isinstance(raw_text, str):
+        raise HTTPException(status_code=400, detail="text required")
+    text = raw_text.strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="text required")
+    if len(text) > 2000:
+        raise HTTPException(status_code=400, detail="text too long")
+
+    raw_session_id = data.get("session_id")
+    session_id = str(raw_session_id).strip() if raw_session_id is not None else ""
+    if not session_id:
+        session_id = str(uuid4())
+    user_id = f"web:{session_id}"
+
+    intent = I.detect_intent(text)
+    if intent == I.HOMEWORK:
+        conv = get_store().get(user_id)
+        reply = (
+            "Помощь с домашкой у нас бесплатная 📸 Откройте приложение, "
+            "загрузите фото задания — объясню, что нужно сделать и как, на примере. "
+            "Решать ребёнок будет сам 🙂"
+        )
+        buttons = _response_buttons(_homework_button())
+        log_turn(user_id, text, reply, intent, conv.stage, "homework")
+        return {"session_id": session_id, "reply": reply, "buttons": buttons}
+
+    reply = await handle_message(user_id, text)
+    buttons = _response_buttons(_contextual_buttons(text, reply))
+    conv = get_store().get(user_id)
+    log_turn(user_id, text, reply, intent, conv.stage, _dialogue_result(conv))
+    return {"session_id": session_id, "reply": reply, "buttons": buttons}
+
+
 @app.post("/webhook")
 async def webhook(request: Request):
     if settings.MAX_WEBHOOK_SECRET:
@@ -345,14 +437,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 btns = _contextual_buttons(text, reply)
                 await max_client.send_message(user_id, reply, buttons=btns or None)
                 conv = get_store().get(user_id)
-                result = (
-                    "lead"
-                    if conv.lead_submitted or conv.stage == STAGE_DONE
-                    else "handoff"
-                    if conv.handed_off or conv.stage == STAGE_HANDOFF
-                    else "consultation"
-                )
-                log_turn(user_id, text, reply, intent, conv.stage, result)
+                log_turn(user_id, text, reply, intent, conv.stage, _dialogue_result(conv))
         return
 
     if update_type == "message_callback":
@@ -621,6 +706,10 @@ async def miniapp_homework(
 # Статика мини-приложения (если каталог есть).
 if _MINIAPP_DIR.exists():
     app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
+
+# Статика веб-виджета (если каталог есть).
+if _WIDGET_DIR.exists():
+    app.mount("/widget", StaticFiles(directory=str(_WIDGET_DIR), html=True), name="widget")
 
 
 def _check_admin(token: str | None) -> None:
