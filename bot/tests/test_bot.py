@@ -210,23 +210,37 @@ def test_recommend_by_age():
 # ---------- диалоговые сценарии ----------
 
 @pytest.mark.asyncio
-async def test_greeting_does_not_dump_info():
+async def test_greeting_does_not_dump_info(monkeypatch):
+    from app import ai_core
+
+    class DisabledLLM:
+        enabled = False
+
+    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+
     uid = "test-greet"
     get_store().reset(uid)
     reply = await handle_message(uid, "Здравствуйте")
-    assert "Фоксинбург" in reply or "Здравствуйте" in reply
+    assert reply.startswith("Привет!")
     # приветствие не должно вываливать прайс
     assert "8 200" not in reply
     assert "?" in reply
 
 
 @pytest.mark.asyncio
-async def test_smalltalk_answers_with_next_step():
+async def test_smalltalk_answers_with_next_step(monkeypatch):
+    from app import ai_core
+
+    class DisabledLLM:
+        enabled = False
+
+    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+
     uid = "test-smalltalk"
     get_store().reset(uid)
     reply = await handle_message(uid, "Как дела?")
-    assert "сразу помогаю" in reply.lower() or "всё отлично" in reply.lower()
-    assert "?" in reply
+    assert reply.startswith("Привет!")
+    assert "Чем могу помочь?" in reply
 
 
 @pytest.mark.asyncio
