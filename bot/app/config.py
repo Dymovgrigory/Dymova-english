@@ -85,6 +85,14 @@ class Settings(BaseSettings):
     # X-Admin-Token). Защищает отчёт об улучшениях и регистрацию webhook.
     ADMIN_TOKEN: str = ""
 
+    # --- Тёплые напоминания (возврат недозаявок) ---
+    NUDGE_ENABLED: bool = True
+    NUDGE_DELAY_HOURS: int = 36   # часы неактивности перед напоминанием
+    NUDGE_MAX_AGE_HOURS: int = 336  # не напоминать по диалогам старше 14 дней
+    NUDGE_HOUR: int = 11          # час проверки (утро удобнее для родителей)
+    NUDGE_MINUTE: int = 0
+    NUDGE_PROXY_URL: str = ""     # прокси для Telegram (если заблокирован с VPS)
+
     # --- Ежедневный отчёт администраторам ---
     DIGEST_ENABLED: bool = True
     DIGEST_HOUR: int = 21          # час отправки (в часовом поясе DIGEST_TZ_OFFSET)

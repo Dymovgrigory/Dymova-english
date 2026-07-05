@@ -75,6 +75,7 @@ class Conversation:
     consent_given: bool = False # согласие на обработку ПД
     last_objection: str = ""    # последнее возражение клиента
     lead_submitted: bool = False # заявка уже отправлялась
+    nudge_sent: bool = False       # тёплое напоминание уже отправлено
     created_at: str = ""
     updated_at: str = ""
     transcript: list[dict] = field(default_factory=list)
@@ -252,6 +253,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         consent_given=d.get("consent_given", False),
         last_objection=d.get("last_objection", ""),
         lead_submitted=d.get("lead_submitted", False),
+        nudge_sent=d.get("nudge_sent", False),
         created_at=d.get("created_at", ""),
         updated_at=d.get("updated_at", ""),
         transcript=d.get("transcript", []),
