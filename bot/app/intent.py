@@ -18,6 +18,7 @@ ABOUT = "about"
 WANT_SIGNUP = "want_signup"
 OBJECTION = "objection"
 HANDOFF = "handoff"
+HOMEWORK = "homework"
 QUESTION = "question"
 
 # Приветствие проверяем отдельным regex по границам слов: короткие токены вроде
@@ -48,6 +49,20 @@ _PATTERNS: list[tuple[str, list[str]]] = [
              "педагог", "отзыв", "результат", "почему вы", "преимуществ",
              "что умеешь", "чем можешь", "чем помог", "кто руководител"]),
 ]
+
+_HOMEWORK_PATTERNS = (
+    "домашк",
+    "домашнее задание",
+    "домашн задани",
+    "задали на дом",
+    "помоги с задани",
+    "разобрать задани",
+    "помоги решить",
+    "не понимаю задани",
+    "не понял задани",
+    "не поняла задани",
+    "упражнен",
+)
 
 _OBJECTIONS = {
     "дорого": ["дорого", "дороговато", "не по карману", "дешевле", "скидк"],
@@ -91,6 +106,19 @@ def detect_objection(text: str) -> str | None:
     return None
 
 
+def is_homework_request(text: str) -> bool:
+    low = text.lower()
+    if re.search(r"\bдз\b", low):
+        return True
+    if any(p in low for p in _HOMEWORK_PATTERNS):
+        return True
+    if re.search(r"\bномер\s*\d+\b", low) and any(
+        w in low for w in ("задани", "упражнен", "домаш", "дз", "реши", "помог")
+    ):
+        return True
+    return False
+
+
 def detect_complaint(text: str) -> bool:
     low = text.lower()
     return any(w in low for w in _COMPLAINT_PATTERNS)
@@ -104,6 +132,8 @@ def detect_intent(text: str) -> str:
         return OBJECTION
     if _GREETING_RE.search(low):
         return GREETING
+    if is_homework_request(low):
+        return HOMEWORK
     for intent, words in _PATTERNS:
         if any(w in low for w in words):
             return intent

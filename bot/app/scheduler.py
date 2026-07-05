@@ -10,6 +10,7 @@ import asyncio
 import logging
 from datetime import datetime, timedelta, timezone
 
+from app.conv_report import conversations_digest
 from app import insights
 from app.config import settings
 from app.max_client import get_max
@@ -39,11 +40,14 @@ async def send_digest_now() -> int:
     if not max_client.configured:
         logger.warning("digest: MAX не сконфигурирован — пропускаю")
         return 0
-    text = insights.digest(days=settings.DIGEST_DAYS)
+    conv_text = conversations_digest(days=settings.DIGEST_DAYS)
+    insights_text = insights.digest(days=settings.DIGEST_DAYS)
     sent = 0
     for admin_id in admins:
         try:
-            if await max_client.send_message(admin_id, text):
+            if await max_client.send_message(admin_id, conv_text):
+                sent += 1
+            if await max_client.send_message(admin_id, insights_text):
                 sent += 1
         except Exception:
             logger.exception("digest: не удалось отправить администратору %s", admin_id)

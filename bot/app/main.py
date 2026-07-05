@@ -20,6 +20,8 @@ from fastapi.staticfiles import StaticFiles
 
 from app import insights, scheduler
 from app import intent as I
+from app.conv_report import conversations_digest
+from app.convlog import log_turn
 from app.dedup import mark_seen
 from app.ai_core import handle_message, handle_start, parse_utm
 from app.broadcast import audience_counts, get_user_detail, list_users, resolve_recipients, send_broadcast
@@ -31,7 +33,7 @@ from app import group_chat
 from app.knowledge.kb import get_kb
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
-from app.memory import Lead, get_store
+from app.memory import Lead, STAGE_DONE, STAGE_HANDOFF, get_store
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -70,7 +72,17 @@ def _main_menu() -> list[list[dict]]:
     base = _miniapp_url()
     if base:
         rows.insert(0, [link_button("📱 Открыть приложение", base)])
+    homework_button = _homework_button()
+    if homework_button:
+        rows.insert(1 if base else 0, homework_button[0])
     return rows
+
+
+def _homework_button() -> list[list[dict]]:
+    url = _miniapp_url("homework")
+    if not url:
+        return []
+    return [[link_button("📸 Помощь с домашкой (бесплатно)", url)]]
 
 
 def _contextual_buttons(question: str, reply: str) -> list[list[dict]]:
@@ -99,6 +111,11 @@ def _contextual_buttons(question: str, reply: str) -> list[list[dict]]:
     # Signup
     if any(w in low_q for w in ("запис", "пробн", "диагност")):
         rows.append([link_button("📋 Записаться онлайн", _miniapp_url("signup"))])
+
+    if I.is_homework_request(question) or I.is_homework_request(reply):
+        homework_button = _homework_button()
+        if homework_button:
+            rows.append(homework_button[0])
 
     # If nothing matched from question, check reply
     if not rows:
@@ -192,6 +209,15 @@ async def _admin_contact_flow(max_client, conv, branch_key: str | None = None) -
     return reply, buttons
 
 
+async def _send_admin_report(max_client, user_id: str) -> None:
+    texts = [conversations_digest(days=settings.DIGEST_DAYS), insights.digest(days=settings.DIGEST_DAYS)]
+    for text in texts:
+        try:
+            await max_client.send_message(user_id, text)
+        except Exception:
+            logger.exception("Не удалось отправить отчёт админу %s", user_id)
+
+
 @app.get("/health")
 async def health() -> dict:
     max_client = get_max()
@@ -280,28 +306,53 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         if not text:
             return
         low = text.lower()
-        admin_reply = _admin_command(low, user_id)
-        if admin_reply is not None:
-            await max_client.send_message(user_id, admin_reply)
-        elif I.detect_intent(text) == I.HANDOFF:
-            store = get_store()
-            conv = store.get(user_id)
-            conv.add("user", text)
-            reply, buttons = await _admin_contact_flow(max_client, conv)
-            conv.add("assistant", reply)
-            store.save(conv)
-            await max_client.send_message(user_id, reply, buttons=buttons)
-        elif low.split(maxsplit=1)[0] in ("/start", "start"):
-            parts = text.split(maxsplit=1)
-            start_param = parts[1].strip() if len(parts) > 1 else ""
-            reply = await handle_start(user_id, start_param=start_param)
-            await max_client.send_message(user_id, reply, buttons=_main_menu())
-        elif low in ("/menu", "меню"):
-            await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
+        intent = I.detect_intent(text)
+        if low in _ADMIN_REPORT_CMDS and settings.is_admin(user_id):
+            await _send_admin_report(max_client, user_id)
         else:
-            reply = await handle_message(user_id, text)
-            btns = _contextual_buttons(text, reply)
-            await max_client.send_message(user_id, reply, buttons=btns or None)
+            admin_reply = _admin_command(low, user_id)
+            if admin_reply is not None:
+                await max_client.send_message(user_id, admin_reply)
+            elif low.split(maxsplit=1)[0] in ("/start", "start"):
+                parts = text.split(maxsplit=1)
+                start_param = parts[1].strip() if len(parts) > 1 else ""
+                reply = await handle_start(user_id, start_param=start_param)
+                await max_client.send_message(user_id, reply, buttons=_main_menu())
+            elif low in ("/menu", "меню"):
+                await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
+            elif intent == I.HOMEWORK:
+                store = get_store()
+                conv = store.get(user_id)
+                reply = (
+                    "Помощь с домашкой у нас бесплатная 📸 Откройте приложение, "
+                    "загрузите фото задания — объясню, что нужно сделать и как, на примере. "
+                    "Решать ребёнок будет сам 🙂"
+                )
+                buttons = _homework_button()
+                await max_client.send_message(user_id, reply, buttons=buttons or None)
+                log_turn(user_id, text, reply, intent, conv.stage, "homework")
+            elif intent == I.HANDOFF:
+                store = get_store()
+                conv = store.get(user_id)
+                conv.add("user", text)
+                reply, buttons = await _admin_contact_flow(max_client, conv)
+                conv.add("assistant", reply)
+                store.save(conv)
+                await max_client.send_message(user_id, reply, buttons=buttons)
+                log_turn(user_id, text, reply, intent, conv.stage, "handoff")
+            else:
+                reply = await handle_message(user_id, text)
+                btns = _contextual_buttons(text, reply)
+                await max_client.send_message(user_id, reply, buttons=btns or None)
+                conv = get_store().get(user_id)
+                result = (
+                    "lead"
+                    if conv.lead_submitted or conv.stage == STAGE_DONE
+                    else "handoff"
+                    if conv.handed_off or conv.stage == STAGE_HANDOFF
+                    else "consultation"
+                )
+                log_turn(user_id, text, reply, intent, conv.stage, result)
         return
 
     if update_type == "message_callback":
