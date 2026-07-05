@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     MAX_BOT_API_URL: str = "https://botapi.max.ru"
     MAX_WEBHOOK_SECRET: str = ""
 
+    # --- Telegram Bot API ---
+    TELEGRAM_BOT_TOKEN: str = ""
+    TELEGRAM_WEBHOOK_SECRET: str = ""
+    TELEGRAM_WEBHOOK_URL: str = ""
+
     # --- LLM (провайдер-агностик, OpenAI-совместимый) ---
     # По умолчанию Groq (бесплатно, быстро). Можно заменить на OpenRouter,
     # локальный Ollama и т.д., поменяв LLM_BASE_URL / LLM_MODEL / LLM_API_KEY.
