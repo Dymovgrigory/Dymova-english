@@ -38,6 +38,7 @@ from app.knowledge.kb import get_kb
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
 from app.memory import Lead, STAGE_DONE, STAGE_HANDOFF, get_store
+from app.registration import is_registered
 from app.telegram_client import get_telegram
 
 logging.basicConfig(level=logging.INFO)
@@ -195,6 +196,12 @@ def _contextual_buttons(question: str, reply: str) -> list[list[dict]]:
     return rows
 
 
+def _user_registered(user_id: str) -> bool:
+    """Check if user completed registration (respects REGISTRATION_REQUIRED)."""
+    conv = get_store().get(user_id)
+    return is_registered(conv)
+
+
 def _dialogue_result(conv, default: str = "consultation") -> str:
     if conv.lead_submitted or conv.stage == STAGE_DONE:
         return "lead"
@@ -332,6 +339,14 @@ async def api_chat(data: dict) -> dict:
     user_id = f"web:{session_id}"
 
     intent = I.detect_intent(text)
+
+    # During registration — no buttons, no special intents
+    if not _user_registered(user_id):
+        reply = await handle_message(user_id, text)
+        conv = get_store().get(user_id)
+        log_turn(user_id, text, reply, intent, conv.stage, _dialogue_result(conv))
+        return {"session_id": session_id, "reply": reply, "buttons": []}
+
     if intent == I.HOMEWORK:
         conv = get_store().get(user_id)
         reply = (
@@ -439,6 +454,15 @@ async def _process_telegram_update(update: dict, telegram_client) -> None:
         return
 
     intent = I.detect_intent(text)
+
+    # During registration — no buttons, no special intents
+    if not _user_registered(user_id):
+        reply = await handle_message(user_id, text)
+        await telegram_client.send_message(chat_id, reply)
+        conv = get_store().get(user_id)
+        log_turn(user_id, text, reply, intent, conv.stage, _dialogue_result(conv))
+        return
+
     if intent == I.HOMEWORK:
         conv = get_store().get(user_id)
         reply = (
@@ -530,7 +554,8 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         user_id = _extract_user_id(update)
         if user_id:
             reply = await handle_start(user_id, start_param=_extract_start_param(update))
-            await max_client.send_message(user_id, reply, buttons=_main_menu())
+            buttons = _main_menu() if _user_registered(user_id) else None
+            await max_client.send_message(user_id, reply, buttons=buttons)
         return
 
     if update_type == "message_created":
@@ -559,9 +584,20 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 parts = text.split(maxsplit=1)
                 start_param = parts[1].strip() if len(parts) > 1 else ""
                 reply = await handle_start(user_id, start_param=start_param)
-                await max_client.send_message(user_id, reply, buttons=_main_menu())
+                buttons = _main_menu() if _user_registered(user_id) else None
+                await max_client.send_message(user_id, reply, buttons=buttons)
             elif low in ("/menu", "меню"):
-                await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
+                if _user_registered(user_id):
+                    await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
+                else:
+                    reply = await handle_message(user_id, text)
+                    await max_client.send_message(user_id, reply)
+            elif not _user_registered(user_id):
+                # During registration — no buttons, no special intents
+                reply = await handle_message(user_id, text)
+                await max_client.send_message(user_id, reply)
+                conv = get_store().get(user_id)
+                log_turn(user_id, text, reply, intent, conv.stage, _dialogue_result(conv))
             elif intent == I.HOMEWORK:
                 store = get_store()
                 conv = store.get(user_id)
@@ -597,7 +633,11 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         user_id = _extract_user_id(update) or _extract_user_id(callback)
         if callback_id:
             await max_client.answer_callback(callback_id)
-        if user_id and payload == "menu:admin":
+        # Ignore menu callbacks during registration
+        if user_id and not _user_registered(user_id):
+            reply = await handle_message(user_id, payload or "меню")
+            await max_client.send_message(user_id, reply)
+        elif user_id and payload == "menu:admin":
             store = get_store()
             conv = store.get(user_id)
             conv.add("user", _CALLBACK_TEXT[payload])
@@ -974,6 +1014,21 @@ async def admin_user_detail(
     if detail is None:
         raise HTTPException(status_code=404, detail="user not found")
     return detail
+
+
+@app.post("/admin/users/{user_id}/reset")
+async def admin_user_reset(
+    user_id: str,
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    """Сбросить память (конверсацию) пользователя."""
+    _require_admin_token(x_admin_token)
+    store = get_store()
+    prev = store.get(user_id)
+    if not prev.created_at and not prev.history:
+        raise HTTPException(status_code=404, detail="user not found")
+    store.reset(user_id)
+    return {"status": "ok", "user_id": user_id, "message": "conversation reset"}
 
 
 @app.post("/admin/broadcast/test")
