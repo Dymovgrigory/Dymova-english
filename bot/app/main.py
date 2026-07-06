@@ -28,6 +28,7 @@ from app.convlog import log_turn
 from app.dedup import mark_seen
 from app.ai_core import handle_message, handle_start, parse_utm
 from app.broadcast import audience_counts, get_user_detail, list_users, resolve_recipients, send_broadcast
+from app import nudge as nudge_mod
 from app.admin_router import hand_off
 from app.bigben import get_bigben
 from app.config import settings
@@ -302,6 +303,7 @@ async def health() -> dict:
         "kb_documents": len(get_kb().documents),
         "llm_configured": llm.enabled,
         "llm_providers": len(llm.providers),
+        "nudge_enabled": settings.NUDGE_ENABLED,
     }
 
 
@@ -923,6 +925,26 @@ async def admin_digest_send(x_admin_token: str | None = Header(default=None)) ->
     _check_admin(x_admin_token)
     sent = await scheduler.send_digest_now()
     return {"ok": True, "sent": sent, "admins": len(settings.admin_ids)}
+
+
+@app.get("/admin/nudge/preview")
+async def admin_nudge_preview(
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    """Preview: who would receive a nudge right now (dry run)."""
+    _check_admin(x_admin_token)
+    rows = nudge_mod.preview()
+    return {"eligible": len(rows), "rows": rows}
+
+
+@app.post("/admin/nudge/send")
+async def admin_nudge_send(
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    """Manually trigger nudge run right now."""
+    _check_admin(x_admin_token)
+    stats = await nudge_mod.run_nudges()
+    return stats
 
 
 @app.get("/admin/broadcast/audience")

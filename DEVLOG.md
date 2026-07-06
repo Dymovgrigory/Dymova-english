@@ -705,24 +705,55 @@ bot/
 
 ---
 
+### Сессия 17 (агент — Devin) — Возврат недозаявок: тёплые напоминания (nudge) — PR #99
+
+**Дата:** 2026-07-06
+**PR:** #99 — feat(bot): тёплые напоминания — возврат недозаявок (`devin/1783365381-nudge-rebase` → main)
+**Запрос владельца:** п.№ 3 из плана — «Возврат недозаявок: кто начал и не закончил — тёплое напоминание через 1–2 дня». Все изменения — сразу на всех каналах (MAX, Telegram, виджет).
+
+**Что сделано (только `bot/`):**
+- `bot/app/nudge.py` (новый): модуль тёплых напоминаний. `is_nudgeable(conv)` — проверка: этап discovery/selection/objection/lead, nudge ещё не отправлен, не web-пользователь, неактивность ≥ `NUDGE_DELAY_HOURS` (36ч) и ≤ `NUDGE_MAX_AGE_HOURS` (14д), есть хотя бы одно сообщение пользователя. `compose_message(conv)` — персонализированное сообщение от Фокси 🦊 с учётом имени родителя, ребёнка, курса, филиала + предложение бесплатной диагностики. `send_nudge(conv)` — отправка через нужный канал: MAX-клиент для MAX-пользователей, Telegram-клиент (через прокси) для `tg:*`-пользователей, web пропускается. `run_nudges()` — скан всех конверсаций, отправка, статистика `{eligible, sent, failed, skipped_web}`. `preview()` — dry run.
+- `bot/app/memory.py`: новое поле `nudge_sent: bool = False` в `Conversation` (однократность).
+- `bot/app/config.py` + `bot/.env.example`: `NUDGE_ENABLED` (bool, true), `NUDGE_DELAY_HOURS` (36), `NUDGE_MAX_AGE_HOURS` (336 = 14д), `NUDGE_HOUR` (11), `NUDGE_MINUTE` (0), `NUDGE_PROXY_URL`.
+- `bot/app/scheduler.py`: фоновая задача `_nudge_loop()` (ежедневно в 11:00 МСК); после рассылки уведомляет админов в MAX. `start()` → `list[Task]` (дайджест + nudge).
+- `bot/app/main.py`: `GET /admin/nudge/preview` (dry run), `POST /admin/nudge/send` (ручной запуск); `nudge_enabled` в `/health`.
+- `bot/tests/test_nudge.py` (новый, 31 тест): is_nudgeable по всем этапам/условиям, compose_message с персонализацией, send_nudge MAX/Telegram/web, run_nudges, админ-эндпоинты.
+
+**Как проверено:** `cd bot && python3 -m pytest -q` → 128 passed.
+**Решения и нюансы:**
+- Напоминание отправляется **ровно один раз** (`nudge_sent=True`) — без спама.
+- Web-пользователи пропускаются (push невозможен).
+- Проверка ежедневно в 11:00 МСК (утро удобнее для родителей).
+- После отправки — админы получают сводку в MAX.
+- Нулевой риск: не меняет лид-менеджер/CRM/LLM — только отправляет сообщение.
+- Работает на ВСЕХ каналах: MAX и Telegram (через тот же SOCKS5-прокси).
+**Деплой:** после мёрджа — редеплой прод `bot` из `main`. Опционально: настроить `NUDGE_DELAY_HOURS`, `NUDGE_HOUR` в прод `.env`.
+**Осталось / следующий шаг:** п.№ 4 — сбор отзывов после первых занятий; п.№ 5 — голосовые сообщения.
+
+---
+
 ## Текущий статус / Где остановились
 
-**Последний влитый PR:** **#96** (Telegram прокси). Открыт PR long-polling (`devin/1783249695-telegram-polling`). Ранее **#95** (Telegram-адаптер) — в `main`, задеплоен. Ранее #94 (веб-виджет, задеплоен + вставлен на сайт Тильда), #93 (Этап 2 живой диалог), #92/#91/#90. Открыт PR поддержки прокси для Telegram (`devin/1783244161-telegram-proxy`).
+**Последний влитый PR:** **#98** (Telegram long-polling). Текущий: **#99** (nudge — тёплые напоминания).
 
-**Telegram:** @foxinburg_bot подключён через тот же «мозг». api.telegram.org с VPS заблокирован → добавлен `TELEGRAM_PROXY_URL` (SOCKS5, зарубежный, куплен владельцем). После мёрджа PR-прокси: редеплой + `setWebhook` + живой тест. Секреты: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_PROXY_URL` — в прод `.env`.
+**Telegram:** @foxinburg_bot работает через long-polling + SOCKS5-прокси (РКН блокирует и inbound, и outbound к api.telegram.org). `TELEGRAM_POLLING=true`, `TELEGRAM_PROXY_URL` в прод `.env`.
 
-**Прод:** бот «Фоксинбург» в MAX на ВМ Yandex Cloud (`yc-user@89.169.132.104`), развёрнут из `main`. LLM: основной — ProxyAPI (gpt-4o-mini, оплата из РФ), запас — OpenRouter (`LLM_FALLBACKS`), `llm_providers:2`, `/health`=ok. Вебхук `https://bot.dymova-english.ru/webhook` активен. **BigBen CRM:** ключ обновлён, лиды доходят (тест → 200). SSH-ключ `~/.ssh/foxinburg_vps` (секрет `VPS_SSH_PRIVATE_KEY_OWNER`).
+**Прод:** бот «Фоксинбург» на ВМ Yandex Cloud (`yc-user@89.169.132.104`), из `main`. LLM: ProxyAPI (gpt-4o-mini) + OpenRouter fallback. Вебхук MAX `https://bot.dymova-english.ru/webhook` активен. Чат-виджет на сайте (`foxi.js`). SSH-ключ `~/.ssh/foxinburg_vps` (секрет `VPS_SSH_PRIVATE_KEY_OWNER`).
+
+**Каналы бота (все работают на одном ядре):**
+- MAX — webhook (`/webhook`)
+- Telegram — long-polling через прокси
+- Виджет на сайте — `/api/chat` + `foxi.js`
 
 **Незакрытые хвосты:**
-- Смёржить #92 → редеплой прода из `main`; добавить `CONV_LOG_FILE=/data/conversations.jsonl` в прод `.env` (иначе запись диалогов пишется рядом со `STATE_FILE`) и проверить `/отчёт`.
-- Сквозной тест в живом MAX-чате на стороне владельца (Этап 1).
-- Сохранить handoff в knowledge-заметку (см. п.4 skill session-journal).
-- Групповой режим на проде для всех чатов (вариант Б) — правка `.env` (`GROUP_CHAT_WHITELIST`).
+- Редеплой прода из `main` после мёрджа #99 (включить `NUDGE_ENABLED=true` в прод `.env`).
+- Живой тест nudge: `GET /admin/nudge/preview` → проверить что есть кандидаты, `POST /admin/nudge/send`.
+- Следить за сроком платного SOCKS5-прокси (истечёт — Telegram замолчит).
 
 **План фич от владельца (по приоритету, из переписки):**
-1. №12 — тот же «мозг» бота виджетом на сайте Тильда (24/7 консультант, единая база/лиды).
-2. №13 — подключить WhatsApp/Telegram тем же ядром.
-3. Возврат «недозаявок» (кто начал и не закончил — тёплое напоминание через 1–2 дня).
+1. ✅ №12 — чат-виджет на сайте (PR #94).
+2. ✅ №13 — Telegram (PR #95, #96, #98).
+3. ✅ Возврат «недозаявок» — тёплые напоминания (PR #99).
 4. Сбор отзывов после первых занятий (довольных — на Яндекс/2ГИС, недовольных — админу в личку).
 5. Голосовые сообщения (распознавание голоса клиента).
 
