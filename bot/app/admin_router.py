@@ -23,6 +23,39 @@ def _format_history(conv: Conversation, limit: int = 10) -> str:
     return "\n".join(rows)
 
 
+def _client_contact_block(conv: Conversation) -> str:
+    """Формирует блок контактной информации клиента для админа.
+
+    Показывает телефон, имя и ссылку на чат (в зависимости от канала).
+    """
+    lines: list[str] = []
+    user_id = conv.user_id
+
+    # Имя родителя
+    if conv.lead.fio_parent:
+        lines.append(f"👤 {conv.lead.fio_parent}")
+
+    # Телефон
+    if conv.lead.phone:
+        lines.append(f"📱 {conv.lead.phone}")
+
+    # Ссылка на чат в зависимости от канала
+    if user_id.startswith("tg:"):
+        chat_id = user_id.removeprefix("tg:")
+        lines.append(f"💬 Telegram: tg://user?id={chat_id}")
+    elif user_id.startswith("web:"):
+        lines.append("🌐 Веб-виджет (ответить по телефону)")
+    else:
+        # MAX — прямая ссылка на чат
+        lines.append(f"💬 MAX: https://max.ru/chat/{user_id}")
+
+    # Fallback: если телефона нет, показываем user_id
+    if not conv.lead.phone:
+        lines.append(f"ID: {user_id}")
+
+    return "\n".join(lines)
+
+
 async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") -> bool:
     """Уведомляет администраторов и помечает диалог как переданный."""
     conv.stage = STAGE_HANDOFF
@@ -35,9 +68,10 @@ async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") 
     header = "🔔 Требуется администратор"
     if reason:
         header += f" ({reason})"
+    contact = _client_contact_block(conv)
     message = (
         f"{header}\n\n"
-        f"Клиент MAX id: {conv.user_id}\n"
+        f"{contact}\n\n"
         f"{conv.summary()}\n\n"
         f"История диалога:\n{_format_history(conv)}"
     )
