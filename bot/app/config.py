@@ -87,6 +87,9 @@ class Settings(BaseSettings):
     # X-Admin-Token). Защищает отчёт об улучшениях и регистрацию webhook.
     ADMIN_TOKEN: str = ""
 
+    # --- Обязательная регистрация ---
+    REGISTRATION_REQUIRED: bool = True  # требовать регистрацию перед доступом к боту
+
     # --- Тёплые напоминания (возврат недозаявок) ---
     NUDGE_ENABLED: bool = True
     NUDGE_DELAY_HOURS: int = 36   # часы неактивности перед напоминанием
