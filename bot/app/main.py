@@ -976,6 +976,21 @@ async def admin_user_detail(
     return detail
 
 
+@app.post("/admin/users/{user_id}/reset")
+async def admin_user_reset(
+    user_id: str,
+    x_admin_token: str | None = Header(default=None),
+) -> dict:
+    """Сбросить память (конверсацию) пользователя."""
+    _require_admin_token(x_admin_token)
+    store = get_store()
+    prev = store.get(user_id)
+    if not prev.created_at and not prev.history:
+        raise HTTPException(status_code=404, detail="user not found")
+    store.reset(user_id)
+    return {"status": "ok", "user_id": user_id, "message": "conversation reset"}
+
+
 @app.post("/admin/broadcast/test")
 async def admin_broadcast_test(
     data: dict,
