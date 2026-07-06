@@ -19,6 +19,7 @@ MAX_HISTORY = 20
 MAX_TRANSCRIPT = 1000
 
 # Этапы воронки продаж — синхронны «мышлению» бота из ТЗ.
+STAGE_REGISTRATION = "registration" # обязательная регистрация перед доступом
 STAGE_GREETING = "greeting"        # начало общения
 STAGE_DISCOVERY = "discovery"      # выявление потребности
 STAGE_SELECTION = "selection"      # подбор курса
@@ -76,6 +77,8 @@ class Conversation:
     last_objection: str = ""    # последнее возражение клиента
     lead_submitted: bool = False # заявка уже отправлялась
     nudge_sent: bool = False       # тёплое напоминание уже отправлено
+    registered: bool = False        # пользователь прошёл обязательную регистрацию
+    registration_step: str = ""     # текущий шаг регистрации
     created_at: str = ""
     updated_at: str = ""
     transcript: list[dict] = field(default_factory=list)
@@ -254,6 +257,8 @@ def _conv_from_dict(d: dict) -> Conversation:
         last_objection=d.get("last_objection", ""),
         lead_submitted=d.get("lead_submitted", False),
         nudge_sent=d.get("nudge_sent", False),
+        registered=d.get("registered", False),
+        registration_step=d.get("registration_step", ""),
         created_at=d.get("created_at", ""),
         updated_at=d.get("updated_at", ""),
         transcript=d.get("transcript", []),

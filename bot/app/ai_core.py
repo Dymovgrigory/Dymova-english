@@ -28,10 +28,12 @@ from app.memory import (
     STAGE_HANDOFF,
     STAGE_LEAD,
     STAGE_OBJECTION,
+    STAGE_REGISTRATION,
     get_store,
 )
 from app import sales
 from app import lead_manager
+from app import registration
 from app.admin_router import hand_off
 
 logger = logging.getLogger(__name__)
@@ -253,6 +255,20 @@ async def handle_message(user_id: str, text: str) -> str:
     kb = get_kb()
     conv = store.get(user_id)
     conv.add("user", text)
+
+    # Registration gate: если пользователь не зарегистрирован — направляем в регистрацию.
+    if not registration.is_registered(conv):
+        from app.bigben import get_bigben
+        if conv.stage != STAGE_REGISTRATION:
+            reply = registration.start_registration(conv)
+        else:
+            reply, _done = await registration.handle_registration_step(
+                conv, text, get_bigben()
+            )
+        conv.add("assistant", reply)
+        store.save(conv)
+        return reply
+
     _capture_entities(conv, text)
 
     reply = await _route(conv, text, kb)
@@ -389,6 +405,7 @@ async def handle_start(user_id: str, start_param: str = "") -> str:
     store = get_store()
     prev = store.get(user_id)
     returning = prev.is_returning()
+    was_registered = prev.registered
     # Сохраняем карточку клиента между сессиями: сбрасываем диалог, но переносим
     # то, что уже знаем о клиенте, чтобы не начинать общение с чистого листа.
     saved_lead = prev.lead
@@ -408,10 +425,19 @@ async def handle_start(user_id: str, start_param: str = "") -> str:
         conv.last_objection = saved_objection
         conv.lead_submitted = saved_submitted
         conv.created_at = saved_created
-    conv.stage = STAGE_DISCOVERY
+    # Preserve registration status across resets
+    conv.registered = was_registered
     if start_param:
         conv.utm = parse_utm(start_param)
 
+    # If not registered — start registration flow
+    if not registration.is_registered(conv):
+        reply = registration.start_registration(conv)
+        conv.add("assistant", reply)
+        store.save(conv)
+        return reply
+
+    conv.stage = STAGE_DISCOVERY
     if returning:
         reply = (
             "С возвращением! 🦊 Рад снова вас видеть.\n\n"
@@ -420,12 +446,9 @@ async def handle_start(user_id: str, start_param: str = "") -> str:
         )
     else:
         reply = (
-            "Привет! 🦊 Я — Фокси из языковой школы «Фоксинбург» в "
-            "Долгопрудном!\n\n"
-            "Помогу подобрать курс, расскажу о ценах и филиалах, "
-            "запишу на бесплатную диагностику 😊\n\n"
-            "Напишите, например: «Сыну 9 лет, ищем английский» — и я подберу "
-            "лучшую программу!"
+            "Привет! 🦊 Я Фокси из «Фоксинбурга»!\n\n"
+            "Чем могу помочь? Расскажу о курсах, ценах, запишу на "
+            "бесплатную диагностику — спрашивайте! 😊"
         )
     conv.add("assistant", reply)
     store.save(conv)

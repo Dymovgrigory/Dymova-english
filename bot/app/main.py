@@ -304,6 +304,7 @@ async def health() -> dict:
         "llm_configured": llm.enabled,
         "llm_providers": len(llm.providers),
         "nudge_enabled": settings.NUDGE_ENABLED,
+        "registration_required": settings.REGISTRATION_REQUIRED,
     }
 
 
