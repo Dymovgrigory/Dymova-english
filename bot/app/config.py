@@ -24,105 +24,69 @@ class Settings(BaseSettings):
     MAX_BOT_API_URL: str = "https://botapi.max.ru"
     MAX_WEBHOOK_SECRET: str = ""
 
-    # --- Telegram Bot API ---
-    TELEGRAM_BOT_TOKEN: str = ""
-    TELEGRAM_WEBHOOK_SECRET: str = ""
-    TELEGRAM_WEBHOOK_URL: str = ""
-    TELEGRAM_PROXY_URL: str = ""
-    TELEGRAM_POLLING: bool = False
-
     # --- LLM (провайдер-агностик, OpenAI-совместимый) ---
-    # По умолчанию Groq (бесплатно, быстро). Можно заменить на OpenRouter,
+    # По умолчанию OpenRouter (бесплатные модели). Можно заменить на Groq,
     # локальный Ollama и т.д., поменяв LLM_BASE_URL / LLM_MODEL / LLM_API_KEY.
     LLM_API_KEY: str = ""
-    LLM_BASE_URL: str = "https://api.groq.com/openai/v1"
-    LLM_MODEL: str = "llama-3.3-70b-versatile"
+    LLM_BASE_URL: str = "https://openrouter.ai/api/v1"
+    LLM_MODEL: str = "meta-llama/llama-3.3-70b-instruct:free"
+    # Запасные провайдеры в порядке попыток. JSON-массив объектов
+    # {"base_url": "...", "api_key": "...", "model": "..."}.
     LLM_FALLBACKS: str = "[]"
-    LLM_HISTORY_TURNS: int = 16
-    VISION_MODEL: str = "openai/gpt-4o-mini"
     LLM_TEMPERATURE: float = 0.4
     LLM_MAX_TOKENS: int = 700
     LLM_TIMEOUT: int = 40
+    LLM_HISTORY_TURNS: int = 8
 
     # --- BigBen CRM ---
     # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
-    # Хост panel.bigbencrm.ru общий для всех школ BigBen, поэтому URL задан
-    # значением по умолчанию. Ключ (секрет) обязательно из окружения.
-    # Воронка «Бот Макс» (id 1924), этап «Входящие» (id 1) — куда падают
-    # новые заявки от бота. См. .env.example.
-    BIGBEN_API_URL: str = "https://panel.bigbencrm.ru/api/leads/add"
+    BIGBEN_API_URL: str = ""
     BIGBEN_API_KEY: str = ""
-    BIGBEN_PIPELINE_ID: str = "1924"
-    BIGBEN_PIPELINE_STATUS_ID: str = "1"
+    BIGBEN_PIPELINE_ID: str = ""
+    BIGBEN_PIPELINE_STATUS_ID: str = ""
 
     # --- Передача администратору ---
     # ID администраторов в MAX (через запятую), куда дублируется контекст диалога.
     ADMIN_MAX_IDS: str = ""
-
-    # --- Group chat mode ---
-    GROUP_CHAT_WHITELIST: str = ""
-    GROUP_MODE_ENABLED: bool = True
+    ADMIN_TOKEN: str = ""
 
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
-    WEB_CHAT_ORIGINS: str = (
-        "https://dymova-english.ru,"
-        "https://www.dymova-english.ru,"
-        "http://localhost:*"
-    )
+    CONV_LOG_FILE: str = ""
+    GROUP_MODE_ENABLED: bool = True
+    GROUP_CHAT_WHITELIST: str = ""
+    NUDGE_DELAY_HOURS: int = 36
+    NUDGE_MAX_AGE_HOURS: int = 100
+
+    # --- Telegram ---
+    TELEGRAM_BOT_TOKEN: str = ""
+    TELEGRAM_PROXY_URL: str = ""
+    TELEGRAM_WEBHOOK_URL: str = ""
+    TELEGRAM_WEBHOOK_SECRET: str = ""
 
     # --- Прочее ---
+    REGISTRATION_REQUIRED: bool = False
     BOT_NAME: str = "Фоксинбург"
     DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
-    STATE_FILE: str = ""  # путь к файлу персистентности диалогов (опц.)
-    CONV_LOG_FILE: str = ""  # JSONL-лог диалогов (опц.)
-
-    # --- Цикл улучшения ---
-    # Журнал «пробелов»: вопросы, на которые бот ответил неуверенно
-    # (низкое совпадение с базой знаний). JSONL-файл, по строке на запись.
-    INSIGHTS_FILE: str = ""
-    # Порог релевантности поиска: ниже — считаем ответ «слабым» и логируем пробел.
-    INSIGHTS_MIN_SCORE: float = 0.34
-    # Токен для служебных эндпоинтов /admin/* (если задан — требуется заголовок
-    # X-Admin-Token). Защищает отчёт об улучшениях и регистрацию webhook.
-    ADMIN_TOKEN: str = ""
-
-    # --- Обязательная регистрация ---
-    REGISTRATION_REQUIRED: bool = True  # требовать регистрацию перед доступом к боту
-
-    # --- Тёплые напоминания (возврат недозаявок) ---
-    NUDGE_ENABLED: bool = True
-    NUDGE_DELAY_HOURS: int = 36   # часы неактивности перед напоминанием
-    NUDGE_MAX_AGE_HOURS: int = 336  # не напоминать по диалогам старше 14 дней
-    NUDGE_HOUR: int = 11          # час проверки (утро удобнее для родителей)
-    NUDGE_MINUTE: int = 0
-    NUDGE_PROXY_URL: str = ""     # прокси для Telegram (если заблокирован с VPS)
-
-    # --- Ежедневный отчёт администраторам ---
-    DIGEST_ENABLED: bool = True
-    DIGEST_HOUR: int = 21          # час отправки (в часовом поясе DIGEST_TZ_OFFSET)
-    DIGEST_MINUTE: int = 0
-    DIGEST_TZ_OFFSET: int = 3      # смещение от UTC (Москва = +3)
-    DIGEST_DAYS: int = 1           # за какой период собирать дайджест
+    DB_PATH: str = "./data/bot.db"
+    STATE_FILE: str = ""  # legacy alias для DB_PATH
 
     @property
     def admin_ids(self) -> list[str]:
         return [x.strip() for x in self.ADMIN_MAX_IDS.split(",") if x.strip()]
 
-    def is_admin(self, user_id: str | int) -> bool:
-        return str(user_id) in self.admin_ids
-
+    @property
     def group_chat_whitelist(self) -> set[int]:
-        values: set[int] = set()
+        items: set[int] = set()
         for raw in self.GROUP_CHAT_WHITELIST.split(","):
-            item = raw.strip()
-            if not item:
+            raw = raw.strip()
+            if not raw:
                 continue
             try:
-                values.add(int(item))
+                items.add(int(raw))
             except ValueError:
                 continue
-        return values
+        return items
 
 
 @lru_cache

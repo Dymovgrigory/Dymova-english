@@ -1,14 +1,11 @@
 """Тесты логики бота (без сети: LLM/MAX/BigBen не сконфигурированы)."""
 import pytest
-from fastapi.testclient import TestClient
 
 from app import intent as I
-from app.ai_core import handle_message, handle_start, parse_utm
-from app.bigben import build_params
+from app.ai_core import handle_message, handle_start
 from app.course_selector import recommend
-from app import main
 from app.knowledge.kb import get_kb
-from app.memory import Lead, STAGE_DONE, STAGE_HANDOFF, STAGE_LEAD, get_store
+from app.memory import STAGE_DONE, STAGE_HANDOFF, STAGE_LEAD, get_store
 
 
 # ---------- извлечение сущностей ----------
@@ -33,155 +30,10 @@ def test_extract_birthday():
 
 def test_intents():
     assert I.detect_intent("Здравствуйте") == I.GREETING
-    assert I.detect_intent("Как дела?") == I.GREETING
     assert I.detect_intent("Сколько стоит обучение?") == I.PRICE
-    assert I.detect_intent("Хочу узнать точную цену") == I.PRICE
-    assert I.detect_intent("Что умеешь?") == I.GREETING
     assert I.detect_intent("хочу записаться на пробное") == I.WANT_SIGNUP
     assert I.detect_intent("соедините с администратором") == I.HANDOFF
     assert I.detect_intent("это дорого для нас") == I.OBJECTION
-
-
-def test_greeting_not_false_positive():
-    # «ку» внутри «ребёнку» не должно распознаваться как приветствие
-    assert I.detect_intent("По каким учебникам занимаетесь? Ребёнку 9 лет") != I.GREETING
-    assert I.detect_intent("ку") == I.GREETING
-
-
-def test_kb_has_textbooks():
-    kb = get_kb()
-    docs = kb.search("по каким учебникам английский My Level")
-    assert docs
-    assert any("My Level" in (d.title + d.text) for d in docs)
-
-
-# ---------- цикл улучшения (insights) ----------
-
-def test_insights_log_and_summarize(tmp_path, monkeypatch):
-    from app import insights
-    from app.config import settings
-
-    monkeypatch.setattr(settings, "INSIGHTS_FILE", str(tmp_path / "insights.jsonl"))
-    insights.log_gap("Есть ли парковка у филиала?", reason="no_kb", score=0.0, user_id="u1")
-    insights.log_gap("есть ли парковка у филиала", reason="no_kb", score=0.1, user_id="u2")
-    insights.log_gap("Можно ли оплатить картой?", reason="low_score", score=0.2, user_id="u1")
-
-    s = insights.summarize(days=30, top=10)
-    assert s["total_weak_answers"] == 3
-    # две формулировки про парковку схлопываются в одну тему с count=2 и 2 юзерами
-    top = s["gaps"][0]
-    assert top["count"] == 2
-    assert top["users"] == 2
-    assert "digest" not in s
-    assert "парков" in insights.digest(days=30).lower()
-
-
-def test_digest_schedule_timing():
-    from datetime import datetime, timedelta, timezone
-
-    from app import scheduler
-    from app.config import settings
-
-    tz = timezone(timedelta(hours=settings.DIGEST_TZ_OFFSET))
-    # за час до 21:00 -> примерно 3600 секунд
-    before = datetime(2026, 6, 28, 20, 0, 0, tzinfo=tz)
-    assert abs(scheduler._seconds_until_next_run(before) - 3600) < 2
-    # после 21:00 -> переносится на следующий день (близко к 24ч)
-    after = datetime(2026, 6, 28, 21, 30, 0, tzinfo=tz)
-    assert scheduler._seconds_until_next_run(after) > 23 * 3600
-
-
-def test_admin_commands(monkeypatch):
-    from app import main
-    from app.config import settings
-
-    monkeypatch.setattr(settings, "ADMIN_MAX_IDS", "555,777")
-    # /myid доступна всем
-    assert "555" in main._admin_command("/myid", "555")
-    assert "обычный" in main._admin_command("/myid", "111")
-    # отчёт: админу — дайджест, обычному пользователю — None (как обычный вопрос)
-    assert main._admin_command("/отчёт", "111") is None
-    assert main._admin_command("/отчёт", "555").startswith("🛠 Админ-панель")
-
-
-# ---------- UTM / атрибуция заявки ----------
-
-def test_parse_utm_query_string():
-    utm = parse_utm("utm_source=vk&utm_campaign=spring&foo=bar")
-    assert utm == {"utm_source": "vk", "utm_campaign": "spring"}
-
-
-def test_parse_utm_short_token():
-    assert parse_utm("vk") == {"utm_source": "vk", "utm_medium": "referral"}
-    assert parse_utm("") == {}
-
-
-def test_build_params_includes_utm_and_contacts():
-    lead = Lead(
-        fio_parent="Иванова Анна", fio_child="Иванов Миша", phone="+79991234567",
-        email="a@b.ru", city="Долгопрудный", course="Английский",
-    )
-    params = build_params(
-        lead, source="MAX мини-приложение", note="заметка",
-        utm={"utm_source": "vk", "utm_medium": "miniapp", "unknown": "x"},
-    )
-    assert params["email"] == "a@b.ru"
-    assert params["city"] == "Долгопрудный"
-    assert params["utm_source"] == "vk"
-    assert params["utm_medium"] == "miniapp"
-    assert "unknown" not in params
-    assert params["user_note"] == "заметка"
-
-
-def test_build_params_includes_interest_details():
-    lead = Lead(
-        fio_parent="Иванова Анна",
-        phone="+79991234567",
-        course="Летняя Академия — 2 смена",
-        interest_type="summer",
-        interest_value="2 смена",
-        branch="Лихачевский 76к1",
-    )
-    params = build_params(lead, source="MAX мини-приложение")
-    assert "Интерес: summer / 2 смена" in params["user_note"]
-    assert "Курс: Летняя Академия — 2 смена" in params["user_note"]
-    assert "Филиал: Лихачевский 76к1" in params["user_note"]
-
-
-def test_miniapp_lead_propagates_interest_details(monkeypatch):
-    captured = {}
-
-    class FakeBigBen:
-        configured = True
-
-        async def create_lead(self, lead, source, note="", utm=None):
-            captured["lead"] = lead
-            captured["source"] = source
-            captured["note"] = note
-            captured["utm"] = utm
-            return True
-
-    monkeypatch.setattr(main, "get_bigben", lambda: FakeBigBen())
-
-    client = TestClient(main.app)
-    resp = client.post(
-        "/api/miniapp/lead",
-        json={
-            "fio_parent": "Иванова Анна",
-            "phone": "+79991234567",
-            "branch": "Лихачевский 76к1",
-            "course": "Летняя Академия — 2 смена",
-            "interest_type": "summer",
-            "interest_value": "2 смена",
-            "start_param": "vk",
-        },
-    )
-
-    assert resp.status_code == 200
-    assert resp.json() == {"ok": True}
-    assert captured["lead"].interest_type == "summer"
-    assert captured["lead"].interest_value == "2 смена"
-    assert "Летняя Академия — 2 смена" in captured["source"]
 
 
 # ---------- база знаний ----------
@@ -210,37 +62,13 @@ def test_recommend_by_age():
 # ---------- диалоговые сценарии ----------
 
 @pytest.mark.asyncio
-async def test_greeting_does_not_dump_info(monkeypatch):
-    from app import ai_core
-
-    class DisabledLLM:
-        enabled = False
-
-    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
-
+async def test_greeting_does_not_dump_info():
     uid = "test-greet"
     get_store().reset(uid)
     reply = await handle_message(uid, "Здравствуйте")
-    assert reply.startswith("Привет!")
+    assert "Фоксинбург" in reply or "Здравствуйте" in reply
     # приветствие не должно вываливать прайс
     assert "8 200" not in reply
-    assert "?" in reply
-
-
-@pytest.mark.asyncio
-async def test_smalltalk_answers_with_next_step(monkeypatch):
-    from app import ai_core
-
-    class DisabledLLM:
-        enabled = False
-
-    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
-
-    uid = "test-smalltalk"
-    get_store().reset(uid)
-    reply = await handle_message(uid, "Как дела?")
-    assert reply.startswith("Привет!")
-    assert "Чем могу помочь?" in reply
 
 
 @pytest.mark.asyncio

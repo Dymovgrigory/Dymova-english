@@ -27,7 +27,7 @@ def _lead_status(conv: Conversation) -> str:
     if conv.lead.is_complete() or conv.stage == STAGE_DONE:
         return "complete"
     if any(
-        getattr(conv.lead, field)
+        getattr(conv.lead, field, "")
         for field in ("fio_parent", "phone", "fio_child", "birthday", "age", "course", "branch", "comment", "email", "city")
     ):
         return "partial"

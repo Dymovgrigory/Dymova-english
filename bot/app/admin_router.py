@@ -24,36 +24,31 @@ def _format_history(conv: Conversation, limit: int = 10) -> str:
 
 
 def _client_contact_block(conv: Conversation) -> str:
-    """Формирует блок контактной информации клиента для админа.
+    lead = conv.lead
+    parts: list[str] = []
+    name = lead.fio_parent.strip()
+    if name:
+        parts.append(f"👤 {name}")
+    if lead.phone:
+        parts.append(f"📱 {lead.phone}")
 
-    Показывает телефон, имя и ссылку на чат (в зависимости от канала).
-    """
-    lines: list[str] = []
     user_id = conv.user_id
-
-    # Имя родителя
-    if conv.lead.fio_parent:
-        lines.append(f"👤 {conv.lead.fio_parent}")
-
-    # Телефон
-    if conv.lead.phone:
-        lines.append(f"📱 {conv.lead.phone}")
-
-    # Ссылка на чат в зависимости от канала
     if user_id.startswith("tg:"):
-        chat_id = user_id.removeprefix("tg:")
-        lines.append(f"💬 Telegram: tg://user?id={chat_id}")
+        link = f"tg://user?id={user_id.removeprefix('tg:')}"
+        platform = "Telegram"
     elif user_id.startswith("web:"):
-        lines.append("🌐 Веб-виджет (ответить по телефону)")
+        link = ""
+        platform = "Веб-виджет"
     else:
-        # MAX — прямая ссылка на чат
-        lines.append(f"💬 MAX: https://max.ru/chat/{user_id}")
+        link = f"https://max.ru/chat/{user_id}"
+        platform = "MAX"
 
-    # Fallback: если телефона нет, показываем user_id
-    if not conv.lead.phone:
-        lines.append(f"ID: {user_id}")
-
-    return "\n".join(lines)
+    parts.append(platform)
+    if link:
+        parts.append(link)
+    if not lead.phone:
+        parts.append(f"ID: {user_id}")
+    return "\n".join(parts)
 
 
 async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") -> bool:
@@ -68,10 +63,9 @@ async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") 
     header = "🔔 Требуется администратор"
     if reason:
         header += f" ({reason})"
-    contact = _client_contact_block(conv)
     message = (
         f"{header}\n\n"
-        f"{contact}\n\n"
+        f"{_client_contact_block(conv)}\n"
         f"{conv.summary()}\n\n"
         f"История диалога:\n{_format_history(conv)}"
     )

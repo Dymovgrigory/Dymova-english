@@ -50,7 +50,6 @@ class Document:
     title: str
     text: str
     tokens: set[str] = field(default_factory=set)
-    title_tokens: set[str] = field(default_factory=set)
 
     def render(self) -> str:
         return f"[{self.title}]\n{self.text}".strip()
@@ -78,7 +77,6 @@ class KnowledgeBase:
             return
         doc = Document(category=category, title=title, text=text)
         doc.tokens = set(_tokens(f"{title} {text}"))
-        doc.title_tokens = set(_tokens(title))
         self.documents.append(doc)
 
     def _build_documents(self) -> None:
@@ -90,7 +88,6 @@ class KnowledgeBase:
                       f"{company.get('philosophy','')} Слоган: {company.get('slogan','')}")
             self._add("methodology", "Методика обучения", company.get("methodology", ""))
             self._add("company", "Режим работы", company.get("work_hours", ""))
-            self._add("company", "Руководители и основатели", company.get("founders", ""))
 
         for adv in r.get("advantages", []):
             self._add("advantages", adv.get("title", ""), adv.get("text", ""))
@@ -109,39 +106,14 @@ class KnowledgeBase:
             self._add("age_programs", p.get("name", ""),
                       f"Возраст {p.get('age','')}. {p.get('text','')} Подробнее: {p.get('url','')}")
 
-        _COURSE_LABELS = {
-            "language": "Язык",
-            "ages": "Возраст",
-            "teacher": "Преподаватель",
-            "format": "Формат",
-            "price": "Стоимость",
-            "trial_price": "Пробный урок",
-        }
         for c in r.get("courses", []):
             parts = [c.get("description", ""), c.get("note", "")]
             meta = []
-            for k, label in _COURSE_LABELS.items():
+            for k in ("language", "ages", "teacher", "format", "price", "trial_price"):
                 if c.get(k):
-                    meta.append(f"{label}: {c[k]}")
-            if c.get("url"):
-                meta.append(f"Подробнее на сайте: {c['url']}")
+                    meta.append(f"{k}: {c[k]}")
             self._add("courses", c.get("name", ""),
                       " ".join([p for p in parts if p]) + " " + "; ".join(meta))
-
-        tb = r.get("textbooks")
-        if tb:
-            levels = tb.get("levels", [])
-            overview = tb.get("summary", "") + " Уровни: " + "; ".join(
-                f"{lv.get('level','')} ({lv.get('age','')}, {lv.get('year','')}, {lv.get('cefr','')})"
-                for lv in levels
-            )
-            self._add("textbooks", tb.get("name", "Учебники"), overview)
-            for lv in levels:
-                self._add(
-                    "textbooks",
-                    f"{lv.get('level','')} — {lv.get('age','')}",
-                    f"{lv.get('year','')}, уровень {lv.get('cefr','')}. {lv.get('detail','')}",
-                )
 
         sa = r.get("summer_academy")
         if sa:
@@ -166,7 +138,7 @@ class KnowledgeBase:
                       f"MAX-канал: {social.get('max_channel','')}")
 
     # ---------- поиск ----------
-    def search_scored(self, query: str, limit: int = 5) -> list[tuple[float, Document]]:
+    def search(self, query: str, limit: int = 5) -> list[Document]:
         q_tokens = set(_tokens(query))
         if not q_tokens:
             return []
@@ -181,23 +153,9 @@ class KnowledgeBase:
             score = len(overlap) / len(q_tokens)
             if doc.category in ("faq", "courses", "formats"):
                 score += 0.1
-            # бонус за совпадение с заголовком: профильные документы
-            # («Летняя Академия», конкретные FAQ) поднимаются выше болтливых.
-            title_overlap = q_tokens & doc.title_tokens
-            if title_overlap:
-                score += 0.4 * len(title_overlap) / len(q_tokens)
-                if doc.category != "faq":
-                    score += 0.3
             scored.append((score, doc))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return scored[:limit]
-
-    def search(self, query: str, limit: int = 5) -> list[Document]:
-        return [d for _, d in self.search_scored(query, limit=limit)]
-
-    def best_score(self, query: str) -> float:
-        scored = self.search_scored(query, limit=1)
-        return scored[0][0] if scored else 0.0
+        return [d for _, d in scored[:limit]]
 
     def context_for(self, query: str, limit: int = 5) -> str:
         docs = self.search(query, limit=limit)
@@ -227,26 +185,6 @@ class KnowledgeBase:
     @property
     def company(self) -> dict:
         return self.raw.get("company", {})
-
-    @property
-    def faq(self) -> list[dict]:
-        return self.raw.get("faq", [])
-
-    @property
-    def promos(self) -> list:
-        return self.raw.get("promos", [])
-
-    @property
-    def summer_academy(self) -> dict:
-        return self.raw.get("summer_academy", {})
-
-    @property
-    def enrollment_steps(self) -> list[dict]:
-        return self.raw.get("enrollment_steps", [])
-
-    @property
-    def advantages(self) -> list[dict]:
-        return self.raw.get("advantages", [])
 
     def objection(self, key: str) -> str | None:
         for o in self.raw.get("objections", []):

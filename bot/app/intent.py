@@ -15,54 +15,35 @@ PRICE = "price"
 COURSES = "courses"
 CONTACTS = "contacts"
 ABOUT = "about"
+HOMEWORK = "homework"
 WANT_SIGNUP = "want_signup"
 OBJECTION = "objection"
 HANDOFF = "handoff"
-HOMEWORK = "homework"
 QUESTION = "question"
 
-# Приветствие проверяем отдельным regex по границам слов: короткие токены вроде
-# «ку»/«hi» иначе ложно срабатывают внутри слов («ребёнку», «уроки»).
-_GREETING_RE = re.compile(
-    r"\b(привет\w*|здравств\w*|здравуй\w*|здравейте|хелло\w*|hello|hi|hey|ку|"
-    r"что умеешь|что ты умеешь|чем можешь|чем помож|что вы умеете)\b"
-    r"|добрый день|добрый вечер|доброе утро|как дела|как пожива\w*|что нового",
-    re.IGNORECASE,
-)
-
 _PATTERNS: list[tuple[str, list[str]]] = [
+    (GREETING, ["привет", "здравств", "добрый день", "добрый вечер", "доброе утро",
+                "здравейте", "хеллоу", "hello", "hi ", "ку "]),
     (HANDOFF, ["оператор", "администратор", "менеджер", "жалоб", "директор",
-               "руководител", "начальник", "возврат", "договор", "претензи",
-               "живой человек", "человек", "позвоните мне", "перезвоните"]),
-    (WANT_SIGNUP, ["запис", "записать", "хочу учиться", "хочу заниматься",
+               "руководител", "недоволь", "не перезвон", "никто не перезвон",
+               "возврат", "договор", "претензи", "живой человек", "человек",
+               "позвоните мне", "перезвоните", "не ответили", "игнорир",
+               "верните деньги", "верните", "деньги"]),
+    (WANT_SIGNUP, ["запис", "записать", "пробн", "хочу учиться", "хочу заниматься",
                    "хочу на курс", "оставить заявку", "забронир", "диагностик",
-                   "хочу попробовать", "хочу записаться", "хочу на пробн",
-                   "запишите на пробн"]),
+                   "хочу попробовать", "хочу записаться"]),
     (PRICE, ["сколько стоит", "стоимость", "цена", "цены", "почем", "прайс",
-             "сколько за", "дорого ли", "оплат", "точную цену", "точная цена"]),
+             "сколько за", "дорого ли", "оплат"]),
     (COURSES, ["курс", "программ", "какие занятия", "направлен", "немецк",
                "китайск", "английск", "чтени", "грамматик", "летн", "академи",
                "онлайн", "оффлайн", "офлайн", "группа", "уровень"]),
     (CONTACTS, ["адрес", "филиал", "где наход", "как добраться", "телефон",
                 "контакт", "режим работы", "часы работы", "как с вами связаться"]),
     (ABOUT, ["о школе", "о вас", "кто вы", "методик", "лицензи", "преподавател",
-             "педагог", "отзыв", "результат", "почему вы", "преимуществ",
-             "что умеешь", "чем можешь", "чем помог", "кто руководител"]),
+             "педагог", "отзыв", "результат", "почему вы", "преимуществ"]),
+    (HOMEWORK, ["домашк", "домашнее задание", "помоги с дз", "помоги с домашк",
+                "помоги с домашкой", "дз "]),
 ]
-
-_HOMEWORK_PATTERNS = (
-    "домашк",
-    "домашнее задание",
-    "домашн задани",
-    "задали на дом",
-    "помоги с задани",
-    "разобрать задани",
-    "помоги решить",
-    "не понимаю задани",
-    "не понял задани",
-    "не поняла задани",
-    "упражнен",
-)
 
 _OBJECTIONS = {
     "дорого": ["дорого", "дороговато", "не по карману", "дешевле", "скидк"],
@@ -71,27 +52,7 @@ _OBJECTIONS = {
     "далеко": ["далеко", "неудобно ехать", "нет рядом", "другой город", "не близко"],
 }
 
-_COMPLAINT_PATTERNS = [
-    "недовол",
-    "не перезвон",
-    "никто не",
-    "не ответил",
-    "не отвечает",
-    "игнорир",
-    "обман",
-    "ужасн",
-    "возмущ",
-    "верните деньги",
-    "вернуть деньги",
-    "жалоб",
-    "претензи",
-    "руководител",
-    "начальник",
-]
-
-_PHONE_RE = re.compile(
-    r"(?<!\d)(?:\+7|8|7)?[\s\-.(]*\d{3}[\s\-.)]*\d{3}[\s\-.]*\d{2}[\s\-.]*\d{2}(?!\d)"
-)
+_PHONE_RE = re.compile(r"(?:\+7|8|7)?[\s\-\.\(]*\d{3}[\s\-\.\)]*\d{3}[\s\-\.\)]*\d{2}[\s\-\.\)]*\d{2}")
 _AGE_RE = re.compile(r"(\d{1,2})\s*(?:лет|год|года|годик)")
 _AGE_CHILD_RE = re.compile(r"(?:сын|доч|реб[её]нк|мальчик|девочк|ему|ей)\D{0,12}?(\d{1,2})")
 _DATE_RE = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
@@ -106,52 +67,50 @@ def detect_objection(text: str) -> str | None:
     return None
 
 
-def is_homework_request(text: str) -> bool:
-    low = text.lower()
-    if re.search(r"\bдз\b", low):
-        return True
-    if any(p in low for p in _HOMEWORK_PATTERNS):
-        return True
-    if re.search(r"\bномер\s*\d+\b", low) and any(
-        w in low for w in ("задани", "упражнен", "домаш", "дз", "реши", "помог")
-    ):
-        return True
-    return False
-
-
-def detect_complaint(text: str) -> bool:
-    low = text.lower()
-    return any(w in low for w in _COMPLAINT_PATTERNS)
-
-
 def detect_intent(text: str) -> str:
     low = text.lower().strip()
-    if detect_complaint(low):
-        return HANDOFF
     if detect_objection(low):
         return OBJECTION
-    if _GREETING_RE.search(low):
-        return GREETING
-    if is_homework_request(low):
+    if any(
+        cue in low
+        for cue in (
+            "домашк",
+            "домашнее задание",
+            "помоги с дз",
+            "помоги с домашк",
+            "помоги с домашкой",
+        )
+    ):
+        return HOMEWORK
+    if "дз" in low and not re.search(r"[а-яёa-z]дз[а-яёa-z]", low):
         return HOMEWORK
     for intent, words in _PATTERNS:
         if any(w in low for w in words):
             return intent
+    if "?" in low:
+        return QUESTION
     return QUESTION
 
 
 def extract_phone(text: str) -> str | None:
-    m = _PHONE_RE.search(text)
-    if not m:
+    digits = re.sub(r"\D", "", text)
+    if len(digits) < 10:
         return None
-    digits = re.sub(r"\D", "", m.group(0))
     if len(digits) == 11 and digits[0] in "78":
         return "+7" + digits[1:]
     if len(digits) == 10:
         return "+7" + digits
-    if len(digits) < 10:
-        return None
+    if len(digits) > 11 and digits[0] in "78":
+        digits = digits[:11]
+        return "+7" + digits[1:]
     return "+" + digits
+
+
+def detect_complaint(text: str) -> bool:
+    low = text.lower()
+    return detect_intent(low) == HANDOFF or any(
+        word in low for word in ("жалоб", "недоволь", "претенз", "возврат", "верните", "деньги")
+    )
 
 
 def extract_age(text: str) -> str | None:

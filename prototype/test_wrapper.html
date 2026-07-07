@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FXB block preview</title>
+<style>html,body{margin:0;padding:0}</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  // Usage: test_wrapper.html?block=page_novosti.html  (comma-separated for multiple)
+  var params = new URLSearchParams(location.search);
+  var blocks = (params.get('block') || 'tilda_shapka.html,page_novosti.html,tilda_footer.html').split(',');
+  (async function () {
+    var root = document.getElementById('root');
+    for (var i = 0; i < blocks.length; i++) {
+      var name = blocks[i].trim();
+      if (!name) continue;
+      try {
+        var res = await fetch(name);
+        var html = await res.text();
+        var wrap = document.createElement('div');
+        wrap.innerHTML = html;
+        // execute inline <script> tags (innerHTML does not run them)
+        var scripts = wrap.querySelectorAll('script');
+        root.appendChild(wrap);
+        scripts.forEach(function (old) {
+          var s = document.createElement('script');
+          if (old.src) s.src = old.src; else s.textContent = old.textContent;
+          document.body.appendChild(s);
+        });
+      } catch (e) {
+        var err = document.createElement('pre');
+        err.textContent = 'Failed to load ' + name + ': ' + e.message;
+        root.appendChild(err);
+      }
+    }
+  })();
+</script>
+</body>
+</html>

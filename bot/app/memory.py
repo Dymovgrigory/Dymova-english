@@ -1,32 +1,29 @@
 """Память диалогов: состояние по каждому пользователю MAX.
 
 Хранит этап продажи, собранные данные лида, краткую историю сообщений и
-выбранный курс/филиал. По умолчанию — потокобезопасное хранилище в памяти
-процесса; при указании STATE_FILE состояние дополнительно сохраняется на диск
-в JSON, чтобы пережить перезапуск.
+выбранный курс/филиал. Бэкенд — SQLite, чтобы переживать перезапуски процесса.
 """
 from __future__ import annotations
 
 import json
+import sqlite3
 import threading
-from datetime import datetime, timezone
 from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 
 from app.config import settings
 
 MAX_HISTORY = 20
-MAX_TRANSCRIPT = 1000
 
-# Этапы воронки продаж — синхронны «мышлению» бота из ТЗ.
-STAGE_REGISTRATION = "registration" # обязательная регистрация перед доступом
-STAGE_GREETING = "greeting"        # начало общения
-STAGE_DISCOVERY = "discovery"      # выявление потребности
-STAGE_SELECTION = "selection"      # подбор курса
-STAGE_OBJECTION = "objection"      # работа с возражениями
-STAGE_LEAD = "lead"                # сбор данных для записи
-STAGE_DONE = "done"                # заявка отправлена
-STAGE_HANDOFF = "handoff"          # передано администратору
+STAGE_GREETING = "greeting"
+STAGE_DISCOVERY = "discovery"
+STAGE_SELECTION = "selection"
+STAGE_OBJECTION = "objection"
+STAGE_LEAD = "lead"
+STAGE_DONE = "done"
+STAGE_HANDOFF = "handoff"
+STAGE_REGISTRATION = "registration"
 
 
 @dataclass
@@ -34,12 +31,10 @@ class Lead:
     fio_parent: str = ""
     phone: str = ""
     fio_child: str = ""
-    birthday: str = ""          # yyyy-mm-dd
+    birthday: str = ""
     age: str = ""
     course: str = ""
     branch: str = ""
-    interest_type: str = ""
-    interest_value: str = ""
     comment: str = ""
     email: str = ""
     city: str = ""
@@ -55,215 +50,255 @@ class Lead:
     def is_complete(self) -> bool:
         return not self.missing_required()
 
-    def interest_label(self) -> str:
-        return " / ".join(
-            part for part in (self.interest_type, self.interest_value) if part
-        )
-
 
 @dataclass
 class Conversation:
     user_id: str
+    platform: str = "max"
     stage: str = STAGE_GREETING
     lead: Lead = field(default_factory=Lead)
-    history: list[dict] = field(default_factory=list)  # [{role, content}]
+    history: list[dict] = field(default_factory=list)
+    transcript: list[dict] = field(default_factory=list)
     selected_course: str = ""
     selected_branch: str = ""
     selected_format: str = ""
-    lead_step: str = ""        # какое поле сейчас собираем
+    lead_step: str = ""
     handed_off: bool = False
-    recs_shown: bool = False   # уже показывали подборку курсов
-    consent_given: bool = False # согласие на обработку ПД
-    last_objection: str = ""    # последнее возражение клиента
-    lead_submitted: bool = False # заявка уже отправлялась
-    nudge_sent: bool = False       # тёплое напоминание уже отправлено
-    registered: bool = False        # пользователь прошёл обязательную регистрацию
-    registration_step: str = ""     # текущий шаг регистрации
+    lead_submitted: bool = False
+    nudge_sent: bool = False
+    last_objection: str = ""
     created_at: str = ""
     updated_at: str = ""
-    transcript: list[dict] = field(default_factory=list)
-    # UTM-метки/источник (из deep-link при /start или из мини-приложения).
+    registered: bool = False
+    registration_step: str = ""
     utm: dict = field(default_factory=dict)
 
     def add(self, role: str, content: str) -> None:
+        ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
         self.history.append({"role": role, "content": content})
+        self.transcript.append({"role": role, "content": content, "ts": ts})
         if len(self.history) > MAX_HISTORY:
             self.history = self.history[-MAX_HISTORY:]
-        self.transcript.append(
-            {
-                "role": role,
-                "content": content,
-                "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            }
-        )
-        if len(self.transcript) > MAX_TRANSCRIPT:
-            self.transcript = self.transcript[-MAX_TRANSCRIPT:]
+        if len(self.transcript) > 1000:
+            self.transcript = self.transcript[-1000:]
 
     def child_label(self) -> str:
-        """Имя ребёнка для обращения (без фамилии, если можно отделить)."""
-        name = (self.lead.fio_child or "").strip()
-        if not name:
+        raw = (self.lead.fio_child or "").strip()
+        if not raw:
             return ""
-        parts = name.split()
-        # «Иванов Миша» → «Миша»: берём более короткую часть как имя.
-        return parts[-1] if len(parts) > 1 else parts[0]
-
-    def hours_since_update(self) -> float | None:
-        if not self.updated_at:
-            return None
-        try:
-            last = datetime.fromisoformat(self.updated_at)
-        except ValueError:
-            return None
-        if last.tzinfo is None:
-            last = last.replace(tzinfo=timezone.utc)
-        return (datetime.now(timezone.utc) - last).total_seconds() / 3600.0
+        parts = raw.split()
+        return parts[-1] if len(parts) > 1 else raw
 
     def client_card(self) -> str:
-        """Карточка клиента для персонализации ответов LLM.
-
-        Возвращает компактный список того, что уже известно о клиенте, чтобы
-        бот не переспрашивал и обращался персонально. Пусто, если ничего нет.
-        """
-        bits: list[str] = []
-        if self.lead.fio_parent:
-            bits.append(f"имя родителя (собеседник): {self.lead.fio_parent}")
+        lines: list[str] = []
         child = self.child_label()
         if child:
-            bits.append(f"имя ребёнка: {child}")
+            lines.append(f"имя ребёнка: {child}")
         if self.lead.age:
-            bits.append(f"возраст ребёнка: {self.lead.age}")
-        interest = self.selected_course or self.lead.course or self.lead.interest_label()
-        if interest:
-            bits.append(f"интересует: {interest}")
+            lines.append(f"возраст ребёнка: {self.lead.age}")
+        if self.selected_course or self.lead.course:
+            lines.append(f"интересует: {self.selected_course or self.lead.course}")
         if self.selected_format:
-            bits.append(f"формат: {self.selected_format}")
-        branch = self.selected_branch or self.lead.branch
-        if branch:
-            bits.append(f"филиал: {branch}")
+            lines.append(f"формат: {self.selected_format}")
         if self.last_objection:
-            bits.append(f"ранее сомневался: {self.last_objection}")
-        if self.lead_submitted:
-            bits.append("заявка уже оставлена ранее")
-        return "; ".join(bits)
+            lines.append(f"ранее сомневался: {self.last_objection}")
+        return "\n".join(lines)
+
+    def hours_since_update(self) -> float | None:
+        raw = self.updated_at or self.created_at
+        if not raw:
+            return None
+        try:
+            dt = datetime.fromisoformat(raw)
+        except ValueError:
+            return None
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - dt).total_seconds() / 3600.0
 
     def is_returning(self) -> bool:
-        """Клиент возвращается после паузы, и о нём уже что-то известно."""
-        hours = self.hours_since_update()
-        return bool(hours and hours >= 12 and self.client_card())
+        return bool(self._facts() and (hours := self.hours_since_update()) is not None and hours >= 12)
+
+    def _facts(self) -> list[str]:
+        facts = [self.lead.fio_parent, self.lead.fio_child, self.lead.phone, self.selected_course, self.selected_branch]
+        return [item for item in facts if item]
 
     def summary(self) -> str:
-        """Краткое резюме для передачи администратору."""
         lines = [f"Этап: {self.stage}"]
+        if self.registered:
+            lines.append("Регистрация: да")
         if self.selected_course:
             lines.append(f"Интересующий курс: {self.selected_course}")
         if self.selected_branch:
             lines.append(f"Филиал: {self.selected_branch}")
         l = self.lead
         for key, label in (
-            ("fio_parent", "Родитель"), ("phone", "Телефон"),
-            ("fio_child", "Ребёнок"), ("age", "Возраст"),
-            ("birthday", "Дата рождения"), ("email", "E-mail"),
-            ("city", "Город"), ("comment", "Комментарий"),
+            ("fio_parent", "Родитель"),
+            ("phone", "Телефон"),
+            ("fio_child", "Ребёнок"),
+            ("age", "Возраст"),
+            ("birthday", "Дата рождения"),
+            ("comment", "Комментарий"),
         ):
             val = getattr(l, key)
             if val:
                 lines.append(f"{label}: {val}")
-        interest = l.interest_label()
-        if interest:
-            lines.append(f"Интерес: {interest}")
         return "\n".join(lines)
 
 
 class MemoryStore:
-    def __init__(self) -> None:
+    def __init__(self, db_path: str | Path | None = None) -> None:
+        self._db_path = str(db_path or _resolve_db_path())
+        self._lock = threading.RLock()
+        self._conn = self._connect()
+        self._init_schema()
         self._data: dict[str, Conversation] = {}
-        self._lock = threading.Lock()
-        self._file = Path(settings.STATE_FILE) if settings.STATE_FILE else None
-        self._load()
 
-    def get(self, user_id: str) -> Conversation:
+    def get(self, user_id: str, platform: str = "max") -> Conversation:
         with self._lock:
             conv = self._data.get(user_id)
             if conv is None:
-                conv = Conversation(user_id=user_id)
-                if not conv.created_at:
-                    conv.created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
-                self._data[user_id] = conv
+                conv = self._load_conversation(platform, user_id)
+            if conv is None:
+                conv = Conversation(platform=platform, user_id=user_id)
+            self._data[user_id] = conv
             return conv
 
     def save(self, conv: Conversation) -> None:
         with self._lock:
+            now = self._now()
             if not conv.created_at:
-                conv.created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
-            conv.updated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                conv.created_at = now
+            conv.updated_at = now
             self._data[conv.user_id] = conv
-            self._persist()
+            self._conn.execute(
+                """
+                INSERT INTO conversations(platform, user_id, payload, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(platform, user_id)
+                DO UPDATE SET payload=excluded.payload, updated_at=CURRENT_TIMESTAMP
+                """,
+                (conv.platform, conv.user_id, json.dumps(asdict(conv), ensure_ascii=False)),
+            )
 
-    def reset(self, user_id: str) -> Conversation:
+    def reset(self, user_id: str, platform: str = "max") -> Conversation:
         with self._lock:
-            conv = Conversation(user_id=user_id)
-            if not conv.created_at:
-                conv.created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
-            self._data[user_id] = conv
-            self._persist()
+            conv = Conversation(platform=platform, user_id=user_id)
+            self.save(conv)
             return conv
 
     def all_conversations(self) -> list[Conversation]:
         with self._lock:
-            return list(self._data.values())
+            if self._data:
+                return list(self._data.values())
+            rows = self._conn.execute("SELECT payload FROM conversations").fetchall()
+            convs: list[Conversation] = []
+            for row in rows:
+                conv = _conv_from_dict(json.loads(row["payload"]))
+                self._data[conv.user_id] = conv
+                convs.append(conv)
+            return convs
 
-    # ---------- персистентность ----------
-    def _persist(self) -> None:
-        if not self._file:
-            return
+    def mark_event_seen(self, event_id: str, platform: str = "max", user_id: str = "", event_type: str = "") -> bool:
+        with self._lock:
+            cur = self._conn.execute(
+                """
+                INSERT OR IGNORE INTO processed_events(platform, event_id, user_id, event_type, created_at)
+                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                """,
+                (platform, event_id, user_id, event_type),
+            )
+            return cur.rowcount == 1
+
+    def ping(self) -> bool:
+        with self._lock:
+            self._conn.execute("SELECT 1")
+        return True
+
+    def _connect(self) -> sqlite3.Connection:
+        db_path = self._db_path
+        uri = db_path.startswith("file:")
+        if db_path not in (":memory:",) and not uri:
+            Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(db_path, check_same_thread=False, uri=uri, isolation_level=None)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys = ON")
         try:
-            payload = {uid: _conv_to_dict(c) for uid, c in self._data.items()}
-            self._file.parent.mkdir(parents=True, exist_ok=True)
-            self._file.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        except Exception:
+            conn.execute("PRAGMA journal_mode = WAL")
+        except sqlite3.Error:
             pass
+        conn.execute("PRAGMA synchronous = NORMAL")
+        conn.execute("PRAGMA busy_timeout = 5000")
+        return conn
 
-    def _load(self) -> None:
-        if not self._file or not self._file.exists():
-            return
-        try:
-            raw = json.loads(self._file.read_text(encoding="utf-8"))
-            for uid, c in raw.items():
-                self._data[uid] = _conv_from_dict(c)
-        except Exception:
-            pass
+    def _init_schema(self) -> None:
+        with self._lock:
+            self._conn.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS conversations (
+                    platform TEXT NOT NULL,
+                    user_id TEXT NOT NULL,
+                    payload TEXT NOT NULL,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (platform, user_id)
+                );
 
+                CREATE TABLE IF NOT EXISTS processed_events (
+                    platform TEXT NOT NULL,
+                    event_id TEXT NOT NULL,
+                    user_id TEXT NOT NULL DEFAULT '',
+                    event_type TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (platform, event_id)
+                );
+                """
+            )
 
-def _conv_to_dict(c: Conversation) -> dict:
-    d = asdict(c)
-    return d
+    def _load_conversation(self, platform: str, user_id: str) -> Conversation | None:
+        row = self._conn.execute(
+            "SELECT payload FROM conversations WHERE platform = ? AND user_id = ?",
+            (platform, user_id),
+        ).fetchone()
+        if row is None:
+            return None
+        return _conv_from_dict(json.loads(row["payload"]))
+
+    @staticmethod
+    def _now() -> str:
+        return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
 def _conv_from_dict(d: dict) -> Conversation:
     lead = Lead(**d.get("lead", {}))
     return Conversation(
+        platform=d.get("platform", "max"),
         user_id=d["user_id"],
         stage=d.get("stage", STAGE_GREETING),
         lead=lead,
         history=d.get("history", []),
+        transcript=d.get("transcript", []),
         selected_course=d.get("selected_course", ""),
         selected_branch=d.get("selected_branch", ""),
         selected_format=d.get("selected_format", ""),
         lead_step=d.get("lead_step", ""),
         handed_off=d.get("handed_off", False),
-        recs_shown=d.get("recs_shown", False),
-        consent_given=d.get("consent_given", False),
-        last_objection=d.get("last_objection", ""),
         lead_submitted=d.get("lead_submitted", False),
         nudge_sent=d.get("nudge_sent", False),
-        registered=d.get("registered", False),
-        registration_step=d.get("registration_step", ""),
+        last_objection=d.get("last_objection", ""),
         created_at=d.get("created_at", ""),
         updated_at=d.get("updated_at", ""),
-        transcript=d.get("transcript", []),
+        registered=d.get("registered", False),
+        registration_step=d.get("registration_step", ""),
         utm=d.get("utm", {}) or {},
     )
+
+
+def _resolve_db_path() -> str:
+    if settings.STATE_FILE:
+        return settings.STATE_FILE
+    if settings.DB_PATH and settings.DB_PATH != "./data/bot.db":
+        return settings.DB_PATH
+    return ":memory:"
 
 
 _store: MemoryStore | None = None

@@ -1,70 +1,97 @@
 #!/usr/bin/env python3
-"""Единая точка входа для минификации прототипа.
+"""Единая точка входа для сборки и минификации прототипа.
 
 Команды:
-  build   — обновить минифицированные Tilda-блоки
-  minify  — то же самое
-  all     — build + status
+  build   — пересобрать HTML-страницы из генераторов
+  minify  — обновить минифицированные Tilda-блоки
+  all     — build + minify
   status  — показать, что устарело или отсутствует
 """
 
 from __future__ import annotations
 
 import argparse
+import subprocess
+import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from minify_block import minify as minify_html
 
 ROOT = Path(__file__).resolve().parent
-OUT_DIR = ROOT / "tilda_blocks_min"
+BLOCK_DIR = ROOT / "tilda_blocks_min"
 
-SOURCE_FILES = [
-    "foxinburg-onboarding.html",
+MINIFY_SOURCES = [
     "tilda_advantages.html",
+    "tilda_contacts_map.html",
     "tilda_cta_diagnostika.html",
+    "tilda_cta_enrollment.html",
     "tilda_directions.html",
-    "tilda_dropdown_menu.html",
+    "tilda_faq.html",
+    "tilda_footer.html",
+    "tilda_header_unified.html",
     "tilda_languages.html",
     "tilda_onboarding.html",
     "tilda_photobank_gallery.html",
-    "tilda_photobank_head.html",
-    "tilda_slogan.html",
-    "tilda_summerbar.html",
+    "tilda_pricing_enrollment.html",
+    "tilda_reviews.html",
     "tilda_svedeniya.html",
     "tilda_team.html",
-    "tilda_topbar.html",
 ]
 
 
+@dataclass(frozen=True)
+class BuildStep:
+    label: str
+    script: str
+
+
+BUILD_STEPS = [
+    BuildStep("course pages", "build_course_pages.py"),
+    BuildStep("subpages", "build_subpages.py"),
+]
+
+
+def run_script(script: str) -> None:
+    subprocess.run([sys.executable, str(ROOT / script)], cwd=ROOT, check=True)
+
+
+def build() -> None:
+    for step in BUILD_STEPS:
+        print(f"[build] {step.label}")
+        run_script(step.script)
+
+
 def minify(dry_run: bool = False) -> list[str]:
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    BLOCK_DIR.mkdir(parents=True, exist_ok=True)
     changed: list[str] = []
-    for name in SOURCE_FILES:
-        source = ROOT / name
-        target = OUT_DIR / f"{source.stem}_min.html"
+    for source_name in MINIFY_SOURCES:
+        source = ROOT / source_name
+        target = BLOCK_DIR / f"{source.stem}_min.html"
         if not source.exists():
             raise FileNotFoundError(f"missing source block: {source}")
         rendered = minify_html(source.read_text(encoding="utf-8"))
         if target.exists() and target.read_text(encoding="utf-8") == rendered:
             continue
         changed.append(target.name)
-        if not dry_run:
-            target.write_text(rendered, encoding="utf-8")
+        if dry_run:
+            continue
+        target.write_text(rendered, encoding="utf-8")
     return changed
 
 
 def status() -> int:
     missing: list[str] = []
     stale: list[str] = []
-    for name in SOURCE_FILES:
-        source = ROOT / name
-        target = OUT_DIR / f"{source.stem}_min.html"
+    for source_name in MINIFY_SOURCES:
+        source = ROOT / source_name
+        target = BLOCK_DIR / f"{source.stem}_min.html"
         if not target.exists():
             missing.append(target.name)
             continue
         if source.stat().st_mtime > target.stat().st_mtime:
             stale.append(target.name)
-    print(f"tracked sources: {len(SOURCE_FILES)}")
+    print(f"tracked sources: {len(MINIFY_SOURCES)}")
     print(f"missing minified: {len(missing)}")
     print(f"stale minified: {len(stale)}")
     if missing:
@@ -88,18 +115,22 @@ def main() -> int:
     sub.add_parser("help")
     args = parser.parse_args()
 
-    if args.command in {"build", "minify"}:
+    if args.command == "build":
+        build()
+        return 0
+    if args.command == "minify":
         changed = minify()
         print(f"updated minified blocks: {len(changed)}")
         for name in changed:
             print(f"  - {name}")
         return 0
     if args.command == "all":
+        build()
         changed = minify()
         print(f"updated minified blocks: {len(changed)}")
         for name in changed:
             print(f"  - {name}")
-        return status()
+        return 0
     if args.command == "status":
         return status()
 

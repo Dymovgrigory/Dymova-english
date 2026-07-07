@@ -1,4 +1,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ДРУГИЕ ЯЗЫКИ (НЕМЕЦКИЙ, КИТАЙСКИЙ)
+  =============================================
+  Назначение: Описание дополнительных языковых программ помимо английского.
+  
+  Что можно менять:
+    - Названия языков и описания программ
+    - Возраст учеников
+    - Текстовые бейджи (DE, CN)
+    - Добавлять новые языковые карточки
+  =============================================
+-->
 <div id="fxb-lang">
   <div class="fxb-section">
     <div class="fxb-head">
@@ -11,12 +24,12 @@
       <!-- Немецкий язык -->
       <article class="fxb-card fxb-de">
         <div class="fxb-cover">
-          <span class="fxb-flag">&#x1f1e9;&#x1f1ea;</span>
+          <span class="fxb-flag">DE</span>
           <span class="fxb-lang-name">Немецкий язык</span>
         </div>
         <div class="fxb-body">
           <div class="fxb-teacher">
-            <div class="fxb-teacher-photo" style="background:linear-gradient(135deg,#7b4fc0,#662d92)"><span>&#x1f98a;</span></div>
+            <div class="fxb-teacher-photo" style="background-image:url(https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/4dcc1ef1b977038bfb8bdc22ea40385e0429f78c/prototype/team-media/de.png);background-size:cover;background-position:center"></div>
             <div>
               <h3>Саляхова Алина</h3>
               <span class="fxb-role">Педагог немецкого языка</span>
@@ -38,12 +51,12 @@
       <!-- Китайский язык -->
       <article class="fxb-card fxb-cn">
         <div class="fxb-cover">
-          <span class="fxb-flag">&#x1f1e8;&#x1f1f3;</span>
+          <span class="fxb-flag">CN</span>
           <span class="fxb-lang-name">Китайский язык</span>
         </div>
         <div class="fxb-body">
           <div class="fxb-teacher">
-            <div class="fxb-teacher-photo" style="background:linear-gradient(135deg,#f5a06f,#ee7349)"><span>&#x1f98a;</span></div>
+            <div class="fxb-teacher-photo" style="background-image:url(https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/4dcc1ef1b977038bfb8bdc22ea40385e0429f78c/prototype/team-media/cn.png);background-size:cover;background-position:center"></div>
             <div>
               <h3>Шевченко Дарья</h3>
               <span class="fxb-role">Педагог китайского языка</span>
@@ -134,12 +147,12 @@
   #fxb-lang .fxb-cover{height:100px;display:flex;align-items:center;justify-content:center;gap:16px;position:relative}
   #fxb-lang .fxb-de .fxb-cover{background:linear-gradient(135deg,#1a1a2e,#16213e)}
   #fxb-lang .fxb-cn .fxb-cover{background:linear-gradient(135deg,#8b0000,#c41e3a)}
-  #fxb-lang .fxb-flag{font-size:42px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.3))}
+  #fxb-lang .fxb-flag{font-size:20px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);padding:8px 16px;border-radius:10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.3))}
   #fxb-lang .fxb-lang-name{color:#fff;font-size:22px;font-weight:800;letter-spacing:.01em}
   #fxb-lang .fxb-body{padding:28px 28px 30px}
   #fxb-lang .fxb-teacher{display:flex;align-items:center;gap:14px;margin-bottom:22px}
   #fxb-lang .fxb-teacher-photo{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto}
-  #fxb-lang .fxb-teacher-photo span{font-size:28px}
+  #fxb-lang .fxb-teacher-photo img{display:block}
   #fxb-lang .fxb-teacher h3{font-size:18px;font-weight:800;margin-bottom:3px}
   #fxb-lang .fxb-role{font-size:12.5px;font-weight:600;color:var(--muted)}
   #fxb-lang .fxb-info{margin-bottom:22px}

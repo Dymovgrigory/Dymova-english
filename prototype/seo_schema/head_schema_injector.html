@@ -1,0 +1,49 @@
+<script>
+(function(){
+  var base='https://dymova-english.ru';
+  var path=location.pathname.replace(/\/$/,'')||'/';
+  var routes={
+    '/':[
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Я не уверена, понравится ли моему ребенку?","acceptedAnswer":{"@type":"Answer","text":"Мы приглашаем на бесплатную пробную диагностику, где ребёнок познакомится с педагогом и атмосферой занятий. Более 90% детей после пробного урока хотят продолжить обучение!"}},{"@type":"Question","name":"Мой даже букв не знает. Как он будет заниматься, если все только на английском?","acceptedAnswer":{"@type":"Answer","text":"Мы работаем с детьми с нулевого уровня. Педагоги используют игровую методику, TPR (полное физическое реагирование) и визуальные материалы. Ребёнок начинает понимать и говорить естественно, как осваивал родной язык."}},{"@type":"Question","name":"А ваша программа совпадает со школьной? Ребенок не запутается?","acceptedAnswer":{"@type":"Answer","text":"Наша программа дополняет школьную и идёт глубже. Мы не просто учим грамматику — мы развиваем все четыре навыка: говорение, аудирование, чтение и письмо. Благодаря этому дети чувствуют себя увереннее и в школе."}},{"@type":"Question","name":"Как проходят занятия?","acceptedAnswer":{"@type":"Answer","text":"Занятия проходят в мини-группах до 7 человек. Каждый урок включает разговорную практику, игровые активности, работу с учебными материалами и закрепление через интерактивное приложение. Длительность — 45–60 минут в зависимости от возраста."}},{"@type":"Question","name":"Сколько раз в неделю проходят занятия?","acceptedAnswer":{"@type":"Answer","text":"Занятия проходят 2 раза в неделю по 60 минут. Мы предлагаем утренние, дневные и вечерние группы, чтобы подобрать удобное расписание для вашей семьи."}},{"@type":"Question","name":"Как оплачиваются занятия?","acceptedAnswer":{"@type":"Answer","text":"Оплата производится помесячно или за семестр (со скидкой). Принимаем банковские карты, переводы, а также маткапитал. Подробную информацию о ценах можно узнать у администратора."}},{"@type":"Question","name":"Задаете ли вы домашние задания? Я не смогу помогать, так как не знаю языка.","acceptedAnswer":{"@type":"Answer","text":"Да, домашние задания выполняются через наше мобильное приложение. Они разработаны так, чтобы ребёнок мог делать их самостоятельно — в игровом формате с подсказками. Помощь родителей не требуется!"}},{"@type":"Question","name":"Как я пойму, что у ребенка появился результат?","acceptedAnswer":{"@type":"Answer","text":"Мы предоставляем: еженедельные видео-отчёты, отчёты о том, что было на уроке, открытые уроки, регулярные тестирования с обратной связью. Вы всегда будете в курсе прогресса ребёнка."}},{"@type":"Question","name":"Как вы обучаете чтению?","acceptedAnswer":{"@type":"Answer","text":"Мы используем метод фониксов (Phonics) — ребёнок учится читать через звуки, а не через зубрёжку букв. Это естественный и эффективный подход, который позволяет детям начать читать уже через несколько месяцев."}}]}
+    ],
+    '/reading':[
+      {"@context":"https://schema.org","@type":"Course","name":"Курс по чтению на английском","description":"Летний курс чтения на английском для младших школьников: фоника, техника чтения, понимание текста. Мини-группы в Долгопрудном. Подберём группу по уровню.","url":base+'/reading',"provider":{"@id":base+'/#organization'}},
+      {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Курс по чтению","item":base+'/reading'}]}
+    ],
+    '/grammar':[
+      {"@context":"https://schema.org","@type":"Course","name":"Курс грамматики английского 3–8 класс","description":"Летний курс грамматики английского для 3–8 классов: закрываем пробелы, систематизируем правила, готовимся к учебному году. Мини-группы в Долгопрудном.","url":base+'/grammar',"provider":{"@id":base+'/#organization'}},
+      {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Курс по грамматике","item":base+'/grammar'}]}
+    ],
+    '/preparation':[
+      {"@context":"https://schema.org","@type":"Course","name":"Подготовка к школе в Долгопрудном","description":"Подготовка к школе в Долгопрудном: комплексные занятия, английский, подготовка к ОГЭ/ЕГЭ/ВПР. Мини-группы, видимый прогресс, отчёты родителям. Диагностика бесплатно.","url":base+'/preparation',"provider":{"@id":base+'/#organization'}},
+      {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Подготовка к школе","item":base+'/preparation'}]}
+    ],
+    '/letnyaya-akademiya':[
+      {"@context":"https://schema.org","@type":"Course","name":"Летняя Академия английского","description":"Летняя Академия Фоксинбург в Долгопрудном: интенсив на лето, тематические недели и проекты на английском. Полный день, мини-группы до 8 человек. Места ограничены.","url":base+'/letnyaya-akademiya',"provider":{"@id":base+'/#organization'}},
+      {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Летняя Академия","item":base+'/letnyaya-akademiya'}]}
+    ],
+    '/doshkolniki':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Дошкольники","item":base+'/doshkolniki'}]}],
+    '/mladshie-shkolniki':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Младшие школьники","item":base+'/mladshie-shkolniki'}]}],
+    '/podrostki':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Подростки","item":base+'/podrostki'}]}],
+    '/online-zanyatiya':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Онлайн-занятия","item":base+'/online-zanyatiya'}]}],
+    '/podderzhivayushchie-online':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Поддерживающие онлайн","item":base+'/podderzhivayushchie-online'}]}],
+    '/standartnye-offline':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Стандартные оффлайн","item":base+'/standartnye-offline'}]}],
+    '/kontakty':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Контакты","item":base+'/kontakty'}]}],
+    '/novosti':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Новости","item":base+'/novosti'}]}],
+    '/vakansii':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Вакансии","item":base+'/vakansii'}]}],
+    '/oge-anglijskij':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Подготовка к ОГЭ по английскому","item":base+'/oge-anglijskij'}]}],
+    '/ege-anglijskij':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Подготовка к ЕГЭ по английскому","item":base+'/ege-anglijskij'}]}],
+    '/anglijskij-dlya-vzroslyh':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Английский для взрослых","item":base+'/anglijskij-dlya-vzroslyh'}]}],
+    '/nemeckij-yazyk':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Курсы немецкого языка","item":base+'/nemeckij-yazyk'}]}],
+    '/kitajskij-yazyk':[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":base+'/'},{"@type":"ListItem","position":2,"name":"Курсы китайского языка","item":base+'/kitajskij-yazyk'}]}]
+  };
+  var snippets=routes[path];
+  if(!snippets)return;
+  snippets.forEach(function(schema){
+    var el=document.createElement('script');
+    el.type='application/ld+json';
+    el.textContent=JSON.stringify(schema);
+    document.head.appendChild(el);
+  });
+})();
+</script>

@@ -38,6 +38,27 @@ uvicorn app.main:app --reload --port 8000
 - Мини-приложение: `http://localhost:8000/app/`
 - Тесты: `pytest -q`
 
+## Прод-деплой 24/7
+
+Для стабильного запуска используйте Docker Compose:
+
+```bash
+cd bot
+cp .env.example .env   # заполните ключи
+mkdir -p data
+docker compose up -d --build
+```
+
+- приложение поднимается без `--reload`;
+- SQLite хранится в `./data/bot.db` и переживает перезапуски;
+- healthcheck дергает `GET /health`;
+- webhook регистрируется после старта:
+  ```bash
+  curl -X POST https://ВАШ_ХОСТ/admin/set-webhook \
+    -H 'Content-Type: application/json' \
+    -d '{"url":"https://ВАШ_ХОСТ/webhook"}'
+  ```
+
 ## Подключение к MAX
 
 1. Получите токен бота: платформа MAX → Чат-боты → Расширенные настройки.
