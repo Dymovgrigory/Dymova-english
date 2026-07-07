@@ -36,6 +36,33 @@ from app.admin_router import hand_off
 logger = logging.getLogger(__name__)
 
 _FACTUAL_INTENTS = {I.PRICE, I.COURSES, I.CONTACTS, I.ABOUT}
+_POSITIVE_MOOD = {"интерес", "готов", "понят", "спасибо", "отлич", "супер"}
+_NEGATIVE_MOOD = {
+    "дорого",
+    "непонят",
+    "не понимаю",
+    "не понял",
+    "не нравится",
+    "неудоб",
+    "устал",
+    "раздраж",
+    "жалоб",
+    "никто не ответ",
+    "почему так",
+    "сбой",
+    "ошиб",
+}
+
+_TOPIC_MAP = {
+    I.PRICE: "цены",
+    I.COURSES: "курсы",
+    I.CONTACTS: "контакты",
+    I.ABOUT: "о школе",
+    I.WANT_SIGNUP: "запись",
+    I.REGISTER: "регистрация",
+    I.HANDOFF: "администратор",
+    I.OBJECTION: "сомнение",
+}
 
 
 def _capture_entities(conv: Conversation, text: str) -> None:
@@ -51,6 +78,25 @@ def _capture_entities(conv: Conversation, text: str) -> None:
         conv.selected_format = "Онлайн"
     elif ("офлайн" in low or "оффлайн" in low) and not conv.selected_format:
         conv.selected_format = "Офлайн"
+
+
+def _detect_mood(text: str) -> str:
+    low = text.lower()
+    if any(token in low for token in _NEGATIVE_MOOD):
+        return "needs_empathy"
+    if any(token in low for token in _POSITIVE_MOOD):
+        return "warm"
+    if "?" in low:
+        return "curious"
+    return "neutral"
+
+
+def _remember_dialogue_state(conv: Conversation, text: str, intent: str) -> None:
+    mood = _detect_mood(text)
+    conv.last_user_intent = intent
+    conv.last_user_topic = _TOPIC_MAP.get(intent, conv.last_user_topic)
+    if mood != "neutral":
+        conv.last_user_mood = mood
 
 
 def _wants_manager(text: str) -> bool:
@@ -113,6 +159,14 @@ def _grounded_fact_reply(kb, text: str, intent: str) -> str:
     return "\n".join(lines)
 
 
+def _empathy_prefix(conv: Conversation) -> str:
+    if conv.last_user_mood == "needs_empathy":
+        return "Понимаю, это важно. "
+    if conv.last_user_mood == "warm":
+        return "Рад, что это помогает. "
+    return ""
+
+
 async def _consult_with_context(conv: Conversation, text: str, kb_context: str) -> str:
     kb = get_kb()
     llm = get_llm()
@@ -125,11 +179,15 @@ async def _consult_with_context(conv: Conversation, text: str, kb_context: str) 
         if reply:
             return reply
     if kb_context:
-        return f"Вот что у меня есть по вашему вопросу:\n\n{kb_context}\n\n" + sales.sales_nudge(conv)
+        return (
+            f"{_empathy_prefix(conv)}Вот что у меня есть по вашему вопросу:\n\n"
+            f"{kb_context}\n\n{sales.sales_nudge(conv)}"
+        )
     return (
-        "Хороший вопрос! Чтобы ответить точно, подскажите, пожалуйста, возраст "
-        "ребёнка и удобный формат (онлайн/офлайн). А можно сразу записаться на "
-        "бесплатную диагностику — администратор всё подробно расскажет. 😊"
+        f"{_empathy_prefix(conv)}Чтобы ответить точно, подскажите, пожалуйста, "
+        "возраст ребёнка и удобный формат (онлайн/офлайн). А можно сразу "
+        "записаться на бесплатную диагностику — администратор всё подробно "
+        "расскажет. 😊"
     )
 
 
@@ -147,6 +205,8 @@ async def handle_message(user_id: str, text: str) -> str:
     conv = store.get(user_id)
     conv.add("user", text)
     _capture_entities(conv, text)
+    intent = I.detect_intent(text)
+    _remember_dialogue_state(conv, text, intent)
 
     if not registration.is_registered(conv):
         if conv.stage != registration.STAGE_REGISTRATION:
@@ -159,21 +219,21 @@ async def handle_message(user_id: str, text: str) -> str:
         store.save(conv)
         return reply
 
-    reply = await _route(conv, text, kb)
+    reply = await _route(conv, text, kb, intent)
 
     conv.add("assistant", reply)
     store.save(conv)
     return reply
 
 
-async def _route(conv: Conversation, text: str, kb) -> str:
+async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     max_client = get_max()
     bigben = get_bigben()
 
     # 1. Если уже идёт сбор данных для заявки — продолжаем его,
     #    но позволяем выйти к оператору.
     if conv.stage == STAGE_LEAD:
-        if I.detect_intent(text) == I.HANDOFF:
+        if intent == I.HANDOFF:
             await hand_off(max_client, conv, reason="запрос оператора")
             return _handoff_reply()
         reply, _submitted = await lead_manager.step(conv, text, kb, bigben, max_client)
@@ -182,8 +242,6 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     # 2. Уже передан администратору — не перебиваем, но подтверждаем.
     if conv.stage == STAGE_HANDOFF:
         return _handoff_followup_reply(conv, text)
-
-    intent = I.detect_intent(text)
 
     # 3. Запрос живого человека / нестандартная ситуация.
     if intent == I.HANDOFF:
@@ -195,8 +253,8 @@ async def _route(conv: Conversation, text: str, kb) -> str:
         conv.stage = STAGE_OBJECTION
         key = I.detect_objection(text) or "подумаю"
         if get_llm().enabled:
-            return await _consult_with_context(conv, text, sales.handle_objection(kb, key))
-        return sales.handle_objection(kb, key)
+            return await _consult_with_context(conv, text, sales.handle_objection(kb, key, conv))
+        return sales.handle_objection(kb, key, conv)
 
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY

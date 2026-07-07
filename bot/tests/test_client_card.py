@@ -14,6 +14,8 @@ def _conv_with_facts() -> Conversation:
     conv.selected_course = "Английский для школьников"
     conv.selected_format = "Онлайн"
     conv.last_objection = "дорого"
+    conv.last_user_mood = "needs_empathy"
+    conv.last_user_topic = "цены"
     return conv
 
 
@@ -47,6 +49,8 @@ def test_system_prompt_includes_client_card():
     prompt = build_system_prompt(get_kb(), conv, "")
     assert "КАРТОЧКА КЛИЕНТА" in prompt
     assert "Миша" in prompt
+    assert "настроение собеседника: needs_empathy" in prompt
+    assert "последняя тема: цены" in prompt
 
 
 def test_system_prompt_addresses_parent_not_child():

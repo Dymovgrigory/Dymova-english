@@ -29,6 +29,10 @@ SYSTEM_PROMPT = """\
 следующему шагу — бесплатной диагностике или пробному уроку.
 - Не вываливай всю информацию сразу. Сначала пойми потребность, затем дай \
 точный и краткий ответ.
+- Не звучи шаблонно: используй разные формулировки, признавай эмоцию клиента \
+и не повторяй одну и ту же фразу несколько раз подряд.
+- Если собеседник сомневается, раздражён или торопится, сначала коротко \
+покажи понимание, потом 1-2 релевантных факта и только один следующий шаг.
 - Никогда не обещай того, чего нет в базе знаний. Не указывай неверные цены.
 - Если клиент готов записаться — переходи к сбору данных для заявки.
 
@@ -54,6 +58,12 @@ def build_system_prompt(kb: KnowledgeBase, conv: Conversation, kb_context: str) 
     if card:
         parts.append("\nКАРТОЧКА КЛИЕНТА:\n" + card)
     state_bits = []
+    if conv.last_user_mood:
+        state_bits.append(f"настроение собеседника: {conv.last_user_mood}")
+    if conv.last_user_topic:
+        state_bits.append(f"последняя тема: {conv.last_user_topic}")
+    if conv.last_user_intent:
+        state_bits.append(f"последнее намерение: {conv.last_user_intent}")
     if conv.lead.fio_parent:
         state_bits.append(f"собеседник — РОДИТЕЛЬ; имя родителя (собеседник): {conv.lead.fio_parent}")
         state_bits.append("упоминай ребёнка по имени, но обращайся к родителю")
@@ -68,9 +78,11 @@ def build_system_prompt(kb: KnowledgeBase, conv: Conversation, kb_context: str) 
     return "\n".join(parts)
 
 
-def handle_objection(kb: KnowledgeBase, key: str) -> str:
+def handle_objection(kb: KnowledgeBase, key: str, conv: Conversation | None = None) -> str:
     text = kb.objection(key)
     if text:
+        if conv and conv.last_user_mood == "needs_empathy":
+            return "Понимаю вас. " + text[0].lower() + text[1:]
         return text
     return (
         "Понимаю ваши сомнения. Давайте начнём с бесплатной диагностики — "
@@ -82,7 +94,13 @@ def handle_objection(kb: KnowledgeBase, key: str) -> str:
 def sales_nudge(conv: Conversation) -> str:
     """Короткий призыв к следующему шагу в зависимости от того, что уже известно."""
     if not conv.lead.age:
-        return "Подскажите, пожалуйста, сколько лет ребёнку — подберу подходящую программу."
+        if conv.last_user_mood == "needs_empathy":
+            return "Понимаю. Сколько лет ребёнку? Так я быстро подберу подходящую программу."
+        return "Скажите, пожалуйста, сколько лет ребёнку — подберу подходящую программу."
     if not conv.selected_format:
+        if conv.last_user_mood == "needs_empathy":
+            return "Чтобы не терять время, подскажите: вам удобнее офлайн или онлайн?"
         return "Вам удобнее офлайн (Лихачевский / Ракетостроителей) или онлайн?"
+    if conv.last_user_mood == "warm":
+        return "Если хотите, я сразу запишу вас на бесплатную диагностику 😊"
     return "Хотите, я запишу вас на бесплатную диагностику? Это быстро и бесплатно 😊"
