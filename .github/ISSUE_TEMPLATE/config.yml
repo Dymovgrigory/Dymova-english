@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Figma / design refs
-    url: https://app.devin.ai/
-    about: Keep design links in the repo docs or devlog.
+    url: https://github.com/Dymovgrigory/Dymova-english/blob/main/wiki/10-figma.md
+    about: Keep design links in the repo wiki, not in chat.
