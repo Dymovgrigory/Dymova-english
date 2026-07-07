@@ -45,6 +45,12 @@ class Settings(BaseSettings):
     BIGBEN_PIPELINE_ID: str = ""
     BIGBEN_PIPELINE_STATUS_ID: str = ""
 
+    # --- Интеграции разработки и наблюдаемости ---
+    SENTRY_DSN: str = ""
+    SENTRY_ENVIRONMENT: str = ""
+    SENTRY_TRACES_SAMPLE_RATE: float = 0.0
+    SLACK_WEBHOOK_URL: str = ""
+
     # --- Передача администратору ---
     # ID администраторов в MAX (через запятую), куда дублируется контекст диалога.
     ADMIN_MAX_IDS: str = ""

@@ -27,9 +27,11 @@ from app import intent as I
 from app import group_chat
 from app import nudge
 from app.knowledge.kb import get_kb
+from app.observability import init_sentry
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
 from app.memory import Lead, STAGE_HANDOFF, get_store
+from app.slack import notify_slack
 from app.telegram_client import get_telegram
 
 logging.basicConfig(level=logging.INFO)
@@ -37,6 +39,8 @@ logger = logging.getLogger(__name__)
 
 APP_VERSION = "0.1.0"
 PLATFORM = "max"
+
+init_sentry()
 
 app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
 
@@ -136,6 +140,7 @@ async def _notify_admins_for_telegram(conv, reason: str) -> None:
     )
     for admin_id in settings.admin_ids:
         await admin_client.send_message(admin_id, message)
+    await notify_slack(f"MAX handoff ({reason})\n\n{conv.summary()}")
 
 
 @app.post("/api/chat")
