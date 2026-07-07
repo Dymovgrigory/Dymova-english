@@ -7,12 +7,13 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from app.bigben import BigBenClient
 from app.intent import extract_age, extract_birthday, extract_phone
 from app.knowledge.kb import KnowledgeBase
 from app.max_client import MaxClient
-from app.memory import Conversation, STAGE_DONE, STAGE_LEAD
+from app.memory import Conversation, STAGE_DISCOVERY, STAGE_DONE, STAGE_LEAD
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,39 @@ PROMPTS = {
     "phone": "По какому номеру телефона с вами связаться?",
     "branch": "Какой формат удобнее: Лихачевский, Ракетостроителей или онлайн?",
 }
+
+_NAME_RE = re.compile(r"^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z\-]*(?:\s+[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z\-]*){0,2}$")
+
+
+def _looks_like_name(text: str) -> bool:
+    clean = text.strip()
+    if len(clean) < 2:
+        return False
+    if any(ch.isdigit() for ch in clean):
+        return False
+    low = clean.lower()
+    if any(token in low for token in (
+        "лет", "год", "класс", "сын", "доч", "реб", "давай", "запиш", "хочу",
+        "пробн", "оформ", "потом", "позже", "поговор",
+    )):
+        return False
+    return bool(_NAME_RE.match(clean))
+
+
+def _extract_name_from_text(text: str) -> str:
+    clean = text.strip()
+    if not clean:
+        return ""
+    clean = re.sub(r"(?i)^(?:меня зовут|я\s*-\s*|это)\s+", "", clean)
+    clean = re.split(r"[,.!?:;\n]", clean)[0].strip()
+    if _looks_like_name(clean):
+        return clean[:255]
+    m = _NAME_RE.search(clean)
+    if m:
+        candidate = m.group(0).strip()
+        if _looks_like_name(candidate):
+            return candidate[:255]
+    return ""
 
 
 def start(conv: Conversation) -> str:
@@ -82,16 +116,42 @@ async def step(
     current = conv.lead_step or _next_step(conv)
     lead = conv.lead
     clean = text.strip()
+    low = clean.lower()
+    _opportunistic_fill(conv, clean, kb)
+
+    if any(word in low for word in ("позже", "попозже", "потом", "не сейчас", "давайте позже")):
+        conv.stage = STAGE_DISCOVERY
+        conv.lead_step = ""
+        return (
+            "Без проблем, вернёмся к этому позже. Если захотите продолжить, "
+            "я помогу подобрать курс или запись на бесплатную диагностику.",
+            False,
+        )
 
     if current == "fio_parent":
-        if len(clean) < 2:
-            return "Подскажите, пожалуйста, как вас зовут?", False
-        lead.fio_parent = clean[:255]
+        age = extract_age(clean)
+        if age:
+            lead.age = age
+            return "Подскажите, пожалуйста, имя родителя.", False
+        name = _extract_name_from_text(clean)
+        if not name:
+            return "Подскажите, пожалуйста, имя родителя.", False
+        lead.fio_parent = name
 
     elif current == "fio_child":
-        if len(clean) < 2:
-            return "Как зовут ребёнка?", False
-        lead.fio_child = clean[:255]
+        birthday = extract_birthday(clean)
+        age = extract_age(clean)
+        if birthday:
+            lead.birthday = birthday
+            return "Подскажите, пожалуйста, имя ребёнка.", False
+        if age:
+            if not lead.age:
+                lead.age = age
+            return "Подскажите, пожалуйста, имя ребёнка.", False
+        name = _extract_name_from_text(clean)
+        if not name:
+            return "Подскажите, пожалуйста, имя ребёнка.", False
+        lead.fio_child = name
 
     elif current == "age":
         birthday = extract_birthday(clean)
@@ -110,6 +170,11 @@ async def step(
                         "или дату рождения в формате дд.мм.гггг."), False
 
     elif current == "phone":
+        birthday = extract_birthday(clean)
+        if birthday:
+            lead.birthday = birthday
+            conv.lead_step = "phone"
+            return "Дату рождения записал. Теперь, пожалуйста, напишите телефон.", False
         phone = extract_phone(clean)
         if not phone:
             return ("Кажется, номер указан не полностью. Напишите телефон в "
@@ -185,13 +250,13 @@ def _match_branch(kb: KnowledgeBase, text: str) -> str | None:
 def _opportunistic_fill(conv: Conversation, text: str, kb: KnowledgeBase) -> None:
     lead = conv.lead
     phone = extract_phone(text)
-    if phone:
+    if phone and not lead.phone:
         lead.phone = phone
     birthday = extract_birthday(text)
-    if birthday:
+    if birthday and not lead.birthday:
         lead.birthday = birthday
     age = extract_age(text)
-    if age:
+    if age and not lead.age:
         lead.age = age
     branch = _match_branch(kb, text)
     if branch:

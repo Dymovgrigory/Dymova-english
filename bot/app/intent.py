@@ -15,6 +15,7 @@ PRICE = "price"
 COURSES = "courses"
 CONTACTS = "contacts"
 ABOUT = "about"
+HOMEWORK = "homework"
 WANT_SIGNUP = "want_signup"
 OBJECTION = "objection"
 HANDOFF = "handoff"
@@ -24,8 +25,10 @@ _PATTERNS: list[tuple[str, list[str]]] = [
     (GREETING, ["привет", "здравств", "добрый день", "добрый вечер", "доброе утро",
                 "здравейте", "хеллоу", "hello", "hi ", "ку "]),
     (HANDOFF, ["оператор", "администратор", "менеджер", "жалоб", "директор",
+               "руководител", "недоволь", "не перезвон", "никто не перезвон",
                "возврат", "договор", "претензи", "живой человек", "человек",
-               "позвоните мне", "перезвоните"]),
+               "позвоните мне", "перезвоните", "не ответили", "игнорир",
+               "верните деньги", "верните", "деньги"]),
     (WANT_SIGNUP, ["запис", "записать", "пробн", "хочу учиться", "хочу заниматься",
                    "хочу на курс", "оставить заявку", "забронир", "диагностик",
                    "хочу попробовать", "хочу записаться"]),
@@ -38,6 +41,8 @@ _PATTERNS: list[tuple[str, list[str]]] = [
                 "контакт", "режим работы", "часы работы", "как с вами связаться"]),
     (ABOUT, ["о школе", "о вас", "кто вы", "методик", "лицензи", "преподавател",
              "педагог", "отзыв", "результат", "почему вы", "преимуществ"]),
+    (HOMEWORK, ["домашк", "домашнее задание", "помоги с дз", "помоги с домашк",
+                "помоги с домашкой", "дз "]),
 ]
 
 _OBJECTIONS = {
@@ -47,7 +52,7 @@ _OBJECTIONS = {
     "далеко": ["далеко", "неудобно ехать", "нет рядом", "другой город", "не близко"],
 }
 
-_PHONE_RE = re.compile(r"(?:\+7|8|7)?[\s\-(]*\d{3}[\s\-)]*\d{3}[\s\-]*\d{2}[\s\-]*\d{2}")
+_PHONE_RE = re.compile(r"(?:\+7|8|7)?[\s\-\.\(]*\d{3}[\s\-\.\)]*\d{3}[\s\-\.\)]*\d{2}[\s\-\.\)]*\d{2}")
 _AGE_RE = re.compile(r"(\d{1,2})\s*(?:лет|год|года|годик)")
 _AGE_CHILD_RE = re.compile(r"(?:сын|доч|реб[её]нк|мальчик|девочк|ему|ей)\D{0,12}?(\d{1,2})")
 _DATE_RE = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
@@ -66,6 +71,19 @@ def detect_intent(text: str) -> str:
     low = text.lower().strip()
     if detect_objection(low):
         return OBJECTION
+    if any(
+        cue in low
+        for cue in (
+            "домашк",
+            "домашнее задание",
+            "помоги с дз",
+            "помоги с домашк",
+            "помоги с домашкой",
+        )
+    ):
+        return HOMEWORK
+    if "дз" in low and not re.search(r"[а-яёa-z]дз[а-яёa-z]", low):
+        return HOMEWORK
     for intent, words in _PATTERNS:
         if any(w in low for w in words):
             return intent
@@ -75,17 +93,24 @@ def detect_intent(text: str) -> str:
 
 
 def extract_phone(text: str) -> str | None:
-    m = _PHONE_RE.search(text)
-    if not m:
+    digits = re.sub(r"\D", "", text)
+    if len(digits) < 10:
         return None
-    digits = re.sub(r"\D", "", m.group(0))
     if len(digits) == 11 and digits[0] in "78":
         return "+7" + digits[1:]
     if len(digits) == 10:
         return "+7" + digits
-    if len(digits) < 10:
-        return None
+    if len(digits) > 11 and digits[0] in "78":
+        digits = digits[:11]
+        return "+7" + digits[1:]
     return "+" + digits
+
+
+def detect_complaint(text: str) -> bool:
+    low = text.lower()
+    return detect_intent(low) == HANDOFF or any(
+        word in low for word in ("жалоб", "недоволь", "претенз", "возврат", "верните", "деньги")
+    )
 
 
 def extract_age(text: str) -> str | None:

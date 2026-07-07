@@ -209,7 +209,7 @@ async def handle_group_message(message: dict[str, Any], max_client) -> None:
     if chat_id is None:
         return
 
-    whitelist = settings.group_chat_whitelist()
+    whitelist = settings.group_chat_whitelist
     if whitelist and chat_id not in whitelist:
         return
 

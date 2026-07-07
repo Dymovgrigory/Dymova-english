@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     LLM_TEMPERATURE: float = 0.4
     LLM_MAX_TOKENS: int = 700
     LLM_TIMEOUT: int = 40
+    LLM_HISTORY_TURNS: int = 8
 
     # --- BigBen CRM ---
     # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
@@ -47,11 +48,24 @@ class Settings(BaseSettings):
     # --- Передача администратору ---
     # ID администраторов в MAX (через запятую), куда дублируется контекст диалога.
     ADMIN_MAX_IDS: str = ""
+    ADMIN_TOKEN: str = ""
 
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
+    CONV_LOG_FILE: str = ""
+    GROUP_MODE_ENABLED: bool = True
+    GROUP_CHAT_WHITELIST: str = ""
+    NUDGE_DELAY_HOURS: int = 36
+    NUDGE_MAX_AGE_HOURS: int = 100
+
+    # --- Telegram ---
+    TELEGRAM_BOT_TOKEN: str = ""
+    TELEGRAM_PROXY_URL: str = ""
+    TELEGRAM_WEBHOOK_URL: str = ""
+    TELEGRAM_WEBHOOK_SECRET: str = ""
 
     # --- Прочее ---
+    REGISTRATION_REQUIRED: bool = False
     BOT_NAME: str = "Фоксинбург"
     DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
     DB_PATH: str = "./data/bot.db"
@@ -60,6 +74,19 @@ class Settings(BaseSettings):
     @property
     def admin_ids(self) -> list[str]:
         return [x.strip() for x in self.ADMIN_MAX_IDS.split(",") if x.strip()]
+
+    @property
+    def group_chat_whitelist(self) -> set[int]:
+        items: set[int] = set()
+        for raw in self.GROUP_CHAT_WHITELIST.split(","):
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                items.add(int(raw))
+            except ValueError:
+                continue
+        return items
 
 
 @lru_cache

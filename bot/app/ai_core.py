@@ -10,10 +10,13 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from app import intent as I
+from app import registration
 from app.bigben import get_bigben
 from app.course_selector import format_recommendations, recommend
+from app.config import settings
 from app.knowledge.kb import get_kb
 from app.llm import get_llm
 from app.max_client import get_max
@@ -48,29 +51,62 @@ def _capture_entities(conv: Conversation, text: str) -> None:
         conv.selected_format = "Офлайн"
 
 
-async def _consult(conv: Conversation, text: str) -> str:
-    """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
+def _wants_manager(text: str) -> bool:
+    low = text.lower()
+    return any(word in low for word in ("руковод", "директор", "администрат", "начальник"))
+
+
+def _drop_trailing_question(text: str) -> str:
+    stripped = text.rstrip()
+    if stripped.endswith("?"):
+        stripped = stripped[:-1].rstrip()
+        cut = max(stripped.rfind("."), stripped.rfind("!"), stripped.rfind("…"))
+        if cut >= 0:
+            stripped = stripped[: cut + 1]
+        elif stripped:
+            stripped += "."
+    return stripped
+
+
+def _handoff_followup_reply(conv: Conversation, text: str) -> str:
+    if _wants_manager(text):
+        return (
+            "Понимаю, сейчас подключу руководителя или администратора — "
+            "он скоро ответит. Если срочно, можно позвонить: 8 993 923-23-09 "
+            "(Лихачевский) или 8 916 732-31-69 (Ракетостроителей)."
+        )
+    variants = [
+        "Я уже передал ваш вопрос администратору — он скоро ответит. Если нужно что-то ещё, напишите, я помогу. 😊",
+        "Вопрос уже у администратора, он скоро подключится. Если хотите, могу пока подсказать по курсам или расписанию. 😊",
+    ]
+    return variants[len(conv.history) % len(variants)]
+
+
+async def _consult_with_context(conv: Conversation, text: str, kb_context: str) -> str:
     kb = get_kb()
     llm = get_llm()
-    kb_context = kb.context_for(text, limit=5)
-
     if llm.enabled:
         system = sales.build_system_prompt(kb, conv, kb_context)
         messages = [{"role": "system", "content": system}]
-        messages.extend(conv.history[-8:])
+        history_turns = max(0, int(getattr(settings, "LLM_HISTORY_TURNS", 8)))
+        messages.extend(conv.history[-history_turns:])
         reply = await llm.complete(messages)
         if reply:
             return reply
-
-    # Fallback без LLM — отдаём найденные факты + мягкий призыв.
     if kb_context:
-        return (f"Вот что у меня есть по вашему вопросу:\n\n{kb_context}\n\n"
-                + sales.sales_nudge(conv))
+        return f"Вот что у меня есть по вашему вопросу:\n\n{kb_context}\n\n" + sales.sales_nudge(conv)
     return (
         "Хороший вопрос! Чтобы ответить точно, подскажите, пожалуйста, возраст "
         "ребёнка и удобный формат (онлайн/офлайн). А можно сразу записаться на "
         "бесплатную диагностику — администратор всё подробно расскажет. 😊"
     )
+
+
+async def _consult(conv: Conversation, text: str) -> str:
+    """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
+    kb = get_kb()
+    kb_context = kb.context_for(text, limit=5)
+    return await _consult_with_context(conv, text, kb_context)
 
 
 async def handle_message(user_id: str, text: str) -> str:
@@ -80,6 +116,17 @@ async def handle_message(user_id: str, text: str) -> str:
     conv = store.get(user_id)
     conv.add("user", text)
     _capture_entities(conv, text)
+
+    if not registration.is_registered(conv):
+        if conv.stage != registration.STAGE_REGISTRATION:
+            reply = registration.start_registration(conv)
+        else:
+            reply, _done = await registration.handle_registration_step(
+                conv, text, get_bigben()
+            )
+        conv.add("assistant", reply)
+        store.save(conv)
+        return reply
 
     reply = await _route(conv, text, kb)
 
@@ -103,8 +150,7 @@ async def _route(conv: Conversation, text: str, kb) -> str:
 
     # 2. Уже передан администратору — не перебиваем, но подтверждаем.
     if conv.stage == STAGE_HANDOFF:
-        return ("Я уже передал ваш вопрос администратору — он скоро ответит. "
-                "Если нужно что-то ещё, напишите, я помогу. 😊")
+        return _handoff_followup_reply(conv, text)
 
     intent = I.detect_intent(text)
 
@@ -117,6 +163,8 @@ async def _route(conv: Conversation, text: str, kb) -> str:
     if intent == I.OBJECTION:
         conv.stage = STAGE_OBJECTION
         key = I.detect_objection(text) or "подумаю"
+        if get_llm().enabled:
+            return await _consult_with_context(conv, text, sales.handle_objection(kb, key))
         return sales.handle_objection(kb, key)
 
     # 5. Явное намерение записаться — запускаем сбор лида.
@@ -158,10 +206,23 @@ def _handoff_reply() -> str:
 async def handle_start(user_id: str) -> str:
     """Ответ на команду /start или событие bot_started."""
     store = get_store()
-    conv = store.reset(user_id)
+    conv = store.get(user_id)
+    if not registration.is_registered(conv):
+        reply = registration.start_registration(conv)
+        conv.add("assistant", reply)
+        store.save(conv)
+        return reply
+    if conv.is_returning():
+        reply = (
+            "Привет! С возвращением! 🦊 Я помню ваш прошлый диалог и помогу "
+            "продолжить с того места, где остановились."
+        )
+        conv.add("assistant", reply)
+        store.save(conv)
+        return reply
     conv.stage = STAGE_DISCOVERY
     reply = (
-        "Здравствуйте! 🦊 Я — консультант языковой школы «Фоксинбург» в "
+        "Привет! 🦊 Я — консультант языковой школы «Фоксинбург» в "
         "Долгопрудном. Помогу подобрать курс, расскажу о ценах, филиалах и "
         "запишу на бесплатную диагностику.\n\n"
         "С чего начнём? Можете написать, например: «Сыну 9 лет, ищем английский»."
@@ -169,3 +230,13 @@ async def handle_start(user_id: str) -> str:
     conv.add("assistant", reply)
     store.save(conv)
     return reply
+
+
+__all__ = [
+    "handle_message",
+    "handle_start",
+    "_consult_with_context",
+    "_drop_trailing_question",
+    "_handoff_followup_reply",
+    "_wants_manager",
+]

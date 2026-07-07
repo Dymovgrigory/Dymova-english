@@ -8,22 +8,29 @@
 """
 from __future__ import annotations
 
+import base64
 import asyncio
 import logging
+import uuid
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.ai_core import handle_message, handle_start
+from app import broadcast
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
+from app import intent as I
+from app import group_chat
+from app import nudge
 from app.knowledge.kb import get_kb
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
-from app.memory import Lead, get_store
+from app.memory import Lead, STAGE_HANDOFF, get_store
+from app.telegram_client import get_telegram
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -57,6 +64,308 @@ _CALLBACK_TEXT = {
     "menu:branches": "Где находятся ваши филиалы?",
     "menu:admin": "Соедините меня с администратором",
 }
+
+_BRANCH_CONTACTS = {
+    "contact:lihachevsky": {
+        "name": "Филиал на Лихачевском",
+        "phone": "8 993 923-23-09",
+        "url": "tel:+79939232309",
+    },
+    "contact:raketostroiteley": {
+        "name": "Филиал на Ракетостроителей",
+        "phone": "8 916 732-31-69",
+        "url": "tel:+79167323169",
+    },
+}
+
+
+def _homework_system_prompt() -> str:
+    return (
+        "Ты помогаешь с домашним заданием, но не давай готовые ответы и не "
+        "не выполнять его за ученика и не решай за него. Вместо этого объясняй, как это сделать, "
+        "давай подсказки, задавай наводящие вопросы и приводи короткий пример."
+    )
+
+
+def _homework_user_prompt(note: str) -> str:
+    extra = f" Дополнительная заметка: {note}." if note else ""
+    return (
+        "Не давай готовые ответы, не решай за ребёнка и помоги понять, как "
+        "это сделать самостоятельно. Покажи короткий пример и объясни шаги."
+        f"{extra}"
+    )
+
+
+def _admin_authorized(request: Request) -> bool:
+    token = request.headers.get("X-Admin-Token", "")
+    return bool(settings.ADMIN_TOKEN) and token == settings.ADMIN_TOKEN
+
+
+def _nudge_authorized(request: Request) -> bool:
+    return not settings.ADMIN_TOKEN or _admin_authorized(request)
+
+
+def _miniapp_url() -> str:
+    return settings.MINIAPP_BASE_URL.rstrip("/")
+
+
+def _contextual_buttons(question: str, reply: str) -> list[dict]:
+    text = f"{question} {reply}".lower()
+    base = _miniapp_url()
+    if not base:
+        return []
+    if "домаш" in text or "дз" in text:
+        return [{"title": "📸 Помощь с домашкой (бесплатно)", "url": f"{base}#homework"}]
+    if "запис" in text or "диагност" in text:
+        return [{"title": "📋 Записаться онлайн", "url": f"{base}#signup"}]
+    return []
+
+
+def _branch_admin_buttons() -> list[list[dict]]:
+    return [
+        [callback_button("Филиал на Лихачевском", "contact:lihachevsky")],
+        [callback_button("Филиал на Ракетостроителей", "contact:raketostroiteley")],
+    ]
+
+
+async def _notify_admins_for_telegram(conv, reason: str) -> None:
+    admin_client = get_max()
+    message = (
+        f"🔔 Требуется администратор ({reason})\n\n"
+        f"{conv.summary()}"
+    )
+    for admin_id in settings.admin_ids:
+        await admin_client.send_message(admin_id, message)
+
+
+@app.post("/api/chat")
+async def api_chat(data: dict) -> dict:
+    text = str(data.get("text", "")).strip()
+    if not text:
+        return JSONResponse({"detail": "text required"}, status_code=400)
+    session_id = str(data.get("session_id") or uuid.uuid4().hex)
+    reply = await handle_message(session_id, text)
+    if not reply.startswith("Привет!"):
+        reply = "Привет! " + reply
+    return {
+        "session_id": session_id,
+        "reply": reply,
+        "buttons": _contextual_buttons(text, reply),
+    }
+
+
+@app.post("/api/miniapp/homework")
+async def api_homework(
+    note: str = Form(default=""),
+    image: UploadFile | None = File(default=None),
+) -> dict:
+    if image is None or not image.filename:
+        return JSONResponse({"detail": "Нужна фотография задания"}, status_code=400)
+    content_type = (image.content_type or "").lower()
+    if not content_type.startswith("image/"):
+        return JSONResponse({"detail": "Файл должен быть в формате изображения"}, status_code=400)
+
+    image_bytes = await image.read()
+    if not image_bytes:
+        return JSONResponse({"detail": "Пустой файл"}, status_code=400)
+
+    llm = get_llm()
+    system_prompt = _homework_system_prompt()
+    user_prompt = _homework_user_prompt(note)
+    explanation = ""
+
+    complete_vision = getattr(llm, "complete_vision", None)
+    if callable(complete_vision):
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": user_prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:{content_type};base64,{base64.b64encode(image_bytes).decode('ascii')}",
+                        },
+                    },
+                ],
+            },
+        ]
+        explanation = await complete_vision(messages, temperature=0.2, max_tokens=1200) or ""
+    else:
+        explanation = user_prompt
+
+    if not explanation:
+        explanation = "Не удалось разобрать фото задания."
+
+    return {
+        "ok": True,
+        "explanation": explanation,
+        "buttons": _contextual_buttons("домашка", explanation),
+    }
+
+
+def _telegram_buttons(text: str, reply: str) -> list[list[dict]]:
+    buttons = _contextual_buttons(text, reply)
+    return [[button] for button in buttons]
+
+
+def _button_rows(text: str, reply: str) -> list[list[dict]]:
+    return [[button] for button in _contextual_buttons(text, reply)]
+
+
+def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
+    return [[link_button(button["title"], button["url"])] for button in _contextual_buttons(text, reply)]
+
+
+async def _process_telegram_update(update: dict, telegram) -> None:
+    message = update.get("message") or {}
+    chat = message.get("chat") or {}
+    chat_id = chat.get("id")
+    text = str(message.get("text") or "").strip()
+    if chat_id is None or not text:
+        return
+
+    user_id = f"tg:{chat_id}"
+    low = text.lower()
+    if low in ("/start", "start"):
+        reply = await handle_start(user_id)
+        await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+        return
+
+    if I.detect_complaint(text) or I.detect_intent(text) == I.HANDOFF:
+        conv = get_store().get(user_id, platform="telegram")
+        branch = conv.selected_branch or conv.lead.branch
+        if branch:
+            await _notify_admins_for_telegram(conv, "запрос администратора")
+            reply = f"Свяжу вас с администратором {branch}. Он скоро ответит."
+            await telegram.send_message(chat_id, reply)
+        else:
+            reply = "Подскажите, пожалуйста, какой филиал вам удобнее?"
+            await telegram.send_message(chat_id, reply, buttons=_branch_admin_buttons())
+        return
+
+    if "домаш" in low or "дз" in low:
+        reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
+        await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+        return
+
+    reply = await handle_message(user_id, text)
+    await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+
+
+def _schedule_telegram_update(update: dict, telegram) -> bool:
+    update_id = update.get("update_id")
+    if update_id is not None:
+        store = get_store()
+        if not store.mark_event_seen(str(update_id), platform="telegram", event_type="update"):
+            return False
+    task = asyncio.create_task(_process_telegram_update(update, telegram))
+    _BACKGROUND_TASKS.add(task)
+    task.add_done_callback(_BACKGROUND_TASKS.discard)
+    return True
+
+
+async def _telegram_poll_loop(telegram) -> None:
+    await telegram.delete_webhook()
+    offset: int | None = None
+    while True:
+        updates = await telegram.get_updates(offset=offset, timeout=25)
+        for update in updates:
+            if _schedule_telegram_update(update, telegram):
+                update_id = update.get("update_id")
+                if update_id is not None:
+                    try:
+                        offset = int(update_id) + 1
+                    except (TypeError, ValueError):
+                        pass
+
+
+@app.post("/telegram/webhook")
+async def telegram_webhook(request: Request) -> dict:
+    if settings.TELEGRAM_WEBHOOK_SECRET:
+        secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+        if secret != settings.TELEGRAM_WEBHOOK_SECRET:
+            return JSONResponse({"error": "invalid secret"}, status_code=403)
+    payload = await request.json()
+    updates = payload if isinstance(payload, list) else [payload]
+    telegram = get_telegram()
+    for update in updates:
+        _schedule_telegram_update(update, telegram)
+    return {"ok": True}
+
+
+@app.post("/admin/telegram/set-webhook")
+async def admin_telegram_set_webhook(request: Request) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    telegram = get_telegram()
+    ok = await telegram.set_webhook(settings.TELEGRAM_WEBHOOK_URL, settings.TELEGRAM_WEBHOOK_SECRET or None)
+    return {"ok": ok}
+
+
+@app.get("/admin/broadcast/audience")
+async def admin_broadcast_audience(request: Request) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return broadcast.audience_counts()
+
+
+@app.get("/admin/nudge/preview")
+async def admin_nudge_preview(request: Request) -> dict:
+    if not _nudge_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    rows = nudge.preview()
+    return {"eligible": len(rows), "rows": rows}
+
+
+@app.post("/admin/nudge/send")
+async def admin_nudge_send(request: Request) -> dict:
+    if not _nudge_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return await nudge.run_nudges()
+
+
+@app.post("/admin/broadcast/test")
+async def admin_broadcast_test(request: Request, data: dict) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return await broadcast.send_broadcast(
+        get_max(),
+        settings.admin_ids,
+        str(data.get("text", "")),
+        str(data.get("button_text", "")) or None,
+        str(data.get("button_url", "")) or None,
+    )
+
+
+@app.post("/admin/broadcast/send")
+async def admin_broadcast_send(request: Request, data: dict) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    recipients = broadcast.resolve_recipients(
+        str(data.get("segment", "all")),
+        course=str(data.get("course", "")) or None,
+        branch=str(data.get("branch", "")) or None,
+    )
+    return await broadcast.send_broadcast(get_max(), recipients, str(data.get("text", "")))
+
+
+@app.get("/admin/users")
+async def admin_users(request: Request) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return {"rows": broadcast.list_users()}
+
+
+@app.get("/admin/users/{user_id}")
+async def admin_user_detail(user_id: str, request: Request) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    detail = broadcast.get_user_detail(user_id)
+    if detail is None:
+        return JSONResponse({"detail": "not found"}, status_code=404)
+    return detail
 
 
 @app.get("/health")
@@ -157,11 +466,27 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         if low in ("/start", "start"):
             reply = await handle_start(user_id)
             await max_client.send_message(user_id, reply, buttons=_main_menu())
+        elif I.detect_intent(text) == I.HANDOFF:
+            conv = get_store().get(user_id)
+            if conv.selected_branch:
+                await _notify_admins_for_telegram(conv, "запрос администратора")
+                reply = f"Свяжу вас с администратором {conv.selected_branch}. Он скоро ответит."
+                await max_client.send_message(user_id, reply, buttons=_main_menu())
+            else:
+                await max_client.send_message(
+                    user_id,
+                    "Подскажите, пожалуйста, какой филиал вам удобнее?",
+                    buttons=_branch_admin_buttons(),
+                )
+        elif I.detect_intent(text) == I.HOMEWORK:
+            reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
+            buttons = _link_button_rows(text, reply)
+            await max_client.send_message(user_id, reply, buttons=buttons or None)
         elif low in ("/menu", "меню"):
             await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
         else:
             reply = await handle_message(user_id, text)
-            await max_client.send_message(user_id, reply)
+            await max_client.send_message(user_id, reply, buttons=_button_rows(text, reply) or None)
         return
 
     if update_type == "message_callback":
@@ -171,7 +496,24 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         user_id = _extract_user_id(update) or _extract_user_id(callback)
         if callback_id:
             await max_client.answer_callback(callback_id)
-        if user_id and payload in _CALLBACK_TEXT:
+        if user_id and payload in _BRANCH_CONTACTS:
+            conv = get_store().get(user_id)
+            info = _BRANCH_CONTACTS[payload]
+            conv.selected_branch = info["name"]
+            conv.stage = STAGE_HANDOFF
+            await _notify_admins_for_telegram(conv, "контакт по филиалу")
+            await max_client.send_message(
+                user_id,
+                f"Свяжу вас с администратором {info['name']}.",
+                buttons=[[link_button(info["name"], info["url"])]],
+            )
+        elif user_id and str(payload).startswith("contact:"):
+            await max_client.send_message(
+                user_id,
+                "Подскажите, пожалуйста, какой филиал вам удобнее?",
+                buttons=_branch_admin_buttons(),
+            )
+        elif user_id and payload in _CALLBACK_TEXT:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
             await max_client.send_message(user_id, reply)
         return
@@ -247,6 +589,17 @@ async def miniapp_lead(data: dict) -> dict:
         return {"ok": False, "error": "Укажите имя и телефон"}
     source = "MAX мини-приложение Фоксинбург"
     ok = await get_bigben().create_lead(lead, source=source)
+    if ok and settings.admin_ids:
+        admin_note = (
+            "Новая заявка из мини-приложения\n"
+            f"Родитель: {lead.fio_parent}\n"
+            f"Ребёнок: {lead.fio_child or '—'}\n"
+            f"Телефон: {lead.phone}\n"
+            f"Филиал: {lead.branch or '—'}\n"
+            f"Интерес: {lead.course or data.get('interest_value', '') or data.get('interest_type', '')}"
+        )
+        for admin_id in settings.admin_ids:
+            await get_max().send_message(admin_id, admin_note)
     return {"ok": ok}
 
 

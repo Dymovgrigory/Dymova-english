@@ -23,6 +23,34 @@ def _format_history(conv: Conversation, limit: int = 10) -> str:
     return "\n".join(rows)
 
 
+def _client_contact_block(conv: Conversation) -> str:
+    lead = conv.lead
+    parts: list[str] = []
+    name = lead.fio_parent.strip()
+    if name:
+        parts.append(f"👤 {name}")
+    if lead.phone:
+        parts.append(f"📱 {lead.phone}")
+
+    user_id = conv.user_id
+    if user_id.startswith("tg:"):
+        link = f"tg://user?id={user_id.removeprefix('tg:')}"
+        platform = "Telegram"
+    elif user_id.startswith("web:"):
+        link = ""
+        platform = "Веб-виджет"
+    else:
+        link = f"https://max.ru/chat/{user_id}"
+        platform = "MAX"
+
+    parts.append(platform)
+    if link:
+        parts.append(link)
+    if not lead.phone:
+        parts.append(f"ID: {user_id}")
+    return "\n".join(parts)
+
+
 async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") -> bool:
     """Уведомляет администраторов и помечает диалог как переданный."""
     conv.stage = STAGE_HANDOFF
@@ -37,7 +65,7 @@ async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") 
         header += f" ({reason})"
     message = (
         f"{header}\n\n"
-        f"Клиент MAX id: {conv.user_id}\n"
+        f"{_client_contact_block(conv)}\n"
         f"{conv.summary()}\n\n"
         f"История диалога:\n{_format_history(conv)}"
     )

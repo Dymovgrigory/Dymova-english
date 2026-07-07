@@ -37,6 +37,8 @@ class MaxClient:
     def __init__(self) -> None:
         self.token = settings.MAX_BOT_TOKEN
         self.base = settings.MAX_BOT_API_URL.rstrip("/")
+        self.bot_user_id: str | None = None
+        self.bot_username: str | None = None
 
     @property
     def configured(self) -> bool:
@@ -57,6 +59,24 @@ class MaxClient:
         except Exception:
             logger.exception("MAX /me failed")
         return None
+
+    async def ensure_bot_identity(self) -> bool:
+        if self.bot_user_id and self.bot_username:
+            return True
+        info = await self.get_bot_info()
+        if not info:
+            return False
+        user_id = info.get("user_id")
+        username = info.get("username")
+        if isinstance(info.get("user"), dict):
+            user = info["user"]
+            user_id = user.get("id") or user_id
+            username = user.get("username") or username
+        if user_id is not None:
+            self.bot_user_id = str(user_id)
+        if username:
+            self.bot_username = str(username)
+        return bool(self.bot_user_id and self.bot_username)
 
     async def send_message(
         self,
@@ -85,6 +105,14 @@ class MaxClient:
         except Exception:
             logger.exception("MAX send failed")
         return False
+
+    async def send_to_chat(
+        self,
+        chat_id: int,
+        text: str,
+        buttons: Optional[list[list[dict]]] = None,
+    ) -> bool:
+        return await self.send_message(str(chat_id), text, buttons)
 
     async def answer_callback(self, callback_id: str, notification: Optional[str] = None) -> bool:
         if not self.configured:

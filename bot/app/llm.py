@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import re
 from dataclasses import dataclass
 
 import httpx
@@ -33,6 +34,26 @@ class ProviderConfig:
 
 
 _client: httpx.AsyncClient | None = None
+_http_client: httpx.AsyncClient | None = None
+
+_FILLER_RE = re.compile(
+    r"\b(?:indeed|actually|basically|really|just|well|so|like|you know)\b",
+    re.IGNORECASE,
+)
+
+
+def _clean_response(text: str) -> str:
+    text = _FILLER_RE.sub("", text)
+    text = re.sub(r"\s{2,}", " ", text)
+    return text.strip(" ,;")
+
+
+def _mostly_russian(text: str) -> bool:
+    if len(text.split()) <= 3:
+        return True
+    latin = sum(1 for ch in text if "A" <= ch <= "Z" or "a" <= ch <= "z")
+    cyr = sum(1 for ch in text if "А" <= ch <= "я" or ch in "Ёё")
+    return not (latin and latin > cyr * 1.25)
 
 
 def _build_provider_configs() -> list[ProviderConfig]:
@@ -76,10 +97,13 @@ def _provider_headers(provider: ProviderConfig) -> dict[str, str]:
 
 
 async def _get_client() -> httpx.AsyncClient:
-    global _client
-    if _client is None:
-        _client = httpx.AsyncClient(timeout=settings.LLM_TIMEOUT)
-    return _client
+    global _client, _http_client
+    client = _client or _http_client
+    if client is None:
+        client = httpx.AsyncClient(timeout=settings.LLM_TIMEOUT)
+    _client = client
+    _http_client = client
+    return client
 
 
 async def _complete_with_provider(
@@ -132,7 +156,10 @@ async def _complete_with_provider(
                 logger.error("LLM provider=%s returned no choices", provider.label)
                 return None
             content = choices[0].get("message", {}).get("content", "")
-            reply = (content or "").strip() or None
+            reply = _clean_response(content or "").strip() or None
+            if reply and not _mostly_russian(reply):
+                logger.warning("LLM provider=%s returned mostly-English text", provider.label)
+                return None
             if reply:
                 logger.info("LLM provider=%s success", provider.label)
             return reply
@@ -191,3 +218,6 @@ def get_llm() -> LLMClient:
     if _llm is None:
         _llm = LLMClient()
     return _llm
+
+
+__all__ = ["get_llm", "_clean_response", "_mostly_russian"]

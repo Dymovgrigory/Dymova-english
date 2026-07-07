@@ -36,9 +36,24 @@ SYSTEM_PROMPT = """\
 
 def build_system_prompt(kb: KnowledgeBase, conv: Conversation, kb_context: str) -> str:
     parts = [SYSTEM_PROMPT]
+    if kb.branches:
+        branch_lines = []
+        for branch in kb.branches:
+            name = branch.get("name", "").strip()
+            address = branch.get("address", "").strip()
+            if name or address:
+                branch_lines.append(f"- {name}: {address}".strip())
+        if branch_lines:
+            parts.append("\nФИЛИАЛЫ:\n" + "\n".join(branch_lines))
     if kb_context:
         parts.append("\nКОНТЕКСТ ИЗ БАЗЫ ЗНАНИЙ (используй только эти факты):\n" + kb_context)
+    card = conv.client_card()
+    if card:
+        parts.append("\nКАРТОЧКА КЛИЕНТА:\n" + card)
     state_bits = []
+    if conv.lead.fio_parent:
+        state_bits.append(f"собеседник — РОДИТЕЛЬ; имя родителя (собеседник): {conv.lead.fio_parent}")
+        state_bits.append("упоминай ребёнка по имени, но обращайся к родителю")
     if conv.lead.age:
         state_bits.append(f"возраст ребёнка: {conv.lead.age}")
     if conv.selected_format:
