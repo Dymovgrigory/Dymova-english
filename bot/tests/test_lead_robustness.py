@@ -87,3 +87,25 @@ def test_miniapp_lead_notifies_admins(monkeypatch):
     assert "Новая заявка" in body
     assert "Иванова Анна" in body
     assert "2 смена" in body
+
+
+def test_miniapp_lead_blocks_unregistered_user(monkeypatch):
+    class FakeBigBen:
+        async def create_lead(self, *args, **kwargs):
+            raise AssertionError("should not submit")
+
+    monkeypatch.setattr(main, "get_bigben", lambda: FakeBigBen())
+    monkeypatch.setattr(main.settings, "ADMIN_MAX_IDS", "111,222")
+
+    client = TestClient(main.app)
+    resp = client.post(
+        "/api/miniapp/lead",
+        json={
+            "user_id": "max:unregistered",
+            "fio_parent": "Иванова Анна",
+            "phone": "+79991234567",
+        },
+    )
+
+    assert resp.status_code == 403
+    assert "зарегистр" in resp.json()["error"].lower()

@@ -58,6 +58,7 @@ class Settings(BaseSettings):
 
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
+    MINIAPP_REQUIRE_REGISTRATION: bool = True
     CONV_LOG_FILE: str = ""
     GROUP_MODE_ENABLED: bool = True
     GROUP_CHAT_WHITELIST: str = ""
