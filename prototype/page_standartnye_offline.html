@@ -29,6 +29,18 @@
 <div class="fxb-fact"><div class="fxb-fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16 8l-2 6-6 2 2-6z"/></svg></div><b>2 филиала</b><span>Долгопрудный</span></div>
 <div class="fxb-fact"><div class="fxb-fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20v-1a5 5 0 0 1 10 0v1"/><path d="M15.5 20v-.5a4 4 0 0 1 5.5-3.7"/></svg></div><b>До 7 человек</b><span>Мини-группы по уровню</span></div>
 </div></div></section>
+<section class="fxb-section fxb-bg-light"><div class="fxb-wrap">
+<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Стоимость</span>
+<h2 class="fxb-h2">Стоимость обучения</h2>
+<p class="fxb-lead">Прозрачные тарифы и удобные форматы оплаты.</p>
+</div>
+<div class="fxb-price-grid">
+<article class="fxb-price-card fxb-price-card--main"><span class="fxb-price-tag">Группа</span><h3>9 000 ₽<span>/мес</span></h3><p>2 занятия в неделю · 60 минут · мини-группа</p></article>
+<article class="fxb-price-card"><span class="fxb-price-tag fxb-price-tag--orange">Индивидуально</span><h3>2 500 ₽<span>/час</span></h3><p>Индивидуальный темп и гибкий график</p></article>
+<article class="fxb-price-card"><span class="fxb-price-tag">Пробный урок</span><h3>1 125 ₽</h3><p>Знакомство с педагогом и подбор формата</p></article>
+</div>
+<p class="fxb-price-note">Оплата материнским капиталом и налоговый вычет 13%.</p>
+</div></section>
 <section class="fxb-cta" id="fxb-cta">
 <div class="fxb-cta-bg"><img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" loading="lazy"></div>
 <div class="fxb-cta-box"><h2>Запишитесь на <span class="fxb-accent">занятия в филиале</span></h2><p>Подберём удобный филиал, время и группу под уровень ученика.</p>
@@ -210,6 +222,22 @@
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+</style>
+
+
+<style>
+#fxb-page .fxb-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+#fxb-page .fxb-price-card{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:22px;padding:26px 24px;box-shadow:0 16px 34px -22px rgba(57,40,82,.4);display:flex;flex-direction:column;gap:12px;transition:transform .35s,box-shadow .35s,border-color .35s}
+#fxb-page .fxb-price-card:hover{transform:translateY(-5px);box-shadow:0 28px 50px -26px rgba(102,45,146,.5);border-color:rgba(102,45,146,.2)}
+#fxb-page .fxb-price-card--main{background:linear-gradient(180deg,#fff 0%,#faf8fe 100%)}
+#fxb-page .fxb-price-tag{display:inline-flex;align-items:center;align-self:flex-start;padding:7px 12px;border-radius:100px;background:rgba(102,45,146,.08);color:var(--purple-2);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+#fxb-page .fxb-price-tag--orange{background:rgba(238,115,73,.12);color:var(--orange)}
+#fxb-page .fxb-price-card h3{font-size:clamp(28px,3vw,38px);line-height:1.05;font-weight:900;color:var(--ink)}
+#fxb-page .fxb-price-card h3 span{font-size:15px;font-weight:800;color:var(--muted)}
+#fxb-page .fxb-price-card p{font-size:14.5px;font-weight:500;color:var(--muted);line-height:1.55}
+#fxb-page .fxb-price-note{margin-top:18px;color:var(--muted);font-size:13px;font-weight:600;text-align:center}
+@media(max-width:860px){#fxb-page .fxb-price-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page .fxb-price-grid{grid-template-columns:1fr}}
 </style>
 
 
