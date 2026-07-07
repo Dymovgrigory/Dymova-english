@@ -167,11 +167,15 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             return await _consult_with_context(conv, text, sales.handle_objection(kb, key))
         return sales.handle_objection(kb, key)
 
-    # 5. Явное намерение записаться — запускаем сбор лида.
+    # 5. Явное намерение открыть кабинет — запускаем регистрацию.
+    if intent == I.REGISTER:
+        return registration.start_registration(conv)
+
+    # 6. Явное намерение записаться — запускаем сбор лида.
     if intent == I.WANT_SIGNUP:
         return lead_manager.start(conv)
 
-    # 6. Приветствие — короткое, человеческое, без простыни про школу.
+    # 7. Приветствие — короткое, человеческое, без простыни про школу.
     if intent == I.GREETING and len(conv.history) <= 2:
         conv.stage = STAGE_DISCOVERY
         return (
@@ -181,7 +185,7 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             "диагностику. 😊"
         )
 
-    # 7. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор.
+    # 8. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор.
     if intent == I.COURSES and conv.lead.age:
         items = recommend(kb, conv.lead.age, conv.selected_format)
         recs = format_recommendations(items)
@@ -189,7 +193,7 @@ async def _route(conv: Conversation, text: str, kb) -> str:
             conv.stage = STAGE_DISCOVERY
             return recs + "\n\n" + sales.sales_nudge(conv)
 
-    # 8. Во всех прочих случаях — консультативный ответ по базе знаний.
+    # 9. Во всех прочих случаях — консультативный ответ по базе знаний.
     if conv.stage not in (STAGE_DONE,):
         conv.stage = STAGE_DISCOVERY
     return await _consult(conv, text)

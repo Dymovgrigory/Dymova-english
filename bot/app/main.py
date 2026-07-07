@@ -113,6 +113,39 @@ def _miniapp_url() -> str:
     return settings.MINIAPP_BASE_URL.rstrip("/")
 
 
+def _miniapp_user_id(data: dict | None) -> str:
+    if not data:
+        return ""
+    for key in ("user_id", "uid", "session_id"):
+        value = data.get(key)
+        if value:
+            return str(value).strip()
+    return ""
+
+
+def _miniapp_access_state(user_id: str) -> dict:
+    has_identity = bool(user_id)
+    registered = False
+    if has_identity:
+        registered = bool(get_store().get(user_id).registered)
+    locked = has_identity and settings.MINIAPP_REQUIRE_REGISTRATION and not registered
+    message = ""
+    if locked:
+        message = (
+            "Сначала зарегистрируйтесь в чате бота: "
+            "напишите «зарегистрироваться», и я проведу вас по шагам."
+        )
+    elif not has_identity:
+        message = "Откройте miniapp внутри MAX, чтобы связать профиль."
+    return {
+        "user_id": user_id,
+        "has_identity": has_identity,
+        "registered": registered,
+        "locked": locked,
+        "message": message,
+    }
+
+
 def _contextual_buttons(question: str, reply: str) -> list[dict]:
     text = f"{question} {reply}".lower()
     base = _miniapp_url()
@@ -162,8 +195,12 @@ async def api_chat(data: dict) -> dict:
 @app.post("/api/miniapp/homework")
 async def api_homework(
     note: str = Form(default=""),
+    user_id: str = Form(default=""),
     image: UploadFile | None = File(default=None),
 ) -> dict:
+    access = _miniapp_access_state(user_id)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     if image is None or not image.filename:
         return JSONResponse({"detail": "Нужна фотография задания"}, status_code=400)
     content_type = (image.content_type or "").lower()
@@ -557,9 +594,15 @@ def _extract_user_id(update: dict):
 
 # --------- Мини-приложение: API ---------
 
+@app.get("/api/miniapp/access")
+async def miniapp_access(user_id: str = "") -> dict:
+    return _miniapp_access_state(user_id)
+
+
 @app.get("/api/miniapp/info")
-async def miniapp_info() -> dict:
+async def miniapp_info(user_id: str = "") -> dict:
     kb = get_kb()
+    access = _miniapp_access_state(user_id)
     return {
         "company": kb.company,
         "branches": kb.branches,
@@ -567,11 +610,15 @@ async def miniapp_info() -> dict:
         "age_programs": kb.age_programs,
         "courses": kb.courses,
         "social": kb.social,
+        "access": access,
     }
 
 
 @app.get("/api/miniapp/recommend")
-async def miniapp_recommend(age: str = "", fmt: str = "") -> dict:
+async def miniapp_recommend(age: str = "", fmt: str = "", user_id: str = "") -> dict:
+    access = _miniapp_access_state(user_id)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     kb = get_kb()
     items = recommend(kb, age or None, fmt or None)
     return {"recommendations": items}
@@ -580,6 +627,10 @@ async def miniapp_recommend(age: str = "", fmt: str = "") -> dict:
 @app.post("/api/miniapp/lead")
 async def miniapp_lead(data: dict) -> dict:
     """Приём заявки из мини-приложения и отправка в BigBen CRM."""
+    user_id = _miniapp_user_id(data)
+    access = _miniapp_access_state(user_id)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     lead = Lead(
         fio_parent=str(data.get("fio_parent", ""))[:255],
         fio_child=str(data.get("fio_child", ""))[:255],
