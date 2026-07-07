@@ -135,3 +135,27 @@ async def test_objection_route_uses_llm(monkeypatch):
 
     assert fake.calls, "ожидали вызов LLM для возражения"
     assert "подберём" in reply.lower()
+
+
+@pytest.mark.asyncio
+async def test_factual_questions_do_not_use_llm_or_invent_prices(monkeypatch):
+    class FakeKB:
+        def search(self, query, limit=5):
+            return []
+
+        def context_for(self, query, limit=5):
+            return ""
+
+    class FakeLLM:
+        enabled = True
+
+        async def complete(self, messages, temperature=None):
+            raise AssertionError("LLM should not be called for factual questions")
+
+    monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB())
+    monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
+
+    reply = await handle_message("quality-factual", "Сколько стоит обучение?")
+
+    assert "10500" not in reply
+    assert "не хочу придумывать" in reply.lower() or "не нашёл" in reply.lower()

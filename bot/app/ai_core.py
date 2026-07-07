@@ -35,6 +35,8 @@ from app.admin_router import hand_off
 
 logger = logging.getLogger(__name__)
 
+_FACTUAL_INTENTS = {I.PRICE, I.COURSES, I.CONTACTS, I.ABOUT}
+
 
 def _capture_entities(conv: Conversation, text: str) -> None:
     """Опортунистически вытаскиваем возраст/телефон/формат из любого сообщения."""
@@ -80,6 +82,35 @@ def _handoff_followup_reply(conv: Conversation, text: str) -> str:
         "Вопрос уже у администратора, он скоро подключится. Если хотите, могу пока подсказать по курсам или расписанию. 😊",
     ]
     return variants[len(conv.history) % len(variants)]
+
+
+def _grounded_fact_reply(kb, text: str, intent: str) -> str:
+    docs = kb.search(text, limit=4)
+    if not docs:
+        return (
+            "Проверил сайт и соцсети, но не нашёл подтверждённых данных по "
+            "этому вопросу. Не хочу придумывать цифры или факты. Могу "
+            "передать вопрос администратору."
+        )
+
+    title_map = {
+        I.PRICE: "Вот подтверждённые данные по стоимости с сайта и соцсетей:",
+        I.CONTACTS: "Вот подтверждённые контакты и филиалы с сайта и соцсетей:",
+        I.COURSES: "Вот подтверждённые программы и направления с сайта и соцсетей:",
+        I.ABOUT: "Вот подтверждённые факты о школе с сайта и соцсетей:",
+    }
+    lines = [title_map.get(intent, "Вот что удалось подтвердить на сайте и в соцсетях:")]
+    for doc in docs:
+        lines.append(f"• {doc.title}: {doc.text}")
+    if intent == I.PRICE:
+        lines.append("Если хотите, я ещё уточню стоимость по возрасту и формату.")
+    elif intent == I.CONTACTS:
+        lines.append("Если нужно, подскажу, какой филиал ближе.")
+    elif intent == I.COURSES:
+        lines.append("Если скажете возраст, подберу подходящую программу.")
+    elif intent == I.ABOUT:
+        lines.append("Если хотите, отдельно соберу факты по методике, лицензии или результатам.")
+    return "\n".join(lines)
 
 
 async def _consult_with_context(conv: Conversation, text: str, kb_context: str) -> str:
@@ -166,6 +197,10 @@ async def _route(conv: Conversation, text: str, kb) -> str:
         if get_llm().enabled:
             return await _consult_with_context(conv, text, sales.handle_objection(kb, key))
         return sales.handle_objection(kb, key)
+
+    if intent in _FACTUAL_INTENTS:
+        conv.stage = STAGE_DISCOVERY
+        return _grounded_fact_reply(kb, text, intent)
 
     # 5. Явное намерение открыть кабинет — запускаем регистрацию.
     if intent == I.REGISTER:
