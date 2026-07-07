@@ -137,6 +137,13 @@ class KnowledgeBase:
                       f"ВКонтакте: {social.get('vk','')}. MAX-бот: {social.get('max_bot','')}. "
                       f"MAX-канал: {social.get('max_channel','')}")
 
+        for src in r.get("sources", []):
+            title = src.get("title", "Источник").strip()
+            url = src.get("url", "").strip()
+            text = src.get("text", "").strip()
+            parts = [p for p in (text, f"URL: {url}" if url else "") if p]
+            self._add("sources", title, " ".join(parts))
+
     # ---------- поиск ----------
     def search(self, query: str, limit: int = 5) -> list[Document]:
         q_tokens = set(_tokens(query))
@@ -181,6 +188,10 @@ class KnowledgeBase:
     @property
     def social(self) -> dict:
         return self.raw.get("social", {})
+
+    @property
+    def sources(self) -> list[dict]:
+        return self.raw.get("sources", [])
 
     @property
     def company(self) -> dict:
