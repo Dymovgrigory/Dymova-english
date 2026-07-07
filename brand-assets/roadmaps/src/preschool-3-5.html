@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дошкольники 3–5 лет — Дорожная карта</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: 1200px;
+  min-height: 1680px;
+  padding: 40px 50px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(52,211,153,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.page::after {
+  content: '';
+  position: absolute;
+  bottom: -150px;
+  left: -150px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(52,211,153,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.title-block h1 {
+  font-size: 42px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.title-block .subtitle {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 4px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.badges {
+  display: flex;
+  gap: 10px;
+}
+
+.badge {
+  padding: 8px 18px;
+  border-radius: 25px;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}
+
+.path-label {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 22px;
+  opacity: 0.9;
+}
+
+.quarter-section {
+  margin-bottom: 8px;
+}
+
+.quarter-header {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  opacity: 0.85;
+}
+
+.months-row {
+  display: flex;
+  gap: 16px;
+}
+
+.month-card {
+  flex: 1;
+  border-radius: 16px;
+  padding: 18px 16px 14px;
+  border: 1px solid;
+  backdrop-filter: blur(10px);
+}
+
+.month-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.month-emoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.month-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.month-items {
+  list-style: none;
+  padding: 0;
+}
+
+.month-items li {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.55;
+  padding: 2.5px 0 2.5px 16px;
+  position: relative;
+}
+
+.month-items li::before {
+  content: '\2022';
+  position: absolute;
+  left: 0;
+  color: #34d399;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.arrow {
+  text-align: center;
+  font-size: 28px;
+  margin: 6px 0;
+  opacity: 0.6;
+}
+
+.footer {
+  text-align: right;
+  color: rgba(255,255,255,0.35);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-top: 15px;
+  padding-right: 5px;
+}
+
+</style>
+</head>
+<body>
+<div class="page" style="background: linear-gradient(135deg, #0a2818 0%, #133a28 50%, #0a2818 100%);">
+  <div class="header">
+    <div class="logo-title">
+      <div class="title-block">
+        <h1>Дошкольники 3–5 лет</h1>
+        <p class="subtitle">Дорожная карта обучения на учебный год</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge" style="background: #34d399;">&#128118; 3–5 лет</span>
+      <span class="badge" style="background: #34d399;">&#127891; Starter</span>
+    </div>
+  </div>
+
+  <div class="path-label" style="color: #34d399;">&#9679; &#9679; &#9679; &nbsp; ПУТЬ УЧЕНИКА &nbsp; &#9679; &#9679; &#9679;</div>
+
+  <div class="quarter-section">
+    <div class="quarter-header" style="color: #34d399;">I ЧЕТВЕРТЬ &#8226; СЕНТЯБРЬ — НОЯБРЬ</div>
+    <div class="months-row">
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">🎒</span>
+          <span class="month-name">Сентябрь</span>
+        </div>
+        <ul class="month-items">
+          <li>Приветствия, цвета, числа</li>
+          <li>Игрушки и предлоги</li>
+          <li>Эмоции</li>
+          <li>Звуки C, A, T, B, I, G</li>
+          <li>Фигуры, сортировка</li>
+        </ul>
+      </div>
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">🎃</span>
+          <span class="month-name">Октябрь</span>
+        </div>
+        <ul class="month-items">
+          <li>Домашние животные (Brown Bear)</li>
+          <li>Дикие животные (Dear Zoo)</li>
+          <li>Животные на ферме</li>
+          <li>Halloween</li>
+          <li>Звуки P, O, M, D, E, N</li>
+          <li>Счёт 1–10</li>
+        </ul>
+      </div>
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">🍂</span>
+          <span class="month-name">Ноябрь</span>
+        </div>
+        <ul class="month-items">
+          <li>Семья, детёныши животных</li>
+          <li>Книга The Enormous Turnip</li>
+          <li>Части тела</li>
+          <li>Звуки F, R, H, K, S, U, L</li>
+          <li>Сравнение: больше/меньше</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="arrow" style="color: #34d399;">&#10515;</div>
+  <div class="quarter-section">
+    <div class="quarter-header" style="color: #34d399;">II ЧЕТВЕРТЬ &#8226; ДЕКАБРЬ — ФЕВРАЛЬ</div>
+    <div class="months-row">
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">⛄</span>
+          <span class="month-name">Декабрь</span>
+        </div>
+        <ul class="month-items">
+          <li>Части тела и лица</li>
+          <li>Здоровье, визит к доктору</li>
+          <li>Рождество и Новый год</li>
+          <li>Звуки J, V, Y</li>
+          <li>Вес и измерения</li>
+        </ul>
+      </div>
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">❄️</span>
+          <span class="month-name">Январь</span>
+        </div>
+        <ul class="month-items">
+          <li>Одежда</li>
+          <li>Погода и времена года</li>
+          <li>Звуки X, Q, W, Z</li>
+          <li>Простое сложение до 10</li>
+        </ul>
+      </div>
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">💜</span>
+          <span class="month-name">Февраль</span>
+        </div>
+        <ul class="month-items">
+          <li>Мой дом: комнаты, мебель</li>
+          <li>Книга The Three Little Pigs</li>
+          <li>Действия и предлоги</li>
+          <li>Книга Fox's Socks</li>
+          <li>Чтение: семейства слов -at, -ad</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="arrow" style="color: #34d399;">&#10515;</div>
+  <div class="quarter-section">
+    <div class="quarter-header" style="color: #34d399;">III ЧЕТВЕРТЬ &#8226; МАРТ — МАЙ</div>
+    <div class="months-row">
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">🌸</span>
+          <span class="month-name">Март</span>
+        </div>
+        <ul class="month-items">
+          <li>Фрукты и овощи</li>
+          <li>Еда и покупки</li>
+          <li>Чтение: семейства слов -an, -ip</li>
+          <li>Паттерны и графики</li>
+        </ul>
+      </div>
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">🌿</span>
+          <span class="month-name">Апрель</span>
+        </div>
+        <ul class="month-items">
+          <li>Мой город, профессии</li>
+          <li>Пасха (Easter)</li>
+          <li>Повторение пройденного</li>
+          <li>Чтение: семейства слов -id, -ig</li>
+          <li>Направления: лево/право</li>
+        </ul>
+      </div>
+      <div class="month-card" style="background: rgba(255,255,255,0.06); border-color: rgba(52,211,153,0.25);">
+        <div class="month-header">
+          <span class="month-emoji">☀️</span>
+          <span class="month-name">Май</span>
+        </div>
+        <ul class="month-items">
+          <li>Насекомые и цветы</li>
+          <li>Подготовка к концу года</li>
+          <li>Песни и стихи на английском</li>
+          <li>Финальное тестирование</li>
+          <li>Здравствуй, лето!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Фоксинбург</div>
+</div>
+</body>
+</html>
