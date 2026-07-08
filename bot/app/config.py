@@ -78,6 +78,11 @@ class Settings(BaseSettings):
     DIGEST_TZ_OFFSET: int = 3  # МСК
     DIGEST_DAYS: int = 1
 
+    # --- Живая синхронизация KB с сайтом ---
+    SITE_SYNC_ENABLED: bool = True
+    SITE_SYNC_URLS: str = ""  # список URL через запятую; пусто = главная сайта
+    SITE_SYNC_INTERVAL_MIN: int = 60
+
     # --- Telegram ---
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_PROXY_URL: str = ""
