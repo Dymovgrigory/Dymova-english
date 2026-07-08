@@ -40,10 +40,10 @@ class Settings(BaseSettings):
 
     # --- BigBen CRM ---
     # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
-    BIGBEN_API_URL: str = ""
+    BIGBEN_API_URL: str = "https://panel.bigbencrm.ru/api/leads/add"
     BIGBEN_API_KEY: str = ""
-    BIGBEN_PIPELINE_ID: str = ""
-    BIGBEN_PIPELINE_STATUS_ID: str = ""
+    BIGBEN_PIPELINE_ID: str = "1924"
+    BIGBEN_PIPELINE_STATUS_ID: str = "1"
 
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""
