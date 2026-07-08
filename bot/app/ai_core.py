@@ -17,7 +17,7 @@ from app import registration
 from app.bigben import get_bigben
 from app.course_selector import format_recommendations, recommend
 from app.config import settings
-from app.knowledge.kb import get_kb
+from app.knowledge.kb import get_kb, _stem, _tokens
 from app.llm import get_llm
 from app.max_client import get_max
 from app.memory import (
@@ -53,6 +53,12 @@ _NEGATIVE_MOOD = {
     "сбой",
     "ошиб",
 }
+
+_TEAM_TRIGGER_RE = re.compile(
+    r"педагог|учител|препода|видеовизит|визитк|фрагмент.{0,15}урок|кто ведёт|кто ведет",
+    re.IGNORECASE,
+)
+_TEAM_LANGS = (("англ", "английск"), ("немец", "немецк"), ("китай", "китайск"))
 
 _UNKNOWN_MARKER = "[UNKNOWN]"
 _UNCERTAIN_RE = re.compile(
@@ -293,6 +299,13 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             return await _consult_with_context(conv, text, sales.handle_objection(kb, key, conv))
         return sales.handle_objection(kb, key, conv)
 
+    # 4б. Вопрос о педагогах — структурированный ответ со ссылками на видео.
+    if intent != I.WANT_SIGNUP:
+        team = team_reply(kb, text)
+        if team:
+            conv.stage = STAGE_DISCOVERY
+            return team
+
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY
         if not kb.search(text, limit=1):
@@ -331,6 +344,58 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     if conv.stage not in (STAGE_DONE,):
         conv.stage = STAGE_DISCOVERY
     return await _consult(conv, text)
+
+
+def _teacher_language(about: str) -> str:
+    langs = [full for key, full in _TEAM_LANGS if key in about.lower()]
+    return " и ".join(f"{lang}ий" for lang in langs) if langs else ""
+
+
+def _format_teacher(person: dict) -> str:
+    lang = _teacher_language(person.get("about", ""))
+    header = f"👩‍🏫 {person.get('name', '')}" + (f" — {lang} язык" if lang else "")
+    lines = [header]
+    if person.get("video_intro"):
+        lines.append(f"▶️ Видеовизитка: {person['video_intro']}")
+    if person.get("video_lesson"):
+        lines.append(f"🎬 Фрагмент урока: {person['video_lesson']}")
+    return "\n".join(lines)
+
+
+def team_reply(kb, text: str) -> str | None:
+    """Структурированный ответ о педагогах: ФИО, язык, ссылки на видео каждого."""
+    raw = getattr(kb, "raw", {}) or {}
+    teachers = [p for p in (raw.get("team") or []) if p.get("role") == "Педагог"]
+    if not teachers:
+        return None
+    text_stems = set(_tokens(text))
+
+    named = [
+        p for p in teachers
+        if any(_stem(part) in text_stems for part in p.get("name", "").split())
+    ]
+    if named:
+        cards = "\n\n".join(_format_teacher(p) for p in named)
+        return f"{cards}\n\nЗаписать вас на бесплатную диагностику? 😊"
+
+    if not _TEAM_TRIGGER_RE.search(text):
+        return None
+    low = text.lower()
+    wanted = [full for key, full in _TEAM_LANGS if key in low]
+    if wanted:
+        selected = [
+            p for p in teachers
+            if any(w in p.get("about", "").lower() for w in wanted)
+        ]
+    else:
+        selected = teachers
+    if not selected:
+        return None
+    cards = "\n\n".join(_format_teacher(p) for p in selected)
+    return (
+        f"Наши педагоги:\n\n{cards}\n\n"
+        "Могу записать на бесплатную диагностику — познакомитесь с педагогом лично. 😊"
+    )
 
 
 def _handoff_reply() -> str:
