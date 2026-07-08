@@ -65,3 +65,28 @@ def test_kb_live_documents_searchable():
     kb.set_live_documents([doc])
     found = kb.search("запись на учебный год 2026/27", limit=3)
     assert any(d.category == "site" for d in found)
+
+
+def test_team_reply_lists_teachers_with_links():
+    from app.ai_core import team_reply
+    kb = KnowledgeBase()
+    reply = team_reply(kb, "Кто у вас педагоги английского?")
+    assert reply is not None
+    assert "Саляхова Алина" in reply and "Птицын Владислав" in reply
+    assert "Шевченко" not in reply  # китайский не запрашивали
+    assert "Видеовизитка: https://" in reply
+    assert "Фрагмент урока: https://" in reply
+
+
+def test_team_reply_specific_teacher_by_name_form():
+    from app.ai_core import team_reply
+    kb = KnowledgeBase()
+    reply = team_reply(kb, "А есть видео с Алиной?")
+    assert reply is not None and "Саляхова Алина" in reply
+    assert "Видеовизитка: https://" in reply
+
+
+def test_team_reply_none_for_unrelated():
+    from app.ai_core import team_reply
+    kb = KnowledgeBase()
+    assert team_reply(kb, "Сколько стоит обучение в месяц?") is None
