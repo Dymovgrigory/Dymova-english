@@ -12,3 +12,4 @@ def _disable_registration(monkeypatch):
     by re-enabling it via monkeypatch.
     """
     monkeypatch.setattr(settings, "REGISTRATION_REQUIRED", False)
+    monkeypatch.setattr(settings, "SITE_SYNC_ENABLED", False)

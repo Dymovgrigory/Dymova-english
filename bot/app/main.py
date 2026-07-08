@@ -536,6 +536,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         text = (message.get("body") or {}).get("text", "").strip()
         if not text:
             return
+        _remember_sender(user_id, sender)
         low = text.lower()
         if low in ("/start", "start"):
             reply = await handle_start(user_id)
@@ -609,6 +610,16 @@ def _extract_update_id(update: dict):
         if value:
             return str(value)
     return None
+
+
+def _remember_sender(user_id: str, sender: dict) -> None:
+    conv = get_store().get(user_id)
+    name = str(sender.get("name") or "").strip()
+    username = str(sender.get("username") or "").strip()
+    if name:
+        conv.client_name = name
+    if username:
+        conv.max_username = username
 
 
 def _extract_user_id(update: dict):
