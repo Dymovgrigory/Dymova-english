@@ -175,4 +175,5 @@ async def test_factual_questions_do_not_use_llm_or_invent_prices(monkeypatch):
     reply = await handle_message("quality-factual", "Сколько стоит обучение?")
 
     assert "10500" not in reply
-    assert "не хочу придумывать" in reply.lower() or "не нашёл" in reply.lower()
+    assert "придумывать" in reply.lower()
+    assert "администратор" in reply.lower()

@@ -64,6 +64,18 @@ class Settings(BaseSettings):
     GROUP_CHAT_WHITELIST: str = ""
     NUDGE_DELAY_HOURS: int = 36
     NUDGE_MAX_AGE_HOURS: int = 100
+    NUDGE_ENABLED: bool = True
+    NUDGE_HOUR: int = 11
+    NUDGE_MINUTE: int = 0
+
+    # --- Цикл улучшения: журнал вопросов без ответа и ежедневный отчёт ---
+    # JSONL-журнал вопросов, на которые бот не смог уверенно ответить.
+    INSIGHTS_FILE: str = "./data/insights.jsonl"
+    DIGEST_ENABLED: bool = True
+    DIGEST_HOUR: int = 21
+    DIGEST_MINUTE: int = 0
+    DIGEST_TZ_OFFSET: int = 3  # МСК
+    DIGEST_DAYS: int = 1
 
     # --- Telegram ---
     TELEGRAM_BOT_TOKEN: str = ""
