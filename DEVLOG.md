@@ -1917,3 +1917,21 @@ bot/
 
 **Деплой:** после мержа — на ВМ `git pull && docker compose up -d --build`.
 **Осталось / следующий шаг:** наблюдать `/admin/insights`, дозаполнять KB по топу вопросов.
+
+---
+
+### Сессия 24 (агент — Devin, деплой прода + восстановление Telegram long-polling) — PR #TBD
+
+**Дата:** 2026-07-08
+**PR:** #TBD — fix(bot): восстановлен запуск Telegram long-polling на startup (devin/1783545164-telegram-polling-restore → main)
+**Запрос владельца:** редеплой прода (#116/#117).
+
+**Что сделано:**
+- Прод переразвёрнут из `main` (fb34618): SSH `yc-user@89.169.132.104`, `cd ~/Dymova-english && git pull && cd bot && docker compose -f docker-compose.yml build && up -d`. ВНИМАНИЕ: `docker compose -f docker-compose.prod.yml` поднимает СТАРЫЙ контейнер `foxinburg-maxbot` — им НЕ пользоваться (остановлен обратно). Рабочий контейнер — `bot-bot-1` из `docker-compose.yml`; после пересоздания подключить к сети `foxinburg_foxinburg` (nginx `foxinburg-frontend` → `bot-bot-1:8000`).
+- Проверено: `/health` ok (llm_providers:2, kb_documents:45), `/api/chat` отвечает реальными ценами, `/admin/insights` 200 с токеном / 401 без.
+- НАЙДЕНА РЕГРЕССИЯ: при консолидации `main.py` (после Сессии 16) потерялся запуск `_telegram_poll_loop` на startup и настройка `TELEGRAM_POLLING` — Telegram-бот молчал бы. Исправлено: `TELEGRAM_POLLING: bool = True` в config, запуск поллинга в `_start_scheduler` при настроенном клиенте, устойчивость цикла к ошибкам (лог + sleep 3).
+
+**Как проверено:** `pytest -q` → 160 passed; после деплоя фикса — лог `telegram: запуск long-polling` в контейнере.
+
+**Деплой:** прод обновлён этой сессией (включая фикс поллинга — см. ниже).
+**Осталось / следующий шаг:** наблюдать /admin/insights неделю, дозаполнить KB; фичи №10/№11.

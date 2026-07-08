@@ -81,6 +81,8 @@ class Settings(BaseSettings):
     # --- Telegram ---
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_PROXY_URL: str = ""
+    # long-polling getUpdates вместо вебхука (вебхуки Telegram→РФ блокируются)
+    TELEGRAM_POLLING: bool = True
     TELEGRAM_WEBHOOK_URL: str = ""
     TELEGRAM_WEBHOOK_SECRET: str = ""
 

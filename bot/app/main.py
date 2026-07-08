@@ -55,6 +55,12 @@ async def _start_scheduler() -> None:
     for task in scheduler.start():
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
+    telegram = get_telegram()
+    if settings.TELEGRAM_POLLING and telegram.configured:
+        logger.info("telegram: запуск long-polling")
+        task = asyncio.create_task(_telegram_poll_loop(telegram))
+        _BACKGROUND_TASKS.add(task)
+        task.add_done_callback(_BACKGROUND_TASKS.discard)
 
 
 def _main_menu() -> list[list[dict]]:
@@ -321,7 +327,14 @@ async def _telegram_poll_loop(telegram) -> None:
     await telegram.delete_webhook()
     offset: int | None = None
     while True:
-        updates = await telegram.get_updates(offset=offset, timeout=25)
+        try:
+            updates = await telegram.get_updates(offset=offset, timeout=25)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            logger.exception("telegram: ошибка long-polling")
+            await asyncio.sleep(3)
+            continue
         for update in updates:
             if _schedule_telegram_update(update, telegram):
                 update_id = update.get("update_id")
