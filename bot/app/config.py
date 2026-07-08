@@ -5,6 +5,7 @@
 """
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -89,6 +90,21 @@ class Settings(BaseSettings):
     DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
     DB_PATH: str = "./data/bot.db"
     STATE_FILE: str = ""  # legacy alias для DB_PATH
+
+    @field_validator(
+        "LLM_API_KEY",
+        "MAX_BOT_TOKEN",
+        "BIGBEN_API_KEY",
+        "ADMIN_TOKEN",
+        "TELEGRAM_BOT_TOKEN",
+        "MAX_WEBHOOK_SECRET",
+        "TELEGRAM_WEBHOOK_SECRET",
+        mode="before",
+    )
+    @classmethod
+    def _strip_secret(cls, v: object) -> object:
+        # Пробелы/переводы строк в ключах ломают HTTP-заголовки провайдеров.
+        return v.strip() if isinstance(v, str) else v
 
     @property
     def admin_ids(self) -> list[str]:
