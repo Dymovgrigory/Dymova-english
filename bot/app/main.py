@@ -267,10 +267,6 @@ def _telegram_buttons(text: str, reply: str) -> list[list[dict]]:
     return [[button] for button in buttons]
 
 
-def _button_rows(text: str, reply: str) -> list[list[dict]]:
-    return [[button] for button in _contextual_buttons(text, reply)]
-
-
 def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
     return [[link_button(button["title"], button["url"])] for button in _contextual_buttons(text, reply)]
 
@@ -564,7 +560,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
         else:
             reply = await handle_message(user_id, text)
-            await max_client.send_message(user_id, reply, buttons=_button_rows(text, reply) or None)
+            await max_client.send_message(user_id, reply, buttons=_link_button_rows(text, reply) or None)
         return
 
     if update_type == "message_callback":

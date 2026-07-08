@@ -297,6 +297,8 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
         conv.stage = STAGE_DISCOVERY
         if not kb.search(text, limit=1):
             return await _refer_to_admin(conv, text, reason="no_kb_match", score=0.0)
+        if get_llm().enabled:
+            return await _consult(conv, text)
         return _grounded_fact_reply(kb, text, intent)
 
     # 5. Явное намерение открыть кабинет — запускаем регистрацию.
