@@ -145,7 +145,7 @@ class KnowledgeBase:
             self._add("sources", title, " ".join(parts))
 
     # ---------- поиск ----------
-    def search(self, query: str, limit: int = 5) -> list[Document]:
+    def search_scored(self, query: str, limit: int = 5) -> list[tuple[float, Document]]:
         q_tokens = set(_tokens(query))
         if not q_tokens:
             return []
@@ -162,7 +162,10 @@ class KnowledgeBase:
                 score += 0.1
             scored.append((score, doc))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [d for _, d in scored[:limit]]
+        return scored[:limit]
+
+    def search(self, query: str, limit: int = 5) -> list[Document]:
+        return [d for _, d in self.search_scored(query, limit=limit)]
 
     def context_for(self, query: str, limit: int = 5) -> str:
         docs = self.search(query, limit=limit)

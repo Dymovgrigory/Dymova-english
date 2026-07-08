@@ -25,7 +25,9 @@ from app.config import settings
 from app.course_selector import recommend
 from app import intent as I
 from app import group_chat
+from app import insights
 from app import nudge
+from app import scheduler
 from app.knowledge.kb import get_kb
 from app.observability import init_sentry
 from app.llm import get_llm
@@ -46,6 +48,13 @@ app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
 _BACKGROUND_TASKS: set[asyncio.Task] = set()
+
+
+@app.on_event("startup")
+async def _start_scheduler() -> None:
+    for task in scheduler.start():
+        _BACKGROUND_TASKS.add(task)
+        task.add_done_callback(_BACKGROUND_TASKS.discard)
 
 
 def _main_menu() -> list[list[dict]]:
@@ -391,6 +400,20 @@ async def admin_broadcast_send(request: Request, data: dict) -> dict:
         branch=str(data.get("branch", "")) or None,
     )
     return await broadcast.send_broadcast(get_max(), recipients, str(data.get("text", "")))
+
+
+@app.get("/admin/insights")
+async def admin_insights(request: Request, days: int = 7, top: int = 20) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return insights.summarize(days=days, top=top)
+
+
+@app.post("/admin/digest/send")
+async def admin_digest_send(request: Request) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return {"sent": await scheduler.send_digest_now()}
 
 
 @app.get("/admin/users")

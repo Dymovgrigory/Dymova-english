@@ -29,6 +29,7 @@ from app.memory import (
     STAGE_OBJECTION,
     get_store,
 )
+from app import insights
 from app import sales
 from app import lead_manager
 from app.admin_router import hand_off
@@ -52,6 +53,16 @@ _NEGATIVE_MOOD = {
     "сбой",
     "ошиб",
 }
+
+_UNKNOWN_MARKER = "[UNKNOWN]"
+_UNCERTAIN_RE = re.compile(
+    r"не обладаю (?:такой |этой |данной )?информаци|"
+    r"нет (?:точной |такой |этой )?информаци|"
+    r"не наш[ёе]л точных данных|не могу сказать точно|"
+    r"лучше уточнить у администратор|уточните у администратор",
+    re.IGNORECASE,
+)
+_WEAK_KB_SCORE = 0.34
 
 _TOPIC_MAP = {
     I.PRICE: "цены",
@@ -159,6 +170,29 @@ def _grounded_fact_reply(kb, text: str, intent: str) -> str:
     return "\n".join(lines)
 
 
+def _is_uncertain_reply(reply: str) -> bool:
+    return reply.lstrip().startswith(_UNKNOWN_MARKER) or bool(_UNCERTAIN_RE.search(reply))
+
+
+async def _refer_to_admin(conv: Conversation, text: str, reason: str, score: float) -> str:
+    """Мягкий перевод на администратора при вопросе без подтверждённого ответа.
+
+    Вопрос логируется в журнал пробелов (insights), администраторы получают
+    уведомление с контекстом, но диалог не блокируется — бот продолжает
+    помогать по остальным темам.
+    """
+    insights.log_gap(text, reason=reason, score=score, user_id=conv.user_id)
+    await hand_off(get_max(), conv, reason="бот не знал точного ответа")
+    conv.stage = STAGE_DISCOVERY
+    return (
+        f"{_empathy_prefix(conv)}Хороший вопрос! Честно скажу: точной информации "
+        "по нему у меня нет, а придумывать не хочу. Я уже передал ваш вопрос "
+        "администратору — он скоро ответит здесь. Если срочно, можно позвонить: "
+        "8 993 923-23-09 (Лихачевский) или 8 916 732-31-69 (Ракетостроителей). "
+        "А пока могу помочь с курсами, ценами или записью на диагностику. 😊"
+    )
+
+
 def _empathy_prefix(conv: Conversation) -> str:
     if conv.last_user_mood == "needs_empathy":
         return "Понимаю, это важно. "
@@ -167,7 +201,9 @@ def _empathy_prefix(conv: Conversation) -> str:
     return ""
 
 
-async def _consult_with_context(conv: Conversation, text: str, kb_context: str) -> str:
+async def _consult_with_context(
+    conv: Conversation, text: str, kb_context: str, kb_score: float = 1.0
+) -> str:
     kb = get_kb()
     llm = get_llm()
     if llm.enabled:
@@ -177,25 +213,26 @@ async def _consult_with_context(conv: Conversation, text: str, kb_context: str) 
         messages.extend(conv.history[-history_turns:])
         reply = await llm.complete(messages)
         if reply:
+            if _is_uncertain_reply(reply):
+                return await _refer_to_admin(conv, text, reason="llm_uncertain", score=kb_score)
             return reply
     if kb_context:
         return (
             f"{_empathy_prefix(conv)}Вот что у меня есть по вашему вопросу:\n\n"
             f"{kb_context}\n\n{sales.sales_nudge(conv)}"
         )
-    return (
-        f"{_empathy_prefix(conv)}Чтобы ответить точно, подскажите, пожалуйста, "
-        "возраст ребёнка и удобный формат (онлайн/офлайн). А можно сразу "
-        "записаться на бесплатную диагностику — администратор всё подробно "
-        "расскажет. 😊"
-    )
+    return await _refer_to_admin(conv, text, reason="no_answer", score=0.0)
 
 
 async def _consult(conv: Conversation, text: str) -> str:
     """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
     kb = get_kb()
-    kb_context = kb.context_for(text, limit=5)
-    return await _consult_with_context(conv, text, kb_context)
+    scored = kb.search_scored(text, limit=5)
+    kb_context = "\n\n".join(doc.render() for _, doc in scored)
+    top_score = scored[0][0] if scored else 0.0
+    if scored and top_score < _WEAK_KB_SCORE:
+        insights.log_gap(text, reason="weak_kb_match", score=top_score, user_id=conv.user_id)
+    return await _consult_with_context(conv, text, kb_context, kb_score=top_score)
 
 
 async def handle_message(user_id: str, text: str) -> str:
@@ -258,6 +295,8 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
 
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY
+        if not kb.search(text, limit=1):
+            return await _refer_to_admin(conv, text, reason="no_kb_match", score=0.0)
         return _grounded_fact_reply(kb, text, intent)
 
     # 5. Явное намерение открыть кабинет — запускаем регистрацию.
