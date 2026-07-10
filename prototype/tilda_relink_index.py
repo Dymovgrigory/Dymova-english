@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""На копии главной (/index-new) заменить курс-ссылки на новые копии.
+"""На главной заменить устаревшие курс-ссылки с суффиксом -new на канонические.
 
-/reading -> /reading-new, /grammar -> /grammar-new, /preparation -> /preparation-new
+/reading-new -> /reading, /grammar-new -> /grammar, /preparation-new -> /preparation
 Меняем только в 2 видимых кастомных T123-блоках (шапка + блок направлений).
 Сырой код берём из опубликованного HTML между маркерами nominify (дословно).
 """
@@ -16,9 +16,9 @@ SITE = "https://dymova-english.ru"
 RECORDS = ["2421794631", "2422572651"]
 
 REPL = [
-    ('href="/reading"', 'href="/reading-new"'),
-    ('href="/grammar"', 'href="/grammar-new"'),
-    ('href="/preparation"', 'href="/preparation-new"'),
+    ('href="/reading-new"', 'href="/reading"'),
+    ('href="/grammar-new"', 'href="/grammar"'),
+    ('href="/preparation-new"', 'href="/preparation"'),
 ]
 
 

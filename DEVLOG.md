@@ -1996,3 +1996,51 @@ bot/
 
 **Деплой:** после мержа — стандартный редеплой (git pull, docker compose build && up -d, контейнер bot-bot-1, при пересоздании подключить сеть foxinburg_foxinburg).
 **Осталось / следующий шаг:** живая проверка в MAX владельцем.
+
+---
+
+### Сессия 25 (Kimi Code CLI) — канонические URL для курсовых страниц
+
+**Дата:** 2026-07-09
+**Запрос владельца:** «Нужно переименовать адреса сайтов: с NEW на /, а старые поставить OLD. Страницы, что сейчас открываются, правильные, но нужен адрес просто /reading и т.д.»
+
+**Контекст:**
+- Новые страницы с единым дизайном были выложены на URL `/reading-new`, `/grammar-new`, `/preparation-new`.
+- Старые оригиналы занимали канонические URL `/reading`, `/grammar`, `/preparation`, но устарели.
+- Владелец потребовал сделать новые страницы доступными по каноническим URL, а старые — по URL с суффиксом `-old`.
+
+**Что сделано:**
+- Обновлены прототипы навигации:
+  - `prototype/tilda_shapka.html` — ссылки `/reading-new` → `/reading`, `/grammar-new` → `/grammar`, `/preparation-new` → `/preparation`.
+  - `prototype/tilda_footer.html` — аналогично.
+  - `prototype/tilda_blocks_min/tilda_footer_min.html` — минифицированная версия подвала синхронизирована.
+- Обновлены скрипты публикации/синхронизации с Tilda:
+  - `prototype/tilda_update_nav.py` — aliases новых страниц изменены на `reading`, `grammar`, `preparation`.
+  - `prototype/tilda_upload_copies.py` — aliases и докстринги приведены в соответствие.
+  - `prototype/tilda_relink_index.py` — направление замены инвертировано: `/reading-new` → `/reading` и т.д.
+  - `prototype/tilda_set_settings.py` — добавлены настройки для всех 6 страниц:
+    - новые: `/reading` (151292376), `/grammar` (151292406), `/preparation` (151292476);
+    - старые архивы: `/reading-old` (137726126), `/grammar-old` (137739566), `/preparation-old` (130390566).
+- Обновлена документация:
+  - `wiki/02-arhitektura.md` — отражены канонические URL и архивные `-old` копии.
+
+**Как применено в Tilda:**
+1. Через Kimi WebBridge (Chrome уже был авторизован в Tilda) запущен новый скрипт `prototype/tilda_set_settings_webbridge.py`.
+2. Установлены канонические alias'ы для новых страниц:
+   - `151292376` → `/reading`
+   - `151292406` → `/grammar`
+   - `151292476` → `/preparation`
+3. Опубликованы страницы скриптом `prototype/tilda_publish_pages_webbridge.py`.
+4. Обновлены шапка/подвал на всех 22 страницах сайта скриптом `prototype/tilda_update_nav_webbridge.py` и опубликованы.
+5. Проверены живые URL:
+   - `curl -I https://dymova-english.ru/reading` → 200 ✅
+   - `curl -I https://dymova-english.ru/grammar` → 200 ✅
+   - `curl -I https://dymova-english.ru/preparation` → 200 ✅
+   - `curl -I https://dymova-english.ru/reading-new` → 404 ✅
+   - `curl -I https://dymova-english.ru/grammar-new` → 404 ✅
+   - `curl -I https://dymova-english.ru/preparation-new` → 404 ✅
+
+**Примечание:** старые оригиналы (`137726126`, `137739566`, `130390566`) оказались в корзине Tilda, поэтому канонические URL были свободны и не потребовалось восстанавливать их как `-old`. Если в будущем понадобится архивная копия, её можно восстановить из корзины и задать alias с суффиксом `-old`.
+
+**Деплой:** изменения касаются только репозитория и Tilda-настроек; бэкенд/бот не затронуты.
+**Осталось / следующий шаг:** продолжить работу над скоростью/SEO (WebP, lazy-load, CLS) — следующий приоритет владельца.

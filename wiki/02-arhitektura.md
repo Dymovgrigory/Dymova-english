@@ -27,13 +27,20 @@
 
 ### Подстраницы
 
-Служебные копии и их `pageid`:
+Канонические URL и их `pageid`:
 
-- `/reading` — `151292376` — `reading-new`
-- `/grammar` — `151292406` — `grammar-new`
-- `/preparation` — `151292476` — `preparation-new`
+- `/reading` — `151292376`
+- `/grammar` — `151292406`
+- `/preparation` — `151292476`
+
+Старые оригиналы переехали на архивные URL:
+
+- `/reading-old` — `137726126`
+- `/grammar-old` — `137739566`
+- `/preparation-old` — `130390566`
 
 Скрипт: [`prototype/tilda_upload_copies.py`](../prototype/tilda_upload_copies.py).
+Для смены alias'ов используется [`prototype/tilda_set_settings.py`](../prototype/tilda_set_settings.py).
 
 ### Логика модалки заявки
 
