@@ -2044,3 +2044,32 @@ bot/
 
 **Деплой:** изменения касаются только репозитория и Tilda-настроек; бэкенд/бот не затронуты.
 **Осталось / следующий шаг:** продолжить работу над скоростью/SEO (WebP, lazy-load, CLS) — следующий приоритет владельца.
+
+---
+
+### Сессия 25b (Kimi Code CLI) — WebP для брендовых изображений в навигации
+
+**Дата:** 2026-07-10
+**Запрос владельца:** «сначала 3 и 2» — после фикса URL перейти к скорости/SEO.
+
+**Что сделано:**
+- Сконвертированы ключевые брендовые PNG в WebP:
+  - `fox-head-yellow.png` 138.5K → `fox-head-yellow.webp` 50.2K (−64%)
+  - `fox-head-purple.png` 138.3K → `fox-head-purple.webp` 47.2K (−66%)
+  - `decor-swirl-yellow-1.png` 64K → `.webp` 8.8K (−86%)
+  - `decor-swirl-yellow-2.png` 74.5K → `.webp` 26.1K (−65%)
+  - `decor-zigzag-yellow.png` 59.7K → `.webp` 17.2K (−71%)
+  - `decor-blob-yellow.png` 38K → `.webp` 10.3K (−73%)
+- Обновлены ссылки в прототипах: `tilda_header_unified.html`, `tilda_shapka.html`, `tilda_footer.html`, `tilda_cta_enrollment.html`, `tilda_slogan.html`, `tilda_pricing_enrollment.html`, `tilda_team.html`, `main_combined_v7.html`.
+- Пересобраны minified-блоки (`make all`) и выложены в Tilda через `tilda_update_nav_webbridge.py` на все 22 страницы.
+
+**Как проверено:**
+- `curl` по `/`, `/reading`, `/grammar`, `/preparation`, `/doshkolniki`, `/oge-anglijskij`:
+  - 0 ссылок с суффиксом `-new`;
+  - 5–7 WebP-изображений на странице (в шапке/подвале).
+
+**Деплой:** изменения закоммичены (`71aa941`) и запушены в `main`.
+**Осталось / следующий шаг:**
+- Развернуть WebP и в контент-блоках главной страницы (team, pricing, CTA, directions и др.), чтобы снизить LCP.
+- Добавить `loading="lazy"`/`fetchpriority="low"` декоративным изображениям.
+- Перейти к крупным пунктам аудита: отложенная загрузка карт/форм, font-display swap, фиксация CLS.
