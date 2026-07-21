@@ -15,3 +15,28 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
+  telegram-bootstrap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      bot:
+        condition: service_healthy
+    command: ["python", "-m", "app.telegram_bootstrap"]
+    restart: "no"
+
+  telegram-poller:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      bot:
+        condition: service_healthy
+    command: ["python", "-m", "app.telegram_poller"]
+    restart: unless-stopped
+    profiles: ["polling"]

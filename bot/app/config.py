@@ -63,6 +63,7 @@ class Settings(BaseSettings):
     TELEGRAM_PROXY_URL: str = ""
     TELEGRAM_WEBHOOK_URL: str = ""
     TELEGRAM_WEBHOOK_SECRET: str = ""
+    TELEGRAM_ADMIN_IDS: str = ""
 
     # --- Прочее ---
     REGISTRATION_REQUIRED: bool = False
@@ -74,6 +75,10 @@ class Settings(BaseSettings):
     @property
     def admin_ids(self) -> list[str]:
         return [x.strip() for x in self.ADMIN_MAX_IDS.split(",") if x.strip()]
+
+    @property
+    def telegram_admin_ids(self) -> list[str]:
+        return [x.strip() for x in self.TELEGRAM_ADMIN_IDS.split(",") if x.strip()]
 
     @property
     def group_chat_whitelist(self) -> set[int]:
