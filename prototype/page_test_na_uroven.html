@@ -1,0 +1,254 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<div id="fxb-test">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Бесплатно · 2 минуты</span>
+      <h1 class="fxb-h2">Тест на <span class="fxb-accent">уровень английского</span></h1>
+      <p class="fxb-sub">24 вопроса по грамматике и лексике — узнайте свой уровень от A1 до C2 прямо сейчас.</p>
+    </div>
+
+    <div class="fxb-card" id="fxbTestQuiz">
+      <div class="fxb-card-head">
+        <div class="fxb-progress-wrap"><div class="fxb-progress" id="fxbTestProgress"></div></div>
+      </div>
+      <div class="fxb-card-body">
+        <div class="fxb-qlevel" id="fxbTestLevel"></div>
+        <div class="fxb-question" id="fxbTestQuestion"></div>
+        <div class="fxb-opts" id="fxbTestOpts"></div>
+        <div class="fxb-nav">
+          <button class="fxb-back" id="fxbTestBack" type="button">← Назад</button>
+          <button class="fxb-next" id="fxbTestNext" type="button">Далее →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fxb-card" id="fxbTestResult" hidden>
+      <div class="fxb-result">
+        <div class="fxb-badge" id="fxbTestBadge"></div>
+        <h3 id="fxbTestResultTitle"></h3>
+        <p id="fxbTestResultText"></p>
+        <button class="fxb-cta" id="fxbTestCta" data-fxb-zayavka data-fxb-subject="Тест на уровень" data-fxb-window="" role="button" tabindex="0">Записаться на разбор результата →</button>
+        <p class="fxb-cta-note">Разбор проведёт методист школы Коваленко Елизавета</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #fxb-test{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1000px 500px at 50% 0%,rgba(102,45,146,.08),transparent 55%),#f4f1fa;}
+  #fxb-test *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-test .fxb-section{max-width:640px;margin:0 auto;padding:90px 24px 100px}
+  #fxb-test .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px}
+  #fxb-test .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-test .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:44px}
+  #fxb-test .fxb-h2{font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.1;letter-spacing:-.02em}
+  #fxb-test .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-test .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.32em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-test .fxb-sub{max-width:440px;color:var(--muted);font-size:16px;font-weight:500}
+
+  #fxb-test .fxb-card{background:#fff;border-radius:22px;border:1px solid rgba(57,40,82,.08);box-shadow:0 16px 36px -20px rgba(57,40,82,.4);overflow:hidden}
+  #fxb-test .fxb-card-head{background:linear-gradient(135deg,var(--purple-2),var(--purple-3));padding:20px 26px;color:#fff}
+  #fxb-test .fxb-progress-wrap{height:6px;background:rgba(255,255,255,.25);border-radius:100px;margin-top:12px;overflow:hidden}
+  #fxb-test .fxb-progress{height:100%;background:var(--yellow);border-radius:100px;width:0%;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+  #fxb-test .fxb-card-body{padding:28px 26px}
+  #fxb-test .fxb-qlevel{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px}
+  #fxb-test .fxb-question{font-size:18px;font-weight:800;line-height:1.35;margin-bottom:22px;min-height:50px}
+  #fxb-test .fxb-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+  #fxb-test .fxb-opt{text-align:left;border:1.5px solid rgba(57,40,82,.14);background:#faf8fd;border-radius:14px;padding:13px 16px;font-family:inherit;font-weight:600;font-size:14.5px;color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s}
+  #fxb-test .fxb-opt:hover{border-color:rgba(102,45,146,.35);background:#f4f1fa}
+  #fxb-test .fxb-opt.fxb-selected{border-color:var(--purple-2);background:rgba(102,45,146,.08);font-weight:800}
+  #fxb-test .fxb-nav{display:flex;justify-content:space-between;align-items:center}
+  #fxb-test .fxb-back{background:none;border:0;color:var(--muted);font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+  #fxb-test .fxb-next{border:0;background:linear-gradient(135deg,var(--orange),#f5a06f);color:#fff;font-weight:800;font-size:14px;padding:12px 26px;border-radius:100px;cursor:pointer;opacity:.4;pointer-events:none;transition:opacity .2s;font-family:inherit}
+  #fxb-test .fxb-next.fxb-active{opacity:1;pointer-events:auto}
+
+  #fxb-test .fxb-result{padding:36px 30px;text-align:center}
+  #fxb-test .fxb-badge{width:88px;height:88px;border-radius:24px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));display:grid;place-items:center;margin:0 auto 18px;font-size:30px;font-weight:900;color:#fff;box-shadow:0 16px 30px -12px rgba(102,45,146,.6)}
+  #fxb-test .fxb-result h3{font-size:22px;font-weight:900;margin-bottom:10px}
+  #fxb-test .fxb-result p{font-size:14px;color:var(--muted);max-width:380px;margin:0 auto 26px;line-height:1.6}
+  #fxb-test .fxb-cta{border:0;background:linear-gradient(135deg,var(--orange),#f5a06f);color:#fff;font-weight:800;font-size:14.5px;padding:14px 26px;border-radius:100px;cursor:pointer;box-shadow:0 14px 26px -10px rgba(238,115,73,.6);font-family:inherit}
+  #fxb-test .fxb-cta-note{margin-top:14px;font-size:12.5px;color:var(--muted);font-weight:600}
+
+  #fxb-test [hidden]{display:none !important}
+  @media(max-width:640px){#fxb-test .fxb-section{padding:64px 18px 76px}}
+</style>
+
+<script>
+(function(){
+  var QUESTIONS = [{"level": "A1", "question": "She ___ a teacher.", "options": ["is", "are", "am"], "correct": 0}, {"level": "A1", "question": "There ___ a book on the table.", "options": ["is", "are", "be"], "correct": 0}, {"level": "A1", "question": "I have two ___.", "options": ["child", "children", "childs"], "correct": 1}, {"level": "A1", "question": "What ___ your name?", "options": ["is", "are", "do"], "correct": 0}, {"level": "A2", "question": "I ___ to the cinema yesterday.", "options": ["go", "went", "goes"], "correct": 1}, {"level": "A2", "question": "This bag is ___ than that one.", "options": ["cheap", "cheaper", "more cheap"], "correct": 1}, {"level": "A2", "question": "She usually ___ up at 7 a.m.", "options": ["get", "gets", "getting"], "correct": 1}, {"level": "A2", "question": "We are going ___ holiday next week.", "options": ["in", "at", "on"], "correct": 2}, {"level": "B1", "question": "If I ___ more time, I would learn Chinese too.", "options": ["have", "had", "will have"], "correct": 1}, {"level": "B1", "question": "Choose the closest meaning to 'reluctant':", "options": ["eager", "unwilling", "confident"], "correct": 1}, {"level": "B1", "question": "I ___ never eaten sushi before I visited Japan.", "options": ["have", "had", "has"], "correct": 1}, {"level": "B1", "question": "Please ___ this form and send it back.", "options": ["fill in", "fill on", "fill at"], "correct": 0}, {"level": "B2", "question": "By the time we arrived, the lesson ___ already ___.", "options": ["has / started", "had / started", "have / started"], "correct": 1}, {"level": "B2", "question": "The bridge ___ in 1990.", "options": ["built", "was built", "has built"], "correct": 1}, {"level": "B2", "question": "Despite ___ hard, he failed the exam.", "options": ["study", "studying", "studies"], "correct": 1}, {"level": "B2", "question": "She's the woman ___ car was stolen.", "options": ["who", "whose", "which"], "correct": 1}, {"level": "C1", "question": "Hardly ___ the class begun when the fire alarm rang.", "options": ["had", "has", "did"], "correct": 0}, {"level": "C1", "question": "The manager insisted that the report ___ finished by Friday.", "options": ["is", "be", "was"], "correct": 1}, {"level": "C1", "question": "Choose the closest meaning to 'meticulous':", "options": ["careless", "extremely careful", "fast"], "correct": 1}, {"level": "C1", "question": "Not only ___ late, but he also forgot his homework.", "options": ["he was", "was he", "he is"], "correct": 1}, {"level": "C2", "question": "Had it not been for your help, I ___ the deadline.", "options": ["would miss", "would have missed", "will miss"], "correct": 1}, {"level": "C2", "question": "The committee's decision was, to say the least, ___.", "options": ["controversial", "control", "controversy"], "correct": 0}, {"level": "C2", "question": "No sooner ___ she left than the phone rang.", "options": ["had", "did", "has"], "correct": 0}, {"level": "C2", "question": "His argument was riddled with ___ — contradictions that undermined his credibility.", "options": ["inconsistencies", "consistency", "consistent"], "correct": 0}];
+  var LEVELS = ["A1","A2","B1","B2","C1","C2"];
+  var RESULT_TEXT = {"A1": ["A1 (Начальный)", "Вы знаете базовые слова и фразы — отличная стартовая точка, чтобы начать говорить уверенно."], "A2": ["A2 (Начальный+)", "Вы понимаете простые фразы и можете рассказать о себе. Пора переходить к более сложным темам и грамматике."], "B1": ["B1 (Средний)", "Вы понимаете основные идеи сложных текстов, можете спонтанно общаться с носителем языка. Дальше — работа над беглостью."], "B2": ["B2 (Выше среднего)", "Вы уверенно общаетесь на разные темы и понимаете большинство фильмов и текстов без перевода. Осталось закрепить сложные конструкции."], "C1": ["C1 (Продвинутый)", "Вы свободно понимаете сложные тексты и говорите почти как носитель. Дальше — оттачивание нюансов и профессиональной лексики."], "C2": ["C2 (В совершенстве)", "Вы владеете английским на уровне носителя — точны в нюансах, идиомах и стилистике. Осталось поддерживать уровень практикой."]};
+  var current = 0, answers = [];
+
+  var elProgress=document.getElementById('fxbTestProgress'),
+      elLevel=document.getElementById('fxbTestLevel'), elQuestion=document.getElementById('fxbTestQuestion'),
+      elOpts=document.getElementById('fxbTestOpts'), elBack=document.getElementById('fxbTestBack'),
+      elNext=document.getElementById('fxbTestNext');
+
+  function render(){
+    var item = QUESTIONS[current];
+    elProgress.style.width = Math.round((current/QUESTIONS.length)*100) + '%';
+    elLevel.textContent = 'Уровень ' + item.level + ' · Вопрос ' + (current+1) + ' из ' + QUESTIONS.length;
+    elQuestion.textContent = item.question;
+    elOpts.innerHTML = '';
+    var selected = answers[current] !== undefined ? answers[current] : null;
+    item.options.forEach(function(opt, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fxb-opt' + (selected === i ? ' fxb-selected' : '');
+      b.textContent = opt;
+      b.addEventListener('click', function(){
+        answers[current] = i;
+        Array.prototype.forEach.call(elOpts.children, function(c){ c.classList.remove('fxb-selected'); });
+        b.classList.add('fxb-selected');
+        elNext.classList.add('fxb-active');
+      });
+      elOpts.appendChild(b);
+    });
+    elNext.classList.toggle('fxb-active', selected !== null);
+    elNext.textContent = current === QUESTIONS.length - 1 ? 'Узнать результат →' : 'Далее →';
+    elBack.style.visibility = current === 0 ? 'hidden' : 'visible';
+  }
+
+  elBack.addEventListener('click', function(){ if (current > 0) { current--; render(); } });
+  elNext.addEventListener('click', function(){
+    if (answers[current] === undefined) return;
+    if (current < QUESTIONS.length - 1) { current++; render(); return; }
+    elProgress.style.width = '100%';
+    setTimeout(finish, 200);
+  });
+
+  function finish(){
+    var correct = 0;
+    QUESTIONS.forEach(function(item, i){ if (answers[i] === item.correct) correct++; });
+    var levelIndex = Math.min(5, Math.floor(correct / 4));
+    var level = LEVELS[levelIndex];
+    var info = RESULT_TEXT[level];
+
+    document.getElementById('fxbTestBadge').textContent = level;
+    document.getElementById('fxbTestResultTitle').textContent = 'Ваш уровень — ' + info[0];
+    document.getElementById('fxbTestResultText').textContent = info[1];
+    var cta = document.getElementById('fxbTestCta');
+    cta.setAttribute('data-fxb-window', 'Результат: ' + level + ' (' + correct + '/' + QUESTIONS.length + ')');
+
+    document.getElementById('fxbTestQuiz').hidden = true;
+    document.getElementById('fxbTestResult').hidden = false;
+  }
+
+  render();
+})();
+</script>
+<!--FXB-ZAYAVKA-START--><div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal" hidden><div class="fxb-modal__ov" data-fxb-close></div><div class="fxb-modal__box fxb-zbox" role="dialog" aria-modal="true" aria-label="Заявка"><button type="button" class="fxb-modal__x" data-fxb-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="fxb-zview fxb-zview--form"><h3 class="fxb-ztitle">Оставить заявку</h3><p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём удобный формат.</p><form class="fxb-zform" id="fxbZform" name="fxbZform" role="form"><input type="hidden" name="tildaspec-formname" value=""><input type="hidden" name="Предмет" value=""><input type="hidden" name="Раздел" value=""><input type="hidden" name="Страница" value=""><label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" required aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label><label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" required aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label><button type="submit" class="fxb-btn-main fxb-zsubmit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Отправить заявку</button><p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p><div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-top:6px"></div></div></form><div class="fxb-zalt"><span class="fxb-zalt-l">Или свяжитесь напрямую</span><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div><div class="fxb-zview fxb-zview--thanks" hidden><div class="fxb-zok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3 class="fxb-ztitle">Заявка сформирована!</h3><p class="fxb-zsub">Спасибо! Заявка отправлена — мы свяжемся с вами. Можно также написать нам:</p><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div></div><style>
+/* ===== FXB-ZAYAVKA: попап-форма заявки ===== */
+#fxb-page [data-fxb-zayavka]{cursor:pointer}
+#fxb-page .fxb-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
+#fxb-page .fxb-modal[hidden]{display:none}
+#fxb-page .fxb-modal__ov{position:absolute;inset:0;background:rgba(20,12,36,.72);backdrop-filter:blur(4px)}
+#fxb-page .fxb-modal__box{position:relative;z-index:1;width:min(900px,100%);background:#fff;border-radius:20px;padding:14px 14px 10px;box-shadow:0 40px 90px -30px rgba(0,0,0,.6);animation:fxbpop .3s ease}
+#fxb-page .fxb-modal__x{position:absolute;top:-16px;right:-16px;width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;background:#fff;color:var(--ink);display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(0,0,0,.4)}
+#fxb-page .fxb-modal__x svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.2}
+@keyframes fxbpop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+#fxb-page .fxb-zbox{width:min(460px,100%);padding:34px 30px 30px;text-align:left}
+#fxb-page .fxb-ztitle{font-size:22px;font-weight:900;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink)}
+#fxb-page .fxb-zsub{font-size:14px;font-weight:500;color:var(--muted);line-height:1.55;margin-bottom:22px}
+#fxb-page .fxb-zform{display:grid;gap:14px}
+#fxb-page .fxb-zfield{display:grid;gap:6px}
+#fxb-page .fxb-zfield span{font-size:12.5px;font-weight:700;color:var(--purple-2);letter-spacing:.02em}
+#fxb-page .fxb-zfield input{font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 16px;border:1.6px solid rgba(57,40,82,.14);border-radius:13px;background:#faf8fe;transition:border-color .2s,box-shadow .2s;width:100%}
+#fxb-page .fxb-zfield input:focus{outline:0;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.12)}
+#fxb-page .fxb-zfield.fxb-zerr input{border-color:#e0526a;background:#fdf2f4}
+#fxb-page .fxb-zsubmit{width:100%;justify-content:center;margin-top:4px;border:0;cursor:pointer;font-family:inherit}
+#fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:var(--purple)}
+#fxb-page .fxb-znote{font-size:11px;color:#a89fbd;font-weight:500;line-height:1.45;margin-top:2px;text-align:center}
+#fxb-page .fxb-znote a{color:var(--purple-2);text-decoration:underline}
+#fxb-page .fxb-zalt{margin-top:22px;padding-top:20px;border-top:1px solid rgba(57,40,82,.1)}
+#fxb-page .fxb-zalt-l{display:block;text-align:center;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+#fxb-page .fxb-zalt-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#fxb-page .fxb-zchip{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:100px;font-weight:800;font-size:13.5px;border:1.6px solid rgba(102,45,146,.2);color:var(--purple-2);background:#fff;transition:transform .2s,border-color .2s,background .2s;cursor:pointer}
+#fxb-page .fxb-zchip:hover{transform:translateY(-2px);border-color:var(--purple-2);background:rgba(102,45,146,.05)}
+#fxb-page .fxb-zchip--wa{border-color:rgba(43,182,115,.45);color:#1f9d63}
+#fxb-page .fxb-zchip--wa:hover{border-color:#1f9d63;background:rgba(43,182,115,.07)}
+#fxb-page .fxb-zview--thanks{text-align:center}
+#fxb-page .fxb-zok{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;background:linear-gradient(135deg,#2bb673,#7ed957);box-shadow:0 14px 30px -12px rgba(43,182,115,.7)}
+#fxb-page .fxb-zok svg{width:32px;height:32px;stroke:#fff;stroke-width:2.6}
+#fxb-page .fxb-zview--thanks .fxb-zalt-btns{margin-top:20px}
+</style><script>
+(function(){
+  if(window.__fxbZayavkaBound)return;
+  window.__fxbZayavkaBound=true;
+  var root=document;
+  var fxbZ=root.querySelector('#fxb-zayavka-modal');
+  if(fxbZ){
+    var fxbZvForm=fxbZ.querySelector('.fxb-zview--form');
+    var fxbZvThx=fxbZ.querySelector('.fxb-zview--thanks');
+    var fxbZtitle=fxbZ.querySelector('.fxb-ztitle');
+    var fxbZsub=fxbZ.querySelector('.fxb-zsub');
+    var fxbZformname=fxbZ.querySelector('[name="tildaspec-formname"]');
+    var fxbZsubject=fxbZ.querySelector('[name="Предмет"]');
+    var fxbZwindow=fxbZ.querySelector('[name="Раздел"]');
+    var fxbZpage=fxbZ.querySelector('[name="Страница"]');
+    var fxbZwrite=function(el,v){if(el)el.value=v;};
+    var fxbZtext=function(el,v){if(el)el.textContent=v;};
+    var fxbZopen=function(z){
+      var subject=(z&&z.getAttribute('data-fxb-subject')||'').trim();
+      var win=(z&&z.getAttribute('data-fxb-window')||'').trim();
+      if(!subject)subject=document.title||'Заявка';
+      if(!win)win='Страница';
+      var title=subject ? 'Заявка — '+subject : 'Оставить заявку';
+      fxbZwrite(fxbZsubject,subject);
+      fxbZwrite(fxbZwindow,win);
+      fxbZwrite(fxbZpage,(document.title||location.pathname)+' ['+location.pathname+']');
+      fxbZwrite(fxbZformname,title);
+      fxbZtext(fxbZtitle,title);
+      fxbZtext(fxbZsub,'Оставьте имя и телефон — перезвоним, расскажем подробности и подберём удобный формат.');
+      fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';
+    };
+    var fxbZclose=function(){fxbZ.hidden=true;document.body.style.overflow='';};
+    root.addEventListener('click',function(e){
+      var z=e.target.closest('[data-fxb-zayavka]');if(z){e.preventDefault();fxbZopen(z);return;}
+      var c=e.target.closest('[data-fxb-close]');if(c&&!fxbZ.hidden){fxbZclose();}});
+    root.addEventListener('keydown',function(e){var z=e.target.closest('[data-fxb-zayavka]');
+      if(z&&(e.key==='Enter'||e.key===' ')){e.preventDefault();fxbZopen(z);}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
+  }
+  window.fxbZSuccess=function(){var m=document.getElementById('fxb-zayavka-modal');if(!m)return;var vf=m.querySelector('.fxb-zview--form');var vt=m.querySelector('.fxb-zview--thanks');if(vf)vf.hidden=true;if(vt)vt.hidden=false;};
+  var fxbForm=root.querySelector('#fxbZform');
+  if(fxbForm){
+    fxbForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      var nameEl=fxbForm.querySelector('[name="Name"]');
+      var phoneEl=fxbForm.querySelector('[name="Phone"]');
+      var name=(nameEl&&nameEl.value||'').trim();
+      var phone=(phoneEl&&phoneEl.value||'').trim();
+      var errBox=fxbForm.querySelector('.js-errorbox-all .js-rule-error-all');
+      [nameEl,phoneEl].forEach(function(el){if(el)el.closest('.fxb-zfield').classList.remove('fxb-zerr');});
+      if(!name||!phone){
+        if(!name&&nameEl)nameEl.closest('.fxb-zfield').classList.add('fxb-zerr');
+        if(!phone&&phoneEl)phoneEl.closest('.fxb-zfield').classList.add('fxb-zerr');
+        if(errBox){errBox.textContent='Укажите имя и телефон.';errBox.closest('.js-errorbox-all').style.display='block';}
+        return;
+      }
+      if(errBox)errBox.closest('.js-errorbox-all').style.display='none';
+      var subject=(fxbForm.querySelector('[name="Предмет"]')||{}).value||'';
+      var section=(fxbForm.querySelector('[name="Раздел"]')||{}).value||'';
+      var page=(fxbForm.querySelector('[name="Страница"]')||{}).value||'';
+      var submitBtn=fxbForm.querySelector('.fxb-zsubmit');
+      if(submitBtn)submitBtn.disabled=true;
+      fetch('https://bot.dymova-english.ru/api/lead',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({fio_parent:name,phone:phone,course:subject,comment:section,source:'Сайт dymova-english.ru — '+(subject||'заявка')+' ('+page+')'})
+      }).then(function(r){return r.json();}).then(function(data){
+        if(submitBtn)submitBtn.disabled=false;
+        if(data&&data.ok){window.fxbZSuccess();}
+        else if(errBox){errBox.textContent=(data&&data.error)||'Не получилось отправить, попробуйте ещё раз или напишите в Max.';errBox.closest('.js-errorbox-all').style.display='block';}
+      }).catch(function(){
+        if(submitBtn)submitBtn.disabled=false;
+        if(errBox){errBox.textContent='Не получилось отправить, попробуйте ещё раз или напишите в Max.';errBox.closest('.js-errorbox-all').style.display='block';}
+      });
+    });
+  }
+})();
+</script><!--FXB-ZAYAVKA-END-->
