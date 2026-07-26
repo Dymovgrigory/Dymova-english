@@ -16,6 +16,7 @@ from app.conv_report import conversations_digest
 from app import insights
 from app import nudge as nudge_mod
 from app.config import settings
+from app.knowledge import site_sync
 from app.max_client import get_max
 
 logger = logging.getLogger(__name__)
@@ -97,6 +98,15 @@ async def _nudge_loop() -> None:
         await asyncio.sleep(60)
 
 
+async def _site_sync_loop() -> None:
+    while True:
+        try:
+            await site_sync.sync_once()
+        except Exception:
+            logger.exception("site_sync: ошибка синхронизации с сайтом")
+        await asyncio.sleep(max(5, settings.SITE_SYNC_INTERVAL_MIN) * 60)
+
+
 def start() -> list[asyncio.Task]:
     """Запускает фоновые задачи (отчёт + напоминания)."""
     tasks: list[asyncio.Task] = []
@@ -108,4 +118,8 @@ def start() -> list[asyncio.Task]:
         tasks.append(asyncio.create_task(_nudge_loop()))
     else:
         logger.info("nudge: тёплые напоминания выключены (NUDGE_ENABLED=false)")
+    if settings.SITE_SYNC_ENABLED:
+        tasks.append(asyncio.create_task(_site_sync_loop()))
+    else:
+        logger.info("site_sync: синхронизация с сайтом выключена (SITE_SYNC_ENABLED=false)")
     return tasks

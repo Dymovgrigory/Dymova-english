@@ -32,6 +32,7 @@ def test_intents():
     assert I.detect_intent("Здравствуйте") == I.GREETING
     assert I.detect_intent("Сколько стоит обучение?") == I.PRICE
     assert I.detect_intent("хочу записаться на пробное") == I.WANT_SIGNUP
+    assert I.detect_intent("зарегистрироваться") == I.REGISTER
     assert I.detect_intent("соедините с администратором") == I.HANDOFF
     assert I.detect_intent("это дорого для нас") == I.OBJECTION
 
@@ -91,10 +92,15 @@ async def test_signup_flow_collects_and_submits():
     assert conv.lead.phone == "+79991234567"
     assert conv.lead.age == "9"
 
-    reply = await handle_message(uid, "да")
+
+@pytest.mark.asyncio
+async def test_registration_request_starts_registration():
+    uid = "test-register-request"
+    get_store().reset(uid)
+    reply = await handle_message(uid, "зарегистрироваться")
     conv = get_store().get(uid)
-    assert conv.stage == STAGE_DONE
-    assert "заявк" in reply.lower()
+    assert conv.stage != STAGE_DONE
+    assert "познаком" in reply.lower() or "зовут" in reply.lower()
 
 
 @pytest.mark.asyncio

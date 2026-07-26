@@ -26,7 +26,7 @@ def _format_history(conv: Conversation, limit: int = 10) -> str:
 def _client_contact_block(conv: Conversation) -> str:
     lead = conv.lead
     parts: list[str] = []
-    name = lead.fio_parent.strip()
+    name = lead.fio_parent.strip() or conv.client_name.strip()
     if name:
         parts.append(f"👤 {name}")
     if lead.phone:
@@ -40,13 +40,13 @@ def _client_contact_block(conv: Conversation) -> str:
         link = ""
         platform = "Веб-виджет"
     else:
-        link = f"https://max.ru/chat/{user_id}"
+        link = f"https://max.ru/{conv.max_username}" if conv.max_username else ""
         platform = "MAX"
 
     parts.append(platform)
     if link:
         parts.append(link)
-    if not lead.phone:
+    if not lead.phone or not link:
         parts.append(f"ID: {user_id}")
     return "\n".join(parts)
 

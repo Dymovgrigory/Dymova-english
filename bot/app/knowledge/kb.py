@@ -32,8 +32,8 @@ def _stem(word: str) -> str:
     word = word.lower()
     if len(word) <= 4:
         return word
-    for suf in ("ями", "иями", "ого", "его", "ому", "ему", "ыми", "ими",
-                "ах", "ях", "ов", "ев", "ей", "ам", "ям", "ом", "ем",
+    for suf in ("ями", "иями", "ами", "ого", "его", "ому", "ему", "ыми", "ими",
+                "ах", "ях", "ов", "ев", "ей", "ам", "ям", "ом", "ем", "ой", "ёй",
                 "ая", "яя", "ое", "ее", "ы", "и", "а", "я", "е", "о", "у", "ю"):
         if word.endswith(suf) and len(word) - len(suf) >= 3:
             return word[: -len(suf)]
@@ -62,6 +62,7 @@ class KnowledgeBase:
         self.path = path
         self.raw: dict[str, Any] = {}
         self.documents: list[Document] = []
+        self.live_documents: list[Document] = []
         self.load()
 
     # ---------- загрузка ----------
@@ -125,6 +126,24 @@ class KnowledgeBase:
             self._add("enrollment", f"Шаг {step.get('step')}: {step.get('title','')}",
                       step.get("text", ""))
 
+        team = r.get("team", [])
+        for person in team:
+            parts = [person.get("role", ""), person.get("about", "")]
+            if person.get("video_intro"):
+                parts.append(f"Видеовизитка: {person['video_intro']}")
+            if person.get("video_lesson"):
+                parts.append(f"Фрагмент урока: {person['video_lesson']}")
+            self._add("team", person.get("name", ""), ". ".join(p for p in parts if p))
+        if team:
+            teachers = [p for p in team if p.get("role") == "Педагог"]
+            self._add(
+                "team",
+                "Команда: педагоги, методист, администраторы, руководители",
+                "Педагоги школы: "
+                + "; ".join(f"{p.get('name','')} ({p.get('about','')})" for p in teachers)
+                + ". Полный список команды с видеовизитками — на сайте, раздел «Команда».",
+            )
+
         for item in r.get("faq", []):
             self._add("faq", item.get("q", ""), item.get("a", ""))
 
@@ -137,13 +156,24 @@ class KnowledgeBase:
                       f"ВКонтакте: {social.get('vk','')}. MAX-бот: {social.get('max_bot','')}. "
                       f"MAX-канал: {social.get('max_channel','')}")
 
+        for src in r.get("sources", []):
+            title = src.get("title", "Источник").strip()
+            url = src.get("url", "").strip()
+            text = src.get("text", "").strip()
+            parts = [p for p in (text, f"URL: {url}" if url else "") if p]
+            self._add("sources", title, " ".join(parts))
+
+    def set_live_documents(self, docs: list[Document]) -> None:
+        """Заменяет «живые» документы, полученные синхронизацией с сайта."""
+        self.live_documents = docs
+
     # ---------- поиск ----------
-    def search(self, query: str, limit: int = 5) -> list[Document]:
+    def search_scored(self, query: str, limit: int = 5) -> list[tuple[float, Document]]:
         q_tokens = set(_tokens(query))
         if not q_tokens:
             return []
         scored: list[tuple[float, Document]] = []
-        for doc in self.documents:
+        for doc in self.documents + self.live_documents:
             if not doc.tokens:
                 continue
             overlap = q_tokens & doc.tokens
@@ -151,11 +181,14 @@ class KnowledgeBase:
                 continue
             # нормируем на длину запроса + небольшой бонус за FAQ/курсы
             score = len(overlap) / len(q_tokens)
-            if doc.category in ("faq", "courses", "formats"):
+            if doc.category in ("faq", "courses", "formats", "team"):
                 score += 0.1
             scored.append((score, doc))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [d for _, d in scored[:limit]]
+        return scored[:limit]
+
+    def search(self, query: str, limit: int = 5) -> list[Document]:
+        return [d for _, d in self.search_scored(query, limit=limit)]
 
     def context_for(self, query: str, limit: int = 5) -> str:
         docs = self.search(query, limit=limit)
@@ -181,6 +214,10 @@ class KnowledgeBase:
     @property
     def social(self) -> dict:
         return self.raw.get("social", {})
+
+    @property
+    def sources(self) -> list[dict]:
+        return self.raw.get("sources", [])
 
     @property
     def company(self) -> dict:

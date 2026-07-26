@@ -67,11 +67,16 @@ class Conversation:
     lead_submitted: bool = False
     nudge_sent: bool = False
     last_objection: str = ""
+    last_user_intent: str = ""
+    last_user_mood: str = ""
+    last_user_topic: str = ""
     created_at: str = ""
     updated_at: str = ""
     registered: bool = False
     registration_step: str = ""
     utm: dict = field(default_factory=dict)
+    client_name: str = ""
+    max_username: str = ""
 
     def add(self, role: str, content: str) -> None:
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -290,6 +295,8 @@ def _conv_from_dict(d: dict) -> Conversation:
         registered=d.get("registered", False),
         registration_step=d.get("registration_step", ""),
         utm=d.get("utm", {}) or {},
+        client_name=d.get("client_name", ""),
+        max_username=d.get("max_username", ""),
     )
 
 

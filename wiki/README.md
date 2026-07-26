@@ -13,6 +13,8 @@
 - [`06-lokalnoe-prodvizhenie.md`](./06-lokalnoe-prodvizhenie.md) — Яндекс.Бизнес, карты, NAP, отзывы.
 - [`07-bot-i-crm.md`](./07-bot-i-crm.md) — MAX/Telegram-бот и CRM.
 - [`08-dostupy-i-infra.md`](./08-dostupy-i-infra.md) — доступы, секреты и окружение.
+- [`09-integrations.md`](./09-integrations.md) — Figma, Linear/Jira, Slack, Sentry, Dependabot.
+- [`10-figma.md`](./10-figma.md) — единый реестр ссылок на макеты и правила сверки.
 
 ## Кратко о проекте
 
