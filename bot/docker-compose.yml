@@ -15,3 +15,31 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
+  # HTTPS-реверс-прокси: bot.dymova-english.ru -> bot:8000, автоматический
+  # Let's Encrypt. Плюс отдаёт статику мигрируемого сайта на
+  # new.dymova-english.ru (см. deploy/Caddyfile).
+  #
+  # dns: 8.8.8.8/1.1.1.1 — без этого контейнер наследует host-овский
+  # /etc/resolv.conf с nameserver 127.0.0.53 (стаб systemd-resolved ХОСТА),
+  # недостижимый изнутри контейнера — ACME-запросы к Let's Encrypt тогда
+  # не резолвятся и сертификат не обновляется (было причиной реального
+  # простоя бота, см. DEVLOG "Сессия 25").
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_config:/config
+      - caddy_data:/data
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile
+      - /home/yc-user/foxinburg-site:/srv/foxinburg-site
+
+volumes:
+  caddy_config:
+  caddy_data:
