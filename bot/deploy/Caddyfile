@@ -11,3 +11,12 @@ bot.dymova-english.ru {
 # bot.dymova-english.ru {
 #     reverse_proxy localhost:8000
 # }
+
+# Стейджинг статического сайта (миграция с Tilda, см. wiki/02-arhitektura.md).
+# Собранные файлы (prototype/build_static_site.py) лежат в /srv/foxinburg-site
+# на хосте — том пробрасывается в контейнер тем же способом, что и Caddyfile.
+new.dymova-english.ru {
+    root * /srv/foxinburg-site
+    try_files {path} {path}/index.html
+    file_server
+}
