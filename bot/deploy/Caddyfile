@@ -12,9 +12,20 @@ bot.dymova-english.ru {
 #     reverse_proxy localhost:8000
 # }
 
-# Стейджинг статического сайта (миграция с Tilda, см. wiki/02-arhitektura.md).
-# Собранные файлы (prototype/build_static_site.py) лежат в /srv/foxinburg-site
-# на хосте — том пробрасывается в контейнер тем же способом, что и Caddyfile.
+# Основной сайт (миграция с Tilda завершена, см. DEVLOG.md "Сессия 28"/29
+# и wiki/02-arhitektura.md). Собранные файлы (prototype/build_static_site.py,
+# прод-режим — без --noindex) лежат в /srv/foxinburg-site на хосте — том
+# пробрасывается в контейнер тем же способом, что и Caddyfile. Активируется
+# автоматически, как только A-запись apex/www-домена укажет на этот сервер.
+dymova-english.ru, www.dymova-english.ru {
+    root * /srv/foxinburg-site
+    try_files {path} {path}/index.html
+    file_server
+}
+
+# Стейджинг/предпросмотр (тот же контент). Оставлен как отдельный alias
+# после переключения DNS — canonical-теги на страницах указывают на apex,
+# так что риска дублей в индексации нет.
 new.dymova-english.ru {
     root * /srv/foxinburg-site
     try_files {path} {path}/index.html
