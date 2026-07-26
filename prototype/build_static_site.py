@@ -48,6 +48,7 @@ PAGE_ALIASES = {
     "page_standartnye_offline.html": "standartnye-offline",
     "page_letnyaya_akademiya.html": "letnyaya-akademiya",
     "page_kontakty.html": "kontakty",
+    "page_policy.html": "policy",
     "page_novosti.html": "novosti",
     "page_vakansii.html": "vakansii",
     "page_oge_anglijskij.html": "oge-anglijskij",

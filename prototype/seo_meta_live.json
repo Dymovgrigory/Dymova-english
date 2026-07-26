@@ -130,5 +130,11 @@
     "description": "Рассказываем, как устроены смены Летней Академии: тематические недели, проекты, мини-группы и комфортный утренний формат.",
     "canonical": "https://dymova-english.ru/novosti-kak-prohodyat-smeny-letnej-akademii",
     "status": "ok"
+  },
+  "policy": {
+    "title": "Политика конфиденциальности — Фоксинбург",
+    "description": "Политика в отношении обработки персональных данных языковой школы «Фоксинбург» (Дымова В.А.) в соответствии с 152-ФЗ.",
+    "canonical": "https://dymova-english.ru/policy",
+    "status": "ok"
   }
 }
