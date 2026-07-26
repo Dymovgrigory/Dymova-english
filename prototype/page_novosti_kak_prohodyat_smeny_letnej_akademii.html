@@ -258,7 +258,7 @@
 <script>
 (function(){
   var root=document.getElementById('fxb-page');if(!root)return;
-  var items=root.querySelectorAll('.fxb-card,.fxb-fact,.fxb-book');
+  var items=root.querySelectorAll('.fxb-card,.fxb-fact,.fxb-book,.fxb-news-card');
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){es.forEach(function(e){
       if(e.isIntersecting){e.target.classList.add('fxb-in');io.unobserve(e.target);}
