@@ -1,0 +1,206 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Собирает /test-na-uroven — интерактивный тест на уровень английского.
+
+Читает level_test_data.json (24 вопроса, см. validate_level_test_data.py),
+рендерит одностраничный квиз (один вопрос на экран, прогресс-бар, линейный
+подсчёт баллов) + результат + переиспользует существующую форму заявки
+(zayavka_unit() из build_course_pages.py) для лида после результата.
+
+Запуск:
+  python3 build_level_test.py
+Результат:
+  page_test_na_uroven.html — фрагмент для build_static_site.py (см. PAGE_ALIASES).
+"""
+from __future__ import annotations
+
+import json
+import os
+
+from build_course_pages import zayavka_unit
+
+DIR = os.path.dirname(os.path.abspath(__file__))
+
+FONT_LINK = (
+    '<link href="https://fonts.googleapis.com/css2?family=Montserrat:'
+    'wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">'
+)
+
+CSS = """
+<style>
+  #fxb-test{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1000px 500px at 50% 0%,rgba(102,45,146,.08),transparent 55%),#f4f1fa;}
+  #fxb-test *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-test .fxb-section{max-width:640px;margin:0 auto;padding:90px 24px 100px}
+  #fxb-test .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px}
+  #fxb-test .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-test .fxb-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-bottom:44px}
+  #fxb-test .fxb-h2{font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.1;letter-spacing:-.02em}
+  #fxb-test .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-test .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.32em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-test .fxb-sub{max-width:440px;color:var(--muted);font-size:16px;font-weight:500}
+
+  #fxb-test .fxb-card{background:#fff;border-radius:22px;border:1px solid rgba(57,40,82,.08);box-shadow:0 16px 36px -20px rgba(57,40,82,.4);overflow:hidden}
+  #fxb-test .fxb-card-head{background:linear-gradient(135deg,var(--purple-2),var(--purple-3));padding:20px 26px;color:#fff}
+  #fxb-test .fxb-progress-wrap{height:6px;background:rgba(255,255,255,.25);border-radius:100px;margin-top:12px;overflow:hidden}
+  #fxb-test .fxb-progress{height:100%;background:var(--yellow);border-radius:100px;width:0%;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+  #fxb-test .fxb-card-body{padding:28px 26px}
+  #fxb-test .fxb-qlevel{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px}
+  #fxb-test .fxb-question{font-size:18px;font-weight:800;line-height:1.35;margin-bottom:22px;min-height:50px}
+  #fxb-test .fxb-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+  #fxb-test .fxb-opt{text-align:left;border:1.5px solid rgba(57,40,82,.14);background:#faf8fd;border-radius:14px;padding:13px 16px;font-family:inherit;font-weight:600;font-size:14.5px;color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s}
+  #fxb-test .fxb-opt:hover{border-color:rgba(102,45,146,.35);background:#f4f1fa}
+  #fxb-test .fxb-opt.fxb-selected{border-color:var(--purple-2);background:rgba(102,45,146,.08);font-weight:800}
+  #fxb-test .fxb-nav{display:flex;justify-content:space-between;align-items:center}
+  #fxb-test .fxb-back{background:none;border:0;color:var(--muted);font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+  #fxb-test .fxb-next{border:0;background:linear-gradient(135deg,var(--orange),#f5a06f);color:#fff;font-weight:800;font-size:14px;padding:12px 26px;border-radius:100px;cursor:pointer;opacity:.4;pointer-events:none;transition:opacity .2s;font-family:inherit}
+  #fxb-test .fxb-next.fxb-active{opacity:1;pointer-events:auto}
+
+  #fxb-test .fxb-result{padding:36px 30px;text-align:center}
+  #fxb-test .fxb-badge{width:88px;height:88px;border-radius:24px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));display:grid;place-items:center;margin:0 auto 18px;font-size:30px;font-weight:900;color:#fff;box-shadow:0 16px 30px -12px rgba(102,45,146,.6)}
+  #fxb-test .fxb-result h3{font-size:22px;font-weight:900;margin-bottom:10px}
+  #fxb-test .fxb-result p{font-size:14px;color:var(--muted);max-width:380px;margin:0 auto 26px;line-height:1.6}
+  #fxb-test .fxb-cta{border:0;background:linear-gradient(135deg,var(--orange),#f5a06f);color:#fff;font-weight:800;font-size:14.5px;padding:14px 26px;border-radius:100px;cursor:pointer;box-shadow:0 14px 26px -10px rgba(238,115,73,.6);font-family:inherit}
+  #fxb-test .fxb-cta-note{margin-top:14px;font-size:12.5px;color:var(--muted);font-weight:600}
+
+  #fxb-test [hidden]{display:none !important}
+  @media(max-width:640px){#fxb-test .fxb-section{padding:64px 18px 76px}}
+</style>
+"""
+
+RESULT_TEXT = {
+    "A1": ("A1 (Начальный)", "Вы знаете базовые слова и фразы — отличная стартовая точка, чтобы начать говорить уверенно."),
+    "A2": ("A2 (Начальный+)", "Вы понимаете простые фразы и можете рассказать о себе. Пора переходить к более сложным темам и грамматике."),
+    "B1": ("B1 (Средний)", "Вы понимаете основные идеи сложных текстов, можете спонтанно общаться с носителем языка. Дальше — работа над беглостью."),
+    "B2": ("B2 (Выше среднего)", "Вы уверенно общаетесь на разные темы и понимаете большинство фильмов и текстов без перевода. Осталось закрепить сложные конструкции."),
+    "C1": ("C1 (Продвинутый)", "Вы свободно понимаете сложные тексты и говорите почти как носитель. Дальше — оттачивание нюансов и профессиональной лексики."),
+    "C2": ("C2 (В совершенстве)", "Вы владеете английским на уровне носителя — точны в нюансах, идиомах и стилистике. Осталось поддерживать уровень практикой."),
+}
+
+SCRIPT_TEMPLATE = """
+<script>
+(function(){
+  var QUESTIONS = %(questions_json)s;
+  var LEVELS = ["A1","A2","B1","B2","C1","C2"];
+  var RESULT_TEXT = %(result_text_json)s;
+  var current = 0, answers = [];
+
+  var elProgress=document.getElementById('fxbTestProgress'),
+      elLevel=document.getElementById('fxbTestLevel'), elQuestion=document.getElementById('fxbTestQuestion'),
+      elOpts=document.getElementById('fxbTestOpts'), elBack=document.getElementById('fxbTestBack'),
+      elNext=document.getElementById('fxbTestNext');
+
+  function render(){
+    var item = QUESTIONS[current];
+    elProgress.style.width = Math.round((current/QUESTIONS.length)*100) + '%%';
+    elLevel.textContent = 'Уровень ' + item.level + ' · Вопрос ' + (current+1) + ' из ' + QUESTIONS.length;
+    elQuestion.textContent = item.question;
+    elOpts.innerHTML = '';
+    var selected = answers[current] !== undefined ? answers[current] : null;
+    item.options.forEach(function(opt, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fxb-opt' + (selected === i ? ' fxb-selected' : '');
+      b.textContent = opt;
+      b.addEventListener('click', function(){
+        answers[current] = i;
+        Array.prototype.forEach.call(elOpts.children, function(c){ c.classList.remove('fxb-selected'); });
+        b.classList.add('fxb-selected');
+        elNext.classList.add('fxb-active');
+      });
+      elOpts.appendChild(b);
+    });
+    elNext.classList.toggle('fxb-active', selected !== null);
+    elNext.textContent = current === QUESTIONS.length - 1 ? 'Узнать результат →' : 'Далее →';
+    elBack.style.visibility = current === 0 ? 'hidden' : 'visible';
+  }
+
+  elBack.addEventListener('click', function(){ if (current > 0) { current--; render(); } });
+  elNext.addEventListener('click', function(){
+    if (answers[current] === undefined) return;
+    if (current < QUESTIONS.length - 1) { current++; render(); return; }
+    elProgress.style.width = '100%%';
+    setTimeout(finish, 200);
+  });
+
+  function finish(){
+    var correct = 0;
+    QUESTIONS.forEach(function(item, i){ if (answers[i] === item.correct) correct++; });
+    var levelIndex = Math.min(5, Math.floor(correct / 4));
+    var level = LEVELS[levelIndex];
+    var info = RESULT_TEXT[level];
+
+    document.getElementById('fxbTestBadge').textContent = level;
+    document.getElementById('fxbTestResultTitle').textContent = 'Ваш уровень — ' + info[0];
+    document.getElementById('fxbTestResultText').textContent = info[1];
+    var cta = document.getElementById('fxbTestCta');
+    cta.setAttribute('data-fxb-window', 'Результат: ' + level + ' (' + correct + '/' + QUESTIONS.length + ')');
+
+    document.getElementById('fxbTestQuiz').hidden = true;
+    document.getElementById('fxbTestResult').hidden = false;
+  }
+
+  render();
+})();
+</script>
+"""
+
+
+def build() -> str:
+    questions = json.load(open(os.path.join(DIR, "level_test_data.json"), encoding="utf-8"))
+
+    body = f"""{FONT_LINK}
+<div id="fxb-test">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Бесплатно · 2 минуты</span>
+      <h1 class="fxb-h2">Тест на <span class="fxb-accent">уровень английского</span></h1>
+      <p class="fxb-sub">24 вопроса по грамматике и лексике — узнайте свой уровень от A1 до C2 прямо сейчас.</p>
+    </div>
+
+    <div class="fxb-card" id="fxbTestQuiz">
+      <div class="fxb-card-head">
+        <div class="fxb-progress-wrap"><div class="fxb-progress" id="fxbTestProgress"></div></div>
+      </div>
+      <div class="fxb-card-body">
+        <div class="fxb-qlevel" id="fxbTestLevel"></div>
+        <div class="fxb-question" id="fxbTestQuestion"></div>
+        <div class="fxb-opts" id="fxbTestOpts"></div>
+        <div class="fxb-nav">
+          <button class="fxb-back" id="fxbTestBack" type="button">← Назад</button>
+          <button class="fxb-next" id="fxbTestNext" type="button">Далее →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fxb-card" id="fxbTestResult" hidden>
+      <div class="fxb-result">
+        <div class="fxb-badge" id="fxbTestBadge"></div>
+        <h3 id="fxbTestResultTitle"></h3>
+        <p id="fxbTestResultText"></p>
+        <button class="fxb-cta" id="fxbTestCta" data-fxb-zayavka data-fxb-subject="Тест на уровень" data-fxb-window="" role="button" tabindex="0">Записаться на разбор результата →</button>
+        <p class="fxb-cta-note">Разбор проведёт методист школы Коваленко Елизавета</p>
+      </div>
+    </div>
+  </div>
+</div>
+{CSS}"""
+
+    questions_json = json.dumps(questions, ensure_ascii=False).replace("</script", "<\\/script")
+    result_text_json = json.dumps(RESULT_TEXT, ensure_ascii=False).replace("</script", "<\\/script")
+    script = SCRIPT_TEMPLATE % {"questions_json": questions_json, "result_text_json": result_text_json}
+
+    return body + script + zayavka_unit()
+
+
+def main() -> None:
+    html = build()
+    out_path = os.path.join(DIR, "page_test_na_uroven.html")
+    open(out_path, "w", encoding="utf-8").write(html)
+    print(f"OK page_test_na_uroven.html -> {len(html)} chars")
+
+
+if __name__ == "__main__":
+    main()
