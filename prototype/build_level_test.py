@@ -5,8 +5,13 @@
 
 Читает level_test_data.json (24 вопроса, см. validate_level_test_data.py),
 рендерит одностраничный квиз (один вопрос на экран, прогресс-бар, линейный
-подсчёт баллов) + результат + переиспользует существующую форму заявки
-(zayavka_unit() из build_course_pages.py) для лида после результата.
+подсчёт баллов) + результат. Лид после результата уходит через уже
+существующую сайтовую модалку заявки (data-fxb-zayavka на CTA-кнопке) —
+её HTML/CSS/JS уже приезжает в каждую страницу с подвалом (tilda_footer.html),
+поэтому здесь НЕ нужно повторно вызывать zayavka_unit() — это создало бы
+дублирующийся #fxb-zayavka-modal с одинаковым id на странице (как у
+page_policy.html/page_kontakty.html — они тоже полагаются на модалку из
+подвала, а не подключают свою).
 
 Запуск:
   python3 build_level_test.py
@@ -17,8 +22,6 @@ from __future__ import annotations
 
 import json
 import os
-
-from build_course_pages import zayavka_unit
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -192,7 +195,7 @@ def build() -> str:
     result_text_json = json.dumps(RESULT_TEXT, ensure_ascii=False).replace("</script", "<\\/script")
     script = SCRIPT_TEMPLATE % {"questions_json": questions_json, "result_text_json": result_text_json}
 
-    return body + script + zayavka_unit()
+    return body + script
 
 
 def main() -> None:
