@@ -64,6 +64,14 @@ class Settings(BaseSettings):
     TELEGRAM_WEBHOOK_URL: str = ""
     TELEGRAM_WEBHOOK_SECRET: str = ""
 
+    # --- Email-уведомления о заявках (Gmail SMTP, App Password) ---
+    GMAIL_SMTP_USER: str = ""
+    GMAIL_SMTP_APP_PASSWORD: str = ""
+    LEAD_NOTIFY_EMAILS: str = ""
+
+    # --- Сайт (миграция с Tilda): разрешённые origin для CORS формы заявки ---
+    SITE_CORS_ORIGINS: str = "https://dymova-english.ru,https://new.dymova-english.ru,https://www.dymova-english.ru"
+
     # --- Прочее ---
     REGISTRATION_REQUIRED: bool = False
     BOT_NAME: str = "Фоксинбург"
@@ -74,6 +82,10 @@ class Settings(BaseSettings):
     @property
     def admin_ids(self) -> list[str]:
         return [x.strip() for x in self.ADMIN_MAX_IDS.split(",") if x.strip()]
+
+    @property
+    def site_cors_origins(self) -> list[str]:
+        return [x.strip() for x in self.SITE_CORS_ORIGINS.split(",") if x.strip()]
 
     @property
     def group_chat_whitelist(self) -> set[int]:
