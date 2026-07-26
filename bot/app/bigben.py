@@ -27,7 +27,9 @@ class BigBenClient:
             and settings.BIGBEN_PIPELINE_STATUS_ID
         )
 
-    async def create_lead(self, lead: Lead, source: str, note: str = "") -> bool:
+    async def create_lead(
+        self, lead: Lead, source: str, note: str = "", utm: dict | None = None
+    ) -> bool:
         if not self.configured:
             logger.warning("BigBen не настроен — заявка не отправлена (lead=%s)", lead.fio_parent)
             return False
@@ -50,6 +52,9 @@ class BigBenClient:
             params["phone_comment"] = lead.comment[:255]
 
         user_note = note or _build_note(lead)
+        utm_note = _format_utm(utm)
+        if utm_note:
+            user_note = f"{user_note}. {utm_note}" if user_note else utm_note
         if user_note:
             params["user_note"] = user_note[:1000]
 
@@ -64,6 +69,13 @@ class BigBenClient:
         except Exception:
             logger.exception("BigBen запрос не удался")
             return False
+
+
+def _format_utm(utm: dict | None) -> str:
+    if not utm:
+        return ""
+    parts = [f"{key}={value}" for key, value in sorted(utm.items()) if value not in ("", None)]
+    return f"UTM: {', '.join(parts)}" if parts else ""
 
 
 def _build_note(lead: Lead) -> str:
