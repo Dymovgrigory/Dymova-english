@@ -1,0 +1,31 @@
+[
+  {"level": "A1", "question": "She ___ a teacher.", "options": ["is", "are", "am"], "correct": 0},
+  {"level": "A1", "question": "There ___ a book on the table.", "options": ["is", "are", "be"], "correct": 0},
+  {"level": "A1", "question": "I have two ___.", "options": ["child", "children", "childs"], "correct": 1},
+  {"level": "A1", "question": "What ___ your name?", "options": ["is", "are", "do"], "correct": 0},
+
+  {"level": "A2", "question": "I ___ to the cinema yesterday.", "options": ["go", "went", "goes"], "correct": 1},
+  {"level": "A2", "question": "This bag is ___ than that one.", "options": ["cheap", "cheaper", "more cheap"], "correct": 1},
+  {"level": "A2", "question": "She usually ___ up at 7 a.m.", "options": ["get", "gets", "getting"], "correct": 1},
+  {"level": "A2", "question": "We are going ___ holiday next week.", "options": ["in", "at", "on"], "correct": 2},
+
+  {"level": "B1", "question": "If I ___ more time, I would learn Chinese too.", "options": ["have", "had", "will have"], "correct": 1},
+  {"level": "B1", "question": "Choose the closest meaning to 'reluctant':", "options": ["eager", "unwilling", "confident"], "correct": 1},
+  {"level": "B1", "question": "I ___ never eaten sushi before I visited Japan.", "options": ["have", "had", "has"], "correct": 1},
+  {"level": "B1", "question": "Please ___ this form and send it back.", "options": ["fill in", "fill on", "fill at"], "correct": 0},
+
+  {"level": "B2", "question": "By the time we arrived, the lesson ___ already ___.", "options": ["has / started", "had / started", "have / started"], "correct": 1},
+  {"level": "B2", "question": "The bridge ___ in 1990.", "options": ["built", "was built", "has built"], "correct": 1},
+  {"level": "B2", "question": "Despite ___ hard, he failed the exam.", "options": ["study", "studying", "studies"], "correct": 1},
+  {"level": "B2", "question": "She's the woman ___ car was stolen.", "options": ["who", "whose", "which"], "correct": 1},
+
+  {"level": "C1", "question": "Hardly ___ the class begun when the fire alarm rang.", "options": ["had", "has", "did"], "correct": 0},
+  {"level": "C1", "question": "The manager insisted that the report ___ finished by Friday.", "options": ["is", "be", "was"], "correct": 1},
+  {"level": "C1", "question": "Choose the closest meaning to 'meticulous':", "options": ["careless", "extremely careful", "fast"], "correct": 1},
+  {"level": "C1", "question": "Not only ___ late, but he also forgot his homework.", "options": ["he was", "was he", "he is"], "correct": 1},
+
+  {"level": "C2", "question": "Had it not been for your help, I ___ the deadline.", "options": ["would miss", "would have missed", "will miss"], "correct": 1},
+  {"level": "C2", "question": "The committee's decision was, to say the least, ___.", "options": ["controversial", "control", "controversy"], "correct": 0},
+  {"level": "C2", "question": "No sooner ___ she left than the phone rang.", "options": ["had", "did", "has"], "correct": 0},
+  {"level": "C2", "question": "His argument was riddled with ___ — contradictions that undermined his credibility.", "options": ["inconsistencies", "consistency", "consistent"], "correct": 0}
+]
