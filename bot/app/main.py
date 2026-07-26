@@ -15,6 +15,7 @@ import uuid
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -23,13 +24,18 @@ from app import broadcast
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
+from app.email_notify import send_lead_email
 from app import intent as I
 from app import group_chat
+from app import insights
 from app import nudge
+from app import scheduler
 from app.knowledge.kb import get_kb
+from app.observability import init_sentry
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
 from app.memory import Lead, STAGE_HANDOFF, get_store
+from app.slack import notify_slack
 from app.telegram_client import get_telegram
 
 logging.basicConfig(level=logging.INFO)
@@ -38,10 +44,35 @@ logger = logging.getLogger(__name__)
 APP_VERSION = "0.1.0"
 PLATFORM = "max"
 
+init_sentry()
+
 app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
+
+# Форма заявки на статическом сайте (миграция с Tilda) шлёт POST с другого
+# origin (dymova-english.ru / new.dymova-english.ru) — без этого браузер
+# заблокирует запрос.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.site_cors_origins,
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
 _BACKGROUND_TASKS: set[asyncio.Task] = set()
+
+
+@app.on_event("startup")
+async def _start_scheduler() -> None:
+    for task in scheduler.start():
+        _BACKGROUND_TASKS.add(task)
+        task.add_done_callback(_BACKGROUND_TASKS.discard)
+    telegram = get_telegram()
+    if settings.TELEGRAM_POLLING and telegram.configured:
+        logger.info("telegram: запуск long-polling")
+        task = asyncio.create_task(_telegram_poll_loop(telegram))
+        _BACKGROUND_TASKS.add(task)
+        task.add_done_callback(_BACKGROUND_TASKS.discard)
 
 
 def _main_menu() -> list[list[dict]]:
@@ -109,6 +140,39 @@ def _miniapp_url() -> str:
     return settings.MINIAPP_BASE_URL.rstrip("/")
 
 
+def _miniapp_user_id(data: dict | None) -> str:
+    if not data:
+        return ""
+    for key in ("user_id", "uid", "session_id"):
+        value = data.get(key)
+        if value:
+            return str(value).strip()
+    return ""
+
+
+def _miniapp_access_state(user_id: str) -> dict:
+    has_identity = bool(user_id)
+    registered = False
+    if has_identity:
+        registered = bool(get_store().get(user_id).registered)
+    locked = has_identity and settings.MINIAPP_REQUIRE_REGISTRATION and not registered
+    message = ""
+    if locked:
+        message = (
+            "Сначала зарегистрируйтесь в чате бота: "
+            "напишите «зарегистрироваться», и я проведу вас по шагам."
+        )
+    elif not has_identity:
+        message = "Откройте miniapp внутри MAX, чтобы связать профиль."
+    return {
+        "user_id": user_id,
+        "has_identity": has_identity,
+        "registered": registered,
+        "locked": locked,
+        "message": message,
+    }
+
+
 def _contextual_buttons(question: str, reply: str) -> list[dict]:
     text = f"{question} {reply}".lower()
     base = _miniapp_url()
@@ -136,6 +200,7 @@ async def _notify_admins_for_telegram(conv, reason: str) -> None:
     )
     for admin_id in settings.admin_ids:
         await admin_client.send_message(admin_id, message)
+    await notify_slack(f"MAX handoff ({reason})\n\n{conv.summary()}")
 
 
 @app.post("/api/chat")
@@ -157,8 +222,12 @@ async def api_chat(data: dict) -> dict:
 @app.post("/api/miniapp/homework")
 async def api_homework(
     note: str = Form(default=""),
+    user_id: str = Form(default=""),
     image: UploadFile | None = File(default=None),
 ) -> dict:
+    access = _miniapp_access_state(user_id)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     if image is None or not image.filename:
         return JSONResponse({"detail": "Нужна фотография задания"}, status_code=400)
     content_type = (image.content_type or "").lower()
@@ -208,10 +277,6 @@ async def api_homework(
 def _telegram_buttons(text: str, reply: str) -> list[list[dict]]:
     buttons = _contextual_buttons(text, reply)
     return [[button] for button in buttons]
-
-
-def _button_rows(text: str, reply: str) -> list[list[dict]]:
-    return [[button] for button in _contextual_buttons(text, reply)]
 
 
 def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
@@ -270,7 +335,14 @@ async def _telegram_poll_loop(telegram) -> None:
     await telegram.delete_webhook()
     offset: int | None = None
     while True:
-        updates = await telegram.get_updates(offset=offset, timeout=25)
+        try:
+            updates = await telegram.get_updates(offset=offset, timeout=25)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            logger.exception("telegram: ошибка long-polling")
+            await asyncio.sleep(3)
+            continue
         for update in updates:
             if _schedule_telegram_update(update, telegram):
                 update_id = update.get("update_id")
@@ -349,6 +421,20 @@ async def admin_broadcast_send(request: Request, data: dict) -> dict:
         branch=str(data.get("branch", "")) or None,
     )
     return await broadcast.send_broadcast(get_max(), recipients, str(data.get("text", "")))
+
+
+@app.get("/admin/insights")
+async def admin_insights(request: Request, days: int = 7, top: int = 20) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return insights.summarize(days=days, top=top)
+
+
+@app.post("/admin/digest/send")
+async def admin_digest_send(request: Request) -> dict:
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return {"sent": await scheduler.send_digest_now()}
 
 
 @app.get("/admin/users")
@@ -462,6 +548,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         text = (message.get("body") or {}).get("text", "").strip()
         if not text:
             return
+        _remember_sender(user_id, sender)
         low = text.lower()
         if low in ("/start", "start"):
             reply = await handle_start(user_id)
@@ -486,7 +573,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
         else:
             reply = await handle_message(user_id, text)
-            await max_client.send_message(user_id, reply, buttons=_button_rows(text, reply) or None)
+            await max_client.send_message(user_id, reply, buttons=_link_button_rows(text, reply) or None)
         return
 
     if update_type == "message_callback":
@@ -537,6 +624,16 @@ def _extract_update_id(update: dict):
     return None
 
 
+def _remember_sender(user_id: str, sender: dict) -> None:
+    conv = get_store().get(user_id)
+    name = str(sender.get("name") or "").strip()
+    username = str(sender.get("username") or "").strip()
+    if name:
+        conv.client_name = name
+    if username:
+        conv.max_username = username
+
+
 def _extract_user_id(update: dict):
     for key in ("user_id",):
         if update.get(key):
@@ -552,9 +649,15 @@ def _extract_user_id(update: dict):
 
 # --------- Мини-приложение: API ---------
 
+@app.get("/api/miniapp/access")
+async def miniapp_access(user_id: str = "") -> dict:
+    return _miniapp_access_state(user_id)
+
+
 @app.get("/api/miniapp/info")
-async def miniapp_info() -> dict:
+async def miniapp_info(user_id: str = "") -> dict:
     kb = get_kb()
+    access = _miniapp_access_state(user_id)
     return {
         "company": kb.company,
         "branches": kb.branches,
@@ -562,11 +665,15 @@ async def miniapp_info() -> dict:
         "age_programs": kb.age_programs,
         "courses": kb.courses,
         "social": kb.social,
+        "access": access,
     }
 
 
 @app.get("/api/miniapp/recommend")
-async def miniapp_recommend(age: str = "", fmt: str = "") -> dict:
+async def miniapp_recommend(age: str = "", fmt: str = "", user_id: str = "") -> dict:
+    access = _miniapp_access_state(user_id)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     kb = get_kb()
     items = recommend(kb, age or None, fmt or None)
     return {"recommendations": items}
@@ -575,6 +682,10 @@ async def miniapp_recommend(age: str = "", fmt: str = "") -> dict:
 @app.post("/api/miniapp/lead")
 async def miniapp_lead(data: dict) -> dict:
     """Приём заявки из мини-приложения и отправка в BigBen CRM."""
+    user_id = _miniapp_user_id(data)
+    access = _miniapp_access_state(user_id)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     lead = Lead(
         fio_parent=str(data.get("fio_parent", ""))[:255],
         fio_child=str(data.get("fio_child", ""))[:255],
@@ -600,6 +711,45 @@ async def miniapp_lead(data: dict) -> dict:
         )
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)
+    return {"ok": ok}
+
+
+@app.post("/api/lead")
+async def site_lead(data: dict) -> dict:
+    """Приём заявки со статического сайта dymova-english.ru (миграция с Tilda).
+
+    Реплицирует то, что раньше делала форма Tilda через встроенные "сервисы
+    приёма данных из форм": BigBen CRM + уведомление админам (тем же
+    каналом, что уже получает уведомления от бота — MAX, ADMIN_MAX_IDS) +
+    email-дубль на dymovgrigory@gmail.com/kidsfoxclub@yandex.ru.
+    """
+    lead = Lead(
+        fio_parent=str(data.get("fio_parent", ""))[:255],
+        fio_child=str(data.get("fio_child", ""))[:255],
+        phone=str(data.get("phone", ""))[:20],
+        birthday=str(data.get("birthday", "")),
+        age=str(data.get("age", "")),
+        branch=str(data.get("branch", "")),
+        course=str(data.get("course", "")),
+        comment=str(data.get("comment", ""))[:255],
+    )
+    if not lead.fio_parent or not lead.phone:
+        return {"ok": False, "error": "Укажите имя и телефон"}
+    source = str(data.get("source") or "Сайт dymova-english.ru")[:255]
+    ok = await get_bigben().create_lead(lead, source=source)
+    admin_note = (
+        "Новая заявка с сайта\n"
+        f"Родитель: {lead.fio_parent}\n"
+        f"Ребёнок: {lead.fio_child or '—'}\n"
+        f"Телефон: {lead.phone}\n"
+        f"Филиал: {lead.branch or '—'}\n"
+        f"Интерес: {lead.course or '—'}\n"
+        f"Источник: {source}"
+    )
+    if ok and settings.admin_ids:
+        for admin_id in settings.admin_ids:
+            await get_max().send_message(admin_id, admin_note)
+    await asyncio.to_thread(send_lead_email, "Новая заявка с сайта Фоксинбург", admin_note)
     return {"ok": ok}
 
 

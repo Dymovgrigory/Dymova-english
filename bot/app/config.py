@@ -5,6 +5,7 @@
 """
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -40,10 +41,16 @@ class Settings(BaseSettings):
 
     # --- BigBen CRM ---
     # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
-    BIGBEN_API_URL: str = ""
+    BIGBEN_API_URL: str = "https://panel.bigbencrm.ru/api/leads/add"
     BIGBEN_API_KEY: str = ""
-    BIGBEN_PIPELINE_ID: str = ""
-    BIGBEN_PIPELINE_STATUS_ID: str = ""
+    BIGBEN_PIPELINE_ID: str = "1924"
+    BIGBEN_PIPELINE_STATUS_ID: str = "1"
+
+    # --- Интеграции разработки и наблюдаемости ---
+    SENTRY_DSN: str = ""
+    SENTRY_ENVIRONMENT: str = ""
+    SENTRY_TRACES_SAMPLE_RATE: float = 0.0
+    SLACK_WEBHOOK_URL: str = ""
 
     # --- Передача администратору ---
     # ID администраторов в MAX (через запятую), куда дублируется контекст диалога.
@@ -52,17 +59,45 @@ class Settings(BaseSettings):
 
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
+    MINIAPP_REQUIRE_REGISTRATION: bool = True
     CONV_LOG_FILE: str = ""
     GROUP_MODE_ENABLED: bool = True
     GROUP_CHAT_WHITELIST: str = ""
     NUDGE_DELAY_HOURS: int = 36
     NUDGE_MAX_AGE_HOURS: int = 100
+    NUDGE_ENABLED: bool = True
+    NUDGE_HOUR: int = 11
+    NUDGE_MINUTE: int = 0
+
+    # --- Цикл улучшения: журнал вопросов без ответа и ежедневный отчёт ---
+    # JSONL-журнал вопросов, на которые бот не смог уверенно ответить.
+    INSIGHTS_FILE: str = "./data/insights.jsonl"
+    DIGEST_ENABLED: bool = True
+    DIGEST_HOUR: int = 21
+    DIGEST_MINUTE: int = 0
+    DIGEST_TZ_OFFSET: int = 3  # МСК
+    DIGEST_DAYS: int = 1
+
+    # --- Живая синхронизация KB с сайтом ---
+    SITE_SYNC_ENABLED: bool = True
+    SITE_SYNC_URLS: str = ""  # список URL через запятую; пусто = главная сайта
+    SITE_SYNC_INTERVAL_MIN: int = 60
 
     # --- Telegram ---
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_PROXY_URL: str = ""
+    # long-polling getUpdates вместо вебхука (вебхуки Telegram→РФ блокируются)
+    TELEGRAM_POLLING: bool = True
     TELEGRAM_WEBHOOK_URL: str = ""
     TELEGRAM_WEBHOOK_SECRET: str = ""
+
+    # --- Email-уведомления о заявках (Gmail SMTP, App Password) ---
+    GMAIL_SMTP_USER: str = ""
+    GMAIL_SMTP_APP_PASSWORD: str = ""
+    LEAD_NOTIFY_EMAILS: str = ""
+
+    # --- Сайт (миграция с Tilda): разрешённые origin для CORS формы заявки ---
+    SITE_CORS_ORIGINS: str = "https://dymova-english.ru,https://new.dymova-english.ru,https://www.dymova-english.ru"
 
     # --- Прочее ---
     REGISTRATION_REQUIRED: bool = False
@@ -71,9 +106,28 @@ class Settings(BaseSettings):
     DB_PATH: str = "./data/bot.db"
     STATE_FILE: str = ""  # legacy alias для DB_PATH
 
+    @field_validator(
+        "LLM_API_KEY",
+        "MAX_BOT_TOKEN",
+        "BIGBEN_API_KEY",
+        "ADMIN_TOKEN",
+        "TELEGRAM_BOT_TOKEN",
+        "MAX_WEBHOOK_SECRET",
+        "TELEGRAM_WEBHOOK_SECRET",
+        mode="before",
+    )
+    @classmethod
+    def _strip_secret(cls, v: object) -> object:
+        # Пробелы/переводы строк в ключах ломают HTTP-заголовки провайдеров.
+        return v.strip() if isinstance(v, str) else v
+
     @property
     def admin_ids(self) -> list[str]:
         return [x.strip() for x in self.ADMIN_MAX_IDS.split(",") if x.strip()]
+
+    @property
+    def site_cors_origins(self) -> list[str]:
+        return [x.strip() for x in self.SITE_CORS_ORIGINS.split(",") if x.strip()]
 
     @property
     def group_chat_whitelist(self) -> set[int]:

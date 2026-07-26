@@ -87,6 +87,16 @@ def test_build_system_prompt_includes_real_branch_addresses():
     assert "Ракетостроителей, 9к3" in prompt
 
 
+def test_build_system_prompt_includes_emotional_state():
+    kb = get_kb()
+    conv = Conversation(user_id="quality-sales-empathy")
+    conv.last_user_mood = "needs_empathy"
+    conv.last_user_topic = "цены"
+    prompt = sales.build_system_prompt(kb, conv, "")
+    assert "настроение собеседника: needs_empathy" in prompt
+    assert "последняя тема: цены" in prompt
+
+
 def test_mostly_russian_guard():
     assert _mostly_russian("Here's the information you requested: Introduction to Psychology") is False
     assert _mostly_russian("Стоимость от 8 200 ₽/мес, см. My Level 2") is True
@@ -113,6 +123,13 @@ async def test_lead_soft_exit_keeps_fields_and_switches_to_discovery():
     assert "позже" in reply.lower() or "без проблем" in reply.lower()
 
 
+def test_sales_nudge_is_more_empathic_when_user_is_upset():
+    conv = Conversation(user_id="quality-sales-nudge")
+    conv.last_user_mood = "needs_empathy"
+    text = sales.sales_nudge(conv)
+    assert "понимаю" in text.lower()
+
+
 @pytest.mark.asyncio
 async def test_objection_route_uses_llm(monkeypatch):
     uid = "quality-objection-llm"
@@ -135,3 +152,28 @@ async def test_objection_route_uses_llm(monkeypatch):
 
     assert fake.calls, "ожидали вызов LLM для возражения"
     assert "подберём" in reply.lower()
+
+
+@pytest.mark.asyncio
+async def test_factual_questions_do_not_use_llm_or_invent_prices(monkeypatch):
+    class FakeKB:
+        def search(self, query, limit=5):
+            return []
+
+        def context_for(self, query, limit=5):
+            return ""
+
+    class FakeLLM:
+        enabled = True
+
+        async def complete(self, messages, temperature=None):
+            raise AssertionError("LLM should not be called for factual questions")
+
+    monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB())
+    monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
+
+    reply = await handle_message("quality-factual", "Сколько стоит обучение?")
+
+    assert "10500" not in reply
+    assert "придумывать" in reply.lower()
+    assert "администратор" in reply.lower()

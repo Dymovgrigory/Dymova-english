@@ -14,6 +14,7 @@ from app.intent import extract_age, extract_birthday, extract_phone
 from app.knowledge.kb import KnowledgeBase
 from app.max_client import MaxClient
 from app.memory import Conversation, STAGE_DISCOVERY, STAGE_DONE, STAGE_LEAD
+from app.slack import notify_slack
 
 logger = logging.getLogger(__name__)
 
@@ -221,6 +222,11 @@ async def _submit(conv: Conversation, bigben: BigBenClient, max_client: MaxClien
         conv.stage = STAGE_DONE
 
     if ok:
+        await notify_slack(
+            "Новая заявка из MAX\n\n"
+            f"{conv.summary()}\n"
+            f"Источник: {source}"
+        )
         return (
             "Готово! ✅ Заявка отправлена, администратор свяжется с вами в "
             "ближайшее время, чтобы подобрать удобное время диагностики. "

@@ -2,16 +2,22 @@
 // Работает внутри MAX Mini App (если доступен мост) и как обычная веб-страница.
 
 const API = ""; // тот же origin, что и бот
+let MINIAPP_USER_ID = "";
+let ACCESS = { has_identity: false, registered: false, locked: false, message: "" };
 
 async function getJSON(url) {
-  const r = await fetch(API + url);
+  const u = new URL(API + url, window.location.origin);
+  if (MINIAPP_USER_ID) u.searchParams.set("user_id", MINIAPP_USER_ID);
+  const r = await fetch(u.toString());
   return r.json();
 }
 async function postJSON(url, body) {
+  const payload = { ...body };
+  if (MINIAPP_USER_ID) payload.user_id = MINIAPP_USER_ID;
   const r = await fetch(API + url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   });
   return r.json();
 }
@@ -101,8 +107,25 @@ function renderBranches() {
       .join("");
 }
 
+function applyAccessState() {
+  const notice = document.querySelector("#tab-cabinet .notice");
+  if (!notice) return;
+  if (ACCESS.locked) {
+    notice.textContent = ACCESS.message;
+    return;
+  }
+  if (!ACCESS.has_identity) {
+    notice.textContent =
+      "Откройте miniapp внутри MAX, чтобы связать профиль. После регистрации здесь появятся кабинет, домашка и онлайн-запись.";
+  }
+}
+
 // --- Форма заявки ---
 function openLeadForm(prefill = {}) {
+  if (ACCESS.locked) {
+    showStatus(ACCESS.message || "Сначала зарегистрируйтесь в чате.", false);
+    return;
+  }
   const form = document.getElementById("lead-form");
   form.classList.remove("hidden");
   if (prefill.age) document.getElementById("lf-age").value = prefill.age;
@@ -112,6 +135,10 @@ function openLeadForm(prefill = {}) {
 document.getElementById("cabinet-signup").addEventListener("click", () => openLeadForm());
 
 document.getElementById("lf-submit").addEventListener("click", async () => {
+  if (ACCESS.locked) {
+    showStatus(ACCESS.message || "Сначала зарегистрируйтесь в чате.", false);
+    return;
+  }
   const status = document.getElementById("lf-status");
   const body = {
     fio_parent: document.getElementById("lf-parent").value.trim(),
@@ -146,6 +173,7 @@ function initMaxBridge() {
   try {
     const wa = window.WebApp || (window.max && window.max.WebApp);
     if (wa && wa.initDataUnsafe && wa.initDataUnsafe.user) {
+      MINIAPP_USER_ID = String(wa.initDataUnsafe.user.id || "");
       const name = wa.initDataUnsafe.user.first_name || "";
       if (name) {
         document.getElementById("cabinet-greeting").textContent = `Здравствуйте, ${name}!`;
@@ -159,6 +187,8 @@ function initMaxBridge() {
 (async function init() {
   initMaxBridge();
   try {
+    ACCESS = await getJSON("/api/miniapp/access");
+    applyAccessState();
     INFO = await getJSON("/api/miniapp/info");
     renderCatalog();
     renderBranches();

@@ -39,9 +39,9 @@ FOOT_MIN = "tilda_blocks_min/tilda_footer_min.html"
 
 PAGES = [
     ("151210576", "",                          'id="fxb-hero"',   HEAD_MIN, FOOT_MIN),  # главная
-    ("151292376", "reading-new",               'id="fxb-shapka"', SHAPKA, FOOTER),
-    ("151292406", "grammar-new",               'id="fxb-shapka"', SHAPKA, FOOTER),
-    ("151292476", "preparation-new",           'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("151292376", "reading",                   'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("151292406", "grammar",                   'id="fxb-shapka"', SHAPKA, FOOTER),
+    ("151292476", "preparation",               'id="fxb-shapka"', SHAPKA, FOOTER),
     ("151228606", "doshkolniki",               'id="fxb-shapka"', SHAPKA, FOOTER),
     ("151228676", "mladshie-shkolniki",        'id="fxb-shapka"', SHAPKA, FOOTER),
     ("151228746", "podrostki",                 'id="fxb-shapka"', SHAPKA, FOOTER),

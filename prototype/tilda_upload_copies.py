@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Залить фирменный контент в копии-страницы reading-new / grammar-new / preparation-new."""
+"""Залить фирменный контент в страницы /reading / /grammar / /preparation."""
 import asyncio
 from playwright.async_api import async_playwright
 import tilda_upload_subpages as U
 
 PAGES = [
-    ("151292376", "page_reading.html", "reading-new"),
-    ("151292406", "page_grammar.html", "grammar-new"),
-    ("151292476", "page_preparation.html", "preparation-new"),
+    ("151292376", "page_reading.html", "reading"),
+    ("151292406", "page_grammar.html", "grammar"),
+    ("151292476", "page_preparation.html", "preparation"),
 ]
 
 
