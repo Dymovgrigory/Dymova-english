@@ -15,6 +15,7 @@ import uuid
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -23,6 +24,7 @@ from app import broadcast
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
+from app.email_notify import send_lead_email
 from app import intent as I
 from app import group_chat
 from app import insights
@@ -45,6 +47,16 @@ PLATFORM = "max"
 init_sentry()
 
 app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
+
+# Форма заявки на статическом сайте (миграция с Tilda) шлёт POST с другого
+# origin (dymova-english.ru / new.dymova-english.ru) — без этого браузер
+# заблокирует запрос.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.site_cors_origins,
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
 _BACKGROUND_TASKS: set[asyncio.Task] = set()
@@ -699,6 +711,45 @@ async def miniapp_lead(data: dict) -> dict:
         )
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)
+    return {"ok": ok}
+
+
+@app.post("/api/lead")
+async def site_lead(data: dict) -> dict:
+    """Приём заявки со статического сайта dymova-english.ru (миграция с Tilda).
+
+    Реплицирует то, что раньше делала форма Tilda через встроенные "сервисы
+    приёма данных из форм": BigBen CRM + уведомление админам (тем же
+    каналом, что уже получает уведомления от бота — MAX, ADMIN_MAX_IDS) +
+    email-дубль на dymovgrigory@gmail.com/kidsfoxclub@yandex.ru.
+    """
+    lead = Lead(
+        fio_parent=str(data.get("fio_parent", ""))[:255],
+        fio_child=str(data.get("fio_child", ""))[:255],
+        phone=str(data.get("phone", ""))[:20],
+        birthday=str(data.get("birthday", "")),
+        age=str(data.get("age", "")),
+        branch=str(data.get("branch", "")),
+        course=str(data.get("course", "")),
+        comment=str(data.get("comment", ""))[:255],
+    )
+    if not lead.fio_parent or not lead.phone:
+        return {"ok": False, "error": "Укажите имя и телефон"}
+    source = str(data.get("source") or "Сайт dymova-english.ru")[:255]
+    ok = await get_bigben().create_lead(lead, source=source)
+    admin_note = (
+        "Новая заявка с сайта\n"
+        f"Родитель: {lead.fio_parent}\n"
+        f"Ребёнок: {lead.fio_child or '—'}\n"
+        f"Телефон: {lead.phone}\n"
+        f"Филиал: {lead.branch or '—'}\n"
+        f"Интерес: {lead.course or '—'}\n"
+        f"Источник: {source}"
+    )
+    if ok and settings.admin_ids:
+        for admin_id in settings.admin_ids:
+            await get_max().send_message(admin_id, admin_note)
+    await asyncio.to_thread(send_lead_email, "Новая заявка с сайта Фоксинбург", admin_note)
     return {"ok": ok}
 
 
