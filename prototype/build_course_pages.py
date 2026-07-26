@@ -296,7 +296,8 @@ COURSES = {
 
 WA_PHONE = "79939232309"        # WhatsApp + звонок
 MAX_BOT = "https://max.ru/id611904726658_bot"
-FORMS_JS_TAG = '<script src="https://static.tildacdn.com/js/tilda-forms-1.0.min.js" async></script>'
+LEAD_API_URL = "https://bot.dymova-english.ru/api/lead"
+FORMS_JS_TAG = ""  # Tilda-скрипт форм отключён — заявка идёт на свой /api/lead (см. ZAYAVKA_JS)
 
 SEND_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
              'stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/>'
@@ -322,19 +323,13 @@ def zayavka_modal():
             '<div class="fxb-zview fxb-zview--form">'
             '<h3 class="fxb-ztitle">Оставить заявку</h3>'
             '<p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём удобный формат.</p>'
-            '<form class="fxb-zform js-form-proccess" id="fxbZform" name="fxbZform" role="form" method="POST" data-formactiontype="2" data-inputbox=".fxb-zfield" data-success-callback="fxbZSuccess">'
-            '<input type="hidden" name="formservices[]" value="aa53a2a49933944f1fb9c3aaf4590622" class="js-formaction-services">'
-            '<input type="hidden" name="formservices[]" value="30ef9df34728007db12c86a2e7cf58b6" class="js-formaction-services">'
-            '<input type="hidden" name="formservices[]" value="b7967c40cba6f8680cc7a33c7d4a3bd1" class="js-formaction-services">'
-            '<input type="hidden" name="formservices[]" value="406ce69659f99227298278ae7b0939c9" class="js-formaction-services">'
-            '<input type="hidden" name="formservices[]" value="111d799a5db07bce252609cabd29b3e0" class="js-formaction-services">'
-            '<input type="hidden" name="formservices[]" value="7c1b855d6fc4254f9b2a189ae11b7360" class="js-formaction-services">'
+            '<form class="fxb-zform" id="fxbZform" name="fxbZform" role="form">'
             '<input type="hidden" name="tildaspec-formname" value="">'
             '<input type="hidden" name="Предмет" value="">'
             '<input type="hidden" name="Раздел" value="">'
             '<input type="hidden" name="Страница" value="">'
-            '<label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="name" aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label>'
-            '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" class="js-tilda-rule" data-tilda-req="1" data-tilda-rule="phone" aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
+            '<label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" required aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label>'
+            '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" required aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
             '<button type="submit" class="fxb-btn-main fxb-zsubmit">%sОтправить заявку</button>'
             '<p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p>'
             '<div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-top:6px"></div></div>'
@@ -426,8 +421,44 @@ ZAYAVKA_JS = """
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
   }
   window.fxbZSuccess=function(){var m=document.getElementById('fxb-zayavka-modal');if(!m)return;var vf=m.querySelector('.fxb-zview--form');var vt=m.querySelector('.fxb-zview--thanks');if(vf)vf.hidden=true;if(vt)vt.hidden=false;};
+  var fxbForm=root.querySelector('#fxbZform');
+  if(fxbForm){
+    fxbForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      var nameEl=fxbForm.querySelector('[name="Name"]');
+      var phoneEl=fxbForm.querySelector('[name="Phone"]');
+      var name=(nameEl&&nameEl.value||'').trim();
+      var phone=(phoneEl&&phoneEl.value||'').trim();
+      var errBox=fxbForm.querySelector('.js-errorbox-all .js-rule-error-all');
+      [nameEl,phoneEl].forEach(function(el){if(el)el.closest('.fxb-zfield').classList.remove('fxb-zerr');});
+      if(!name||!phone){
+        if(!name&&nameEl)nameEl.closest('.fxb-zfield').classList.add('fxb-zerr');
+        if(!phone&&phoneEl)phoneEl.closest('.fxb-zfield').classList.add('fxb-zerr');
+        if(errBox){errBox.textContent='Укажите имя и телефон.';errBox.closest('.js-errorbox-all').style.display='block';}
+        return;
+      }
+      if(errBox)errBox.closest('.js-errorbox-all').style.display='none';
+      var subject=(fxbForm.querySelector('[name="Предмет"]')||{}).value||'';
+      var section=(fxbForm.querySelector('[name="Раздел"]')||{}).value||'';
+      var page=(fxbForm.querySelector('[name="Страница"]')||{}).value||'';
+      var submitBtn=fxbForm.querySelector('.fxb-zsubmit');
+      if(submitBtn)submitBtn.disabled=true;
+      fetch('%s',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({fio_parent:name,phone:phone,course:subject,comment:section,source:'Сайт dymova-english.ru — '+(subject||'заявка')+' ('+page+')'})
+      }).then(function(r){return r.json();}).then(function(data){
+        if(submitBtn)submitBtn.disabled=false;
+        if(data&&data.ok){window.fxbZSuccess();}
+        else if(errBox){errBox.textContent=(data&&data.error)||'Не получилось отправить, попробуйте ещё раз или напишите в Max.';errBox.closest('.js-errorbox-all').style.display='block';}
+      }).catch(function(){
+        if(submitBtn)submitBtn.disabled=false;
+        if(errBox){errBox.textContent='Не получилось отправить, попробуйте ещё раз или напишите в Max.';errBox.closest('.js-errorbox-all').style.display='block';}
+      });
+    });
+  }
 })();
-"""
+""" % LEAD_API_URL
 
 
 def zayavka_unit():
