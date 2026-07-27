@@ -63,6 +63,25 @@ def _extract_name_from_text(text: str) -> str:
     return ""
 
 
+_SIGNUP_RESTATEMENT_RE = re.compile(
+    r"давай|запиш|хочу|пробн|оформ", re.IGNORECASE,
+)
+
+
+def _name_retry_reply(text: str, field_label: str) -> str:
+    """Просьба повторить имя после неудачного извлечения.
+
+    Если человек просто снова говорит «хочу записаться» / «давайте
+    запишем» вместо имени (естественная реакция сразу после приглашения
+    записаться), голый повтор «Подскажите, пожалуйста, имя родителя.»
+    читается как бот, который не слышит собеседника. Подтверждаем, что
+    намерение услышано, и уточняем, что нужно конкретно.
+    """
+    if _SIGNUP_RESTATEMENT_RE.search(text.lower()):
+        return f"Хорошо, уже записываю 😊 Для заявки нужно {field_label} — напишите, пожалуйста."
+    return f"Подскажите, пожалуйста, {field_label}."
+
+
 def start(conv: Conversation) -> str:
     conv.stage = STAGE_LEAD
     return _ask_next(conv)
@@ -136,7 +155,7 @@ async def step(
             return "Подскажите, пожалуйста, имя родителя.", False
         name = _extract_name_from_text(clean)
         if not name:
-            return "Подскажите, пожалуйста, имя родителя.", False
+            return _name_retry_reply(clean, "имя родителя"), False
         lead.fio_parent = name
 
     elif current == "fio_child":
@@ -151,7 +170,7 @@ async def step(
             return "Подскажите, пожалуйста, имя ребёнка.", False
         name = _extract_name_from_text(clean)
         if not name:
-            return "Подскажите, пожалуйста, имя ребёнка.", False
+            return _name_retry_reply(clean, "имя ребёнка"), False
         lead.fio_child = name
 
     elif current == "age":
@@ -270,13 +289,42 @@ def _opportunistic_fill(conv: Conversation, text: str, kb: KnowledgeBase) -> Non
         conv.selected_branch = branch
 
 
+_YES_RE = re.compile(
+    r"\b(?:да|верно|подтвержда\w*|ага|угу|ок|окей|yes)\b|\bотправ\w*",
+    re.IGNORECASE,
+)
+
+
 def _is_yes(text: str) -> bool:
-    return text.lower().strip(" .!") in (
-        "да", "верно", "всё верно", "все верно", "да, верно", "отправляйте",
-        "отправить", "подтверждаю", "ок", "окей", "ага", "yes", "+",
-    )
+    """Подтверждение на шаге confirm.
+
+    Раньше это было точное совпадение с узким списком фраз ("да", "верно",
+    "все верно", ...) — любая естественная формулировка вроде «Да, всё
+    верно, отправляйте заявку» не совпадала ни с одной из них, и бот
+    бесконечно повторял один и тот же текст подтверждения на любой ответ,
+    не продвигая заявку. Тот же класс бага, что чинили в STAGE_HANDOFF
+    (dc70d34), только на шаге оформления заявки.
+    """
+    low = text.lower().strip()
+    if low == "+":
+        return True
+    if _is_no(low):
+        return False
+    return bool(_YES_RE.search(low))
+
+
+_NO_RE = re.compile(
+    r"нет|не\s*верно|неверно|исправ|поправ|измен|не\s*отправ|не\s*надо|"
+    r"подожд\w*|погоди(?:те)?|\bстоп\b|\bно\b",
+    re.IGNORECASE,
+)
 
 
 def _is_no(text: str) -> bool:
-    low = text.lower()
-    return any(w in low for w in ("нет", "не верно", "неверно", "исправ", "поправ", "измен"))
+    """Отказ/просьба поправить или подождать на шаге confirm.
+
+    Должна перекрывать отрицательные формы вроде «не отправляйте пока» —
+    иначе \bотправ\w* в _YES_RE ловит «отправляйте» внутри такой фразы и
+    заявка уходит в CRM ровно вопреки прямой просьбе пользователя.
+    """
+    return bool(_NO_RE.search(text.lower()))
