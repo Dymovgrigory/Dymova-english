@@ -31,6 +31,14 @@ services:
     dns:
       - 8.8.8.8
       - 1.1.1.1
+    # gbrain's memory/recall/swarm MCP services run as systemd units directly
+    # on the host (not in Docker), listening on 127.0.0.1. From inside this
+    # container, "127.0.0.1" is the container's own loopback, not the host's —
+    # host.docker.internal + this extra_hosts entry is what lets the
+    # mcp.dymova-english.ru block in Caddyfile reach them (see hermes-integration
+    # setup in Dymova-english repo docs).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "80:80"
       - "443:443"
