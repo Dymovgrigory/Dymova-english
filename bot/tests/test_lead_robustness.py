@@ -5,7 +5,7 @@ from app import intent as I
 from app import lead_manager
 from app import main
 from app.knowledge.kb import get_kb
-from app.memory import Conversation
+from app.memory import Conversation, STAGE_DISCOVERY
 
 
 def test_extract_phone_tolerates_messy_separators():
@@ -14,6 +14,21 @@ def test_extract_phone_tolerates_messy_separators():
     assert I.extract_phone("8.999.123.45.67") == "+79991234567"
     assert I.extract_phone("мой номер 89991234567, звоните") == "+79991234567"
     assert I.extract_phone("позвоните позже") is None
+
+
+def test_name_blocklist_matches_whole_words_not_substrings():
+    """Раньше блок-лист был проверкой подстроки: "лет" in "Виолетта" и
+    "реб" in "Реброва" — реальные имя/фамилия отклонялись как мусор, и
+    ввести их в заявку было невозможно ни при первом вопросе, ни через
+    коррекцию (оба пути используют _looks_like_name)."""
+    assert lead_manager._looks_like_name("Виолетта") is True
+    assert lead_manager._looks_like_name("Реброва") is True
+    assert lead_manager._looks_like_name("Реброва Виолетта") is True
+    # блок-лист по-прежнему должен отсеивать то, для чего он написан
+    assert lead_manager._looks_like_name("9 лет") is False
+    assert lead_manager._looks_like_name("хочу записаться на пробное") is False
+    assert lead_manager._looks_like_name("давайте запишем сына") is False
+    assert lead_manager._looks_like_name("сыну 8 лет") is False
 
 
 def test_extract_name_strips_noise_and_reordered_data():
@@ -170,6 +185,107 @@ async def test_confirm_step_correction_is_not_mistaken_for_yes():
     )
 
     assert submitted is False
+    assert conv.lead_step == "correcting"
+    assert conv.lead.phone == "+79991234567"  # not wiped, still needs the new number
+
+
+@pytest.mark.asyncio
+async def test_confirm_correction_actually_updates_the_phone():
+    """Раньше после «нет, поправьте» следующее сообщение с новым телефоном
+    никак не применялось: _opportunistic_fill не перезаписывает уже
+    заполненные поля, а lead_step сбрасывался в "" и тут же снова
+    становился "confirm" — бот бесконечно показывал СТАРЫЙ телефон."""
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            return True
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-fix-phone")
+    conv.lead.fio_parent = "Иванова Анна"
+    conv.lead.fio_child = "Миша"
+    conv.lead.age = "9"
+    conv.lead.phone = "+79991234567"
+    conv.selected_branch = "Лихачевский 76к1"
+    conv.lead_step = "confirm"
+
+    reply, submitted = await lead_manager.step(
+        conv, "нет, телефон неверный", get_kb(), FakeBigBen(), FakeMax()
+    )
+    assert submitted is False
+    assert conv.lead_step == "correcting"
+
+    reply, submitted = await lead_manager.step(
+        conv, "телефон 89997654321", get_kb(), FakeBigBen(), FakeMax()
+    )
+    assert submitted is False
+    assert conv.lead.phone == "+79997654321"
+    assert conv.lead_step == "confirm"
+    assert "+79997654321" in reply
+
+
+@pytest.mark.asyncio
+async def test_confirm_correction_updates_parent_name_via_prefix():
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            return True
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-fix-name")
+    conv.lead.fio_parent = "Иванова Анна"
+    conv.lead.fio_child = "Миша"
+    conv.lead.age = "9"
+    conv.lead.phone = "+79991234567"
+    conv.selected_branch = "Лихачевский 76к1"
+    conv.lead_step = "correcting"
+
+    reply, submitted = await lead_manager.step(
+        conv, "имя родителя: Петрова Ольга", get_kb(), FakeBigBen(), FakeMax()
+    )
+
+    assert submitted is False
+    assert conv.lead.fio_parent == "Петрова Ольга"
+    assert conv.lead_step == "confirm"
+
+
+@pytest.mark.asyncio
+async def test_confirm_step_change_of_mind_exits_without_looping():
+    """«передумал, не хочу записываться» раньше не совпадало ни с _is_yes,
+    ни с _is_no, ни со старым узким списком слов выхода — бот бесконечно
+    показывал ту же заявку."""
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            raise AssertionError("should not submit after change of mind")
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-change-mind")
+    conv.lead.fio_parent = "Иванова Анна"
+    conv.lead.fio_child = "Миша"
+    conv.lead.age = "9"
+    conv.lead.phone = "+79991234567"
+    conv.selected_branch = "Лихачевский 76к1"
+    conv.lead_step = "confirm"
+
+    reply, submitted = await lead_manager.step(
+        conv, "передумал, не хочу записываться", get_kb(), FakeBigBen(), FakeMax()
+    )
+
+    assert submitted is False
+    assert conv.stage == STAGE_DISCOVERY
     assert conv.lead_step == ""
 
 
