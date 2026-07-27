@@ -13,7 +13,7 @@ from app.bigben import BigBenClient
 from app.intent import extract_age, extract_birthday, extract_phone
 from app.knowledge.kb import KnowledgeBase
 from app.max_client import MaxClient
-from app.memory import Conversation, STAGE_DISCOVERY, STAGE_DONE, STAGE_LEAD
+from app.memory import Conversation, Lead, STAGE_DISCOVERY, STAGE_DONE, STAGE_LEAD
 from app.slack import notify_slack
 
 logger = logging.getLogger(__name__)
@@ -95,6 +95,20 @@ def _name_retry_reply(text: str, field_label: str) -> str:
 
 
 def start(conv: Conversation) -> str:
+    if conv.lead_submitted:
+        # Предыдущая заявка уже ушла в CRM — начинаем новую с чистого листа.
+        # Без этого сброса ФИО/телефон/возраст из уже отправленной заявки
+        # (например, тестовые данные) продолжали подставляться в каждую
+        # следующую попытку записаться: "хочу записаться" сразу прыгало на
+        # экран подтверждения со старыми данными, бот выглядел так, будто
+        # отвечает одно и то же независимо от разговора, а повторное "да"
+        # отправляло дубликат заявки в CRM. Отмена (cancel) сюда не
+        # попадает — lead_submitted остаётся False, и незавершённая заявка
+        # осознанно донабирается с того же места, как обещано в тексте
+        # отмены.
+        conv.lead = Lead()
+        conv.lead_step = ""
+        conv.lead_submitted = False
     conv.stage = STAGE_LEAD
     return _ask_next(conv)
 
@@ -251,8 +265,18 @@ async def step(
                 "напишите «отмена», если передумали отправлять заявку."
             ), False
         # пытаемся обновить поля из свободного текста
-        _opportunistic_fill(conv, clean, kb)
-        return _confirmation_text(conv), False
+        if _opportunistic_fill(conv, clean, kb):
+            return _confirmation_text(conv), False
+        # Не "да"/"нет"/коррекция и ничего полезного не нашли — скорее
+        # всего человек спросил что-то не по теме заявки (например, про
+        # другой курс). Раньше в этом случае молча повторялся тот же самый
+        # экран подтверждения без единого слова о заданном вопросе — читалось
+        # как «бот отвечает одно и то же на всё».
+        return (
+            "Секунду — сначала завершим заявку, а потом обязательно отвечу "
+            "на ваш вопрос 😊\n\n"
+            f"{_confirmation_text(conv)}"
+        ), False
 
     elif current == "correcting":
         if _CANCEL_RE.search(low):
@@ -290,6 +314,7 @@ async def _submit(conv: Conversation, bigben: BigBenClient, max_client: MaxClien
 
     ok = await bigben.create_lead(lead, source=source)
     conv.stage = STAGE_DONE
+    conv.lead_submitted = True
 
     # уведомляем администратора о новой заявке (без переключения в режим handoff)
     if max_client.configured:
@@ -332,21 +357,33 @@ def _match_branch(kb: KnowledgeBase, text: str) -> str | None:
     return None
 
 
-def _opportunistic_fill(conv: Conversation, text: str, kb: KnowledgeBase) -> None:
+def _opportunistic_fill(conv: Conversation, text: str, kb: KnowledgeBase) -> bool:
+    """Дополняет ещё пустые поля данными, случайно найденными в тексте.
+
+    Возвращает True, если что-то реально обновили — используется на шаге
+    confirm, чтобы отличить "в свободном тексте была полезная деталь" от
+    "человек просто спросил что-то не по теме заявки" (см. вызов ниже).
+    """
     lead = conv.lead
+    updated = False
     phone = extract_phone(text)
     if phone and not lead.phone:
         lead.phone = phone
+        updated = True
     birthday = extract_birthday(text)
     if birthday and not lead.birthday:
         lead.birthday = birthday
+        updated = True
     age = extract_age(text)
     if age and not lead.age:
         lead.age = age
+        updated = True
     branch = _match_branch(kb, text)
     if branch:
         lead.branch = branch
         conv.selected_branch = branch
+        updated = True
+    return updated
 
 
 _PARENT_NAME_PREFIX_RE = re.compile(r"^(?:имя\s+родител[яю]|родитель)\s*[:\-]?\s*", re.IGNORECASE)
@@ -440,7 +477,7 @@ def _is_no(text: str) -> bool:
     """Отказ/просьба поправить или подождать на шаге confirm.
 
     Должна перекрывать отрицательные формы вроде «не отправляйте пока» —
-    иначе \bотправ\w* в _YES_RE ловит «отправляйте» внутри такой фразы и
-    заявка уходит в CRM ровно вопреки прямой просьбе пользователя.
+    иначе шаблон "отправ" в _YES_RE ловит «отправляйте» внутри такой фразы
+    и заявка уходит в CRM ровно вопреки прямой просьбе пользователя.
     """
     return bool(_NO_RE.search(text.lower()))

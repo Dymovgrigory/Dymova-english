@@ -37,6 +37,11 @@ from app.admin_router import hand_off
 logger = logging.getLogger(__name__)
 
 _FACTUAL_INTENTS = {I.PRICE, I.COURSES, I.CONTACTS, I.ABOUT}
+_COURSE_HINT_RE = re.compile(
+    r"английск|немецк|китайск|взросл\w*|дошкольник\w*|подготовк\w*|"
+    r"егэ|огэ|летн\w*|летня|чтени\w*|грамматик\w*",
+    re.IGNORECASE,
+)
 _POSITIVE_MOOD = {"интерес", "готов", "понят", "спасибо", "отлич", "супер"}
 _NEGATIVE_MOOD = {
     "дорого",
@@ -314,6 +319,29 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
 
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY
+        has_course_hint = bool(_COURSE_HINT_RE.search(text))
+        if (
+            intent == I.PRICE
+            and not conv.lead.age
+            and not conv.selected_course
+            and not has_course_hint
+        ):
+            # Голый "сколько стоит?" без курса/возраста находит по ключевым
+            # словам нерелевантный документ (например, про частоту занятий),
+            # LLM честно отказывается называть цену по слабому контексту
+            # (это в промпте — не выдумывать цифры), и это перехватывается
+            # как "не знаю" → шаблонная передача администратору, хотя цены
+            # для конкретных курсов есть в базе знаний. Уточняющий вопрос
+            # вместо отказа — и дешевле, и больше похоже на живого менеджера.
+            # has_course_hint защищает от того же паттерна на новом месте:
+            # без него "сколько стоит английский для ребёнка?" (нет цифры,
+            # selected_course нигде не присваивается) получал бы тот же
+            # уточняющий вопрос бесконечно, хотя курс уже назван.
+            return (
+                "С радостью подскажу точную стоимость! 😊 Для какого курса "
+                "и какого возраста ученика — так назову цифры без "
+                "приблизительных догадок."
+            )
         if not kb.search(text, limit=1):
             return await _refer_to_admin(conv, text, reason="no_kb_match", score=0.0)
         if get_llm().enabled:
