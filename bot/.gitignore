@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 .env
+.env.bak.*
 state.json
 .pytest_cache/
 data/

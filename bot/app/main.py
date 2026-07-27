@@ -39,6 +39,11 @@ from app.slack import notify_slack
 from app.telegram_client import get_telegram
 
 logging.basicConfig(level=logging.INFO)
+# httpx/httpcore логируют полный URL запроса на уровне INFO, а токены MAX и
+# Telegram передаются прямо в пути URL (botTOKEN/...) — на WARNING+ секреты
+# в логи не попадают.
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 APP_VERSION = "0.1.0"
