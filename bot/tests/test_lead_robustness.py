@@ -92,6 +92,60 @@ async def test_confirm_step_accepts_natural_yes_phrasing():
 
 
 @pytest.mark.asyncio
+async def test_confirm_step_negative_imperative_does_not_submit():
+    """«не отправляйте пока» contains "отправ" (a _YES_RE trigger) — must not submit."""
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            raise AssertionError("should not submit when user says not to")
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-no-submit")
+    conv.lead.fio_parent = "Иванова Анна"
+    conv.lead.fio_child = "Миша"
+    conv.lead.age = "9"
+    conv.lead.phone = "+79991234567"
+    conv.selected_branch = "Лихачевский 76к1"
+    conv.lead_step = "confirm"
+
+    reply, submitted = await lead_manager.step(
+        conv, "подождите, не отправляйте пока", get_kb(), FakeBigBen(), FakeMax()
+    )
+
+    assert submitted is False
+
+
+@pytest.mark.asyncio
+async def test_fio_parent_retry_acknowledges_signup_restatement():
+    """Пользователь снова говорит «хочу записаться» вместо имени — бот не
+    должен молча повторять один и тот же голый вопрос."""
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            return True
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-name-restate")
+    conv.lead_step = "fio_parent"
+
+    reply, submitted = await lead_manager.step(
+        conv, "давайте запишем сына", get_kb(), FakeBigBen(), FakeMax()
+    )
+
+    assert submitted is False
+    assert conv.lead.fio_parent == ""
+    assert "уже записываю" in reply.lower()
+
+
+@pytest.mark.asyncio
 async def test_confirm_step_correction_is_not_mistaken_for_yes():
     class FakeBigBen:
         async def create_lead(self, *a, **k):
