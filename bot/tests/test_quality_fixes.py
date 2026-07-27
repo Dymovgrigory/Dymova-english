@@ -172,8 +172,46 @@ async def test_factual_questions_do_not_use_llm_or_invent_prices(monkeypatch):
     monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB())
     monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
 
-    reply = await handle_message("quality-factual", "Сколько стоит обучение?")
+    uid = "quality-factual"
+    # Возраст уже известен — обходит уточняющий вопрос про курс/возраст
+    # (см. test_bare_price_question_asks_clarifying_question_instead_of_giving_up)
+    # и упирается именно в то, что тест проверяет: пустой KB-поиск не
+    # должен уходить в LLM и придумывать цифры.
+    store = get_store()
+    conv = store.get(uid)
+    conv.lead.age = "9"
+    store.save(conv)
+
+    reply = await handle_message(uid, "Сколько стоит обучение?")
 
     assert "10500" not in reply
     assert "придумывать" in reply.lower()
     assert "администратор" in reply.lower()
+
+
+@pytest.mark.asyncio
+async def test_bare_price_question_asks_clarifying_question_instead_of_giving_up():
+    """Раньше голый "Сколько стоит?" без курса/возраста находил по
+    ключевым словам нерелевантный документ, LLM честно отказывался
+    называть цену по слабому контексту, и это перехватывалось как "не
+    знаю" — шаблонная передача администратору, хотя цены для конкретных
+    курсов есть в базе знаний. Теперь бот сначала уточняет курс/возраст,
+    как это сделал бы живой менеджер."""
+    reply = await handle_message("quality-price-clarify", "Сколько стоит?")
+
+    assert "администратор" not in reply.lower()
+    assert "курс" in reply.lower() or "возраст" in reply.lower()
+
+
+@pytest.mark.asyncio
+async def test_price_question_naming_a_course_skips_the_clarifying_loop():
+    """Без учёта упоминания курса в самом сообщении "сколько стоит
+    английский для ребёнка?" получал бы тот же уточняющий вопрос
+    бесконечно: цифры в тексте нет (conv.lead.age не установится), а
+    conv.selected_course нигде в кодовой базе не присваивается — тот же
+    паттерн "узкое условие → одинаковый ответ навсегда", который чинили
+    весь остальной сеанс."""
+    uid = "quality-price-with-course"
+    reply = await handle_message(uid, "сколько стоит английский для ребенка?")
+
+    assert "для какого курса" not in reply.lower()

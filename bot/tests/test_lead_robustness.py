@@ -4,8 +4,9 @@ from fastapi.testclient import TestClient
 from app import intent as I
 from app import lead_manager
 from app import main
+from app.ai_core import handle_message, handle_start
 from app.knowledge.kb import get_kb
-from app.memory import Conversation, STAGE_DISCOVERY
+from app.memory import Conversation, STAGE_DISCOVERY, STAGE_DONE, get_store
 
 
 def test_extract_phone_tolerates_messy_separators():
@@ -287,6 +288,77 @@ async def test_confirm_step_change_of_mind_exits_without_looping():
     assert submitted is False
     assert conv.stage == STAGE_DISCOVERY
     assert conv.lead_step == ""
+
+
+@pytest.mark.asyncio
+async def test_signup_after_previous_submission_starts_with_a_clean_lead():
+    """Reproduces the production report: after a lead is submitted, /start
+    followed by another "хочу записаться" jumped straight to a confirm
+    screen with the PREVIOUS (submitted, possibly stale/test) data instead
+    of asking for the new person's details — because conv.lead was never
+    reset and STAGE_DONE doesn't survive /start (handle_start resets stage
+    to STAGE_DISCOVERY). Drives this through the real entry points
+    (handle_message/handle_start), not lead_manager.step() directly, since
+    a unit test that sets conv.lead_step by hand would pass even with the
+    broken guard.
+    """
+    uid = "robust-resubmit"
+    store = get_store()
+    store.reset(uid)
+
+    await handle_message(uid, "Хочу записаться")
+    await handle_message(uid, "Иванова Анна")
+    await handle_message(uid, "Иванов Миша")
+    await handle_message(uid, "9 лет")
+    await handle_message(uid, "89991234567")
+    await handle_message(uid, "Лихачевский")
+    reply = await handle_message(uid, "да")
+
+    conv = store.get(uid)
+    assert conv.stage == STAGE_DONE
+    assert conv.lead_submitted is True
+    assert "Спасибо" in reply
+
+    await handle_start(uid)
+    reply = await handle_message(uid, "Хочу записать ещё одного ребёнка")
+
+    conv = store.get(uid)
+    assert "Проверьте" not in reply  # not the confirm screen with stale data
+    assert conv.lead.fio_parent == ""
+    assert conv.lead.fio_child == ""
+    assert conv.lead.phone == ""
+
+
+@pytest.mark.asyncio
+async def test_confirm_step_off_topic_question_gets_a_bridge_not_silence():
+    """"Хочу узнать про китайский" at the confirm screen used to silently
+    re-show the identical confirmation block with zero acknowledgement of
+    what was actually asked — reported as "отвечает одно и то же на всё"."""
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            raise AssertionError("should not submit on an unrelated question")
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-off-topic")
+    conv.lead.fio_parent = "Иванова Анна"
+    conv.lead.fio_child = "Миша"
+    conv.lead.age = "9"
+    conv.lead.phone = "+79991234567"
+    conv.selected_branch = "Лихачевский 76к1"
+    conv.lead_step = "confirm"
+
+    reply, submitted = await lead_manager.step(
+        conv, "Хочу узнать про китайский", get_kb(), FakeBigBen(), FakeMax()
+    )
+
+    assert submitted is False
+    assert "Проверьте" in reply  # still shows the confirmation
+    assert "секунду" in reply.lower() or "сначала" in reply.lower()
 
 
 def test_miniapp_lead_notifies_admins(monkeypatch):
