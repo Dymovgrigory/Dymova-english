@@ -288,40 +288,82 @@ def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
     return [[link_button(button["title"], button["url"])] for button in _contextual_buttons(text, reply)]
 
 
+_TELEGRAM_MEDIA_FIELDS = ("voice", "photo", "sticker", "video", "document", "audio", "video_note")
+
+
 async def _process_telegram_update(update: dict, telegram) -> None:
-    message = update.get("message") or {}
+    message = update.get("message") or update.get("edited_message") or {}
     chat = message.get("chat") or {}
     chat_id = chat.get("id")
-    text = str(message.get("text") or "").strip()
-    if chat_id is None or not text:
+    if chat_id is None:
         return
+    try:
+        # Фото с подписью — текст лежит в caption, не в text.
+        text = str(message.get("text") or message.get("caption") or "").strip()
+        if not text:
+            media_field = next((f for f in _TELEGRAM_MEDIA_FIELDS if message.get(f)), None)
+            if media_field is None:
+                # Служебные апдейты без текста (new_chat_members,
+                # pinned_message и т.п.) — отвечать нечего, не спамим.
+                return
+            # Голосовые/стикеры/видео бот не читает. Раньше такие апдейты
+            # молча отбрасывались (ни ответа, ни лога) — выглядело как
+            # зависание бота при любом нетекстовом сообщении.
+            if media_field == "photo":
+                # main.py уже просит прислать фото задания для помощи с ДЗ —
+                # плоский отказ "не умею читать фото" был бы противоречием.
+                await telegram.send_message(
+                    chat_id,
+                    "Вижу фото 📸 Опишите, пожалуйста, текстом, что за "
+                    "задание — так смогу помочь точнее.",
+                )
+            else:
+                await telegram.send_message(
+                    chat_id,
+                    "Пока не умею читать голосовые и файлы 🙈 Напишите, "
+                    "пожалуйста, текстом — обязательно отвечу.",
+                )
+            return
 
-    user_id = f"tg:{chat_id}"
-    low = text.lower()
-    if low in ("/start", "start"):
-        reply = await handle_start(user_id)
+        user_id = f"tg:{chat_id}"
+        low = text.lower()
+        if low in ("/start", "start"):
+            reply = await handle_start(user_id)
+            await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+            return
+
+        if I.detect_complaint(text) or I.detect_intent(text) == I.HANDOFF:
+            conv = get_store().get(user_id, platform="telegram")
+            branch = conv.selected_branch or conv.lead.branch
+            if branch:
+                await _notify_admins_for_telegram(conv, "запрос администратора")
+                reply = f"Свяжу вас с администратором {branch}. Он скоро ответит."
+                await telegram.send_message(chat_id, reply)
+            else:
+                reply = "Подскажите, пожалуйста, какой филиал вам удобнее?"
+                await telegram.send_message(chat_id, reply, buttons=_branch_admin_buttons())
+            return
+
+        if "домаш" in low or "дз" in low:
+            reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
+            await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+            return
+
+        reply = await handle_message(user_id, text)
         await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
-        return
-
-    if I.detect_complaint(text) or I.detect_intent(text) == I.HANDOFF:
-        conv = get_store().get(user_id, platform="telegram")
-        branch = conv.selected_branch or conv.lead.branch
-        if branch:
-            await _notify_admins_for_telegram(conv, "запрос администратора")
-            reply = f"Свяжу вас с администратором {branch}. Он скоро ответит."
-            await telegram.send_message(chat_id, reply)
-        else:
-            reply = "Подскажите, пожалуйста, какой филиал вам удобнее?"
-            await telegram.send_message(chat_id, reply, buttons=_branch_admin_buttons())
-        return
-
-    if "домаш" in low or "дз" in low:
-        reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
-        await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
-        return
-
-    reply = await handle_message(user_id, text)
-    await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+    except Exception:
+        # Раньше исключение здесь просто убивало фоновую задачу молча —
+        # пользователь не получал вообще ничего, что выглядело как
+        # зависший бот. Теперь хотя бы логируем и отвечаем что-то живое.
+        logger.exception("telegram: unhandled error processing update %s", update.get("update_id"))
+        try:
+            await telegram.send_message(
+                chat_id,
+                "Что-то пошло не так на моей стороне 🙏 Попробуйте, пожалуйста, "
+                "написать ещё раз через минуту.",
+            )
+        except Exception:
+            logger.exception("telegram: failed to send fallback error message")
 
 
 def _schedule_telegram_update(update: dict, telegram) -> bool:

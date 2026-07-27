@@ -173,6 +173,148 @@ async def test_telegram_start_and_homework_routes(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_telegram_non_text_message_gets_reply_not_silence(monkeypatch):
+    """Голосовое/фото/стикер раньше молча отбрасывались — бот выглядел зависшим."""
+    telegram = FakeTelegramClient()
+
+    await main_module._process_telegram_update(
+        {
+            "update_id": 2001,
+            "message": {
+                "chat": {"id": 55},
+                "voice": {"file_id": "abc"},
+            },
+        },
+        telegram,
+    )
+
+    assert len(telegram.sent) == 1
+    assert telegram.sent[0]["chat_id"] == 55
+    assert "текст" in telegram.sent[0]["text"].lower()
+
+
+@pytest.mark.asyncio
+async def test_telegram_photo_with_caption_is_read_as_text(monkeypatch):
+    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+
+    async def fake_handle_message(user_id, text):
+        assert text == "Сколько стоит?"
+        return "Отвечаю на подпись к фото"
+
+    monkeypatch.setattr(main_module, "handle_message", fake_handle_message)
+    monkeypatch.setattr(main_module, "_contextual_buttons", lambda question, reply: [])
+    telegram = FakeTelegramClient()
+
+    await main_module._process_telegram_update(
+        {
+            "update_id": 2004,
+            "message": {
+                "chat": {"id": 58},
+                "photo": [{"file_id": "abc"}],
+                "caption": "Сколько стоит?",
+            },
+        },
+        telegram,
+    )
+
+    assert telegram.sent[0]["text"] == "Отвечаю на подпись к фото"
+
+
+@pytest.mark.asyncio
+async def test_telegram_photo_without_caption_stays_on_homework_topic(monkeypatch):
+    telegram = FakeTelegramClient()
+
+    await main_module._process_telegram_update(
+        {
+            "update_id": 2005,
+            "message": {
+                "chat": {"id": 59},
+                "photo": [{"file_id": "abc"}],
+            },
+        },
+        telegram,
+    )
+
+    assert len(telegram.sent) == 1
+    assert "фото" in telegram.sent[0]["text"].lower()
+    assert "не умею" not in telegram.sent[0]["text"].lower()
+
+
+@pytest.mark.asyncio
+async def test_telegram_service_message_without_media_is_ignored(monkeypatch):
+    """new_chat_members и т.п. не должны получать 'не умею читать стикеры'."""
+    telegram = FakeTelegramClient()
+
+    await main_module._process_telegram_update(
+        {
+            "update_id": 2006,
+            "message": {
+                "chat": {"id": 60},
+                "new_chat_members": [{"id": 999, "first_name": "Кто-то"}],
+            },
+        },
+        telegram,
+    )
+
+    assert telegram.sent == []
+
+
+@pytest.mark.asyncio
+async def test_telegram_edited_message_is_handled(monkeypatch):
+    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+
+    async def fake_handle_message(user_id, text):
+        return "Понял!"
+
+    monkeypatch.setattr(main_module, "handle_message", fake_handle_message)
+    monkeypatch.setattr(main_module, "_contextual_buttons", lambda question, reply: [])
+    telegram = FakeTelegramClient()
+
+    await main_module._process_telegram_update(
+        {
+            "update_id": 2002,
+            "edited_message": {
+                "chat": {"id": 56},
+                "text": "Уточнение вопроса",
+            },
+        },
+        telegram,
+    )
+
+    assert len(telegram.sent) == 1
+    assert telegram.sent[0]["text"] == "Понял!"
+
+
+@pytest.mark.asyncio
+async def test_telegram_unhandled_error_sends_fallback_instead_of_silence(monkeypatch):
+    """Раньше исключение здесь убивало фоновую задачу молча — пользователь не
+    получал вообще ничего, что выглядело как зависший бот (см. dc70d34 для
+    аналогичного класса бага в STAGE_HANDOFF)."""
+    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+
+    async def broken_handle_message(user_id, text):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(main_module, "handle_message", broken_handle_message)
+    telegram = FakeTelegramClient()
+
+    await main_module._process_telegram_update(
+        {
+            "update_id": 2003,
+            "message": {
+                "chat": {"id": 57},
+                "text": "Сколько стоит обучение?",
+            },
+        },
+        telegram,
+    )
+
+    assert len(telegram.sent) == 1
+    assert telegram.sent[0]["chat_id"] == 57
+    assert telegram.sent[0]["text"]
+
+
+@pytest.mark.asyncio
 async def test_telegram_handoff_uses_max_for_admins(monkeypatch):
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
     monkeypatch.setattr(settings, "ADMIN_MAX_IDS", "111", raising=False)
