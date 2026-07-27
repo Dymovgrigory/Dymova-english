@@ -270,11 +270,28 @@ def _opportunistic_fill(conv: Conversation, text: str, kb: KnowledgeBase) -> Non
         conv.selected_branch = branch
 
 
+_YES_RE = re.compile(
+    r"\b(?:да|верно|подтвержда\w*|ага|угу|ок|окей|yes)\b|\bотправ\w*",
+    re.IGNORECASE,
+)
+
+
 def _is_yes(text: str) -> bool:
-    return text.lower().strip(" .!") in (
-        "да", "верно", "всё верно", "все верно", "да, верно", "отправляйте",
-        "отправить", "подтверждаю", "ок", "окей", "ага", "yes", "+",
-    )
+    """Подтверждение на шаге confirm.
+
+    Раньше это было точное совпадение с узким списком фраз ("да", "верно",
+    "все верно", ...) — любая естественная формулировка вроде «Да, всё
+    верно, отправляйте заявку» не совпадала ни с одной из них, и бот
+    бесконечно повторял один и тот же текст подтверждения на любой ответ,
+    не продвигая заявку. Тот же класс бага, что чинили в STAGE_HANDOFF
+    (dc70d34), только на шаге оформления заявки.
+    """
+    low = text.lower().strip()
+    if low == "+":
+        return True
+    if _is_no(low):
+        return False
+    return bool(_YES_RE.search(low))
 
 
 def _is_no(text: str) -> bool:

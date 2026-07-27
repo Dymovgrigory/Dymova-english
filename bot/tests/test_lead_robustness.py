@@ -53,6 +53,72 @@ async def test_step_captures_reordered_phone_and_branch():
     assert submitted is False
 
 
+@pytest.mark.asyncio
+async def test_confirm_step_accepts_natural_yes_phrasing():
+    """Раньше подтверждение принимало только точный список фраз ("да",
+    "верно", "все верно", ...) — любая естественная формулировка вроде
+    «Да, всё верно, отправляйте заявку» не совпадала ни с одной из них, и
+    бот бесконечно повторял один и тот же текст подтверждения, не
+    продвигая заявку (описано пользователем как «бот завис на моменте
+    оформления заявки, отвечает одно и то же на всё»)."""
+    submitted_leads = []
+
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            submitted_leads.append(a)
+            return True
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-confirm")
+    conv.lead.fio_parent = "Иванова Анна"
+    conv.lead.fio_child = "Миша"
+    conv.lead.age = "9"
+    conv.lead.phone = "+79991234567"
+    conv.selected_branch = "Лихачевский 76к1"
+    conv.lead_step = "confirm"
+
+    reply, submitted = await lead_manager.step(
+        conv, "Да, всё верно, отправляйте заявку", get_kb(), FakeBigBen(), FakeMax()
+    )
+
+    assert submitted is True
+    assert len(submitted_leads) == 1
+    assert "Готово" in reply
+
+
+@pytest.mark.asyncio
+async def test_confirm_step_correction_is_not_mistaken_for_yes():
+    class FakeBigBen:
+        async def create_lead(self, *a, **k):
+            raise AssertionError("should not submit on a correction request")
+
+    class FakeMax:
+        configured = False
+
+        async def send_message(self, *a, **k):
+            return True
+
+    conv = Conversation(user_id="robust-correct")
+    conv.lead.fio_parent = "Иванова Анна"
+    conv.lead.fio_child = "Миша"
+    conv.lead.age = "9"
+    conv.lead.phone = "+79991234567"
+    conv.selected_branch = "Лихачевский 76к1"
+    conv.lead_step = "confirm"
+
+    reply, submitted = await lead_manager.step(
+        conv, "нет, телефон неверно указан", get_kb(), FakeBigBen(), FakeMax()
+    )
+
+    assert submitted is False
+    assert conv.lead_step == ""
+
+
 def test_miniapp_lead_notifies_admins(monkeypatch):
     sent = []
 
