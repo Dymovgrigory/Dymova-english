@@ -40,3 +40,21 @@ new.dymova-english.ru {
     try_files {path} {path}/index.html
     file_server
 }
+
+# gbrain MCP endpoints, exposed for the Hermes agent (Timeweb server) to
+# reach — see docs/hermes-integration.md in the gbrain repo on foxinburg-vm.
+# Auth (Bearer/HMAC) is enforced by the MCP services themselves; Caddy here
+# is a plain reverse proxy. The services are host-level systemd units
+# (memory:8767, recall:8768, swarm:8766), not Docker containers, hence
+# host.docker.internal instead of a compose service name.
+mcp.dymova-english.ru {
+    handle_path /memory/* {
+        reverse_proxy host.docker.internal:8767
+    }
+    handle_path /recall/* {
+        reverse_proxy host.docker.internal:8768
+    }
+    handle_path /swarm/* {
+        reverse_proxy host.docker.internal:8766
+    }
+}
