@@ -29,10 +29,10 @@ bot.dymova-english.ru {
 #
 # /members/* — исключение: это фича личного кабинета Tilda (Tilda Members),
 # которой нет в статической сборке. Пока не появится свой личный кабинет,
-# этот путь редиректит на tilda-members.dymova-english.ru — отдельный
-# поддомен, у которого DNS указывает прямо на Tilda (не на этот сервер) и
-# который добавлен как алиас в настройках домена проекта 2053071 в кабинете
-# Tilda. См. дизайн-документ
+# этот путь редиректит на tilda-members.tilda.ws — бесплатный системный
+# поддомен проекта 2053071 в самой Tilda (Настройки сайта → Главное →
+# «Субдомен на Тильде»), с уже валидным HTTPS от Tilda — отдельная DNS-запись
+# и алиас домена не нужны. См. дизайн-документ
 # docs/superpowers/specs/2026-07-28-tilda-members-proxy-design.md.
 #
 # Раньше здесь был reverse_proxy (server-to-server на Tilda) — не пошло:
@@ -43,7 +43,7 @@ bot.dymova-english.ru {
 # IP, а не через наш сервер.
 dymova-english.ru, www.dymova-english.ru {
     handle /members/* {
-        redir https://tilda-members.dymova-english.ru{uri} 302
+        redir https://tilda-members.tilda.ws{uri} 302
     }
 
     root * /srv/foxinburg-site
