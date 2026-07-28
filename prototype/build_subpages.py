@@ -365,7 +365,7 @@ FOX_AVATAR = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devi
 ENGLISH_TEACHERS = [
     {"name": "Дмитроченко Юлия", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "dmitrochenko.jpg", "video": TEAM_MEDIA + "dmitrochenko.mp4", "lesson": TEAM_MEDIA + "dmitrochenko_lesson.mp4"},
     {"name": "Птицын Владислав", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "ptitsyn.jpg", "video": TEAM_MEDIA + "ptitsyn.mp4", "lesson": TEAM_MEDIA + "ptitsyn_lesson.mp4"},
-    {"name": "Анохин Роман", "role": "Педагог английского языка", "placeholder": True},
+    {"name": "Анохин Роман", "role": "Педагог английского языка", "photo": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@main/prototype/team-media/anokhin.jpg"},
     {"name": "Саляхова Алина", "role": "Педагог английского и немецкого языков", "photo": TEAM_MEDIA + "salyahova.jpg", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
 ]
 GERMAN_TEACHERS = [
