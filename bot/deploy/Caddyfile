@@ -26,7 +26,25 @@ bot.dymova-english.ru {
 # прод-режим — без --noindex) лежат в /srv/foxinburg-site на хосте — том
 # пробрасывается в контейнер тем же способом, что и Caddyfile. Активируется
 # автоматически, как только A-запись apex/www-домена укажет на этот сервер.
+#
+# /members/* — исключение: это фича личного кабинета Tilda (Tilda Members),
+# которой нет в статической сборке. Пока не появится свой личный кабинет,
+# этот путь прозрачно проксируется на Tilda — см. дизайн-документ
+# docs/superpowers/specs/2026-07-28-tilda-members-proxy-design.md.
+# tilda-origin.dymova-english.ru — отдельная A-запись (DNS-индикатор) с
+# текущим IP Tilda для проекта 2053071. IP Tilda для этого домена уже менялся
+# один раз без наших действий (было 185.215.4.12, стало 176.57.67.189) — при
+# повторной смене правим ТОЛЬКО эту DNS-запись в кабинете reg.ru, Caddyfile
+# трогать не нужно.
 dymova-english.ru, www.dymova-english.ru {
+    handle_path /members/* {
+        reverse_proxy https://tilda-origin.dymova-english.ru:443 {
+            transport http {
+                tls_server_name dymova-english.ru
+            }
+        }
+    }
+
     root * /srv/foxinburg-site
     try_files {path} {path}/index.html
     file_server
