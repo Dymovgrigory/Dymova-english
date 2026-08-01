@@ -375,11 +375,16 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY
         has_course_hint = bool(_COURSE_HINT_RE.search(text))
+        recent_course_hint = has_course_hint or any(
+            _COURSE_HINT_RE.search(m.get("content", ""))
+            for m in conv.history[-4:]
+            if m.get("role") == "user"
+        )
         if (
             intent == I.PRICE
             and not conv.lead.age
             and not conv.selected_course
-            and not has_course_hint
+            and not recent_course_hint
         ):
             # Голый "сколько стоит?" без курса/возраста находит по ключевым
             # словам нерелевантный документ (например, про частоту занятий),
@@ -392,6 +397,9 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             # без него "сколько стоит английский для ребёнка?" (нет цифры,
             # selected_course нигде не присваивается) получал бы тот же
             # уточняющий вопрос бесконечно, хотя курс уже назван.
+            # recent_course_hint смотрит и на пару предыдущих реплик: в диалоге
+            # «расскажите про летнюю академию» → «сколько стоит смена?»
+            # курс ясен из контекста, уточнять не нужно (сессия 36, стресс-тест).
             return (
                 "С радостью подскажу точную стоимость! 😊 Для какого курса "
                 "и какого возраста ученика — так назову цифры без "

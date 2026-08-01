@@ -92,6 +92,7 @@ class KnowledgeBase:
                       f"{company.get('philosophy','')} Слоган: {company.get('slogan','')}")
             self._add("methodology", "Методика обучения", company.get("methodology", ""))
             self._add("company", "Режим работы", company.get("work_hours", ""))
+            self._add("company", "Опыт и история школы", company.get("founded", ""))
 
         for adv in r.get("advantages", []):
             self._add("advantages", adv.get("title", ""), adv.get("text", ""))

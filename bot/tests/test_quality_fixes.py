@@ -302,3 +302,18 @@ def test_questions_about_people_are_not_handoff():
     assert I.detect_intent("Хочу поговорить с руководителем") == I.HANDOFF
     assert I.detect_intent("Мне никто не перезвонил!") == I.HANDOFF
     assert I.detect_intent("Верните деньги") == I.HANDOFF
+
+
+def test_questions_are_not_misrouted():
+    """Стресс-тест сессии 36: «ку» из сленга ловило «грамматику ...» как
+    приветствие; вопросы про диагностику/пробный запускали сбор заявки
+    вместо ответа; маткапитал уходил в уточняющий вопрос о цене."""
+    from app import intent as I
+
+    assert I.detect_intent("А если только грамматику подтянуть?") != I.GREETING
+    assert I.detect_intent("Что будет на бесплатной диагностике?") == I.ABOUT
+    assert I.detect_intent("А пробный урок есть?") == I.ABOUT
+    assert I.detect_intent("Можно оплатить материнским капиталом?") == I.ABOUT
+    # но реальное желание записаться по-прежнему ловится
+    assert I.detect_intent("Давайте запишемся на диагностику") == I.WANT_SIGNUP
+    assert I.detect_intent("Хочу на пробное занятие") == I.WANT_SIGNUP
