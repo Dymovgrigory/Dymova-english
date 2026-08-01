@@ -214,7 +214,8 @@ def _empathy_prefix(conv: Conversation) -> str:
 
 
 async def _consult_with_context(
-    conv: Conversation, text: str, kb_context: str, kb_score: float = 1.0
+    conv: Conversation, text: str, kb_context: str, kb_score: float = 1.0,
+    allow_web_retry: bool = False, school_related: bool | None = None,
 ) -> str:
     kb = get_kb()
     llm = get_llm()
@@ -225,6 +226,19 @@ async def _consult_with_context(
         messages.extend(conv.history[-history_turns:])
         reply = await llm.complete(messages)
         if reply:
+            if _is_uncertain_reply(reply) and allow_web_retry:
+                # Вторая попытка с живым веб-поиском: вопрос мог быть про
+                # актуальное (новости, даты, требования), чего нет в базе.
+                if school_related is None:
+                    school_related = bool(_SCHOOL_SCOPE_RE.search(text))
+                web_ctx = await _web_context_for(text, school_related=school_related)
+                if web_ctx:
+                    retry_context = (kb_context + "\n\n" if kb_context else "") + web_ctx
+                    system = sales.build_system_prompt(kb, conv, retry_context)
+                    messages[0] = {"role": "system", "content": system}
+                    retry = await llm.complete(messages)
+                    if retry and not _is_uncertain_reply(retry):
+                        return retry
             if _is_uncertain_reply(reply):
                 return await _refer_to_admin(conv, text, reason="llm_uncertain", score=kb_score)
             return reply
@@ -281,7 +295,10 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
         web_ctx = await _web_context_for(text, school_related=school_related)
         if web_ctx:
             context = (kb_context + "\n\n" if kb_context else "") + web_ctx
-    return await _consult_with_context(conv, text, context, kb_score=top_score)
+    return await _consult_with_context(
+        conv, text, context, kb_score=top_score,
+        allow_web_retry=allow_web, school_related=school_related,
+    )
 
 
 async def handle_message(user_id: str, text: str) -> str:

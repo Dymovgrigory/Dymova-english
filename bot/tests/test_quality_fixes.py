@@ -229,3 +229,59 @@ async def test_price_question_naming_a_course_skips_the_clarifying_loop():
     reply = await handle_message(uid, "сколько стоит английский для ребенка?")
 
     assert "для какого курса" not in reply.lower()
+
+
+@pytest.mark.asyncio
+async def test_uncertain_answer_retries_with_web_search(monkeypatch):
+    """Если LLM ответила [UNKNOWN] по школьному/фактическому вопросу, бот
+    делает вторую попытку с результатами живого веб-поиска, прежде чем
+    передавать вопрос администратору (сессия 36)."""
+    class FakeKB:
+        branches = []
+
+        def search(self, query, limit=5):
+            return []
+
+        def search_scored(self, query, limit=5):
+            return [(0.5, None)]  # сильное покрытие — веб сразу не подключается
+
+        def context_for(self, query, limit=5):
+            return ""
+
+    class Doc:
+        def render(self):
+            return "[ЕГЭ]\nКурс подготовки к ЕГЭ по английскому."
+
+    class FakeKB2(FakeKB):
+        def search_scored(self, query, limit=5):
+            return [(0.5, Doc())]
+
+    class FakeLLM:
+        enabled = True
+        calls = 0
+
+        async def complete(self, messages, temperature=None):
+            self.calls += 1
+            if self.calls == 1:
+                return "[UNKNOWN] нет актуальных данных."
+            return "По данным ФИПИ, в 2026 году формат ЕГЭ по английскому не меняется."
+
+    async def fake_search_web(query, limit=4):
+        return [{"title": "ФИПИ", "url": "https://fipi.ru", "snippet": "Изменений в КИМ ЕГЭ 2026 по английскому нет."}]
+
+    fake_llm = FakeLLM()
+    monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB2())
+    monkeypatch.setattr(ai_core, "get_llm", lambda: fake_llm)
+    monkeypatch.setattr(ai_core, "search_web", fake_search_web)
+
+    uid = "quality-web-retry"
+    store = get_store()
+    conv = store.get(uid)
+    conv.lead.age = "16"
+    store.save(conv)
+
+    reply = await handle_message(uid, "Что нового в ЕГЭ по английскому в 2026 году?")
+
+    assert fake_llm.calls == 2, "ожидали первую попытку и веб-ретрай"
+    assert "ФИПИ" in reply
+    assert "администратор" not in reply.lower()
