@@ -153,9 +153,11 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
 # параллакс — подключаются на всех страницах перед </body>.
 # 3D-маскот (foxi-3d.js + three.js importmap) отключён по решению владельца
 # (сессия 35): файлы остались в prototype/wow/, чтобы вернуть при желании.
+# Чат-виджет Фокси (бот, POST /api/chat) — на всех страницах, правый нижний угол.
 WOW_SNIPPET = (
     '<link rel="stylesheet" href="/wow/foxi-wow.css">\n'
-    '<script type="module" src="/wow/foxi-wow.js"></script>'
+    '<script type="module" src="/wow/foxi-wow.js"></script>\n'
+    '<script src="https://bot.dymova-english.ru/widget/foxi.js" defer></script>'
 )
 
 

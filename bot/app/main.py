@@ -804,6 +804,12 @@ async def site_lead(data: dict) -> dict:
 if _MINIAPP_DIR.exists():
     app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
 
+# Веб-виджет чата Фокси для статического сайта dymova-english.ru:
+# страницы подключают <script src="https://bot.dymova-english.ru/widget/foxi.js">.
+_WIDGET_DIR = Path(__file__).with_name("widget")
+if _WIDGET_DIR.exists():
+    app.mount("/widget", StaticFiles(directory=str(_WIDGET_DIR)), name="widget")
+
 
 @app.post("/admin/set-webhook")
 async def admin_set_webhook(data: dict) -> dict:
