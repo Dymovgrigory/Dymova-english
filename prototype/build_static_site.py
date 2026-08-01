@@ -30,6 +30,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://dymova-english.ru"
@@ -131,6 +132,7 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
     parts = [
         '<meta charset="UTF-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        '<link rel="icon" type="image/png" href="/favicon.png">',
         f"<title>{title}</title>",
         f'<meta name="description" content="{description}">',
         f'<link rel="canonical" href="{canonical}">',
@@ -147,6 +149,17 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
     return "\n".join(parts)
 
 
+# WOW-эффекты + 3D-маскот Фокси (prototype/wow/) — подключаются на всех
+# страницах перед </body>. importmap для three.js (маскот грузится лениво
+# после load+idle из foxi-wow.js, на LCP не влияет).
+WOW_SNIPPET = (
+    '<link rel="stylesheet" href="/wow/foxi-wow.css">\n'
+    '<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js",'
+    '"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/"}}</script>\n'
+    '<script type="module" src="/wow/foxi-wow.js"></script>'
+)
+
+
 def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, noindex: bool) -> str:
     title = meta.get("title") or f"{alias} — Фоксинбург"
     description = meta.get("description") or ""
@@ -158,7 +171,8 @@ def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, no
     body = content if alias == "index" else (shapka + "\n" + content + "\n" + footer)
     return (
         "<!DOCTYPE html>\n"
-        '<html lang="ru">\n<head>\n' + head + "\n</head>\n<body>\n" + body + "\n</body>\n</html>\n"
+        '<html lang="ru">\n<head>\n' + head + "\n</head>\n<body>\n" + body + "\n"
+        + WOW_SNIPPET + "\n</body>\n</html>\n"
     )
 
 
@@ -225,6 +239,16 @@ def main() -> None:
         robots = f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n"
     with open(os.path.join(out_dir, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
+
+    # WOW-ассеты (3D-маскот + эффекты) → /wow/ на сайте
+    wow_src = os.path.join(DIR, "wow")
+    if os.path.isdir(wow_src):
+        shutil.copytree(wow_src, os.path.join(out_dir, "wow"), dirs_exist_ok=True)
+
+    # favicon → корень сайта
+    favicon_src = os.path.join(DIR, "favicon.png")
+    if os.path.exists(favicon_src):
+        shutil.copy(favicon_src, os.path.join(out_dir, "favicon.png"))
 
     print(f"\nСобрано страниц: {len(written)} -> {out_dir}")
     print(f"robots: {'NOINDEX (стейджинг)' if args.noindex else 'индексируемый (прод)'}")
