@@ -32,8 +32,8 @@
   =============================================
 -->
 <div id="fxb-cinema">
-  <video class="fxb-cinema-video fxb-anim-fade" style="animation-delay:.2s" autoplay loop muted playsinline preload="metadata">
-    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260717_120352_eb988725-1351-43b3-8095-16e4a1005e3d.mp4" type="video/mp4">
+  <video class="fxb-cinema-video fxb-anim-fade" style="animation-delay:.2s" autoplay loop muted playsinline preload="auto">
+    <source src="/wow/cinema.mp4" type="video/mp4">
   </video>
   <div class="fxb-cinema-veil"></div>
 <div id="fxb-hero">
@@ -308,12 +308,19 @@
   if(!vids.length)return;
   function tryPlay(){
     vids.forEach(function(v){
+      v.muted=true; /* на случай строгих политик — mute до play */
       var p=v.play();
       if(p&&p.catch)p.catch(function(){});
     });
   }
+  /* пробуем сразу, по готовности данных и по событию load */
+  tryPlay();
+  vids.forEach(function(v){
+    v.addEventListener('canplay',tryPlay);
+  });
   if(document.readyState==='complete')tryPlay();
   else window.addEventListener('load',tryPlay,{once:true});
+  /* строгие режимы (Low Power Mode и т.п.) — запуск по первому касанию */
   var unlock=function(){tryPlay();document.removeEventListener('pointerdown',unlock);};
   document.addEventListener('pointerdown',unlock);
 })();
@@ -489,7 +496,8 @@
 #fxb-enrollment .fxb-input{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.24);color:#fff}
 #fxb-enrollment .fxb-input:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(252,249,81,.15);background:rgba(255,255,255,.18)}
 #fxb-enrollment .fxb-input::placeholder{color:rgba(255,255,255,.55)}
-#fxb-enrollment .fxb-select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")}
+#fxb-enrollment .fxb-select{background-color:rgba(36,26,54,.95);background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+#fxb-enrollment .fxb-select:focus{background-color:rgba(36,26,54,.75)}
 #fxb-enrollment .fxb-select option{color:#241a36}
 #fxb-enrollment .fxb-submit{border-radius:0}
 #fxb-enrollment .fxb-form-note{color:rgba(255,255,255,.55)}
