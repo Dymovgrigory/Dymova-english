@@ -62,8 +62,28 @@ def _sync_urls() -> list[str]:
     return urls or ["https://dymova-english.ru"]
 
 
+_SITE_DOCS: list[Document] = []
+
+
+def get_site_documents() -> list[Document]:
+    """Живые документы, полученные с сайта (для объединения с другими источниками)."""
+    return list(_SITE_DOCS)
+
+
+def refresh_live_documents() -> int:
+    """Собирает живые документы всех синхронизаций (сайт + внешние источники)
+    и обновляет KB одним списком. Локальный импорт — чтобы избежать цикла."""
+    from app.knowledge import sources
+
+    docs = get_site_documents() + sources.get_source_documents()
+    if docs:
+        get_kb().set_live_documents(docs)
+    return len(docs)
+
+
 async def sync_once() -> int:
     """Скачивает страницы и обновляет живые документы KB. Возвращает их число."""
+    global _SITE_DOCS
     docs: list[Document] = []
     async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
         for url in _sync_urls():
@@ -80,7 +100,8 @@ async def sync_once() -> int:
                 doc.tokens = set(_tokens(f"{page_title} {chunk}"))
                 docs.append(doc)
     if docs:
-        get_kb().set_live_documents(docs)
+        _SITE_DOCS = docs
+        refresh_live_documents()
         logger.info("site_sync: обновлено %s живых документов с сайта", len(docs))
     else:
         logger.warning("site_sync: ни одного документа не получено — оставляю прежние")

@@ -111,13 +111,15 @@ async def _complete_with_provider(
     provider: ProviderConfig,
     messages: list[dict],
     temperature: float,
+    max_tokens: int | None = None,
+    allow_english: bool = False,
 ) -> str | None:
     url = f"{provider.base_url.rstrip('/')}/chat/completions"
     payload = {
         "model": provider.model,
         "messages": messages,
         "temperature": temperature,
-        "max_tokens": settings.LLM_MAX_TOKENS,
+        "max_tokens": max_tokens or settings.LLM_MAX_TOKENS,
     }
     headers = _provider_headers(provider)
     delay = _INITIAL_BACKOFF
@@ -157,7 +159,7 @@ async def _complete_with_provider(
                 return None
             content = choices[0].get("message", {}).get("content", "")
             reply = _clean_response(content or "").strip() or None
-            if reply and not _mostly_russian(reply):
+            if reply and not allow_english and not _mostly_russian(reply):
                 logger.warning("LLM provider=%s returned mostly-English text", provider.label)
                 return None
             if reply:
@@ -207,6 +209,30 @@ class LLMClient:
             if reply:
                 return reply
         logger.error("LLM cascade exhausted all providers")
+        return None
+
+    async def complete_vision(
+        self,
+        messages: list[dict],
+        temperature: float = 0.2,
+        max_tokens: int = 1200,
+    ) -> str | None:
+        """Мультимодальный запрос (текст + изображение в content-частях).
+
+        Используется помощником по домашке: фото задания → объяснение.
+        Ответ не фильтруем по языку — объяснение может цитировать задание.
+        """
+        if not self.enabled:
+            return None
+        client = await _get_client()
+        for provider in self.providers:
+            reply = await _complete_with_provider(
+                client, provider, messages, temperature, max_tokens=max_tokens,
+                allow_english=True,
+            )
+            if reply:
+                return reply
+        logger.error("LLM vision cascade exhausted all providers")
         return None
 
 

@@ -1,4 +1,5 @@
-// Мини-приложение Фоксинбург: витрина курсов, помощник по выбору, личный кабинет.
+// Мини-приложение Фоксинбург: меню мини-приложений.
+// Экраны: меню, подбор курса, запись, помощь с домашкой, каталог, филиалы, кабинет.
 // Работает внутри MAX Mini App (если доступен мост) и как обычная веб-страница.
 
 const API = ""; // тот же origin, что и бот
@@ -24,16 +25,17 @@ async function postJSON(url, body) {
 
 let INFO = null;
 
-// --- Вкладки ---
-document.querySelectorAll(".tab").forEach((t) => {
-  t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
-    t.classList.add("active");
-    const name = t.dataset.tab;
-    ["select", "catalog", "branches", "cabinet"].forEach((s) => {
-      document.getElementById("tab-" + s).classList.toggle("hidden", s !== name);
-    });
+// --- Навигация по экранам ---
+const SCREENS = ["menu", "select", "signup", "homework", "catalog", "branches", "cabinet"];
+function showScreen(name) {
+  SCREENS.forEach((s) => {
+    document.getElementById("screen-" + s).classList.toggle("hidden", s !== name);
   });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
+}
+document.querySelectorAll("[data-go]").forEach((el) => {
+  el.addEventListener("click", () => showScreen(el.dataset.go));
 });
 
 // --- Помощник по выбору ---
@@ -107,29 +109,10 @@ function renderBranches() {
       .join("");
 }
 
-function applyAccessState() {
-  const notice = document.querySelector("#tab-cabinet .notice");
-  if (!notice) return;
-  if (ACCESS.locked) {
-    notice.textContent = ACCESS.message;
-    return;
-  }
-  if (!ACCESS.has_identity) {
-    notice.textContent =
-      "Откройте miniapp внутри MAX, чтобы связать профиль. После регистрации здесь появятся кабинет, домашка и онлайн-запись.";
-  }
-}
-
 // --- Форма заявки ---
 function openLeadForm(prefill = {}) {
-  if (ACCESS.locked) {
-    showStatus(ACCESS.message || "Сначала зарегистрируйтесь в чате.", false);
-    return;
-  }
-  const form = document.getElementById("lead-form");
-  form.classList.remove("hidden");
+  showScreen("signup");
   if (prefill.age) document.getElementById("lf-age").value = prefill.age;
-  form.scrollIntoView({ behavior: "smooth" });
 }
 
 document.getElementById("cabinet-signup").addEventListener("click", () => openLeadForm());
@@ -139,7 +122,6 @@ document.getElementById("lf-submit").addEventListener("click", async () => {
     showStatus(ACCESS.message || "Сначала зарегистрируйтесь в чате.", false);
     return;
   }
-  const status = document.getElementById("lf-status");
   const body = {
     fio_parent: document.getElementById("lf-parent").value.trim(),
     fio_child: document.getElementById("lf-child").value.trim(),
@@ -168,6 +150,62 @@ function showStatus(msg, ok) {
   s.style.background = ok ? "#e7f7ec" : "#fdecec";
 }
 
+// --- Помощь с домашкой ---
+document.getElementById("hw-file").addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0];
+  const img = document.getElementById("hw-preview");
+  if (file) {
+    img.src = URL.createObjectURL(file);
+    img.style.display = "block";
+  } else {
+    img.style.display = "none";
+  }
+});
+
+function hwStatus(msg, ok) {
+  const s = document.getElementById("hw-status");
+  s.textContent = msg;
+  s.classList.remove("hidden");
+  s.style.background = ok ? "#e7f7ec" : "#fdecec";
+}
+
+document.getElementById("hw-submit").addEventListener("click", async () => {
+  const fileInput = document.getElementById("hw-file");
+  const file = fileInput.files && fileInput.files[0];
+  const answerBox = document.getElementById("hw-answer");
+  answerBox.classList.add("hidden");
+  if (!file) {
+    hwStatus("Пожалуйста, прикрепите фото задания.", false);
+    return;
+  }
+  if (ACCESS.locked) {
+    hwStatus(ACCESS.message || "Сначала зарегистрируйтесь в чате.", false);
+    return;
+  }
+  const btn = document.getElementById("hw-submit");
+  btn.disabled = true;
+  hwStatus("Фокси разбирает задание... Обычно это 10–20 секунд.", true);
+  try {
+    const fd = new FormData();
+    fd.append("image", file);
+    fd.append("note", document.getElementById("hw-note").value.trim());
+    if (MINIAPP_USER_ID) fd.append("user_id", MINIAPP_USER_ID);
+    const r = await fetch(API + "/api/miniapp/homework", { method: "POST", body: fd });
+    const res = await r.json();
+    if (res.ok && res.explanation) {
+      hwStatus("Готово! Вот разбор:", true);
+      answerBox.textContent = res.explanation;
+      answerBox.classList.remove("hidden");
+    } else {
+      hwStatus("Не получилось разобрать фото: " + (res.error || res.detail || "попробуйте снимок почище."), false);
+    }
+  } catch (e) {
+    hwStatus("Ошибка сети — попробуйте ещё раз.", false);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
 // --- MAX Mini App bridge (приветствие по имени, если доступно) ---
 function initMaxBridge() {
   try {
@@ -186,9 +224,11 @@ function initMaxBridge() {
 
 (async function init() {
   initMaxBridge();
+  // поддержка старых ссылок вида #signup / #homework
+  const hash = (location.hash || "").replace("#", "");
+  if (SCREENS.includes(hash) && hash !== "menu") showScreen(hash);
   try {
     ACCESS = await getJSON("/api/miniapp/access");
-    applyAccessState();
     INFO = await getJSON("/api/miniapp/info");
     renderCatalog();
     renderBranches();

@@ -155,9 +155,18 @@ async def test_objection_route_uses_llm(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_factual_questions_do_not_use_llm_or_invent_prices(monkeypatch):
+async def test_factual_questions_do_not_invent_prices(monkeypatch):
+    """Новый контракт (сессия 36): при пустом KB бот НЕ уходит мгновенно к
+    администратору — сначала спрашивает LLM (с живым веб-поиском). Но цифры
+    выдумывать всё равно запрещено: если LLM не нашёл подтверждённых данных,
+    он отвечает [UNKNOWN], и только тогда включается handoff."""
     class FakeKB:
+        branches = []
+
         def search(self, query, limit=5):
+            return []
+
+        def search_scored(self, query, limit=5):
             return []
 
         def context_for(self, query, limit=5):
@@ -165,18 +174,23 @@ async def test_factual_questions_do_not_use_llm_or_invent_prices(monkeypatch):
 
     class FakeLLM:
         enabled = True
+        calls = 0
 
         async def complete(self, messages, temperature=None):
-            raise AssertionError("LLM should not be called for factual questions")
+            self.calls += 1
+            return "[UNKNOWN] точных данных по стоимости в источниках нет."
 
+    async def fake_search_web(query, limit=4):
+        return []
+
+    fake_llm = FakeLLM()
     monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB())
-    monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
+    monkeypatch.setattr(ai_core, "get_llm", lambda: fake_llm)
+    monkeypatch.setattr(ai_core, "search_web", fake_search_web)
 
     uid = "quality-factual"
     # Возраст уже известен — обходит уточняющий вопрос про курс/возраст
-    # (см. test_bare_price_question_asks_clarifying_question_instead_of_giving_up)
-    # и упирается именно в то, что тест проверяет: пустой KB-поиск не
-    # должен уходить в LLM и придумывать цифры.
+    # (см. test_bare_price_question_asks_clarifying_question_instead_of_giving_up).
     store = get_store()
     conv = store.get(uid)
     conv.lead.age = "9"
@@ -184,8 +198,8 @@ async def test_factual_questions_do_not_use_llm_or_invent_prices(monkeypatch):
 
     reply = await handle_message(uid, "Сколько стоит обучение?")
 
+    assert fake_llm.calls == 1, "ожидали ровно один вызов LLM для фактического вопроса"
     assert "10500" not in reply
-    assert "придумывать" in reply.lower()
     assert "администратор" in reply.lower()
 
 

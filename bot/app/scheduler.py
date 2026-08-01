@@ -107,6 +107,21 @@ async def _site_sync_loop() -> None:
         await asyncio.sleep(max(5, settings.SITE_SYNC_INTERVAL_MIN) * 60)
 
 
+async def _sources_sync_loop() -> None:
+    """Синхронизация внешних источников (VK, Яндекс.Карты, Telegram)."""
+    from app.knowledge import sources
+    from app.sources_config import sources_settings
+
+    while True:
+        try:
+            if sources_settings.SOURCES_SYNC_ENABLED:
+                await sources.sync_sources()
+                site_sync.refresh_live_documents()
+        except Exception:
+            logger.exception("sources: ошибка синхронизации внешних источников")
+        await asyncio.sleep(max(5, settings.SITE_SYNC_INTERVAL_MIN) * 60)
+
+
 def start() -> list[asyncio.Task]:
     """Запускает фоновые задачи (отчёт + напоминания)."""
     tasks: list[asyncio.Task] = []
@@ -120,6 +135,7 @@ def start() -> list[asyncio.Task]:
         logger.info("nudge: тёплые напоминания выключены (NUDGE_ENABLED=false)")
     if settings.SITE_SYNC_ENABLED:
         tasks.append(asyncio.create_task(_site_sync_loop()))
+        tasks.append(asyncio.create_task(_sources_sync_loop()))
     else:
         logger.info("site_sync: синхронизация с сайтом выключена (SITE_SYNC_ENABLED=false)")
     return tasks

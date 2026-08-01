@@ -33,6 +33,7 @@ from app import insights
 from app import sales
 from app import lead_manager
 from app.admin_router import hand_off
+from app.web import search_web
 
 logger = logging.getLogger(__name__)
 
@@ -235,15 +236,52 @@ async def _consult_with_context(
     return await _refer_to_admin(conv, text, reason="no_answer", score=0.0)
 
 
-async def _consult(conv: Conversation, text: str) -> str:
-    """Свободный консультативный ответ, основанный на базе знаний (RAG-lite)."""
+async def _web_context_for(text: str, school_related: bool) -> str:
+    """Живой поиск в интернете (DuckDuckGo) — подстраховка, когда база знаний
+    и синхронизированные источники не покрыли вопрос. Никогда не падает."""
+    if not getattr(settings, "WEB_SEARCH_ENABLED", True):
+        return ""
+    query = f"Фоксинбург Долгопрудный школа английского {text}" if school_related else text
+    try:
+        results = await search_web(query, limit=4)
+    except Exception:
+        logger.exception("web_search: ошибка поиска")
+        return ""
+    if not results:
+        return ""
+    lines = ["ИЗ ИНТЕРНЕТА (живой поиск; используй осторожно, школьные факты сверяй с базой):"]
+    for r in results:
+        title = (r.get("title") or "").strip()
+        snippet = (r.get("snippet") or "").strip()
+        url = (r.get("url") or "").strip()
+        if title or snippet:
+            lines.append(f"• {title}: {snippet} ({url})")
+    return "\n".join(lines) if len(lines) > 1 else ""
+
+
+_SCHOOL_SCOPE_RE = re.compile(
+    r"фоксинбург|фокси|долгопрудн|dymova|foxy|лихачевск|ракетостроител",
+    re.IGNORECASE,
+)
+
+
+async def _consult(conv: Conversation, text: str, allow_web: bool = False, school_related: bool | None = None) -> str:
+    """Свободный консультативный ответ: база знаний + живые источники,
+    при слабом покрытии — живой веб-поиск (RAG-lite)."""
     kb = get_kb()
     scored = kb.search_scored(text, limit=5)
     kb_context = "\n\n".join(doc.render() for _, doc in scored)
     top_score = scored[0][0] if scored else 0.0
     if scored and top_score < _WEAK_KB_SCORE:
         insights.log_gap(text, reason="weak_kb_match", score=top_score, user_id=conv.user_id)
-    return await _consult_with_context(conv, text, kb_context, kb_score=top_score)
+    context = kb_context
+    if allow_web and top_score < _WEAK_KB_SCORE:
+        if school_related is None:
+            school_related = bool(_SCHOOL_SCOPE_RE.search(text))
+        web_ctx = await _web_context_for(text, school_related=school_related)
+        if web_ctx:
+            context = (kb_context + "\n\n" if kb_context else "") + web_ctx
+    return await _consult_with_context(conv, text, context, kb_score=top_score)
 
 
 async def handle_message(user_id: str, text: str) -> str:
@@ -342,10 +380,13 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
                 "и какого возраста ученика — так назову цифры без "
                 "приблизительных догадок."
             )
-        if not kb.search(text, limit=1):
+        if not kb.search(text, limit=1) and not get_llm().enabled:
+            # Без LLM и без совпадений в базе знаний ответить нечем — handoff.
             return await _refer_to_admin(conv, text, reason="no_kb_match", score=0.0)
         if get_llm().enabled:
-            return await _consult(conv, text)
+            # LLM разберётся сам: сильный контекст из KB, иначе живой веб-поиск;
+            # администратор подключается только если уверенного ответа нет нигде.
+            return await _consult(conv, text, allow_web=True, school_related=True)
         return _grounded_fact_reply(kb, text, intent)
 
     # 5. Явное намерение открыть кабинет — запускаем регистрацию.
@@ -380,9 +421,12 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             return recs + "\n\n" + sales.sales_nudge(conv)
 
     # 9. Во всех прочих случаях — консультативный ответ по базе знаний.
+    #    Веб-поиск подключаем только для содержательных вопросов (не для
+    #    коротких реплик вида «ок», «спасибо», «понятно»).
     if conv.stage not in (STAGE_DONE,):
         conv.stage = STAGE_DISCOVERY
-    return await _consult(conv, text)
+    looks_like_question = "?" in text or len(text.strip()) >= 25
+    return await _consult(conv, text, allow_web=looks_like_question)
 
 
 def _teacher_language(about: str) -> str:
