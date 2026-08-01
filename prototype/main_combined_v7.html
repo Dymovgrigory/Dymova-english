@@ -31,11 +31,12 @@
   Занятия: 2 раза в неделю по 60 минут
   =============================================
 -->
-<div id="fxb-hero">
-  <video class="fxb-hero-video fxb-anim-fade" style="animation-delay:.2s" autoplay loop muted playsinline preload="metadata">
+<div id="fxb-cinema">
+  <video class="fxb-cinema-video fxb-anim-fade" style="animation-delay:.2s" autoplay loop muted playsinline preload="metadata">
     <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260717_120352_eb988725-1351-43b3-8095-16e4a1005e3d.mp4" type="video/mp4">
   </video>
-  <div class="fxb-hero-veil"></div>
+  <div class="fxb-cinema-veil"></div>
+<div id="fxb-hero">
   <div class="fxb-hero-bg">
     <img class="fxb-hero-decor fxb-hd1" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-1.png" alt="" loading="lazy">
     <img class="fxb-hero-decor fxb-hd2" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-zigzag-yellow.png" alt="" loading="lazy">
@@ -151,7 +152,7 @@
 #fxb-hero{
   --purple:#392852;--purple-2:#662d92;--purple-d:#241a36;--orange:#ee7349;--yellow:#fcf951;
   font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
-  background:linear-gradient(165deg,#1e1433 0%,var(--purple) 25%,var(--purple-2) 60%,#7a3db0 88%,#8f52c4 100%);
+  background:transparent;
   position:relative;overflow:hidden;color:#fff;
 }
 #fxb-hero *{box-sizing:border-box;margin:0;padding:0}
@@ -159,9 +160,6 @@
 #fxb-hero .fxb-w{max-width:1260px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
 
 /* Decorative background */
-#fxb-hero .fxb-hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-#fxb-hero .fxb-hero-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(165deg,rgba(30,20,51,.88) 0%,rgba(57,40,82,.74) 45%,rgba(102,45,146,.68) 100%)}
 #fxb-hero .fxb-hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 #fxb-hero .fxb-hero-decor{position:absolute;opacity:.035}
 #fxb-hero .fxb-hd1{right:-120px;top:-60px;width:520px;transform:rotate(15deg)}
@@ -277,7 +275,11 @@
   #fxb-hero .fxb-slogan-text{font-size:22px}
 }
 
-/* === CINEMA MODE (видео-фон + стекло + stagger-анимации) === */
+/* === CINEMA MODE: единая сцена — одно видео и вуаль на шапку + блок записи === */
+#fxb-cinema{position:relative;overflow:hidden;background:#1e1433}
+#fxb-cinema .fxb-cinema-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#fxb-cinema .fxb-cinema-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(165deg,rgba(30,20,51,.86) 0%,rgba(57,40,82,.78) 40%,rgba(102,45,146,.72) 100%)}
 /* Уплотняем топлайн на десктопе: «Вход в ЛК» обрезался overflow:hidden */
 @media(min-width:961px){
   #fxb-hero .fxb-act-link{display:none}
@@ -293,7 +295,7 @@
 /* у лисы своя float-анимация — совмещаем: сначала вход, потом парение */
 #fxb-hero .fxb-slogan-fox.fxb-anim{animation:fxbFadeUp .8s cubic-bezier(.16,1,.3,1) forwards,fxbFoxFloat 4s ease-in-out .9s infinite}
 @media (prefers-reduced-motion: reduce){
-  #fxb-hero .fxb-hero-video,#fxb-enrollment .fxb-enroll-video{display:none}
+  #fxb-cinema .fxb-cinema-video{display:none}
   .fxb-anim,.fxb-anim-fade{opacity:1;animation:none}
 }
 </style>
@@ -302,7 +304,7 @@
 /* CINEMA: гарантированный запуск фонового видео (autoplay может блокироваться).
    Первая попытка — сразу, при блокировке — по первому касанию/клику. */
 (function(){
-  var vids=document.querySelectorAll('.fxb-hero-video,.fxb-enroll-video');
+  var vids=document.querySelectorAll('.fxb-cinema-video');
   if(!vids.length)return;
   function tryPlay(){
     vids.forEach(function(v){
@@ -314,13 +316,6 @@
   else window.addEventListener('load',tryPlay,{once:true});
   var unlock=function(){tryPlay();document.removeEventListener('pointerdown',unlock);};
   document.addEventListener('pointerdown',unlock);
-  /* блок записи ниже сгиба — запускаем видео при появлении в кадре */
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(es){
-      es.forEach(function(e){if(e.isIntersecting){tryPlay();}});
-    },{threshold:.05});
-    vids.forEach(function(v){io.observe(v);});
-  }
 })();
 </script>
 
@@ -386,10 +381,6 @@
   =============================================
 -->
 <div id="fxb-enrollment">
-  <video class="fxb-enroll-video fxb-anim-fade" style="animation-delay:.15s" autoplay loop muted playsinline preload="metadata">
-    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260717_120352_eb988725-1351-43b3-8095-16e4a1005e3d.mp4" type="video/mp4">
-  </video>
-  <div class="fxb-enroll-veil"></div>
   <div class="fxb-enroll-bg">
     <img class="fxb-enroll-decor fxb-edl" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-blob-yellow.png" alt="" loading="lazy">
     <img class="fxb-enroll-decor fxb-edr" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" loading="lazy">
@@ -443,6 +434,7 @@
     </div>
   </div>
 </div>
+</div><!-- /#fxb-cinema -->
 
 <style>
 #fxb-enrollment{--purple:#392852;--purple-2:#662d92;--orange:#ee7349;--yellow:#fcf951;
@@ -483,27 +475,24 @@
   #fxb-enrollment .fxb-enroll-card{max-width:480px}
 }
 
-/* === CINEMA MODE: видео-фон + стекло === */
-#fxb-enrollment{background:#1e1433}
-#fxb-enrollment .fxb-enroll-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-#fxb-enrollment .fxb-enroll-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(135deg,rgba(30,20,51,.9) 0%,rgba(57,40,82,.82) 50%,rgba(102,45,146,.78) 100%)}
+/* === CINEMA MODE: блок прозрачен — общее видео из #fxb-cinema === */
+#fxb-enrollment{background:transparent}
 #fxb-enrollment .fxb-enroll-title{color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.3)}
 #fxb-enrollment .fxb-enroll-desc{color:rgba(255,255,255,.82)}
 #fxb-enrollment .fxb-ef svg{stroke:var(--yellow)}
 #fxb-enrollment .fxb-ef strong{color:#fff}
-#fxb-enrollment .fxb-ef span{color:rgba(255,255,255,.68)}
+#fxb-enrollment .fxb-ef span{color:rgba(255,255,255,.75)}
 #fxb-enrollment .fxb-enroll-card{background:rgba(255,255,255,.08);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 60px -20px rgba(0,0,0,.5);border-radius:20px}
 #fxb-enrollment .fxb-form-title{color:#fff}
-#fxb-enrollment .fxb-form-sub{color:rgba(255,255,255,.66)}
-#fxb-enrollment .fxb-input{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff}
-#fxb-enrollment .fxb-input:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(252,249,81,.15);background:rgba(255,255,255,.14)}
-#fxb-enrollment .fxb-input::placeholder{color:rgba(255,255,255,.45)}
+#fxb-enrollment .fxb-form-sub{color:rgba(255,255,255,.72)}
+#fxb-enrollment .fxb-input{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.24);color:#fff}
+#fxb-enrollment .fxb-input:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(252,249,81,.15);background:rgba(255,255,255,.18)}
+#fxb-enrollment .fxb-input::placeholder{color:rgba(255,255,255,.55)}
 #fxb-enrollment .fxb-select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")}
 #fxb-enrollment .fxb-select option{color:#241a36}
 #fxb-enrollment .fxb-submit{border-radius:0}
-#fxb-enrollment .fxb-form-note{color:rgba(255,255,255,.45)}
+#fxb-enrollment .fxb-form-note{color:rgba(255,255,255,.55)}
 #fxb-enrollment .fxb-form-note a{color:var(--yellow)}
 </style>
 
