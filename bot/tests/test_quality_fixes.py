@@ -285,3 +285,20 @@ async def test_uncertain_answer_retries_with_web_search(monkeypatch):
     assert fake_llm.calls == 2, "ожидали первую попытку и веб-ретрай"
     assert "ФИПИ" in reply
     assert "администратор" not in reply.lower()
+
+
+def test_questions_about_people_are_not_handoff():
+    """«Кто руководители?» — вопрос о школе (ABOUT), а не просьба позвать
+    человека. Раньше такие вопросы мгновенно уходили администратору (баг
+    из продовых логов, сессия 36)."""
+    from app import intent as I
+
+    assert I.detect_intent("Кто руководители школы?") == I.ABOUT
+    assert I.detect_intent("Как зовут директора?") == I.ABOUT
+    assert I.detect_intent("Расскажите про вашу команду") == I.ABOUT
+    assert I.detect_intent("У вас есть носитель языка?") == I.ABOUT
+    # а явные просьбы человека — по-прежнему handoff
+    assert I.detect_intent("Позовите администратора") == I.HANDOFF
+    assert I.detect_intent("Хочу поговорить с руководителем") == I.HANDOFF
+    assert I.detect_intent("Мне никто не перезвонил!") == I.HANDOFF
+    assert I.detect_intent("Верните деньги") == I.HANDOFF
