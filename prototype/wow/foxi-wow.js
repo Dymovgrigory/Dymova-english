@@ -1,16 +1,13 @@
 /* Фокси WOW — scroll-эффекты для всех страниц dymova-english.ru.
    Лёгкий (<10 КБ): reveal-анимации, магнитные кнопки, 3D-tilt карточек,
-   параллакс декора, ленивая загрузка 3D-маскота после load+idle.
-   Уважает prefers-reduced-motion и слабые устройства. */
+   параллакс декора. Уважает prefers-reduced-motion и слабые устройства.
+   (3D-маскот foxi-3d.js отключён по решению владельца, сессия 35.) */
 
 (() => {
   'use strict';
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(pointer: fine)').matches;
-  const weakDevice =
-    (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
-    (navigator.connection && navigator.connection.saveData);
 
   /* ---------- 1. Scroll-reveal (IntersectionObserver, once) ---------- */
   const REVEAL_SELECTORS = [
@@ -131,26 +128,12 @@
     if (h1) h1.classList.add('wow-hero-in');
   }
 
-  /* ---------- 6. Ленивая загрузка 3D-маскота ---------- */
-  function initFoxiLazy() {
-    if (reduceMotion || weakDevice) return;
-    const start = () => {
-      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 400));
-      idle(() => {
-        import('./foxi-3d.js').then((m) => m.initFoxi3D()).catch(() => { /* 3D опционален */ });
-      });
-    };
-    if (document.readyState === 'complete') start();
-    else window.addEventListener('load', start, { once: true });
-  }
-
   function boot() {
     initReveal();
     initMagnets();
     initTilt();
     initParallax();
     initHero();
-    initFoxiLazy();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
   else boot();

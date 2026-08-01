@@ -68,7 +68,7 @@
         <a href="/kontakty">Контакты</a>
         <a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>
         <a href="/letnyaya-akademiya">Летняя Академия</a>
-        <a href="/lmsfoxinburg">Личный кабинет</a>
+        <a href="/members/login">Личный кабинет</a>
       </div>
 
       <!-- Колонка 4: Контакты -->
@@ -89,7 +89,7 @@
       </div>
       <div class="fxb-ft-links">
         <a href="/policy">Политика конфиденциальности</a>
-        <a href="https://docs.google.com/document/d/10SWEMRDFKEc" target="_blank" rel="noopener">Публичная оферта</a>
+        <!-- «Публичная оферта» убрана: Google-документ удалён (410), владелец пришлёт новый — вернуть ссылку -->
       </div>
     </div>
   </div>
@@ -209,5 +209,43 @@
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!fxbZ.hidden)fxbZclose();});
   }
   window.fxbZSuccess=function(){var m=document.getElementById('fxb-zayavka-modal');if(!m)return;var vf=m.querySelector('.fxb-zview--form');var vt=m.querySelector('.fxb-zview--thanks');if(vf)vf.hidden=true;if(vt)vt.hidden=false;};
+  /* Отправка заявки на свой /api/lead. На страницах, где контент уже содержит
+     свой zayavka-модуль (window.__fxbZayavkaBound), обработчик там — не дублируем. */
+  var fxbForm=root.querySelector('#fxbZform');
+  if(fxbForm&&!window.__fxbZayavkaBound){
+    fxbForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      var nameEl=fxbForm.querySelector('[name="Name"]');
+      var phoneEl=fxbForm.querySelector('[name="Phone"]');
+      var name=(nameEl&&nameEl.value||'').trim();
+      var phone=(phoneEl&&phoneEl.value||'').trim();
+      var errBox=fxbForm.querySelector('.js-errorbox-all .js-rule-error-all');
+      [nameEl,phoneEl].forEach(function(el){if(el)el.closest('.fxb-zfield').classList.remove('fxb-zerr');});
+      if(!name||!phone){
+        if(!name&&nameEl)nameEl.closest('.fxb-zfield').classList.add('fxb-zerr');
+        if(!phone&&phoneEl)phoneEl.closest('.fxb-zfield').classList.add('fxb-zerr');
+        if(errBox){errBox.textContent='Укажите имя и телефон.';errBox.closest('.js-errorbox-all').style.display='block';}
+        return;
+      }
+      if(errBox)errBox.closest('.js-errorbox-all').style.display='none';
+      var subject=(fxbForm.querySelector('[name="Предмет"]')||{}).value||'';
+      var section=(fxbForm.querySelector('[name="Раздел"]')||{}).value||'';
+      var page=(fxbForm.querySelector('[name="Страница"]')||{}).value||'';
+      var submitBtn=fxbForm.querySelector('.fxb-zsubmit');
+      if(submitBtn)submitBtn.disabled=true;
+      fetch('https://bot.dymova-english.ru/api/lead',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({fio_parent:name,phone:phone,course:subject,comment:section,source:'Сайт dymova-english.ru — '+(subject||'заявка')+' ('+page+')'})
+      }).then(function(r){return r.json();}).then(function(data){
+        if(submitBtn)submitBtn.disabled=false;
+        if(data&&data.ok){window.fxbZSuccess();}
+        else if(errBox){errBox.textContent=(data&&data.error)||'Не получилось отправить, попробуйте ещё раз или напишите в Max.';errBox.closest('.js-errorbox-all').style.display='block';}
+      }).catch(function(){
+        if(submitBtn)submitBtn.disabled=false;
+        if(errBox){errBox.textContent='Не получилось отправить, попробуйте ещё раз или напишите в Max.';errBox.closest('.js-errorbox-all').style.display='block';}
+      });
+    });
+  }
 })();
 </script>

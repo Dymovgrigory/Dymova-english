@@ -63,6 +63,8 @@
             <a href="/reading">Курс по чтению</a>
             <a href="/grammar">Курс по грамматике</a>
             <a href="/preparation">Подготовка к школе</a>
+            <a href="/oge-anglijskij">Подготовка к ОГЭ по английскому</a>
+            <a href="/ege-anglijskij">Подготовка к ЕГЭ по английскому</a>
           </div>
         </div>
         <div class="fxb-dd">
@@ -71,6 +73,14 @@
             <a href="/doshkolniki">Дошкольники (3-6)</a>
             <a href="/mladshie-shkolniki">Младшие школьники (7-10)</a>
             <a href="/podrostki">Подростки (11-16)</a>
+            <a href="/anglijskij-dlya-vzroslyh">Английский для взрослых</a>
+          </div>
+        </div>
+        <div class="fxb-dd">
+          <button class="fxb-dd-btn" type="button">Другие языки <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="fxb-dd-panel">
+            <a href="/nemeckij-yazyk">Немецкий язык</a>
+            <a href="/kitajskij-yazyk">Китайский язык</a>
           </div>
         </div>
         <a href="/novosti">Новости</a>
@@ -82,7 +92,7 @@
         <a class="fxb-act-link" href="https://max.ru/id611904726658_biz" target="_blank" rel="noopener">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
           Max</a>
-        <a class="fxb-act-btn" href="/lmsfoxinburg">Вход в ЛК</a>
+        <a class="fxb-act-btn" href="/members/login">Вход в ЛК</a>
       </div>
     </div>
 
@@ -234,8 +244,11 @@
 
 /* ========== MOBILE ========== */
 @media(max-width:960px){
-  #fxb-hero .fxb-topline{flex-wrap:wrap;padding:12px 0 10px}
-  #fxb-hero .fxb-contacts{display:none}
+  #fxb-hero{overflow:visible}
+  #fxb-hero .fxb-topline{position:relative;flex-wrap:wrap;padding:12px 0 10px}
+  #fxb-hero .fxb-contacts{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 4px}
+  #fxb-hero .fxb-contacts-group{width:100%;justify-content:center;flex-wrap:wrap;gap:5px}
+  #fxb-hero .fxb-csep{display:none}
   #fxb-hero .fxb-badge{display:none}
   #fxb-hero .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:200;border-radius:0 0 16px 16px}
   #fxb-hero .fxb-nav.fxb-open{display:flex}
@@ -243,7 +256,7 @@
   #fxb-hero .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.04);margin:2px 0;border-radius:10px}
   #fxb-hero .fxb-dd-panel a{color:rgba(255,255,255,.7);font-size:14px}
   #fxb-hero .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
-  #fxb-hero .fxb-burger{display:flex}
+  #fxb-hero .fxb-burger{display:flex;margin-left:auto}
   #fxb-hero .fxb-actions{display:none}
   #fxb-hero .fxb-summer{padding:10px 0 4px}
   #fxb-hero .fxb-summer-tags{gap:4px}
@@ -349,7 +362,7 @@
         <div class="fxb-enroll-card">
           <h3 class="fxb-form-title">Оставьте заявку</h3>
           <p class="fxb-form-sub">Мы свяжемся и подберём удобное расписание</p>
-          <form class="fxb-form" id="fxbEnrollForm" onsubmit="return false;">
+          <form class="fxb-form" id="fxbEnrollForm">
             <input type="text" name="name" placeholder="Имя родителя" required class="fxb-input">
             <input type="text" name="child" placeholder="Имя и возраст ребёнка" required class="fxb-input">
             <input type="tel" name="phone" placeholder="Телефон" required class="fxb-input">
@@ -359,8 +372,14 @@
               <option value="offline-rak">Офлайн — Ракетостроителей</option>
               <option value="online">Онлайн</option>
             </select>
+            <p class="fxb-form-err" style="display:none;color:#e0526a;font-size:13px;font-weight:600"></p>
             <button type="submit" class="fxb-submit">Забронировать место</button>
           </form>
+          <div class="fxb-enroll-thanks" hidden>
+            <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#2bb673" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14l-3-3"/></svg>
+            <h3 class="fxb-form-title">Заявка отправлена!</h3>
+            <p class="fxb-form-sub">Мы свяжемся с вами, расскажем расписание и забронируем место.</p>
+          </div>
           <p class="fxb-form-note">Нажимая кнопку, вы соглашаетесь с <a href="/policy">политикой конфиденциальности</a></p>
         </div>
       </div>
@@ -399,6 +418,9 @@
 #fxb-enrollment .fxb-submit:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(238,115,73,.6)}
 #fxb-enrollment .fxb-form-note{margin-top:12px;font-size:11px;color:#b5afc4;font-weight:500;text-align:center}
 #fxb-enrollment .fxb-form-note a{color:var(--purple-2);text-decoration:underline}
+#fxb-enrollment .fxb-enroll-thanks{text-align:center;padding:24px 0 8px;display:flex;flex-direction:column;align-items:center;gap:10px}
+#fxb-enrollment .fxb-enroll-thanks[hidden]{display:none}
+#fxb-enrollment .fxb-input.fxb-err{border-color:#e0526a;box-shadow:0 0 0 3px rgba(224,82,106,.15)}
 @media(max-width:860px){
   #fxb-enrollment .fxb-enroll-grid{grid-template-columns:1fr;gap:32px}
   #fxb-enrollment .fxb-enroll-card{max-width:480px}
@@ -1824,7 +1846,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
         <div class="fxb-row"><strong>Электронная почта:</strong><span><a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a></span></div>
         <div class="fxb-row"><strong>Основные сведения:</strong><span>ИП ДЫМОВА ВЕРОНИКА АЛЕКСАНДРОВНА, ИНН 611904726658</span></div>
         <div class="fxb-row"><strong>Структура и органы управления:</strong><span>Единоличный руководитель — Дымова Вероника Александровна</span></div>
-        <div class="fxb-row"><strong>Документы:</strong><span><a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>, <a href="https://docs.google.com/document/d/10SWEMRDFKEc" target="_blank" rel="noopener">Публичная оферта-занятия</a></span></div>
+        <div class="fxb-row"><strong>Документы:</strong><span><a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a><!-- «Публичная оферта-занятия» убрана: Google-документ удалён (410), владелец пришлёт новый — вернуть ссылку --></span></div>
         <div class="fxb-row"><strong>Образование:</strong><span>Дополнительное образование для детей и взрослых</span></div>
         <div class="fxb-row"><strong>Руководство:</strong><span>Дымова Вероника Александровна — руководитель</span></div>
         <div class="fxb-row"><strong>Педагогический состав:</strong><span>Информация о педагогическом составе доступна по запросу у администратора</span></div>
@@ -2080,7 +2102,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
         <a href="/kontakty">Контакты</a>
         <a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>
         <a href="/letnyaya-akademiya">Летняя Академия</a>
-        <a href="/lmsfoxinburg">Личный кабинет</a>
+        <a href="/members/login">Личный кабинет</a>
       </div>
 
       <!-- Колонка 4: Контакты -->
@@ -2101,7 +2123,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
       </div>
       <div class="fxb-ft-links">
         <a href="/policy">Политика конфиденциальности</a>
-        <a href="https://docs.google.com/document/d/10SWEMRDFKEc" target="_blank" rel="noopener">Публичная оферта</a>
+        <!-- «Публичная оферта» убрана: Google-документ удалён (410), владелец пришлёт новый — вернуть ссылку -->
       </div>
     </div>
   </div>
@@ -2255,6 +2277,49 @@ var fxbForm=document.querySelector('#fxbZform');
       }).catch(function(){
         if(submitBtn)submitBtn.disabled=false;
         if(errBox){errBox.textContent='Не получилось отправить, попробуйте ещё раз или напишите в Max.';errBox.closest('.js-errorbox-all').style.display='block';}
+      });
+    });
+  }
+  /* Форма «Забронировать место» (блок записи 2026/27). После миграции с Tilda
+     у неё не было обработчика (onsubmit="return false") — кнопка ничего не делала. */
+  var enrollForm=document.getElementById('fxbEnrollForm');
+  if(enrollForm){
+    enrollForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      var nameEl=enrollForm.querySelector('[name="name"]');
+      var childEl=enrollForm.querySelector('[name="child"]');
+      var phoneEl=enrollForm.querySelector('[name="phone"]');
+      var fmtEl=enrollForm.querySelector('[name="format"]');
+      var errEl=enrollForm.querySelector('.fxb-form-err');
+      var name=(nameEl.value||'').trim(), child=(childEl.value||'').trim(), phone=(phoneEl.value||'').trim();
+      [nameEl,childEl,phoneEl].forEach(function(el){el.classList.remove('fxb-err');});
+      var bad=[];
+      if(!name)bad.push(nameEl);
+      if(!child)bad.push(childEl);
+      if(!phone)bad.push(phoneEl);
+      if(bad.length){
+        bad.forEach(function(el){el.classList.add('fxb-err');});
+        if(errEl){errEl.textContent='Заполните имя, ребёнка и телефон.';errEl.style.display='block';}
+        return;
+      }
+      if(errEl)errEl.style.display='none';
+      var fmtText=fmtEl.value?fmtEl.options[fmtEl.selectedIndex].text:'';
+      var submitBtn=enrollForm.querySelector('.fxb-submit');
+      submitBtn.disabled=true;
+      fetch('https://bot.dymova-english.ru/api/lead',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({fio_parent:name,fio_child:child,phone:phone,branch:fmtText,course:'Запись на новый учебный год 2026/27',comment:fmtText?('Формат: '+fmtText):'',source:'Сайт dymova-english.ru — Запись 2026/27 (форма на главной)'})
+      }).then(function(r){return r.json();}).then(function(data){
+        submitBtn.disabled=false;
+        if(data&&data.ok){
+          enrollForm.hidden=true;
+          var th=enrollForm.parentElement.querySelector('.fxb-enroll-thanks');
+          if(th)th.hidden=false;
+        }else if(errEl){errEl.textContent=(data&&data.error)||'Не получилось отправить, попробуйте ещё раз или напишите в Max.';errEl.style.display='block';}
+      }).catch(function(){
+        submitBtn.disabled=false;
+        if(errEl){errEl.textContent='Не получилось отправить, попробуйте ещё раз или напишите в Max.';errEl.style.display='block';}
       });
     });
   }

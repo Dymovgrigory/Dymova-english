@@ -149,13 +149,12 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
     return "\n".join(parts)
 
 
-# WOW-эффекты + 3D-маскот Фокси (prototype/wow/) — подключаются на всех
-# страницах перед </body>. importmap для three.js (маскот грузится лениво
-# после load+idle из foxi-wow.js, на LCP не влияет).
+# WOW-эффекты (prototype/wow/) — scroll-reveal, магнитные кнопки, tilt,
+# параллакс — подключаются на всех страницах перед </body>.
+# 3D-маскот (foxi-3d.js + three.js importmap) отключён по решению владельца
+# (сессия 35): файлы остались в prototype/wow/, чтобы вернуть при желании.
 WOW_SNIPPET = (
     '<link rel="stylesheet" href="/wow/foxi-wow.css">\n'
-    '<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js",'
-    '"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/"}}</script>\n'
     '<script type="module" src="/wow/foxi-wow.js"></script>'
 )
 
@@ -240,7 +239,7 @@ def main() -> None:
     with open(os.path.join(out_dir, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
 
-    # WOW-ассеты (3D-маскот + эффекты) → /wow/ на сайте
+    # WOW-ассеты (scroll-эффекты; foxi-3d.js/foxi.glb лежат про запас, не подключаются)
     wow_src = os.path.join(DIR, "wow")
     if os.path.isdir(wow_src):
         shutil.copytree(wow_src, os.path.join(out_dir, "wow"), dirs_exist_ok=True)

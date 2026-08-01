@@ -84,6 +84,11 @@
         <iframe src="https://yandex.ru/map-widget/v1/?ll=37.499850%2C55.935600&amp;z=15&amp;pt=37.494061%2C55.936540%2Cpm2rdm~37.505763%2C55.934678%2Cpm2rdm" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
       </div>
     </div>
+
+    <!-- CTA: форма заявки (модалка из подвала) -->
+    <div class="fxb-cta-row">
+      <a data-fxb-zayavka data-fxb-subject="Вопрос со страницы Контакты" data-fxb-window="Контакты" role="button" tabindex="0" class="fxb-btn-main">Оставить заявку — перезвоним</a>
+    </div>
   </div>
 </div>
 
@@ -130,6 +135,10 @@
   #fxb-contacts .fxb-map-title{font-size:20px;font-weight:800;margin-bottom:20px;text-align:center}
   #fxb-contacts .fxb-map-frame{border-radius:20px;overflow:hidden;box-shadow:0 18px 40px -18px rgba(57,40,82,.3);border:1px solid rgba(57,40,82,.08)}
   #fxb-contacts .fxb-map-frame iframe{display:block;width:100%;min-height:400px}
+
+  #fxb-contacts .fxb-cta-row{display:flex;justify-content:center;margin-top:40px}
+  #fxb-contacts .fxb-cta-row .fxb-btn-main{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));color:#fff;font-weight:800;font-size:16px;padding:16px 34px;border-radius:16px;cursor:pointer;box-shadow:0 16px 34px -14px rgba(102,45,146,.7);transition:transform .2s,box-shadow .2s;text-decoration:none}
+  #fxb-contacts .fxb-cta-row .fxb-btn-main:hover{transform:translateY(-2px);box-shadow:0 22px 40px -14px rgba(102,45,146,.75)}
 
   @media(max-width:900px){#fxb-contacts .fxb-grid{grid-template-columns:1fr}#fxb-contacts .fxb-extra{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:520px){#fxb-contacts .fxb-extra{grid-template-columns:1fr}#fxb-contacts .fxb-section{padding:64px 18px 76px}}
