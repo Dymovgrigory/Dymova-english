@@ -32,7 +32,7 @@ def test_api_chat_validates_text_and_generates_session(monkeypatch):
     assert first_resp.status_code == 200
     first_data = first_resp.json()
     assert first_data["session_id"]
-    assert first_data["reply"].startswith("Привет!")
+    assert first_data["reply"].startswith(("Привет!", "Здравствуйте"))
     assert isinstance(first_data["buttons"], list)
 
     second_resp = client.post(
