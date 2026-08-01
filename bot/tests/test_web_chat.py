@@ -42,7 +42,9 @@ def test_api_chat_validates_text_and_generates_session(monkeypatch):
     assert second_resp.status_code == 200
     second_data = second_resp.json()
     assert second_data["session_id"] == first_data["session_id"]
-    assert second_data["reply"].startswith("Привет!")
+    # Принудительного «Привет!» в каждом сообщении больше нет — бот отвечает
+    # как живой консультант; важно, что ответ не пустой и сессия та же.
+    assert second_data["reply"].strip()
 
 
 def test_api_chat_homework_returns_widget_button(monkeypatch):

@@ -215,8 +215,6 @@ async def api_chat(data: dict) -> dict:
         return JSONResponse({"detail": "text required"}, status_code=400)
     session_id = str(data.get("session_id") or uuid.uuid4().hex)
     reply = await handle_message(session_id, text)
-    if not reply.startswith("Привет!"):
-        reply = "Привет! " + reply
     return {
         "session_id": session_id,
         "reply": reply,
