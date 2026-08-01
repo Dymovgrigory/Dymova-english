@@ -187,6 +187,13 @@
 #fxb-shapka .fxb-summer.fxb-summer-open .fxb-summer-label{background:rgba(238,115,73,.15);border-color:rgba(238,115,73,.5)}
 #fxb-shapka .fxb-summer-label:hover{background:rgba(238,115,73,.12);border-color:rgba(238,115,73,.5)}
 
+/* Уплотняем топлайн на десктопе: «Вход в ЛК» обрезался overflow:hidden */
+@media(min-width:961px){
+  #fxb-shapka .fxb-act-link{display:none}
+  #fxb-shapka .fxb-nav>a,#fxb-shapka .fxb-dd-btn{font-size:12.5px;padding:8px 10px}
+  #fxb-shapka .fxb-nav{gap:2px}
+  #fxb-shapka .fxb-topline{gap:10px}
+}
 @media(max-width:960px){
   #fxb-shapka{overflow:visible}
   #fxb-shapka .fxb-topline{position:relative;flex-wrap:wrap;padding:12px 0 10px}

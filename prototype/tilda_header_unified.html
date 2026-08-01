@@ -241,6 +241,13 @@
 #fxb-hero .fxb-slogan-sub{font-size:16px;font-weight:500;color:rgba(255,255,255,.55);max-width:400px;line-height:1.5}
 
 /* ========== MOBILE ========== */
+/* Уплотняем топлайн на десктопе: «Вход в ЛК» обрезался overflow:hidden */
+@media(min-width:961px){
+  #fxb-hero .fxb-act-link{display:none}
+  #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:12.5px;padding:8px 10px}
+  #fxb-hero .fxb-nav{gap:2px}
+  #fxb-hero .fxb-topline{gap:10px}
+}
 @media(max-width:960px){
   #fxb-hero{overflow:visible}
   #fxb-hero .fxb-topline{position:relative;flex-wrap:wrap;padding:12px 0 10px}

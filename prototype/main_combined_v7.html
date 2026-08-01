@@ -32,6 +32,10 @@
   =============================================
 -->
 <div id="fxb-hero">
+  <video class="fxb-hero-video fxb-anim-fade" style="animation-delay:.2s" autoplay loop muted playsinline preload="metadata">
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260717_120352_eb988725-1351-43b3-8095-16e4a1005e3d.mp4" type="video/mp4">
+  </video>
+  <div class="fxb-hero-veil"></div>
   <div class="fxb-hero-bg">
     <img class="fxb-hero-decor fxb-hd1" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-1.png" alt="" loading="lazy">
     <img class="fxb-hero-decor fxb-hd2" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-zigzag-yellow.png" alt="" loading="lazy">
@@ -40,7 +44,7 @@
 
   <div class="fxb-w">
     <!-- Инфо + Навигация — компактная единая полоса -->
-    <div class="fxb-topline">
+    <div class="fxb-topline fxb-anim" style="animation-delay:.1s">
       <a class="fxb-logo" href="/">
         <img src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="Фоксинбург" width="38" height="38">
         <span>Фоксинбург</span>
@@ -97,7 +101,7 @@
     </div>
 
     <!-- Контактная строка — бесшовно вписана -->
-    <div class="fxb-contacts">
+    <div class="fxb-contacts fxb-anim" style="animation-delay:.2s">
       <div class="fxb-contacts-group">
         <a class="fxb-addr" href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
@@ -119,7 +123,7 @@
     </div>
 
     <!-- Летние программы — органично вписанный ряд тегов -->
-    <div class="fxb-summer">
+    <div class="fxb-summer fxb-anim" style="animation-delay:.3s">
       <span class="fxb-summer-label">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
         Летние программы</span>
@@ -135,9 +139,9 @@
 
     <!-- Слоган — большой центральный блок с лисой -->
     <div class="fxb-slogan">
-      <img class="fxb-slogan-fox" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="56" height="56" loading="lazy">
-      <h1 class="fxb-slogan-text">Английский не для школы,<br>а для <span class="fxb-life">жизни!</span></h1>
-      <p class="fxb-slogan-sub">Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых</p>
+      <img class="fxb-slogan-fox fxb-anim" style="animation-delay:.45s" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="56" height="56" loading="lazy">
+      <h1 class="fxb-slogan-text fxb-anim" style="animation-delay:.55s">Английский не для школы,<br>а для <span class="fxb-life">жизни!</span></h1>
+      <p class="fxb-slogan-sub fxb-anim" style="animation-delay:.7s">Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых</p>
     </div>
   </div>
 </div>
@@ -155,6 +159,9 @@
 #fxb-hero .fxb-w{max-width:1260px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
 
 /* Decorative background */
+#fxb-hero .fxb-hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#fxb-hero .fxb-hero-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(165deg,rgba(30,20,51,.88) 0%,rgba(57,40,82,.74) 45%,rgba(102,45,146,.68) 100%)}
 #fxb-hero .fxb-hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 #fxb-hero .fxb-hero-decor{position:absolute;opacity:.035}
 #fxb-hero .fxb-hd1{right:-120px;top:-60px;width:520px;transform:rotate(15deg)}
@@ -269,7 +276,53 @@
   #fxb-hero .fxb-summer-label{font-size:11px}
   #fxb-hero .fxb-slogan-text{font-size:22px}
 }
+
+/* === CINEMA MODE (видео-фон + стекло + stagger-анимации) === */
+/* Уплотняем топлайн на десктопе: «Вход в ЛК» обрезался overflow:hidden */
+@media(min-width:961px){
+  #fxb-hero .fxb-act-link{display:none}
+  #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:12.5px;padding:8px 10px}
+  #fxb-hero .fxb-nav{gap:2px}
+  #fxb-hero .fxb-topline{gap:10px}
+}
+@keyframes fxbFadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fxbFadeIn{from{opacity:0}to{opacity:1}}
+.fxb-anim{opacity:0;animation:fxbFadeUp .8s cubic-bezier(.16,1,.3,1) forwards}
+.fxb-anim-fade{opacity:0;animation:fxbFadeIn 1s cubic-bezier(.16,1,.3,1) forwards}
+.fxb-btn-cut{clip-path:polygon(12px 0%,calc(100% - 12px) 0%,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0% calc(100% - 12px),0% 12px)}
+/* у лисы своя float-анимация — совмещаем: сначала вход, потом парение */
+#fxb-hero .fxb-slogan-fox.fxb-anim{animation:fxbFadeUp .8s cubic-bezier(.16,1,.3,1) forwards,fxbFoxFloat 4s ease-in-out .9s infinite}
+@media (prefers-reduced-motion: reduce){
+  #fxb-hero .fxb-hero-video,#fxb-enrollment .fxb-enroll-video{display:none}
+  .fxb-anim,.fxb-anim-fade{opacity:1;animation:none}
+}
 </style>
+
+<script>
+/* CINEMA: гарантированный запуск фонового видео (autoplay может блокироваться).
+   Первая попытка — сразу, при блокировке — по первому касанию/клику. */
+(function(){
+  var vids=document.querySelectorAll('.fxb-hero-video,.fxb-enroll-video');
+  if(!vids.length)return;
+  function tryPlay(){
+    vids.forEach(function(v){
+      var p=v.play();
+      if(p&&p.catch)p.catch(function(){});
+    });
+  }
+  if(document.readyState==='complete')tryPlay();
+  else window.addEventListener('load',tryPlay,{once:true});
+  var unlock=function(){tryPlay();document.removeEventListener('pointerdown',unlock);};
+  document.addEventListener('pointerdown',unlock);
+  /* блок записи ниже сгиба — запускаем видео при появлении в кадре */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){tryPlay();}});
+    },{threshold:.05});
+    vids.forEach(function(v){io.observe(v);});
+  }
+})();
+</script>
 
 <script>
 (function(){
@@ -333,6 +386,10 @@
   =============================================
 -->
 <div id="fxb-enrollment">
+  <video class="fxb-enroll-video fxb-anim-fade" style="animation-delay:.15s" autoplay loop muted playsinline preload="metadata">
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260717_120352_eb988725-1351-43b3-8095-16e4a1005e3d.mp4" type="video/mp4">
+  </video>
+  <div class="fxb-enroll-veil"></div>
   <div class="fxb-enroll-bg">
     <img class="fxb-enroll-decor fxb-edl" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-blob-yellow.png" alt="" loading="lazy">
     <img class="fxb-enroll-decor fxb-edr" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" loading="lazy">
@@ -340,10 +397,10 @@
   <div class="fxb-section">
     <div class="fxb-enroll-grid">
       <div class="fxb-enroll-info">
-        <span class="fxb-enroll-tag">Набор открыт</span>
-        <h2 class="fxb-enroll-title">Запись на новый<br>учебный год 2026/27</h2>
-        <p class="fxb-enroll-desc">Успейте забронировать место в группе с удобным расписанием! Мини-группы до 7 человек — места ограничены.</p>
-        <div class="fxb-enroll-features">
+        <span class="fxb-enroll-tag fxb-anim" style="animation-delay:.1s">Набор открыт</span>
+        <h2 class="fxb-enroll-title fxb-anim" style="animation-delay:.25s">Запись на новый<br>учебный год 2026/27</h2>
+        <p class="fxb-enroll-desc fxb-anim" style="animation-delay:.4s">Успейте забронировать место в группе с удобным расписанием! Мини-группы до 7 человек — места ограничены.</p>
+        <div class="fxb-enroll-features fxb-anim" style="animation-delay:.55s">
           <div class="fxb-ef">
             <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <div><strong>Занятия 2 раза в неделю по 60 мин</strong><span>Утренние, дневные и вечерние группы</span></div>
@@ -358,7 +415,7 @@
           </div>
         </div>
       </div>
-      <div class="fxb-enroll-form-wrap">
+      <div class="fxb-enroll-form-wrap fxb-anim" style="animation-delay:.7s">
         <div class="fxb-enroll-card">
           <h3 class="fxb-form-title">Оставьте заявку</h3>
           <p class="fxb-form-sub">Мы свяжемся и подберём удобное расписание</p>
@@ -373,7 +430,7 @@
               <option value="online">Онлайн</option>
             </select>
             <p class="fxb-form-err" style="display:none;color:#e0526a;font-size:13px;font-weight:600"></p>
-            <button type="submit" class="fxb-submit">Забронировать место</button>
+            <button type="submit" class="fxb-submit fxb-btn-cut">Забронировать место</button>
           </form>
           <div class="fxb-enroll-thanks" hidden>
             <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#2bb673" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14l-3-3"/></svg>
@@ -425,6 +482,29 @@
   #fxb-enrollment .fxb-enroll-grid{grid-template-columns:1fr;gap:32px}
   #fxb-enrollment .fxb-enroll-card{max-width:480px}
 }
+
+/* === CINEMA MODE: видео-фон + стекло === */
+#fxb-enrollment{background:#1e1433}
+#fxb-enrollment .fxb-enroll-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#fxb-enrollment .fxb-enroll-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(135deg,rgba(30,20,51,.9) 0%,rgba(57,40,82,.82) 50%,rgba(102,45,146,.78) 100%)}
+#fxb-enrollment .fxb-enroll-title{color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.3)}
+#fxb-enrollment .fxb-enroll-desc{color:rgba(255,255,255,.82)}
+#fxb-enrollment .fxb-ef svg{stroke:var(--yellow)}
+#fxb-enrollment .fxb-ef strong{color:#fff}
+#fxb-enrollment .fxb-ef span{color:rgba(255,255,255,.68)}
+#fxb-enrollment .fxb-enroll-card{background:rgba(255,255,255,.08);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 60px -20px rgba(0,0,0,.5);border-radius:20px}
+#fxb-enrollment .fxb-form-title{color:#fff}
+#fxb-enrollment .fxb-form-sub{color:rgba(255,255,255,.66)}
+#fxb-enrollment .fxb-input{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff}
+#fxb-enrollment .fxb-input:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(252,249,81,.15);background:rgba(255,255,255,.14)}
+#fxb-enrollment .fxb-input::placeholder{color:rgba(255,255,255,.45)}
+#fxb-enrollment .fxb-select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")}
+#fxb-enrollment .fxb-select option{color:#241a36}
+#fxb-enrollment .fxb-submit{border-radius:0}
+#fxb-enrollment .fxb-form-note{color:rgba(255,255,255,.45)}
+#fxb-enrollment .fxb-form-note a{color:var(--yellow)}
 </style>
 
 
