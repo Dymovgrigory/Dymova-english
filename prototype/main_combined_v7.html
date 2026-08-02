@@ -1346,7 +1346,9 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
 </style>
 
 <script>
-(function(){
+/* Инициализация вынесена в window.fxbGalleryInit — CMS-лоадер пересоздаёт
+   карточки из LMS и вызывает её повторно (см. fxb-cms-loader ниже). */
+window.fxbGalleryInit=function(){
   var root=document.getElementById('fxb-gallery');if(!root)return;
 
   /* === Стекинг: карточки складываются колодой, предыдущие уменьшаются === */
@@ -1372,33 +1374,43 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
     update();
   }
   var tick=false;
-  window.addEventListener('scroll',function(){
-    if(!tick){tick=true;requestAnimationFrame(function(){update();tick=false});}
-  },{passive:true});
-  window.addEventListener('resize',measure);
+  if(!window.__fxbGalleryBound){
+    window.__fxbGalleryBound=true;
+    window.addEventListener('scroll',function(){
+      if(!tick){tick=true;requestAnimationFrame(function(){update();tick=false});}
+    },{passive:true});
+    window.addEventListener('resize',function(){if(window.fxbGalleryInit)window.fxbGalleryInit()});
+  }
   measure();
 
-  /* === Лайтбокс для просмотра фото === */
+  /* === Лайтбокс для просмотра фото ===
+     Список фото и текущий индекс — на элементе lb: при пересоздании карточек
+     CMS-лоадером кнопки prev/next (привязаны один раз) видят свежие src. */
   var lb=document.getElementById('fxbLightbox');
   var lbImg=lb.querySelector('.fxb-lb-img');
   var frames=root.querySelectorAll('.fxb-frame');
-  var imgs=[];var cur=0;
+  var imgs=[];lb.__cur=0;
   frames.forEach(function(f,i){
     var img=f.querySelector('img');
     if(img){
       imgs.push(img.src);
       /* размытая подложка из того же фото — чтобы фото не обрезалось */
       f.style.setProperty('--ph','url("'+img.src+'")');
-      f.addEventListener('click',function(){cur=i;openLb(imgs[cur])});
+      f.addEventListener('click',function(){lb.__cur=i;openLb(lb.__imgs[lb.__cur])});
     }
   });
+  lb.__imgs=imgs;
   function openLb(src){lbImg.src=src;lb.classList.add('fxb-open')}
   function closeLb(){lb.classList.remove('fxb-open');lbImg.src=''}
-  lb.querySelector('.fxb-lb-close').addEventListener('click',closeLb);
-  lb.querySelector('.fxb-lb-bg').addEventListener('click',closeLb);
-  lb.querySelector('.fxb-lb-prev').addEventListener('click',function(){if(imgs.length){cur=(cur-1+imgs.length)%imgs.length;lbImg.src=imgs[cur]}});
-  lb.querySelector('.fxb-lb-next').addEventListener('click',function(){if(imgs.length){cur=(cur+1)%imgs.length;lbImg.src=imgs[cur]}});
-})();
+  if(!lb.dataset.fxbLbBound){
+    lb.dataset.fxbLbBound='1';
+    lb.querySelector('.fxb-lb-close').addEventListener('click',closeLb);
+    lb.querySelector('.fxb-lb-bg').addEventListener('click',closeLb);
+    lb.querySelector('.fxb-lb-prev').addEventListener('click',function(){var a=lb.__imgs||[];if(a.length){lb.__cur=(lb.__cur-1+a.length)%a.length;lbImg.src=a[lb.__cur]}});
+    lb.querySelector('.fxb-lb-next').addEventListener('click',function(){var a=lb.__imgs||[];if(a.length){lb.__cur=(lb.__cur+1)%a.length;lbImg.src=a[lb.__cur]}});
+  }
+};
+fxbGalleryInit();
 </script>
 
 
@@ -2751,5 +2763,76 @@ var fxbForm=document.querySelector('#fxbZform');
       });
     });
   }
+})();
+</script>
+
+<!-- ===== CMS-подхват контента с LMS (read-only public API) ===== -->
+<script>
+(function(){
+  /* Админка /admin/site (LMS) пишет блоки/фото в Postgres, сайт читает их
+     публичным JSON. При любой ошибке/пустом ответе — статичная вёрстка выше. */
+  var API=(function(){
+    if(window.FXB_CMS_API)return window.FXB_CMS_API;
+    var h=location.hostname;
+    if(h==='localhost'||h==='127.0.0.1')return 'http://localhost:8765';
+    return 'https://lms.dymova-english.ru';
+  })();
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function get(path){
+    return fetch(API+path,{cache:'no-cache'})
+      .then(function(r){return r.ok?r.json():null;})
+      .catch(function(){return null;});
+  }
+
+  /* Галерея #fxb-gallery: фото из /api/v1/site/public/photos?group=gallery.
+     Структура карточек повторяет статичную; после перерисовки перезапускаем
+     window.fxbGalleryInit (стекинг + лайтбокс на новых src). */
+  var gallery=document.getElementById('fxb-gallery');
+  if(gallery){
+    get('/api/v1/site/public/photos?group=gallery').then(function(photos){
+      if(!photos||!photos.length)return;
+      var stack=gallery.querySelector('.fxb-stack');if(!stack)return;
+      var pill='<span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>';
+      stack.innerHTML=photos.map(function(p,i){
+        var num=('0'+(i+1)).slice(-2);
+        return '<div class="fxb-scard"><div class="fxb-sticky"><figure class="fxb-frame">'
+          +'<img src="'+esc(p.url)+'" alt="'+esc(p.alt)+'" loading="lazy" decoding="async">'
+          +'<figcaption class="fxb-cap"><span class="fxb-cap-num">'+num+'</span>'
+          +'<span class="fxb-cap-text">'+esc(p.alt)+'</span>'+pill+'</figcaption>'
+          +'</figure></div></div>';
+      }).join('');
+      if(window.fxbGalleryInit)window.fxbGalleryInit();
+    });
+  }
+
+  /* Hero-слоган: блок home.hero.slogan {line1, line2, highlight} */
+  get('/api/v1/site/public/blocks/home.hero.slogan').then(function(d){
+    if(!d||!d.content)return;
+    var h1=document.querySelector('#fxb-hero .fxb-slogan-text');if(!h1)return;
+    var c=d.content;
+    h1.innerHTML=esc(c.line1)+'<br>'+esc(c.line2)+' <span class="fxb-life">'+esc(c.highlight)+'</span>';
+  });
+
+  /* FAQ: блок home.faq {items:[{q,a}]}. Аккордеон для новых узлов — делегирование. */
+  get('/api/v1/site/public/blocks/home.faq').then(function(d){
+    if(!d||!d.content||!d.content.items||!d.content.items.length)return;
+    var list=document.getElementById('fxbFaqList');if(!list)return;
+    var svg='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    list.innerHTML=d.content.items.map(function(it){
+      return '<div class="fxb-faq-item"><button class="fxb-faq-q" type="button"><span>'+esc(it.q)+'</span>'+svg+'</button>'
+        +'<div class="fxb-faq-a"><p>'+esc(it.a)+'</p></div></div>';
+    }).join('');
+    list.addEventListener('click',function(e){
+      var btn=e.target.closest('.fxb-faq-q');if(!btn||!list.contains(btn))return;
+      var item=btn.closest('.fxb-faq-item');
+      var answer=item.querySelector('.fxb-faq-a');
+      var wasOpen=item.classList.contains('fxb-faq-open');
+      list.querySelectorAll('.fxb-faq-item').forEach(function(i){
+        i.classList.remove('fxb-faq-open');
+        i.querySelector('.fxb-faq-a').style.maxHeight='0';
+      });
+      if(!wasOpen){item.classList.add('fxb-faq-open');answer.style.maxHeight=answer.scrollHeight+'px';}
+    });
+  });
 })();
 </script>

@@ -171,7 +171,9 @@
 </style>
 
 <script>
-(function(){
+/* Инициализация вынесена в window.fxbGalleryInit — CMS-лоадер пересоздаёт
+   карточки из LMS и вызывает её повторно (см. fxb-cms-loader ниже). */
+window.fxbGalleryInit=function(){
   var root=document.getElementById('fxb-gallery');if(!root)return;
 
   /* === Стекинг: карточки складываются колодой, предыдущие уменьшаются === */
@@ -197,31 +199,74 @@
     update();
   }
   var tick=false;
-  window.addEventListener('scroll',function(){
-    if(!tick){tick=true;requestAnimationFrame(function(){update();tick=false});}
-  },{passive:true});
-  window.addEventListener('resize',measure);
+  if(!window.__fxbGalleryBound){
+    window.__fxbGalleryBound=true;
+    window.addEventListener('scroll',function(){
+      if(!tick){tick=true;requestAnimationFrame(function(){update();tick=false});}
+    },{passive:true});
+    window.addEventListener('resize',function(){if(window.fxbGalleryInit)window.fxbGalleryInit()});
+  }
   measure();
 
-  /* === Лайтбокс для просмотра фото === */
+  /* === Лайтбокс для просмотра фото ===
+     Список фото и текущий индекс — на элементе lb: при пересоздании карточек
+     CMS-лоадером кнопки prev/next (привязаны один раз) видят свежие src. */
   var lb=document.getElementById('fxbLightbox');
   var lbImg=lb.querySelector('.fxb-lb-img');
   var frames=root.querySelectorAll('.fxb-frame');
-  var imgs=[];var cur=0;
+  var imgs=[];lb.__cur=0;
   frames.forEach(function(f,i){
     var img=f.querySelector('img');
     if(img){
       imgs.push(img.src);
       /* размытая подложка из того же фото — чтобы фото не обрезалось */
       f.style.setProperty('--ph','url("'+img.src+'")');
-      f.addEventListener('click',function(){cur=i;openLb(imgs[cur])});
+      f.addEventListener('click',function(){lb.__cur=i;openLb(lb.__imgs[lb.__cur])});
     }
   });
+  lb.__imgs=imgs;
   function openLb(src){lbImg.src=src;lb.classList.add('fxb-open')}
   function closeLb(){lb.classList.remove('fxb-open');lbImg.src=''}
-  lb.querySelector('.fxb-lb-close').addEventListener('click',closeLb);
-  lb.querySelector('.fxb-lb-bg').addEventListener('click',closeLb);
-  lb.querySelector('.fxb-lb-prev').addEventListener('click',function(){if(imgs.length){cur=(cur-1+imgs.length)%imgs.length;lbImg.src=imgs[cur]}});
-  lb.querySelector('.fxb-lb-next').addEventListener('click',function(){if(imgs.length){cur=(cur+1)%imgs.length;lbImg.src=imgs[cur]}});
+  if(!lb.dataset.fxbLbBound){
+    lb.dataset.fxbLbBound='1';
+    lb.querySelector('.fxb-lb-close').addEventListener('click',closeLb);
+    lb.querySelector('.fxb-lb-bg').addEventListener('click',closeLb);
+    lb.querySelector('.fxb-lb-prev').addEventListener('click',function(){var a=lb.__imgs||[];if(a.length){lb.__cur=(lb.__cur-1+a.length)%a.length;lbImg.src=a[lb.__cur]}});
+    lb.querySelector('.fxb-lb-next').addEventListener('click',function(){var a=lb.__imgs||[];if(a.length){lb.__cur=(lb.__cur+1)%a.length;lbImg.src=a[lb.__cur]}});
+  }
+};
+fxbGalleryInit();
+</script>
+
+<!-- ===== CMS-подхват фото галереи с LMS (read-only public API) ===== -->
+<script>
+(function(){
+  /* Админка /admin/site (LMS) → Postgres → публичный JSON. При ошибке/пустом
+     ответе остаётся статичная вёрстка. После перерисовки — fxbGalleryInit(). */
+  var API=(function(){
+    if(window.FXB_CMS_API)return window.FXB_CMS_API;
+    var h=location.hostname;
+    if(h==='localhost'||h==='127.0.0.1')return 'http://localhost:8765';
+    return 'https://lms.dymova-english.ru';
+  })();
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  var gallery=document.getElementById('fxb-gallery');if(!gallery)return;
+  fetch(API+'/api/v1/site/public/photos?group=gallery',{cache:'no-cache'})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(photos){
+      if(!photos||!photos.length)return;
+      var stack=gallery.querySelector('.fxb-stack');if(!stack)return;
+      var pill='<span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>';
+      stack.innerHTML=photos.map(function(p,i){
+        var num=('0'+(i+1)).slice(-2);
+        return '<div class="fxb-scard"><div class="fxb-sticky"><figure class="fxb-frame">'
+          +'<img src="'+esc(p.url)+'" alt="'+esc(p.alt)+'" loading="lazy" decoding="async">'
+          +'<figcaption class="fxb-cap"><span class="fxb-cap-num">'+num+'</span>'
+          +'<span class="fxb-cap-text">'+esc(p.alt)+'</span>'+pill+'</figcaption>'
+          +'</figure></div></div>';
+      }).join('');
+      if(window.fxbGalleryInit)window.fxbGalleryInit();
+    })
+    .catch(function(){/* фолбэк — статичная вёрстка */});
 })();
 </script>
