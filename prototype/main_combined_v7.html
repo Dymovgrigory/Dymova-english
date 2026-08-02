@@ -1886,7 +1886,10 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
     - Скорость ленты: --fxb-yr-speed (меньше = быстрее)
     - Состав строк: карточки в первом .fxb-yr-track дублируются во втором
       (aria-hidden) вручную — содержимое треков внутри строки должно совпадать
-  Обновление отзывов: снять свежие с страниц-источников и заменить карточки.
+  Обновление отзывов: АВТОМАТИЧЕСКИ — крон на сервере раз в сутки запускает
+  prototype/ymaps_reviews_fetch.py, тот пишет /wow/yandex_reviews.json,
+  а JS этого блока перерисовывает карточки из JSON. Вёрстка ниже —
+  статичный фолбэк (виден без JS и индексируется).
   =============================================
 -->
 <div id="fxb-yarev">
@@ -2304,14 +2307,39 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
 
 <script>
 (function(){
-  // Лента на чистом CSS; JS только дублирует треки, чтобы не поддерживать копии вручную
   var root=document.getElementById('fxb-yarev');if(!root)return;
+  // дублируем треки, если копия оставлена пустой
   root.querySelectorAll('.fxb-yr-row').forEach(function(row){
     var tracks=row.querySelectorAll('.fxb-yr-track');
     if(tracks.length===2&&tracks[1].innerHTML.replace(/\s+/g,'')===''){
       tracks[1].innerHTML=tracks[0].innerHTML;
     }
   });
+  // Живые данные: /wow/yandex_reviews.json обновляется на сервере кроном
+  // (prototype/ymaps_reviews_fetch.py — снимок открытых страниц Яндекс Карт).
+  // Вёрстка ниже — статичный фолбэк (SEO/офлайн), JSON её перезаписывает.
+  var STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg>';
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function card(r){
+    return '<article class="fxb-yr-card">'
+      +'<div class="fxb-yr-top"><div class="fxb-yr-stars" aria-label="Оценка 5 из 5">'+STAR+STAR+STAR+STAR+STAR+'</div>'
+      +'<span class="fxb-yr-src">Яндекс&nbsp;Карты</span></div>'
+      +'<p class="fxb-yr-text">'+esc(r.text)+'</p>'
+      +'<div class="fxb-yr-author"><span class="fxb-yr-ava">'+esc((r.author||'?').charAt(0).toUpperCase())+'</span>'
+      +'<div><strong>'+esc(r.author)+'</strong><span>'+esc((r.date||'')+' · '+(r.branch||''))+'</span></div></div>'
+      +'</article>';
+  }
+  fetch('/wow/yandex_reviews.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(!d||!d.rows)return;
+    var rowEls=root.querySelectorAll('.fxb-yr-row');
+    d.rows.forEach(function(cards,i){
+      var row=rowEls[i];if(!row||!cards||!cards.length)return;
+      var html=cards.map(card).join('\n');
+      var tracks=row.querySelectorAll('.fxb-yr-track');
+      tracks[0].innerHTML=html;
+      if(tracks[1])tracks[1].innerHTML=html;
+    });
+  }).catch(function(){/* фолбэк — статичная вёрстка */});
 })();
 </script>
 
