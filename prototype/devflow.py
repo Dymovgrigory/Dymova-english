@@ -34,7 +34,6 @@ MINIFY_SOURCES = [
     "tilda_onboarding.html",
     "tilda_photobank_gallery.html",
     "tilda_pricing_enrollment.html",
-    "tilda_reviews.html",
     "tilda_svedeniya.html",
     "tilda_yandex_reviews.html",
     "tilda_team.html",
