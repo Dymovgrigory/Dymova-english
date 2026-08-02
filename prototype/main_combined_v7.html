@@ -141,7 +141,7 @@
     <!-- Слоган — большой центральный блок с лисой -->
     <div class="fxb-slogan">
       <img class="fxb-slogan-fox fxb-anim" style="animation-delay:.45s" src="https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png" alt="" width="56" height="56" loading="lazy">
-      <h1 class="fxb-slogan-text fxb-anim" style="animation-delay:.55s">Английский не для школы,<br>а для <span class="fxb-life">жизни!</span></h1>
+      <h1 class="fxb-slogan-text fxb-anim" style="animation-delay:.55s">Подготовься к началу<br>учебного года <span class="fxb-life">вместе с Фоксинбург</span></h1>
       <p class="fxb-slogan-sub fxb-anim" style="animation-delay:.7s">Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых</p>
     </div>
   </div>
@@ -244,7 +244,7 @@
 @keyframes fxbFoxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 #fxb-hero .fxb-slogan-text{font-size:clamp(24px,4vw,42px);font-weight:900;color:#fff;line-height:1.15;text-shadow:0 2px 20px rgba(0,0,0,.12);letter-spacing:-.01em}
 #fxb-hero .fxb-life{position:relative;display:inline-block}
-#fxb-hero .fxb-life::after{content:'';position:absolute;left:-5px;right:-5px;bottom:2px;height:38%;background:var(--yellow);opacity:.28;border-radius:4px;z-index:-1}
+#fxb-hero .fxb-life::after{content:'';position:absolute;left:-5px;right:-5px;bottom:2px;height:38%;background:var(--yellow);opacity:.28;border-radius:4px;z-index:-1;transform-origin:left center;animation:fxbMark .7s cubic-bezier(.16,1,.3,1) 1.35s both}
 #fxb-hero .fxb-slogan-sub{font-size:16px;font-weight:500;color:rgba(255,255,255,.55);max-width:400px;line-height:1.5}
 
 /* ========== MOBILE ========== */
@@ -289,6 +289,7 @@
 }
 @keyframes fxbFadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fxbFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fxbMark{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .fxb-anim{opacity:0;animation:fxbFadeUp .8s cubic-bezier(.16,1,.3,1) forwards}
 .fxb-anim-fade{opacity:0;animation:fxbFadeIn 1s cubic-bezier(.16,1,.3,1) forwards}
 .fxb-btn-cut{clip-path:polygon(12px 0%,calc(100% - 12px) 0%,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0% calc(100% - 12px),0% 12px)}
@@ -297,6 +298,7 @@
 @media (prefers-reduced-motion: reduce){
   #fxb-cinema .fxb-cinema-video{display:none}
   .fxb-anim,.fxb-anim-fade{opacity:1;animation:none}
+  #fxb-hero .fxb-life::after{animation:none}
 }
 </style>
 
