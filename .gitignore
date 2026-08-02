@@ -3,3 +3,9 @@ prototype/dist/
 prototype/dist_staging/
 prototype/dist_prod/
 .superpowers/
+# секреты и локальные окружения — никогда не коммитить
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
