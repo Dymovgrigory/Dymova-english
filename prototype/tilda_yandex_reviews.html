@@ -1,0 +1,446 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">
+<!--
+  =============================================
+  БЛОК: ЛЕНТА ОТЗЫВОВ С ЯНДЕКС КАРТ
+  =============================================
+  Назначение: динамичная бегущая лента реальных отзывов 5★
+  с Яндекс Карт (оба филиала Фоксинбурга, Долгопрудный).
+  Две строки движутся навстречу друг другу, пауза при наведении.
+
+  Источники (открытые страницы отзывов):
+    - https://yandex.ru/maps/org/foksinburg/112008441352/reviews/ (Ракетостроителей, 9к3 — рейтинг 5,0; 165 оценок)
+    - https://yandex.ru/maps/org/foksinburg/162408588499/reviews/ (Лихачёвский, 76к1 — рейтинг 5,0; 58 оценок)
+
+  Что можно менять:
+    - Отзывы: копировать/править .fxb-yr-card (только 5★, желательно развёрнутые)
+    - Скорость ленты: --fxb-yr-speed (меньше = быстрее)
+    - Состав строк: карточки в первом .fxb-yr-track дублируются во втором
+      (aria-hidden) вручную — содержимое треков внутри строки должно совпадать
+  Обновление отзывов: снять свежие с страниц-источников и заменить карточки.
+  =============================================
+-->
+<div id="fxb-yarev">
+  <div class="fxb-yr-head">
+    <span class="fxb-eyebrow"><span class="fxb-dot"></span>Отзывы с Яндекс Карт</span>
+    <h2 class="fxb-h2">Родители ставят нам <span class="fxb-accent">5 из 5</span></h2>
+    <div class="fxb-yr-rating">
+      <span class="fxb-yr-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><b>5,0</b></span>
+      <span class="fxb-yr-count">223 оценки · 155 отзывов · оба филиала Долгопрудного</span>
+    </div>
+    <a class="fxb-yr-all" href="https://yandex.ru/maps/org/foksinburg/112008441352/reviews/" target="_blank" rel="noopener">Читать все отзывы на Яндекс Картах →</a>
+  </div>
+
+  <div class="fxb-yr-marquee">
+      <div class="fxb-yr-row fxb-yr-row-fwd">
+        <div class="fxb-yr-track">
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Хочу сказать огромное спасибо всем кто работает в Фокси Фокс и конечно в первую очередь нашим преподавателям!Они замечательные, талантливые, добрые, умные! У меня в Фокси Фокс ходит двое детей и обоим безумно нравится туда ходить!Для меня как для родителя это безумно важно чтобы у детей был интерес к занятиям, чтобы горели глаза когда бегут на занятия, чтобы не приходилось заставлять выполнять домашку! И Фокси Фокс в этом…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">К</span>
+            <div><strong>Кристина Б.</strong><span>18 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Ходили в эту школу,когда она была еще по другому адресу,и ходим сейчас. Хочу сказать только положительные отзывы. Дочь ходила 2 года до школы и потом не ходила ни сюда, ни к репетитору,так вот 1 и 2 класс в школе английский идеально прошёл на базе полученых тут знаний и словарного запаса, без помощи со стороны. Сейчас ходит сын,тоже дошкольник и просто влюблён в английский. Шикарной мотивацией служит приложение на телефоне от…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">A</span>
+            <div><strong>Anna B.</strong><span>18 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Мы с клубом с самого открытия, для нас это самый лучший клуб в Долгопрудном. 💞 Репетиторы и школа напрочь отбили желание учить английский у ребёнка , в клубе нам очень помогли. Занятия интересные , увлекательные, ребёнок получает много эмоций, быстро вышел в речь , у нас отличная успеваемость в школе по данному предмету. Младшая дочь наблюдая за успехами сына тоже увлеклась английским))). Профессиональный подход к обучению…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Ф</span>
+            <div><strong>Фёдор Клящин</strong><span>17 июля 2023 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дети бегут сюда с большим удовольствием! Старший ребенок ходит 4й год и занятия очень помогают восполнять пробелы школьного уровня. В этом году в Фокси пришел и младший. Уроки интересные, насыщенные, много дополнительных дидактических материалов, преподаватели славные, умеют увлечь, особенно хочется отметить Алину! Администраторы всегда неравнодушны и внимательны даже к мелочам! Руководитель Вероника вообще большая умничка…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Надежда Ермоленко</strong><span>16 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Моя дочь , 8 лет , 2 класс, ходит на занятия уже полгода. Ходит с удовольствием, очень нравится учитель Алина Зинуровна. Занятия помогают усваивать школьный материал. Триместр закончили на 5. Уроки проходят в легкой , игровой форме. Во время игры учат слова и уже не нужно зубрить их дома. Был опыт хождения на курсы в Welcome. Небо и Земля. Там урок проходил как в школе, учитель давал новый материал, потом в основном…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Е</span>
+            <div><strong>Елена К.</strong><span>17 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Отличное место, прекрасная команда! Обоим моим детям очень нравится тут учиться. Очень хорошие педагоги, которые находят контакт с ребенком, маленькие группы, у нас 6 человек, игровая форма обучения, геймификация, мобильное приложение, внутренняя валюта и магазин, где можно обменять заработанные баллы на подарки. Моим детям очень зашло и все нравится, ходят с удовольствием, домашку делают без принуждения. К тому же…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">А</span>
+            <div><strong>Анастасия Ю.</strong><span>21 октября 2025 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Как родитель мне очень нравится 👍🏼 здесь находиться, прекрасные условия. Ребенок с радостью посещает занятия. Моей дочке 3.9 и мы хотели разнообразить ей досуг с пользой раннего изучения иностранного языка. “Foxy Fox” 🦊 отличная школа для изучения языка с малых лет; здесь интересно, классно и весело. Педагог Лиза сразу влюбила в себя мою дочь 😍, а это уже отличный показатель, ведь посещаем мы занятия с удовольствием…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Нади</strong><span>26 июня 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        </div>
+        <div class="fxb-yr-track" aria-hidden="true">
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Хочу сказать огромное спасибо всем кто работает в Фокси Фокс и конечно в первую очередь нашим преподавателям!Они замечательные, талантливые, добрые, умные! У меня в Фокси Фокс ходит двое детей и обоим безумно нравится туда ходить!Для меня как для родителя это безумно важно чтобы у детей был интерес к занятиям, чтобы горели глаза когда бегут на занятия, чтобы не приходилось заставлять выполнять домашку! И Фокси Фокс в этом…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">К</span>
+            <div><strong>Кристина Б.</strong><span>18 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Ходили в эту школу,когда она была еще по другому адресу,и ходим сейчас. Хочу сказать только положительные отзывы. Дочь ходила 2 года до школы и потом не ходила ни сюда, ни к репетитору,так вот 1 и 2 класс в школе английский идеально прошёл на базе полученых тут знаний и словарного запаса, без помощи со стороны. Сейчас ходит сын,тоже дошкольник и просто влюблён в английский. Шикарной мотивацией служит приложение на телефоне от…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">A</span>
+            <div><strong>Anna B.</strong><span>18 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Мы с клубом с самого открытия, для нас это самый лучший клуб в Долгопрудном. 💞 Репетиторы и школа напрочь отбили желание учить английский у ребёнка , в клубе нам очень помогли. Занятия интересные , увлекательные, ребёнок получает много эмоций, быстро вышел в речь , у нас отличная успеваемость в школе по данному предмету. Младшая дочь наблюдая за успехами сына тоже увлеклась английским))). Профессиональный подход к обучению…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Ф</span>
+            <div><strong>Фёдор Клящин</strong><span>17 июля 2023 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дети бегут сюда с большим удовольствием! Старший ребенок ходит 4й год и занятия очень помогают восполнять пробелы школьного уровня. В этом году в Фокси пришел и младший. Уроки интересные, насыщенные, много дополнительных дидактических материалов, преподаватели славные, умеют увлечь, особенно хочется отметить Алину! Администраторы всегда неравнодушны и внимательны даже к мелочам! Руководитель Вероника вообще большая умничка…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Надежда Ермоленко</strong><span>16 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Моя дочь , 8 лет , 2 класс, ходит на занятия уже полгода. Ходит с удовольствием, очень нравится учитель Алина Зинуровна. Занятия помогают усваивать школьный материал. Триместр закончили на 5. Уроки проходят в легкой , игровой форме. Во время игры учат слова и уже не нужно зубрить их дома. Был опыт хождения на курсы в Welcome. Небо и Земля. Там урок проходил как в школе, учитель давал новый материал, потом в основном…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Е</span>
+            <div><strong>Елена К.</strong><span>17 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Отличное место, прекрасная команда! Обоим моим детям очень нравится тут учиться. Очень хорошие педагоги, которые находят контакт с ребенком, маленькие группы, у нас 6 человек, игровая форма обучения, геймификация, мобильное приложение, внутренняя валюта и магазин, где можно обменять заработанные баллы на подарки. Моим детям очень зашло и все нравится, ходят с удовольствием, домашку делают без принуждения. К тому же…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">А</span>
+            <div><strong>Анастасия Ю.</strong><span>21 октября 2025 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Как родитель мне очень нравится 👍🏼 здесь находиться, прекрасные условия. Ребенок с радостью посещает занятия. Моей дочке 3.9 и мы хотели разнообразить ей досуг с пользой раннего изучения иностранного языка. “Foxy Fox” 🦊 отличная школа для изучения языка с малых лет; здесь интересно, классно и весело. Педагог Лиза сразу влюбила в себя мою дочь 😍, а это уже отличный показатель, ведь посещаем мы занятия с удовольствием…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Нади</strong><span>26 июня 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        </div>
+      </div>
+
+      <div class="fxb-yr-row fxb-yr-row-rev">
+        <div class="fxb-yr-track">
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Очень уютный, добрый, атмосферный клуб рядом с домом. Дочка с радостью бежит на занятия к преподавателю Александре. Мы 2 года занимались с репетитором, а в этом году решили попробовать прийти в мини группу и ребенок сказала, что в группе интереснее заниматься и ходить в языковую школу лучше, веселее и познавательные, чем сидеть перед монитором. Уже показывает первые результаты!! В Foxy Fox не только учат иностранным языкам…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">З</span>
+            <div><strong>Земфира Гейнер</strong><span>15 октября 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дочка посещает английский клуб 2 год, посещает с удовольствием, для меня как для родителя это главный показатель, пришли в клуб т. к. Упала успеваемость в школе по английскому, после нескольких месяцев увидели результат итог - 5 за год в школе. Отзывчивые педагоги, всегда можно прийти задать вопрос или написать лично. Удобное приложение, присылают отчет за месяц, проводят открытые уроки. Масса дополнительных мероприятий на…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">К</span>
+            <div><strong>Кsenija</strong><span>16 октября 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Ребёнку 2,5 года. Ходим на занятия «Мама+малыш». Очень понравилось что во время пребывания в клубе ребёнок полностью погружается в иностранную речь и начиная с приветствия и до прощания все обращения только на английском языке. Отдельно хочу отметить уровень владения языком, а самое главное - произношение, у всех преподавателей на высоком уровне. Жалею только что не узнали об этом месте раньше. Дочка уже после первого занятия…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Y</span>
+            <div><strong>Yulia K.</strong><span>2 августа 2022 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дочь второй год посещает Фокси Фокс, с радостью ходит на занятия. В выходные посещает английский клуб, где происходит общение с носителем языка. Очень нравится, что домашние задания есть не только в тетради, но и в приложении. Также в приложении можно отследить успехи и посещение ребенка,что в нашей жизни очень актуально. Вообще мне нравится семейная и дружелюбная обстановка в этой школе, с удовольствием рекомендую ее всем…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Надежда Надежда</strong><span>20 октября 2025 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Английский клуб FoxyFox. Мой младший сын и старший ходят сюда второй год. Есть возможность офлайн и онлайн обучения. Ребенок идет на занятия с удовольствием, очень любит свою учительницу Елизавету. Летом на каникулах занимались онлайн прямо на даче. Уроки очень интересные, дети на уроках рисуют, поют, обучение проходит в игровой форме. Обучающие материалы-красочные, легко воспринимаются, не скучные. Рекомендую! 🌸</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">N</span>
+            <div><strong>Nadin</strong><span>11 апреля 2025 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дети ходят в ФоксиФокс(возле 11 школы). За первый месяц реально отпали проблемы с домашкой по английскому в школе. Учитель всегда просит, если есть вопросы по школьному материалу, обращаться, не стесняться. Каждый раз дает обратную связь. Приложение, с покупкой призов за баллы тоже очень мотивирующая вещь. В общем молодцы, так держать. Уже записала детвору на будущий год. Знакомым советую, с чистой совестью.</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Наталия К.</strong><span>3 июня · филиал Лихачёвский, 76к1</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дочке нравится ходить на занятия в Foxy. Очень радуют поощрения в виде монеток, на которые можно потом что-нибудь купить. В классе немного учеников, что позволяет учителю уделять внимание каждому учащемуся. Для нас это было важно при выборе дополнительных занятий. Со слов дочки, атмосфера в классе дружелюбная, легкая и комфортная. Спасибо за позитивное отношение к детям! 🦊</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Э</span>
+            <div><strong>Эльмира Х.</strong><span>23 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Прекрасные преподаватели с отличной методикой развития языка. Давно занимаемся в этой школе и прогресс очень хорошо заметен. Занимались как очно, так и онлайн - в любом формате преподаватели умеют увлечь и заинтересовать детей. Ну и много активностей и мероприятий. У нашей дочки любимый - это хэллоуин, ходим постоянно :)</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">K</span>
+            <div><strong>KrAssor</strong><span>16 декабря 2025 · филиал Лихачёвский, 76к1</span></div>
+          </div>
+        </article>
+        </div>
+        <div class="fxb-yr-track" aria-hidden="true">
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Очень уютный, добрый, атмосферный клуб рядом с домом. Дочка с радостью бежит на занятия к преподавателю Александре. Мы 2 года занимались с репетитором, а в этом году решили попробовать прийти в мини группу и ребенок сказала, что в группе интереснее заниматься и ходить в языковую школу лучше, веселее и познавательные, чем сидеть перед монитором. Уже показывает первые результаты!! В Foxy Fox не только учат иностранным языкам…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">З</span>
+            <div><strong>Земфира Гейнер</strong><span>15 октября 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дочка посещает английский клуб 2 год, посещает с удовольствием, для меня как для родителя это главный показатель, пришли в клуб т. к. Упала успеваемость в школе по английскому, после нескольких месяцев увидели результат итог - 5 за год в школе. Отзывчивые педагоги, всегда можно прийти задать вопрос или написать лично. Удобное приложение, присылают отчет за месяц, проводят открытые уроки. Масса дополнительных мероприятий на…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">К</span>
+            <div><strong>Кsenija</strong><span>16 октября 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Ребёнку 2,5 года. Ходим на занятия «Мама+малыш». Очень понравилось что во время пребывания в клубе ребёнок полностью погружается в иностранную речь и начиная с приветствия и до прощания все обращения только на английском языке. Отдельно хочу отметить уровень владения языком, а самое главное - произношение, у всех преподавателей на высоком уровне. Жалею только что не узнали об этом месте раньше. Дочка уже после первого занятия…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Y</span>
+            <div><strong>Yulia K.</strong><span>2 августа 2022 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дочь второй год посещает Фокси Фокс, с радостью ходит на занятия. В выходные посещает английский клуб, где происходит общение с носителем языка. Очень нравится, что домашние задания есть не только в тетради, но и в приложении. Также в приложении можно отследить успехи и посещение ребенка,что в нашей жизни очень актуально. Вообще мне нравится семейная и дружелюбная обстановка в этой школе, с удовольствием рекомендую ее всем…</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Надежда Надежда</strong><span>20 октября 2025 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Английский клуб FoxyFox. Мой младший сын и старший ходят сюда второй год. Есть возможность офлайн и онлайн обучения. Ребенок идет на занятия с удовольствием, очень любит свою учительницу Елизавету. Летом на каникулах занимались онлайн прямо на даче. Уроки очень интересные, дети на уроках рисуют, поют, обучение проходит в игровой форме. Обучающие материалы-красочные, легко воспринимаются, не скучные. Рекомендую! 🌸</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">N</span>
+            <div><strong>Nadin</strong><span>11 апреля 2025 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дети ходят в ФоксиФокс(возле 11 школы). За первый месяц реально отпали проблемы с домашкой по английскому в школе. Учитель всегда просит, если есть вопросы по школьному материалу, обращаться, не стесняться. Каждый раз дает обратную связь. Приложение, с покупкой призов за баллы тоже очень мотивирующая вещь. В общем молодцы, так держать. Уже записала детвору на будущий год. Знакомым советую, с чистой совестью.</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Н</span>
+            <div><strong>Наталия К.</strong><span>3 июня · филиал Лихачёвский, 76к1</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Дочке нравится ходить на занятия в Foxy. Очень радуют поощрения в виде монеток, на которые можно потом что-нибудь купить. В классе немного учеников, что позволяет учителю уделять внимание каждому учащемуся. Для нас это было важно при выборе дополнительных занятий. Со слов дочки, атмосфера в классе дружелюбная, легкая и комфортная. Спасибо за позитивное отношение к детям! 🦊</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">Э</span>
+            <div><strong>Эльмира Х.</strong><span>23 декабря 2024 · филиал Ракетостроителей, 9к3</span></div>
+          </div>
+        </article>
+        <article class="fxb-yr-card">
+          <div class="fxb-yr-top">
+            <div class="fxb-yr-stars" aria-label="Оценка 5 из 5"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.3 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.3 9,9"/></svg></div>
+            <span class="fxb-yr-src">Яндекс&nbsp;Карты</span>
+          </div>
+          <p class="fxb-yr-text">Прекрасные преподаватели с отличной методикой развития языка. Давно занимаемся в этой школе и прогресс очень хорошо заметен. Занимались как очно, так и онлайн - в любом формате преподаватели умеют увлечь и заинтересовать детей. Ну и много активностей и мероприятий. У нашей дочки любимый - это хэллоуин, ходим постоянно :)</p>
+          <div class="fxb-yr-author">
+            <span class="fxb-yr-ava">K</span>
+            <div><strong>KrAssor</strong><span>16 декабря 2025 · филиал Лихачёвский, 76к1</span></div>
+          </div>
+        </article>
+        </div>
+      </div>
+  </div>
+</div>
+
+<style>
+  #fxb-yarev{--purple:#392852;--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;
+    --fxb-yr-speed:70s;
+    font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:linear-gradient(180deg,#faf7fe 0%,#f3edfb 100%);padding:84px 0 92px;overflow:hidden}
+  #fxb-yarev *{box-sizing:border-box;margin:0;padding:0}
+  #fxb-yarev .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px}
+  #fxb-yarev .fxb-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(238,115,73,.18)}
+  #fxb-yarev .fxb-yr-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;max-width:1200px;margin:0 auto 44px;padding:0 24px}
+  #fxb-yarev .fxb-h2{font-weight:800;font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.02em}
+  #fxb-yarev .fxb-accent{position:relative;white-space:nowrap;color:var(--purple-2)}
+  #fxb-yarev .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
+  #fxb-yarev .fxb-yr-rating{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+  #fxb-yarev .fxb-yr-badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:100px;padding:8px 16px;box-shadow:0 10px 24px -14px rgba(57,40,82,.4)}
+  #fxb-yarev .fxb-yr-badge svg{width:18px;height:18px;fill:#ffb800}
+  #fxb-yarev .fxb-yr-badge b{font-size:16px;font-weight:800;color:var(--purple)}
+  #fxb-yarev .fxb-yr-count{font-size:14px;font-weight:600;color:var(--muted)}
+  #fxb-yarev .fxb-yr-all{font-size:14px;font-weight:700;color:var(--purple-2);text-decoration:none;border-bottom:2px solid rgba(102,45,146,.25);transition:border-color .25s,color .25s}
+  #fxb-yarev .fxb-yr-all:hover{color:var(--orange);border-color:var(--orange)}
+  #fxb-yarev .fxb-yr-marquee{display:flex;flex-direction:column;gap:22px;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  #fxb-yarev .fxb-yr-row{display:flex;width:max-content;gap:22px}
+  #fxb-yarev .fxb-yr-track{display:flex;gap:22px;padding:0 11px;flex:0 0 auto}
+  #fxb-yarev .fxb-yr-row-fwd{animation:fxbYrFwd var(--fxb-yr-speed) linear infinite}
+  #fxb-yarev .fxb-yr-row-rev{animation:fxbYrRev calc(var(--fxb-yr-speed)*1.15) linear infinite}
+  #fxb-yarev .fxb-yr-marquee:hover .fxb-yr-row{animation-play-state:paused}
+  @keyframes fxbYrFwd{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes fxbYrRev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+  #fxb-yarev .fxb-yr-card{width:400px;flex:0 0 auto;background:#fff;border:1px solid rgba(57,40,82,.07);border-radius:22px;padding:26px 28px;
+    box-shadow:0 16px 40px -26px rgba(57,40,82,.45);display:flex;flex-direction:column;gap:13px;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+  #fxb-yarev .fxb-yr-card:hover{transform:translateY(-5px);box-shadow:0 26px 50px -26px rgba(102,45,146,.55)}
+  #fxb-yarev .fxb-yr-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  #fxb-yarev .fxb-yr-stars{display:flex;gap:3px}
+  #fxb-yarev .fxb-yr-stars svg{width:17px;height:17px;fill:#ffb800}
+  #fxb-yarev .fxb-yr-src{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#fc3f1d,#ff8c42);padding:5px 11px;border-radius:100px;white-space:nowrap}
+  #fxb-yarev .fxb-yr-text{color:#4f4463;font-size:14.5px;line-height:1.62;font-weight:500;flex:1;
+    display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden}
+  #fxb-yarev .fxb-yr-author{display:flex;align-items:center;gap:13px;margin-top:2px}
+  #fxb-yarev .fxb-yr-ava{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:17px;color:#fff;background:linear-gradient(135deg,var(--purple-2),var(--purple-3))}
+  #fxb-yarev .fxb-yr-author strong{display:block;font-size:14.5px;font-weight:800;color:var(--purple)}
+  #fxb-yarev .fxb-yr-author span{font-size:12.5px;color:var(--muted);font-weight:500}
+  @media(max-width:640px){
+    #fxb-yarev{padding:60px 0 70px;--fxb-yr-speed:48s}
+    #fxb-yarev .fxb-yr-card{width:320px;padding:22px}
+    #fxb-yarev .fxb-yr-text{-webkit-line-clamp:9}
+  }
+  @media(prefers-reduced-motion:reduce){
+    #fxb-yarev .fxb-yr-row-fwd,#fxb-yarev .fxb-yr-row-rev{animation:none}
+    #fxb-yarev .fxb-yr-row{width:auto;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-bottom:8px}
+    #fxb-yarev .fxb-yr-track[aria-hidden="true"]{display:none}
+    #fxb-yarev .fxb-yr-card{scroll-snap-align:start}
+  }
+</style>
+
+<script>
+(function(){
+  // Лента на чистом CSS; JS только дублирует треки, чтобы не поддерживать копии вручную
+  var root=document.getElementById('fxb-yarev');if(!root)return;
+  root.querySelectorAll('.fxb-yr-row').forEach(function(row){
+    var tracks=row.querySelectorAll('.fxb-yr-track');
+    if(tracks.length===2&&tracks[1].innerHTML.replace(/\s+/g,'')===''){
+      tracks[1].innerHTML=tracks[0].innerHTML;
+    }
+  });
+})();
+</script>
