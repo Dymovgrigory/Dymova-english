@@ -644,19 +644,28 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
   #fxb-onboarding .fxb-card:nth-child(4){--g:linear-gradient(137deg,#ff3d77 0%,#ffb1ce 45%,#ff9d3c 100%)}
   #fxb-onboarding .fxb-card.fxb-in{opacity:1;transform:none}
   #fxb-onboarding .fxb-card:hover{transform:translateY(-10px)}
-  /* Неоновое свечение: размытый градиент за карточкой, загорается при появлении карточки */
-  #fxb-onboarding .fxb-glow{position:absolute;inset:0;border-radius:30px;background:var(--g);filter:blur(34px);opacity:0;pointer-events:none;transition:opacity 1s ease .2s}
-  #fxb-onboarding .fxb-card.fxb-in .fxb-glow{opacity:.55}
-  #fxb-onboarding .fxb-card:hover .fxb-glow{opacity:.85}
-  /* Тёмная карточка с градиентной рамкой (техника background-clip: padding-box + border-box) */
-  #fxb-onboarding .fxb-card-in{position:relative;height:100%;border:3px solid transparent;border-radius:26px;padding:30px 26px;background:linear-gradient(#1d1330,#1d1330) padding-box,var(--g) border-box;box-shadow:0 18px 40px -18px rgba(57,40,82,.45);transition:box-shadow .45s}
+  /* Неоновое свечение: плавно зажигается при появлении карточки и «дышит» (анимировано).
+     Блюрим маленький прямоугольник и растягиваем — так гало гладкое, без пикселей */
+  #fxb-onboarding .fxb-glow{position:absolute;inset:14px;border-radius:26px;background:var(--g);filter:blur(26px);opacity:0;pointer-events:none;transform:scale(1.22) translateZ(0);will-change:opacity,transform}
+  #fxb-onboarding .fxb-card.fxb-in .fxb-glow{animation:fxbignite .9s ease .15s both,fxbneon 4.2s ease-in-out 1.2s infinite alternate}
+  #fxb-onboarding .fxb-card:nth-child(2).fxb-in .fxb-glow{animation:fxbignite .9s ease .15s both,fxbneon 4.2s ease-in-out 1.7s infinite alternate}
+  #fxb-onboarding .fxb-card:nth-child(3).fxb-in .fxb-glow{animation:fxbignite .9s ease .15s both,fxbneon 4.2s ease-in-out 2.2s infinite alternate}
+  #fxb-onboarding .fxb-card:nth-child(4).fxb-in .fxb-glow{animation:fxbignite .9s ease .15s both,fxbneon 4.2s ease-in-out 2.7s infinite alternate}
+  #fxb-onboarding .fxb-card:hover .fxb-glow{animation-duration:.9s,2s}
+  @keyframes fxbignite{from{opacity:0;transform:scale(1.12) translateZ(0)}to{opacity:.4;transform:scale(1.22) translateZ(0)}}
+  @keyframes fxbneon{
+    from{opacity:.4;transform:scale(1.22) translateZ(0);filter:blur(24px) hue-rotate(0deg)}
+    to{opacity:.72;transform:scale(1.32) translateZ(0);filter:blur(30px) hue-rotate(-16deg)}
+  }
+  /* Светлая карточка с градиентной рамкой (техника background-clip: padding-box + border-box) */
+  #fxb-onboarding .fxb-card-in{position:relative;height:100%;border:3px solid transparent;border-radius:26px;padding:30px 26px;background:linear-gradient(#ffffff,#ffffff) padding-box,var(--g) border-box;box-shadow:0 18px 40px -18px rgba(57,40,82,.45);transition:box-shadow .45s}
   #fxb-onboarding .fxb-card:hover .fxb-card-in{box-shadow:0 30px 60px -20px rgba(102,45,146,.55)}
-  @media (prefers-reduced-motion: reduce){#fxb-onboarding .fxb-glow{transition:none}}
+  @media (prefers-reduced-motion: reduce){#fxb-onboarding .fxb-glow{transition:none;animation:none;opacity:.45}}
   #fxb-onboarding .fxb-num{position:absolute;top:-22px;left:26px;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 12px 22px -8px rgba(102,45,146,.7)}
-  #fxb-onboarding .fxb-ic{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;margin:14px 0 18px;background:rgba(252,249,81,.13);}
-  #fxb-onboarding .fxb-ic svg{width:30px;height:30px;stroke:var(--yellow);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  #fxb-onboarding .fxb-card h3{font-size:18px;font-weight:800;margin-bottom:9px;line-height:1.25;color:#fff}
-  #fxb-onboarding .fxb-card p{color:#b7aec9;font-size:14.5px;font-weight:500;line-height:1.55}
+  #fxb-onboarding .fxb-ic{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;margin:14px 0 18px;background:linear-gradient(135deg,rgba(252,249,81,.45),rgba(245,238,118,.18));}
+  #fxb-onboarding .fxb-ic svg{width:30px;height:30px;stroke:var(--purple-2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  #fxb-onboarding .fxb-card h3{font-size:18px;font-weight:800;margin-bottom:9px;line-height:1.25;color:var(--ink)}
+  #fxb-onboarding .fxb-card p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.55}
   #fxb-onboarding .fxb-tag{display:inline-block;margin-top:14px;font-size:12px;font-weight:700;color:var(--orange);background:rgba(238,115,73,.10);padding:5px 12px;border-radius:100px}
   #fxb-onboarding .fxb-cta-wrap{display:flex;justify-content:center;margin-top:60px;position:relative;z-index:6}
   #fxb-onboarding .fxb-cta{position:relative;display:inline-flex;align-items:center;gap:12px;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:17px;color:#fff;padding:20px 34px;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 20px 36px -14px rgba(102,45,146,.8);transition:transform .3s,box-shadow .3s}
