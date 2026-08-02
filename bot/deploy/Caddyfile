@@ -60,6 +60,24 @@ new.dymova-english.ru {
     file_server
 }
 
+# LMS (личный кабинет + админка): Next.js frontend + FastAPI backend из
+# репозитория Dymovgrigory/LMS. Контейнеры lms-frontend/lms-backend живут
+# в docker-сети foxinburg_foxinburg — Caddy подключён к ней (см. networks
+# в docker-compose.yml). Раньше LMS проксировал nginx стека Foxinburg-EBOS;
+# после переезда сайта на этот Caddy тот nginx потерял порты 80/443, и LMS
+# стала недоступна извне — этот блок возвращает её в публичность.
+lms.dymova-english.ru {
+    handle /api/* {
+        reverse_proxy lms-backend:8000
+    }
+    handle /health {
+        reverse_proxy lms-backend:8000
+    }
+    handle {
+        reverse_proxy lms-frontend:3000
+    }
+}
+
 # gbrain MCP endpoints, exposed for the Hermes agent (Timeweb server) to
 # reach — see docs/hermes-integration.md in the gbrain repo on foxinburg-vm.
 # Auth (Bearer/HMAC) is enforced by the MCP services themselves; Caddy here

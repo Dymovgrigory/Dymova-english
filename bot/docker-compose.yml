@@ -47,7 +47,17 @@ services:
       - caddy_data:/data
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile
       - /home/yc-user/foxinburg-site:/srv/foxinburg-site
+    networks:
+      - default
+      # LMS-стек (lms-frontend/lms-backend) живёт в сети проекта foxinburg
+      # (см. LMS/docker-compose.prod.yml). Подключаем Caddy к ней, чтобы
+      # блок lms.dymova-english.ru в Caddyfile резолвил контейнеры по именам.
+      - foxinburg_foxinburg
 
 volumes:
   caddy_config:
   caddy_data:
+
+networks:
+  foxinburg_foxinburg:
+    external: true
