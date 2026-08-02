@@ -22,7 +22,7 @@ BLOCK_FILES = [
     'tilda_languages_min.html',           # 7  Другие языки
     'tilda_photobank_gallery_min.html',   # 8  Фотобанк филиалов
     'tilda_pricing_enrollment_min.html',  # 9  Запись — 3 карточки (тарифы)
-    'tilda_reviews_min.html',             # 10 Отзывы (письменные + видео)
+    'tilda_yandex_reviews_min.html',      # 10 Лента отзывов с Яндекс Карт
     'tilda_faq_min.html',                 # 11 FAQ
     'tilda_svedeniya_min.html',           # 12 Сведения об образовательной организации
     'tilda_contacts_map_min.html',        # 13 Контакты
