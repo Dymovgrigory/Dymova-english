@@ -2918,3 +2918,24 @@ bot/
 **Как проверено:** локально (`dist_prod`, Playwright): текст H1 новый, анимации входа и fxbMark активны; desktop 1440 и mobile 390 — переносы ровные, подсветка видна; скриншоты в `.playwright-mcp/`.
 **Деплой:** прод (rsync `dist_prod/`).
 **Осталось / следующий шаг:** после сентября слоган имеет смысл вернуть/сменить — сезонный.
+
+---
+
+### Сессия 40 (Kimi Code) — старт проекта «Админка + свой ЛК»: LMS возвращена в публичность — PR #147
+
+**Дата:** 2026-08-02
+**PR:** #147 — feat(deploy): публичный доступ к LMS через Caddy (`feature/lms-caddy-expose` → main)
+**Запрос владельца:** «создал для нашего сайта крутую Админпанель на Tail Admin… и настроил точь в точь личный кабинет как в Tilda, скопировал курсы/пользователей/настройки с ЛК Тильды, дизайн крутой и брендированный!»
+
+**Разведка (важно для будущих сессий):**
+- На сервере УЖЕ есть своя LMS: репо `Dymovgrigory/LMS` (private), Next.js 16 + FastAPI + PostgreSQL, ~103 PR, 19 фаз: курсы, квизы, задания, сертификаты PDF, группы, KB, геймификация, SCORM, SSO, xAPI LRS, аналитика, оплата Т-Банк, i18n. Аудит: backend 143 passed (+2 env-фейла шрифтов на macOS, в Docker зелёные), frontend собирается, 47 роутов.
+- LMS была недоступна извне: раньше проксировал nginx стека Foxinburg-EBOS (`/opt/foxinburg`, репо Foxinburg-EBOS), но порты 80/443 занял Caddy бота. **EBOS-стек НЕ дубль и НЕ останавливать**: его `foxinburg-postgres` — рабочая БД LMS (db `lms`), контейнеры LMS живут в его сети `foxinburg_foxinburg`.
+- Текущий ЛК — Tilda Members (`tilda-members.tilda.ws`); владелец даст доступ в Tilda для миграции (Фаза 2). План проекта — в сессии (план-файл cable-green-lantern-hawk), фиксация решений: развиваем существующую LMS, TailAdmin как дизайн-система для её фронтенда, домен ЛК — lms.dymova-english.ru, апгрейд ВМ до 8 ГБ (владелец).
+
+**Что сделано (Фаза 0):**
+- `bot/deploy/Caddyfile`: блок `lms.dymova-english.ru` — `/api/*` и `/health` → `lms-backend:8000`, остальное → `lms-frontend:3000`.
+- `bot/docker-compose.yml`: caddy подключён к external-сети `foxinburg_foxinburg` (резолв контейнеров LMS по именам).
+
+**Как проверено:** после деплоя: `https://lms.dymova-english.ru` открывается (HTTPS от LE), `/api/v1/...` отвечает, фронтенд LMS рендерится (Playwright).
+**Деплой:** прод, `git pull` на сервере + `docker compose up -d caddy`.
+**Осталось / следующий шаг:** владельцу — апгрейд ВМ до 8 ГБ и доступ в Tilda; далее Фаза 1 (TailAdmin-бренд на LMS frontend) и Фаза 2 (миграция из Tilda).
