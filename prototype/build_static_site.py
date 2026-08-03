@@ -160,15 +160,12 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
 # 3D-маскот Фокси (prototype/mascot/): ригнутая модель с 17 клипами
 # (сессия 41) — ходит по нижней кромке, реагирует на скорость скролла,
 # курсор и CTA. three.js и GLB грузятся ПОСЛЕ load + requestIdleCallback.
-# ВАЖНО: importmap обязан идти раньше первого <script type="module">.
+# ВАЖНО: importmap обязан идти раньше первого <script type="module"> —
+# поэтому он вынесен в PRELOADER_BODY (самое начало <body>).
 # Чат-виджет Фокси (бот, POST /api/chat) — на всех страницах, правый нижний угол.
 # Cookie-согласие (wow/foxi-consent.js) — баннер с localStorage + событие
 # 'fxb-consent' для будущего гейтинга аналитики (сессия 46).
 WOW_SNIPPET = (
-    '<script type="importmap">{"imports":{'
-    '"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",'
-    '"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"'
-    '}}</script>\n'
     '<link rel="stylesheet" href="/wow/foxi-wow.css">\n'
     '<link rel="stylesheet" href="/wow/foxi-consent.css">\n'
     '<script type="module" src="/wow/foxi-wow.js"></script>\n'
@@ -179,54 +176,127 @@ WOW_SNIPPET = (
 )
 
 
-# Заставка-прелоадер (сессия 46): маскот Фокси на брендовом градиенте,
-# полоса загрузки и надпись «Языковая школа Фоксинбург». Критический CSS —
-# инлайном в <head> (ПЕРВЫМ, чтобы заставка рисовалась до остальных стилей),
-# оверлей и крошечный скрипт — первыми в <body>, без внешних зависимостей,
-# чтобы не было белой вспышки и «мелькающих символов» при открытии сайта.
+# Заставка-прелоадер (сессия 46, v2): РИГНУТЫЙ 3D-Фокси (/mascot/foxi-rigged.glb,
+# клип Big_Wave_Hello) машет над полосой загрузки — как на сайте, а не статика.
+# Раскладка: крупная надпись «Языковая школа Фоксинбург» сверху, под ней
+# маскот, ниже — полоса загрузки; фон — многослойный брендовый градиент
+# с жёлтым/оранжевым свечением. Пока three.js+GLB грузятся, на месте маскота
+# статичный foxi-splash.webp (мгновенный кадр), при готовности модели —
+# crossfade на canvas. Критический CSS инлайном в <head> первым, оверлей и
+# скрипты — первыми в <body>: никакой белой вспышки. Прогресс — rAF до 90%,
+# скрытие: window.load И (3D готов ИЛИ прошло 5 с), мин. показ 1.2 с,
+# принудительно через 8 с; reduced-motion — без анимаций и ожидания 3D.
+# Если GLB пришёл после скрытия заставки — 3D-сцену не стартуем (экономим CPU).
 PRELOADER_HEAD = (
     "<style>"
     "#fxb-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;"
-    "background:linear-gradient(135deg,#241a36 0%,#392852 45%,#662d92 100%);"
+    "background:"
+    "radial-gradient(120% 90% at 50% 26%,rgba(252,249,81,.13) 0%,rgba(252,249,81,0) 55%),"
+    "radial-gradient(100% 80% at 82% 92%,rgba(238,115,73,.2) 0%,rgba(238,115,73,0) 60%),"
+    "linear-gradient(135deg,#241a36 0%,#392852 42%,#662d92 78%,#7b4fc0 100%);"
     "transition:opacity .5s ease,visibility .5s}"
+    "#fxb-splash::after{content:'';position:absolute;inset:0;pointer-events:none;"
+    "background:radial-gradient(60% 45% at 50% 34%,rgba(252,249,81,.1) 0%,rgba(252,249,81,0) 70%);"
+    "animation:fxbSplashGlow 3.2s ease-in-out infinite}"
+    "@keyframes fxbSplashGlow{0%,100%{opacity:.5}50%{opacity:1}}"
     "#fxb-splash.fxb-splash-done{opacity:0;visibility:hidden;pointer-events:none}"
-    ".fxb-splash-inner{display:flex;flex-direction:column;align-items:center;gap:18px;padding:24px;text-align:center}"
-    ".fxb-splash-fox{width:132px;height:auto;animation:fxbSplashFloat 2.2s ease-in-out infinite;"
-    "filter:drop-shadow(0 14px 30px rgba(0,0,0,.35))}"
-    "@keyframes fxbSplashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}"
-    ".fxb-splash-brand{font-family:'Montserrat',system-ui,-apple-system,sans-serif;font-weight:600;"
-    "font-size:17px;letter-spacing:.04em;color:rgba(255,255,255,.85)}"
+    ".fxb-splash-inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px;text-align:center}"
+    ".fxb-splash-brand{font-family:'Montserrat',system-ui,-apple-system,sans-serif;font-weight:700;"
+    "font-size:clamp(24px,4.6vw,34px);letter-spacing:.03em;color:rgba(255,255,255,.95);"
+    "text-shadow:0 2px 18px rgba(0,0,0,.35)}"
     ".fxb-splash-brand b{font-weight:800;color:#fcf951}"
-    ".fxb-splash-bar{width:196px;height:6px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}"
+    ".fxb-splash-stage{position:relative;width:220px;height:210px}"
+    ".fxb-splash-fox{position:absolute;inset:0;margin:auto;height:198px;width:auto;"
+    "animation:fxbSplashFloat 2.2s ease-in-out infinite;filter:drop-shadow(0 14px 30px rgba(0,0,0,.35));"
+    "transition:opacity .4s ease}"
+    ".fxb-splash-3d{position:absolute;inset:0;width:220px;height:210px;opacity:0;transition:opacity .5s ease}"
+    ".fxb-splash-3d-on .fxb-splash-3d{opacity:1}"
+    ".fxb-splash-3d-on .fxb-splash-fox{opacity:0;animation:none}"
+    "@keyframes fxbSplashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}"
+    ".fxb-splash-bar{width:220px;height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;"
+    "box-shadow:0 2px 12px rgba(0,0,0,.25)}"
     ".fxb-splash-bar span{display:block;height:100%;width:0;border-radius:99px;"
     "background:linear-gradient(90deg,#fcf951,#ee7349);transition:width .25s ease;"
     "animation:fxbSplashBar 1.9s ease-out forwards}"
     "@keyframes fxbSplashBar{0%{width:0}60%{width:55%}100%{width:88%}}"
-    "@media (prefers-reduced-motion:reduce){.fxb-splash-fox{animation:none}.fxb-splash-bar span{animation:none;width:60%}}"
+    "@media (prefers-reduced-motion:reduce){"
+    "#fxb-splash::after{animation:none}.fxb-splash-fox{animation:none}.fxb-splash-bar span{animation:none;width:60%}}"
     "</style>"
 )
 
 PRELOADER_BODY = (
+    '<script type="importmap">{"imports":{'
+    '"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",'
+    '"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"'
+    "}}</script>\n"
     '<div id="fxb-splash" aria-hidden="true">'
     '<div class="fxb-splash-inner">'
-    '<img class="fxb-splash-fox" src="/mascot/foxi-splash.webp" alt="" width="132" height="193">'
     '<div class="fxb-splash-brand">Языковая школа <b>Фоксинбург</b></div>'
+    '<div class="fxb-splash-stage">'
+    '<img class="fxb-splash-fox" src="/mascot/foxi-splash.webp" alt="" width="136" height="198">'
+    '<canvas class="fxb-splash-3d" width="220" height="210"></canvas>'
+    "</div>"
     '<div class="fxb-splash-bar"><span></span></div>'
     "</div></div>\n"
     "<noscript><style>#fxb-splash{display:none}</style></noscript>\n"
+    # прогресс и скрытие — обычный скрипт, работает даже при недоступном CDN
     "<script>(function(){var s=document.getElementById('fxb-splash');if(!s)return;"
-    "var bar=s.querySelector('.fxb-splash-bar span'),t0=performance.now(),done=false;"
+    "var bar=s.querySelector('.fxb-splash-bar span'),t0=performance.now(),done=false,loaded=false;"
     "var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;"
-    "var MIN=rm?0:900,MAX=5000;"
+    "var MIN=rm?0:1200,WAIT3D=rm?0:5000,MAX=8000;"
     "function pct(v){if(bar)bar.style.width=v+'%';}"
     "function tick(){if(done)return;var t=(performance.now()-t0)/1800;"
     "pct(Math.min(90,Math.round(t*90)));if(t<1)requestAnimationFrame(tick);}"
     "requestAnimationFrame(tick);"
-    "function hide(){if(done)return;done=true;pct(100);"
+    "function tryHide(){if(done||!loaded)return;"
+    "if(!window.__fxb3dReady&&performance.now()-t0<WAIT3D)return;done=true;pct(100);"
     "var wait=Math.max(0,MIN-(performance.now()-t0));"
     "setTimeout(function(){s.classList.add('fxb-splash-done');"
-    "setTimeout(function(){s.parentNode&&s.parentNode.removeChild(s);},600);},wait);}"
-    "window.addEventListener('load',hide);setTimeout(hide,MAX);})();</script>"
+    "setTimeout(function(){if(window.__fxbSplashStop)window.__fxbSplashStop();"
+    "s.parentNode&&s.parentNode.removeChild(s);},600);},wait);}"
+    "window.addEventListener('load',function(){loaded=true;tryHide();});"
+    "document.addEventListener('fxb-splash-3d-ready',tryHide);"
+    "setTimeout(function(){loaded=true;tryHide();},MAX);})();</script>\n"
+    # ригнутый Фокси — модуль; при недоступности CDN/модели остаётся webp
+    "<script type=\"module\">"
+    "try{"
+    "const THREE=await import('three');"
+    "const{GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');"
+    "const{DRACOLoader}=await import('three/addons/loaders/DRACOLoader.js');"
+    "const stage=document.querySelector('.fxb-splash-stage');"
+    "if(!stage)throw 0;"
+    "const canvas=stage.querySelector('.fxb-splash-3d');"
+    "const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});"
+    "renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));"
+    "renderer.setSize(220,210,false);"
+    "const scene=new THREE.Scene();"
+    "const camera=new THREE.PerspectiveCamera(40,220/210,0.1,50);"
+    "camera.position.set(0,1.0,3.2);camera.lookAt(0,0.85,0);"
+    "scene.add(new THREE.HemisphereLight(0xffffff,0xd9c8ff,1.05));"
+    "const dl=new THREE.DirectionalLight(0xffffff,1.4);dl.position.set(2,4,3);scene.add(dl);"
+    "const draco=new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');"
+    "new GLTFLoader().setDRACOLoader(draco).load('/mascot/foxi-rigged.glb',(gltf)=>{"
+    # заставка уже скрылась (медленная сеть) — сцену не стартуем, цикл не крутим
+    "if(!document.getElementById('fxb-splash'))return;"
+    "const model=gltf.scene;"
+    "const box=new THREE.Box3().setFromObject(model);"
+    "const c=box.getCenter(new THREE.Vector3());"
+    "model.position.x-=c.x;model.position.z-=c.z;model.position.y-=box.min.y;"
+    "const size=box.getSize(new THREE.Vector3());"
+    "const body=new THREE.Group();body.add(model);"
+    "body.scale.setScalar(1.7/Math.max(size.y,0.001));"
+    "scene.add(body);"
+    "const mixer=new THREE.AnimationMixer(model);"
+    "const clips={};for(const cl of gltf.animations)clips[cl.name]=mixer.clipAction(cl);"
+    "(clips['Big_Wave_Hello']||Object.values(clips)[0]).play();"
+    "const clock=new THREE.Clock();"
+    "renderer.setAnimationLoop(()=>{mixer.update(clock.getDelta());renderer.render(scene,camera);});"
+    "window.__fxbSplashStop=()=>renderer.setAnimationLoop(null);"
+    "stage.classList.add('fxb-splash-3d-on');"
+    "window.__fxb3dReady=true;"
+    "document.dispatchEvent(new Event('fxb-splash-3d-ready'));"
+    "},undefined,()=>{});"
+    "}catch(e){}</script>"
 )
 
 
