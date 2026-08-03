@@ -145,6 +145,8 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
         f'<meta name="description" content="{description}">',
         f'<link rel="canonical" href="{canonical}">',
         f'<meta name="robots" content="{robots}">',
+        # подтверждение владения сайтом для Яндекс.Вебмастера (сессия 47)
+        '<meta name="yandex-verification" content="c08742055e803bc5">',
         f'<meta property="og:title" content="{title}">',
         f'<meta property="og:description" content="{description}">',
         f'<meta property="og:url" content="{canonical}">',
