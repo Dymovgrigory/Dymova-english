@@ -356,25 +356,25 @@ JS = """
 </script>
 """
 
-DECOR_SWIRL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/decor-swirl-yellow-1.png"
-DECOR_FOX = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png"
-MYLEVEL = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/"
+DECOR_SWIRL = "/assets/brand/decor-swirl-yellow-1.webp"
+DECOR_FOX = "/assets/brand/fox-head-yellow.webp"
+MYLEVEL = "/assets/brand/"
 MAX_BOT = "https://max.ru/id611904726658_bot"
-ROADMAP = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/3060ea827cc6304ed2419454ea5bbf9e6d7c19f0/brand-assets/roadmaps/"
-TEAM_MEDIA = "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@4dcc1ef1b977038bfb8bdc22ea40385e0429f78c/prototype/team-media/"
-FOX_AVATAR = "https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/fox-head-yellow.png"
+ROADMAP = "/assets/brand/roadmaps/"
+TEAM_MEDIA = "/team-media/"
+FOX_AVATAR = "/assets/brand/fox-head-yellow.webp"
 
 ENGLISH_TEACHERS = [
-    {"name": "Дмитроченко Юлия", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "dmitrochenko.jpg", "video": TEAM_MEDIA + "dmitrochenko.mp4", "lesson": TEAM_MEDIA + "dmitrochenko_lesson.mp4"},
-    {"name": "Птицын Владислав", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "ptitsyn.jpg", "video": TEAM_MEDIA + "ptitsyn.mp4", "lesson": TEAM_MEDIA + "ptitsyn_lesson.mp4"},
-    {"name": "Анохин Роман", "role": "Педагог английского языка", "photo": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@main/prototype/team-media/anokhin.jpg"},
-    {"name": "Саляхова Алина", "role": "Педагог английского и немецкого языков", "photo": TEAM_MEDIA + "salyahova.jpg", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
+    {"name": "Дмитроченко Юлия", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "dmitrochenko.webp", "video": TEAM_MEDIA + "dmitrochenko.mp4", "lesson": TEAM_MEDIA + "dmitrochenko_lesson.mp4"},
+    {"name": "Птицын Владислав", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "ptitsyn.webp", "video": TEAM_MEDIA + "ptitsyn.mp4", "lesson": TEAM_MEDIA + "ptitsyn_lesson.mp4"},
+    {"name": "Анохин Роман", "role": "Педагог английского языка", "photo": "/team-media/anokhin.webp"},
+    {"name": "Саляхова Алина", "role": "Педагог английского и немецкого языков", "photo": TEAM_MEDIA + "salyahova.webp", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
 ]
 GERMAN_TEACHERS = [
-    {"name": "Саляхова Алина", "role": "Педагог немецкого языка", "photo": TEAM_MEDIA + "salyahova.jpg", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
+    {"name": "Саляхова Алина", "role": "Педагог немецкого языка", "photo": TEAM_MEDIA + "salyahova.webp", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
 ]
 CHINESE_TEACHERS = [
-    {"name": "Шевченко Дарья", "role": "Педагог китайского языка", "photo": TEAM_MEDIA + "shevchenko.jpg", "video": TEAM_MEDIA + "shevchenko.mp4"},
+    {"name": "Шевченко Дарья", "role": "Педагог китайского языка", "photo": TEAM_MEDIA + "shevchenko.webp", "video": TEAM_MEDIA + "shevchenko.mp4"},
 ]
 
 
@@ -807,8 +807,8 @@ PAGES["page_doshkolniki.html"] = {
         "kicker": "Видео",
         "title": "Как проходят занятия у дошкольников",
         "lead": "Небольшой фрагмент реального занятия — с игрой, движением и речевой практикой.",
-        "src": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/doshkolniki.mp4",
-        "poster": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/doshkolniki-poster.jpg",
+        "src": "/media/doshkolniki.mp4",
+        "poster": "/media/doshkolniki-poster.webp",
     },
     "teachers": ENGLISH_TEACHERS,
     "prices": True,
@@ -872,10 +872,10 @@ PAGES["page_mladshie_shkolniki.html"] = {
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
     "books": [
-        ("My Level 1", "6–8 лет, 1-й год обучения. Уровень Pre-A1. Старт с азов: алфавит, фоника и первые фразы, чтение по Read with Richie.", MYLEVEL + "mylevel-1.png"),
-        ("My Level 2", "8–9 лет, 2-й год обучения. Уровень Pre-A1 → A1. Расширяем лексику и грамматику, больше чтения с Richie's Adventures.", MYLEVEL + "mylevel-2.png"),
-        ("My Level 3", "9–10 лет, 3-й год обучения. Уровень A1. Уверенное чтение и грамматика, отработка лексики по Move It 1.", MYLEVEL + "mylevel-3.png"),
-        ("My Level 4", "10–11 лет, 4-й год обучения. Уровень A1 → A2. Сложнее тексты и грамматика по Move It 2, мягкая подготовка к Кембриджским экзаменам YLE.", MYLEVEL + "mylevel-4.png"),
+        ("My Level 1", "6–8 лет, 1-й год обучения. Уровень Pre-A1. Старт с азов: алфавит, фоника и первые фразы, чтение по Read with Richie.", MYLEVEL + "mylevel-1.webp"),
+        ("My Level 2", "8–9 лет, 2-й год обучения. Уровень Pre-A1 → A1. Расширяем лексику и грамматику, больше чтения с Richie's Adventures.", MYLEVEL + "mylevel-2.webp"),
+        ("My Level 3", "9–10 лет, 3-й год обучения. Уровень A1. Уверенное чтение и грамматика, отработка лексики по Move It 1.", MYLEVEL + "mylevel-3.webp"),
+        ("My Level 4", "10–11 лет, 4-й год обучения. Уровень A1 → A2. Сложнее тексты и грамматика по Move It 2, мягкая подготовка к Кембриджским экзаменам YLE.", MYLEVEL + "mylevel-4.webp"),
     ],
     "books_title": "Учебники My Level",
     "books_lead": "Занимаемся по современным оригинальным УМК My Level — с 1 по 4 уровень, по возрасту и подготовке ребёнка.",
@@ -959,8 +959,8 @@ PAGES["page_letnyaya_akademiya.html"] = {
         "kicker": "Как это проходит",
         "title": 'Летняя Академия — <span class="fxb-accent">вживую</span>',
         "lead": "Атмосфера смены: как проходят занятия, проекты и общение в Академии.",
-        "src": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy.mp4",
-        "poster": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy-poster.jpg",
+        "src": "/media/summer-academy.mp4",
+        "poster": "/media/summer-academy-poster.webp",
     },
     "lead_subject": "Летняя Академия",
     "lead_hero_window": "Блок героя",
@@ -1723,8 +1723,8 @@ NEWS_POST_3 = {
             "kicker": "Видео",
             "title": "Летняя Академия — вживую",
             "lead": "Короткий ролик показывает атмосферу смен: как дети занимаются, общаются и включаются в проекты.",
-            "src": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy.mp4",
-            "poster": "https://cdn.jsdelivr.net/gh/Dymovgrigory/Dymova-english@gh-pages/media/summer-academy-poster.jpg",
+            "src": "/media/summer-academy.mp4",
+            "poster": "/media/summer-academy-poster.webp",
         }),
         ("h2", "Что такое смена Летней Академии"),
         ("p", "Летняя Академия — это не просто «занятия летом», а короткий интенсивный формат, в котором английский живёт в течение дня. Ребёнок приходит в комфортное время, погружается в тему смены и каждый день видит, как язык нужен для общения, игры, мини-проектов и творческих заданий. Летом у детей обычно появляется больше свободы, и наша задача — направить эту энергию в полезное русло без ощущения школьной нагрузки."),

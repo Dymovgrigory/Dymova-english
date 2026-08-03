@@ -434,10 +434,18 @@ def main() -> None:
         shutil.copytree(mascot_src, os.path.join(out_dir, "mascot"), dirs_exist_ok=True,
                         ignore=shutil.ignore_patterns("*.html", "README.md"))
 
-    # Общие ассеты сайта (og-cover.png и т.п.)
+    # Общие ассеты сайта (og-cover.png, fonts/, brand/ и т.п.)
     assets_src = os.path.join(DIR, "assets")
     if os.path.isdir(assets_src):
         shutil.copytree(assets_src, os.path.join(out_dir, "assets"), dirs_exist_ok=True)
+
+    # Локальные медиа (сессия 47): галерея, фото/видео команды, видео страниц.
+    # В прод уходят только webp/mp4 — jpg/png-исходники остаются в репозитории.
+    for media_dir in ("gallery", "team-media", "media"):
+        src = os.path.join(DIR, media_dir)
+        if os.path.isdir(src):
+            shutil.copytree(src, os.path.join(out_dir, media_dir), dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns("*.jpg", "*.jpeg", "*.png", "*.opt.mp4"))
 
     # favicon → корень сайта
     favicon_src = os.path.join(DIR, "favicon.png")

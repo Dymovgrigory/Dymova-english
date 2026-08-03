@@ -3403,3 +3403,19 @@ bot/
 **Как проверено:** сборка 33 страницы; grep dist — 0 вхождений fonts.googleapis/gstatic в HTML. Playwright локально: 12/12 начертаний Montserrat `loaded`, 0 запросов к fonts.g*, 0 404, 0 pageerror, скриншоты главной и /doshkolniki — типографика без изменений. Прод curl: woff2 200 (21 492 B), 0 googleapis на главной и /doshkolniki.
 **Деплой:** rsync `dist_prod/` на прод.
 **Осталось / следующий шаг:** фото галереи/команды и бренд-ассеты в локальный WebP (cdn.jsdelivr → /gallery, /team-media; raw.githubusercontent → /assets; Caddy @static path дополнить), FAQ на 11 старых страниц, отзывы-партиал, /tseny.
+
+### Сессия 47, продолжение 6 (Kimi Code) — Скорость: все медиа локальные + WebP, уход с jsdelivr/raw.githubusercontent
+
+**Дата:** 2026-08-04
+**Ветка:** `main` (без PR; деплой rsync на прод).
+
+**Что сделано:**
+- **Изображения 33 МБ → 2,9 МБ**: галерея (6 фото, 1600→1200px, q80), фото команды/отчётов (14 jpg→webp), бренд-ассеты (fox-head, decor-blob/swirl/zigzag — готовые webp скопированы; mylevel-1..4 и 12 roadmaps png→webp), постеры видео (2 jpg→webp). Локальные пути: `/gallery/*.webp`, `/team-media/*.webp`, `/assets/brand/*.webp`, `/assets/brand/roadmaps/*.webp`, `/media/*-poster.webp`.
+- **Видео 68 → 34 МБ**: 12 mp4 (media/doshkolniki, media/summer-academy, 10 team-media) пережаты — 576px, 30 fps, CRF 28, faststart, звук СОХРАНЁН (это controls-видео в модалках и на страницах, не фон). Исходники в git-истории.
+- **172 + 110 замен URL** во входах сборки (tilda_shapka/tilda_footer/main_combined_v7/page_*.html): cdn.jsdelivr.net (любой хеш) и raw.githubusercontent.com (ветка devin/... — два сегмента пути) → локальные пути. В build_subpages.py константы DECOR_SWIRL/DECOR_FOX/FOX_AVATAR/MYLEVEL/ROADMAP/TEAM_MEDIA переведены на локальные пути (+ .png/.jpg→.webp у склеиваемых имён).
+- `build_static_site.py`: копирование `gallery/`, `team-media/`, `media/` в dist (только webp/mp4; jpg/png-исходники не уходят в прод).
+- `bot/deploy/Caddyfile`: `/gallery/* /team-media/* /media/*` добавлены в @static (Cache-Control max-age=604800).
+
+**Как проверено:** сборка 33 страницы; grep dist — 0 jsdelivr/raw в HTML. Playwright локально на /, /doshkolniki, /letnyaya-akademiya, /mladshie-shkolniki, /kontakty: 0 404, 0 pageerror, битых img нет (один `<img>` без src на главной — рантайм-плейсхолдер, был и до правки), видео /media/doshkolniki.mp4 отдаётся с постером webp (readyState 4). Прод curl: 200 на webp галереи/команды/бренда/roadmaps + mp4 (shevchenko.mp4 9 МБ, doshkolniki.mp4 2,7 МБ), cache-control 604800 на /gallery. Caddy validate — Valid.
+**Деплой:** rsync `dist_prod/` + Caddyfile + reload.
+**Осталось / следующий шаг:** контент — FAQ на 11 старых страниц (паттерн с /oge-anglijskij), отзывы-партиал на коммерческие страницы, сводная /tseny, убрать Tilda-ЛК из главного меню. Ждём от владельца номер лицензии и Google SA-ключ. Через 2–4 недели — замер CTR в API Вебмастера.
