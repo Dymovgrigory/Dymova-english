@@ -2582,10 +2582,10 @@ bot/
 - Владельцу: удалить тестовые лиды «ТЕСТ аудит сайта» и «ТЕСТ аудит сессия 35» из BigBen.
 - Нерешённое с прошлых сессий: вернуть ли чат-виджет бота на сайт (см. сессию 34), вернуть ли 3D-маскота при появлении ригнутой модели (файлы на месте).
 
-## Текущий статус (обновлено в Сессии 44, 2026-08-03)
+## Текущий статус (обновлено в Сессии 44, продолжение, 2026-08-03)
 
-- Последняя работа: **Сессия 44 — SEO: посадочная `/repetitor` + FAQPage JSON-LD на всех посадочных** (генерируется из `p["faq"]` в `build_subpages.py`). **Задеплоено на dymova-english.ru** (rsync `dist_prod`, 31 страница).
-- До неё: Сессия 43 — «Сайт» v2 (CMS-подхват цен/контактов из LMS на главной), тоже на проде.
+- Последняя работа: **Сессия 44, продолжение — Course JSON-LD с ценами на 11 страницах курсов + посадочная `/repetitor-nachalnaya-shkola` (репетитор русский/математика 1–4 кл, 5 600 ₽/мес) + уточнение цен ОГЭ/ЕГЭ (только индивидуально 2 500 ₽/час) + 11-я статья в /novosti**. **Задеплоено на dymova-english.ru** (rsync `dist_prod`, 33 страницы).
+- До неё: Сессия 44 — посадочная `/repetitor` + FAQPage на всех посадочных; Сессия 43 — «Сайт» v2 (CMS-подхват цен/контактов). Всё на проде.
 - Сайт: `dymova-english.ru` отдаётся с `yc-user@89.169.132.104:/home/yc-user/foxinburg-site` (rsync из `prototype/dist_prod`, сборка `python3 prototype/build_static_site.py --out dist_prod`). Стейджинг = тот же каталог (`new.dymova-english.ru`).
 - Бот: контейнер `bot-bot-1`, деплой `cd /home/yc-user/Dymova-english && git pull && cd bot && sudo docker compose up -d --build`. Тесты: `cd bot && .venv313/bin/pytest -q` (старый `.venv` сломан, Python 3.9).
 - Ждём от владельца: проверить URL кнопки mini-apps в MAX (`https://bot.dymova-english.ru/app/`); новый документ публичной оферты; опционально токен VK API.
@@ -3097,3 +3097,27 @@ bot/
 
 **Деплой:** прод, rsync `dist_prod/` → `yc-user@89.169.132.104:/home/yc-user/foxinburg-site/`.
 **Осталось / следующий шаг:** по плану продвижения дальше — (1) кит для каталогов (единый NAP + чек-лист ~30 площадок: Яндекс.Бизнес до 100%, Google Business, 2GIS, Zoon, Yell и др.), (2) контент-пак для бесплатного постинга в городские чаты/группы + календарь, (3) Course-разметка для посадочных, (4) регулярный контент-поток в /novosti. Владельцу — регистрации (телефон/почта) и доступы к Яндекс Вебмастеру / Search Console.
+
+---
+
+### Сессия 44, продолжение (Kimi Code) — Course-разметка с ценами для посадочных + статья про репетитора
+
+**Дата:** 2026-08-03
+**Ветка:** `main` (без PR, как сессии 30–44; деплой rsync на прод).
+**Запрос владельца:** план продвижения, пункт 3 — Course-разметка с ценами для посадочных + контент-поток в /novosti.
+
+**Что сделано:**
+- **6 новых Course-схем с offers** в `prototype/seo_schema/`: `course_oge-anglijskij.html` и `course_ege-anglijskij.html` (**индивидуально 2 500 ₽/час**, workload PT1H — уточнение владельца: ОГЭ/ЕГЭ по английскому ведём только индивидуально, групп нет), `course_anglijskij-dlya-vzroslyh.html` / `course_nemeckij-yazyk.html` / `course_kitajskij-yazyk.html` (9 000 ₽, месяц группы), `course_repetitor.html` (2 500 ₽/час индивидуально). Паттерн: name/description/url + provider `{"@id":"...#organization"}` + hasCourseInstance с offers (price/priceCurrency RUB, availability InStock, category). Цены синхронизированы с блоком цен на сайте и bot/data.yaml.
+- **offers уже были** в 4 старых схемах (reading 12 400, grammar 16 000, preparation 5 600, letnyaya-akademiya 46 000, priceCurrency RUR) — проверено, не трогал.
+- **Уточнение цен от владельца (важно, держать в уме):** ОГЭ/ЕГЭ английский — ТОЛЬКО индивидуально 2 500 ₽/час; 5 600 ₽/мес — это подготовка к школе и общие предметы (математика, русский, чтение); репетитор по русскому языку и математике 1–4 класс — 5 600 ₽/мес. В `build_subpages.py`: у страниц oge/ege убраны упоминания мини-групп (facts/formats/advantages/FAQ → «1 на 1», «индивидуальный план»), блок цен — одна карточка 2 500 ₽/час; у /preparation блок цен — 5 600 ₽/мес. `price_section()` теперь принимает опциональные `price_cards` (tag, tag_mod, price_html, desc) — иначе дефолтные 3 карточки.
+- **Новая услуга и посадочная `/repetitor-nachalnaya-shkola`** («Репетитор по русскому языку и математике для 1–4 класса», 5 600 ₽/мес): `PAGES["page_repetitor_nachalnaya_shkola.html"]` — hero, фичи (русский/математика/ДЗ/пробелы), форматы, team-карточки (без teachers — фото английских педагогов неуместны), цены (одна карточка 5 600 ₽/мес), преимущества, FAQ (6 вопросов), CTA. Иконка `heart` добавлена в ICONS. Регистрация: алиас и SCHEMA_MAP в `build_static_site.py`, title/description/canonical в `seo_meta_live.json`, схемы `course_repetitor-nachalnaya-shkola.html` + `breadcrumb_repetitor-nachalnaya-shkola.html`. Перелинковка: ссылка «Репетитор 1–4 класс» в меню «Наши курсы» шапки (`tilda_shapka.html`, `tilda_header_unified.html`, `main_combined_v7.html`) и в подвале (`tilda_footer.html`) + FAQ-кросслинк со страницы /repetitor. `make minify` — доминифицированы footer/header_unified.
+- `build_static_site.py`: SCHEMA_MAP — 6 посадочных теперь `["course_X.html", "breadcrumb_X.html"]`; добавлен алиас `page_novosti_komu_nuzhen_repetitor_po_anglijskomu_5_priznakov.html → novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov`. `seo_schema/DEPLOY_MAP.md` обновлён.
+- **11-я статья ленты** `NEWS_POST_11` в `build_subpages.py` — «Кому на самом деле нужен репетитор по английскому: 5 честных признаков» (date 2026-08-10, 6 мин чтения, Article+BreadcrumbList JSON-LD через шаблон статей). 4 внутренние ссылки на /repetitor + перелинковка на /oge-anglijskij и др. Важно: определение `NEWS_POST_11` стоит ДО `PAGES["page_novosti.html"]` (лента ссылается на него), присваивание `PAGES[...] = NEWS_POST_11` — в конце с остальными статьями.
+- Сборка: `python3 build_subpages.py && python3 build_static_site.py --out dist_prod` → **33 страницы**.
+
+**Как проверено:**
+- Структурно: все 7 посадочных имеют Course+BreadcrumbList+FAQPage (JSON парсится), у новой страницы title/canonical из seo_meta_live.json, цена 5 600 ₽ в вёрстке и в Course-offers, «9 000» на oge/ege/preparation/новой странице отсутствует, «1 на 1» присутствует; статья — Article+BreadcrumbList, есть в sitemap.xml и в ленте /novosti; ссылка на новую страницу в шапке главной. Валидатор JSON-LD: сначала вырезать HTML-комментарии (`re.sub(r'<!--.*?-->','')`) — иначе regex цепляет псевдо-тег `<script type="application/ld+json">` из шапки-комментария схемы.
+- Playwright локально (dist_prod :8099, standalone через `.tilda-venv/bin/python`, channel="chrome"): новая страница рендерится (H1, блок цен 5 600 ₽/мес), /oge-anglijskij — блок цен 2 500 ₽/час индивидуально, 0 pageerror. Скриншоты `.playwright-mcp/nachshkola-price.png`, `oge-price.png` — корректны.
+
+**Деплой:** прод, rsync `dist_prod/` → `yc-user@89.169.132.104:/home/yc-user/foxinburg-site/`.
+**Осталось / следующий шаг:** по плану продвижения — (1) кит для каталогов (единый NAP + чек-лист ~30 площадок), (2) контент-пак для бесплатного постинга в городские чаты/группы. От владельца по-прежнему нужны: доступы Яндекс Вебмастер / Search Console, регистрации в каталогах (его телефон).

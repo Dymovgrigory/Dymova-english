@@ -58,6 +58,7 @@ PAGE_ALIASES = {
     "page_nemeckij_yazyk.html": "nemeckij-yazyk",
     "page_kitajskij_yazyk.html": "kitajskij-yazyk",
     "page_repetitor.html": "repetitor",
+    "page_repetitor_nachalnaya_shkola.html": "repetitor-nachalnaya-shkola",
     "page_novosti_so_skolki_let_uchit_anglijskij.html": "novosti-so-skolki-let-uchit-anglijskij",
     "page_novosti_kak_podgotovitsya_k_oge_anglijskij.html": "novosti-kak-podgotovitsya-k-oge-anglijskij",
     "page_novosti_kak_prohodyat_smeny_letnej_akademii.html": "novosti-kak-prohodyat-smeny-letnej-akademii",
@@ -68,6 +69,7 @@ PAGE_ALIASES = {
     "page_novosti_yazykovaya_shkola_ili_repetitor_kak_vybrat.html": "novosti-yazykovaya-shkola-ili-repetitor-kak-vybrat",
     "page_novosti_anglijskij_dlya_vzroslyh_s_nulya_s_chego_nachat.html": "novosti-anglijskij-dlya-vzroslyh-s-nulya-s-chego-nachat",
     "page_novosti_lozhnye_druzya_perevodchika_slova_kotorye_obmanyvayut.html": "novosti-lozhnye-druzya-perevodchika-slova-kotorye-obmanyvayut",
+    "page_novosti_komu_nuzhen_repetitor_po_anglijskomu_5_priznakov.html": "novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov",
 }
 
 # Статьи уже несут собственную Article+BreadcrumbList JSON-LD внутри себя
@@ -91,12 +93,13 @@ SCHEMA_MAP = {
     "standartnye-offline": ["breadcrumb_standartnye-offline.html"],
     "novosti": ["breadcrumb_novosti.html"],
     "vakansii": ["breadcrumb_vakansii.html"],
-    "oge-anglijskij": ["breadcrumb_oge-anglijskij.html"],
-    "ege-anglijskij": ["breadcrumb_ege-anglijskij.html"],
-    "anglijskij-dlya-vzroslyh": ["breadcrumb_anglijskij-dlya-vzroslyh.html"],
-    "nemeckij-yazyk": ["breadcrumb_nemeckij-yazyk.html"],
-    "kitajskij-yazyk": ["breadcrumb_kitajskij-yazyk.html"],
-    "repetitor": ["breadcrumb_repetitor.html"],
+    "oge-anglijskij": ["course_oge-anglijskij.html", "breadcrumb_oge-anglijskij.html"],
+    "ege-anglijskij": ["course_ege-anglijskij.html", "breadcrumb_ege-anglijskij.html"],
+    "anglijskij-dlya-vzroslyh": ["course_anglijskij-dlya-vzroslyh.html", "breadcrumb_anglijskij-dlya-vzroslyh.html"],
+    "nemeckij-yazyk": ["course_nemeckij-yazyk.html", "breadcrumb_nemeckij-yazyk.html"],
+    "kitajskij-yazyk": ["course_kitajskij-yazyk.html", "breadcrumb_kitajskij-yazyk.html"],
+    "repetitor": ["course_repetitor.html", "breadcrumb_repetitor.html"],
+    "repetitor-nachalnaya-shkola": ["course_repetitor-nachalnaya-shkola.html", "breadcrumb_repetitor-nachalnaya-shkola.html"],
 }
 INDEX_SCHEMA = ["faq.html"]
 
