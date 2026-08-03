@@ -3292,3 +3292,24 @@ bot/
 **Как проверено:** сборка 33 страницы; grep dist_prod — `fxb-splash-fox` 0 вхождений; Playwright desktop+mobile: img отсутствует, `__fxb3dReady` → живой Фокси в заставке (скриншот `splash-nostatic-desktop.png`), скрытие OK, 0 pageerror; прод curl — `fxb-splash-fox` 0.
 **Деплой:** прод, rsync `dist_prod/` → `yc-user@89.169.132.104:/home/yc-user/foxinburg-site/`.
 **Осталось / следующий шаг:** по плану продвижения — (2) контент-пак для городских чатов, (3) обновить wiki/03-seo.md.
+
+---
+
+### Сессия 46, продолжение 5 (Kimi Code) — заставка v2.2: маскот появляется сразу, three.js локальный+min, zstd/gzip в Caddy
+
+**Дата:** 2026-08-04
+**Ветка:** `main` (без PR; деплой rsync на прод).
+**Запрос владельца:** «маскот слишком поздно появляется — нужно чтобы сразу, как начинается загрузка».
+
+**Что сделано:**
+- **three.js/draco завендорены локально** (`prototype/mascot/vendor/`, three 0.180.0 + draco 1.5.7 с gstatic): importmap и `draco.setDecoderPath` переведены на `/mascot/vendor/...`, CDN-больше нет. Сначала вендорились полные сборки (2,0 МБ JS), затем добавлены **min-сборки** (`three.module.min.js` 339 КБ + `three.core.min.js` 381 КБ) — importmap/modulepreload переключены на них. Сайтовой маскот (`mascot.js`) использует тот же importmap и локальный draco — работает без изменений логики.
+- **Ранняя загрузка из `<head>`** (PRELOADER_HEAD): 4× `<link rel="modulepreload">` (three min, GLTFLoader, DRACOLoader) + `window.__fxbPre` — `fetch` GLB и draco-wasm начинается до парсинга `<body>`; модуль берёт буфер через `loader.parse` (фолбэк — `loader.load`).
+- **Облегчённый GLB для заставки**: `mascot/foxi-splash.glb` (688 КБ вместо 726) — из `foxi-rigged.glb` убраны 5 лишних клипов, оставлен только `Big_Wave_Hello` (gltf-transform 4.4.2: dispose animations + resample + prune, draco сохранён). Сайтовой маскот продолжает использовать полный `foxi-rigged.glb` (6 клипов).
+- **Включено сжатие на сервере**: в `bot/deploy/Caddyfile` блокам `dymova-english.ru, www...` и `new.dymova-english.ru` добавлено `encode zstd gzip` (раньше статика отдавалась несжатой — three.module.min.js ехал 339 КБ вместо ~106). Конфиг задеплоен в `/home/yc-user/Dymova-english/bot/deploy/Caddyfile`, `caddy validate` + `caddy reload` в контейнере bot-caddy-1. Проверка: `content-encoding: zstd`, three.core.min.js — 106 КБ за 0,89 с.
+- **Наблюдаемость**: флаг `__fxb3dReady` теперь ставится ДО гарда «заставка скрыта» (раньше на медленной сети флаг никогда не вставал и диагностика была слепой); добавлен `__fxb3dError` с деталями ошибки; загадочный «баг прода» оказался намеренным `throw 0` при гарде — заменён на `throw new Error('splash-already-hidden')`.
+
+**Как проверено:**
+- Локально Playwright (desktop 1280 + mobile 390): `__fxb3dReady` за 0,58–1,26 с, маскот виден в заставке, сайтовой FOXI ready, 0 pageerror.
+- Прод (Playwright, холодный кэш): маскот готов и виден с ~5,4 с (канал до сервера в этот день нестабильный, файлы шли по 2–16 с), заставка корректно скрывается, сайтовой FOXI ready, 0 ошибок. Ручной прогон пайплайна в прод-странице: three r180 + GLTFLoader + DRACOLoader + parse GLB — всё ok, клип `Big_Wave_Hello` на месте.
+**Деплой:** прод, rsync `dist_prod/` → `yc-user@89.169.132.104:/home/yc-user/foxinburg-site/`; Caddyfile → `/home/yc-user/Dymova-english/bot/deploy/` + reload.
+**Осталось / следующий шаг:** по плану продвижения — (2) контент-пак для городских чатов, (3) обновить wiki/03-seo.md.

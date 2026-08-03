@@ -218,12 +218,23 @@ PRELOADER_HEAD = (
     "@media (prefers-reduced-motion:reduce){"
     "#fxb-splash::after{animation:none}.fxb-splash-bar span{animation:none;width:60%}}"
     "</style>"
+    # three.js вендорен локально (prototype/mascot/vendor, min-сборки) — без задержек на CDN;
+    # modulepreload начинает качать модули сразу, fetch в <head> — GLB и draco-wasm,
+    # поэтому живой Фокси появляется практически сразу с началом загрузки
+    '<link rel="modulepreload" href="/mascot/vendor/three/build/three.module.min.js">'
+    '<link rel="modulepreload" href="/mascot/vendor/three/build/three.core.min.js">'
+    '<link rel="modulepreload" href="/mascot/vendor/three/examples/jsm/loaders/GLTFLoader.js">'
+    '<link rel="modulepreload" href="/mascot/vendor/three/examples/jsm/loaders/DRACOLoader.js">'
+    "<script>window.__fxbPre={"
+    "glb:fetch('/mascot/foxi-splash.glb').then(function(r){return r.arrayBuffer();}).catch(function(){return null;}),"
+    "wasm:fetch('/mascot/vendor/draco/draco_decoder.wasm').catch(function(){})"
+    "};</script>"
 )
 
 PRELOADER_BODY = (
     '<script type="importmap">{"imports":{'
-    '"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",'
-    '"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"'
+    '"three":"/mascot/vendor/three/build/three.module.min.js",'
+    '"three/addons/":"/mascot/vendor/three/examples/jsm/"'
     "}}</script>\n"
     '<div id="fxb-splash" aria-hidden="true">'
     '<div class="fxb-splash-inner">'
@@ -252,14 +263,16 @@ PRELOADER_BODY = (
     "window.addEventListener('load',function(){loaded=true;tryHide();});"
     "document.addEventListener('fxb-splash-3d-ready',tryHide);"
     "setTimeout(function(){loaded=true;tryHide();},MAX);})();</script>\n"
-    # ригнутый Фокси — модуль; при недоступности CDN/модели сцена пустая, заставка не ломается
+    # ригнутый Фокси — модуль; GLB уже летит с <head> (__fxbPre.glb) — берём буфер
+    # через loader.parse, а не ждём повторную загрузку; three.js локальный (vendor)
     "<script type=\"module\">"
     "try{"
     "const THREE=await import('three');"
     "const{GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');"
     "const{DRACOLoader}=await import('three/addons/loaders/DRACOLoader.js');"
     "const stage=document.querySelector('.fxb-splash-stage');"
-    "if(!stage)throw 0;"
+    # сеть слишком медленная: заставка уже скрыта, пока качались модули — тихо выходим
+    "if(!stage)throw new Error('splash-already-hidden');"
     "const canvas=stage.querySelector('.fxb-splash-3d');"
     "const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});"
     "renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));"
@@ -269,8 +282,10 @@ PRELOADER_BODY = (
     "camera.position.set(0,1.0,3.2);camera.lookAt(0,0.85,0);"
     "scene.add(new THREE.HemisphereLight(0xffffff,0xd9c8ff,1.05));"
     "const dl=new THREE.DirectionalLight(0xffffff,1.4);dl.position.set(2,4,3);scene.add(dl);"
-    "const draco=new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');"
-    "new GLTFLoader().setDRACOLoader(draco).load('/mascot/foxi-rigged.glb',(gltf)=>{"
+    "const draco=new DRACOLoader().setDecoderPath('/mascot/vendor/draco/');"
+    "const loader=new GLTFLoader().setDRACOLoader(draco);"
+    "const onReady=(gltf)=>{"
+    "window.__fxb3dReady=true;"
     # заставка уже скрылась (медленная сеть) — сцену не стартуем, цикл не крутим
     "if(!document.getElementById('fxb-splash'))return;"
     "const model=gltf.scene;"
@@ -288,10 +303,15 @@ PRELOADER_BODY = (
     "renderer.setAnimationLoop(()=>{mixer.update(clock.getDelta());renderer.render(scene,camera);});"
     "window.__fxbSplashStop=()=>renderer.setAnimationLoop(null);"
     "stage.classList.add('fxb-splash-3d-on');"
-    "window.__fxb3dReady=true;"
     "document.dispatchEvent(new Event('fxb-splash-3d-ready'));"
-    "},undefined,()=>{});"
-    "}catch(e){}</script>"
+    "};"
+    "const pre=(window.__fxbPre&&window.__fxbPre.glb)||Promise.resolve(null);"
+    "const onErr=(e)=>{try{window.__fxb3dError=[String((e&&e.message)||e),Object.prototype.toString.call(e),e&&e.type,e&&e.error].join('|');}catch(_){window.__fxb3dError='unserializable';}};"
+    "pre.then((buf)=>{"
+    "if(buf)loader.parse(buf,'/mascot/',onReady,onErr);"
+    "else loader.load('/mascot/foxi-splash.glb',onReady,undefined,onErr);"
+    "}).catch(onErr);"
+    "}catch(e){window.__fxb3dError=String((e&&e.message)||e);}</script>"
 )
 
 

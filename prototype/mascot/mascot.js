@@ -52,7 +52,7 @@
 const CFG = Object.assign(
   {
     modelUrl: './foxi-rigged.glb',
-    dracoPath: 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/',
+    dracoPath: '/mascot/vendor/draco/', // локальный вендор draco 1.5.7 (сессия 46) — без CDN
     headBone: 'head', // подстрока имени кости головы (слежение за мышью)
     height: 1.0, // высота маскота в мировых юнитах на ближнем плане (масштаб авто)
     mobileHeight: 0.72, // высота на узких экранах
