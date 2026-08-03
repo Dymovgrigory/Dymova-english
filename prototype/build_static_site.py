@@ -151,12 +151,20 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
 
 # WOW-эффекты (prototype/wow/) — scroll-reveal, магнитные кнопки, tilt,
 # параллакс — подключаются на всех страницах перед </body>.
-# 3D-маскот (foxi-3d.js + three.js importmap) отключён по решению владельца
-# (сессия 35): файлы остались в prototype/wow/, чтобы вернуть при желании.
+# 3D-маскот Фокси (prototype/mascot/): ригнутая модель с 17 клипами
+# (сессия 41) — ходит по нижней кромке, реагирует на скорость скролла,
+# курсор и CTA. three.js и GLB грузятся ПОСЛЕ load + requestIdleCallback.
+# ВАЖНО: importmap обязан идти раньше первого <script type="module">.
 # Чат-виджет Фокси (бот, POST /api/chat) — на всех страницах, правый нижний угол.
 WOW_SNIPPET = (
+    '<script type="importmap">{"imports":{'
+    '"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",'
+    '"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"'
+    '}}</script>\n'
     '<link rel="stylesheet" href="/wow/foxi-wow.css">\n'
     '<script type="module" src="/wow/foxi-wow.js"></script>\n'
+    "<script>window.FOXI_CONFIG={modelUrl:'/mascot/foxi-rigged.glb'};</script>\n"
+    '<script type="module" src="/mascot/mascot.js"></script>\n'
     '<script src="https://bot.dymova-english.ru/widget/foxi.js" defer></script>'
 )
 
@@ -245,6 +253,11 @@ def main() -> None:
     wow_src = os.path.join(DIR, "wow")
     if os.path.isdir(wow_src):
         shutil.copytree(wow_src, os.path.join(out_dir, "wow"), dirs_exist_ok=True)
+
+    # 3D-маскот (mascot.js + ригнутый foxi-rigged.glb)
+    mascot_src = os.path.join(DIR, "mascot")
+    if os.path.isdir(mascot_src):
+        shutil.copytree(mascot_src, os.path.join(out_dir, "mascot"), dirs_exist_ok=True)
 
     # favicon → корень сайта
     favicon_src = os.path.join(DIR, "favicon.png")

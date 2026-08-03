@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Фокси — живой маскот (демо)</title>
+  <style>
+    body { margin: 0; font-family: Montserrat, sans-serif; background: #fdf8ef; color: #392852; min-height: 250vh; }
+    .content { padding: 60px 40px; max-width: 800px; margin: 0 auto; }
+    h1 { color: #662d92; }
+    mark { background: #fcf951; padding: 0 6px; border-radius: 6px; }
+    .controls { position: fixed; bottom: 16px; left: 16px; z-index: 10000; display: flex; gap: 8px; }
+    .controls button { padding: 10px 14px; border: 0; border-radius: 10px; background: #662d92; color: #fff; font-weight: 700; cursor: pointer; }
+    .controls button:hover { background: #392852; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1>Демо: <mark>Фокси</mark> ходит по странице</h1>
+    <p>Маскот живёт поверх контента: гуляет по нижней кромке экрана, машет лапой, «хлопает» и посматривает на курсор. Кликните рядом с ним — он ответит.</p>
+    <p>Прокрутите страницу вниз — маскот останется на месте (canvas фиксирован).</p>
+    <p style="margin-top:120vh">Низ страницы. Фокси всё ещё с вами.</p>
+  </div>
+
+  <div class="controls">
+    <button id="btn-wave">Помахать</button>
+    <button id="btn-clap">Похлопать</button>
+    <button id="btn-walk">Погулять</button>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script>
+    window.FOXI_CONFIG = { modelUrl: './foxi.glb' };
+  </script>
+  <script type="module">
+    import './mascot.js';
+    // Тестовые кнопки — в бою поведение включается само по таймеру
+    document.getElementById('btn-wave').onclick = () => window.FOXI?.wave();
+    document.getElementById('btn-clap').onclick = () => window.FOXI?.clap();
+    document.getElementById('btn-walk').onclick = () => window.FOXI?.walk();
+  </script>
+</body>
+</html>

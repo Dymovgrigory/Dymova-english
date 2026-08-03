@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тест skeletal-режима (Xbot placeholder)</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #fdf8ef; color: #392852; min-height: 200vh; }
+    .content { padding: 60px 40px; max-width: 800px; margin: 0 auto; }
+    .controls { position: fixed; bottom: 16px; left: 16px; z-index: 10000; display: flex; gap: 8px; }
+    .controls button { padding: 10px 14px; border: 0; border-radius: 10px; background: #662d92; color: #fff; font-weight: 700; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1>Тест скелетной анимации</h1>
+    <p>Временная ригнутая модель Xbot (из примеров three.js) вместо Фокси — проверяем AnimationMixer, crossfade, one-shot действия и слежение головой за мышью.</p>
+  </div>
+
+  <div class="controls">
+    <button id="btn-wave">Wave (agree)</button>
+    <button id="btn-clap">Clap (sad_pose)</button>
+    <button id="btn-walk">Walk</button>
+    <button id="btn-look">Look</button>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script>
+    window.FOXI_CONFIG = {
+      modelUrl: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r180/examples/models/gltf/Xbot.glb',
+      anims: { idle: 'idle', walk: 'walk', wave: 'agree', clap: 'sad_pose' },
+      headBone: 'head',
+      height: 1.8,
+    };
+  </script>
+  <script type="module">
+    import './mascot.js';
+    document.getElementById('btn-wave').onclick = () => window.FOXI?.wave();
+    document.getElementById('btn-clap').onclick = () => window.FOXI?.clap();
+    document.getElementById('btn-walk').onclick = () => window.FOXI?.walk();
+    document.getElementById('btn-look').onclick = () => window.FOXI?.look();
+  </script>
+</body>
+</html>
