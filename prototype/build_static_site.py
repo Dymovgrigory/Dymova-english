@@ -31,6 +31,7 @@ import json
 import os
 import re
 import shutil
+from datetime import datetime
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://dymova-english.ru"
@@ -132,8 +133,9 @@ def extract_article_meta(html: str) -> tuple[str | None, str | None]:
     return title, desc
 
 
-def build_head(alias: str, title: str, description: str, canonical: str, noindex: bool, extra_schema: list[str]) -> str:
+def build_head(alias: str, title: str, description: str, canonical: str, noindex: bool, extra_schema: list[str], og_type: str = "website") -> str:
     robots = "noindex,nofollow" if noindex else "index,follow"
+    og_image = f"{SITE}/assets/og-cover.png"
     parts = [
         '<meta charset="UTF-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -146,8 +148,12 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
         f'<meta property="og:title" content="{title}">',
         f'<meta property="og:description" content="{description}">',
         f'<meta property="og:url" content="{canonical}">',
-        '<meta property="og:type" content="website">',
+        f'<meta property="og:type" content="{og_type}">',
         '<meta property="og:locale" content="ru_RU">',
+        '<meta property="og:site_name" content="Языковая школа Фоксинбург">',
+        f'<meta property="og:image" content="{og_image}">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:image" content="{og_image}">',
         read_schema("org_localbusiness.html"),
     ]
     for fname in extra_schema:
@@ -320,9 +326,11 @@ def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, no
     description = meta.get("description") or ""
     canonical = meta.get("canonical") or f"{SITE}/{alias}"
     extra_schema = INDEX_SCHEMA if alias == "index" else SCHEMA_MAP.get(alias, [])
+    og_type = "website"
     if alias in ARTICLE_ALIASES:
         extra_schema = []  # уже есть собственная Article+BreadcrumbList
-    head = build_head(alias, title, description, canonical, noindex, extra_schema)
+        og_type = "article"
+    head = build_head(alias, title, description, canonical, noindex, extra_schema, og_type)
     body = content if alias == "index" else (shapka + "\n" + content + "\n" + footer)
     return (
         "<!DOCTYPE html>\n"
@@ -356,7 +364,7 @@ def main() -> None:
     index_path = os.path.join(out_dir, "index.html")
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(index_html)
-    written.append(("index", "/"))
+    written.append(("index", "/", os.path.join(DIR, "main_combined_v7.html")))
 
     missing_meta = []
     for fname, alias in PAGE_ALIASES.items():
@@ -378,13 +386,20 @@ def main() -> None:
         os.makedirs(page_dir, exist_ok=True)
         with open(os.path.join(page_dir, "index.html"), "w", encoding="utf-8") as f:
             f.write(html)
-        written.append((alias, f"/{alias}"))
+        written.append((alias, f"/{alias}", src_path))
 
     # sitemap.xml + robots.txt
+    # <lastmod> — mtime исходного файла страницы (page_*.html / главная),
+    # если он недоступен — дата сборки.
+    build_date = datetime.now().date().isoformat()
     urlset = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for alias, path in written:
+    for alias, path, src in written:
         loc = SITE + (path if path != "/" else "/")
-        urlset.append(f"  <url><loc>{loc}</loc></url>")
+        try:
+            lastmod = datetime.fromtimestamp(os.path.getmtime(src)).date().isoformat()
+        except OSError:
+            lastmod = build_date
+        urlset.append(f"  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod></url>")
     urlset.append("</urlset>")
     with open(os.path.join(out_dir, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write("\n".join(urlset) + "\n")
@@ -401,10 +416,17 @@ def main() -> None:
     if os.path.isdir(wow_src):
         shutil.copytree(wow_src, os.path.join(out_dir, "wow"), dirs_exist_ok=True)
 
-    # 3D-маскот (mascot.js + ригнутый foxi-rigged.glb)
+    # 3D-маскот (mascot.js + ригнутый foxi-rigged.glb). Демо-страницы
+    # (index.html, test-rigged.html) и README в прод не уходят.
     mascot_src = os.path.join(DIR, "mascot")
     if os.path.isdir(mascot_src):
-        shutil.copytree(mascot_src, os.path.join(out_dir, "mascot"), dirs_exist_ok=True)
+        shutil.copytree(mascot_src, os.path.join(out_dir, "mascot"), dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("*.html", "README.md"))
+
+    # Общие ассеты сайта (og-cover.png и т.п.)
+    assets_src = os.path.join(DIR, "assets")
+    if os.path.isdir(assets_src):
+        shutil.copytree(assets_src, os.path.join(out_dir, "assets"), dirs_exist_ok=True)
 
     # favicon → корень сайта
     favicon_src = os.path.join(DIR, "favicon.png")

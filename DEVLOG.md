@@ -3313,3 +3313,28 @@ bot/
 - Прод (Playwright, холодный кэш): маскот готов и виден с ~5,4 с (канал до сервера в этот день нестабильный, файлы шли по 2–16 с), заставка корректно скрывается, сайтовой FOXI ready, 0 ошибок. Ручной прогон пайплайна в прод-странице: three r180 + GLTFLoader + DRACOLoader + parse GLB — всё ok, клип `Big_Wave_Hello` на месте.
 **Деплой:** прод, rsync `dist_prod/` → `yc-user@89.169.132.104:/home/yc-user/foxinburg-site/`; Caddyfile → `/home/yc-user/Dymova-english/bot/deploy/` + reload.
 **Осталось / следующий шаг:** по плану продвижения — (2) контент-пак для городских чатов, (3) обновить wiki/03-seo.md.
+
+---
+
+### Сессия 47 (Kimi Code) — SEO-аудит (4 направления) + пакет технических фиксов
+
+**Дата:** 2026-08-04
+**Ветка:** `main` (без PR; деплой rsync на прод).
+**Запрос владельца:** «дам доступ к Яндекс.Вебмастеру и Google Search Console — проверь, оптимизируй, ускорь, улучши SEO; сайт сделать профессиональным и полезным». Владелец выбрал полный API-доступ (инструкции отправлены: OAuth-приложение Яндекса + сервисный аккаунт Google) и аудит «прямо сейчас».
+
+**Аудит (4 параллельных исследования, выводы):**
+- Мета/schema: все JSON-LD валидны, title/description уникальны. Проблемы: нет h1 на /kontakty; нет og:image/twitter-тегов; og:type везде website; демо-страницы маскота в проде и индексируемы; 9 страниц с длинными title (худшие /repetitor* 76–78 симв).
+- Sitemap/robots: sitemap и robots корректны на 100%. Проблемы: www без 301 (зеркало с 200); стейджинг new. с index,follow; нет Cache-Control вообще; нет security-заголовков; sitemap без lastmod.
+- Скорость: главная 10,7 МБ холодный кэш, LCP ~3,1 с (mobile lab) — видео cinema.mp4 4,3 МБ = LCP-элемент; 14 блокирующих ссылок Google Fonts (Montserrat, нет self-host); бренд-ассеты с raw.githubusercontent (кэш 300 с); фото галереи/команды ~3,7 МБ несжатых JPG с jsDelivr; маскот (GLB+three ~1,4 МБ) тянется на всех 33 страницах. zstd/gzip из сессии 46 работает.
+- Контент: КРИТИЧНО — плейсхолдер «Лицензия …(указать номер и дату)» на главной; противоречие отчества владельца (Юрьевна в сведениях vs Александровна в футере — нужны данные от владельца); нет цен на /letnyaya-akademiya (нужна цена); нет FAQ на 11 старых коммерческих страницах; команда без фото, видео-заглушки «Видео появится здесь»; отзывы только на главной; нет сводных /tseny и /raspisanie; сезонные тексты /reading,/grammar устаревают; «Вход в ЛК» ведёт на tilda-members.tilda.ws.
+
+**Что исправлено и задеплоено (технический пакет):**
+- Caddyfile: www→apex 301; Cache-Control «public, max-age=604800» для /mascot/*, /wow/*, /assets/*, /favicon.png, /og-cover.png; security-заголовки (nosniff, Referrer-Policy, HSTS без includeSubDomains); X-Robots-Tag «noindex, nofollow» на new.dymova-english.ru. Validate+reload через bot-caddy-1.
+- build_static_site.py: og:site_name, og:image (/assets/og-cover.png), twitter:card/twitter:image; og:type=article для novosti-* (ARTICLE_ALIASES); sitemap получил lastmod (mtime исходников); mascot-демо (*.html, README.md) исключены из копирования в dist; добавлено копирование prototype/assets/.
+- page_kontakty.html: добавлен h1 «Контакты языковой школы Фоксинбург в Долгопрудном».
+- main_combined_v7.html: убран пустой `src=""` у лайтбокс-изображения (JS ставит src динамически — проверено); пробел после `<br>` в h1 главной.
+- Сгенерирована OG-обложка prototype/assets/og-cover.png (1200×630, бренд-градиент + лиса + «Языковая школа Фоксинбург», Pillow).
+
+**Как проверено (прод, curl):** www 301→apex; cache-control на статике; 3 security-заголовка; X-Robots на new.; /mascot/index.html и /mascot/test-rigged.html → 404; og-cover 200 (132 КБ); og:image+twitter:card на главной; og:type=article на статье; h1 на /kontakty; 33 lastmod в sitemap. Caddy validate — Valid configuration.
+**Деплой:** rsync `dist_prod/` (--delete, старые mascot-html удалены на сервере) + Caddyfile + reload.
+**Осталось / следующий шаг:** ждём от владельца: коды верификации Яндекс/Google, номер лицензии, правильное отчество, цена Летней академии. Далее по аудиту: cinema.mp4 сжать+poster+preload=none (LCP главной), self-host Montserrat, бренд-ассеты и фото в локальный WebP, FAQ на 11 старых страниц, отзывы-партиал, /tseny, сократить title на 9 страницах, PSI-ключ.

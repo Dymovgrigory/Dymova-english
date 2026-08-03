@@ -41,13 +41,35 @@ bot.dymova-english.ru {
 # ломало бы кабинет для всех посетителей одинаково. Редирект избегает
 # этого: браузер посетителя подключается к Tilda напрямую, своим обычным
 # IP, а не через наш сервер.
-dymova-english.ru, www.dymova-english.ru {
+# www — навсегда на apex (301), чтобы не плодить дубли в индексации
+# и не делить ссылочный вес между двумя хостами.
+www.dymova-english.ru {
+    redir https://dymova-english.ru{uri} 301
+}
+
+dymova-english.ru {
     handle /members/* {
         redir https://tilda-members.tilda.ws{uri} 302
     }
 
     root * /srv/foxinburg-site
     try_files {path} {path}/index.html
+
+    # Кэширование статики. Имена файлов БЕЗ хэшей в URL — поэтому только
+    # неделя (max-age=604800), immutable и год ставить НЕЛЬЗЯ: при замене
+    # файла клиенты должны получить новую версию в обозримый срок.
+    @static path /mascot/* /wow/* /assets/* /favicon.png /og-cover.png
+    header @static Cache-Control "public, max-age=604800"
+
+    # Security-заголовки. HSTS намеренно БЕЗ includeSubDomains — на
+    # поддоменах (bot./lms./mcp./new.) тоже HTTPS, но не рискуем ломать
+    # будущие поддомены принудительным TLS.
+    header {
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Strict-Transport-Security "max-age=31536000"
+    }
+
     # сжатие текстовых ассетов (JS/CSS/HTML/SVG): three.js и прочие модули
     # едут в 3-4 раза быстрее — критично для скорости появления заставки
     encode zstd gzip
@@ -60,6 +82,10 @@ dymova-english.ru, www.dymova-english.ru {
 new.dymova-english.ru {
     root * /srv/foxinburg-site
     try_files {path} {path}/index.html
+    # стейджинг не должен индексироваться — дублируем noindex заголовком
+    # (на страницах стейджинг-сборки уже есть meta robots, но бинарные
+    # ассеты и старые копии заголовок надёжнее)
+    header X-Robots-Tag "noindex, nofollow"
     encode zstd gzip
     file_server
 }
