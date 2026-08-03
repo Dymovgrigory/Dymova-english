@@ -176,16 +176,16 @@ WOW_SNIPPET = (
 )
 
 
-# Заставка-прелоадер (сессия 46, v2): РИГНУТЫЙ 3D-Фокси (/mascot/foxi-rigged.glb,
-# клип Big_Wave_Hello) машет над полосой загрузки — как на сайте, а не статика.
+# Заставка-прелоадер (сессия 46, v2.1): РИГНУТЫЙ 3D-Фокси (/mascot/foxi-rigged.glb,
+# клип Big_Wave_Hello) машет над полосой загрузки. Статичного webp-фолбэка НЕТ
+# (запрос владельца: «только живой») — пока модель грузится, на градиенте
+# просто текст и полоса; canvas плавно проявляется при готовности модели.
 # Раскладка: крупная надпись «Языковая школа Фоксинбург» сверху, под ней
 # маскот, ниже — полоса загрузки; фон — многослойный брендовый градиент
-# с жёлтым/оранжевым свечением. Пока three.js+GLB грузятся, на месте маскота
-# статичный foxi-splash.webp (мгновенный кадр), при готовности модели —
-# crossfade на canvas. Критический CSS инлайном в <head> первым, оверлей и
-# скрипты — первыми в <body>: никакой белой вспышки. Прогресс — rAF до 90%,
-# скрытие: window.load И (3D готов ИЛИ прошло 5 с), мин. показ 1.2 с,
-# принудительно через 8 с; reduced-motion — без анимаций и ожидания 3D.
+# с жёлтым/оранжевым свечением. Критический CSS инлайном в <head> первым,
+# оверлей и скрипты — первыми в <body>: никакой белой вспышки. Прогресс —
+# rAF до 90%, скрытие: window.load И (3D готов ИЛИ прошло 5 с), мин. показ
+# 1.2 с, принудительно через 8 с; reduced-motion — без анимаций и ожидания 3D.
 # Если GLB пришёл после скрытия заставки — 3D-сцену не стартуем (экономим CPU).
 PRELOADER_HEAD = (
     "<style>"
@@ -206,13 +206,9 @@ PRELOADER_HEAD = (
     "text-shadow:0 2px 18px rgba(0,0,0,.35)}"
     ".fxb-splash-brand b{font-weight:800;color:#fcf951}"
     ".fxb-splash-stage{position:relative;width:220px;height:210px}"
-    ".fxb-splash-fox{position:absolute;inset:0;margin:auto;height:198px;width:auto;"
-    "animation:fxbSplashFloat 2.2s ease-in-out infinite;filter:drop-shadow(0 14px 30px rgba(0,0,0,.35));"
-    "transition:opacity .4s ease}"
-    ".fxb-splash-3d{position:absolute;inset:0;width:220px;height:210px;opacity:0;transition:opacity .5s ease}"
+    ".fxb-splash-3d{position:absolute;inset:0;width:220px;height:210px;opacity:0;transition:opacity .5s ease;"
+    "filter:drop-shadow(0 14px 30px rgba(0,0,0,.35))}"
     ".fxb-splash-3d-on .fxb-splash-3d{opacity:1}"
-    ".fxb-splash-3d-on .fxb-splash-fox{opacity:0;animation:none}"
-    "@keyframes fxbSplashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}"
     ".fxb-splash-bar{width:220px;height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;"
     "box-shadow:0 2px 12px rgba(0,0,0,.25)}"
     ".fxb-splash-bar span{display:block;height:100%;width:0;border-radius:99px;"
@@ -220,7 +216,7 @@ PRELOADER_HEAD = (
     "animation:fxbSplashBar 1.9s ease-out forwards}"
     "@keyframes fxbSplashBar{0%{width:0}60%{width:55%}100%{width:88%}}"
     "@media (prefers-reduced-motion:reduce){"
-    "#fxb-splash::after{animation:none}.fxb-splash-fox{animation:none}.fxb-splash-bar span{animation:none;width:60%}}"
+    "#fxb-splash::after{animation:none}.fxb-splash-bar span{animation:none;width:60%}}"
     "</style>"
 )
 
@@ -233,7 +229,6 @@ PRELOADER_BODY = (
     '<div class="fxb-splash-inner">'
     '<div class="fxb-splash-brand">Языковая школа <b>Фоксинбург</b></div>'
     '<div class="fxb-splash-stage">'
-    '<img class="fxb-splash-fox" src="/mascot/foxi-splash.webp" alt="" width="136" height="198">'
     '<canvas class="fxb-splash-3d" width="220" height="210"></canvas>'
     "</div>"
     '<div class="fxb-splash-bar"><span></span></div>'
@@ -257,7 +252,7 @@ PRELOADER_BODY = (
     "window.addEventListener('load',function(){loaded=true;tryHide();});"
     "document.addEventListener('fxb-splash-3d-ready',tryHide);"
     "setTimeout(function(){loaded=true;tryHide();},MAX);})();</script>\n"
-    # ригнутый Фокси — модуль; при недоступности CDN/модели остаётся webp
+    # ригнутый Фокси — модуль; при недоступности CDN/модели сцена пустая, заставка не ломается
     "<script type=\"module\">"
     "try{"
     "const THREE=await import('three');"
