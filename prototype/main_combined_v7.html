@@ -155,7 +155,7 @@
   --purple:#392852;--purple-2:#662d92;--purple-d:#241a36;--orange:#ee7349;--yellow:#fcf951;
   font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;
   background:transparent;
-  position:relative;overflow:hidden;color:#fff;
+  position:relative;overflow:visible;z-index:9000;color:#fff;
 }
 #fxb-hero *{box-sizing:border-box;margin:0;padding:0}
 #fxb-hero a{text-decoration:none;color:inherit}
@@ -194,7 +194,7 @@
 #fxb-hero .fxb-dd-btn{background:0;border:0;font-family:inherit;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.72);padding:8px 13px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
 #fxb-hero .fxb-dd-btn:hover{color:#fff;background:rgba(255,255,255,.08)}
 #fxb-hero .fxb-dd-btn svg{transition:transform .25s}
-#fxb-hero .fxb-dd-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:250px;background:#fff;border-radius:14px;box-shadow:0 20px 50px -12px rgba(0,0,0,.35);padding:8px;z-index:100}
+#fxb-hero .fxb-dd-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:250px;background:#fff;border-radius:14px;box-shadow:0 20px 50px -12px rgba(0,0,0,.35);padding:8px;z-index:1000}
 #fxb-hero .fxb-dd.fxb-open .fxb-dd-panel{display:block;animation:fxbddIn .2s ease-out}
 @keyframes fxbddIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 #fxb-hero .fxb-dd.fxb-open .fxb-dd-btn{color:#fff;background:rgba(255,255,255,.1)}
@@ -260,7 +260,7 @@
   #fxb-hero .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:200;border-radius:0 0 16px 16px}
   #fxb-hero .fxb-nav.fxb-open{display:flex}
   #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:15px;padding:13px 16px;width:100%;text-align:left}
-  #fxb-hero .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.04);margin:2px 0;border-radius:10px}
+  #fxb-hero .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.12);margin:2px 0;border-radius:10px}
   #fxb-hero .fxb-dd-panel a{color:rgba(255,255,255,.7);font-size:14px}
   #fxb-hero .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
   #fxb-hero .fxb-burger{display:flex;margin-left:auto}

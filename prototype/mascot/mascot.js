@@ -12,6 +12,11 @@
  *     скролл вверх               → Walking (шагает влево)
  *     быстрый скролл (>2600 px/с)→ Running (бежит по направлению скролла)
  *     резкие рывки туда-сюда     → Happy_jump_f (от неожиданности)
+ *     упёрся в край сцены        → НЕ топчется «в стену»: разворачивается
+ *       к зрителю и периодически (кулдаун 6 сек) выдаёт весёлый жест —
+ *       танец (Shake_It_Off_Dance), махание (Big_Wave_Hello), «ура»
+ *       (Cheer_with_Both_Hands_Up) или прыжок (Happy_jump_f); между
+ *       жестами — тихое покачивание вместо ходьбы на месте.
  *   Место на странице:
  *     доскроллил до самого низа  → Shake_It_Off_Dance (танцует)
  *   Курсор и клики:
@@ -554,14 +559,20 @@ async function init() {
         startOneshot(CLIP.jump);
       } else if (speed > 2600) {
         // быстрый скролл — бежит по направлению скролла
-        moveAlong(scroll.dir, CFG.runSpeed, dt);
-        targetYaw = (scroll.dir > 0 ? Math.PI / 2 : -Math.PI / 2) + CFG.faceOffset;
-        playLoop(CLIP.run, { fade: 0.2 });
+        const blocked = moveAlong(scroll.dir, CFG.runSpeed, dt);
+        targetYaw = blocked
+          ? CFG.faceOffset
+          : (scroll.dir > 0 ? Math.PI / 2 : -Math.PI / 2) + CFG.faceOffset;
+        if (blocked) edgeFun();
+        else playLoop(CLIP.run, { fade: 0.2 });
       } else {
         // обычный скролл — шагает: вниз → вправо, вверх → влево
-        moveAlong(scroll.dir, CFG.walkSpeed, dt);
-        targetYaw = (scroll.dir > 0 ? Math.PI / 2 : -Math.PI / 2) + CFG.faceOffset;
-        playLoop(CLIP.walk, { fade: 0.25 });
+        const blocked = moveAlong(scroll.dir, CFG.walkSpeed, dt);
+        targetYaw = blocked
+          ? CFG.faceOffset
+          : (scroll.dir > 0 ? Math.PI / 2 : -Math.PI / 2) + CFG.faceOffset;
+        if (blocked) edgeFun();
+        else playLoop(CLIP.walk, { fade: 0.25 });
       }
     } else if (state.mode === 'scrollwalk') {
       // скролл затухает — останавливаемся
@@ -618,7 +629,23 @@ async function init() {
   function moveAlong(dir, speed, dt) {
     const rig = state.rig;
     const { minX, maxX } = view.xLimitsAt(rig.position.z);
-    rig.position.x = THREE.MathUtils.clamp(rig.position.x + dir * speed * dt, minX, maxX);
+    const next = rig.position.x + dir * speed * dt;
+    rig.position.x = THREE.MathUtils.clamp(next, minX, maxX);
+    // true — уперся в край сцены в направлении движения («стена»)
+    return dir > 0 ? next > maxX : next < minX;
+  }
+
+  // Край сцены: не топчемся «в стену» — разворачиваемся к зрителю и
+  // периодически выдаём весёлый жест: танец, махание, «ура» или прыжок.
+  // Между жестами (кулдаун) — тихое покачивание вместо ходьбы на месте.
+  function edgeFun() {
+    if (cooldownOk('edge', 6)) {
+      touch('edge');
+      const fun = [CLIP.dance, CLIP.wave, CLIP.cheer, CLIP.jump];
+      startOneshot(fun[(Math.random() * fun.length) | 0]);
+    } else {
+      playLoop(CLIP.idle, { fade: 0.3, timeScale: 0.35 });
+    }
   }
 
   animate();
