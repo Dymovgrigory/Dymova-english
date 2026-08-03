@@ -2777,7 +2777,7 @@ var fxbForm=document.querySelector('#fxbZform');
     if(h==='localhost'||h==='127.0.0.1')return 'http://localhost:8765';
     return 'https://lms.dymova-english.ru';
   })();
-  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function get(path){
     return fetch(API+path,{cache:'no-cache'})
       .then(function(r){return r.ok?r.json():null;})
@@ -2833,6 +2833,97 @@ var fxbForm=document.querySelector('#fxbZform');
       });
       if(!wasOpen){item.classList.add('fxb-faq-open');answer.style.maxHeight=answer.scrollHeight+'px';}
     });
+  });
+
+  /* Цены: блок home.pricing {badge,title,subtitle,
+     items:[{title,subtitle,features[],prices[{price,note}],popular}]}.
+     Перерисовываем карточки в #fxb-pricing; при ошибке/пустом — статика. */
+  get('/api/v1/site/public/blocks/home.pricing').then(function(d){
+    if(!d||!d.content||!d.content.items||!d.content.items.length)return;
+    var c=d.content;
+    var section=document.getElementById('fxb-pricing');if(!section)return;
+    var cards=section.querySelector('.fxb-cards');if(!cards)return;
+    var badge=section.querySelector('.fxb-pricing-badge');
+    var title=section.querySelector('.fxb-pricing-title');
+    var sub=section.querySelector('.fxb-pricing-sub');
+    if(c.badge&&badge)badge.textContent=c.badge;
+    if(c.title&&title)title.textContent=c.title;
+    if(c.subtitle&&sub)sub.textContent=c.subtitle;
+    cards.innerHTML=c.items.map(function(it){
+      var feats=(it.features||[]).map(function(f){return '<li>'+esc(f)+'</li>';}).join('');
+      var prices=(it.prices||[]).map(function(p,pi){
+        return '<div class="fxb-price-row'+(pi>0?' fxb-price-2':'')+'">'
+          +'<span class="fxb-price'+(pi>0?' fxb-price-sm':'')+'">'+esc(p.price)+'</span>'
+          +(p.note?'<span class="fxb-price-note">'+esc(p.note)+'</span>':'')
+          +'</div>';
+      }).join('');
+      return '<div class="fxb-card'+(it.popular?' fxb-card-accent':'')+'">'
+        +(it.popular?'<div class="fxb-card-popular">Популярное</div>':'')
+        +'<div class="fxb-card-head"><h3>'+esc(it.title)+'</h3>'
+        +(it.subtitle?'<span class="fxb-card-loc">'+esc(it.subtitle)+'</span>':'')
+        +'</div><div class="fxb-card-body"><ul class="fxb-feat-list">'+feats+'</ul>'
+        +prices
+        +'<a class="fxb-card-btn'+(it.popular?' fxb-btn-accent':'')+'" href="#fxb-enrollment">Записаться</a>'
+        +'</div></div>';
+    }).join('');
+  });
+
+  /* Контакты: блок home.contacts {title,subtitle,schedule,email,map_iframe_url,
+     branches:[{name,address,maps_url,phone,phone_href}],
+     socials:[{kind,url,title}]}. Карточки филиалов и соцсети пересобираем,
+     карту/заголовки/режим/email обновляем точечно. */
+  get('/api/v1/site/public/blocks/home.contacts').then(function(d){
+    if(!d||!d.content)return;
+    var c=d.content;
+    var section=document.getElementById('fxb-contacts');if(!section)return;
+    var title=section.querySelector('.fxb-ct-title');
+    var sub=section.querySelector('.fxb-ct-sub');
+    if(c.title&&title)title.textContent=c.title;
+    if(c.subtitle&&sub)sub.textContent=c.subtitle;
+    if(c.map_iframe_url){
+      var frame=section.querySelector('.fxb-ct-map iframe');
+      if(frame)frame.setAttribute('src',c.map_iframe_url);
+    }
+    var pinSvg='<svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+    var phoneSvg='<svg viewBox="0 0 24 24" width="16" height="16"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.1 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    if(c.branches&&c.branches.length){
+      var info=section.querySelector('.fxb-ct-info');
+      if(info){
+        info.querySelectorAll('.fxb-ct-branch').forEach(function(n){n.remove();});
+        var general=info.querySelector('.fxb-ct-general');
+        c.branches.forEach(function(b){
+          var div=document.createElement('div');
+          div.className='fxb-ct-branch';
+          div.innerHTML='<h3>'+esc(b.name)+'</h3>'
+            +(b.address?'<a class="fxb-ct-addr" href="'+esc(b.maps_url||'#')+'" target="_blank" rel="noopener">'+pinSvg+esc(b.address)+'</a>':'')
+            +(b.phone?'<a class="fxb-ct-phone" href="tel:'+esc(b.phone_href||b.phone)+'">'+phoneSvg+esc(b.phone)+'</a>':'');
+          info.insertBefore(div,general);
+        });
+      }
+    }
+    var rows=section.querySelectorAll('.fxb-ct-general .fxb-ct-row');
+    if(c.schedule&&rows[0]){
+      var sp=rows[0].querySelector('span');if(sp)sp.textContent=c.schedule;
+    }
+    if(c.email&&rows[1]){
+      var mail=rows[1].querySelector('a');
+      if(mail){mail.textContent=c.email;mail.setAttribute('href','mailto:'+c.email);}
+    }
+    if(c.socials&&c.socials.length){
+      var socialSvgs={
+        vk:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M12.78 19.83c-7 0-11-4.83-11.17-12.83h3.5c.12 5.93 2.73 8.43 4.8 8.95V7h3.3v5.1c2.04-.22 4.18-2.57 4.9-5.1h3.3c-.55 1.97-2.27 4.32-3.57 5.08 1.3.6 3.27 2.65 4.03 5.75h-3.63c-.6-1.87-2.08-3.95-4.73-4.23v4.23h-.73z" fill="currentColor"/></svg>',
+        max:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        telegram:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M21.2 4.4L2.4 11.1c-.6.3-.6.7 0 .9l4.8 1.5 1.8 5.8c.2.5.7.5 1 .2l2.6-2.1 5.1 3.7c.5.3 1 .1 1.1-.5L22.5 5.3c.2-.7-.4-1.2-1.3-.9zM9.6 13.7l-.3 3.4-.1.1-1-3.2 9.1-5.6-7.7 5.3z" fill="currentColor"/></svg>',
+        whatsapp:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.7 1.9-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3zM12 21.5c-1.8 0-3.4-.5-4.8-1.3l-.3-.2-3.5.9.9-3.4-.2-.3A9.4 9.4 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zM12 1C6 1 1 6 1 12c0 1.9.5 3.8 1.4 5.4L1 23l5.7-1.5c1.6.9 3.4 1.4 5.3 1.4 6 0 11-5 11-11S18 1 12 1z" fill="currentColor"/></svg>'
+      };
+      var links=section.querySelector('.fxb-social-links');
+      if(links){
+        links.innerHTML=c.socials.filter(function(s){return socialSvgs[s.kind];}).map(function(s){
+          return '<a class="fxb-social-btn" href="'+esc(s.url)+'" target="_blank" rel="noopener" title="'+esc(s.title||s.kind)+'">'
+            +socialSvgs[s.kind]+'</a>';
+        }).join('');
+      }
+    }
   });
 })();
 </script>
