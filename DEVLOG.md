@@ -3374,3 +3374,17 @@ bot/
 **Как проверено:** сборка 33 страницы; grep dist — новые title на главной/repetitor/статье, бренд-мост 1 вхождение; прод curl — title главной, /vakansii, description /kitajskij-yazyk соответствуют.
 **Деплой:** rsync `dist_prod/` на прод.
 **Осталось / следующий шаг:** ждём номер лицензии. Очередь: cinema.mp4 (LCP главной 3,1 с), self-host Montserrat (14 блокирующих запросов), фото галереи/команды в WebP локально, FAQ на 11 старых страниц, отзывы-партиал на коммерческие, /tseny. Через 2–4 недели — замер CTR тех же запросов в API Вебмастера.
+
+### Сессия 47, продолжение 4 (Kimi Code) — Скорость: cinema.mp4 сжат + ленивая загрузка (LCP главной)
+
+**Дата:** 2026-08-04
+**Ветка:** `main` (без PR; деплой rsync на прод).
+
+**Что сделано:**
+- `prototype/wow/cinema.mp4` пережат: 4 329 506 → 1 215 765 байт (−72%): 576px, 30 fps, CRF 36, без звука, faststart (ffmpeg из imageio-ffmpeg в `.tilda-venv`). Исходник сохранён как `prototype/wow/cinema-src.mp4`.
+- Создан постер `prototype/wow/cinema-poster.webp` (109 258 байт, кадр t=2).
+- В `main_combined_v7.html` блок `#fxb-cinema`: `<video preload="none" poster="/wow/cinema-poster.webp">`, у `<source>` `data-src` вместо `src`; инлайн-скрипт по `window.load` подставляет src → `load()` → `play()`. Постер стал LCP-кандидатом вместо 4,3 МБ видео.
+
+**Как проверено:** локальный http.server 8099 + Playwright (chrome): до `window.load` видео не запрашивается (readyState 0), после — mp4 загружается и играет (paused=false, currentTime растёт, readyState 4), 0 pageerror, 0 404; скриншот героя корректный. Прод curl: `/wow/cinema.mp4` 200 (1 215 765 B), `/wow/cinema-poster.webp` 200 (109 258 B), в HTML главной `preload="none" poster=...`.
+**Деплой:** rsync `dist_prod/` на прод.
+**Осталось / следующий шаг:** self-host Montserrat (14 блокирующих `<link fonts.googleapis.com>`), фото галереи/команды и бренд-ассеты в локальный WebP, FAQ на 11 старых страниц, отзывы-партиал, /tseny. Ждём от владельца номер лицензии и Google SA-ключ.

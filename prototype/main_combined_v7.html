@@ -32,9 +32,13 @@
   =============================================
 -->
 <div id="fxb-cinema">
-  <video class="fxb-cinema-video fxb-anim-fade" style="animation-delay:.2s" autoplay loop muted playsinline preload="auto">
-    <source src="/wow/cinema.mp4" type="video/mp4">
+  <!-- видео сжато 4,3→1,2 МБ (сессия 47, wow/cinema-src.mp4 — исходник);
+       src подставляется после window.load — постер сразу становится LCP,
+       видео не блокирует первую отрисовку -->
+  <video class="fxb-cinema-video fxb-anim-fade" style="animation-delay:.2s" autoplay loop muted playsinline preload="none" poster="/wow/cinema-poster.webp" fetchpriority="high">
+    <source data-src="/wow/cinema.mp4" type="video/mp4">
   </video>
+  <script>window.addEventListener('load',function(){var v=document.querySelector('.fxb-cinema-video');if(!v)return;var s=v.querySelector('source[data-src]');if(s){s.src=s.getAttribute('data-src');v.load();var p=v.play();if(p&&p.catch)p.catch(function(){});}});</script>
   <div class="fxb-cinema-veil"></div>
 <div id="fxb-hero">
   <div class="fxb-hero-bg">
