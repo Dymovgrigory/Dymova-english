@@ -6,6 +6,7 @@ prototype/dist_prod/
 # секреты и локальные окружения — никогда не коммитить
 .env
 .env.*
+secrets/
 !.env.example
 !.env.sample
 !.env.template
