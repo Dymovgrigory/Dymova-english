@@ -3,25 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Тест skeletal-режима (Xbot placeholder)</title>
+  <title>Тест маскота Фокси v2 (6 клипов, 3D-глубина)</title>
   <style>
-    body { margin: 0; font-family: sans-serif; background: #fdf8ef; color: #392852; min-height: 200vh; }
+    body { margin: 0; font-family: sans-serif; background: #fdf8ef; color: #392852; min-height: 300vh; }
     .content { padding: 60px 40px; max-width: 800px; margin: 0 auto; }
-    .controls { position: fixed; bottom: 16px; left: 16px; z-index: 10000; display: flex; gap: 8px; }
+    .controls { position: fixed; top: 16px; right: 16px; z-index: 10000; display: flex; flex-direction: column; gap: 8px; }
     .controls button { padding: 10px 14px; border: 0; border-radius: 10px; background: #662d92; color: #fff; font-weight: 700; cursor: pointer; }
+    .controls .row { display: flex; gap: 8px; }
+    #status { position: fixed; top: 16px; left: 16px; z-index: 10000; background: #fff; padding: 8px 12px; border-radius: 8px; font: 12px/1.5 monospace; white-space: pre; }
   </style>
 </head>
 <body>
   <div class="content">
-    <h1>Тест скелетной анимации</h1>
-    <p>Временная ригнутая модель Xbot (из примеров three.js) вместо Фокси — проверяем AnimationMixer, crossfade, one-shot действия и слежение головой за мышью.</p>
+    <h1>Тест маскота Фокси v2</h1>
+    <p>Ригнутая модель Meshy (6 клипов). Проверяем: текстуры не слетают, скиннинг корректный (конечности не тянут лишнее), движение по сцене в глубину (ближе/дальше), развороты в сторону движения.</p>
+    <p data-fxb-zayavka><a href="#zayavka" class="fxb-btn-main" style="display:inline-block;padding:12px 20px;background:#ee7349;color:#fff;border-radius:10px;text-decoration:none;font-weight:700">Оставить заявку (CTA)</a></p>
   </div>
 
+  <div id="status">loading…</div>
+
   <div class="controls">
-    <button id="btn-wave">Wave (agree)</button>
-    <button id="btn-clap">Clap (sad_pose)</button>
-    <button id="btn-walk">Walk</button>
-    <button id="btn-look">Look</button>
+    <div class="row"><button data-clip="Walking">Walking</button><button data-clip="Running">Running</button></div>
+    <div class="row"><button data-clip="Big_Wave_Hello">Wave</button><button data-clip="Cheer_with_Both_Hands_Up">Cheer</button></div>
+    <div class="row"><button data-clip="Happy_jump_f">Jump</button><button data-clip="Shake_It_Off_Dance">Dance</button></div>
+    <div class="row"><button id="btn-idle">Idle</button><button id="btn-stroll">Stroll 3D</button><button id="btn-visit">Visit</button></div>
   </div>
 
   <script type="importmap">
@@ -33,19 +38,42 @@
     }
   </script>
   <script>
-    window.FOXI_CONFIG = {
-      modelUrl: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r180/examples/models/gltf/Xbot.glb',
-      anims: { idle: 'idle', walk: 'walk', wave: 'agree', clap: 'sad_pose' },
-      headBone: 'head',
-      height: 1.8,
+    const qh = parseFloat(new URLSearchParams(location.search).get('h'));
+    window.FOXI_CONFIG = { modelUrl: './foxi-rigged.glb', height: qh > 0 ? qh : 1.4 };
+    // Тестовый форсировщик клипа: крутит выбранный клип в цикле, режим idle «замораживается»
+    window.FOXI_FORCE = (name, timeScale) => {
+      const F = window.FOXI;
+      if (!F) return 'not ready';
+      const st = F._state;
+      st.mode = 'forced';
+      clearTimeout(st.behaviorTimer);
+      const a = st.actions[name];
+      if (!a) return 'no clip ' + name;
+      const prev = st.active;
+      st.active = a;
+      a.reset().setLoop(220, Infinity).setEffectiveTimeScale(timeScale || 1).setEffectiveWeight(1).fadeIn(0.2).play();
+      if (prev && prev !== a) prev.fadeOut(0.2);
+      return 'ok';
     };
   </script>
   <script type="module">
     import './mascot.js';
-    document.getElementById('btn-wave').onclick = () => window.FOXI?.wave();
-    document.getElementById('btn-clap').onclick = () => window.FOXI?.clap();
-    document.getElementById('btn-walk').onclick = () => window.FOXI?.walk();
-    document.getElementById('btn-look').onclick = () => window.FOXI?.look();
+    const status = document.getElementById('status');
+    setInterval(() => {
+      const F = window.FOXI;
+      if (!F) { status.textContent = 'loading…'; return; }
+      const p = F._state.rig.position;
+      status.textContent =
+        'mode: ' + F._state.mode + '\n' +
+        'clip: ' + (F._state.active ? F._state.active.getClip().name : '-') + '\n' +
+        'x: ' + p.x.toFixed(2) + '  z: ' + p.z.toFixed(2) + '  yaw: ' + F._state.yaw.toFixed(2);
+    }, 200);
+    document.querySelectorAll('[data-clip]').forEach((b) => {
+      b.onclick = () => window.FOXI_FORCE(b.dataset.clip);
+    });
+    document.getElementById('btn-idle').onclick = () => window.FOXI_FORCE('Shake_It_Off_Dance', 0.18);
+    document.getElementById('btn-stroll').onclick = () => { window.FOXI._state.mode = 'idle'; window.FOXI.walk(); };
+    document.getElementById('btn-visit').onclick = () => { window.FOXI._state.mode = 'idle'; window.FOXI.visit(); };
   </script>
 </body>
 </html>
