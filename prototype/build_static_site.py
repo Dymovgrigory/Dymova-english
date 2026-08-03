@@ -57,6 +57,7 @@ PAGE_ALIASES = {
     "page_anglijskij_dlya_vzroslyh.html": "anglijskij-dlya-vzroslyh",
     "page_nemeckij_yazyk.html": "nemeckij-yazyk",
     "page_kitajskij_yazyk.html": "kitajskij-yazyk",
+    "page_repetitor.html": "repetitor",
     "page_novosti_so_skolki_let_uchit_anglijskij.html": "novosti-so-skolki-let-uchit-anglijskij",
     "page_novosti_kak_podgotovitsya_k_oge_anglijskij.html": "novosti-kak-podgotovitsya-k-oge-anglijskij",
     "page_novosti_kak_prohodyat_smeny_letnej_akademii.html": "novosti-kak-prohodyat-smeny-letnej-akademii",
@@ -95,6 +96,7 @@ SCHEMA_MAP = {
     "anglijskij-dlya-vzroslyh": ["breadcrumb_anglijskij-dlya-vzroslyh.html"],
     "nemeckij-yazyk": ["breadcrumb_nemeckij-yazyk.html"],
     "kitajskij-yazyk": ["breadcrumb_kitajskij-yazyk.html"],
+    "repetitor": ["breadcrumb_repetitor.html"],
 }
 INDEX_SCHEMA = ["faq.html"]
 
