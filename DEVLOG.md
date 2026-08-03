@@ -2584,7 +2584,7 @@ bot/
 
 ## Текущий статус (обновлено в Сессии 45, 2026-08-03)
 
-- Последняя работа: **Сессия 45 — фикс выпадающих меню (overflow:hidden шапки резал панель → overflow:visible + z-index:9000/1000) + маскот не топчется у края (весёлые жесты по кулдауну)**. **Задеплоено на dymova-english.ru** (rsync `dist_prod`, 33 страницы).
+- Последняя работа: **Сессия 45 — фикс выпадающих меню + маскот не топчется у края; продолжение — яркость текстов шапки (адреса, летние программы, слоган — белые и жирнее на видео-фоне)**. **Задеплоено на dymova-english.ru** (rsync `dist_prod`, 33 страницы).
 - До неё: Сессия 44 — посадочная `/repetitor` + FAQPage; продолжение — Course-разметка с ценами, `/repetitor-nachalnaya-shkola`, цены ОГЭ/ЕГЭ индивидуально. Всё на проде.
 - Сайт: `dymova-english.ru` отдаётся с `yc-user@89.169.132.104:/home/yc-user/foxinburg-site` (rsync из `prototype/dist_prod`, сборка `python3 prototype/build_static_site.py --out dist_prod`). Стейджинг = тот же каталог (`new.dymova-english.ru`).
 - Бот: контейнер `bot-bot-1`, деплой `cd /home/yc-user/Dymova-english && git pull && cd bot && sudo docker compose up -d --build`. Тесты: `cd bot && .venv313/bin/pytest -q` (старый `.venv` сломан, Python 3.9).
@@ -3147,3 +3147,22 @@ bot/
 
 **Деплой:** прод, rsync `dist_prod/` → `yc-user@89.169.132.104:/home/yc-user/foxinburg-site/`.
 **Осталось / следующий шаг:** план продвижения — (1) кит для каталогов, (2) контент-пак для чатов; от владельца — доступы Яндекс Вебмастер / Search Console.
+
+---
+
+### Сессия 45, продолжение (Kimi Code) — Яркость текстов шапки на видео-фоне
+
+**Дата:** 2026-08-03
+**Ветка:** `main` (без PR; деплой rsync на прод).
+**Запрос владельца:** «текст адресов, названия Летних программ и „языковая школа в Долгопрудном для детей от 2 до 18 и взрослых“ — более ярким: белый текст и чуть жирнее, чтобы было видно на фоне видео».
+
+**Что сделано:**
+- `.fxb-addr` (адреса филиалов в шапке): `color rgba(255,255,255,.6) / w600` → `#fff / w700` + `text-shadow:0 1px 6px rgba(0,0,0,.45)` — в `main_combined_v7.html`, `tilda_header_unified.html`, `tilda_shapka.html`.
+- `.fxb-slogan-sub` («Языковая школа в Долгопрудном…»): `rgba(255,255,255,.55) / w500` → `#fff / w600` + `text-shadow:0 1px 8px rgba(0,0,0,.5)` — в `main_combined_v7.html`, `tilda_header_unified.html`.
+- `.fxb-summer-tags a` (названия летних программ): `rgba(255,255,255,.55–.65) / w600` → `#fff / w700` + тень + рамка `rgba(255,255,255,.25)` — в `main_combined_v7.html`, `tilda_shapka.html`.
+- `.fxb-summer-label` («Летние программы», оранжевый): + `text-shadow:0 1px 8px rgba(0,0,0,.55)` для читаемости на видео.
+- `make minify` (header_unified) + сборка dist_prod (33 страницы).
+
+**Как проверено:** Playwright локально — главная десктоп/мобильный 390: computed `color #fff`, веса 700/700/600; скриншоты `bright-main-top.png`, `bright-main-mobile.png` — адреса, теги программ и слоган читаются на видео-фоне.
+
+**Деплой:** прод, rsync `dist_prod/` → `yc-user@89.169.132.104:/home/yc-user/foxinburg-site/`.
