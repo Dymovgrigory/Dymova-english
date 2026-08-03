@@ -121,6 +121,13 @@ def read_schema(fname: str) -> str:
         return f.read()
 
 
+# Self-hosted Montserrat (сессия 47): вместо блокирующих <link> на
+# fonts.googleapis.com во всех шаблонах — @font-face инлайном в <head>
+# каждой страницы. Файлы — variable font (кириллица 21 КБ, латиница 35 КБ)
+# в assets/fonts/, копируются в dist вместе с assets/.
+FONT_FACE_STYLE = "<style>" + read("assets/fonts/montserrat.css") + "</style>"
+
+
 def extract_article_meta(html: str) -> tuple[str | None, str | None]:
     """Для новых статей без записи в seo_meta_live.json: title из <h1>,
     description — из уже встроенного в страницу Article JSON-LD (та же
@@ -140,6 +147,8 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
         '<meta charset="UTF-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         PRELOADER_HEAD,
+        FONT_FACE_STYLE,
+        '<link rel="preload" href="/assets/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>',
         '<link rel="icon" type="image/png" href="/favicon.png">',
         f"<title>{title}</title>",
         f'<meta name="description" content="{description}">',

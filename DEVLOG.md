@@ -3388,3 +3388,18 @@ bot/
 **Как проверено:** локальный http.server 8099 + Playwright (chrome): до `window.load` видео не запрашивается (readyState 0), после — mp4 загружается и играет (paused=false, currentTime растёт, readyState 4), 0 pageerror, 0 404; скриншот героя корректный. Прод curl: `/wow/cinema.mp4` 200 (1 215 765 B), `/wow/cinema-poster.webp` 200 (109 258 B), в HTML главной `preload="none" poster=...`.
 **Деплой:** rsync `dist_prod/` на прод.
 **Осталось / следующий шаг:** self-host Montserrat (14 блокирующих `<link fonts.googleapis.com>`), фото галереи/команды и бренд-ассеты в локальный WebP, FAQ на 11 старых страниц, отзывы-партиал, /tseny. Ждём от владельца номер лицензии и Google SA-ключ.
+
+### Сессия 47, продолжение 5 (Kimi Code) — Скорость: self-host Montserrat, уход с Google Fonts
+
+**Дата:** 2026-08-04
+**Ветка:** `main` (без PR; деплой rsync на прод).
+
+**Что сделано:**
+- Montserrat теперь хостится локально: `prototype/assets/fonts/montserrat-{cyrillic,latin}.woff2` — variable font с Google Fonts API v2 (кириллица 21 КБ, латиница 35 КБ, 2 уникальных файла вместо 12 — все веса в одном variable-файле на сабсет).
+- `prototype/assets/fonts/montserrat.css` — 12 @font-face (веса 400–900 × 2 сабсета, unicode-range как у Google, font-display: swap, url абсолютный `/assets/fonts/...`).
+- `build_static_site.py`: константа `FONT_FACE_STYLE` (css инлайном в `<style>` в `build_head` — ноль блокирующих запросов) + `<link rel="preload">` кириллического woff2. Подключено на всех 33 страницах.
+- Удалены все `<link>` на fonts.googleapis/gstatic из входов сборки: tilda_shapka/tilda_footer/main_combined_v7 (14 шт)/page_*.html — всего 36. В `build_subpages.py` убран emit font-`<link>` в `landing_page` (чтобы регенерация не вернула). Легаси main_combined_v3–v6 и standalone-демки (foxinburg-onboarding) не тронуты — в сборку не входят.
+
+**Как проверено:** сборка 33 страницы; grep dist — 0 вхождений fonts.googleapis/gstatic в HTML. Playwright локально: 12/12 начертаний Montserrat `loaded`, 0 запросов к fonts.g*, 0 404, 0 pageerror, скриншоты главной и /doshkolniki — типографика без изменений. Прод curl: woff2 200 (21 492 B), 0 googleapis на главной и /doshkolniki.
+**Деплой:** rsync `dist_prod/` на прод.
+**Осталось / следующий шаг:** фото галереи/команды и бренд-ассеты в локальный WebP (cdn.jsdelivr → /gallery, /team-media; raw.githubusercontent → /assets; Caddy @static path дополнить), FAQ на 11 старых страниц, отзывы-партиал, /tseny.

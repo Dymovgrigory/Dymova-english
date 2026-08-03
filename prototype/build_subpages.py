@@ -560,7 +560,8 @@ def landing_page(p):
     """p: dict with page content."""
     grad = p["hero_grad"]
     h = []
-    h.append('<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap&subset=latin,cyrillic" rel="stylesheet">')
+    # Шрифт Montserrat — self-hosted, подключается в build_head
+    # (build_static_site.py, FONT_FACE_STYLE), здесь <link> не нужен.
     h.append('<div id="fxb-page">')
     # HERO
     h.append('<section class="fxb-hero" style="background:' + grad + '">')
