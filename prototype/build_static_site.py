@@ -40,6 +40,7 @@ SITE = "https://dymova-english.ru"
 # tilda_upload_subpages.py / tilda_bootstrap_articles.py.
 PAGE_ALIASES = {
     "page_doshkolniki.html": "doshkolniki",
+    "page_tseny.html": "tseny",
     "page_mladshie_shkolniki.html": "mladshie-shkolniki",
     "page_podrostki.html": "podrostki",
     "page_reading.html": "reading",
@@ -101,6 +102,7 @@ SCHEMA_MAP = {
     "kitajskij-yazyk": ["course_kitajskij-yazyk.html", "breadcrumb_kitajskij-yazyk.html"],
     "repetitor": ["course_repetitor.html", "breadcrumb_repetitor.html"],
     "repetitor-nachalnaya-shkola": ["course_repetitor-nachalnaya-shkola.html", "breadcrumb_repetitor-nachalnaya-shkola.html"],
+    "tseny": ["breadcrumb_tseny.html"],
 }
 INDEX_SCHEMA = ["faq.html"]
 

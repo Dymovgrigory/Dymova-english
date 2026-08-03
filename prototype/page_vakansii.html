@@ -160,6 +160,24 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Вопросы и ответы</span>
+      <h2 class="fxb-h2">Частые вопросы <span class="fxb-accent">о работе у нас</span></h2>
+    </div>
+    <div class="fxb-faq">
+      <details><summary>Какие требования к преподавателю?</summary><p>Главное — сильный английский и желание работать с детьми. Методике учим сами: оплачиваемое обучение и программа повышения квалификации «три года методики за один».</p></details>
+      <details><summary>Обязателен ли опыт работы?</summary><p>Опыт — плюс, но не обязательное условие. На старте вас поддержит методист, а занятия ведутся по готовым учебным пособиям My Level — с понятной структурой урока.</p></details>
+      <details><summary>Какой график работы?</summary><p>У педагогов гибкий график — нагрузка обсуждается индивидуально. У администраторов сменный график: 9:00–15:00 и 15:00–21:00.</p></details>
+      <details><summary>Сколько платят?</summary><p>Зарплата педагога зависит от нагрузки. Администратор — от 45 000 ₽ + бонусы. Трудоустройство официальное.</p></details>
+      <details><summary>Есть ли обучение и методическая поддержка?</summary><p>Да: оплачиваемое обучение методике, регулярные методические сессии и поддержка методиста. Работа в мини-группах до 7 человек — с вниманием к каждому ученику.</p></details>
+      <details><summary>Как откликнуться и как проходит отбор?</summary><p>Заполните форму на сайте и прикрепите резюме — отвечаем в течение 2 рабочих дней. Дальше: знакомство со школой и уроком действующего педагога, собеседование с методистом и встреча с руководителем.</p></details>
+    </div>
+  </section>
+
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Какие требования к преподавателю?", "acceptedAnswer": {"@type": "Answer", "text": "Главное — сильный английский и желание работать с детьми. Методике учим сами: оплачиваемое обучение и программа повышения квалификации «три года методики за один»."}}, {"@type": "Question", "name": "Обязателен ли опыт работы?", "acceptedAnswer": {"@type": "Answer", "text": "Опыт — плюс, но не обязательное условие. На старте вас поддержит методист, а занятия ведутся по готовым учебным пособиям My Level — с понятной структурой урока."}}, {"@type": "Question", "name": "Какой график работы?", "acceptedAnswer": {"@type": "Answer", "text": "У педагогов гибкий график — нагрузка обсуждается индивидуально. У администраторов сменный график: 9:00–15:00 и 15:00–21:00."}}, {"@type": "Question", "name": "Сколько платят?", "acceptedAnswer": {"@type": "Answer", "text": "Зарплата педагога зависит от нагрузки. Администратор — от 45 000 ₽ + бонусы. Трудоустройство официальное."}}, {"@type": "Question", "name": "Есть ли обучение и методическая поддержка?", "acceptedAnswer": {"@type": "Answer", "text": "Да: оплачиваемое обучение методике, регулярные методические сессии и поддержка методиста. Работа в мини-группах до 7 человек — с вниманием к каждому ученику."}}, {"@type": "Question", "name": "Как откликнуться и как проходит отбор?", "acceptedAnswer": {"@type": "Answer", "text": "Заполните форму на сайте и прикрепите резюме — отвечаем в течение 2 рабочих дней. Дальше: знакомство со школой и уроком действующего педагога, собеседование с методистом и встреча с руководителем."}}]}</script>
+
   <!-- CTA -->
   <section class="fxb-cta-wrap">
     <div class="fxb-cta">
@@ -248,6 +266,15 @@
   #fxb-page .fxb-form-note{font-size:12.5px;color:var(--muted);text-align:center}
   #fxb-page .fxb-form-note a{color:var(--purple-2);text-decoration:underline}
 
+
+  #fxb-page .fxb-faq{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+  #fxb-page .fxb-faq details{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:16px;padding:2px 24px;box-shadow:0 12px 28px -20px rgba(57,40,82,.35);transition:border-color .25s}
+  #fxb-page .fxb-faq details[open]{border-color:rgba(102,45,146,.22)}
+  #fxb-page .fxb-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;font-weight:800;font-size:15.5px;line-height:1.35;padding:20px 0;color:var(--ink)}
+  #fxb-page .fxb-faq summary::-webkit-details-marker{display:none}
+  #fxb-page .fxb-faq summary::after{content:"+";font-size:24px;font-weight:700;color:var(--purple-2);flex:0 0 auto;line-height:1;transition:transform .25s}
+  #fxb-page .fxb-faq details[open] summary::after{content:"\2013"}
+  #fxb-page .fxb-faq p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.6;padding:0 0 22px}
   @media(max-width:960px){#fxb-page .fxb-why-grid{grid-template-columns:1fr 1fr}#fxb-page .fxb-vac-grid{grid-template-columns:1fr}#fxb-page .fxb-steps{grid-template-columns:1fr 1fr}}
   @media(max-width:620px){#fxb-page .fxb-why-grid{grid-template-columns:1fr}#fxb-page .fxb-steps{grid-template-columns:1fr}#fxb-page .fxb-vac-cols{grid-template-columns:1fr}#fxb-page .fxb-form-row{grid-template-columns:1fr}#fxb-page .fxb-form{padding:26px 20px}#fxb-page .fxb-hero-inner{padding:72px 18px 76px}#fxb-page .fxb-section{padding:60px 18px 0}#fxb-page .fxb-cta{padding:46px 22px}}
 </style>

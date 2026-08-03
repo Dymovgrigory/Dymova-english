@@ -3419,3 +3419,18 @@ bot/
 **Как проверено:** сборка 33 страницы; grep dist — 0 jsdelivr/raw в HTML. Playwright локально на /, /doshkolniki, /letnyaya-akademiya, /mladshie-shkolniki, /kontakty: 0 404, 0 pageerror, битых img нет (один `<img>` без src на главной — рантайм-плейсхолдер, был и до правки), видео /media/doshkolniki.mp4 отдаётся с постером webp (readyState 4). Прод curl: 200 на webp галереи/команды/бренда/roadmaps + mp4 (shevchenko.mp4 9 МБ, doshkolniki.mp4 2,7 МБ), cache-control 604800 на /gallery. Caddy validate — Valid.
 **Деплой:** rsync `dist_prod/` + Caddyfile + reload.
 **Осталось / следующий шаг:** контент — FAQ на 11 старых страниц (паттерн с /oge-anglijskij), отзывы-партиал на коммерческие страницы, сводная /tseny, убрать Tilda-ЛК из главного меню. Ждём от владельца номер лицензии и Google SA-ключ. Через 2–4 недели — замер CTR в API Вебмастера.
+
+### Сессия 47, продолжение 7 (Kimi Code) — Контент: FAQ на 11 страниц, отзывы-партиал на 17, новая /tseny
+
+**Дата:** 2026-08-04
+**Ветка:** `main` (без PR; деплой rsync на прод). Часть работ делегирована сабагентам (FAQ; отзывы+/tseny), проверка и доработки — в основной сессии.
+
+**Что сделано:**
+- **FAQ на 11 страниц** (видимый `<div class="fxb-faq">` с `<details>` + зеркальный FAQPage JSON-LD, паттерн с /oge-anglijskij): doshkolniki, mladshie-shkolniki, podrostki, reading, grammar, preparation, online-zanyatiya, podderzhivayushchie-online, standartnye-offline, letnyaya-akademiya, vakansii. По 6 уникальных вопросов на страницу по содержимому h1/секций (сначала возражения, потом организация). Все 11 JSON-LD валидны (json.loads) и дословно зеркалят <summary>.
+- **Компактный блок отзывов на 17 коммерческих страниц** (+7 уже имевших FAQ: oge, ege, repetitor, repetitor-nachalnaya, vzroslyh, nemeckij, kitajskij): классы fxb-yrc-* (свой мини-<style>, marquee-анимации главной не копировались), рейтинг-бейдж 5,0, 4 дословные цитаты, бренд-мост «бывш. Фокси Фокс», ссылка на Яндекс.Карты. БЕЗ Review/AggregateRating JSON-LD (антиспам). Позиция — перед FAQ.
+- **Новая страница /tseny**: сводные цены со всех направлений (только опубликованные на сайте: 8 200/9 000 ₽/мес, 6 050/6 550 малыши, 2 500 ₽/час индивидуально, 5 600 ₽/мес нач. школа, 26 000 ₽ + питание Академия, пробный 1 125 ₽, диагностика 0 ₽), блоки «Что входит» и «Как платить» (маткапитал, вычет 13%). Зарегистрирована в PAGES, seo_meta_live.json (title 53, description 153), ссылка «Цены» в футере, breadcrumb_tseny.html в SCHEMA_MAP. Сборка: 34 страницы.
+- **Единообразие «группы до 7»** (правило владельца): убраны все «до 8» — page_letnyaya_akademiya (карточка+FAQ+JSON-LD), page_tseny, build_subpages.py, seo_meta_live.json (description Академии), 4 файла seo_schema/course_*.html, head_schema_injector.html, feed_education.xml. Контрольный grep по dist — 0.
+
+**Как проверено:** сборка 34 страницы; Playwright локально — /tseny рендерится (скриншоты секций цен), 0 pageerror; grep dist — FAQPage и 6 details на каждой из 11, fxb-yrc-grid на всех 17. Прод curl: /tseny 200 + верный title, FAQPage на /doshkolniki, отзывы на /oge-anglijskij, 0 «до 8» на /letnyaya-akademiya, /tseny в sitemap.
+**Деплой:** rsync `dist_prod/` на прод.
+**Осталось / следующий шаг:** убрать Tilda-ЛК из главного меню (из аудита); ждём от владельца номер лицензии и Google SA-ключ для Search Console; через 2–4 недели — замер CTR тех же запросов в API Вебмастера (неделя 26.07–01.08 как базовая).
