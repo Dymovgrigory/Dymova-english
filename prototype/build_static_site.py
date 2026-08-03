@@ -137,6 +137,7 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
     parts = [
         '<meta charset="UTF-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        PRELOADER_HEAD,
         '<link rel="icon" type="image/png" href="/favicon.png">',
         f"<title>{title}</title>",
         f'<meta name="description" content="{description}">',
@@ -161,16 +162,71 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
 # курсор и CTA. three.js и GLB грузятся ПОСЛЕ load + requestIdleCallback.
 # ВАЖНО: importmap обязан идти раньше первого <script type="module">.
 # Чат-виджет Фокси (бот, POST /api/chat) — на всех страницах, правый нижний угол.
+# Cookie-согласие (wow/foxi-consent.js) — баннер с localStorage + событие
+# 'fxb-consent' для будущего гейтинга аналитики (сессия 46).
 WOW_SNIPPET = (
     '<script type="importmap">{"imports":{'
     '"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",'
     '"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"'
     '}}</script>\n'
     '<link rel="stylesheet" href="/wow/foxi-wow.css">\n'
+    '<link rel="stylesheet" href="/wow/foxi-consent.css">\n'
     '<script type="module" src="/wow/foxi-wow.js"></script>\n'
     "<script>window.FOXI_CONFIG={modelUrl:'/mascot/foxi-rigged.glb'};</script>\n"
     '<script type="module" src="/mascot/mascot.js"></script>\n'
-    '<script src="https://bot.dymova-english.ru/widget/foxi.js" defer></script>'
+    '<script src="https://bot.dymova-english.ru/widget/foxi.js" defer></script>\n'
+    '<script src="/wow/foxi-consent.js" defer></script>'
+)
+
+
+# Заставка-прелоадер (сессия 46): маскот Фокси на брендовом градиенте,
+# полоса загрузки и надпись «Языковая школа Фоксинбург». Критический CSS —
+# инлайном в <head> (ПЕРВЫМ, чтобы заставка рисовалась до остальных стилей),
+# оверлей и крошечный скрипт — первыми в <body>, без внешних зависимостей,
+# чтобы не было белой вспышки и «мелькающих символов» при открытии сайта.
+PRELOADER_HEAD = (
+    "<style>"
+    "#fxb-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;"
+    "background:linear-gradient(135deg,#241a36 0%,#392852 45%,#662d92 100%);"
+    "transition:opacity .5s ease,visibility .5s}"
+    "#fxb-splash.fxb-splash-done{opacity:0;visibility:hidden;pointer-events:none}"
+    ".fxb-splash-inner{display:flex;flex-direction:column;align-items:center;gap:18px;padding:24px;text-align:center}"
+    ".fxb-splash-fox{width:132px;height:auto;animation:fxbSplashFloat 2.2s ease-in-out infinite;"
+    "filter:drop-shadow(0 14px 30px rgba(0,0,0,.35))}"
+    "@keyframes fxbSplashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}"
+    ".fxb-splash-brand{font-family:'Montserrat',system-ui,-apple-system,sans-serif;font-weight:600;"
+    "font-size:17px;letter-spacing:.04em;color:rgba(255,255,255,.85)}"
+    ".fxb-splash-brand b{font-weight:800;color:#fcf951}"
+    ".fxb-splash-bar{width:196px;height:6px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}"
+    ".fxb-splash-bar span{display:block;height:100%;width:0;border-radius:99px;"
+    "background:linear-gradient(90deg,#fcf951,#ee7349);transition:width .25s ease;"
+    "animation:fxbSplashBar 1.9s ease-out forwards}"
+    "@keyframes fxbSplashBar{0%{width:0}60%{width:55%}100%{width:88%}}"
+    "@media (prefers-reduced-motion:reduce){.fxb-splash-fox{animation:none}.fxb-splash-bar span{animation:none;width:60%}}"
+    "</style>"
+)
+
+PRELOADER_BODY = (
+    '<div id="fxb-splash" aria-hidden="true">'
+    '<div class="fxb-splash-inner">'
+    '<img class="fxb-splash-fox" src="/mascot/foxi-splash.webp" alt="" width="132" height="193">'
+    '<div class="fxb-splash-brand">Языковая школа <b>Фоксинбург</b></div>'
+    '<div class="fxb-splash-bar"><span></span></div>'
+    "</div></div>\n"
+    "<noscript><style>#fxb-splash{display:none}</style></noscript>\n"
+    "<script>(function(){var s=document.getElementById('fxb-splash');if(!s)return;"
+    "var bar=s.querySelector('.fxb-splash-bar span'),t0=performance.now(),done=false;"
+    "var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;"
+    "var MIN=rm?0:900,MAX=5000;"
+    "function pct(v){if(bar)bar.style.width=v+'%';}"
+    "function tick(){if(done)return;var t=(performance.now()-t0)/1800;"
+    "pct(Math.min(90,Math.round(t*90)));if(t<1)requestAnimationFrame(tick);}"
+    "requestAnimationFrame(tick);"
+    "function hide(){if(done)return;done=true;pct(100);"
+    "var wait=Math.max(0,MIN-(performance.now()-t0));"
+    "setTimeout(function(){s.classList.add('fxb-splash-done');"
+    "setTimeout(function(){s.parentNode&&s.parentNode.removeChild(s);},600);},wait);}"
+    "window.addEventListener('load',hide);setTimeout(hide,MAX);})();</script>"
 )
 
 
@@ -185,7 +241,8 @@ def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, no
     body = content if alias == "index" else (shapka + "\n" + content + "\n" + footer)
     return (
         "<!DOCTYPE html>\n"
-        '<html lang="ru">\n<head>\n' + head + "\n</head>\n<body>\n" + body + "\n"
+        '<html lang="ru">\n<head>\n' + head + "\n</head>\n<body>\n"
+        + PRELOADER_BODY + "\n" + body + "\n"
         + WOW_SNIPPET + "\n</body>\n</html>\n"
     )
 
