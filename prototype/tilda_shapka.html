@@ -136,7 +136,7 @@
 .r.t-rec{display:none!important}
 .r.t-rec:has([id^="fxb-"]){display:block!important}
 
-#fxb-shapka .fxb-topline{display:flex;align-items:center;gap:16px;padding:16px 0 14px}
+#fxb-shapka .fxb-topline{display:flex;align-items:center;gap:16px;padding:16px 0 14px;position:relative;z-index:1000}
 #fxb-shapka .fxb-logo{display:flex;align-items:center;gap:10px;flex:0 0 auto}
 #fxb-shapka .fxb-logo img{border-radius:10px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.2))}
 #fxb-shapka .fxb-logo span{font-weight:900;font-size:19px;color:#fff;white-space:nowrap;letter-spacing:-.01em}
@@ -198,16 +198,16 @@
 }
 @media(max-width:960px){
   #fxb-shapka{overflow:visible}
-  #fxb-shapka .fxb-topline{position:relative;flex-wrap:wrap;padding:12px 0 10px}
+  #fxb-shapka .fxb-topline{position:relative;z-index:10001;flex-wrap:wrap;padding:12px 0 10px}
   #fxb-shapka .fxb-contacts{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 4px}
   #fxb-shapka .fxb-contacts-group{width:100%;justify-content:center;flex-wrap:wrap;gap:5px}
   #fxb-shapka .fxb-csep{display:none}
   #fxb-shapka .fxb-badge{display:none}
-  #fxb-shapka .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:200;border-radius:0 0 16px 16px}
+  #fxb-shapka .fxb-nav{display:none;position:absolute;top:100%;left:-28px;right:-28px;background:var(--purple-d);flex-direction:column;padding:16px 20px;gap:2px;box-shadow:0 24px 48px rgba(0,0,0,.4);z-index:10001;border-radius:0 0 16px 16px;max-height:calc(100dvh - 60px);overflow-y:auto;-webkit-overflow-scrolling:touch}
   #fxb-shapka .fxb-nav.fxb-open{display:flex}
   #fxb-shapka .fxb-nav>a,#fxb-shapka .fxb-dd-btn{font-size:15px;padding:13px 16px;width:100%;text-align:left}
-  #fxb-shapka .fxb-dd-panel{position:static;box-shadow:none;background:rgba(255,255,255,.12);margin:2px 0;border-radius:10px}
-  #fxb-shapka .fxb-dd-panel a{color:rgba(255,255,255,.7);font-size:14px}
+  #fxb-shapka .fxb-dd-panel{position:static;box-shadow:none;background:#33254f;margin:2px 0;border-radius:10px}
+  #fxb-shapka .fxb-dd-panel a{color:rgba(255,255,255,.95);font-size:14px}
   #fxb-shapka .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
   #fxb-shapka .fxb-burger{display:flex;margin-left:auto}
   #fxb-shapka .fxb-actions{display:none}
