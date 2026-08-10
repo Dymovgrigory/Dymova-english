@@ -18,6 +18,7 @@ from app import nudge as nudge_mod
 from app.config import settings
 from app.knowledge import site_sync
 from app.max_client import get_max
+from app import watchdog
 
 logger = logging.getLogger(__name__)
 
@@ -138,4 +139,8 @@ def start() -> list[asyncio.Task]:
         tasks.append(asyncio.create_task(_sources_sync_loop()))
     else:
         logger.info("site_sync: синхронизация с сайтом выключена (SITE_SYNC_ENABLED=false)")
+    if settings.WATCHDOG_ENABLED:
+        tasks.append(asyncio.create_task(watchdog.loop()))
+    else:
+        logger.info("watchdog: сторож доступности выключен (WATCHDOG_ENABLED=false)")
     return tasks

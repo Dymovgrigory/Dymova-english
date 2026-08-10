@@ -34,6 +34,7 @@ from app import insights
 from app import nudge
 from app import runtime
 from app import scheduler
+from app import watchdog
 from app.knowledge.kb import get_kb
 from app.observability import init_sentry
 from app.llm import get_llm
@@ -668,6 +669,9 @@ async def _telegram_poll_loop(telegram) -> None:
             backoff = min(backoff * 2, 60)
             continue
         backoff = 3
+        # Отмечаем, что цикл реально прокрутился: сторож по этой метке
+        # ловит «getUpdates отвечает, а сообщения не забираются».
+        watchdog.record_poll_ok()
         for update in updates:
             # ВАЖНО: offset двигаем ВСЕГДА, даже если апдейт признан
             # дубликатом и обрабатывать его не нужно. Раньше offset
@@ -802,6 +806,9 @@ async def health() -> dict:
         "max_configured": max_client.configured,
         "bigben_configured": get_bigben().configured,
         "kb_documents": len(get_kb().documents),
+        # Раньше /health отвечал "ok", пока Telegram лежал две недели: он
+        # знал только про собственный процесс. Теперь видно и внешний канал.
+        "telegram": watchdog.status(),
     }
 
 

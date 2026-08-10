@@ -108,6 +108,23 @@ class Settings(BaseSettings):
     # Публичный HTTPS-URL Telegram Mini App (кнопка web_app в чате).
     # Пусто = взять {MINIAPP_BASE_URL origin}/tg/ , если он задан.
     TELEGRAM_MINIAPP_URL: str = ""
+    # Известные адреса api.telegram.org. Сторож проверяет их, чтобы при
+    # обрыве связи сразу подсказать администратору рабочий адрес для
+    # extra_hosts, а не просто сообщить «всё сломалось».
+    TELEGRAM_API_IPS: str = (
+        "149.154.167.220,149.154.166.110,149.154.167.197,149.154.171.5,91.108.56.130"
+    )
+
+    # --- Сторож доступности ---
+    WATCHDOG_ENABLED: bool = True
+    WATCHDOG_INTERVAL_MIN: int = 5
+    # Сколько проверок подряд должны провалиться до тревоги (защита от
+    # одиночной сетевой осечки).
+    WATCHDOG_FAILURES_BEFORE_ALERT: int = 2
+    WATCHDOG_ALERT_COOLDOWN_MIN: int = 60
+    # Опрос Telegram считается вставшим, если успешных циклов не было
+    # дольше этого времени (обычный цикл — 25 секунд).
+    WATCHDOG_POLL_SILENCE_MIN: int = 5
 
     # --- Email-уведомления о заявках (Gmail SMTP, App Password) ---
     GMAIL_SMTP_USER: str = ""
