@@ -157,16 +157,24 @@ class MemoryStore:
         self._lock = threading.RLock()
         self._conn = self._connect()
         self._init_schema()
-        self._data: dict[str, Conversation] = {}
+        self._data: dict[tuple[str, str], Conversation] = {}
 
     def get(self, user_id: str, platform: str = "max") -> Conversation:
+        """Диалог пользователя на конкретной платформе.
+
+        Кэш обязан учитывать платформу: раньше ключом был только user_id, и
+        обращение store.get(uid) (платформа по умолчанию "max") и
+        store.get(uid, platform="telegram") давали разные строки в БД —
+        telegram-диалог раздваивался и после перезапуска терял историю.
+        """
         with self._lock:
-            conv = self._data.get(user_id)
+            key = (platform, user_id)
+            conv = self._data.get(key)
             if conv is None:
                 conv = self._load_conversation(platform, user_id)
             if conv is None:
                 conv = Conversation(platform=platform, user_id=user_id)
-            self._data[user_id] = conv
+            self._data[key] = conv
             return conv
 
     def save(self, conv: Conversation) -> None:
@@ -175,7 +183,7 @@ class MemoryStore:
             if not conv.created_at:
                 conv.created_at = now
             conv.updated_at = now
-            self._data[conv.user_id] = conv
+            self._data[(conv.platform, conv.user_id)] = conv
             self._conn.execute(
                 """
                 INSERT INTO conversations(platform, user_id, payload, updated_at)
@@ -200,7 +208,7 @@ class MemoryStore:
             convs: list[Conversation] = []
             for row in rows:
                 conv = _conv_from_dict(json.loads(row["payload"]))
-                self._data[conv.user_id] = conv
+                self._data[(conv.platform, conv.user_id)] = conv
                 convs.append(conv)
             return convs
 
@@ -290,6 +298,12 @@ def _conv_from_dict(d: dict) -> Conversation:
         lead_submitted=d.get("lead_submitted", False),
         nudge_sent=d.get("nudge_sent", False),
         last_objection=d.get("last_objection", ""),
+        # Настроение/тема/намерение тоже часть контекста: без них после
+        # перезапуска бот забывал, о чём был предыдущий вопрос, и на «а
+        # сколько стоит?» отвечал вслепую.
+        last_user_intent=d.get("last_user_intent", ""),
+        last_user_mood=d.get("last_user_mood", ""),
+        last_user_topic=d.get("last_user_topic", ""),
         created_at=d.get("created_at", ""),
         updated_at=d.get("updated_at", ""),
         registered=d.get("registered", False),
@@ -301,11 +315,17 @@ def _conv_from_dict(d: dict) -> Conversation:
 
 
 def _resolve_db_path() -> str:
+    """Путь к SQLite-файлу состояния.
+
+    Раньше значение по умолчанию (./data/bot.db) специально игнорировалось и
+    подменялось на ":memory:" — то есть «из коробки» бот терял ВСЮ историю
+    диалогов и таблицу processed_events при каждом рестарте. Теперь DB_PATH
+    работает как написано в .env.example, а in-memory включается явным
+    DB_PATH=":memory:" (так делают тесты).
+    """
     if settings.STATE_FILE:
         return settings.STATE_FILE
-    if settings.DB_PATH and settings.DB_PATH != "./data/bot.db":
-        return settings.DB_PATH
-    return ":memory:"
+    return settings.DB_PATH or ":memory:"
 
 
 _store: MemoryStore | None = None

@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import base64
 import asyncio
+import hmac
 import logging
+import time
 import uuid
 from pathlib import Path
 
@@ -19,6 +21,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from app import ai_core
 from app.ai_core import handle_message, handle_start
 from app import broadcast
 from app.bigben import get_bigben
@@ -29,11 +32,13 @@ from app import intent as I
 from app import group_chat
 from app import insights
 from app import nudge
+from app import runtime
 from app import scheduler
 from app.knowledge.kb import get_kb
 from app.observability import init_sentry
 from app.llm import get_llm
 from app.max_client import callback_button, get_max, link_button
+from app import miniapp_auth
 from app.memory import Lead, STAGE_HANDOFF, get_store
 from app.slack import notify_slack
 from app.telegram_client import get_telegram
@@ -134,11 +139,20 @@ def _homework_user_prompt(note: str) -> str:
 
 def _admin_authorized(request: Request) -> bool:
     token = request.headers.get("X-Admin-Token", "")
-    return bool(settings.ADMIN_TOKEN) and token == settings.ADMIN_TOKEN
+    if not settings.ADMIN_TOKEN:
+        return False
+    # Сравнение постоянного времени: обычный == утекает длину общего префикса
+    # и позволяет подбирать токен по времени ответа.
+    return hmac.compare_digest(token, settings.ADMIN_TOKEN)
 
 
 def _nudge_authorized(request: Request) -> bool:
-    return not settings.ADMIN_TOKEN or _admin_authorized(request)
+    """Рассылка напоминаний — тоже админское действие.
+
+    Раньше при пустом ADMIN_TOKEN эти ручки были открыты всему интернету:
+    кто угодно мог инициировать рассылку по всей базе клиентов.
+    """
+    return _admin_authorized(request)
 
 
 def _miniapp_url() -> str:
@@ -155,11 +169,40 @@ def _miniapp_user_id(data: dict | None) -> str:
     return ""
 
 
-def _miniapp_access_state(user_id: str) -> dict:
-    has_identity = bool(user_id)
+# Заголовок, в котором мини-приложение передаёт подписанный initData.
+INIT_DATA_HEADER = "X-Miniapp-Init-Data"
+PLATFORM_HEADER = "X-Miniapp-Platform"
+
+
+def _identity_from_request(
+    request: Request | None,
+    init_data: str = "",
+    fallback_user_id: str = "",
+) -> miniapp_auth.MiniAppIdentity | None:
+    """Личность пользователя мини-приложения — только из подписанных данных.
+
+    `user_id` из запроса личностью не считается (см. miniapp_auth.identify):
+    доверять ему означало бы отдавать чужой профиль любому желающему.
+    """
+    if request is not None:
+        init_data = init_data or request.headers.get(INIT_DATA_HEADER, "")
+        platform_hint = request.headers.get(PLATFORM_HEADER, "")
+    else:
+        platform_hint = ""
+    return miniapp_auth.identify(
+        init_data=init_data,
+        platform_hint=platform_hint,
+        fallback_user_id=fallback_user_id,
+    )
+
+
+def _miniapp_access_state(identity: miniapp_auth.MiniAppIdentity | None) -> dict:
+    has_identity = identity is not None
     registered = False
-    if has_identity:
-        registered = bool(get_store().get(user_id).registered)
+    if identity is not None:
+        registered = bool(
+            get_store().get(identity.user_id, platform=identity.platform).registered
+        )
     locked = has_identity and settings.MINIAPP_REQUIRE_REGISTRATION and not registered
     message = ""
     if locked:
@@ -168,10 +211,13 @@ def _miniapp_access_state(user_id: str) -> dict:
             "напишите «зарегистрироваться», и я проведу вас по шагам."
         )
     elif not has_identity:
-        message = "Откройте miniapp внутри MAX, чтобы связать профиль."
+        message = "Откройте приложение внутри Telegram или MAX, чтобы связать профиль."
     return {
-        "user_id": user_id,
+        "user_id": identity.user_id if identity else "",
+        "platform": identity.platform if identity else "",
+        "display_name": identity.display_name if identity else "",
         "has_identity": has_identity,
+        "verified": bool(identity and identity.verified),
         "registered": registered,
         "locked": locked,
         "message": message,
@@ -208,13 +254,46 @@ async def _notify_admins_for_telegram(conv, reason: str) -> None:
     await notify_slack(f"MAX handoff ({reason})\n\n{conv.summary()}")
 
 
+# Публичный чат-эндпоинт ходит в платный LLM, поэтому ограничиваем частоту:
+# без этого один скрипт способен сжечь квоту провайдера за минуты.
+MAX_CHAT_TEXT_CHARS = 2000
+_CHAT_RATE_LIMIT = 20          # сообщений
+_CHAT_RATE_WINDOW_SEC = 60.0   # за окно
+_chat_hits: dict[str, list[float]] = {}
+
+
+def _chat_rate_limited(key: str) -> bool:
+    now = time.monotonic()
+    hits = [t for t in _chat_hits.get(key, []) if now - t < _CHAT_RATE_WINDOW_SEC]
+    if len(hits) >= _CHAT_RATE_LIMIT:
+        _chat_hits[key] = hits
+        return True
+    hits.append(now)
+    _chat_hits[key] = hits
+    if len(_chat_hits) > 10_000:
+        # Грубая, но достаточная защита словаря от неограниченного роста.
+        for stale_key in [k for k, v in _chat_hits.items() if not v or now - v[-1] > _CHAT_RATE_WINDOW_SEC]:
+            _chat_hits.pop(stale_key, None)
+    return False
+
+
 @app.post("/api/chat")
-async def api_chat(data: dict) -> dict:
+async def api_chat(request: Request, data: dict) -> dict:
     text = str(data.get("text", "")).strip()
     if not text:
         return JSONResponse({"detail": "text required"}, status_code=400)
-    session_id = str(data.get("session_id") or uuid.uuid4().hex)
-    reply = await handle_message(session_id, text)
+    if len(text) > MAX_CHAT_TEXT_CHARS:
+        return JSONResponse(
+            {"detail": f"Сообщение длиннее {MAX_CHAT_TEXT_CHARS} символов"}, status_code=413
+        )
+    session_id = str(data.get("session_id") or uuid.uuid4().hex)[:64]
+    client_host = request.client.host if request.client else "unknown"
+    if _chat_rate_limited(client_host):
+        return JSONResponse(
+            {"detail": "Слишком много сообщений подряд, попробуйте через минуту"},
+            status_code=429,
+        )
+    reply = await handle_message(f"web:{session_id}", text, platform="web")
     return {
         "session_id": session_id,
         "reply": reply,
@@ -222,13 +301,44 @@ async def api_chat(data: dict) -> dict:
     }
 
 
+@app.post("/api/miniapp/chat")
+async def miniapp_chat(request: Request, data: dict) -> dict:
+    """Чат с Фокси внутри мини-приложения — тот же диалог, что и в мессенджере."""
+    identity = _identity_from_request(request, fallback_user_id=_miniapp_user_id(data))
+    if identity is None:
+        return JSONResponse(
+            {"ok": False, "error": "Нужна авторизация внутри Telegram или MAX"},
+            status_code=401,
+        )
+    text = str(data.get("text", "")).strip()
+    if not text:
+        return JSONResponse({"ok": False, "error": "Пустое сообщение"}, status_code=400)
+    if len(text) > MAX_CHAT_TEXT_CHARS:
+        return JSONResponse({"ok": False, "error": "Слишком длинное сообщение"}, status_code=413)
+    if _chat_rate_limited(identity.user_id):
+        return JSONResponse(
+            {"ok": False, "error": "Слишком много сообщений подряд, попробуйте через минуту"},
+            status_code=429,
+        )
+    reply = await handle_message(identity.user_id, text, platform=identity.platform)
+    return {"ok": True, "reply": reply}
+
+
+# Больше 8 МБ фото задания быть не может, а вот OOM от «загрузки» на 2 ГБ —
+# вполне: UploadFile.read() без лимита читает всё тело в память.
+MAX_HOMEWORK_IMAGE_BYTES = 8 * 1024 * 1024
+
+
 @app.post("/api/miniapp/homework")
 async def api_homework(
+    request: Request,
     note: str = Form(default=""),
     user_id: str = Form(default=""),
+    init_data: str = Form(default=""),
     image: UploadFile | None = File(default=None),
 ) -> dict:
-    access = _miniapp_access_state(user_id)
+    identity = _identity_from_request(request, init_data=init_data, fallback_user_id=user_id)
+    access = _miniapp_access_state(identity)
     if access["locked"]:
         return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     if image is None or not image.filename:
@@ -237,7 +347,11 @@ async def api_homework(
     if not content_type.startswith("image/"):
         return JSONResponse({"detail": "Файл должен быть в формате изображения"}, status_code=400)
 
-    image_bytes = await image.read()
+    image_bytes = await image.read(MAX_HOMEWORK_IMAGE_BYTES + 1)
+    if len(image_bytes) > MAX_HOMEWORK_IMAGE_BYTES:
+        return JSONResponse(
+            {"detail": "Фото слишком большое — пришлите снимок до 8 МБ"}, status_code=413
+        )
     if not image_bytes:
         return JSONResponse({"detail": "Пустой файл"}, status_code=400)
 
@@ -282,14 +396,166 @@ def _telegram_buttons(text: str, reply: str) -> list[list[dict]]:
     return [[button] for button in buttons]
 
 
+def _telegram_webapp_button() -> dict | None:
+    """Кнопка открытия Telegram Mini App прямо внутри чата."""
+    url = settings.telegram_miniapp_url
+    if not url.startswith("https://"):
+        return None
+    return {"type": "web_app", "text": "📱 Личный кабинет", "web_app": url}
+
+
+def _telegram_menu_buttons() -> list[list[dict]]:
+    rows: list[list[dict]] = []
+    webapp = _telegram_webapp_button()
+    if webapp:
+        rows.append([webapp])
+    rows.extend(
+        [
+            [callback_button("🎓 Подобрать курс", "menu:courses")],
+            [callback_button("📅 Записаться на пробное", "menu:signup")],
+            [callback_button("💳 Стоимость обучения", "menu:price")],
+            [callback_button("🏫 Наши филиалы", "menu:branches")],
+            [callback_button("☎ Связаться с администратором", "menu:admin")],
+        ]
+    )
+    return rows
+
+
+def _telegram_start_buttons(text: str, reply: str) -> list[list[dict]] | None:
+    """На /start показываем меню целиком — иначе новый пользователь видит
+    только текст и не знает, что у бота вообще есть кнопки."""
+    return _telegram_menu_buttons() or _telegram_buttons(text, reply) or None
+
+
 def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
     return [[link_button(button["title"], button["url"])] for button in _contextual_buttons(text, reply)]
 
 
 _TELEGRAM_MEDIA_FIELDS = ("voice", "photo", "sticker", "video", "document", "audio", "video_note")
 
+TELEGRAM_PLATFORM = "telegram"
+# Индикатор «печатает» живёт ~5 секунд, поэтому обновляем его чаще.
+TYPING_REFRESH_SEC = 4.0
+
+
+async def _keep_typing(telegram, chat_id) -> None:
+    """Держит индикатор «печатает», пока формируется ответ.
+
+    Молчащий бот и думающий бот выглядят для пользователя одинаково — этот
+    цикл делает разницу видимой.
+    """
+    send_action = getattr(telegram, "send_chat_action", None)
+    if not callable(send_action):
+        return
+    try:
+        while True:
+            try:
+                await send_action(chat_id, "typing")
+            except Exception:
+                logger.debug("telegram: не удалось отправить typing", exc_info=True)
+                return
+            await asyncio.sleep(TYPING_REFRESH_SEC)
+    except asyncio.CancelledError:
+        return
+
+
+async def _slow_notice(telegram, chat_id) -> None:
+    """Промежуточный статус, если ответ готовится дольше обычного."""
+    delay = float(getattr(settings, "SLOW_NOTICE_SEC", 12.0) or 0)
+    if delay <= 0:
+        return
+    try:
+        await asyncio.sleep(delay)
+        await telegram.send_message(
+            chat_id, "Секунду, уточняю информацию — сейчас отвечу 🙂"
+        )
+    except asyncio.CancelledError:
+        return
+    except Exception:
+        logger.debug("telegram: не удалось отправить промежуточный статус", exc_info=True)
+
+
+async def _reply_while_alive(client, chat_id, produce):
+    """Выполняет produce(), показывая пользователю, что бот жив.
+
+    Работает и для Telegram, и для MAX: индикатор «печатает» включается
+    только там, где клиент его поддерживает, промежуточный статус —
+    везде (у обоих клиентов одинаковая сигнатура send_message).
+    """
+    typing = asyncio.create_task(_keep_typing(client, chat_id))
+    notice = asyncio.create_task(_slow_notice(client, chat_id))
+    try:
+        return await produce()
+    finally:
+        for task in (typing, notice):
+            task.cancel()
+        await asyncio.gather(typing, notice, return_exceptions=True)
+
+
+async def _telegram_callback(update: dict, telegram) -> None:
+    """Обработка нажатия inline-кнопки.
+
+    answerCallbackQuery отправляется ПЕРВЫМ и всегда: пока он не пришёл,
+    клиент Telegram крутит спиннер на кнопке до собственного таймаута.
+    """
+    callback = update.get("callback_query") or {}
+    callback_id = callback.get("id")
+    payload = str(callback.get("data") or "")
+    message = callback.get("message") or {}
+    chat_id = (message.get("chat") or {}).get("id")
+    if chat_id is None:
+        chat_id = (callback.get("from") or {}).get("id")
+    if callback_id:
+        try:
+            await telegram.answer_callback_query(str(callback_id))
+        except Exception:
+            logger.exception("telegram: answerCallbackQuery не прошёл")
+    if chat_id is None:
+        return
+
+    user_id = f"tg:{chat_id}"
+    if payload in _BRANCH_CONTACTS:
+        info = _BRANCH_CONTACTS[payload]
+        conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+        conv.selected_branch = info["name"]
+        conv.stage = STAGE_HANDOFF
+        get_store().save(conv)
+        await _notify_admins_for_telegram(conv, "контакт по филиалу")
+        await telegram.send_message(
+            chat_id,
+            f"Свяжу вас с администратором {info['name']}. Телефон: {info['phone']}",
+        )
+        return
+    if payload.startswith("contact:"):
+        await telegram.send_message(
+            chat_id,
+            "Подскажите, пожалуйста, какой филиал вам удобнее?",
+            buttons=_branch_admin_buttons(),
+        )
+        return
+    if payload in _CALLBACK_TEXT:
+        text = _CALLBACK_TEXT[payload]
+        reply = await _reply_while_alive(
+            telegram,
+            chat_id,
+            lambda: handle_message(user_id, text, platform=TELEGRAM_PLATFORM),
+        )
+        await telegram.send_message(
+            chat_id, reply, buttons=_telegram_buttons(text, reply) or None
+        )
+        return
+    logger.info("telegram: неизвестный callback payload=%s", payload[:64])
+
 
 async def _process_telegram_update(update: dict, telegram) -> None:
+    runtime.set_request_id(runtime.new_request_id())
+    if update.get("callback_query"):
+        try:
+            await _telegram_callback(update, telegram)
+        except Exception:
+            logger.exception("telegram: ошибка обработки callback_query")
+        return
+
     message = update.get("message") or update.get("edited_message") or {}
     chat = message.get("chat") or {}
     chat_id = chat.get("id")
@@ -326,12 +592,18 @@ async def _process_telegram_update(update: dict, telegram) -> None:
         user_id = f"tg:{chat_id}"
         low = text.lower()
         if low in ("/start", "start"):
-            reply = await handle_start(user_id)
-            await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+            reply = await handle_start(user_id, platform=TELEGRAM_PLATFORM)
+            await telegram.send_message(chat_id, reply, buttons=_telegram_start_buttons(text, reply))
+            return
+
+        if low in ("/menu", "меню", "/app", "кабинет"):
+            await telegram.send_message(
+                chat_id, "Чем помочь? 😊", buttons=_telegram_menu_buttons()
+            )
             return
 
         if I.detect_complaint(text) or I.detect_intent(text) == I.HANDOFF:
-            conv = get_store().get(user_id, platform="telegram")
+            conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
             branch = conv.selected_branch or conv.lead.branch
             if branch:
                 await _notify_admins_for_telegram(conv, "запрос администратора")
@@ -347,7 +619,11 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
             return
 
-        reply = await handle_message(user_id, text)
+        reply = await _reply_while_alive(
+            telegram,
+            chat_id,
+            lambda: handle_message(user_id, text, platform=TELEGRAM_PLATFORM),
+        )
         await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
     except Exception:
         # Раньше исключение здесь просто убивало фоновую задачу молча —
@@ -368,7 +644,8 @@ def _schedule_telegram_update(update: dict, telegram) -> bool:
     update_id = update.get("update_id")
     if update_id is not None:
         store = get_store()
-        if not store.mark_event_seen(str(update_id), platform="telegram", event_type="update"):
+        if not store.mark_event_seen(str(update_id), platform=TELEGRAM_PLATFORM, event_type="update"):
+            logger.info("telegram: дубликат update_id=%s пропущен", update_id)
             return False
     task = asyncio.create_task(_process_telegram_update(update, telegram))
     _BACKGROUND_TASKS.add(task)
@@ -379,6 +656,7 @@ def _schedule_telegram_update(update: dict, telegram) -> bool:
 async def _telegram_poll_loop(telegram) -> None:
     await telegram.delete_webhook()
     offset: int | None = None
+    backoff = 3
     while True:
         try:
             updates = await telegram.get_updates(offset=offset, timeout=25)
@@ -386,16 +664,26 @@ async def _telegram_poll_loop(telegram) -> None:
             raise
         except Exception:
             logger.exception("telegram: ошибка long-polling")
-            await asyncio.sleep(3)
+            await asyncio.sleep(backoff)
+            backoff = min(backoff * 2, 60)
             continue
+        backoff = 3
         for update in updates:
-            if _schedule_telegram_update(update, telegram):
-                update_id = update.get("update_id")
-                if update_id is not None:
-                    try:
-                        offset = int(update_id) + 1
-                    except (TypeError, ValueError):
-                        pass
+            # ВАЖНО: offset двигаем ВСЕГДА, даже если апдейт признан
+            # дубликатом и обрабатывать его не нужно. Раньше offset
+            # обновлялся только для новых апдейтов — и после рестарта
+            # (Telegram переотдаёт неподтверждённый апдейт, который уже
+            # лежит в processed_events) offset замирал навсегда, getUpdates
+            # бесконечно возвращал тот же батч, а бот переставал отвечать
+            # вообще всем. Подтверждение доставки и дедупликация — разные
+            # вещи, и путать их нельзя.
+            update_id = update.get("update_id")
+            if update_id is not None:
+                try:
+                    offset = max(offset or 0, int(update_id) + 1)
+                except (TypeError, ValueError):
+                    pass
+            _schedule_telegram_update(update, telegram)
 
 
 @app.post("/telegram/webhook")
@@ -568,10 +856,19 @@ def _schedule_update(update: dict, update_type: str, max_client) -> bool:
 
 
 async def _process_update_safe(update: dict, update_type: str, max_client) -> None:
+    runtime.set_request_id(runtime.new_request_id())
     try:
         await _process_update(update, update_type, max_client)
     except Exception:
         logger.exception("Ошибка обработки update_type=%s", update_type)
+        # Молчание после исключения выглядит как зависший бот — отвечаем
+        # хоть что-то живое, если знаем, кому.
+        user_id = _extract_user_id(update) or _extract_user_id(update.get("message") or {})
+        if user_id:
+            try:
+                await max_client.send_message(user_id, ai_core.ERROR_REPLY)
+            except Exception:
+                logger.exception("MAX: не удалось отправить фолбэк об ошибке")
 
 
 async def _process_update(update: dict, update_type: str, max_client) -> None:
@@ -587,6 +884,16 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         sender = message.get("sender") or {}
         if sender.get("is_bot"):
             return
+
+        # Групповые чаты MAX: модуль group_chat был полностью написан и
+        # покрыт тестами, но нигде не вызывался — в группах бот молчал на
+        # любое обращение, включая прямое упоминание. Приватная ветка ниже
+        # для группового сообщения тоже не годится: она отвечает в личку
+        # отправителю, а не в чат.
+        if settings.GROUP_MODE_ENABLED and group_chat.is_group_message(message):
+            await group_chat.handle_group_message(message, max_client)
+            return
+
         user_id = str(sender.get("user_id")) if sender.get("user_id") else None
         if not user_id:
             return
@@ -617,7 +924,11 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         elif low in ("/menu", "меню"):
             await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
         else:
-            reply = await handle_message(user_id, text)
+            reply = await _reply_while_alive(
+                max_client,
+                user_id,
+                lambda: handle_message(user_id, text, platform=PLATFORM),
+            )
             await max_client.send_message(user_id, reply, buttons=_link_button_rows(text, reply) or None)
         return
 
@@ -695,14 +1006,19 @@ def _extract_user_id(update: dict):
 # --------- Мини-приложение: API ---------
 
 @app.get("/api/miniapp/access")
-async def miniapp_access(user_id: str = "") -> dict:
-    return _miniapp_access_state(user_id)
+async def miniapp_access(request: Request, user_id: str = "") -> dict:
+    return _miniapp_access_state(_identity_from_request(request, fallback_user_id=user_id))
 
 
 @app.get("/api/miniapp/info")
-async def miniapp_info(user_id: str = "") -> dict:
+async def miniapp_info(request: Request, user_id: str = "") -> dict:
+    """Витрина: публичные данные школы + состояние доступа.
+
+    Каталог, форматы и филиалы — публичная информация с сайта, она отдаётся
+    и без авторизации, чтобы мини-приложение открывалось мгновенно.
+    """
     kb = get_kb()
-    access = _miniapp_access_state(user_id)
+    access = _miniapp_access_state(_identity_from_request(request, fallback_user_id=user_id))
     return {
         "company": kb.company,
         "branches": kb.branches,
@@ -715,8 +1031,9 @@ async def miniapp_info(user_id: str = "") -> dict:
 
 
 @app.get("/api/miniapp/recommend")
-async def miniapp_recommend(age: str = "", fmt: str = "", user_id: str = "") -> dict:
-    access = _miniapp_access_state(user_id)
+async def miniapp_recommend(request: Request, age: str = "", fmt: str = "", user_id: str = "") -> dict:
+    identity = _identity_from_request(request, fallback_user_id=user_id)
+    access = _miniapp_access_state(identity)
     if access["locked"]:
         return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     kb = get_kb()
@@ -724,11 +1041,48 @@ async def miniapp_recommend(age: str = "", fmt: str = "", user_id: str = "") -> 
     return {"recommendations": items}
 
 
+@app.get("/api/miniapp/profile")
+async def miniapp_profile(request: Request) -> dict:
+    """Личные данные пользователя. Только по подписанному initData.
+
+    Здесь лежат ФИО, телефон и история заявок — отдавать это по открытому
+    `?user_id=` нельзя ни при каких настройках.
+    """
+    identity = _identity_from_request(request)
+    if identity is None or not identity.verified:
+        return JSONResponse(
+            {"ok": False, "error": "Нужна авторизация внутри Telegram или MAX"},
+            status_code=401,
+        )
+    conv = get_store().get(identity.user_id, platform=identity.platform)
+    lead = conv.lead
+    return {
+        "ok": True,
+        "user_id": identity.user_id,
+        "platform": identity.platform,
+        "display_name": identity.display_name or conv.client_name,
+        "registered": bool(conv.registered),
+        "stage": conv.stage,
+        "lead_submitted": bool(conv.lead_submitted),
+        "profile": {
+            "fio_parent": lead.fio_parent,
+            "fio_child": lead.fio_child,
+            "phone": lead.phone,
+            "age": lead.age,
+            "branch": conv.selected_branch or lead.branch,
+            "course": conv.selected_course or lead.course,
+            "format": conv.selected_format,
+        },
+    }
+
+
 @app.post("/api/miniapp/lead")
-async def miniapp_lead(data: dict) -> dict:
+async def miniapp_lead(request: Request, data: dict) -> dict:
     """Приём заявки из мини-приложения и отправка в BigBen CRM."""
-    user_id = _miniapp_user_id(data)
-    access = _miniapp_access_state(user_id)
+    identity = _identity_from_request(
+        request, fallback_user_id=_miniapp_user_id(data)
+    )
+    access = _miniapp_access_state(identity)
     if access["locked"]:
         return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
     lead = Lead(
@@ -743,8 +1097,24 @@ async def miniapp_lead(data: dict) -> dict:
     )
     if not lead.fio_parent or not lead.phone:
         return {"ok": False, "error": "Укажите имя и телефон"}
-    source = "MAX мини-приложение Фоксинбург"
+    platform_label = {
+        "telegram": "Telegram мини-приложение Фоксинбург",
+        "max": "MAX мини-приложение Фоксинбург",
+    }
+    source = platform_label.get(
+        identity.platform if identity else "", "Мини-приложение Фоксинбург"
+    )
     ok = await get_bigben().create_lead(lead, source=source)
+    if ok and identity is not None:
+        # Заявка из кабинета — часть того же диалога: сохраняем, чтобы бот
+        # в чате не спрашивал заново то, что человек уже заполнил.
+        store = get_store()
+        conv = store.get(identity.user_id, platform=identity.platform)
+        conv.lead = lead
+        conv.lead_submitted = True
+        if lead.branch:
+            conv.selected_branch = lead.branch
+        store.save(conv)
     if ok and settings.admin_ids:
         admin_note = (
             "Новая заявка из мини-приложения\n"
@@ -802,6 +1172,12 @@ async def site_lead(data: dict) -> dict:
 if _MINIAPP_DIR.exists():
     app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
 
+# Telegram Mini App: отдельная сборка под гайдлайны Telegram (тема клиента,
+# BackButton/MainButton, haptics). Открывается кнопкой web_app в чате бота.
+_TGAPP_DIR = Path(__file__).with_name("tgapp")
+if _TGAPP_DIR.exists():
+    app.mount("/tg", StaticFiles(directory=str(_TGAPP_DIR), html=True), name="tgapp")
+
 # Веб-виджет чата Фокси для статического сайта dymova-english.ru:
 # страницы подключают <script src="https://bot.dymova-english.ru/widget/foxi.js">.
 _WIDGET_DIR = Path(__file__).with_name("widget")
@@ -810,8 +1186,14 @@ if _WIDGET_DIR.exists():
 
 
 @app.post("/admin/set-webhook")
-async def admin_set_webhook(data: dict) -> dict:
-    """Регистрирует webhook бота в MAX. Тело: {"url": "https://.../webhook"}."""
+async def admin_set_webhook(request: Request, data: dict) -> dict:
+    """Регистрирует webhook бота в MAX. Тело: {"url": "https://.../webhook"}.
+
+    Ручка была полностью открытой: любой мог переподписать бота на свой URL и
+    перехватывать все входящие сообщения клиентов.
+    """
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
     url = data.get("url")
     if not url:
         return {"ok": False, "error": "url required"}

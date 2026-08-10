@@ -38,6 +38,17 @@ class Settings(BaseSettings):
     LLM_MAX_TOKENS: int = 700
     LLM_TIMEOUT: int = 40
     LLM_HISTORY_TURNS: int = 8
+    # Общий бюджет каскада провайдеров: 3 попытки × N провайдеров × LLM_TIMEOUT
+    # в худшем случае складываются в минуты молчания. Каскад обязан уложиться
+    # в это окно, чтобы вызывающий успел отправить живой фолбэк.
+    LLM_TOTAL_BUDGET_SEC: float = 45.0
+
+    # --- Дедлайны диалога ---
+    # Максимум, сколько пользователь ждёт ответ (включая очередь своих же
+    # предыдущих сообщений). По истечении — честный фолбэк, а не молчание.
+    REPLY_TIMEOUT_SEC: float = 60.0
+    # Через сколько секунд ожидания отправить промежуточное «секунду, уточняю».
+    SLOW_NOTICE_SEC: float = 12.0
 
     # --- BigBen CRM ---
     # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
@@ -60,6 +71,10 @@ class Settings(BaseSettings):
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
     MINIAPP_REQUIRE_REGISTRATION: bool = True
+    # Если true, API мини-приложения принимает личность ТОЛЬКО из подписанного
+    # initData (Telegram/MAX). Открытый ?user_id= перестаёт что-либо значить —
+    # иначе любой может прочитать и изменить чужой профиль (IDOR).
+    MINIAPP_AUTH_REQUIRED: bool = True
     CONV_LOG_FILE: str = ""
     GROUP_MODE_ENABLED: bool = True
     GROUP_CHAT_WHITELIST: str = ""
@@ -90,6 +105,9 @@ class Settings(BaseSettings):
     TELEGRAM_POLLING: bool = True
     TELEGRAM_WEBHOOK_URL: str = ""
     TELEGRAM_WEBHOOK_SECRET: str = ""
+    # Публичный HTTPS-URL Telegram Mini App (кнопка web_app в чате).
+    # Пусто = взять {MINIAPP_BASE_URL origin}/tg/ , если он задан.
+    TELEGRAM_MINIAPP_URL: str = ""
 
     # --- Email-уведомления о заявках (Gmail SMTP, App Password) ---
     GMAIL_SMTP_USER: str = ""
@@ -120,6 +138,24 @@ class Settings(BaseSettings):
     def _strip_secret(cls, v: object) -> object:
         # Пробелы/переводы строк в ключах ломают HTTP-заголовки провайдеров.
         return v.strip() if isinstance(v, str) else v
+
+    @property
+    def telegram_miniapp_url(self) -> str:
+        """URL Telegram Mini App: явный или производный от MINIAPP_BASE_URL.
+
+        MAX-приложение живёт на /app/, Telegram-версия — на /tg/ того же
+        хоста, поэтому отдельную переменную окружения задавать не обязательно.
+        """
+        explicit = self.TELEGRAM_MINIAPP_URL.strip()
+        if explicit:
+            return explicit
+        base = self.MINIAPP_BASE_URL.strip()
+        if not base:
+            return ""
+        origin = base.split("#", 1)[0].split("?", 1)[0].rstrip("/")
+        if origin.endswith("/app"):
+            origin = origin[: -len("/app")]
+        return f"{origin}/tg/"
 
     @property
     def admin_ids(self) -> list[str]:

@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 import httpx
@@ -14,7 +15,9 @@ class _FakeClient:
         self._responses = list(responses)
         self.calls = []
 
-    async def post(self, url, headers=None, json=None):
+    # timeout передаётся на каждый запрос: каскад укладывается в общий
+    # бюджет LLM_TOTAL_BUDGET_SEC (см. llm._complete_with_provider).
+    async def post(self, url, headers=None, json=None, timeout=None):
         self.calls.append({"url": url, "headers": headers, "json": json})
         if not self._responses:
             raise AssertionError("unexpected extra request")
@@ -203,3 +206,42 @@ def test_webhook_deduplicates_same_update_id(tmp_path, monkeypatch):
     assert main_module._schedule_update(update, "message_created", object()) is True
     assert main_module._schedule_update(update, "message_created", object()) is False
     assert len(scheduled) == 1
+
+
+@pytest.mark.asyncio
+async def test_llm_cascade_stops_when_time_budget_is_exhausted(monkeypatch):
+    """Каскад не имеет права держать пользователя дольше бюджета.
+
+    Худший случай без бюджета: провайдеры × 3 попытки × LLM_TIMEOUT — это
+    минуты полного молчания в чате.
+    """
+    monkeypatch.setattr(settings, "LLM_API_KEY", "key", raising=False)
+    monkeypatch.setattr(settings, "LLM_BASE_URL", "https://api.example/v1", raising=False)
+    monkeypatch.setattr(settings, "LLM_MODEL", "model-a", raising=False)
+    monkeypatch.setattr(
+        settings,
+        "LLM_FALLBACKS",
+        '[{"base_url":"https://b.example/v1","api_key":"k","model":"model-b"}]',
+        raising=False,
+    )
+    monkeypatch.setattr(settings, "LLM_TOTAL_BUDGET_SEC", 0.05, raising=False)
+
+    calls = []
+
+    class SlowClient:
+        async def post(self, url, headers=None, json=None, timeout=None):
+            calls.append(url)
+            await asyncio.sleep(0.2)
+            raise httpx.ReadTimeout("too slow")
+
+    llm_module._client = SlowClient()
+    llm_module._llm = None
+
+    client = llm_module.get_llm()
+    started = asyncio.get_running_loop().time()
+    reply = await client.complete([{"role": "user", "content": "hi"}])
+    elapsed = asyncio.get_running_loop().time() - started
+
+    assert reply is None
+    assert elapsed < 2.0, "каскад обязан уложиться в бюджет, а не перебирать всё подряд"
+    assert len(calls) <= 2, f"после исчерпания бюджета новые запросы не шлются: {calls}"

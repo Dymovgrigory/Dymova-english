@@ -9,10 +9,13 @@
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
+import time
 
 from app import intent as I
+from app import runtime
 from app import registration
 from app.bigben import get_bigben
 from app.course_selector import format_recommendations, recommend
@@ -301,11 +304,89 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
     )
 
 
-async def handle_message(user_id: str, text: str) -> str:
-    """Главная точка входа: принимает сообщение пользователя, возвращает ответ бота."""
+TIMEOUT_REPLY = (
+    "Мне нужно чуть больше времени на этот вопрос 🙏 Напишите, пожалуйста, "
+    "ещё раз — отвечу сразу. Если срочно, позвоните: 8 993 923-23-09 "
+    "(Лихачевский) или 8 916 732-31-69 (Ракетостроителей)."
+)
+
+ERROR_REPLY = (
+    "Что-то у меня сейчас не сложилось на техничеcкой стороне 🙈 "
+    "Попробуйте, пожалуйста, ещё раз через минуту — или позвоните: "
+    "8 993 923-23-09 (Лихачевский), 8 916 732-31-69 (Ракетостроителей)."
+)
+
+
+async def handle_message(user_id: str, text: str, platform: str = "max") -> str:
+    """Главная точка входа: принимает сообщение пользователя, возвращает ответ бота.
+
+    Три гарантии, без которых бот выглядит зависшим:
+    1. сообщения одного пользователя обрабатываются строго по очереди —
+       иначе параллельные апдейты мутируют один Conversation и затирают
+       историю друг друга;
+    2. ответ приходит не позже REPLY_TIMEOUT_SEC (включая ожидание очереди) —
+       по истечении отдаём честный фолбэк вместо молчания;
+    3. любое исключение превращается в человеческий текст, а не в тишину.
+    """
+    request_id = runtime.get_request_id() or runtime.new_request_id()
+    runtime.set_request_id(request_id)
+    started = time.monotonic()
+    runtime.log_event(
+        "REQUEST_RECEIVED", user_id=user_id, platform=platform, chars=len(text)
+    )
+    timeout = float(getattr(settings, "REPLY_TIMEOUT_SEC", 60.0) or 0) or None
+    try:
+        reply = await asyncio.wait_for(
+            _handle_message_serialized(user_id, text, platform), timeout=timeout
+        )
+        status = "ok"
+    except asyncio.TimeoutError:
+        status = "timeout"
+        reply = _record_fallback(user_id, text, platform, TIMEOUT_REPLY)
+    except asyncio.CancelledError:
+        runtime.log_event("REQUEST_CANCELLED", user_id=user_id, platform=platform)
+        raise
+    except Exception:
+        status = "error"
+        logger.exception("handle_message failed user_id=%s platform=%s", user_id, platform)
+        reply = _record_fallback(user_id, text, platform, ERROR_REPLY)
+    runtime.log_event(
+        "RESPONSE_READY",
+        user_id=user_id,
+        platform=platform,
+        status=status,
+        took=f"{time.monotonic() - started:.2f}s",
+    )
+    return reply
+
+
+def _record_fallback(user_id: str, text: str, platform: str, reply: str) -> str:
+    """Сохраняет пару «вопрос → честный фолбэк», чтобы контекст остался связным.
+
+    Без этого после таймаута в истории висел вопрос без ответа, и следующая
+    реплика («а сколько стоит?») уходила в LLM с оборванным диалогом.
+    """
+    try:
+        store = get_store()
+        conv = store.get(user_id, platform=platform)
+        if not conv.history or conv.history[-1] != {"role": "user", "content": text}:
+            conv.add("user", text)
+        conv.add("assistant", reply)
+        store.save(conv)
+    except Exception:
+        logger.exception("не удалось сохранить фолбэк для user_id=%s", user_id)
+    return reply
+
+
+async def _handle_message_serialized(user_id: str, text: str, platform: str) -> str:
+    async with runtime.conversation_lock(platform, user_id):
+        return await _handle_message_locked(user_id, text, platform)
+
+
+async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     store = get_store()
     kb = get_kb()
-    conv = store.get(user_id)
+    conv = store.get(user_id, platform=platform)
     conv.add("user", text)
     _capture_entities(conv, text)
     intent = I.detect_intent(text)
@@ -322,11 +403,17 @@ async def handle_message(user_id: str, text: str) -> str:
         store.save(conv)
         return reply
 
+    runtime.log_event("ROUTING", user_id=user_id, intent=intent, stage=conv.stage)
     reply = await _route(conv, text, kb, intent)
 
     conv.add("assistant", reply)
     store.save(conv)
     return reply
+
+
+def reset_conversation_locks() -> None:
+    """Сброс очередей между тестами."""
+    runtime.reset_locks()
 
 
 async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
@@ -514,10 +601,10 @@ def _handoff_reply() -> str:
     )
 
 
-async def handle_start(user_id: str) -> str:
+async def handle_start(user_id: str, platform: str = "max") -> str:
     """Ответ на команду /start или событие bot_started."""
     store = get_store()
-    conv = store.get(user_id)
+    conv = store.get(user_id, platform=platform)
     if not registration.is_registered(conv):
         reply = registration.start_registration(conv)
         conv.add("assistant", reply)
@@ -546,6 +633,7 @@ async def handle_start(user_id: str) -> str:
 __all__ = [
     "handle_message",
     "handle_start",
+    "reset_conversation_locks",
     "_consult_with_context",
     "_drop_trailing_question",
     "_handoff_followup_reply",

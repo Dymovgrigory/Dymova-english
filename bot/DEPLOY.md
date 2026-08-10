@@ -102,3 +102,60 @@ curl -X POST https://<домен>/admin/set-webhook \
   `curl -s -o /dev/null -w "%{http_code}\n" https://api.groq.com/openai/v1/models`.
   Если недоступен — сменить провайдера LLM (`LLM_BASE_URL`/`LLM_MODEL`) или поднять исходящий прокси.
 - Для домена можно использовать поддомен основного сайта (A-запись у регистратора домена `dymova-english.ru`).
+
+---
+
+## Telegram Mini App
+
+Приложение отдаётся ботом по пути `/tg/` (тот же контейнер, отдельно
+разворачивать нечего). Домен обязан быть HTTPS — Telegram не открывает
+Mini App по http.
+
+1. Проверьте, что страница доступна: `curl -I https://<домен>/tg/`.
+2. В `.env` задайте `MINIAPP_BASE_URL=https://<домен>/app/`
+   (URL Telegram-версии вычислится сам: `https://<домен>/tg/`).
+   Если Mini App живёт на отдельном домене — задайте `TELEGRAM_MINIAPP_URL`.
+3. Зарегистрируйте приложение у @BotFather:
+   `/newapp` → выберите бота → название, описание, иконка →
+   Web App URL: `https://<домен>/tg/`.
+   Там же `/setmenubutton` — кнопка меню в чате будет открывать приложение.
+4. Проверьте: в чате с ботом команда `/menu` покажет кнопку
+   «📱 Личный кабинет», открывающую приложение внутри Telegram.
+
+Глубокие ссылки: `https://t.me/<бот>/<приложение>?startapp=signup` открывает
+сразу нужный экран (`picker`, `signup`, `homework`, `chat`, `catalog`,
+`branches`, `profile`).
+
+### Безопасность мини-приложений
+
+Личность пользователя бэкенд берёт ТОЛЬКО из подписанного `initData`
+(заголовок `X-Miniapp-Init-Data`, проверка HMAC-SHA256 по токену бота,
+`app/miniapp_auth.py`). Открытый `?user_id=` игнорируется, пока
+`MINIAPP_AUTH_REQUIRED=true` — не выключайте это в проде: иначе любой
+сможет прочитать чужой профиль.
+
+## Обязательные переменные для стабильности
+
+| Переменная | Зачем |
+| --- | --- |
+| `DB_PATH` | Персистентность диалогов и таблицы обработанных событий. Без файла (`:memory:`) бот теряет контекст и дедупликацию при каждом рестарте. |
+| `ADMIN_TOKEN` | Без него все `/admin/*` закрыты (401). Пустой токен больше не открывает ручки наружу. |
+| `REPLY_TIMEOUT_SEC` | Потолок ожидания ответа пользователем; по истечении отправляется честный фолбэк. |
+| `LLM_TOTAL_BUDGET_SEC` | Общий бюджет каскада LLM-провайдеров. Должен быть меньше `REPLY_TIMEOUT_SEC`. |
+
+## Как диагностировать «бот завис»
+
+Журнал пишет события с общим `request_id`:
+
+```
+REQUEST_RECEIVED request_id=ab12 user_id=tg:42 platform=telegram chars=18
+ROUTING         request_id=ab12 user_id=tg:42 intent=price stage=discovery
+RESPONSE_READY  request_id=ab12 user_id=tg:42 platform=telegram status=ok took=1.42s
+```
+
+`status=timeout` — не уложились в `REPLY_TIMEOUT_SEC`; `QUEUE_WAIT` —
+пользователь ждал очереди своих же предыдущих сообщений.
+
+```bash
+journalctl -u foxinburg-bot -f | grep bot.flow
+```

@@ -8,6 +8,8 @@ from app.ai_core import handle_message, handle_start
 from app.knowledge.kb import get_kb
 from app.memory import Conversation, STAGE_DISCOVERY, STAGE_DONE, get_store
 
+from tests.conftest import make_telegram_init_data
+
 
 def test_extract_phone_tolerates_messy_separators():
     assert I.extract_phone("+7 999 123 45 67") == "+79991234567"
@@ -398,18 +400,26 @@ def test_miniapp_lead_notifies_admins(monkeypatch):
 
 
 def test_miniapp_lead_blocks_unregistered_user(monkeypatch):
+    """Гейт регистрации применяется к ОПОЗНАННОМУ пользователю.
+
+    Личность берётся из подписанного initData: открытый `user_id` в теле
+    запроса личностью не является (иначе гейт обходится подстановкой чужого
+    id, см. app/miniapp_auth.py).
+    """
     class FakeBigBen:
         async def create_lead(self, *args, **kwargs):
             raise AssertionError("should not submit")
 
     monkeypatch.setattr(main, "get_bigben", lambda: FakeBigBen())
     monkeypatch.setattr(main.settings, "ADMIN_MAX_IDS", "111,222")
+    monkeypatch.setattr(main.settings, "TELEGRAM_BOT_TOKEN", "test-token", raising=False)
+    init_data = make_telegram_init_data("test-token", telegram_user_id=4242)
 
     client = TestClient(main.app)
     resp = client.post(
         "/api/miniapp/lead",
+        headers={"X-Miniapp-Init-Data": init_data},
         json={
-            "user_id": "max:unregistered",
             "fio_parent": "Иванова Анна",
             "phone": "+79991234567",
         },

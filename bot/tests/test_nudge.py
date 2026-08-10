@@ -315,11 +315,12 @@ def test_preview_returns_rows():
 
 def test_admin_nudge_preview_endpoint(monkeypatch):
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
-    monkeypatch.setattr(settings, "ADMIN_TOKEN", "", raising=False)
+    # Рассылка по всей базе клиентов — админское действие, токен обязателен.
+    monkeypatch.setattr(settings, "ADMIN_TOKEN", "adm", raising=False)
     _make_conv(user_id="ep1", stage=STAGE_DISCOVERY, hours_ago=48)
 
     client = TestClient(main_module.app)
-    resp = client.get("/admin/nudge/preview")
+    resp = client.get("/admin/nudge/preview", headers={"X-Admin-Token": "adm"})
     assert resp.status_code == 200
     data = resp.json()
     assert data["eligible"] >= 1
@@ -330,11 +331,11 @@ def test_admin_nudge_send_endpoint(monkeypatch):
     fake_max = FakeMaxClient()
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
     monkeypatch.setattr(nudge_mod, "get_max", lambda: fake_max)
-    monkeypatch.setattr(settings, "ADMIN_TOKEN", "", raising=False)
+    monkeypatch.setattr(settings, "ADMIN_TOKEN", "adm", raising=False)
     _make_conv(user_id="ep2", stage=STAGE_DISCOVERY, hours_ago=48)
 
     client = TestClient(main_module.app)
-    resp = client.post("/admin/nudge/send")
+    resp = client.post("/admin/nudge/send", headers={"X-Admin-Token": "adm"})
     assert resp.status_code == 200
     data = resp.json()
     assert data["sent"] >= 1

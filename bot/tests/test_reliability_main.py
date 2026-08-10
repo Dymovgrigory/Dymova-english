@@ -14,7 +14,9 @@ class FakeClient:
         self.responses = list(responses)
         self.calls = []
 
-    async def post(self, url, headers=None, json=None):
+    # timeout передаётся на каждый запрос: каскад укладывается в общий
+    # бюджет LLM_TOTAL_BUDGET_SEC (см. llm._complete_with_provider).
+    async def post(self, url, headers=None, json=None, timeout=None):
         self.calls.append({"url": url, "headers": headers, "json": json})
         if not self.responses:
             raise AssertionError("unexpected extra request")

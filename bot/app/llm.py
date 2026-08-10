@@ -22,6 +22,13 @@ _MAX_ATTEMPTS_PER_PROVIDER = 3
 _INITIAL_BACKOFF = 0.25
 
 
+def _remaining(deadline: float | None) -> float | None:
+    """Сколько секунд осталось от общего бюджета каскада."""
+    if deadline is None:
+        return None
+    return deadline - asyncio.get_running_loop().time()
+
+
 @dataclass(frozen=True)
 class ProviderConfig:
     base_url: str
@@ -106,6 +113,14 @@ async def _get_client() -> httpx.AsyncClient:
     return client
 
 
+def _budget_seconds() -> float:
+    raw = getattr(settings, "LLM_TOTAL_BUDGET_SEC", 45.0)
+    try:
+        return max(1.0, float(raw))
+    except (TypeError, ValueError):
+        return 45.0
+
+
 async def _complete_with_provider(
     client: httpx.AsyncClient,
     provider: ProviderConfig,
@@ -113,6 +128,7 @@ async def _complete_with_provider(
     temperature: float,
     max_tokens: int | None = None,
     allow_english: bool = False,
+    deadline: float | None = None,
 ) -> str | None:
     url = f"{provider.base_url.rstrip('/')}/chat/completions"
     payload = {
@@ -125,8 +141,20 @@ async def _complete_with_provider(
     delay = _INITIAL_BACKOFF
 
     for attempt in range(1, _MAX_ATTEMPTS_PER_PROVIDER + 1):
+        remaining = _remaining(deadline)
+        if remaining is not None and remaining <= 0:
+            logger.warning("LLM provider=%s бюджет времени исчерпан", provider.label)
+            return None
         try:
-            resp = await client.post(url, headers=headers, json=payload)
+            request_timeout = (
+                httpx.Timeout(min(float(settings.LLM_TIMEOUT), remaining))
+                if remaining is not None
+                else None
+            )
+            if request_timeout is None:
+                resp = await client.post(url, headers=headers, json=payload)
+            else:
+                resp = await client.post(url, headers=headers, json=payload, timeout=request_timeout)
         except httpx.RequestError:
             logger.warning(
                 "LLM provider=%s attempt=%s network/timeout error",
@@ -200,12 +228,24 @@ class LLMClient:
         return bool(self.providers)
 
     async def complete(self, messages: list[dict], temperature: float | None = None) -> str | None:
+        """Каскад провайдеров с общим бюджетом времени.
+
+        Без бюджета худший случай = провайдеры × 3 попытки × LLM_TIMEOUT,
+        то есть минуты полного молчания в чате. Каскад обязан вернуть
+        управление вовремя, чтобы вызывающий успел отправить фолбэк.
+        """
         if not self.enabled:
             return None
         client = await _get_client()
         target_temperature = settings.LLM_TEMPERATURE if temperature is None else temperature
+        deadline = asyncio.get_running_loop().time() + _budget_seconds()
         for provider in self.providers:
-            reply = await _complete_with_provider(client, provider, messages, target_temperature)
+            if _remaining(deadline) <= 0:
+                logger.warning("LLM: бюджет времени исчерпан, провайдер %s пропущен", provider.label)
+                break
+            reply = await _complete_with_provider(
+                client, provider, messages, target_temperature, deadline=deadline
+            )
             if reply:
                 return reply
         logger.error("LLM cascade exhausted all providers")
@@ -225,10 +265,14 @@ class LLMClient:
         if not self.enabled:
             return None
         client = await _get_client()
+        # Картинки обрабатываются дольше текста — даём каскаду двойной бюджет.
+        deadline = asyncio.get_running_loop().time() + _budget_seconds() * 2
         for provider in self.providers:
+            if _remaining(deadline) <= 0:
+                break
             reply = await _complete_with_provider(
                 client, provider, messages, temperature, max_tokens=max_tokens,
-                allow_english=True,
+                allow_english=True, deadline=deadline,
             )
             if reply:
                 return reply
