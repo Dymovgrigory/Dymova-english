@@ -159,3 +159,30 @@ RESPONSE_READY  request_id=ab12 user_id=tg:42 platform=telegram status=ok took=1
 ```bash
 journalctl -u foxinburg-bot -f | grep bot.flow
 ```
+
+## Telegram: доступ к api.telegram.org без прокси
+
+На сервере нет маршрута в IPv6, а `api.telegram.org` отдаёт и A, и AAAA.
+glibc ставит IPv6 первым, httpx подключается только к первому адресу и не
+откатывается на IPv4 — каждый `getUpdates` падал с
+`[Errno 101] Network is unreachable`. Из-за этого Telegram-бот молчал с
+27.07.2026; симптом маскировался тем, что трафик шёл через платный
+SOCKS-прокси, который к тому моменту тоже перестал отвечать.
+
+Лечится приоритетом IPv4 в резолвере — в Docker-образе это делает
+`Dockerfile` (`/etc/gai.conf`). При запуске через systemd то же самое
+нужно на хосте:
+
+```bash
+echo 'precedence ::ffff:0:0/96  100' | sudo tee -a /etc/gai.conf
+```
+
+Проверка:
+
+```bash
+docker exec bot-bot-1 python -c "import socket;print(socket.getaddrinfo('api.telegram.org',443,type=socket.SOCK_STREAM)[0][4])"
+# ожидаем IPv4, напр. ('149.154.166.110', 443)
+```
+
+`TELEGRAM_PROXY_URL` при этом не нужен — оставьте пустым. Переменная
+сохранена на случай, если доступ снова закроют.
