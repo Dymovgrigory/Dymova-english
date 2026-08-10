@@ -1206,3 +1206,14 @@ async def admin_set_webhook(request: Request, data: dict) -> dict:
         return {"ok": False, "error": "url required"}
     ok = await get_max().set_webhook(url, settings.MAX_WEBHOOK_SECRET or None)
     return {"ok": ok}
+
+
+# Админка: список клиентов, переписка, заявки, рассылки.
+#
+# Монтируется В САМОМ КОНЦЕ файла осознанно: StaticFiles на "/admin"
+# перехватывает всё, что не совпало с уже объявленными маршрутами, поэтому
+# любая ручка /admin/* должна быть зарегистрирована выше этой строки.
+# Страница публична, но пустая: данные отдаются только по X-Admin-Token.
+_ADMINAPP_DIR = Path(__file__).with_name("adminapp")
+if _ADMINAPP_DIR.exists():
+    app.mount("/admin", StaticFiles(directory=str(_ADMINAPP_DIR), html=True), name="adminapp")

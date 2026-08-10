@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import logging
 import re
+from datetime import date
 
 from app.bigben import BigBenClient
 from app.config import settings
@@ -48,14 +49,44 @@ REG_COMPLETE = (
 _NAME_WORD_RE = re.compile(r"^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z\-]*$")
 
 
+# Слова, которые человек пишет вместо имени. Раньше проходило что угодно без
+# цифр и знака вопроса — в CRM попадали карточки «Привет» и «Тест».
+_NAME_STOPWORDS = {
+    "привет", "здравствуй", "здравствуйте", "добрый", "доброе", "день", "вечер",
+    "утро", "тест", "test", "проверка", "да", "нет", "ок", "окей", "ok", "хорошо",
+    "давай", "давайте", "не", "знаю", "никак", "хз", "спасибо", "пока", "бот",
+    "админ", "asdf", "qwerty", "фыва", "йцукен", "ааа", "ясно", "понятно",
+    "меня", "зовут", "имя", "ребенок", "ребёнок", "мама", "папа", "сын", "дочь",
+}
+
+_VOWELS = set("аеёиоуыэюяaeiouy")
+
+
 def _looks_like_name(text: str) -> bool:
+    """Отличает настоящее имя от «Привет», «ааа» и «фффф».
+
+    Идеального детектора не существует, поэтому берём то, что ловит реальный
+    мусор без ложных срабатываний на именах: слово из букв, хотя бы одна
+    гласная, минимум две разные буквы и не из списка дежурных ответов.
+    """
     clean = text.strip()
-    if len(clean) < 2:
+    if len(clean) < 2 or "?" in clean:
         return False
     if any(c.isdigit() for c in clean):
         return False
-    if "?" in clean:
+    words = clean.split()
+    if not words or len(words) > 3:
         return False
+    for word in words:
+        if not _NAME_WORD_RE.match(word):
+            return False
+        low = word.lower().strip("-")
+        if low in _NAME_STOPWORDS:
+            return False
+        if len(set(low)) < 2:
+            return False
+        if not (_VOWELS & set(low)):
+            return False
     return True
 
 
@@ -86,6 +117,27 @@ def _extract_name(text: str) -> str:
     if candidate and _looks_like_name(candidate):
         return candidate[:255]
     return ""
+
+
+def _plausible_age(value: str) -> bool:
+    """Возраст ученика. «0» и «150» — это не возраст, а опечатка или шутка."""
+    try:
+        age = int(str(value).strip())
+    except (TypeError, ValueError):
+        return False
+    return 1 <= age <= 99
+
+
+def _plausible_birthday(iso_date: str) -> bool:
+    """Дата рождения в пределах живого человека, а не 1899 год."""
+    try:
+        born = date.fromisoformat(iso_date)
+    except (TypeError, ValueError):
+        return False
+    today = date.today()
+    if born > today:
+        return False
+    return (today.year - born.year) <= 100
 
 
 def _current_step(conv: Conversation) -> str:
@@ -139,12 +191,14 @@ async def handle_registration_step(
 
     elif step == "birthday":
         birthday = extract_birthday(clean)
-        if birthday:
+        if birthday and _plausible_birthday(birthday):
             lead.birthday = birthday
         else:
             age = extract_age(clean)
             if not age and clean.isdigit() and 1 <= len(clean) <= 2:
                 age = clean
+            if age and not _plausible_age(age):
+                age = ""
             if age:
                 lead.age = age
             else:

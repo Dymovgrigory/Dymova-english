@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Фоксинбург — админка бота</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🦊</text></svg>" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+
+<!-- Ворота: без токена ничего не показываем и никуда не ходим. -->
+<section class="gate" id="gate">
+  <div class="gate__card">
+    <div class="gate__mark">🦊</div>
+    <h1>Админка бота</h1>
+    <p class="muted">Введите админ-токен. Он сохранится только в этом браузере.</p>
+    <form id="gate-form">
+      <input type="password" id="gate-token" placeholder="Админ-токен" autocomplete="current-password" required />
+      <button class="btn" type="submit">Войти</button>
+    </form>
+    <p class="gate__error" id="gate-error" hidden></p>
+  </div>
+</section>
+
+<div class="app" id="app" hidden>
+  <header class="topbar">
+    <div class="topbar__brand"><span>🦊</span> Фоксинбург <em>админка</em></div>
+    <div class="topbar__actions">
+      <button class="btn btn--ghost" id="refresh">Обновить</button>
+      <button class="btn btn--ghost" id="logout">Выйти</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab tab--active" data-tab="clients">Клиенты<span class="tab__count" id="count-clients"></span></button>
+    <button class="tab" data-tab="leads">Заявки<span class="tab__count" id="count-leads"></span></button>
+    <button class="tab" data-tab="broadcast">Рассылка</button>
+    <button class="tab" data-tab="insights">Вопросы</button>
+  </nav>
+
+  <main>
+    <!-- Клиенты -->
+    <section class="panel" id="panel-clients">
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="Поиск по имени, телефону, вопросу" />
+      </div>
+      <div class="split">
+        <div class="list" id="clients-list"></div>
+        <aside class="detail" id="detail">
+          <div class="detail__empty">Выберите клиента, чтобы увидеть переписку</div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Заявки -->
+    <section class="panel" id="panel-leads" hidden>
+      <div class="split">
+        <div class="list" id="leads-list"></div>
+        <aside class="detail" id="detail-leads">
+          <div class="detail__empty">Выберите заявку</div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Рассылка -->
+    <section class="panel panel--form" id="panel-broadcast" hidden>
+      <div class="audience" id="audience"></div>
+      <label class="field">
+        <span>Текст сообщения</span>
+        <textarea id="bc-text" rows="6" placeholder="Что отправить клиентам"></textarea>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>Кому</span>
+          <select id="bc-segment">
+            <option value="all">Всем</option>
+            <option value="leads">Только с заявкой</option>
+          </select>
+        </label>
+      </div>
+      <div class="actions">
+        <button class="btn btn--ghost" id="bc-test">Отправить себе</button>
+        <button class="btn btn--danger" id="bc-send">Отправить выбранным</button>
+      </div>
+      <p class="hint">«Отправить себе» уходит только администраторам из ADMIN_MAX_IDS — проверьте текст на себе, прежде чем отправлять клиентам.</p>
+      <div class="result" id="bc-result" hidden></div>
+    </section>
+
+    <!-- Вопросы без ответа -->
+    <section class="panel" id="panel-insights" hidden>
+      <div class="insights" id="insights"></div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

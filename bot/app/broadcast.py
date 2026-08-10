@@ -138,6 +138,8 @@ def list_users() -> list[dict]:
         rows.append(
             {
                 "user_id": conv.user_id,
+                "platform": conv.platform,
+                "registered": bool(conv.registered),
                 "stage": conv.stage,
                 "course": _conversation_course(conv),
                 "branch": _conversation_branch(conv),
@@ -190,6 +192,8 @@ def get_user_detail(user_id: str) -> dict | None:
         return {
             "header": {
                 "user_id": conv.user_id,
+                "platform": conv.platform,
+                "registered": bool(conv.registered),
                 "stage": conv.stage,
                 "course": _conversation_course(conv),
                 "branch": _conversation_branch(conv),
