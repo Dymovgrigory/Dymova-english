@@ -186,3 +186,50 @@ docker exec bot-bot-1 python -c "import socket;print(socket.getaddrinfo('api.tel
 
 `TELEGRAM_PROXY_URL` при этом не нужен — оставьте пустым. Переменная
 сохранена на случай, если доступ снова закроют.
+
+## Сторож доступности (мониторинг)
+
+`/health` знает только про собственный процесс — именно поэтому простой
+Telegram с 27.07.2026 остался незамеченным. `app/watchdog.py` закрывает
+эту дыру: раз в `WATCHDOG_INTERVAL_MIN` (по умолчанию 5 минут) он сам
+дёргает `getMe` и проверяет, что цикл long-polling действительно
+прокручивается.
+
+Второй признак важен отдельно: он ловит случай «`getUpdates` отвечает, а
+сообщения не забираются» — то есть замерший `offset`, а не только обрыв
+сети.
+
+При обрыве администратор получает в MAX готовое действие, а не «всё
+сломалось»:
+
+```
+🚨 Бот не может работать с Telegram
+
+Что именно: API Telegram недоступен (ConnectError)
+
+Сейчас отвечает: 149.154.167.220
+Впишите рабочий адрес в docker-compose.yml → bot → extra_hosts:
+  - "api.telegram.org:149.154.167.220"
+и перезапустите: docker compose up -d bot
+
+MAX и сайт продолжают работать.
+```
+
+Если не отвечает ни один известный адрес — сторож пишет, что нужен прокси
+(`TELEGRAM_PROXY_URL`).
+
+Антиспам: тревога только после двух провалов подряд, повтор не чаще раза
+в час, отдельное сообщение о восстановлении.
+
+Состояние видно снаружи:
+
+```bash
+curl -s https://bot.dymova-english.ru/health | python3 -m json.tool
+# telegram.telegram_api_ok      — доступен ли API
+# telegram.seconds_since_poll   — когда последний раз прокрутился опрос
+# telegram.reachable_telegram_ips — какие адреса отвечают сейчас
+```
+
+Настройки: `WATCHDOG_ENABLED`, `WATCHDOG_INTERVAL_MIN`,
+`WATCHDOG_FAILURES_BEFORE_ALERT`, `WATCHDOG_ALERT_COOLDOWN_MIN`,
+`WATCHDOG_POLL_SILENCE_MIN`, `TELEGRAM_API_IPS`.
