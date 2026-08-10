@@ -427,6 +427,21 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             await hand_off(max_client, conv, reason="запрос оператора")
             return _handoff_reply()
         reply, _submitted = await lead_manager.step(conv, text, kb, bigben, max_client)
+        if reply == lead_manager.OFF_TOPIC:
+            # Вопрос не про заявку. Отвечаем по существу и только потом
+            # возвращаемся к анкете: глушить вопрос ради формы — верный
+            # способ выглядеть роботом.
+            if intent == I.GREETING:
+                # На «привет» не ищут ответ в базе знаний.
+                answer = "Здравствуйте! 😊"
+            else:
+                # _consult по пути может сменить этап (например, эскалация
+                # «не знаю» переводит в handoff). Незавершённую заявку это
+                # обнуляло молча — человек больше не видел её вообще.
+                saved_stage, saved_step = conv.stage, conv.lead_step
+                answer = await _consult(conv, text)
+                conv.stage, conv.lead_step = saved_stage, saved_step
+            return f"{answer}\n\n{lead_manager.pending_question(conv)}"
         return reply
 
     # 2. Уже передан администратору — не перебиваем, но подтверждаем.

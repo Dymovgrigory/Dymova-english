@@ -332,10 +332,12 @@ async def test_signup_after_previous_submission_starts_with_a_clean_lead():
 
 
 @pytest.mark.asyncio
-async def test_confirm_step_off_topic_question_gets_a_bridge_not_silence():
-    """"Хочу узнать про китайский" at the confirm screen used to silently
-    re-show the identical confirmation block with zero acknowledgement of
-    what was actually asked — reported as "отвечает одно и то же на всё"."""
+async def test_confirm_step_off_topic_question_is_handed_back_for_a_real_answer():
+    """"Хочу узнать про китайский" на экране подтверждения сначала молча
+    повторяло тот же блок, потом — «сначала завершим заявку» с тем же блоком.
+    И то и другое читалось как «отвечает одно и то же на всё»: вопрос так и
+    оставался без ответа. Теперь step отдаёт маркер, а ai_core отвечает по
+    существу и лишь затем напоминает про заявку."""
     class FakeBigBen:
         async def create_lead(self, *a, **k):
             raise AssertionError("should not submit on an unrelated question")
@@ -359,8 +361,9 @@ async def test_confirm_step_off_topic_question_gets_a_bridge_not_silence():
     )
 
     assert submitted is False
-    assert "Проверьте" in reply  # still shows the confirmation
-    assert "секунду" in reply.lower() or "сначала" in reply.lower()
+    assert reply == lead_manager.OFF_TOPIC
+    assert conv.lead_step == "confirm"  # заявка не потеряна
+    assert "Проверьте" in lead_manager.pending_question(conv)
 
 
 def test_miniapp_lead_notifies_admins(monkeypatch):

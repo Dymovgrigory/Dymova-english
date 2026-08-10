@@ -136,12 +136,24 @@ def _ask_next(conv: Conversation) -> str:
     return PROMPTS[step]
 
 
-def _confirmation_text(conv: Conversation) -> str:
+def _confirmation_text(conv: Conversation, changed: list[tuple[str, str]] | None = None) -> str:
+    """Экран подтверждения. `changed` — что именно только что поправили.
+
+    Дословно одинаковый блок в ответ на каждую правку читается как «бот меня
+    не услышал»: в реальной переписке человек дважды диктовал имя ребёнка,
+    потому что подтверждение выглядело неизменившимся. Поэтому сверху
+    называем внесённые изменения.
+    """
     lead = conv.lead
     branch = lead.branch or conv.selected_branch or "—"
     when = lead.birthday or (f"{lead.age} лет" if lead.age else "—")
+    prefix = ""
+    if changed:
+        listed = ", ".join(f"{label} — {value}" for label, value in changed)
+        prefix = f"Готово: {listed}.\n\n"
     return (
-        "Проверьте, пожалуйста, заявку:\n"
+        prefix
+        + "Проверьте, пожалуйста, заявку:\n"
         f"• Родитель: {lead.fio_parent}\n"
         f"• Ребёнок: {lead.fio_child}\n"
         f"• Возраст/дата рождения: {when}\n"
@@ -151,10 +163,49 @@ def _confirmation_text(conv: Conversation) -> str:
     )
 
 
+# Маркер для вызывающего кода: сообщение не про заявку, на него нужно
+# ответить по существу (см. pending_question). Заявка при этом не теряется.
+OFF_TOPIC = "\x00off-topic"
+
+
+# Отказ продолжать. Основы, а не точные слова: человек пишет «не будем»,
+# «не буду», «не будете» — раньше подходило только «не буду», и фраза
+# «Не будем завершать» не совпадала ни с чем, оставляя единственный выход
+# словом «отмена», о котором клиент не знает.
 _CANCEL_RE = re.compile(
-    r"позже|попозже|потом|не\s*сейчас|передумал|не\s*хочу|отмен\w*|"
-    r"не\s*буду|расхотел",
+    r"позже|попозже|потом|не\s*сейчас|передумал\w*|не\s*хочу|не\s*хотим|"
+    r"отмен\w*|не\s*буд\w*|расхотел\w*|не\s*готов\w*|хватит|прекрат\w*|"
+    r"\bстоп\b|не\s*нужно",
     re.IGNORECASE,
+)
+
+
+def _exit_reply(conv: Conversation) -> str:
+    """Выход из заявки без потери уже собранного."""
+    lead = conv.lead
+    if lead.fio_parent or lead.fio_child or lead.phone:
+        return (
+            "Хорошо, к заявке вернёмся позже — отправлять не буду. Всё, что вы "
+            "уже назвали, сохранится, продолжим с того же места. А пока "
+            "спрашивайте что угодно про курсы, цены и филиалы 😊"
+        )
+    return (
+        "Без проблем, вернёмся к этому позже. Если захотите продолжить, "
+        "я помогу подобрать курс или запись на бесплатную диагностику."
+    )
+
+
+def pending_question(conv: Conversation) -> str:
+    """Чем закончить ответ на посторонний вопрос, чтобы заявка не потерялась."""
+    if conv.lead_step == "correcting":
+        return f"{_CORRECTION_HINT}\n\n{_confirmation_text(conv)}"
+    return _ask_next(conv)
+
+
+_CORRECTION_HINT = (
+    "Что именно поправить? Например: «телефон 89991234567», «ребёнку 10 лет», "
+    "«филиал Ракетостроителей», «имя родителя: Иванова Анна» или «имя "
+    "ребёнка: Миша». Или напишите «отмена», если передумали отправлять заявку."
 )
 
 
@@ -172,14 +223,17 @@ async def step(
     low = clean.lower()
     _opportunistic_fill(conv, clean, kb)
 
-    if any(word in low for word in ("позже", "попозже", "потом", "не сейчас", "давайте позже")):
+    # Согласие проверяем РАНЬШЕ отказа: «не буду ничего менять, отправляйте»
+    # содержит «не буду», но означает ровно противоположное.
+    if current == "confirm" and _is_yes(clean):
+        return await _submit(conv, bigben, max_client), True
+
+    # Отказ работает на любом шаге, а не только на подтверждении: бросить
+    # заполнение можно в любой момент, иначе анкета превращается в ловушку.
+    if _CANCEL_RE.search(low):
         conv.stage = STAGE_DISCOVERY
         conv.lead_step = ""
-        return (
-            "Без проблем, вернёмся к этому позже. Если захотите продолжить, "
-            "я помогу подобрать курс или запись на бесплатную диагностику.",
-            False,
-        )
+        return _exit_reply(conv), False
 
     if current == "fio_parent":
         age = extract_age(clean)
@@ -239,16 +293,6 @@ async def step(
         conv.selected_branch = lead.branch
 
     elif current == "confirm":
-        if _CANCEL_RE.search(low):
-            conv.stage = STAGE_DISCOVERY
-            conv.lead_step = ""
-            return (
-                "Хорошо, не отправляю заявку. Если передумаете — просто "
-                "напишите, и мы продолжим с того же места.",
-                False,
-            )
-        if _is_yes(clean):
-            return await _submit(conv, bigben, max_client), True
         if _is_no(clean):
             # Пользователь хочет поправить данные — переходим в отдельный шаг
             # "correcting", где следующее сообщение ПЕРЕЗАПИШЕТ поле (а не
@@ -258,48 +302,28 @@ async def step(
             # рождения — заявка бесконечно показывала неизменённые данные,
             # что бы человек ни написал.
             conv.lead_step = "correcting"
-            return (
-                "Хорошо, что нужно поправить? Например: «телефон "
-                "89991234567», «ребёнку 10 лет», «филиал Ракетостроителей», "
-                "«имя родителя: Иванова Анна» или «имя ребёнка: Миша». Или "
-                "напишите «отмена», если передумали отправлять заявку."
-            ), False
-        # пытаемся обновить поля из свободного текста
-        if _opportunistic_fill(conv, clean, kb):
-            return _confirmation_text(conv), False
-        # Не "да"/"нет"/коррекция и ничего полезного не нашли — скорее
-        # всего человек спросил что-то не по теме заявки (например, про
-        # другой курс). Раньше в этом случае молча повторялся тот же самый
-        # экран подтверждения без единого слова о заданном вопросе — читалось
-        # как «бот отвечает одно и то же на всё».
-        return (
-            "Секунду — сначала завершим заявку, а потом обязательно отвечу "
-            "на ваш вопрос 😊\n\n"
-            f"{_confirmation_text(conv)}"
-        ), False
+            return f"Хорошо, {_CORRECTION_HINT[0].lower()}{_CORRECTION_HINT[1:]}", False
+        # Экран подтверждения прямо предлагает поправить данные, поэтому
+        # свободный текст здесь трактуем как правку с ПЕРЕЗАПИСЬЮ поля.
+        changed = _apply_correction(conv, clean, kb)
+        if changed:
+            return _confirmation_text(conv, changed), False
+        # Ни «да», ни «нет», ни правка — человек спросил что-то своё.
+        # Отвечать за него здесь нечем: возвращаем маркер, и вызывающий
+        # отвечает по существу, а потом напоминает про заявку. Раньше тут
+        # повторялся тот же экран с «сначала завершим заявку» — на живой
+        # переписке это выглядело как бот, который не слышит собеседника.
+        return OFF_TOPIC, False
 
     elif current == "correcting":
-        if _CANCEL_RE.search(low):
-            conv.stage = STAGE_DISCOVERY
-            conv.lead_step = ""
-            return (
-                "Хорошо, не отправляю заявку. Если передумаете — просто "
-                "напишите, и мы продолжим с того же места.",
-                False,
-            )
-        if _apply_correction(conv, clean, kb):
+        changed = _apply_correction(conv, clean, kb)
+        if changed:
             conv.lead_step = "confirm"
-            return _confirmation_text(conv), False
-        # Не смогли распознать поле — показываем текущие данные заявки
-        # заново (а не голое сообщение об ошибке), чтобы человек не терял
-        # из виду, что уже собрано, и мог просто написать «да».
-        return (
-            "Не понял, что именно поправить. Попробуйте, например: «телефон "
-            "89991234567», «ребёнку 10 лет», «филиал Ракетостроителей», "
-            "«имя родителя: Иванова Анна» или «имя ребёнка: Миша». Или "
-            "напишите «отмена», если передумали отправлять заявку.\n\n"
-            f"{_confirmation_text(conv)}"
-        ), False
+            return _confirmation_text(conv, changed), False
+        # Поле не распознали. Возможно, это была не правка, а вопрос —
+        # пусть отвечает вызывающий, подсказку про правку он добавит сам
+        # (pending_question).
+        return OFF_TOPIC, False
 
     return _ask_next(conv), False
 
@@ -390,56 +414,80 @@ _PARENT_NAME_PREFIX_RE = re.compile(r"^(?:имя\s+родител[яю]|роди
 _CHILD_NAME_PREFIX_RE = re.compile(r"^(?:имя\s+реб[её]нка|реб[её]нок)\s*[:\-]?\s*", re.IGNORECASE)
 
 
-def _apply_correction(conv: Conversation, text: str, kb: KnowledgeBase) -> bool:
-    """Перезаписывает поле после явной просьбы «поправьте данные».
+_SEGMENT_SPLIT_RE = re.compile(r"[,;\n]|\s+и\s+")
+
+
+def _apply_correction(
+    conv: Conversation, text: str, kb: KnowledgeBase
+) -> list[tuple[str, str]]:
+    """Перезаписывает поля после явной просьбы «поправьте данные».
 
     В отличие от _opportunistic_fill (которая только дополняет ПУСТЫЕ поля,
     чтобы не затереть что-то по случайному совпадению в свободном тексте),
     здесь пользователь целенаправленно диктует новое значение в ответ на
     прямой вопрос «что нужно поправить?» — поэтому уже заполненное поле
-    нужно именно перезаписать. Возвращает True, если что-то обновили.
+    нужно именно перезаписать.
+
+    Применяем ВСЕ поля, которые нашли, а не первое попавшееся: на живой
+    переписке «Родитель Григорий, ребенок Аделина» обновляло только
+    родителя, и имя ребёнка приходилось диктовать вторым сообщением.
+
+    Возвращает список пар (поле, новое значение) — вызывающий показывает их
+    человеку, чтобы правка была видна.
     """
     lead = conv.lead
     clean = text.strip()
+    changed: list[tuple[str, str]] = []
 
-    m = _PARENT_NAME_PREFIX_RE.match(clean)
-    if m:
-        name = _extract_name_from_text(clean[m.end():])
-        if name:
-            lead.fio_parent = name
-            return True
+    # Имена ищем посегментно: у каждого свой префикс («родитель …»,
+    # «ребёнок …»), и в одном сообщении их может быть несколько.
+    for segment in _SEGMENT_SPLIT_RE.split(clean):
+        segment = segment.strip()
+        if not segment:
+            continue
+        m = _PARENT_NAME_PREFIX_RE.match(segment)
+        if m:
+            name = _extract_name_from_text(segment[m.end():])
+            if name and name != lead.fio_parent:
+                lead.fio_parent = name
+                changed.append(("родитель", name))
+            continue
+        m = _CHILD_NAME_PREFIX_RE.match(segment)
+        if m:
+            name = _extract_name_from_text(segment[m.end():])
+            if name and name != lead.fio_child:
+                lead.fio_child = name
+                changed.append(("ребёнок", name))
 
-    m = _CHILD_NAME_PREFIX_RE.match(clean)
-    if m:
-        name = _extract_name_from_text(clean[m.end():])
-        if name:
-            lead.fio_child = name
-            return True
-
+    # Остальные поля однозначны по формату — их достаточно искать во всём
+    # сообщении целиком.
     phone = extract_phone(clean)
-    if phone:
+    if phone and phone != lead.phone:
         lead.phone = phone
-        return True
+        changed.append(("телефон", phone))
 
     birthday = extract_birthday(clean)
-    if birthday:
+    if birthday and birthday != lead.birthday:
         lead.birthday = birthday
         lead.age = ""
-        return True
-
-    age = extract_age(clean)
-    if age:
-        lead.age = age
-        lead.birthday = ""
-        return True
+        changed.append(("дата рождения", birthday))
+    else:
+        age = extract_age(clean)
+        if age and age != lead.age:
+            lead.age = age
+            lead.birthday = ""
+            changed.append(("возраст", f"{age} лет"))
 
     branch = _match_branch(kb, clean)
-    if branch:
+    if branch and branch != lead.branch:
         lead.branch = branch
         conv.selected_branch = branch
-        return True
+        changed.append(("филиал", branch))
 
-    return False
+    # Голое имя без «родитель»/«ребёнок» намеренно НЕ трогаем: на шаге
+    # подтверждения под это подошло бы любое слово вроде «Привет», и правка
+    # молча затёрла бы имя ребёнка.
+    return changed
 
 
 _YES_RE = re.compile(
