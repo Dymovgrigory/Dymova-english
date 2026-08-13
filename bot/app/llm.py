@@ -129,7 +129,16 @@ async def _complete_with_provider(
     max_tokens: int | None = None,
     allow_english: bool = False,
     deadline: float | None = None,
+    extra_payload: dict | None = None,
+    raw: bool = False,
 ) -> str | None:
+    """Один запрос к провайдеру с ретраями.
+
+    `raw=True` отключает косметическую постобработку (чистку слов-паразитов и
+    проверку «ответ в основном по-русски»): для JSON она разрушительна —
+    вырезает `so`/`just` внутри строк и отбраковывает валидный ответ как
+    «не русский», потому что ключи схемы латиницей.
+    """
     url = f"{provider.base_url.rstrip('/')}/chat/completions"
     payload = {
         "model": provider.model,
@@ -137,6 +146,8 @@ async def _complete_with_provider(
         "temperature": temperature,
         "max_tokens": max_tokens or settings.LLM_MAX_TOKENS,
     }
+    if extra_payload:
+        payload.update(extra_payload)
     headers = _provider_headers(provider)
     delay = _INITIAL_BACKOFF
 
@@ -186,6 +197,8 @@ async def _complete_with_provider(
                 logger.error("LLM provider=%s returned no choices", provider.label)
                 return None
             content = choices[0].get("message", {}).get("content", "")
+            if raw:
+                return (content or "").strip() or None
             reply = _clean_response(content or "").strip() or None
             if reply and not allow_english and not _mostly_russian(reply):
                 logger.warning("LLM provider=%s returned mostly-English text", provider.label)
@@ -227,24 +240,52 @@ class LLMClient:
     def enabled(self) -> bool:
         return bool(self.providers)
 
-    async def complete(self, messages: list[dict], temperature: float | None = None) -> str | None:
+    async def complete(
+        self,
+        messages: list[dict],
+        temperature: float | None = None,
+        *,
+        model: str | None = None,
+        max_tokens: int | None = None,
+        extra_payload: dict | None = None,
+        raw: bool = False,
+        budget_scale: float = 1.0,
+    ) -> str | None:
         """Каскад провайдеров с общим бюджетом времени.
 
         Без бюджета худший случай = провайдеры × 3 попытки × LLM_TIMEOUT,
         то есть минуты полного молчания в чате. Каскад обязан вернуть
         управление вовремя, чтобы вызывающий успел отправить фолбэк.
+
+        `model` подменяет модель ТОЛЬКО у основного провайдера — так роль
+        (быстрая/умная модель) выбирается на основном ключе, а запасные
+        провайдеры остаются со своими собственными моделями, ради которых
+        их и настраивали. Подставлять роль во все провайдеры нельзя: у
+        запасного ключа такой модели может просто не быть.
         """
         if not self.enabled:
             return None
         client = await _get_client()
         target_temperature = settings.LLM_TEMPERATURE if temperature is None else temperature
-        deadline = asyncio.get_running_loop().time() + _budget_seconds()
-        for provider in self.providers:
+        deadline = asyncio.get_running_loop().time() + _budget_seconds() * max(0.1, budget_scale)
+        for index, provider in enumerate(self.providers):
             if _remaining(deadline) <= 0:
                 logger.warning("LLM: бюджет времени исчерпан, провайдер %s пропущен", provider.label)
                 break
+            if model and index == 0:
+                provider = ProviderConfig(
+                    base_url=provider.base_url, api_key=provider.api_key, model=model
+                )
             reply = await _complete_with_provider(
-                client, provider, messages, target_temperature, deadline=deadline
+                client,
+                provider,
+                messages,
+                target_temperature,
+                max_tokens=max_tokens,
+                allow_english=raw,
+                deadline=deadline,
+                extra_payload=extra_payload,
+                raw=raw,
             )
             if reply:
                 return reply

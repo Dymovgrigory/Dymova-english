@@ -38,6 +38,13 @@ from app import watchdog
 from app.knowledge.kb import get_kb
 from app.observability import init_sentry
 from app.llm import get_llm
+from app.llm_gateway import (
+    ROLE_CRITIC,
+    ROLE_FAST,
+    ROLE_REASONING,
+    ROLE_VISION,
+    get_gateway,
+)
 from app.max_client import callback_button, get_max, link_button
 from app import miniapp_auth
 from app.memory import Lead, STAGE_HANDOFF, get_store
@@ -803,6 +810,13 @@ async def health() -> dict:
         "db_path": getattr(store, "_db_path", ""),
         "llm_configured": llm.enabled,
         "llm_providers": len(llm.providers),
+        # Видно, какая модель обслуживает какую роль и как она себя ведёт —
+        # без этого деградация быстрой модели незаметна до жалоб клиентов.
+        "llm_roles": {
+            role: get_gateway().model_for(role) or settings.LLM_MODEL
+            for role in (ROLE_REASONING, ROLE_FAST, ROLE_VISION, ROLE_CRITIC)
+        },
+        "llm_role_stats": get_gateway().stats(),
         "max_configured": max_client.configured,
         "bigben_configured": get_bigben().configured,
         "kb_documents": len(get_kb().documents),
