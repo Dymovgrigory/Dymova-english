@@ -167,7 +167,8 @@ async def test_telegram_start_and_homework_routes(monkeypatch):
     assert len(telegram.sent) == 2
     start_reply = telegram.sent[0]
     homework_reply = telegram.sent[1]
-    assert start_reply["text"].startswith("Привет!")
+    # Проверяем маршрутизацию /start, а не конкретную формулировку приветствия.
+    assert "Фокси" in start_reply["text"]
     assert homework_reply["text"].startswith("Помощь с домашкой у нас бесплатная")
     assert homework_reply["buttons"]
     assert homework_reply["buttons"][0][0]["url"].endswith("#homework")

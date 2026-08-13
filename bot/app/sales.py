@@ -1,11 +1,13 @@
-"""Sales Engine: системный промт консультанта и работа с возражениями.
+"""Системный промпт консультанта и работа с возражениями.
 
-Бот ведёт себя как опытный менеджер по продажам Фоксинбурга: не просто отвечает
-на вопрос, а выявляет потребность и мягко ведёт к записи на бесплатную
-диагностику / пробный урок.
+Бот ведёт себя как сильный консультант школы: сначала разбирается в ситуации
+человека и только потом что-то предлагает. Решение «уже можно предлагать или
+ещё рано» принимает не текст промпта, а профиль потребности (см. `smart`), —
+промпт лишь объясняет модели, что делать в каждом из двух случаев.
 """
 from __future__ import annotations
 
+from app import recall
 from app import smart
 from app.knowledge.kb import KnowledgeBase
 from app.memory import Conversation
@@ -94,6 +96,9 @@ def build_system_prompt(
             parts.append("\nФИЛИАЛЫ:\n" + "\n".join(branch_lines))
     if kb_context:
         parts.append("\nКОНТЕКСТ ИЗ БАЗЫ ЗНАНИЙ (используй только эти факты):\n" + kb_context)
+    digest = recall.digest_block(conv)
+    if digest:
+        parts.append(digest)
     card = conv.client_card()
     if card:
         parts.append("\nКАРТОЧКА КЛИЕНТА:\n" + card)

@@ -26,6 +26,7 @@ from app.llm_gateway import ROLE_REASONING, get_gateway
 from app.max_client import get_max
 from app import critic
 from app import pii
+from app import recall
 from app import smart
 from app.memory import (
     Conversation,
@@ -330,6 +331,10 @@ NEED_EXTRACTION_TIMEOUT_SEC = 6.0
 # всё это время ждёт. Улучшение не стоит того, чтобы удваивать ожидание.
 REWRITE_TIMEOUT_SEC = 8.0
 
+# Сжатие давних сообщений — служебная работа перед ответом; не свернулось
+# вовремя, значит свернётся на следующей реплике.
+MEMORY_FOLD_TIMEOUT_SEC = 5.0
+
 TIMEOUT_REPLY = (
     "Мне нужно чуть больше времени на этот вопрос 🙏 Напишите, пожалуйста, "
     "ещё раз — отвечу сразу. Если срочно, позвоните: 8 993 923-23-09 "
@@ -430,6 +435,8 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
         store.save(conv)
         return reply
 
+    await _fold_memory(conv)
+
     runtime.log_event("ROUTING", user_id=user_id, intent=intent, stage=conv.stage)
     reply = await _route(conv, text, kb, intent)
     reply = await _review(conv, text, reply)
@@ -437,6 +444,26 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     conv.add("assistant", reply)
     store.save(conv)
     return reply
+
+
+async def _fold_memory(conv: Conversation) -> None:
+    """Сворачивает выпавшие из окна сообщения в долгосрочную память.
+
+    Делается до генерации ответа: пересказ нужен уже в этом системном
+    промпте, иначе бот ответит, не зная того, что человек рассказал раньше.
+    """
+    if not recall.needs_fold(conv):
+        return
+    try:
+        await asyncio.wait_for(
+            recall.fold(conv, vault=_vault_for(conv)), timeout=MEMORY_FOLD_TIMEOUT_SEC
+        )
+    except asyncio.TimeoutError:
+        # Опоздавшее сжатие не повод задерживать ответ: сообщения остаются в
+        # очереди и свернутся на следующей реплике.
+        runtime.log_event("MEMORY_FOLD_TIMEOUT", user_id=conv.user_id)
+    except Exception:
+        logger.exception("recall: сжатие памяти не удалось user_id=%s", conv.user_id)
 
 
 def _seed_need_from_conversation(conv: Conversation) -> None:
@@ -791,19 +818,23 @@ async def handle_start(user_id: str, platform: str = "max") -> str:
         store.save(conv)
         return reply
     if conv.is_returning():
-        reply = (
-            "Привет! С возвращением! 🦊 Я помню ваш прошлый диалог и помогу "
-            "продолжить с того места, где остановились."
+        # Помнить надо по-человечески: «мы обсуждали занятия для Маши», а не
+        # «я помню ваш прошлый диалог» — и уж точно не с датой и временем.
+        remembered = recall.returning_line(conv)
+        reply = "С возвращением! " + (
+            f"{remembered} Что-то изменилось с тех пор?"
+            if remembered
+            else "Расскажите, на чём мы остановились?"
         )
         conv.add("assistant", reply)
         store.save(conv)
         return reply
     conv.stage = STAGE_DISCOVERY
     reply = (
-        "Привет! 🦊 Я — консультант языковой школы «Фоксинбург» в "
-        "Долгопрудном. Помогу подобрать курс, расскажу о ценах, филиалах и "
-        "запишу на бесплатную диагностику.\n\n"
-        "С чего начнём? Можете написать, например: «Сыну 9 лет, ищем английский»."
+        "Здравствуйте! Я Фокси, консультант языковой школы «Фоксинбург» в "
+        "Долгопрудном.\n\n"
+        "Расскажите, для кого ищете занятия — и что для вас сейчас важнее "
+        "всего?"
     )
     conv.add("assistant", reply)
     store.save(conv)

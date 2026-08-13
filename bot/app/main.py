@@ -32,6 +32,7 @@ from app import intent as I
 from app import group_chat
 from app import insights
 from app import nudge
+from app import profile
 from app import runtime
 from app import scheduler
 from app import watchdog
@@ -286,11 +287,11 @@ async def _notify_admins_for_telegram(conv, reason: str) -> None:
     admin_client = get_max()
     message = (
         f"🔔 Требуется администратор ({reason})\n\n"
-        f"{conv.summary()}"
+        f"{profile.lead_summary(conv)}"
     )
     for admin_id in settings.admin_ids:
         await admin_client.send_message(admin_id, message)
-    await notify_slack(f"MAX handoff ({reason})\n\n{conv.summary()}")
+    await notify_slack(f"MAX handoff ({reason})\n\n{profile.lead_summary(conv)}")
 
 
 # Публичный чат-эндпоинт ходит в платный LLM, поэтому ограничиваем частоту:

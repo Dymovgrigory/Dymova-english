@@ -16,6 +16,9 @@ from app.config import settings
 from app.smart import NeedProfile
 
 MAX_HISTORY = 20
+# Сколько выпавших сообщений ждут сжатия. Больше — значит человек говорил
+# долго и без ответа бота, что невозможно: сворачиваем на каждой реплике.
+MAX_DROPPED = 40
 
 STAGE_GREETING = "greeting"
 STAGE_DISCOVERY = "discovery"
@@ -82,12 +85,27 @@ class Conversation:
     # объект решает, можно ли уже предлагать курс, — раньше это решал
     # системный промпт, и предложение звучало с первой реплики.
     need: NeedProfile = field(default_factory=NeedProfile)
+    # Долгосрочная память: сжатый пересказ того, что вышло за окно истории.
+    digest: str = ""
+    # Сообщения, выпавшие из окна и ещё не свёрнутые в digest.
+    dropped: list[dict] = field(default_factory=list)
+    # Что бот порекомендовал (движок подбора). Хранится, чтобы не
+    # рекомендовать в следующей реплике что-то другое без причины.
+    recommended_program: str = ""
 
     def add(self, role: str, content: str) -> None:
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
         self.history.append({"role": role, "content": content})
         self.transcript.append({"role": role, "content": content, "ts": ts})
         if len(self.history) > MAX_HISTORY:
+            # Выпавшие сообщения не выбрасываем: они уходят в очередь на
+            # сжатие. Раньше здесь терялось всё начало разговора — человек
+            # рассказывал про ребёнка, а через двадцать реплик бот об этом
+            # уже не знал.
+            cut = self.history[:-MAX_HISTORY]
+            self.dropped.extend(cut)
+            if len(self.dropped) > MAX_DROPPED:
+                self.dropped = self.dropped[-MAX_DROPPED:]
             self.history = self.history[-MAX_HISTORY:]
         if len(self.transcript) > 1000:
             self.transcript = self.transcript[-1000:]
@@ -319,6 +337,9 @@ def _conv_from_dict(d: dict) -> Conversation:
         # Записи, сделанные до появления SMART, ключа "need" не содержат —
         # from_dict отдаёт для них пустой профиль, и диалог продолжается.
         need=NeedProfile.from_dict(d.get("need")),
+        digest=d.get("digest", ""),
+        dropped=d.get("dropped", []) or [],
+        recommended_program=d.get("recommended_program", ""),
     )
 
 
