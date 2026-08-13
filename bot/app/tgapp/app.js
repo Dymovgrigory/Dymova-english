@@ -43,7 +43,20 @@
     });
   }
 
+  function mascot(event) {
+    // Маскот — отдельный модуль и может не загрузиться вовсе (слабое
+    // устройство, экономия трафика). Событие в пустоту здесь безвредно.
+    try {
+      document.dispatchEvent(new CustomEvent("foxi:" + event));
+    } catch (e) {
+      /* реакция маскота необязательна */
+    }
+  }
+
   function haptic(kind) {
+    // Успех — единственная точка, где маскот радуется вместе с человеком:
+    // так реакция всегда привязана к реальному результату, а не к декору.
+    if (kind === "success") mascot("success");
     try {
       var hf = tg && tg.HapticFeedback;
       if (!hf) return;
@@ -317,15 +330,15 @@
           return (
             '<article class="card">' +
             '<h3 class="card__title">' + esc(b.name) + "</h3>" +
-            '<p class="card__meta">📍 ' +
+            '<p class="card__meta"><svg class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg> ' +
             (b.maps
               ? '<a href="' + esc(b.maps) + '" target="_blank" rel="noopener">' + esc(b.address) + "</a>"
               : esc(b.address)) +
             "</p>" +
             (b.phone
-              ? '<p class="card__meta">☎ <a href="tel:' + esc(b.phone_tel || b.phone) + '">' + esc(b.phone) + "</a></p>"
+              ? '<p class="card__meta"><svg class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.4a12 12 0 0 0 5.6 5.6L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 6.2 2 2 0 0 1 5 4h1.5Z"/></svg> <a href="tel:' + esc(b.phone_tel || b.phone) + '">' + esc(b.phone) + "</a></p>"
               : "") +
-            (b.work_hours ? '<p class="card__text">🕘 ' + esc(b.work_hours) + "</p>" : "") +
+            (b.work_hours ? '<p class="card__text"><svg class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg> ' + esc(b.work_hours) + "</p>" : "") +
             "</article>"
           );
         })
