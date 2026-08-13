@@ -22,7 +22,10 @@ from app.course_selector import format_recommendations, recommend
 from app.config import settings
 from app.knowledge.kb import get_kb, _stem, _tokens
 from app.llm import get_llm
+from app.llm_gateway import ROLE_REASONING, get_gateway
 from app.max_client import get_max
+from app import pii
+from app import smart
 from app.memory import (
     Conversation,
     STAGE_DISCOVERY,
@@ -41,11 +44,6 @@ from app.web import search_web
 logger = logging.getLogger(__name__)
 
 _FACTUAL_INTENTS = {I.PRICE, I.COURSES, I.CONTACTS, I.ABOUT}
-_COURSE_HINT_RE = re.compile(
-    r"английск|немецк|китайск|взросл\w*|дошкольник\w*|подготовк\w*|"
-    r"егэ|огэ|летн\w*|летня|чтени\w*|грамматик\w*",
-    re.IGNORECASE,
-)
 _POSITIVE_MOOD = {"интерес", "готов", "понят", "спасибо", "отлич", "супер"}
 _NEGATIVE_MOOD = {
     "дорого",
@@ -208,12 +206,29 @@ async def _refer_to_admin(conv: Conversation, text: str, reason: str, score: flo
     )
 
 
+async def _ask(messages: list[dict], vault) -> str | None:
+    """Запрос к модели через Gateway с редакцией ПДн.
+
+    Отдельная функция, потому что вызывается и в основном пути, и в повторе
+    с веб-контекстом: редакция не должна зависеть от того, какая это попытка.
+    """
+    return await get_gateway().complete(ROLE_REASONING, messages, vault=vault)
+
+
 def _empathy_prefix(conv: Conversation) -> str:
     if conv.last_user_mood == "needs_empathy":
         return "Понимаю, это важно. "
     if conv.last_user_mood == "warm":
         return "Рад, что это помогает. "
     return ""
+
+
+def _vault_for(conv: Conversation):
+    """Хранилище ПДн для этого диалога — или None, если редакция выключена."""
+    if not getattr(settings, "LLM_PII_REDACTION", True):
+        return None
+    vault = pii.vault_for(conv)
+    return vault if vault else None
 
 
 async def _consult_with_context(
@@ -223,11 +238,12 @@ async def _consult_with_context(
     kb = get_kb()
     llm = get_llm()
     if llm.enabled:
-        system = sales.build_system_prompt(kb, conv, kb_context)
+        vault = _vault_for(conv)
+        system = sales.build_system_prompt(kb, conv, kb_context, vault=vault)
         messages = [{"role": "system", "content": system}]
         history_turns = max(0, int(getattr(settings, "LLM_HISTORY_TURNS", 8)))
         messages.extend(conv.history[-history_turns:])
-        reply = await llm.complete(messages)
+        reply = await _ask(messages, vault)
         if reply:
             if _is_uncertain_reply(reply) and allow_web_retry:
                 # Вторая попытка с живым веб-поиском: вопрос мог быть про
@@ -237,9 +253,9 @@ async def _consult_with_context(
                 web_ctx = await _web_context_for(text, school_related=school_related)
                 if web_ctx:
                     retry_context = (kb_context + "\n\n" if kb_context else "") + web_ctx
-                    system = sales.build_system_prompt(kb, conv, retry_context)
+                    system = sales.build_system_prompt(kb, conv, retry_context, vault=vault)
                     messages[0] = {"role": "system", "content": system}
-                    retry = await llm.complete(messages)
+                    retry = await _ask(messages, vault)
                     if retry and not _is_uncertain_reply(retry):
                         return retry
             if _is_uncertain_reply(reply):
@@ -303,6 +319,11 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
         allow_web_retry=allow_web, school_related=school_related,
     )
 
+
+# Разбор потребности выполняется ДО генерации ответа, поэтому его дедлайн
+# должен быть заметно меньше общего: иначе служебный запрос съест окно,
+# отведённое на сам ответ.
+NEED_EXTRACTION_TIMEOUT_SEC = 6.0
 
 TIMEOUT_REPLY = (
     "Мне нужно чуть больше времени на этот вопрос 🙏 Напишите, пожалуйста, "
@@ -389,6 +410,7 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     conv = store.get(user_id, platform=platform)
     conv.add("user", text)
     _capture_entities(conv, text)
+    await _update_need(conv, text)
     intent = I.detect_intent(text)
     _remember_dialogue_state(conv, text, intent)
 
@@ -409,6 +431,57 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     conv.add("assistant", reply)
     store.save(conv)
     return reply
+
+
+def _seed_need_from_conversation(conv: Conversation) -> None:
+    """Переносит в профиль то, что диалог знал ещё до появления SMART.
+
+    Клиенты, начавшие разговор на прошлой версии бота, имеют заполненные
+    lead.age и selected_format, но пустой профиль потребности. Без переноса
+    бот заново спросил бы возраст у человека, который его уже называл, —
+    именно то, за что диалог ощущается роботизированным.
+    """
+    profile = conv.need
+    if not profile.child_age and conv.lead.age:
+        profile.child_age = conv.lead.age
+    if not profile.preferred_format and conv.selected_format:
+        profile.preferred_format = conv.selected_format.lower()
+    if not profile.who and (conv.lead.fio_child or conv.lead.age):
+        profile.who = smart.WHO_PARENT
+    if not profile.objections and conv.last_objection:
+        profile.objections.append(conv.last_objection)
+
+
+async def _update_need(conv: Conversation, text: str) -> None:
+    """Обновляет профиль потребности после очередной реплики клиента.
+
+    Дешёвый детерминированный разбор — всегда: он работает и без LLM, и когда
+    модель ничего не нашла. Разбор моделью — только пока потребность неясна:
+    как только её достаточно, тратить на это запрос в каждой реплике незачем.
+    """
+    profile = conv.need
+    _seed_need_from_conversation(conv)
+    smart.enrich_from_text(profile, text)
+    if profile.stage() == smart.STAGE_READY:
+        return
+    if not smart.looks_informative(text):
+        # Справочный вопрос о потребности ничего не сообщает — незачем платить
+        # за разбор и, главное, задерживать ответ лишним round trip.
+        return
+    try:
+        extracted = await asyncio.wait_for(
+            smart.extract(conv.history, vault=_vault_for(conv)),
+            timeout=NEED_EXTRACTION_TIMEOUT_SEC,
+        )
+    except asyncio.TimeoutError:
+        # Разбор — улучшение ответа, а не его условие. Опоздал — работаем без
+        # него: пользователь не должен ждать служебный запрос.
+        runtime.log_event("NEED_EXTRACTION_TIMEOUT", user_id=conv.user_id)
+        return
+    except Exception:
+        logger.exception("smart: разбор потребности не удался user_id=%s", conv.user_id)
+        return
+    profile.merge(extracted)
 
 
 def reset_conversation_locks() -> None:
@@ -474,19 +547,35 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             conv.stage = STAGE_DISCOVERY
             return team
 
+    # 4в. Человек описал проблему, а не спросил справку.
+    #     «Ребёнок не хочет заниматься английским» по ключевым словам попадает
+    #     в COURSES и раньше получало в ответ список программ — то есть на
+    #     рассказ о трудности приходил прайс. Сначала признаём проблему и
+    #     выясняем причину; предложение появится, когда станет ясна потребность.
+    pain = smart.pain_in_text(text)
+    if pain and not smart.sales_allowed(conv.need):
+        conv.stage = STAGE_DISCOVERY
+        if get_llm().enabled:
+            # У модели уже есть в промпте и сама боль, и запрет предлагать —
+            # живой ответ лучше заготовки.
+            return await _consult(conv, text)
+        acknowledgement, question = smart.pain_reply(pain)
+        smart.mark_asked(conv.need, question)
+        return f"{acknowledgement} {question}"
+
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY
-        has_course_hint = bool(_COURSE_HINT_RE.search(text))
-        recent_course_hint = has_course_hint or any(
-            _COURSE_HINT_RE.search(m.get("content", ""))
-            for m in conv.history[-4:]
-            if m.get("role") == "user"
-        )
         if (
             intent == I.PRICE
-            and not conv.lead.age
+            and not conv.need.knows_situation()
             and not conv.selected_course
-            and not recent_course_hint
+            # Спрашиваем про ученика один раз. Раньше от зацикливания
+            # защищали три наслоившихся условия (есть ли в тексте название
+            # курса, было ли оно в паре прошлых реплик, известен ли
+            # возраст) — каждое добавляли после очередного бага. Теперь
+            # достаточно журнала заданных вопросов: он же не даёт спросить
+            # то же самое дважды во всех остальных сценариях.
+            and "who" not in conv.need.asked_slots
         ):
             # Голый "сколько стоит?" без курса/возраста находит по ключевым
             # словам нерелевантный документ (например, про частоту занятий),
@@ -502,10 +591,17 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             # recent_course_hint смотрит и на пару предыдущих реплик: в диалоге
             # «расскажите про летнюю академию» → «сколько стоит смена?»
             # курс ясен из контекста, уточнять не нужно (сессия 36, стресс-тест).
+            #
+            # Формулировка вопроса берётся из SMART, а не пишется здесь:
+            # иначе бот на любой вопрос о цене отвечает одной и той же
+            # заготовкой, а профиль потребности не пополняется.
+            question = smart.next_question(conv.need) or (
+                "Для какого курса и возраста уточнить стоимость?"
+            )
+            smart.mark_asked(conv.need, question)
             return (
-                "С радостью подскажу точную стоимость! 😊 Для какого курса "
-                "и какого возраста ученика — так назову цифры без "
-                "приблизительных догадок."
+                "Конечно, подскажу. Чтобы не отправлять вам общий прайс, "
+                f"уточню одну вещь. {question}"
             )
         if not kb.search(text, limit=1) and not get_llm().enabled:
             # Без LLM и без совпадений в базе знаний ответить нечем — handoff.
@@ -531,13 +627,14 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     if intent == I.GREETING:
         conv.stage = STAGE_DISCOVERY
         if len(conv.history) <= 2:
-            return (
-                "Здравствуйте! 🦊 Рады видеть вас в школе «Фоксинбург».\n"
-                "Подскажите, для кого подбираете занятия и сколько лет ребёнку — "
-                "помогу выбрать подходящую программу. Или сразу запишу на бесплатную "
-                "диагностику. 😊"
-            )
-        return "Здравствуйте! 😊 Чем ещё могу помочь — курсы, цены, запись на диагностику?"
+            # Приветствие не продаёт: сначала выясняем, для кого занятия.
+            # Прежний вариант сразу предлагал диагностику — ровно та ранняя
+            # продажа, которую запрещает SMART.
+            question = smart.next_question(conv.need)
+            smart.mark_asked(conv.need, question)
+            opener = "Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург»."
+            return f"{opener} {question}" if question else opener
+        return "Здравствуйте! Чем могу помочь?"
 
     # 8. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор.
     if intent == I.COURSES and conv.lead.age:

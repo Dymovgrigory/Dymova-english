@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from app.config import settings
+from app.smart import NeedProfile
 
 MAX_HISTORY = 20
 
@@ -77,6 +78,10 @@ class Conversation:
     utm: dict = field(default_factory=dict)
     client_name: str = ""
     max_username: str = ""
+    # Что мы поняли о потребности человека (протокол SMART). Именно этот
+    # объект решает, можно ли уже предлагать курс, — раньше это решал
+    # системный промпт, и предложение звучало с первой реплики.
+    need: NeedProfile = field(default_factory=NeedProfile)
 
     def add(self, role: str, content: str) -> None:
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -311,6 +316,9 @@ def _conv_from_dict(d: dict) -> Conversation:
         utm=d.get("utm", {}) or {},
         client_name=d.get("client_name", ""),
         max_username=d.get("max_username", ""),
+        # Записи, сделанные до появления SMART, ключа "need" не содержат —
+        # from_dict отдаёт для них пустой профиль, и диалог продолжается.
+        need=NeedProfile.from_dict(d.get("need")),
     )
 
 

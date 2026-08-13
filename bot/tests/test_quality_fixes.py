@@ -1,7 +1,7 @@
 import pytest
 
 from app import intent as I
-from app import ai_core
+from app import ai_core, llm_gateway
 from app.ai_core import handle_message
 from app.knowledge.kb import get_kb
 from app.llm import _mostly_russian
@@ -141,12 +141,13 @@ async def test_objection_route_uses_llm(monkeypatch):
         def __init__(self):
             self.calls = []
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             self.calls.append(messages)
             return "Понимаю сомнения — давайте подберём удобный вариант."
 
     fake = FakeLLM()
     monkeypatch.setattr(ai_core, "get_llm", lambda: fake)
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: fake)
 
     reply = await handle_message(uid, "это дорого")
 
@@ -176,7 +177,11 @@ async def test_factual_questions_do_not_invent_prices(monkeypatch):
         enabled = True
         calls = 0
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
+            # Разбор потребности (SMART) ходит в ту же модель, но это
+            # служебный запрос, а не ответ клиенту — считаем только диалоговые.
+            if "карточку потребности" in messages[0].get("content", ""):
+                return None
             self.calls += 1
             return "[UNKNOWN] точных данных по стоимости в источниках нет."
 
@@ -186,6 +191,7 @@ async def test_factual_questions_do_not_invent_prices(monkeypatch):
     fake_llm = FakeLLM()
     monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB())
     monkeypatch.setattr(ai_core, "get_llm", lambda: fake_llm)
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: fake_llm)
     monkeypatch.setattr(ai_core, "search_web", fake_search_web)
 
     uid = "quality-factual"
@@ -214,7 +220,9 @@ async def test_bare_price_question_asks_clarifying_question_instead_of_giving_up
     reply = await handle_message("quality-price-clarify", "Сколько стоит?")
 
     assert "администратор" not in reply.lower()
-    assert "курс" in reply.lower() or "возраст" in reply.lower()
+    # Формулировку уточняющего вопроса теперь даёт SMART, поэтому проверяем
+    # смысл (спросили про ученика), а не слово из прежней заготовки.
+    assert "сколько лет" in reply.lower() or "возраст" in reply.lower()
 
 
 @pytest.mark.asyncio
@@ -260,7 +268,7 @@ async def test_uncertain_answer_retries_with_web_search(monkeypatch):
         enabled = True
         calls = 0
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             self.calls += 1
             if self.calls == 1:
                 return "[UNKNOWN] нет актуальных данных."
@@ -272,6 +280,7 @@ async def test_uncertain_answer_retries_with_web_search(monkeypatch):
     fake_llm = FakeLLM()
     monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB2())
     monkeypatch.setattr(ai_core, "get_llm", lambda: fake_llm)
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: fake_llm)
     monkeypatch.setattr(ai_core, "search_web", fake_search_web)
 
     uid = "quality-web-retry"

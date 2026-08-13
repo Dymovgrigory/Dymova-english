@@ -40,7 +40,7 @@ async def test_phone_step_acknowledges_birthday_instead_of_error():
 
 @pytest.mark.asyncio
 async def test_consult_uses_configured_history_window(monkeypatch):
-    from app import ai_core
+    from app import ai_core, llm_gateway
     from app.config import settings
 
     monkeypatch.setattr(settings, "LLM_HISTORY_TURNS", 4)
@@ -55,11 +55,12 @@ async def test_consult_uses_configured_history_window(monkeypatch):
     class FakeLLM:
         enabled = True
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             captured["messages"] = messages
             return "Готово"
 
     monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: FakeLLM())
 
     reply = await ai_core._consult_with_context(conv, "Сколько стоит обучение?", "")
     assert reply == "Готово"
