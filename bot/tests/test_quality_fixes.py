@@ -1,5 +1,7 @@
 import pytest
 
+from app import emotion
+
 from app import intent as I
 from app import ai_core, llm_gateway
 from app.ai_core import handle_message
@@ -90,10 +92,10 @@ def test_build_system_prompt_includes_real_branch_addresses():
 def test_build_system_prompt_includes_emotional_state():
     kb = get_kb()
     conv = Conversation(user_id="quality-sales-empathy")
-    conv.last_user_mood = "needs_empathy"
+    conv.last_user_mood = emotion.ANXIOUS
     conv.last_user_topic = "цены"
     prompt = sales.build_system_prompt(kb, conv, "")
-    assert "настроение собеседника: needs_empathy" in prompt
+    assert f"настроение собеседника: {emotion.ANXIOUS}" in prompt
     assert "последняя тема: цены" in prompt
 
 
@@ -125,7 +127,7 @@ async def test_lead_soft_exit_keeps_fields_and_switches_to_discovery():
 
 def test_sales_nudge_is_more_empathic_when_user_is_upset():
     conv = Conversation(user_id="quality-sales-nudge")
-    conv.last_user_mood = "needs_empathy"
+    conv.last_user_mood = emotion.ANXIOUS
     text = sales.sales_nudge(conv)
     assert "понимаю" in text.lower()
 

@@ -25,6 +25,8 @@ from app.llm import get_llm
 from app.llm_gateway import ROLE_REASONING, get_gateway
 from app.max_client import get_max
 from app import critic
+from app import emotion
+from app import intent_ai
 from app import pii
 from app import recall
 from app import smart
@@ -46,23 +48,6 @@ from app.web import search_web
 logger = logging.getLogger(__name__)
 
 _FACTUAL_INTENTS = {I.PRICE, I.COURSES, I.CONTACTS, I.ABOUT}
-_POSITIVE_MOOD = {"интерес", "готов", "понят", "спасибо", "отлич", "супер"}
-_NEGATIVE_MOOD = {
-    "дорого",
-    "непонят",
-    "не понимаю",
-    "не понял",
-    "не нравится",
-    "неудоб",
-    "устал",
-    "раздраж",
-    "жалоб",
-    "никто не ответ",
-    "почему так",
-    "сбой",
-    "ошиб",
-}
-
 _TEAM_TRIGGER_RE = re.compile(
     r"педагог|учител|препода|видеовизит|визитк|фрагмент.{0,15}урок|кто ведёт|кто ведет",
     re.IGNORECASE,
@@ -106,23 +91,12 @@ def _capture_entities(conv: Conversation, text: str) -> None:
         conv.selected_format = "Офлайн"
 
 
-def _detect_mood(text: str) -> str:
-    low = text.lower()
-    if any(token in low for token in _NEGATIVE_MOOD):
-        return "needs_empathy"
-    if any(token in low for token in _POSITIVE_MOOD):
-        return "warm"
-    if "?" in low:
-        return "curious"
-    return "neutral"
-
-
 def _remember_dialogue_state(conv: Conversation, text: str, intent: str) -> None:
-    mood = _detect_mood(text)
     conv.last_user_intent = intent
     conv.last_user_topic = _TOPIC_MAP.get(intent, conv.last_user_topic)
-    if mood != "neutral":
-        conv.last_user_mood = mood
+    # Состояние пишем всегда, включая нейтральное: иначе одно раздражённое
+    # сообщение делало весь остаток разговора «раздражённым» навсегда.
+    conv.last_user_mood = emotion.detect(text, conv.last_user_mood)
 
 
 def _wants_manager(text: str) -> bool:
@@ -200,11 +174,11 @@ async def _refer_to_admin(conv: Conversation, text: str, reason: str, score: flo
     await hand_off(get_max(), conv, reason="бот не знал точного ответа")
     conv.stage = STAGE_DISCOVERY
     return (
-        f"{_empathy_prefix(conv)}Хороший вопрос! Честно скажу: точной информации "
-        "по нему у меня нет, а придумывать не хочу. Я уже передал ваш вопрос "
-        "администратору — он скоро ответит здесь. Если срочно, можно позвонить: "
-        "8 993 923-23-09 (Лихачевский) или 8 916 732-31-69 (Ракетостроителей). "
-        "А пока могу помочь с курсами, ценами или записью на диагностику. 😊"
+        f"{_empathy_prefix(conv)}Не хочу вводить вас в заблуждение: точных "
+        "данных по этому вопросу у меня нет, а придумывать не буду. Передал "
+        "вопрос администратору — он ответит здесь. Если срочно, можно "
+        "позвонить: 8 993 923-23-09 (Лихачевский) или 8 916 732-31-69 "
+        "(Ракетостроителей)."
     )
 
 
@@ -218,11 +192,7 @@ async def _ask(messages: list[dict], vault) -> str | None:
 
 
 def _empathy_prefix(conv: Conversation) -> str:
-    if conv.last_user_mood == "needs_empathy":
-        return "Понимаю, это важно. "
-    if conv.last_user_mood == "warm":
-        return "Рад, что это помогает. "
-    return ""
+    return emotion.opening(conv.last_user_mood)
 
 
 def _vault_for(conv: Conversation):
@@ -335,6 +305,10 @@ REWRITE_TIMEOUT_SEC = 8.0
 # вовремя, значит свернётся на следующей реплике.
 MEMORY_FOLD_TIMEOUT_SEC = 5.0
 
+# Разбор намерения стоит перед ответом, поэтому лимит жёсткий: лучше общий
+# ответ по существу, чем правильный маршрут через пять секунд.
+INTENT_TIMEOUT_SEC = 4.0
+
 TIMEOUT_REPLY = (
     "Мне нужно чуть больше времени на этот вопрос 🙏 Напишите, пожалуйста, "
     "ещё раз — отвечу сразу. Если срочно, позвоните: 8 993 923-23-09 "
@@ -421,7 +395,7 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     conv.add("user", text)
     _capture_entities(conv, text)
     await _update_need(conv, text)
-    intent = I.detect_intent(text)
+    intent = await _detect_intent(conv, text)
     _remember_dialogue_state(conv, text, intent)
 
     if not registration.is_registered(conv):
@@ -444,6 +418,33 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     conv.add("assistant", reply)
     store.save(conv)
     return reply
+
+
+async def _detect_intent(conv: Conversation, text: str) -> str:
+    """Намерение: сначала ключевые слова, затем — по смыслу.
+
+    Модель подключается только там, где разбор по словам ничего не понял
+    (общий QUESTION). Так все уже работающие сценарии остаются такими же
+    быстрыми и бесплатными, а платим мы за неоднозначные реплики.
+    """
+    intent = I.detect_intent(text)
+    if intent != I.QUESTION:
+        return intent
+    try:
+        refined = await asyncio.wait_for(
+            intent_ai.refine(text, conv.history, vault=_vault_for(conv)),
+            timeout=INTENT_TIMEOUT_SEC,
+        )
+    except asyncio.TimeoutError:
+        runtime.log_event("INTENT_REFINE_TIMEOUT", user_id=conv.user_id)
+        return intent
+    except Exception:
+        logger.exception("intent: разбор по смыслу не удался user_id=%s", conv.user_id)
+        return intent
+    if refined and refined != intent:
+        runtime.log_event("INTENT_REFINED", user_id=conv.user_id, intent=refined)
+        return refined
+    return intent
 
 
 async def _fold_memory(conv: Conversation) -> None:
@@ -527,7 +528,7 @@ async def _review(conv: Conversation, user_text: str, reply: str) -> str:
     """
     if not reply:
         return reply
-    allowed = smart.sales_allowed(conv.need)
+    allowed = sales.offer_allowed(conv)
     issues = critic.inspect(reply, conv, allowed)
     if not issues:
         return reply
@@ -648,7 +649,7 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     #     рассказ о трудности приходил прайс. Сначала признаём проблему и
     #     выясняем причину; предложение появится, когда станет ясна потребность.
     pain = smart.pain_in_text(text)
-    if pain and not smart.sales_allowed(conv.need):
+    if pain and not sales.offer_allowed(conv):
         conv.stage = STAGE_DISCOVERY
         if get_llm().enabled:
             # У модели уже есть в промпте и сама боль, и запрет предлагать —

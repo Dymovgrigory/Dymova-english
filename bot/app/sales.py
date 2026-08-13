@@ -7,6 +7,7 @@
 """
 from __future__ import annotations
 
+from app import emotion
 from app import recall
 from app import smart
 from app.knowledge.kb import KnowledgeBase
@@ -81,6 +82,9 @@ def build_system_prompt(
 ) -> str:
     parts = [SYSTEM_PROMPT]
     parts.append(_discovery_block(conv))
+    mood_block = emotion.prompt_block(getattr(conv, "last_user_mood", ""))
+    if mood_block:
+        parts.append(mood_block)
     if vault is not None:
         hint = placeholder_hint(vault)
         if hint:
@@ -123,6 +127,20 @@ def build_system_prompt(
     return "\n".join(parts)
 
 
+def offer_allowed(conv: Conversation) -> bool:
+    """Можно ли сейчас что-либо предлагать этому человеку.
+
+    Два независимых условия, и оба обязательны: потребность выяснена (SMART)
+    и собеседник не в том состоянии, когда предложение звучит издевательством
+    (эмоциональный слой). Ворота одни на всех — промпт, критик и маршрутизацию,
+    — иначе запрет соблюдался бы в одном месте и нарушался в другом.
+    """
+    profile = getattr(conv, "need", None)
+    if profile is not None and not smart.sales_allowed(profile):
+        return False
+    return emotion.allows_offer(getattr(conv, "last_user_mood", "") or emotion.NEUTRAL)
+
+
 def _discovery_block(conv: Conversation) -> str:
     """Инструкция про этап разговора: разрешена продажа или ещё нет.
 
@@ -136,7 +154,7 @@ def _discovery_block(conv: Conversation) -> str:
     known = smart.summary(profile)
     parts = ["\nЧТО МЫ УЖЕ ПОНЯЛИ О КЛИЕНТЕ:\n" + (known or "- пока ничего")]
 
-    if smart.sales_allowed(profile):
+    if offer_allowed(conv):
         parts.append(
             "\nЭТАП: потребность понятна. Можно предложить подходящую программу "
             "или бесплатную диагностику — ОДИН раз и со ссылкой на то, что "
@@ -166,8 +184,9 @@ def _discovery_block(conv: Conversation) -> str:
 def handle_objection(kb: KnowledgeBase, key: str, conv: Conversation | None = None) -> str:
     text = kb.objection(key)
     if text:
-        if conv and conv.last_user_mood == "needs_empathy":
-            return "Понимаю вас. " + text[0].lower() + text[1:]
+        opener = emotion.opening(getattr(conv, "last_user_mood", "")) if conv else ""
+        if opener:
+            return opener + text[0].lower() + text[1:]
         return text
     return (
         "Понимаю ваши сомнения. Давайте начнём с бесплатной диагностики — "
@@ -183,16 +202,22 @@ def sales_nudge(conv: Conversation) -> str:
     предложения диагностики в ответ на первый же вопрос о цене. Теперь
     предложение появляется только после того, как потребность понята.
     """
+    mood = getattr(conv, "last_user_mood", "") or emotion.NEUTRAL
+    if mood == emotion.ANGRY:
+        # Недовольному человеку не нужен ни вопрос про возраст ребёнка, ни
+        # приглашение: любой «следующий шаг» здесь читается как уход от темы.
+        return ""
     profile = getattr(conv, "need", None)
-    if profile is not None and not smart.sales_allowed(profile):
-        question = smart.next_question(profile)
+    if not offer_allowed(conv):
+        question = smart.next_question(profile) if profile is not None else ""
         if question:
             smart.mark_asked(profile, question)
-            if conv.last_user_mood == "needs_empathy":
-                return f"Понимаю вас. {question[0].lower()}{question[1:]}"
+            opener = emotion.opening(mood)
+            if opener:
+                return f"{opener}{question[0].lower()}{question[1:]}"
             return question
         return ""
-    if conv.last_user_mood == "needs_empathy":
+    if mood == emotion.ANXIOUS:
         return (
             "Чтобы не гадать, предлагаю начать с бесплатной диагностики — "
             "она ни к чему не обязывает и покажет реальный уровень."

@@ -90,6 +90,31 @@ def detect_objection(text: str) -> str | None:
     return None
 
 
+# Отрицание перед словом «записаться». «Я не хочу записываться, просто
+# спрашиваю» раньше попадало в WANT_SIGNUP, и бот начинал собирать заявку у
+# человека, который прямо от неё отказался. Смотрим не на всю реплику, а на
+# то, что стоит непосредственно перед словом: «не подскажете, как записаться»
+# — это как раз просьба записать.
+_NEGATABLE = frozenset({WANT_SIGNUP, REGISTER})
+_NEGATION_RE = re.compile(
+    r"(?:^|[\s,])(?:не|нет|пока\s+не|ещё\s+не|еще\s+не|без)\s+"
+    r"(?:\w+[\s,]+){0,2}$"
+)
+# «Не подскажете, как записаться?» — это просьба, а не отказ: отрицание тут
+# часть вежливой формы вопроса.
+_POLITE_RE = re.compile(
+    r"\bне\s+(?:подскаж|скаж|могли\s+бы|можете|поможете|расскаж)"
+)
+
+
+def _is_negated(low: str, position: int) -> bool:
+    window = low[:position]
+    match = _NEGATION_RE.search(window)
+    if not match:
+        return False
+    return not _POLITE_RE.search(window[match.start():])
+
+
 def detect_intent(text: str) -> str:
     low = text.lower().strip()
     if detect_objection(low):
@@ -113,7 +138,14 @@ def detect_intent(text: str) -> str:
     if "дз" in low and not re.search(r"[а-яёa-z]дз[а-яёa-z]", low):
         return HOMEWORK
     for intent, words in _PATTERNS:
-        if any(w in low for w in words):
+        for word in words:
+            position = low.find(word)
+            if position < 0:
+                continue
+            if intent in _NEGATABLE and _is_negated(low, position):
+                # Отказ от записи — не намерение записаться. Пропускаем этот
+                # шаблон и ищем, о чём человек спрашивает на самом деле.
+                continue
             return intent
     if "?" in low:
         return QUESTION

@@ -2,6 +2,8 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+from app import emotion
+
 from app.ai_core import handle_start
 from app.knowledge.kb import get_kb
 from app.memory import Conversation, Lead, get_store
@@ -14,7 +16,7 @@ def _conv_with_facts() -> Conversation:
     conv.selected_course = "Английский для школьников"
     conv.selected_format = "Онлайн"
     conv.last_objection = "дорого"
-    conv.last_user_mood = "needs_empathy"
+    conv.last_user_mood = emotion.ANXIOUS
     conv.last_user_topic = "цены"
     return conv
 
@@ -49,7 +51,7 @@ def test_system_prompt_includes_client_card():
     prompt = build_system_prompt(get_kb(), conv, "")
     assert "КАРТОЧКА КЛИЕНТА" in prompt
     assert "Миша" in prompt
-    assert "настроение собеседника: needs_empathy" in prompt
+    assert f"настроение собеседника: {emotion.ANXIOUS}" in prompt
     assert "последняя тема: цены" in prompt
 
 

@@ -64,7 +64,8 @@ async def test_uncertain_llm_reply_refers_to_admin_and_logs_gap(monkeypatch, ins
     reply = await ai_core.handle_message(uid, "Есть ли у вас парковка для самокатов?")
 
     assert "администратор" in reply.lower()
-    assert "придумывать не хочу" in reply.lower() or "точной информации" in reply.lower()
+    # Проверяем обещание честности, а не конкретную формулировку.
+    assert "придумыв" in reply.lower()
     assert notified, "администраторы должны получить уведомление"
 
     gaps = _read_gaps(insights_file)

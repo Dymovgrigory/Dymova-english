@@ -7,6 +7,8 @@ import urllib.parse
 
 import pytest
 
+from app import llm
+from app import llm_gateway
 from app.config import settings
 
 
@@ -37,6 +39,27 @@ def make_telegram_init_data(
     if tamper:
         signature = "0" * len(signature)
     return urllib.parse.urlencode({**fields, "hash": signature})
+
+
+@pytest.fixture(autouse=True)
+def _fresh_llm_singletons():
+    """Клиент модели и шлюз — синглтоны, кэширующие ключи и адрес провайдера.
+
+    Без сброса тест, подменивший настройки провайдера, оставлял следующим
+    «включённый» клиент с недоступным адресом: они честно ходили в сеть и
+    ждали ретраев. Сбрасываем до и после — порядок тестов не должен влиять
+    ни на их скорость, ни на то, ходит ли тест в сеть вообще.
+    """
+    _reset_llm()
+    yield
+    _reset_llm()
+
+
+def _reset_llm() -> None:
+    llm._llm = None
+    llm._client = None
+    llm._http_client = None
+    llm_gateway.reset_gateway()
 
 
 @pytest.fixture(autouse=True)
