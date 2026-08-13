@@ -24,6 +24,7 @@ from app.knowledge.kb import get_kb, _stem, _tokens
 from app.llm import get_llm
 from app.llm_gateway import ROLE_REASONING, get_gateway
 from app.max_client import get_max
+from app import critic
 from app import pii
 from app import smart
 from app.memory import (
@@ -325,6 +326,10 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
 # отведённое на сам ответ.
 NEED_EXTRACTION_TIMEOUT_SEC = 6.0
 
+# Переписывание ответа критиком идёт уже после генерации, то есть человек
+# всё это время ждёт. Улучшение не стоит того, чтобы удваивать ожидание.
+REWRITE_TIMEOUT_SEC = 8.0
+
 TIMEOUT_REPLY = (
     "Мне нужно чуть больше времени на этот вопрос 🙏 Напишите, пожалуйста, "
     "ещё раз — отвечу сразу. Если срочно, позвоните: 8 993 923-23-09 "
@@ -427,6 +432,7 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
 
     runtime.log_event("ROUTING", user_id=user_id, intent=intent, stage=conv.stage)
     reply = await _route(conv, text, kb, intent)
+    reply = await _review(conv, text, reply)
 
     conv.add("assistant", reply)
     store.save(conv)
@@ -482,6 +488,68 @@ async def _update_need(conv: Conversation, text: str) -> None:
         logger.exception("smart: разбор потребности не удался user_id=%s", conv.user_id)
         return
     profile.merge(extracted)
+
+
+async def _review(conv: Conversation, user_text: str, reply: str) -> str:
+    """Пропускает ответ через критика перед отправкой.
+
+    Порядок важен: сначала чиним то, что чинится текстом (это бесплатно и
+    без риска потерять факты), и только оставшиеся нарушения отдаём на
+    переписывание модели. Ровно одна попытка: вторая стоила бы пользователю
+    ещё нескольких секунд ожидания ради всё менее заметного улучшения.
+    """
+    if not reply:
+        return reply
+    allowed = smart.sales_allowed(conv.need)
+    issues = critic.inspect(reply, conv, allowed)
+    if not issues:
+        return reply
+
+    runtime.log_event("CRITIC_ISSUES", user_id=conv.user_id, issues=",".join(issues))
+    reply = critic.repair(reply, issues)
+    remaining = critic.inspect(reply, conv, allowed)
+    if not critic.needs_rewrite(remaining):
+        return reply
+
+    rewritten = await _rewrite(conv, user_text, reply, remaining)
+    if not rewritten:
+        # Переписать не вышло — отдаём то, что есть. Молчание или
+        # шаблонная отписка хуже неидеальной, но осмысленной реплики.
+        return reply
+    fixed = critic.repair(rewritten, critic.inspect(rewritten, conv, allowed))
+    # Вторая версия принимается, только если она реально лучше: модель
+    # вполне может переписать в те же самые грабли.
+    if len(critic.inspect(fixed, conv, allowed)) < len(remaining):
+        runtime.log_event("CRITIC_REWRITTEN", user_id=conv.user_id)
+        return fixed
+    return reply
+
+
+async def _rewrite(
+    conv: Conversation, user_text: str, reply: str, issues: list[str]
+) -> str | None:
+    """Одна попытка переписать ответ с замечаниями критика."""
+    note = critic.feedback(issues)
+    if not note or not get_llm().enabled:
+        return None
+    vault = _vault_for(conv)
+    system = sales.build_system_prompt(get_kb(), conv, "", vault=vault)
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user_text},
+        {"role": "assistant", "content": reply},
+        {"role": "user", "content": note},
+    ]
+    try:
+        return await asyncio.wait_for(
+            _ask(messages, vault), timeout=REWRITE_TIMEOUT_SEC
+        )
+    except asyncio.TimeoutError:
+        runtime.log_event("CRITIC_REWRITE_TIMEOUT", user_id=conv.user_id)
+        return None
+    except Exception:
+        logger.exception("critic: переписывание не удалось user_id=%s", conv.user_id)
+        return None
 
 
 def reset_conversation_locks() -> None:
