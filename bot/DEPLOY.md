@@ -272,3 +272,48 @@ curl -s https://bot.dymova-english.ru/health | python3 -m json.tool
 Настройки: `WATCHDOG_ENABLED`, `WATCHDOG_INTERVAL_MIN`,
 `WATCHDOG_FAILURES_BEFORE_ALERT`, `WATCHDOG_ALERT_COOLDOWN_MIN`,
 `WATCHDOG_POLL_SILENCE_MIN`, `TELEGRAM_API_IPS`.
+
+## MAX Bot API: домен и сертификат Минцифры
+
+Бот работает с `https://platform-api2.max.ru`. Старый `botapi.max.ru` выведен из
+эксплуатации — срок миграции истёк 19 июля 2026 года.
+
+Новый домен обслуживается сертификатом Минцифры, которого нет в стандартном
+списке доверенных. Без него **все** запросы к MAX падают на проверке TLS:
+в журнале это выглядит как `MAX ... сетевая ошибка` на каждое сообщение.
+
+Проверить, нужен ли сертификат:
+
+```bash
+docker compose exec bot python -c \
+  "import httpx; print(httpx.get('https://platform-api2.max.ru/me').status_code)"
+```
+
+`401` — сертификат уже доверенный (ответ пришёл, просто без токена).
+Ошибка `SSLCertVerificationError` — сертификат нужно поставить.
+
+### Вариант 1 — в систему (рекомендуется)
+
+Добавьте в `Dockerfile` перед `COPY . /app`:
+
+```dockerfile
+ADD https://gu-st.ru/content/Other/doc/russiantrustedca.pem \
+    /usr/local/share/ca-certificates/russian_trusted_root_ca.crt
+RUN update-ca-certificates
+```
+
+### Вариант 2 — отдельным файлом
+
+Положите PEM рядом с проектом, смонтируйте в контейнер и укажите путь:
+
+```yaml
+volumes:
+  - ./deploy/russian_trusted_root_ca.pem:/etc/ssl/certs/russian_trusted_root_ca.pem:ro
+```
+
+```dotenv
+MAX_CA_BUNDLE=/etc/ssl/certs/russian_trusted_root_ca.pem
+```
+
+Второй вариант удобен тем, что сертификат доверяется только запросам к MAX,
+а не всему, что делает контейнер.

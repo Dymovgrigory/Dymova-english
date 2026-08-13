@@ -231,6 +231,37 @@ class TelegramClient:
         result = await self._post("answerCallbackQuery", data, timeout=10, attempts=2)
         return result is not None
 
+    async def download_file(self, file_id: str, max_bytes: int) -> bytes | None:
+        """Скачивает файл по file_id. None — не удалось.
+
+        Лимит размера обязателен: без него ответ на getFile читается в память
+        целиком, и одна большая присылка кладёт процесс.
+        """
+        result = await self._post("getFile", {"file_id": str(file_id)}, attempts=2)
+        path = (result or {}).get("file_path") if isinstance(result, dict) else None
+        if not path:
+            logger.warning("telegram: getFile не вернул путь для file_id=%s", file_id)
+            return None
+        url = f"https://api.telegram.org/file/bot{self.token}/{path}"
+        try:
+            async with httpx.AsyncClient(**_client_kwargs(60)) as client:
+                async with client.stream("GET", url) as response:
+                    if response.status_code != 200:
+                        logger.warning("telegram: скачивание файла status=%s", response.status_code)
+                        return None
+                    chunks: list[bytes] = []
+                    size = 0
+                    async for chunk in response.aiter_bytes():
+                        size += len(chunk)
+                        if size > max_bytes:
+                            logger.info("telegram: файл больше лимита %s байт", max_bytes)
+                            return None
+                        chunks.append(chunk)
+            return b"".join(chunks)
+        except Exception:
+            logger.warning("telegram: не удалось скачать файл", exc_info=True)
+            return None
+
     async def set_webhook(self, url: str, secret: str | None = None) -> bool:
         data: dict[str, str] = {
             "url": url,

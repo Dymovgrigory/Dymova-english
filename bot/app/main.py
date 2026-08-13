@@ -130,9 +130,10 @@ _BRANCH_CONTACTS = {
 
 def _homework_system_prompt() -> str:
     return (
-        "Ты помогаешь с домашним заданием, но не давай готовые ответы и не "
-        "не выполнять его за ученика и не решай за него. Вместо этого объясняй, как это сделать, "
-        "давай подсказки, задавай наводящие вопросы и приводи короткий пример."
+        "Ты помогаешь ученику разобраться с домашним заданием. Не давай "
+        "готовых ответов и не решай задание за него: объясняй, как к нему "
+        "подступиться, давай подсказки, задавай наводящие вопросы и приводи "
+        "короткий пример на похожем материале."
     )
 
 
@@ -143,6 +144,36 @@ def _homework_user_prompt(note: str) -> str:
         "это сделать самостоятельно. Покажи короткий пример и объясни шаги."
         f"{extra}"
     )
+
+
+async def explain_homework_image(
+    image_bytes: bytes, content_type: str, note: str = ""
+) -> str | None:
+    """Разбор фотографии задания. None — модель не смогла помочь.
+
+    Общая точка для мини-приложения и для чата: раньше vision работал только
+    в мини-приложении, а на фото в чате бот отвечал «опишите текстом» — то
+    есть отказывался от того, что уже умел.
+    """
+    messages = [
+        {"role": "system", "content": _homework_system_prompt()},
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": _homework_user_prompt(note)},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": (
+                            f"data:{content_type};base64,"
+                            f"{base64.b64encode(image_bytes).decode('ascii')}"
+                        )
+                    },
+                },
+            ],
+        },
+    ]
+    return await get_gateway().vision(messages, temperature=0.2, max_tokens=1200)
 
 
 def _admin_authorized(request: Request) -> bool:
@@ -363,34 +394,12 @@ async def api_homework(
     if not image_bytes:
         return JSONResponse({"detail": "Пустой файл"}, status_code=400)
 
-    llm = get_llm()
-    system_prompt = _homework_system_prompt()
-    user_prompt = _homework_user_prompt(note)
-    explanation = ""
-
-    complete_vision = getattr(llm, "complete_vision", None)
-    if callable(complete_vision):
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": user_prompt},
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:{content_type};base64,{base64.b64encode(image_bytes).decode('ascii')}",
-                        },
-                    },
-                ],
-            },
-        ]
-        explanation = await complete_vision(messages, temperature=0.2, max_tokens=1200) or ""
-    else:
-        explanation = user_prompt
-
+    explanation = await explain_homework_image(image_bytes, content_type, note)
     if not explanation:
-        explanation = "Не удалось разобрать фото задания."
+        explanation = (
+            "Не удалось разобрать фото задания. Попробуйте снять его при "
+            "хорошем свете — или опишите текстом, что нужно сделать."
+        )
 
     return {
         "ok": True,
@@ -555,6 +564,41 @@ async def _telegram_callback(update: dict, telegram) -> None:
     logger.info("telegram: неизвестный callback payload=%s", payload[:64])
 
 
+def parse_start_payload(text: str) -> dict:
+    """Разбирает payload команды /start в UTM-метки.
+
+    Deeplink Telegram не допускает `=` и `&`, поэтому источники кодируют
+    метки как `utm_source-vk__utm_campaign-avgust`. Всё, что не разобралось
+    по этой схеме, сохраняем целиком — это может быть код партнёра или id
+    рекламного объявления, и терять его нельзя.
+    """
+    parts = (text or "").split(maxsplit=1)
+    payload = parts[1].strip() if len(parts) > 1 else ""
+    if not payload:
+        return {}
+    utm: dict[str, str] = {}
+    for chunk in payload.split("__"):
+        key, sep, value = chunk.partition("-")
+        if sep and key.startswith("utm_") and value:
+            utm[key] = value[:100]
+    if not utm:
+        utm["deeplink"] = payload[:100]
+    return utm
+
+
+def _remember_deeplink(user_id: str, platform: str, text: str) -> None:
+    """Сохраняет источник перехода в диалог — он уйдёт в CRM вместе с заявкой."""
+    utm = parse_start_payload(text)
+    if not utm:
+        return
+    store = get_store()
+    conv = store.get(user_id, platform=platform)
+    # Первый источник важнее последнего: он привёл человека в бота.
+    conv.utm = {**utm, **(conv.utm or {})}
+    store.save(conv)
+    logger.info("deeplink: source=%s user_id=%s", ",".join(utm), user_id)
+
+
 async def _process_telegram_update(update: dict, telegram) -> None:
     runtime.set_request_id(runtime.new_request_id())
     if update.get("callback_query"):
@@ -570,7 +614,19 @@ async def _process_telegram_update(update: dict, telegram) -> None:
     if chat_id is None:
         return
     try:
-        # Фото с подписью — текст лежит в caption, не в text.
+        # Фото с подписью двусмысленно: «Задание 3» — это комментарий к
+        # присланному снимку, а «Сколько стоит?» — самостоятельный вопрос, к
+        # которому картинка приложена мимоходом. Решаем по намерению подписи:
+        # распознанное намерение (цена, контакты, запись) отвечаем текстом,
+        # всё остальное считаем заданием и разбираем фото.
+        if message.get("photo"):
+            caption = str(message.get("caption") or "").strip()
+            caption_intent = I.detect_intent(caption) if caption else I.HOMEWORK
+            if caption_intent in (I.QUESTION, I.HOMEWORK):
+                await _handle_telegram_photo(message, chat_id, telegram)
+                return
+
+        # Подпись к остальным вложениям лежит в caption, не в text.
         text = str(message.get("text") or message.get("caption") or "").strip()
         if not text:
             media_field = next((f for f in _TELEGRAM_MEDIA_FIELDS if message.get(f)), None)
@@ -581,25 +637,21 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             # Голосовые/стикеры/видео бот не читает. Раньше такие апдейты
             # молча отбрасывались (ни ответа, ни лога) — выглядело как
             # зависание бота при любом нетекстовом сообщении.
-            if media_field == "photo":
-                # main.py уже просит прислать фото задания для помощи с ДЗ —
-                # плоский отказ "не умею читать фото" был бы противоречием.
-                await telegram.send_message(
-                    chat_id,
-                    "Вижу фото 📸 Опишите, пожалуйста, текстом, что за "
-                    "задание — так смогу помочь точнее.",
-                )
-            else:
-                await telegram.send_message(
-                    chat_id,
-                    "Пока не умею читать голосовые и файлы 🙈 Напишите, "
-                    "пожалуйста, текстом — обязательно отвечу.",
-                )
+            await telegram.send_message(
+                chat_id,
+                "Пока не умею читать голосовые и файлы 🙈 Напишите, "
+                "пожалуйста, текстом — обязательно отвечу.",
+            )
             return
 
         user_id = f"tg:{chat_id}"
         low = text.lower()
-        if low in ("/start", "start"):
+        if low.split(maxsplit=1)[0] in ("/start", "start"):
+            # У /start бывает payload: `t.me/bot?start=utm_source-vk` приходит
+            # как «/start utm_source-vk». Раньше сравнение шло со всей строкой,
+            # поэтому команда с payload не распознавалась как старт, а сам
+            # payload (источник перехода) терялся вместе с ней.
+            _remember_deeplink(user_id, TELEGRAM_PLATFORM, text)
             reply = await handle_start(user_id, platform=TELEGRAM_PLATFORM)
             await telegram.send_message(chat_id, reply, buttons=_telegram_start_buttons(text, reply))
             return
@@ -646,6 +698,51 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             )
         except Exception:
             logger.exception("telegram: failed to send fallback error message")
+
+
+async def _handle_telegram_photo(message: dict, chat_id, telegram) -> None:
+    """Фото задания из чата: скачиваем и разбираем тем же vision, что и в кабинете."""
+    sizes = message.get("photo") or []
+    if not isinstance(sizes, list) or not sizes:
+        return
+    # Telegram отдаёт несколько размеров по возрастанию — берём самый крупный
+    # из тех, что влезают в лимит: мелкий превью нечитаем для модели.
+    largest = max(sizes, key=lambda item: item.get("file_size") or item.get("width") or 0)
+    file_id = largest.get("file_id")
+    if not file_id:
+        return
+
+    note = str(message.get("caption") or "").strip()
+    download = getattr(telegram, "download_file", None)
+    if not callable(download):
+        # Клиент без скачивания файлов (старая сборка, урезанный адаптер) —
+        # не повод отвечать пользователю ошибкой.
+        await telegram.send_message(
+            chat_id,
+            "Вижу фото 📸 Опишите, пожалуйста, текстом, что за задание — "
+            "так смогу помочь точнее.",
+        )
+        return
+    image = await download(file_id, MAX_HOMEWORK_IMAGE_BYTES)
+    if not image:
+        await telegram.send_message(
+            chat_id,
+            "Не получилось открыть это фото. Пришлите, пожалуйста, снимок "
+            "поменьше — или опишите задание текстом.",
+        )
+        return
+
+    explanation = await _reply_while_alive(
+        telegram, chat_id, lambda: explain_homework_image(image, "image/jpeg", note)
+    )
+    if not explanation:
+        await telegram.send_message(
+            chat_id,
+            "Не смог разобрать задание по фото. Напишите, пожалуйста, текстом, "
+            "что именно нужно сделать — помогу разобраться.",
+        )
+        return
+    await telegram.send_message(chat_id, explanation)
 
 
 def _schedule_telegram_update(update: dict, telegram) -> bool:
