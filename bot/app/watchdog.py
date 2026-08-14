@@ -80,7 +80,11 @@ async def check_telegram_api() -> CheckResult:
     if not telegram.configured:
         return CheckResult(ok=True, detail="токен не задан — проверка пропущена")
     try:
-        result = await telegram._post("getMe", {}, timeout=15, attempts=1)
+        # Две попытки, а не одна: канал до Telegram у этого провайдера
+        # периодически даёт единичный ConnectTimeout, при том что поллинг
+        # продолжает работать. С одной попыткой сторож объявлял бота
+        # недоступным из-за случайного таймаута — и поднимал ложную тревогу.
+        result = await telegram._post("getMe", {}, timeout=15, attempts=2)
     except Exception as exc:
         return CheckResult(ok=False, detail=f"{type(exc).__name__}")
     if result is None:

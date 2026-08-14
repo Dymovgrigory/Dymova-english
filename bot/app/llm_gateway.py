@@ -140,7 +140,11 @@ class LLMGateway:
             payload = {
                 "response_format": {
                     "type": "json_schema",
-                    "json_schema": {"name": name, "strict": True, "schema": schema},
+                    "json_schema": {
+                        "name": name,
+                        "strict": True,
+                        "schema": _strict_schema(schema),
+                    },
                 }
             }
             raw = await self._call(
@@ -244,6 +248,34 @@ class LLMGateway:
 
     def stats(self) -> dict:
         return {role: value.as_dict() for role, value in self._stats.items()}
+
+
+def _strict_schema(schema: dict) -> dict:
+    """Схема в том виде, какого требует строгий режим OpenAI.
+
+    Провайдер отвечает 400 «additionalProperties is required to be supplied
+    and to be false», если это поле не задано у каждого объекта. Без него
+    первый запрос всегда пропадал впустую: шлюз откатывался на разбор через
+    промпт, но уже потратив round trip. Исходную схему не трогаем — она же
+    используется для проверки ответа.
+    """
+    if not isinstance(schema, dict):
+        return schema
+    strict = dict(schema)
+    if strict.get("type") == "object":
+        strict["additionalProperties"] = False
+        properties = strict.get("properties")
+        if isinstance(properties, dict):
+            strict["properties"] = {
+                key: _strict_schema(value) for key, value in properties.items()
+            }
+            # Строгий режим требует перечислить в required ВСЕ свойства;
+            # необязательность выражается типом, а не отсутствием в списке.
+            strict["required"] = list(strict["properties"])
+    items = strict.get("items")
+    if isinstance(items, dict):
+        strict["items"] = _strict_schema(items)
+    return strict
 
 
 def _parse_json(raw: str | None) -> dict | None:

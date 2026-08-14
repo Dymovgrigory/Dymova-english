@@ -135,8 +135,11 @@ def repair(reply: str, issues: list[str]) -> str:
         fixed = _LEAK_RE.sub("", fixed)
     if "too_many_emoji" in issues:
         fixed = _trim_emoji(fixed, MAX_EMOJI)
-    # Чистим следы вырезанного: двойные пробелы и осиротевшую пунктуацию.
+    # Чистим следы вырезанного: двойные пробелы, пробел перед знаком и
+    # осиротевшую пунктуацию. Без этого вырезанный токен оставлял дыру:
+    # «А сколько лет ?» вместо «А сколько лет Маше?».
     fixed = re.sub(r"[ \t]{2,}", " ", fixed)
+    fixed = re.sub(r"\s+([,.!?;:…])", r"\1", fixed)
     fixed = re.sub(r"\n{3,}", "\n\n", fixed)
     fixed = re.sub(r"^\s*[,.;:!]\s*", "", fixed)
     fixed = fixed.strip()

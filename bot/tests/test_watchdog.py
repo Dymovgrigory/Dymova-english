@@ -223,3 +223,22 @@ async def test_watchdog_never_raises(monkeypatch):
     await watchdog.run_check_once()
 
     assert watchdog.status()["telegram_api_ok"] is False
+
+
+@pytest.mark.asyncio
+async def test_telegram_probe_retries_before_raising_alarm(monkeypatch):
+    """Единичный таймаут канала — не повод объявлять бота недоступным."""
+    seen = {}
+
+    class FlakyTelegram:
+        configured = True
+
+        async def _post(self, method, data, *, timeout=30, attempts=1):
+            seen["attempts"] = attempts
+            return {"username": "foxinburg_bot"}
+
+    monkeypatch.setattr("app.telegram_client.get_telegram", lambda: FlakyTelegram())
+    result = await watchdog.check_telegram_api()
+
+    assert result.ok
+    assert seen["attempts"] >= 2, "у проверки должна быть повторная попытка"
