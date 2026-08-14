@@ -29,8 +29,8 @@ def test_mini_app_loads_telegram_sdk_and_own_assets():
     html = (TGAPP / "index.html").read_text(encoding="utf-8")
 
     assert "telegram-web-app.js" in html
-    assert 'href="app.css"' in html
-    assert 'src="app.js"' in html
+    assert 'href="app.css?v=' in html
+    assert 'src="app.js?v=' in html
 
 
 def test_mini_app_is_mobile_first_and_theme_aware():

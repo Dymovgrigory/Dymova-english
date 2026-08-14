@@ -9,7 +9,12 @@
   <title>Фоксинбург</title>
   <!-- Фавикон — фирменный маскот, а не системная emoji-лиса. -->
   <link rel="icon" href="assets/foxi.webp" />
-  <link rel="stylesheet" href="app.css" />
+  <!-- Версия в адресе нужна, чтобы вырваться из кэша, накопленного до того,
+       как Caddy начал отдавать мини-приложения с Cache-Control: no-cache.
+       Дальше версию можно не трогать — заголовок заставляет браузер
+       проверять файл при каждой загрузке, — но при крупной правке её проще
+       поднять, чем объяснять человеку, почему у него старый экран. -->
+  <link rel="stylesheet" href="app.css?v=2" />
   <!-- Хиро-картинка маскота решает первый экран: грузим её раньше всего. -->
   <link rel="preload" as="image" href="assets/foxi.webp" />
   <!--
@@ -221,7 +226,7 @@
 
   <div id="toast" class="toast" hidden></div>
 
-  <script src="app.js"></script>
-  <script type="module" src="mascot.js"></script>
+  <script src="app.js?v=2"></script>
+  <script type="module" src="mascot.js?v=2"></script>
 </body>
 </html>
