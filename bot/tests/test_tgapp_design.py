@@ -17,14 +17,13 @@ TGAPP = Path(__file__).resolve().parents[1] / "app" / "tgapp"
 HTML = (TGAPP / "index.html").read_text(encoding="utf-8")
 CSS = (TGAPP / "app.css").read_text(encoding="utf-8")
 JS = (TGAPP / "app.js").read_text(encoding="utf-8")
-MASCOT = (TGAPP / "mascot.js").read_text(encoding="utf-8")
 
 # Пиктограммы и дингбаты. Диапазон намеренно широкий: запрещены не только
 # лисы, но и «📅», «☎» — весь класс системных картинок вместо иконок.
 _EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF←-⇿☀-➿️]")
 
 
-@pytest.mark.parametrize("name", ["index.html", "app.css", "app.js", "mascot.js"])
+@pytest.mark.parametrize("name", ["index.html", "app.css", "app.js"])
 def test_no_system_emoji_anywhere(name):
     """«Никаких стандартных emoji-лис» — принципиальное требование ТЗ."""
     text = (TGAPP / name).read_text(encoding="utf-8")
@@ -34,24 +33,29 @@ def test_no_system_emoji_anywhere(name):
 
 def test_favicon_is_the_brand_mascot_not_an_emoji():
     """Раньше фавиконом была inline-SVG с текстом «🦊»."""
-    assert 'rel="icon" href="assets/foxi.webp"' in HTML
+    assert 'rel="icon" href="/tg/assets/foxi.webp"' in HTML
     assert "text>🦊" not in HTML
 
 
-def test_real_mascot_assets_are_shipped():
-    """Маскот лежит в репозитории и уже работает на сайте — используем его."""
+def test_real_mascot_asset_is_shipped_and_light():
+    """Маскот лежит в репозитории и уже работает на сайте — используем его.
+
+    Трёхмерная модель и рантайм three.js (около двух мегабайт) удалены:
+    сгенерированная модель выглядела хуже рисованного маскота, а платил за
+    неё человек с телефоном.
+    """
     still = TGAPP / "assets" / "foxi.webp"
-    model = TGAPP / "assets" / "foxi.glb"
-    assert still.exists() and model.exists()
-    # Статичный маскот обязан быть лёгким: он на первом экране.
+    assert still.exists()
+    # Он на первом экране, поэтому обязан быть лёгким.
     assert still.stat().st_size < 60_000
-    assert model.stat().st_size < 1_200_000
+    assert not (TGAPP / "assets" / "foxi.glb").exists()
+    assert not (TGAPP / "vendor").exists()
 
 
 def test_static_mascot_is_shown_immediately():
     """Первый экран не должен ждать 3D — картинка видна сразу."""
     assert 'id="mascot-still"' in HTML
-    assert 'rel="preload" as="image" href="assets/foxi.webp"' in HTML
+    assert 'rel="preload" as="image" href="/tg/assets/foxi.webp"' in HTML
     assert 'alt="Фокси, маскот школы Фоксинбург"' in HTML
 
 
@@ -61,51 +65,22 @@ def test_icons_are_inline_svg():
     assert 'class="qa__ic"' in HTML
 
 
-# --------------------------- 3D: лениво и безопасно ---------------------------
+# --------------------------- маскот ---------------------------
 
-def test_three_js_is_not_loaded_eagerly():
-    """Рантайм 3D весит больше мегабайта — в начальную загрузку он не входит."""
-    assert "await import('three')" in MASCOT
-    assert '<script src="./vendor/three' not in HTML
-    assert 'type="module" src="mascot.js?v=' in HTML
-
-
-def test_three_js_is_self_hosted_not_from_cdn():
-    """Вебвью мессенджера часто за плохой сетью, а сторонний домен блокируется."""
-    assert '"three": "./vendor/three/three.module.min.js"' in HTML
-    assert "cdn.jsdelivr.net" not in HTML
-    assert (TGAPP / "vendor" / "three" / "three.module.min.js").exists()
-    assert (TGAPP / "vendor" / "draco" / "draco_decoder.wasm").exists()
+def test_mascot_is_drawn_not_generated_3d():
+    """Сгенерированная трёхмерная модель рендерилась тускло и в неудачной
+    позе — то есть проигрывала той самой картинке, ради которой её ставили.
+    Живость даём движением, а не полигонами."""
+    assert "mascot.js" not in HTML
+    assert "importmap" not in HTML
+    assert "three" not in HTML
+    assert 'id="mascot-still"' in HTML
 
 
-def test_3d_is_skipped_on_weak_devices_and_saved_data():
-    """Fallback для слабых устройств — прямое требование ТЗ."""
-    assert "saveData" in MASCOT
-    assert "deviceMemory" in MASCOT
-    assert "hardwareConcurrency" in MASCOT
-    assert "webgl2" in MASCOT
-
-
-def test_3d_respects_reduced_motion():
-    assert "prefers-reduced-motion" in MASCOT
-    assert "reducedMotion" in MASCOT
-
-
-def test_3d_failure_leaves_the_static_mascot():
-    """Провал загрузки не должен ломать экран."""
-    assert "catch" in MASCOT
-    assert "remove('is-3d')" in MASCOT
-
-
-def test_3d_does_not_render_while_hidden():
-    """Рендерить невидимую сцену — чистый расход батареи."""
-    assert "IntersectionObserver" in MASCOT
-    assert "visibilitychange" in MASCOT
-
-
-def test_3d_pixel_ratio_is_capped():
-    """Плотность выше 2 не видна, но стоит вчетверо дороже по пикселям."""
-    assert "Math.min(window.devicePixelRatio || 1, 2)" in MASCOT
+def test_mascot_moves_and_reacts():
+    assert "@keyframes float" in CSS
+    assert "@keyframes greet" in CSS and "@keyframes cheer" in CSS
+    assert "is-cheer" in JS
 
 
 # --------------------------- микровзаимодействия ---------------------------
@@ -113,13 +88,12 @@ def test_3d_pixel_ratio_is_capped():
 def test_mascot_reacts_to_real_success_not_decoration():
     """Реакция маскота привязана к результату действия, а не к таймеру."""
     assert 'mascot("success")' in JS
-    assert "foxi:success" in MASCOT
     # Радость наступает после успешного ответа сервера, а не по расписанию.
     assert "setInterval" not in JS
 
 
 def test_mascot_reacts_to_touch():
-    assert "pointerdown" in MASCOT
+    assert "touchstart" in JS
 
 
 def test_loading_state_has_skeletons():

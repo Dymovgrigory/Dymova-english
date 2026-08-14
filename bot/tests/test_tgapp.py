@@ -29,8 +29,8 @@ def test_mini_app_loads_telegram_sdk_and_own_assets():
     html = (TGAPP / "index.html").read_text(encoding="utf-8")
 
     assert "telegram-web-app.js" in html
-    assert 'href="app.css?v=' in html
-    assert 'src="app.js?v=' in html
+    assert 'href="/tg/app.css?v=' in html
+    assert 'src="/tg/app.js?v=' in html
 
 
 def test_mini_app_is_mobile_first_and_theme_aware():
@@ -64,7 +64,7 @@ def test_mini_app_sends_signed_init_data_not_raw_user_id():
     js = (TGAPP / "app.js").read_text(encoding="utf-8")
 
     assert "X-Miniapp-Init-Data" in js
-    assert "tg.initData" in js
+    assert "bridge.initData" in js
     # user_id как основание доступа в запросах не отправляется.
     assert "user_id=" not in js
 
