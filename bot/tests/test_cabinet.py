@@ -164,10 +164,6 @@ def test_cabinet_without_import_is_honest():
     assert data["schedule"]["lessons"] == []
 
 
-def test_honest_schedule_block_in_frontend():
-    js = (main_module._TGAPP_DIR / "app.js").read_text(encoding="utf-8")
-    assert "Расписание появится, когда администратор загрузит его в бота" in js
-    assert "Спросить расписание" in js
 
 
 # --- 5. Правка карточки ребёнка меняет то, чем пользуется бот --------------
@@ -270,18 +266,7 @@ def test_stale_import_is_marked_and_reminder_text_exists():
     assert scheduler.import_reminder_text(2.0) is None
 
 
-# --- 9. Разметка кабинета видна при выключенном JS -------------------------
-
-def test_cabinet_markup_visible_without_js():
-    html = (main_module._TGAPP_DIR / "index.html").read_text(encoding="utf-8")
-    css = (main_module._TGAPP_DIR / "app.css").read_text(encoding="utf-8")
-    assert 'id="cabinet"' in html
-    assert 'id="cab-child"' in html and 'id="cab-progress"' in html
-    # Появление задаёт CSS-анимация, а не класс из скрипта.
-    assert "@keyframes cab-in" in css
-    # В каждом блоке есть осмысленный текст до прихода данных.
-    assert "cab__loading" in html
-
+# --- 10
 
 # --- 10. В логах нет телефонов и имён детей ---------------------------------
 

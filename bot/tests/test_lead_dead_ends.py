@@ -34,7 +34,7 @@ def _ready_conv(user_id: str) -> Conversation:
     conv.lead.fio_parent = "Григорий"
     conv.lead.fio_child = "Папа"
     conv.lead.age = "9"
-    conv.lead.phone = "+79999999999"
+    conv.lead.phone = "+79991234567"
     conv.selected_branch = "Филиал на Лихачевском"
     conv.lead_step = "confirm"
     return conv
@@ -157,7 +157,7 @@ async def test_production_transcript_replayed_end_to_end():
     await handle_message(uid, "Григорий")
     await handle_message(uid, "Папа")
     await handle_message(uid, "9 лет")
-    await handle_message(uid, "+79999999999")
+    await handle_message(uid, "+79991234567")
     await handle_message(uid, "Лихачевский")
 
     reply = await handle_message(uid, "Нет")

@@ -691,6 +691,14 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             return await _consult_with_context(conv, text, sales.handle_objection(kb, key, conv))
         return sales.handle_objection(kb, key, conv)
 
+    # 4а. Расписание. Если выгрузка сопоставлена с этим родителем — отвечаем
+    #     его занятиями с датой импорта. Если нет — честно: расписание
+    #     подбирается под группу, а не «какие дни вас интересуют?» в пустую.
+    if "расписан" in text.lower():
+        schedule_answer = await _schedule_reply(conv, max_client)
+        if schedule_answer:
+            return schedule_answer
+
     # 4б. Вопрос о педагогах — структурированный ответ со ссылками на видео.
     if intent != I.WANT_SIGNUP:
         team = team_reply(kb, text)
@@ -849,6 +857,41 @@ def _format_teacher(person: dict) -> str:
     if person.get("video_lesson"):
         lines.append(f"🎬 Фрагмент урока: {person['video_lesson']}")
     return "\n".join(lines)
+
+
+async def _schedule_reply(conv: Conversation, max_client) -> str | None:
+    """Ответ на вопрос о расписании.
+
+    Своё расписание — из последней выгрузки (с датой импорта). Клиенту без
+    сопоставления — передаём администратору, а не отвечаем уклончиво.
+    None — тема не про конкретное расписание (пусть отвечает обычный путь).
+    """
+    from app import cabinet
+
+    schedule = cabinet.schedule_for(get_store(), conv.platform, conv.user_id)
+    if schedule["lessons"]:
+        parts = []
+        for lesson in schedule["lessons"]:
+            when = " ".join(x for x in (lesson["weekday_label"], lesson["time"]) if x)
+            details = ", ".join(
+                x for x in (lesson["program"], lesson["teacher"], lesson["filial"]) if x
+            )
+            parts.append(f"{when} ({details})" if details else when)
+        note = f"Расписание на {schedule['imported_label']}"
+        if schedule["stale"]:
+            note += " — могло измениться, лучше уточнить у администратора"
+        conv.stage = STAGE_DISCOVERY
+        return "Ваше расписание: " + "; ".join(parts) + f".\n{note}."
+    if conv.lead_submitted or schedule["has_import"]:
+        # Человек уже наш (заявка или сопоставленная выгрузка), а его строки
+        # в ней нет — это вопрос к администратору, а не к базе знаний.
+        await hand_off(max_client, conv, reason="вопрос о расписании")
+        return (
+            "Уточню у администратора и он пришлёт актуальное расписание сюда. "
+            "Если удобнее голосом: 8 993 923-23-09 (Лихачевский) или "
+            "8 916 732-31-69 (Ракетостроителей)."
+        )
+    return None
 
 
 def team_reply(kb, text: str) -> str | None:

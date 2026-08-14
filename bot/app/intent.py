@@ -156,6 +156,10 @@ def extract_phone(text: str) -> str | None:
     digits = re.sub(r"\D", "", text)
     if len(digits) < 10:
         return None
+    # +79999999999 и подобные — не номер, а шум: у настоящего номера
+    # последние десять цифр не бывают одинаковыми.
+    if len(set(digits[-10:])) == 1:
+        return None
     if len(digits) == 11 and digits[0] in "78":
         return "+7" + digits[1:]
     if len(digits) == 10:

@@ -73,6 +73,57 @@ class Recommendation:
         return " ".join(lines)
 
 
+def _language_of(card: UserProfile, conv) -> str:
+    """Какой язык интересует человека: «китайск» / «немецк» / «английск» / "".
+
+    Без этого измерения подбор для «китайский с нуля для шестилетней»
+    честно находил лучшее совпадение по возрасту — «Для дошкольников»,
+    то есть английский. Рекомендация не по тому языку хуже, чем её
+    отсутствие.
+    """
+    haystack = " ".join(
+        [
+            getattr(conv, "selected_course", "") or "",
+            " ".join(card.goals),
+            " ".join(card.motivations),
+            " ".join(card.pain_points),
+            # Язык часто назван только вслух в переписке и не попадает ни в
+            # одно поле профиля — смотрим последние реплики человека.
+            " ".join(
+                m.get("content", "")
+                for m in getattr(conv, "history", [])[-6:]
+                if m.get("role") == "user"
+            ),
+        ]
+    ).lower()
+    for marker in ("китайск", "немецк", "английск"):
+        if marker in haystack:
+            return marker
+    return ""
+
+
+def _filter_by_language(programs: list[dict], language: str) -> list[dict]:
+    """Кандидаты только по названному языку.
+
+    Английский — язык школы по умолчанию: возрастные программы («Для
+    дошкольников») его в тексте не называют, но про него. Поэтому для
+    английского отсекаем явно немецкое/китайское, а для китайского и
+    немецкого — всё, где язык не упомянут.
+    """
+    if not language:
+        return programs
+
+    def text_of(program: dict) -> str:
+        return f"{program.get('name', '')} {program.get('text', '')}".lower()
+
+    if language == "английск":
+        return [
+            p for p in programs
+            if "китайск" not in text_of(p) and "немецк" not in text_of(p)
+        ]
+    return [p for p in programs if language in text_of(p)]
+
+
 def suggest(kb: KnowledgeBase, conv) -> Recommendation | None:
     """Что предложить этому человеку. None — предлагать пока нечего.
 
@@ -81,6 +132,9 @@ def suggest(kb: KnowledgeBase, conv) -> Recommendation | None:
     """
     card = UserProfile.of(conv)
     programs = _candidates(kb)
+    if not programs:
+        return None
+    programs = _filter_by_language(programs, _language_of(card, conv))
     if not programs:
         return None
 

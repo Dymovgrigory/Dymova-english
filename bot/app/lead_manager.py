@@ -37,7 +37,13 @@ _NAME_RE = re.compile(r"^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z\-]*(?:\s+[�
 _NAME_BLOCKLIST_RE = re.compile(
     r"\bлет\b|\bгод\w*\b|\bкласс\w*\b|\bсын\w*\b|\bдоч\w*\b|\bребён\w*\b|"
     r"\bребят\w*\b|\bдавай\w*\b|\bзапиш\w*\b|\bхочу\b|\bпробн\w*\b|"
-    r"\bоформ\w*\b|\bпотом\b|\bпозже\b|\bпоговор\w*\b",
+    r"\bоформ\w*\b|\bпотом\b|\bпозже\b|\bпоговор\w*\b|"
+    # Вопросительные и разговорные слова: «Как дела» и «Что расскажешь» —
+    # не имена, хотя формально подходят под маску «два слова с большой
+    # буквы». На живой переписке они попадали в заявку как ФИО.
+    r"\bчто\b|\bкак\b|\bэто\b|\bзовут\b|\bрасскаж\w*|\bдела\b|\bпочему\b|"
+    r"\bсколько\b|\bкогда\b|\bгде\b|\bзачем\b|\bзаявк\w*|\bпривет\w*|"
+    r"\bздравствуй\w*|\bдобрый\b|\bспасибо\b|\bпожалуйста\b|\bвопрос\w*\b",
     re.IGNORECASE,
 )
 
@@ -75,6 +81,15 @@ def _extract_name_from_text(text: str) -> str:
         if _looks_like_name(candidate):
             return candidate[:255]
     return ""
+
+
+def _child_age_ok(age: str) -> bool:
+    """Возраст ребёнка-ученика: 2–17. «99 лет» в заявке — это не возраст,
+    а мусор из разговора; взрослые ученики оформляются через администратора."""
+    try:
+        return 2 <= int(str(age).strip()) <= 17
+    except (TypeError, ValueError):
+        return False
 
 
 _SIGNUP_RESTATEMENT_RE = re.compile(
@@ -237,9 +252,16 @@ async def step(
         conv.lead_step = ""
         return _exit_reply(conv), False
 
+    # Вопрос посреди анкеты — это не значение поля: «Как ты записал мое
+    # имя?» в ответ на «какой филиал удобнее?» — это разговор, а не филиал.
+    # Отвечает вызывающий код (OFF_TOPIC), анкета после ответа продолжится
+    # с того же места (pending_question).
+    if "?" in clean and current not in ("confirm", "correcting"):
+        return OFF_TOPIC, False
+
     if current == "fio_parent":
         age = extract_age(clean)
-        if age:
+        if age and _child_age_ok(age):
             lead.age = age
             return "Подскажите, пожалуйста, имя родителя.", False
         name = _extract_name_from_text(clean)
@@ -253,7 +275,7 @@ async def step(
         if birthday:
             lead.birthday = birthday
             return "Подскажите, пожалуйста, имя ребёнка.", False
-        if age:
+        if age and _child_age_ok(age):
             if not lead.age:
                 lead.age = age
             return "Подскажите, пожалуйста, имя ребёнка.", False
@@ -267,12 +289,15 @@ async def step(
         age = extract_age(clean)
         if birthday:
             lead.birthday = birthday
-        elif age:
+        elif age and _child_age_ok(age):
             lead.age = age
+        elif age:
+            return ("Кажется, это не возраст ребёнка. Напишите, пожалуйста, "
+                    "сколько лет ребёнку — например, «9»."), False
         else:
             # просто число?
             digits = "".join(c for c in clean if c.isdigit())
-            if digits and len(digits) <= 2:
+            if digits and len(digits) <= 2 and _child_age_ok(digits):
                 lead.age = digits
             else:
                 return ("Не понял возраст. Укажите числом, например «9», "
@@ -402,7 +427,7 @@ def _opportunistic_fill(conv: Conversation, text: str, kb: KnowledgeBase) -> boo
         lead.birthday = birthday
         updated = True
     age = extract_age(text)
-    if age and not lead.age:
+    if age and _child_age_ok(age) and not lead.age:
         lead.age = age
         updated = True
     branch = _match_branch(kb, text)
@@ -476,7 +501,7 @@ def _apply_correction(
         changed.append(("дата рождения", birthday))
     else:
         age = extract_age(clean)
-        if age and age != lead.age:
+        if age and _child_age_ok(age) and age != lead.age:
             lead.age = age
             lead.birthday = ""
             changed.append(("возраст", f"{age} лет"))

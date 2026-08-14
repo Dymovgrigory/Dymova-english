@@ -32,22 +32,19 @@
   var bridge = tg || max;
   var PLATFORM = tg ? "telegram" : max ? "max" : "web";
   var REQUEST_TIMEOUT_MS = 15000;
-  var TABS = ["home", "programs", "team", "chat", "profile"];
+  var TABS = ["home", "programs", "team", "chat"];
 
   var state = {
     tab: "home",
     sheet: null,
     info: null,
     access: null,
-    profile: null,
     format: "",
     ageFilter: "",
     homeworkFile: null,
     chatBusy: false,
     quiz: { questions: [], index: 0, answers: {} },
     me: null, // что мы знаем о человеке после теста и подбора
-    cabinet: null, // сводка кабинета с сервера
-    activeChild: 0, // выбранный ребёнок в кабинете (индекс в cabinet.children)
     scroll: {},
   };
 
@@ -206,7 +203,6 @@
 
     if (name === "programs") renderCatalog();
     if (name === "team") renderTeam();
-    if (name === "profile") loadCabinet();
     if (name === "chat") greetInChat();
   }
 
@@ -217,7 +213,6 @@
     picker: { title: "Подбор курса", build: buildPicker },
     signup: { title: "Запись на занятие", build: buildSignup },
     homework: { title: "Помощь с домашкой", build: buildHomework },
-    "child-edit": { title: "Карточка ребёнка", build: buildChildEdit },
   };
 
   function showSheet(title, html) {
@@ -341,12 +336,7 @@
 
   function finishQuiz(box) {
     box.innerHTML = '<div class="skeleton"></div>';
-    postJSON("/api/miniapp/level-test", {
-      answers: state.quiz.answers,
-      // Попытка сохраняется на сервере за выбранным ребёнком — результат
-      // больше не зависит от кэша браузера.
-      child_id: currentChildId(),
-    })
+    postJSON("/api/miniapp/level-test", { answers: state.quiz.answers })
       .then(function (data) {
         var result = data.result;
         if (!result) throw new Error("нет результата");
@@ -532,31 +522,102 @@
 
   function buildSignup(box) {
     var me = state.me || {};
+    var branches = (state.info && state.info.branches) || [];
+    var branchOptions = branches.length
+      ? branches.map(function (b) {
+          return {
+            value: b.name,
+            label: String(b.name || "").replace(/^Филиал на /, ""),
+            hint: "",
+          };
+        })
+      : [];
+    branchOptions.push({ value: "Онлайн", label: "Онлайн", hint: "из дома" });
+    // дедуп, если «Онлайн» пришёл из базы
+    var seen = {};
+    branchOptions = branchOptions.filter(function (o) {
+      if (seen[o.value]) return false;
+      seen[o.value] = true;
+      return true;
+    });
+
     box.innerHTML =
+      '<div class="lead">' +
+      '<div class="lead__hero">' +
+      '<span class="lead__badge">Бесплатная диагностика</span>' +
+      '<p class="lead__title">Запись за 30 секунд</p>' +
+      '<p class="lead__sub">Оставьте контакты — администратор перезвонит, определит уровень и подберёт группу.</p>' +
+      "</div>" +
       '<form id="lead-form" class="form" novalidate>' +
       '<label class="field"><span class="field__label">Ваше имя <em>обязательно</em></span>' +
       '<input id="lf-parent" name="fio_parent" type="text" autocomplete="name" placeholder="Иванова Анна" required /></label>' +
+      '<div class="field-row">' +
       '<label class="field"><span class="field__label">Имя ребёнка</span>' +
       '<input id="lf-child" name="fio_child" type="text" placeholder="Миша" /></label>' +
       '<label class="field"><span class="field__label">Возраст</span>' +
-      '<input id="lf-age" name="age" type="number" min="2" max="99" value="' +
+      '<input id="lf-age" name="age" type="number" min="2" max="17" value="' +
       esc(me.age || "") + '" placeholder="9" /></label>' +
+      "</div>" +
       '<label class="field"><span class="field__label">Телефон <em>обязательно</em></span>' +
-      '<input id="lf-phone" name="phone" type="tel" autocomplete="tel" placeholder="+7 999 000-00-00" required /></label>' +
-      '<label class="field"><span class="field__label">Филиал или онлайн</span>' +
-      '<select id="lf-branch" name="branch"><option value="">Выберите</option>' +
-      "<option>Филиал на Лихачевском</option><option>Филиал на Ракетостроителей</option><option>Онлайн</option>" +
-      "</select></label>" +
+      '<input id="lf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 999 000-00-00" required /></label>' +
+      '<div class="field"><span class="field__label">Филиал или онлайн</span>' +
+      '<div class="lead__branches" id="lf-branch-pills" role="radiogroup" aria-label="Филиал">' +
+      branchOptions.map(function (o, i) {
+        return (
+          '<button type="button" class="lead__branch' + (i === 0 ? " is-active" : "") +
+          '" data-value="' + esc(o.value) + '" role="radio" aria-checked="' + (i === 0) + '">' +
+          '<span class="lead__branch-name">' + esc(o.label) + "</span>" +
+          (o.hint ? '<span class="lead__branch-hint">' + esc(o.hint) + "</span>" : "") +
+          "</button>"
+        );
+      }).join("") +
+      "</div>" +
+      '<input id="lf-branch" type="hidden" name="branch" value="' + esc(branchOptions[0].value) + '" />' +
+      "</div>" +
       '<label class="field"><span class="field__label">Комментарий</span>' +
       '<textarea id="lf-comment" name="comment" rows="2" placeholder="Удобное время, пожелания"></textarea></label>' +
-      '<button type="submit" class="primary primary--glow">Отправить заявку</button>' +
+      '<button type="submit" class="lead__submit">Записаться на диагностику</button>' +
+      '<p class="lead__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>' +
       '<p id="lead-status" class="status" hidden></p>' +
-      "</form>";
+      "</form></div>";
+
+    // Пилюли филиалов вместо системного select: крупные цели, видно все
+    // варианты сразу — выбор без выпадающего списка.
+    all(".lead__branch", box).forEach(function (pill) {
+      pill.addEventListener("click", function () {
+        all(".lead__branch", box).forEach(function (other) {
+          other.classList.toggle("is-active", other === pill);
+          other.setAttribute("aria-checked", other === pill ? "true" : "false");
+        });
+        $("#lf-branch").value = pill.dataset.value;
+        haptic("light");
+      });
+    });
+
+    // Мягкая маска телефона: человек вводит цифры, формат появляется сам.
+    $("#lf-phone", box).addEventListener("input", function (event) {
+      event.target.value = formatPhone(event.target.value);
+    });
 
     $("#lead-form", box).addEventListener("submit", function (event) {
       event.preventDefault();
       submitLead();
     });
+  }
+
+  /** Из «89991234567» получается «+7 999 123-45-67» по мере ввода. */
+  function formatPhone(raw) {
+    var digits = String(raw || "").replace(/\D/g, "");
+    if (!digits) return "";
+    if (digits[0] === "8") digits = "7" + digits.slice(1);
+    if (digits[0] !== "7") digits = "7" + digits;
+    digits = digits.slice(0, 11);
+    var out = "+7";
+    if (digits.length > 1) out += " " + digits.slice(1, 4);
+    if (digits.length > 4) out += " " + digits.slice(4, 7);
+    if (digits.length > 7) out += "-" + digits.slice(7, 9);
+    if (digits.length > 9) out += "-" + digits.slice(9, 11);
+    return out;
   }
 
   function submitLead() {
@@ -583,11 +644,11 @@
     postJSON("/api/miniapp/lead", body)
       .then(function (data) {
         if (data.ok) {
-          status.textContent = "Готово. Администратор свяжется с вами.";
           haptic("success");
           mascot("success");
           celebrate();
-          setTimeout(closeSheet, 1400);
+          showLeadSuccess(body);
+          setTimeout(closeSheet, 2200);
         } else {
           status.textContent = data.error || "Не получилось отправить. Попробуйте ещё раз.";
           haptic("error");
@@ -597,6 +658,22 @@
         status.textContent = "Нет связи. Заявка не ушла.";
         haptic("error");
       });
+  }
+
+  /** Успех — заметный, а не строчка статуса: карточка с галочкой вместо формы. */
+  function showLeadSuccess(body) {
+    var sheet = $("#sheet-body");
+    if (!sheet) return;
+    sheet.innerHTML =
+      '<div class="lead-success">' +
+      '<span class="lead-success__ring">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>' +
+      "</span>" +
+      '<p class="lead-success__title">Заявка отправлена</p>' +
+      '<p class="lead-success__text">Администратор свяжется с вами в ближайшее время и подберёт удобное время' +
+      (body.branch ? ". Филиал: " + esc(body.branch) + "." : "") +
+      "</p>" +
+      "</div>";
   }
 
   /* -------------------------------------------------------------- домашка */
@@ -1047,528 +1124,6 @@
     haptic("light");
   }
 
-  /* -------------------------------------------------------------- кабинет */
-
-  /* Кабинет — это раздел дока, а не лист. Лента блоков: кто я, ближайшее
-     занятие, прогресс, заявки, что дальше. Каждое пустое состояние —
-     предложение действия, а не сообщение об ошибке. */
-
-  var LEVEL_ORDER = ["A0–A1", "A1–A2", "A2–B1", "B1+"];
-
-  function kvRow(key, value) {
-    return (
-      '<div class="kv"><span class="kv__k">' + esc(key) + "</span>" +
-      '<span class="kv__v">' + esc(value) + "</span></div>"
-    );
-  }
-
-  function loadCabinet() {
-    if (!signedIn()) {
-      renderCabinetGuest();
-      return;
-    }
-    markCabinetLoading();
-    request("/api/miniapp/cabinet")
-      .then(function (data) {
-        if (data.__status === 401) {
-          renderCabinetGuest();
-          return;
-        }
-        state.cabinet = data;
-        remember("cabinet", data);
-        $("#offline").hidden = true;
-        renderCabinet(data);
-      })
-      .catch(function () {
-        // Нет связи: показываем последнее загруженное с честной пометкой,
-        // а не пустой экран.
-        var cached = recall("cabinet");
-        $("#offline").hidden = false;
-        if (cached) {
-          state.cabinet = cached;
-          renderCabinet(cached, true);
-        } else {
-          renderCabinetMessage(
-            "Нет связи",
-            "Как только сеть появится, кабинет загрузится сам. Пока можно посмотреть программы и педагогов — они на месте."
-          );
-        }
-      });
-  }
-
-  function markCabinetLoading() {
-    all(".cab__block").forEach(function (block) {
-      block.innerHTML = '<div class="skeleton"></div>';
-    });
-  }
-
-  function renderCabinetMessage(title, text, actionsHtml) {
-    all(".cab__block").forEach(function (block) {
-      block.innerHTML = "";
-    });
-    $("#cab-kids").innerHTML = "";
-    $("#cab-greeting").textContent = title;
-    $("#cab-sub").textContent = text;
-    $("#cab-next").innerHTML = actionsHtml || "";
-  }
-
-  /** Не в мессенджере: объясняем, откуда открывается кабинет, и даём
-   *  кнопку в бота. Никаких фальшивых данных. */
-  function renderCabinetGuest() {
-    var botUrl = botLink();
-    renderCabinetMessage(
-      "Кабинет открывается из чата",
-      "Здесь будут ваши дети, их прогресс и расписание. Откройте приложение из чата с ботом — там оно знает, кто вы.",
-      botUrl
-        ? '<a class="primary primary--glow cab__cta" href="' + esc(botUrl) + '" target="_blank" rel="noopener">Перейти в бота</a>'
-        : ""
-    );
-  }
-
-  function botLink() {
-    var social = (state.info && state.info.social) || {};
-    return PLATFORM === "telegram"
-      ? social.telegram || social.max_bot || ""
-      : social.max_bot || social.telegram || "";
-  }
-
-  /** Есть личность, но регистрации нет: что даст регистрация и кнопка
-   *  в чат с ботом, где она проходит. */
-  function renderCabinetUnregistered() {
-    renderCabinetMessage(
-      "Осталось познакомиться",
-      "",
-      '<ul class="cab__perks">' +
-        "<li>Карточка ребёнка: уровень, программа, расписание</li>" +
-        "<li>История тестов уровня — видно динамику</li>" +
-        "<li>Заявки и ближайшее занятие в одном месте</li>" +
-        "</ul>" +
-        '<button class="primary primary--glow cab__cta" data-cab-register>Пройти регистрацию</button>'
-    );
-    var btn = $("[data-cab-register]");
-    if (btn) {
-      btn.addEventListener("click", function () {
-        askInChat("Хочу зарегистрироваться");
-      });
-    }
-  }
-
-  function renderCabinet(data, stale) {
-    var kids = data.children || [];
-    if (state.activeChild >= kids.length) state.activeChild = 0;
-    var child = kids[state.activeChild] || null;
-
-    $("#cab-greeting").textContent = data.greeting_name
-      ? "Здравствуйте, " + data.greeting_name
-      : "Кабинет";
-    $("#cab-sub").textContent = stale
-      ? "Нет связи — показаны данные последней загрузки, они могли устареть."
-      : "Ваши дети, прогресс и занятия — всё своё в одном месте.";
-
-    if (!data.registered) {
-      renderCabinetUnregistered();
-      return;
-    }
-
-    renderKids(kids);
-    renderChildCard(child);
-    renderLesson(data.schedule || {}, child);
-    renderProgress(data.attempts || {}, child);
-    renderLead(data.lead);
-    renderNext(data.next_action, data.schedule);
-  }
-
-  function renderKids(kids) {
-    var box = $("#cab-kids");
-    if (!kids.length) {
-      box.innerHTML = "";
-      return;
-    }
-    box.innerHTML =
-      kids
-        .map(function (kid, index) {
-          return (
-            '<button class="cab__kid' + (index === state.activeChild ? " is-active" : "") +
-            '" data-kid="' + index + '" role="tab" aria-selected="' +
-            (index === state.activeChild) + '">' +
-            '<span class="cab__kid-name">' + esc(kid.name) + "</span>" +
-            (kid.age ? '<span class="cab__kid-age">' + esc(kid.age) + "</span>" : "") +
-            "</button>"
-          );
-        })
-        .join("") +
-      '<button class="cab__kid cab__kid--add" data-cab-add-child aria-label="Добавить ребёнка">+</button>';
-
-    all("[data-kid]", box).forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        state.activeChild = Number(btn.dataset.kid);
-        haptic("light");
-        renderCabinet(state.cabinet);
-      });
-    });
-    var add = $("[data-cab-add-child]", box);
-    if (add) {
-      add.addEventListener("click", function () {
-        openSheet("child-edit");
-      });
-    }
-  }
-
-  function currentChild() {
-    var kids = (state.cabinet && state.cabinet.children) || [];
-    return kids[state.activeChild] || null;
-  }
-
-  function currentChildId() {
-    var child = currentChild();
-    return child ? child.id : null;
-  }
-
-  function renderChildCard(child) {
-    var box = $("#cab-child");
-    if (!child) {
-      box.innerHTML =
-        '<div class="cab__card">' +
-        '<h3 class="cab__title">Карточка ребёнка</h3>' +
-        '<p class="cab__text">Расскажите, кто будет заниматься: имя, возраст и уровень подтянутся в подбор программы и в чат с ботом.</p>' +
-        '<button class="primary" data-cab-add-child>Добавить ребёнка</button>' +
-        "</div>";
-      var btn = $("[data-cab-add-child]", box);
-      if (btn) btn.addEventListener("click", function () { openSheet("child-edit"); });
-      return;
-    }
-    box.innerHTML =
-      '<div class="cab__card">' +
-      '<h3 class="cab__title">' + esc(child.name) + "</h3>" +
-      '<div class="kv-list">' +
-      (child.age ? kvRow("Возраст", child.age) : "") +
-      (child.grade ? kvRow("Класс", child.grade) : "") +
-      kvRow("Уровень", child.level || "пока не определён") +
-      (child.program ? kvRow("Программа", child.program) : "") +
-      "</div>" +
-      '<button class="ghost" data-cab-edit-child>Изменить</button>' +
-      "</div>";
-    $("[data-cab-edit-child]", box).addEventListener("click", function () {
-      openSheet("child-edit");
-    });
-  }
-
-  function branchInfo(name) {
-    var branches = (state.info && state.info.branches) || [];
-    if (!name) return null;
-    var clean = function (s) {
-      return String(s || "").toLowerCase().replace(/ё/g, "е").replace(/[^а-яa-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
-    };
-    var hay = function (b) { return clean(b.name) + " " + clean(b.address); };
-    var needle = clean(name);
-    // Склонения ломают точное сравнение («Лихачёвский» vs «на Лихачевском»),
-    // поэтому сравниваем по основам слов: хвост из 2–3 букв отбрасываем.
-    var stems = needle.split(" ").filter(function (w) { return w.length >= 6; })
-      .map(function (w) { return w.slice(0, -3); });
-    for (var i = 0; i < branches.length; i++) {
-      var text = hay(branches[i]);
-      if (needle && text.indexOf(needle) >= 0) return branches[i];
-      for (var j = 0; j < stems.length; j++) {
-        if (stems[j].length >= 5 && text.indexOf(stems[j]) >= 0) return branches[i];
-      }
-    }
-    return null;
-  }
-
-  function lessonActions(filial) {
-    var branch = branchInfo(filial);
-    var html = "";
-    if (branch && (branch.maps || branch.address)) {
-      var url = branch.maps ||
-        "https://yandex.ru/maps/?text=" + encodeURIComponent(branch.address);
-      html += '<a class="ghost" target="_blank" rel="noopener" href="' + esc(url) + '">Построить маршрут</a>';
-    }
-    if (branch && (branch.phone_tel || branch.phone)) {
-      html += '<a class="ghost" href="tel:' + esc(branch.phone_tel || String(branch.phone).replace(/[^+\d]/g, "")) + '">Позвонить в филиал</a>';
-    }
-    return html;
-  }
-
-  function renderLesson(schedule, child) {
-    var box = $("#cab-lesson");
-    if (!schedule.has_import) {
-      // Честный блок вместо пустой сетки недели: расписания нет, потому что
-      // выгрузки ещё не было, — и вот что с этим сделать.
-      box.innerHTML =
-        '<div class="cab__card">' +
-        '<h3 class="cab__title">Расписание</h3>' +
-        '<p class="cab__text">Расписание появится, когда администратор загрузит его в бота. Обычно это раз в неделю.</p>' +
-        '<button class="primary" data-cab-ask-schedule>Спросить расписание</button>' +
-        "</div>";
-      $("[data-cab-ask-schedule]", box).addEventListener("click", function () {
-        askInChat("Подскажите, пожалуйста, расписание занятий");
-      });
-      return;
-    }
-    var lessons = schedule.lessons || [];
-    var note = '<p class="cab__note">Данные на ' + esc(schedule.imported_label || "—") +
-      (schedule.stale ? " · расписание могло измениться" : "") + "</p>";
-    if (!lessons.length) {
-      box.innerHTML =
-        '<div class="cab__card">' +
-        '<h3 class="cab__title">Расписание</h3>' +
-        '<p class="cab__text">Выгрузка есть, но вашего расписания в ней пока нет. Уточните у администратора — возможно, строку не сопоставили.</p>' +
-        '<button class="primary" data-cab-ask-schedule>Спросить расписание</button>' +
-        note +
-        "</div>";
-      $("[data-cab-ask-schedule]", box).addEventListener("click", function () {
-        askInChat("Подскажите, пожалуйста, расписание занятий");
-      });
-      return;
-    }
-    var next = schedule.next;
-    var nextHtml = "";
-    if (next) {
-      nextHtml =
-        '<div class="cab__next-lesson">' +
-        '<p class="cab__next-when">' + esc(next.day_hint || next.weekday_label) +
-        (next.time ? ", " + esc(next.time) : "") + "</p>" +
-        (next.program ? '<p class="cab__next-what">' + esc(next.program) + "</p>" : "") +
-        '<p class="cab__next-meta">' +
-        [next.teacher, next.filial].filter(Boolean).map(esc).join(" · ") +
-        "</p>" +
-        '<div class="cab__actions">' + lessonActions(next.filial) + "</div>" +
-        "</div>";
-    }
-    var weekHtml =
-      lessons.length > 1
-        ? '<ul class="cab__week">' +
-          lessons
-            .map(function (lesson) {
-              return (
-                "<li><b>" + esc(lesson.weekday_label || lesson.weekday) + "</b> " +
-                esc(lesson.time || "") +
-                (lesson.program ? " · " + esc(lesson.program) : "") +
-                (lesson.student_name && (!child || lesson.student_name !== child.name)
-                  ? " · " + esc(lesson.student_name)
-                  : "") +
-                "</li>"
-              );
-            })
-            .join("") +
-          "</ul>"
-        : "";
-    box.innerHTML =
-      '<div class="cab__card">' +
-      '<h3 class="cab__title">Ближайшее занятие</h3>' +
-      nextHtml + weekHtml + note +
-      "</div>";
-  }
-
-  function renderProgress(attempts, child) {
-    var box = $("#cab-progress");
-    if (!attempts.kind || attempts.kind === "none") {
-      box.innerHTML =
-        '<div class="cab__card">' +
-        '<h3 class="cab__title">Прогресс</h3>' +
-        '<p class="cab__text">Здесь будет динамика теста уровня' +
-        (child ? " — " + esc(child.name) : "") +
-        ". Первый результат появится сразу после прохождения.</p>" +
-        '<button class="primary" data-sheet="quiz">Пройти тест уровня</button>' +
-        "</div>";
-      return;
-    }
-    if (attempts.kind === "single") {
-      var point = attempts.points[0];
-      box.innerHTML =
-        '<div class="cab__card">' +
-        '<h3 class="cab__title">Прогресс</h3>' +
-        '<p class="cab__text">' + esc(attempts.phrase) + "</p>" +
-        '<p class="cab__note">' + esc(point.level) + " · верно " + point.correct + " из " + point.total + "</p>" +
-        "</div>";
-      return;
-    }
-    box.innerHTML =
-      '<div class="cab__card">' +
-      '<h3 class="cab__title">Прогресс</h3>' +
-      progressChart(attempts.points) +
-      '<p class="cab__text">' + esc(attempts.phrase) + "</p>" +
-      "</div>";
-  }
-
-  /** Линия уровня по попыткам. Шкала — коды уровней, а не проценты:
-   *  процентов мы не измеряли. */
-  function progressChart(points) {
-    var W = 300, H = 120, PAD = 26;
-    var ranks = points.map(function (p) {
-      var rank = LEVEL_ORDER.indexOf(p.level);
-      return rank < 0 ? 0 : rank;
-    });
-    var stepX = points.length > 1 ? (W - PAD * 2) / (points.length - 1) : 0;
-    var stepY = (H - PAD * 2) / (LEVEL_ORDER.length - 1);
-    var coords = points.map(function (p, i) {
-      return [PAD + i * stepX, H - PAD - ranks[i] * stepY];
-    });
-    var path = coords
-      .map(function (c, i) {
-        return (i ? "L" : "M") + c[0].toFixed(1) + " " + c[1].toFixed(1);
-      })
-      .join(" ");
-    var dots = coords
-      .map(function (c, i) {
-        return (
-          '<circle cx="' + c[0].toFixed(1) + '" cy="' + c[1].toFixed(1) + '" r="5" class="cab__dot' +
-          (i === coords.length - 1 ? " is-last" : "") + '">' +
-          "<title>" + esc(points[i].date + " — " + points[i].level) + "</title></circle>"
-        );
-      })
-      .join("");
-    var labels = LEVEL_ORDER.map(function (level, i) {
-      var y = H - PAD - i * stepY;
-      return '<text x="2" y="' + (y + 3).toFixed(1) + '" class="cab__axis">' + esc(level) + "</text>";
-    }).join("");
-    return (
-      '<svg class="cab__chart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Динамика уровня">' +
-      labels +
-      '<path d="' + path + '" class="cab__line"/>' +
-      dots +
-      "</svg>"
-    );
-  }
-
-  function renderLead(lead) {
-    var box = $("#cab-lead");
-    if (!lead) {
-      box.innerHTML =
-        '<div class="cab__card">' +
-        '<h3 class="cab__title">Мои заявки</h3>' +
-        '<p class="cab__text">Заявок пока нет. Бесплатная диагностика покажет уровень и подходящую группу.</p>' +
-        '<button class="primary" data-sheet="signup">Записаться на диагностику</button>' +
-        "</div>";
-      return;
-    }
-    box.innerHTML =
-      '<div class="cab__card">' +
-      '<h3 class="cab__title">Мои заявки</h3>' +
-      '<div class="kv-list">' +
-      (lead.date ? kvRow("Дата", lead.date) : "") +
-      (lead.program ? kvRow("Программа", lead.program) : "") +
-      (lead.branch ? kvRow("Филиал", lead.branch) : "") +
-      kvRow("Статус", lead.status) +
-      "</div></div>";
-  }
-
-  function renderNext(action, schedule) {
-    var box = $("#cab-next");
-    if (!action) {
-      box.innerHTML = "";
-      return;
-    }
-    var cta;
-    if (action.kind === "route") {
-      var branch = branchInfo((state.cabinet.lead && state.cabinet.lead.branch) || "");
-      cta = branch && (branch.maps || branch.address)
-        ? '<a class="primary primary--glow cab__cta" target="_blank" rel="noopener" href="' +
-          esc(branch.maps || "https://yandex.ru/maps/?text=" + encodeURIComponent(branch.address)) + '">' + esc(action.cta) + "</a>"
-        : '<button class="primary primary--glow cab__cta" data-cab-ask-route>' + esc(action.cta) + "</button>";
-    } else if (action.kind === "ask_teacher") {
-      cta = '<button class="primary primary--glow cab__cta" data-cab-ask-teacher>' + esc(action.cta) + "</button>";
-    } else {
-      cta = '<button class="primary primary--glow cab__cta" data-sheet="' + esc(action.sheet || "quiz") + '">' + esc(action.cta) + "</button>";
-    }
-    box.innerHTML =
-      '<div class="cab__card cab__card--next">' +
-      '<h3 class="cab__title">Что дальше</h3>' +
-      '<p class="cab__next-title">' + esc(action.title) + "</p>" +
-      '<p class="cab__text">' + esc(action.text) + "</p>" +
-      cta +
-      "</div>";
-    var teacher = $("[data-cab-ask-teacher]", box);
-    if (teacher) {
-      teacher.addEventListener("click", function () {
-        askInChat("Вопрос педагогу: ");
-      });
-    }
-    var route = $("[data-cab-ask-route]", box);
-    if (route) {
-      route.addEventListener("click", function () {
-        askInChat("Как добраться до филиала?");
-      });
-    }
-  }
-
-  /** Чат с готовым вопросом: переход в раздел «Фокси» и текст в поле ввода. */
-  function askInChat(text) {
-    goTab("chat");
-    var input = $("#chat-input");
-    if (input) {
-      input.value = text;
-      input.focus();
-    }
-  }
-
-  /* ------------------------------------------------------- карточка ребёнка */
-
-  function buildChildEdit(box) {
-    var child = currentChild();
-    var levels = [""].concat(LEVEL_ORDER);
-    box.innerHTML =
-      '<form class="form" id="child-form" novalidate>' +
-      '<label class="field"><span class="field__label">Имя</span>' +
-      '<input name="name" type="text" required maxlength="120" value="' + esc(child ? child.name : "") + '" /></label>' +
-      '<label class="field"><span class="field__label">Возраст</span>' +
-      '<input name="age" type="text" maxlength="20" placeholder="например, 8 лет" value="' + esc(child ? child.age : "") + '" /></label>' +
-      '<label class="field"><span class="field__label">Класс</span>' +
-      '<input name="grade" type="text" maxlength="20" placeholder="например, 3" value="' + esc(child ? child.grade : "") + '" /></label>' +
-      '<label class="field"><span class="field__label">Уровень</span>' +
-      '<select name="level">' +
-      levels
-        .map(function (level) {
-          return (
-            '<option value="' + esc(level) + '"' +
-            (child && child.level === level ? " selected" : "") + ">" +
-            (level ? esc(level) : "пока не определён") + "</option>"
-          );
-        })
-        .join("") +
-      "</select></label>" +
-      '<label class="field"><span class="field__label">Программа</span>' +
-      '<input name="program" type="text" maxlength="160" value="' + esc(child ? child.program : "") + '" /></label>' +
-      '<p class="status" id="child-status"></p>' +
-      '<button class="primary primary--glow" type="submit">Сохранить</button>' +
-      "</form>";
-
-    on("#child-form", "submit", function (event) {
-      event.preventDefault();
-      var form = event.target;
-      var body = {
-        name: form.name.value.trim(),
-        age: form.age.value.trim(),
-        grade: form.grade.value.trim(),
-        level: form.level.value,
-        program: form.program.value.trim(),
-      };
-      if (child) body.id = child.id;
-      if (!body.name) {
-        $("#child-status").textContent = "Укажите имя";
-        return;
-      }
-      var status = $("#child-status");
-      status.textContent = "Сохраняю…";
-      postJSON("/api/miniapp/cabinet/child", body)
-        .then(function (data) {
-          if (!data.ok) throw new Error(data.error || "Не сохранилось");
-          if (state.cabinet) state.cabinet.children = data.children;
-          if (!child && data.children && data.children.length) {
-            state.activeChild = data.children.length - 1;
-          }
-          haptic("success");
-          mascot("success");
-          toast("Сохранено");
-          closeSheet();
-          if (state.tab === "profile") loadCabinet();
-        })
-        .catch(function (err) {
-          status.textContent = err.message || "Не удалось сохранить. Попробуйте ещё раз.";
-        });
-    });
-  }
-
   /* ------------------------------------------------------------- появление */
 
   function armReveals() {
@@ -1647,7 +1202,7 @@
     // фон — одно целое, а не картинка и кнопки поверх неё.
     document.addEventListener("pointerdown", function (event) {
       if (!event.target || !event.target.closest) return;
-      if (event.target.closest(".qa, .pulse, .dock__btn, .cab__card, .cab__kid")) {
+      if (event.target.closest(".qa, .pulse, .dock__btn")) {
         if (typeof window.foxiSplash === "function") window.foxiSplash(1);
       }
     }, { passive: true });
