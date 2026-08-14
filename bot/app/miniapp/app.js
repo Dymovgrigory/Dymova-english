@@ -122,12 +122,26 @@ function renderBranches() {
       .map(
         (b) =>
           `<div class="card"><h2>${esc(b.name)}</h2>
-           <p>📍 <a href="${esc(b.maps)}" target="_blank" rel="noopener">${esc(b.address)}</a></p>
-           <p>☎ <a href="tel:${esc(b.phone_tel)}">${esc(b.phone)}</a></p>
-           <p class="muted">🕘 ${esc(b.work_hours || "")}</p></div>`
+           <p>${IC_PIN}<a href="${esc(b.maps)}" target="_blank" rel="noopener">${esc(b.address)}</a></p>
+           <p>${IC_PHONE}<a href="tel:${esc(b.phone_tel)}">${esc(b.phone)}</a></p>
+           <p class="muted">${IC_CLOCK}${esc(b.work_hours || "")}</p></div>`
       )
       .join("");
 }
+
+// Иконки списков — тот же язык, что и на плитках меню. Эмодзи не годятся:
+// они рисуются шрифтом системы, то есть выглядят по-разному на каждом
+// устройстве и к фирменному стилю школы отношения не имеют.
+const IC_ATTRS =
+  'class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+const IC_PIN =
+  `<svg ${IC_ATTRS}><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/>` +
+  '<circle cx="12" cy="10" r="2.6"/></svg>';
+const IC_PHONE =
+  `<svg ${IC_ATTRS}><path d="M5 4h3l2 5-2 1.5a12 12 0 0 0 5.5 5.5L15 14l5 2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 6.2 2 2 0 0 1 5 4Z"/></svg>`;
+const IC_CLOCK =
+  `<svg ${IC_ATTRS}><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg>`;
 
 // --- Форма заявки ---
 function openLeadForm(prefill = {}) {
@@ -157,7 +171,7 @@ document.getElementById("lf-submit").addEventListener("click", async () => {
   showStatus("Отправляю...", true);
   const res = await postJSON("/api/miniapp/lead", body);
   if (res.ok) {
-    showStatus("Готово! ✅ Заявка отправлена, администратор скоро свяжется с вами.", true);
+    showStatus("Готово — заявка отправлена. Администратор скоро свяжется с вами.", true);
   } else {
     showStatus("Не удалось отправить заявку: " + (res.error || "попробуйте позже или позвоните нам."), false);
   }
