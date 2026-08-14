@@ -9,6 +9,7 @@ KB загружает data.yaml и строит коллекцию «докум�
 """
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -20,10 +21,22 @@ from app.config import settings
 
 _DEFAULT_PATH = Path(__file__).with_name("data.yaml")
 _WORD_RE = re.compile(r"[а-яёa-z0-9]+", re.IGNORECASE)
-# Очень короткие/служебные слова не несут смысла для поиска.
+# Насколько сильнее совпадение в заголовке документа, чем в его тексте.
+_TITLE_BONUS = 0.4
+# Служебные слова не несут смысла для поиска. Местоимения и вопросительные
+# слова здесь особенно важны: они редкие, поэтому при взвешивании по
+# редкости именно они начинали перевешивать содержательные слова —
+# «Кто у вас педагоги?» находило «У вас есть носитель языка?» по слову «вас».
 _STOPWORDS = {
     "и", "в", "на", "с", "по", "для", "от", "до", "не", "а", "что", "как",
     "это", "у", "о", "за", "ли", "же", "бы", "то", "из", "мы", "вы", "я",
+    "кто", "кого", "кому", "кем", "чем", "чём", "чего", "чему",
+    "вас", "вам", "вами", "ваш", "ваша", "ваше", "ваши",
+    "нас", "нам", "нами", "наш", "наша", "наше", "наши",
+    "мне", "меня", "мной", "он", "она", "оно", "они", "его", "её", "ее",
+    "их", "им", "ими", "ему", "ей", "там", "тут", "здесь", "там",
+    "есть", "был", "была", "было", "были", "быть", "ещё", "еще",
+    "или", "но", "если", "когда", "где", "куда", "почему", "зачем",
 }
 
 
@@ -53,6 +66,7 @@ class Document:
     title: str
     text: str
     tokens: set[str] = field(default_factory=set)
+    title_tokens: set[str] = field(default_factory=set)
 
     def render(self) -> str:
         return f"[{self.title}]\n{self.text}".strip()
@@ -66,6 +80,9 @@ class KnowledgeBase:
         self.raw: dict[str, Any] = {}
         self.documents: list[Document] = []
         self.live_documents: list[Document] = []
+        # Веса слов считаются лениво и сбрасываются при смене документов.
+        self._idf: dict[str, float] = {}
+        self._unknown_weight: float = 1.0
         self.load()
 
     # ---------- загрузка ----------
@@ -73,6 +90,7 @@ class KnowledgeBase:
         with open(self.path, encoding="utf-8") as f:
             self.raw = yaml.safe_load(f) or {}
         self.documents = []
+        self._idf = {}
         self._build_documents()
 
     def _add(self, category: str, title: str, text: str) -> None:
@@ -81,6 +99,7 @@ class KnowledgeBase:
             return
         doc = Document(category=category, title=title, text=text)
         doc.tokens = set(_tokens(f"{title} {text}"))
+        doc.title_tokens = set(_tokens(title))
         self.documents.append(doc)
 
     def _build_documents(self) -> None:
@@ -170,12 +189,43 @@ class KnowledgeBase:
     def set_live_documents(self, docs: list[Document]) -> None:
         """Заменяет «живые» документы, полученные синхронизацией с сайта."""
         self.live_documents = docs
+        self._idf = {}
 
     # ---------- поиск ----------
+    def _weights(self) -> dict[str, float]:
+        """Вес каждого слова: чем реже слово, тем больше оно значит.
+
+        Без этого «сколько стоит английский» и «расписание английского»
+        считались одинаково похожими на любой документ со словом
+        «английский» — оно есть почти везде. Совпадение по слову «рассрочка»
+        должно весить намного больше совпадения по слову «занятие».
+        """
+        if self._idf:
+            return self._idf
+        docs = self.documents + self.live_documents
+        total = len(docs) or 1
+        frequency: dict[str, int] = {}
+        for doc in docs:
+            for token in doc.tokens:
+                frequency[token] = frequency.get(token, 0) + 1
+        self._idf = {
+            token: math.log(1 + total / count) for token, count in frequency.items()
+        }
+        # Слово, которого нет ни в одном документе, весит как самое редкое:
+        # именно из-за него ответа в базе может не быть, и занижать его вес
+        # значило бы завышать уверенность в неподходящем документе.
+        self._unknown_weight = math.log(1 + total)
+        return self._idf
+
+    def _weight_of(self, token: str, weights: dict[str, float]) -> float:
+        return weights.get(token, self._unknown_weight)
+
     def search_scored(self, query: str, limit: int = 5) -> list[tuple[float, Document]]:
         q_tokens = set(_tokens(query))
         if not q_tokens:
             return []
+        weights = self._weights()
+        total_weight = sum(self._weight_of(t, weights) for t in q_tokens) or 1.0
         scored: list[tuple[float, Document]] = []
         for doc in self.documents + self.live_documents:
             if not doc.tokens:
@@ -183,8 +233,18 @@ class KnowledgeBase:
             overlap = q_tokens & doc.tokens
             if not overlap:
                 continue
-            # нормируем на длину запроса + небольшой бонус за FAQ/курсы
-            score = len(overlap) / len(q_tokens)
+            # Доля «смысловой массы» запроса, которую покрыл документ,
+            # плюс небольшой бонус разделам, где чаще лежит прямой ответ.
+            score = sum(self._weight_of(t, weights) for t in overlap) / total_weight
+            # Совпадение в заголовке — куда более сильное свидетельство, чем
+            # то же слово где-то в тексте: заголовок это и есть тема
+            # документа. Без этого запрос из одного слова давал одинаковый
+            # балл всем документам, где оно вообще встречается.
+            in_title = q_tokens & doc.title_tokens
+            if in_title:
+                score += _TITLE_BONUS * (
+                    sum(self._weight_of(t, weights) for t in in_title) / total_weight
+                )
             if doc.category in ("faq", "courses", "formats", "team"):
                 score += 0.1
             scored.append((score, doc))

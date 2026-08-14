@@ -18,7 +18,6 @@ from app import intent as I
 from app import runtime
 from app import registration
 from app.bigben import get_bigben
-from app.course_selector import format_recommendations, recommend
 from app.config import settings
 from app.knowledge.kb import get_kb, _stem, _tokens
 from app.llm import get_llm
@@ -29,6 +28,7 @@ from app import emotion
 from app import intent_ai
 from app import pii
 from app import recall
+from app import recommender
 from app import smart
 from app.memory import (
     Conversation,
@@ -659,6 +659,23 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
         smart.mark_asked(conv.need, question)
         return f"{acknowledgement} {question}"
 
+    # 4г. Спрашивают про программы, и мы уже понимаем, для кого. Отвечаем
+    #     подбором с обоснованием, а не перечислением каталога: список
+    #     программ — это тот же прайс, только другими словами. Если
+    #     уверенного подбора нет, ниже отработает обычный ответ по базе.
+    if intent == I.COURSES:
+        pick = recommender.suggest(kb, conv)
+        if pick and pick.next_best_action != recommender.NEXT_ASK:
+            conv.stage = STAGE_DISCOVERY
+            conv.recommended_program = pick.program
+            runtime.log_event(
+                "RECOMMENDED",
+                user_id=conv.user_id,
+                program=pick.program,
+                confidence=pick.confidence,
+            )
+            return pick.as_text()
+
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY
         if (
@@ -731,14 +748,6 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             opener = "Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург»."
             return f"{opener} {question}" if question else opener
         return "Здравствуйте! Чем могу помочь?"
-
-    # 8. Если знаем возраст и спрашивают про курсы/программы — предлагаем подбор.
-    if intent == I.COURSES and conv.lead.age:
-        items = recommend(kb, conv.lead.age, conv.selected_format)
-        recs = format_recommendations(items)
-        if recs:
-            conv.stage = STAGE_DISCOVERY
-            return recs + "\n\n" + sales.sales_nudge(conv)
 
     # 9. Во всех прочих случаях — консультативный ответ по базе знаний.
     #    Веб-поиск подключаем только для содержательных вопросов (не для

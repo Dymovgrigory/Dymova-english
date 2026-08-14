@@ -165,6 +165,10 @@ async def test_factual_questions_do_not_invent_prices(monkeypatch):
     он отвечает [UNKNOWN], и только тогда включается handoff."""
     class FakeKB:
         branches = []
+        # Подбор программы теперь тоже спрашивает базу — двойник обязан
+        # отвечать на те же вопросы, что и настоящая KB.
+        age_programs = []
+        courses = []
 
         def search(self, query, limit=5):
             return []
@@ -248,6 +252,10 @@ async def test_uncertain_answer_retries_with_web_search(monkeypatch):
     передавать вопрос администратору (сессия 36)."""
     class FakeKB:
         branches = []
+        # Подбор программы теперь тоже спрашивает базу — двойник обязан
+        # отвечать на те же вопросы, что и настоящая KB.
+        age_programs = []
+        courses = []
 
         def search(self, query, limit=5):
             return []
