@@ -210,3 +210,23 @@ def test_binding_survives_missing_elements():
     Один null не должен мешать приложению запуститься."""
     assert "function on(" in JS
     assert "console.warn" in JS.split("bind();")[1][:400] or "catch" in JS.split("try {")[1][:200]
+
+
+def test_menu_enters_in_order_without_javascript():
+    """Меню появляется ступенчато — тем же языком, что и шапка. Анимацией,
+    а не классом от скрипта: при незагрузившемся JS меню обязано быть."""
+    assert "@keyframes menu-in" in CSS
+    assert "--ease-entrance" in CSS
+    for delay in ("320ms", "480ms", "560ms", "640ms", "760ms"):
+        assert delay in CSS, f"нет задержки {delay}"
+
+
+def test_menu_press_stirs_the_ink():
+    """Интерфейс и фон — одно целое: нажатие отзывается в шапке."""
+    assert 'closest(".qa, .pulse, .dock__btn")' in JS
+    assert "foxiSplash(1)" in JS
+
+
+def test_keyboard_focus_is_as_visible_as_a_press():
+    assert ".dock__btn:focus-visible" in CSS
+    assert ".quick .qa:focus-visible" in CSS

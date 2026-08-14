@@ -57,6 +57,11 @@
 
   --ease: cubic-bezier(.22, .61, .36, 1);
   --ease-out-back: cubic-bezier(.34, 1.4, .64, 1);
+  /* Кривая входа и быстрый отклик — из языка, заданного для шапки:
+     меню обязано двигаться так же, иначе экран распадается на две части. */
+  --ease-entrance: cubic-bezier(.2, 0, 0, 1);
+  --duration-fast: 150ms;
+  --duration-entrance: 700ms;
 
   /* Цвет текста клиента используется только для системных элементов, где
      мессенджер рисует свой хром поверх нашего. */
@@ -1537,4 +1542,106 @@ body.is-locked { overflow: hidden; }
 @keyframes toast-in {
   from { opacity: 0; transform: translate(-50%, 8px); }
   to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+
+/* ============================================================
+   МЕНЮ: ступенчатый вход и стеклянный отклик
+
+   Тот же язык, что у шапки: мягкая пружина, вход по очереди сверху вниз,
+   стекло с размытием и подсветкой края. Появление сделано анимацией, а не
+   классом от скрипта: при незагрузившемся JS меню обязано быть на месте.
+   ============================================================ */
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translate3d(0, 1.25rem, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes dock-in {
+  from { opacity: 0; transform: translate(-50%, 1.5rem); }
+  to   { opacity: 1; transform: translateX(-50%); }
+}
+
+.pulse,
+.quick .qa,
+.dock {
+  animation: menu-in var(--duration-entrance) var(--ease-entrance) both;
+}
+
+/* Задержки — из того же ряда, что и вход шапки: полоса, затем плитки по
+   очереди, затем док. Человек видит порядок, а не вспышку всего сразу. */
+.pulse            { animation-delay: 320ms; }
+.quick .qa        { animation-delay: 480ms; }
+.quick .qa:nth-child(2) { animation-delay: 560ms; }
+.quick .qa:nth-child(3) { animation-delay: 640ms; }
+.dock {
+  animation-name: dock-in;
+  animation-delay: 760ms;
+}
+
+/* Стекло: полупрозрачная заливка, размытие и светлая грань сверху —
+   кнопка выглядит выпуклой, а не нарисованной. */
+.quick .qa,
+.pulse {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .62)),
+    var(--bg-elev);
+  backdrop-filter: blur(12px) saturate(1.3);
+  transition:
+    transform .18s var(--ease-entrance),
+    box-shadow .18s var(--ease-entrance),
+    border-color var(--duration-fast) var(--ease-entrance);
+}
+
+.quick .qa::after,
+.pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .9), transparent);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .quick .qa:hover,
+  .pulse:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: rgba(107, 77, 230, .35);
+  }
+}
+
+/* Нажатие: кнопка проседает и подсвечивается фирменным свечением. */
+.quick .qa:active,
+.pulse:active {
+  transform: scale(.975);
+  box-shadow: var(--glow-violet);
+}
+
+/* Клавиатура должна видеть фокус так же ясно, как палец — нажатие. */
+.quick .qa:focus-visible,
+.pulse:focus-visible,
+.dock__btn:focus-visible,
+.chip:focus-visible,
+.primary:focus-visible,
+.ghost:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--violet);
+}
+
+/* Активный раздел в доке подсвечивается мягким свечением, а не просто
+   заливкой: док лежит на стекле и плоский фон на нём теряется. */
+.dock__btn.is-active {
+  background: linear-gradient(180deg, rgba(107, 77, 230, .16), rgba(107, 77, 230, .08));
+  box-shadow: inset 0 0 0 1px rgba(107, 77, 230, .18), 0 6px 18px -10px rgba(107, 77, 230, .8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse,
+  .quick .qa,
+  .dock { animation: none; }
 }
