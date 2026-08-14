@@ -31,6 +31,7 @@ from app.email_notify import send_lead_email
 from app import intent as I
 from app import group_chat
 from app import insights
+from app import leveltest
 from app import nudge
 from app import profile
 from app import registration
@@ -1181,8 +1182,39 @@ async def miniapp_info(request: Request, user_id: str = "") -> dict:
         # маркетинговым текстом в вёрстке, который разъедется с реальностью.
         "advantages": kb.raw.get("advantages", []),
         "faq": kb.raw.get("faq", []),
+        # Педагоги с видеовизитками, шаги зачисления, летняя академия и акции
+        # лежали в базе знаний, но в мини-приложение не попадали ни разу.
+        # Это самое ценное, что школа может показать: живой педагог на видео
+        # убеждает сильнее любого текста о методике.
+        "team": kb.raw.get("team", []),
+        "enrollment_steps": kb.raw.get("enrollment_steps", []),
+        "summer_academy": kb.raw.get("summer_academy", {}),
+        "promos": kb.raw.get("promos", []),
         "access": access,
     }
+
+
+@app.get("/api/miniapp/level-test")
+async def miniapp_level_test() -> dict:
+    """Задания теста уровня — без правильных ответов.
+
+    Ответы остаются на сервере: тест, который решается открытием исходника
+    страницы, не даёт ни пользы человеку, ни данных школе.
+    """
+    return {"questions": leveltest.public_questions()}
+
+
+@app.post("/api/miniapp/level-test")
+async def miniapp_level_test_result(data: dict) -> dict:
+    """Проверка ответов теста. Ничего не сохраняет и авторизации не требует.
+
+    Это витринный инструмент: он должен работать до регистрации, иначе
+    человек упрётся в анкету ровно там, где мы обещали пользу.
+    """
+    answers = data.get("answers")
+    if not isinstance(answers, dict):
+        return JSONResponse({"ok": False, "error": "Нет ответов"}, status_code=400)
+    return {"ok": True, "result": leveltest.grade(answers)}
 
 
 @app.get("/api/miniapp/recommend")

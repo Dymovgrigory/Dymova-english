@@ -1,28 +1,45 @@
-/* Telegram Mini App «Фоксинбург».
+/**
+ * Мини-приложение Фоксинбурга.
  *
- * Устройство:
- * - личность пользователя = подписанный initData, он уходит на бэкенд
- *   заголовком X-Miniapp-Init-Data; initDataUnsafe используется ТОЛЬКО для
- *   приветствия в интерфейсе и никогда — как основание для доступа;
- * - навигация — стек экранов, кнопка «назад» Telegram снимает верхний экран;
- * - у каждого экрана свой MainButton, он же — единственная главная кнопка;
- * - все сетевые вызовы имеют таймаут и понятное состояние ошибки.
+ * Механика отличается от прежней версии. Раньше это была стопка экранов с
+ * кнопкой «назад»: любое действие уводило человека с главной и теряло
+ * контекст. Теперь два независимых слоя:
+ *
+ *   1. Разделы — постоянный док внизу. Переключение мгновенное, положение
+ *      прокрутки каждого раздела сохраняется, кнопка «назад» не нужна.
+ *   2. Действия — лист снизу. Подбор, запись, домашка, тест уровня и видео
+ *      педагога открываются поверх текущего раздела и закрываются свайпом,
+ *      кнопкой или системной «назад».
+ *
+ * Личность пользователя — подписанный initData, он уходит на бэкенд
+ * заголовком X-Miniapp-Init-Data; initDataUnsafe нигде не служит основанием
+ * доступа. Всё, что показывает приложение, приходит с сервера: тексты о
+ * школе, педагоги, шаги зачисления, вопросы теста. В вёрстке нет ни одного
+ * факта — иначе он разойдётся с реальностью на первой правке прайса.
+ *
+ * Приложение обязано работать и без Telegram (обычный браузер), и без сети:
+ * тогда закрыты личные разделы, а витрина показывает последнее загруженное.
  */
 (function () {
   "use strict";
 
-  var tg = window.Telegram && window.Telegram.WebApp;
-  var HOME = "home";
-  var REQUEST_TIMEOUT_MS = 20000;
+  var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  var REQUEST_TIMEOUT_MS = 15000;
+  var TABS = ["home", "programs", "team", "chat", "profile"];
 
   var state = {
-    stack: [HOME],
+    tab: "home",
+    sheet: null,
     info: null,
     access: null,
     profile: null,
     format: "",
+    ageFilter: "",
     homeworkFile: null,
     chatBusy: false,
+    quiz: { questions: [], index: 0, answers: {} },
+    me: null, // что мы знаем о человеке после теста и подбора
+    scroll: {},
   };
 
   /* ---------------------------------------------------------------- утилиты */
@@ -31,8 +48,8 @@
     return (scope || document).querySelector(selector);
   }
 
-  function screenEl(name) {
-    return document.querySelector('[data-screen="' + name + '"]');
+  function all(selector, scope) {
+    return Array.prototype.slice.call((scope || document).querySelectorAll(selector));
   }
 
   /** Экранирование: данные приходят из базы знаний и от LLM — в innerHTML их
@@ -43,20 +60,12 @@
     });
   }
 
+  /** Событие для трёхмерного маскота: он живёт в своём модуле. */
   function mascot(event) {
-    // Маскот — отдельный модуль и может не загрузиться вовсе (слабое
-    // устройство, экономия трафика). Событие в пустоту здесь безвредно.
-    try {
-      document.dispatchEvent(new CustomEvent("foxi:" + event));
-    } catch (e) {
-      /* реакция маскота необязательна */
-    }
+    document.dispatchEvent(new CustomEvent("foxi:" + event));
   }
 
   function haptic(kind) {
-    // Успех — единственная точка, где маскот радуется вместе с человеком:
-    // так реакция всегда привязана к реальному результату, а не к декору.
-    if (kind === "success") mascot("success");
     try {
       var hf = tg && tg.HapticFeedback;
       if (!hf) return;
@@ -78,7 +87,35 @@
     return Boolean(initData());
   }
 
-  /* ------------------------------------------------------------- сеть */
+  function toast(text) {
+    var box = $("#toast");
+    box.textContent = text;
+    box.hidden = false;
+    clearTimeout(box._timer);
+    box._timer = setTimeout(function () {
+      box.hidden = true;
+    }, 2600);
+  }
+
+  /** Память между запусками. В вебвью хранилище иногда запрещено — тогда
+   *  приложение просто забывает человека, но не падает. */
+  function remember(key, value) {
+    try {
+      window.localStorage.setItem("foxi:" + key, JSON.stringify(value));
+    } catch (e) {
+      /* приватный режим — переживём */
+    }
+  }
+
+  function recall(key) {
+    try {
+      return JSON.parse(window.localStorage.getItem("foxi:" + key));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /* ------------------------------------------------------------------- сеть */
 
   function request(path, options) {
     options = options || {};
@@ -123,189 +160,556 @@
     });
   }
 
-  /* -------------------------------------------------------- навигация */
+  /* -------------------------------------------------------------- разделы */
 
-  function current() {
-    return state.stack[state.stack.length - 1];
+  function goTab(name) {
+    if (TABS.indexOf(name) < 0 || name === state.tab) return;
+    // Положение прокрутки принадлежит разделу, а не странице: вернувшись,
+    // человек должен оказаться там, где был.
+    state.scroll[state.tab] = window.scrollY;
+    state.tab = name;
+
+    all("[data-tab]").forEach(function (section) {
+      section.hidden = section.dataset.tab !== name;
+    });
+    all(".dock__btn").forEach(function (button) {
+      button.classList.toggle("is-active", button.dataset.tabGo === name);
+    });
+
+    window.scrollTo(0, state.scroll[name] || 0);
+    haptic("light");
+    syncChrome();
+
+    if (name === "programs") renderCatalog();
+    if (name === "team") renderTeam();
+    if (name === "profile") loadProfile();
+    if (name === "chat") greetInChat();
   }
 
-  function render() {
-    var name = current();
-    document.querySelectorAll("[data-screen]").forEach(function (section) {
-      section.hidden = section.dataset.screen !== name;
+  /* ---------------------------------------------------------------- листы */
+
+  var SHEETS = {
+    quiz: { title: "Тест уровня", build: buildQuiz },
+    picker: { title: "Подбор курса", build: buildPicker },
+    signup: { title: "Запись на занятие", build: buildSignup },
+    homework: { title: "Помощь с домашкой", build: buildHomework },
+  };
+
+  function showSheet(title, html) {
+    $("#sheet-title").textContent = title;
+    $("#sheet-body").innerHTML = html;
+    var sheet = $("#sheet");
+    sheet.hidden = false;
+    // Кадр между показом и классом нужен, чтобы браузер успел применить
+    // начальное состояние и анимация действительно проигралась.
+    requestAnimationFrame(function () {
+      sheet.classList.add("is-open");
     });
-    window.scrollTo(0, 0);
+    document.body.classList.add("is-locked");
     syncChrome();
   }
 
-  function go(name) {
-    if (name === current()) return;
+  function openSheet(name) {
+    var config = SHEETS[name];
+    if (!config) return;
+    state.sheet = name;
+    showSheet(config.title, "");
+    config.build($("#sheet-body"));
     haptic("light");
-    state.stack.push(name);
-    render();
-    onEnter(name);
   }
 
-  function back() {
-    if (state.stack.length <= 1) {
-      if (tg && tg.close) tg.close();
+  function closeSheet() {
+    var sheet = $("#sheet");
+    if (sheet.hidden) return;
+    sheet.classList.remove("is-open");
+    document.body.classList.remove("is-locked");
+    state.sheet = null;
+    setTimeout(function () {
+      sheet.hidden = true;
+      $("#sheet-body").innerHTML = "";
+    }, 220);
+    syncChrome();
+  }
+
+  /** Системная кнопка «назад» закрывает лист, а не приложение. */
+  function syncChrome() {
+    if (!tg) return;
+    try {
+      if (state.sheet || state.tab !== "home") tg.BackButton.show();
+      else tg.BackButton.hide();
+      tg.MainButton.hide();
+    } catch (e) {
+      /* старые версии клиента не знают этих кнопок */
+    }
+  }
+
+  /* ----------------------------------------------------------- тест уровня */
+
+  function buildQuiz(box) {
+    if (!state.quiz.questions.length) {
+      box.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+      request("/api/miniapp/level-test")
+        .then(function (data) {
+          state.quiz.questions = data.questions || [];
+          state.quiz.index = 0;
+          state.quiz.answers = {};
+          if (state.sheet === "quiz") renderQuizStep(box);
+        })
+        .catch(function () {
+          box.innerHTML = '<p class="empty">Тест не загрузился. Попробуйте позже.</p>';
+        });
       return;
     }
-    haptic("light");
-    state.stack.pop();
-    render();
+    state.quiz.index = 0;
+    state.quiz.answers = {};
+    renderQuizStep(box);
   }
 
-  /** Кнопки Telegram зависят от экрана — держим их в одном месте, иначе
-   *  MainButton легко «залипает» с обработчиком чужого экрана. */
-  var mainButtonHandler = null;
+  function renderQuizStep(box) {
+    var quiz = state.quiz;
+    var question = quiz.questions[quiz.index];
+    if (!question) {
+      finishQuiz(box);
+      return;
+    }
 
-  /** Есть ли рабочая MainButton. В клиентах старше 6.1 её нет, и без
-   *  запасной кнопки в разметке экран заявки становится тупиком. */
-  function hasMainButton() {
-    return Boolean(tg && tg.MainButton && typeof tg.MainButton.setText === "function" && tg.isVersionAtLeast && tg.isVersionAtLeast("6.1"));
-  }
+    var progress = (quiz.index / quiz.questions.length) * 100;
+    box.innerHTML =
+      '<div class="quiz">' +
+      '<div class="quiz__bar"><span style="width:' + progress + '%"></span></div>' +
+      '<p class="quiz__step">Вопрос ' + (quiz.index + 1) + " из " + quiz.questions.length + "</p>" +
+      '<p class="quiz__prompt">' + esc(question.prompt) + "</p>" +
+      '<p class="quiz__hint">' + esc(question.hint) + "</p>" +
+      '<div class="quiz__options">' +
+      (question.options || [])
+        .map(function (option, index) {
+          return '<button class="quiz__opt" data-answer="' + index + '">' + esc(option) + "</button>";
+        })
+        .join("") +
+      "</div></div>";
 
-  function showFallbackButtons(screenName) {
-    document.querySelectorAll("[data-fallback-action]").forEach(function (button) {
-      button.hidden = hasMainButton() || button.dataset.fallbackAction !== screenName;
+    all(".quiz__opt", box).forEach(function (button) {
+      button.addEventListener("click", function () {
+        quiz.answers[question.id] = Number(button.dataset.answer);
+        button.classList.add("is-picked");
+        haptic("light");
+        setTimeout(function () {
+          quiz.index += 1;
+          renderQuizStep(box);
+        }, 180);
+      });
     });
   }
 
-  function setMainButton(text, handler) {
-    if (!hasMainButton()) return;
-    if (mainButtonHandler) {
-      tg.MainButton.offClick(mainButtonHandler);
-      mainButtonHandler = null;
-    }
-    if (!text || !handler) {
-      tg.MainButton.hide();
-      return;
-    }
-    mainButtonHandler = handler;
-    tg.MainButton.setText(text);
-    tg.MainButton.onClick(mainButtonHandler);
-    tg.MainButton.show();
-    tg.MainButton.enable();
-  }
+  function finishQuiz(box) {
+    box.innerHTML = '<div class="skeleton"></div>';
+    postJSON("/api/miniapp/level-test", { answers: state.quiz.answers })
+      .then(function (data) {
+        var result = data.result;
+        if (!result) throw new Error("нет результата");
 
-  function mainButtonProgress(on) {
-    if (!hasMainButton()) return;
-    if (on) tg.MainButton.showProgress(true);
-    else tg.MainButton.hideProgress();
-  }
+        state.me = Object.assign({}, state.me, { level: result.level });
+        remember("me", state.me);
+        renderPulse();
+        haptic("success");
+        mascot("success");
+        celebrate();
 
-  function syncChrome() {
-    if (!tg) return;
-    if (tg.BackButton) {
-      if (state.stack.length > 1) tg.BackButton.show();
-      else tg.BackButton.hide();
-    }
-    var name = current();
-    showFallbackButtons(name);
-    if (name === "signup") {
-      setMainButton("Отправить заявку", submitLead);
-    } else if (name === "homework") {
-      setMainButton("Разобрать задание", submitHomework);
-    } else if (name === "picker") {
-      setMainButton("Записаться на диагностику", function () {
-        go("signup");
+        box.innerHTML =
+          '<div class="result">' +
+          '<p class="result__label">Ваш уровень</p>' +
+          '<p class="result__level">' + esc(result.level) + "</p>" +
+          '<p class="result__title">' + esc(result.title) + "</p>" +
+          '<p class="result__score">Верно ' + result.correct + " из " + result.total + "</p>" +
+          '<p class="result__text">' + esc(result.text) + "</p>" +
+          '<p class="result__note">' + esc(result.disclaimer) + "</p>" +
+          '<button class="primary primary--glow" data-sheet="signup">Записаться на диагностику</button>' +
+          '<button class="ghost" data-sheet="picker">Подобрать программу</button>' +
+          "</div>";
+      })
+      .catch(function () {
+        box.innerHTML = '<p class="empty">Не удалось проверить ответы. Попробуйте ещё раз.</p>';
       });
-    } else {
-      setMainButton(null, null);
+  }
+
+  /** Короткий залп конфетти. Рисуется на canvas и сам себя убирает: это
+   *  награда за пройденный шаг, а не постоянный элемент интерфейса. */
+  function celebrate() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var canvas = document.createElement("canvas");
+    canvas.className = "confetti";
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    document.body.appendChild(canvas);
+
+    var ctx = canvas.getContext("2d");
+    var colors = ["#ffb703", "#6b4de6", "#24c6a0", "#ff6b8b"];
+    var pieces = [];
+    for (var i = 0; i < 70; i++) {
+      pieces.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * 120,
+        y: canvas.height * 0.35,
+        vx: (Math.random() - 0.5) * 9,
+        vy: Math.random() * -11 - 3,
+        size: 4 + Math.random() * 6,
+        color: colors[i % colors.length],
+        spin: (Math.random() - 0.5) * 0.3,
+        angle: Math.random() * Math.PI,
+      });
     }
+
+    var started = performance.now();
+    (function frame(now) {
+      var elapsed = now - started;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(function (p) {
+        p.vy += 0.38;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.angle += p.spin;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, 1 - elapsed / 1800);
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        ctx.restore();
+      });
+      if (elapsed < 1800) requestAnimationFrame(frame);
+      else canvas.remove();
+    })(started);
   }
 
-  /* --------------------------------------------------------- экраны */
+  /* --------------------------------------------------------- подбор курса */
 
-  function onEnter(name) {
-    if (name === "catalog") renderCatalog();
-    if (name === "branches") renderBranches();
-    if (name === "picker") runPicker();
-    if (name === "profile") loadProfile();
-    if (name === "chat") focusChat();
+  function buildPicker(box) {
+    var me = state.me || {};
+    box.innerHTML =
+      '<div class="picker">' +
+      '<p class="picker__q">Для кого подбираем?</p>' +
+      '<div class="picker__row" data-group="who">' +
+      ["Ребёнку", "Подростку", "Себе"]
+        .map(function (label, index) {
+          return (
+            '<button class="pill' + (index === 0 ? " is-active" : "") + '" data-value="' +
+            esc(label) + '">' + esc(label) + "</button>"
+          );
+        })
+        .join("") +
+      "</div>" +
+      '<p class="picker__q">Возраст</p>' +
+      '<div class="ruler">' +
+      '<input id="age" class="ruler__input" type="range" min="3" max="20" step="1" value="' +
+      (me.age || 9) + '" aria-label="Возраст ученика" />' +
+      '<output class="ruler__value" id="age-value" for="age">' + (me.age || 9) + " лет</output>" +
+      "</div>" +
+      '<p class="picker__q">Формат</p>' +
+      '<div class="picker__row" data-group="format">' +
+      '<button class="pill is-active" data-value="">Любой</button>' +
+      '<button class="pill" data-value="offline">Офлайн</button>' +
+      '<button class="pill" data-value="online">Онлайн</button>' +
+      "</div>" +
+      '<div id="picker-results" class="results"></div>' +
+      "</div>";
+
+    all("[data-group] .pill", box).forEach(function (pill) {
+      pill.addEventListener("click", function () {
+        var group = pill.parentNode;
+        all(".pill", group).forEach(function (other) {
+          other.classList.toggle("is-active", other === pill);
+        });
+        if (group.dataset.group === "format") state.format = pill.dataset.value;
+        haptic("light");
+        runPicker();
+      });
+    });
+
+    $("#age", box).addEventListener("input", function (event) {
+      $("#age-value", box).textContent = event.target.value + " лет";
+      state.me = Object.assign({}, state.me, { age: Number(event.target.value) });
+      remember("me", state.me);
+      renderPulse();
+      runPicker();
+    });
+
+    runPicker();
   }
-
-  /* --- подбор курса ------------------------------------------------ */
-
-  function ageLabel(value) {
-    var n = Number(value);
-    if (n >= 18) return "взрослым";
-    var last = n % 10;
-    var teen = n % 100 >= 11 && n % 100 <= 14;
-    if (!teen && last === 1) return n + " год";
-    if (!teen && last >= 2 && last <= 4) return n + " года";
-    return n + " лет";
-  }
-
-  var pickerTimer = null;
 
   function runPicker() {
-    var age = $("#age").value;
-    $("#age-value").textContent = ageLabel(age);
     var box = $("#picker-results");
-    box.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
-
-    clearTimeout(pickerTimer);
-    pickerTimer = setTimeout(function () {
-      var url =
-        "/api/miniapp/recommend?age=" +
-        encodeURIComponent(age) +
-        "&fmt=" +
-        encodeURIComponent(state.format);
-      request(url)
-        .then(function (data) {
-          var items = data.recommendations || [];
-          if (!items.length) {
-            box.innerHTML =
-              '<p class="empty">Точного совпадения нет — оставьте заявку, ' +
-              "подберём программу вручную.</p>";
-            return;
-          }
-          box.innerHTML = items
+    if (!box) return;
+    var ageInput = $("#age");
+    var age = (ageInput && ageInput.value) || "9";
+    box.innerHTML = '<div class="skeleton"></div>';
+    request(
+      "/api/miniapp/recommend?age=" + encodeURIComponent(age) +
+        "&fmt=" + encodeURIComponent(state.format)
+    )
+      .then(function (data) {
+        if (data.__status === 403) {
+          box.innerHTML =
+            '<p class="empty">' + esc(data.error || "Раздел откроется после регистрации") + "</p>";
+          return;
+        }
+        var items = data.recommendations || [];
+        box.innerHTML =
+          items
             .map(function (item) {
               return (
-                '<article class="card card--match">' +
-                (item.age ? '<span class="pill">' + esc(item.age) + "</span>" : "") +
-                '<h3 class="card__title">' + esc(item.name) + "</h3>" +
-                '<p class="card__text">' + esc(item.text || "") + "</p>" +
+                '<article class="result-card">' +
+                (item.age ? '<span class="rail__age">' + esc(item.age) + "</span>" : "") +
+                '<h3 class="rail__name">' + esc(item.name) + "</h3>" +
+                '<p class="rail__text">' + esc(item.text || "") + "</p>" +
+                '<button class="ghost" data-sheet="signup">Записаться на это</button>' +
                 "</article>"
               );
             })
-            .join("");
-        })
-        .catch(function () {
-          box.innerHTML =
-            '<p class="empty">Не удалось загрузить программы. Проверьте связь и попробуйте ещё раз.</p>';
-        });
-    }, 180);
+            .join("") || '<p class="empty">Для этого возраста подбор пока не готов.</p>';
+      })
+      .catch(function () {
+        box.innerHTML = '<p class="empty">Не удалось загрузить подбор.</p>';
+      });
   }
 
-  /* --- каталог и филиалы ------------------------------------------- */
+  /* ---------------------------------------------------------------- запись */
 
-  /* ------------------------------------------------------ витрина главной */
+  function buildSignup(box) {
+    var me = state.me || {};
+    box.innerHTML =
+      '<form id="lead-form" class="form" novalidate>' +
+      '<label class="field"><span class="field__label">Ваше имя <em>обязательно</em></span>' +
+      '<input id="lf-parent" name="fio_parent" type="text" autocomplete="name" placeholder="Иванова Анна" required /></label>' +
+      '<label class="field"><span class="field__label">Имя ребёнка</span>' +
+      '<input id="lf-child" name="fio_child" type="text" placeholder="Миша" /></label>' +
+      '<label class="field"><span class="field__label">Возраст</span>' +
+      '<input id="lf-age" name="age" type="number" min="2" max="99" value="' +
+      esc(me.age || "") + '" placeholder="9" /></label>' +
+      '<label class="field"><span class="field__label">Телефон <em>обязательно</em></span>' +
+      '<input id="lf-phone" name="phone" type="tel" autocomplete="tel" placeholder="+7 999 000-00-00" required /></label>' +
+      '<label class="field"><span class="field__label">Филиал или онлайн</span>' +
+      '<select id="lf-branch" name="branch"><option value="">Выберите</option>' +
+      "<option>Филиал на Лихачевском</option><option>Филиал на Ракетостроителей</option><option>Онлайн</option>" +
+      "</select></label>" +
+      '<label class="field"><span class="field__label">Комментарий</span>' +
+      '<textarea id="lf-comment" name="comment" rows="2" placeholder="Удобное время, пожелания"></textarea></label>' +
+      '<button type="submit" class="primary primary--glow">Отправить заявку</button>' +
+      '<p id="lead-status" class="status" hidden></p>' +
+      "</form>";
 
-  /** Главный экран рассказывает о школе фактами из базы знаний.
-   *  Ничего из этого не зашито в вёрстку: расходиться с реальностью текст
-   *  в разметке начинает на первой же правке прайса или расписания. */
+    $("#lead-form", box).addEventListener("submit", function (event) {
+      event.preventDefault();
+      submitLead();
+    });
+  }
+
+  function submitLead() {
+    var status = $("#lead-status");
+    var body = {
+      fio_parent: $("#lf-parent").value.trim(),
+      fio_child: $("#lf-child").value.trim(),
+      age: $("#lf-age").value.trim(),
+      phone: $("#lf-phone").value.trim(),
+      branch: $("#lf-branch").value,
+      comment: $("#lf-comment").value.trim(),
+    };
+    if (!body.fio_parent || !body.phone) {
+      status.hidden = false;
+      status.textContent = "Заполните имя и телефон — без них не сможем перезвонить.";
+      haptic("error");
+      return;
+    }
+    status.hidden = false;
+    status.textContent = "Отправляю…";
+
+    postJSON("/api/miniapp/lead", body)
+      .then(function (data) {
+        if (data.ok) {
+          status.textContent = "Готово. Администратор свяжется с вами.";
+          haptic("success");
+          mascot("success");
+          celebrate();
+          setTimeout(closeSheet, 1400);
+        } else {
+          status.textContent = data.error || "Не получилось отправить. Попробуйте ещё раз.";
+          haptic("error");
+        }
+      })
+      .catch(function () {
+        status.textContent = "Нет связи. Заявка не ушла.";
+        haptic("error");
+      });
+  }
+
+  /* -------------------------------------------------------------- домашка */
+
+  function buildHomework(box) {
+    box.innerHTML =
+      '<div class="hw">' +
+      '<p class="lede">Сфотографируйте задание — Фокси объяснит, как его решать. Бесплатно.</p>' +
+      '<label class="drop"><input id="hw-file" type="file" accept="image/*" hidden />' +
+      '<span id="hw-hint">Выбрать фото задания</span>' +
+      '<img id="hw-preview" class="drop__preview" alt="" hidden /></label>' +
+      '<input id="hw-note" type="text" placeholder="Например: задание 3, перевести предложения" />' +
+      '<button type="button" class="primary" data-fallback-action="homework">Разобрать задание</button>' +
+      '<p id="hw-status" class="status" hidden></p>' +
+      '<div id="hw-answer" class="answer" hidden></div>' +
+      "</div>";
+
+    $("#hw-file", box).addEventListener("change", function (event) {
+      var file = event.target.files && event.target.files[0];
+      state.homeworkFile = file || null;
+      var preview = $("#hw-preview", box);
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.hidden = false;
+        $("#hw-hint", box).textContent = "Заменить фото";
+      } else {
+        preview.hidden = true;
+        $("#hw-hint", box).textContent = "Выбрать фото задания";
+      }
+    });
+
+    $('[data-fallback-action="homework"]', box).addEventListener("click", submitHomework);
+  }
+
+  function submitHomework() {
+    var status = $("#hw-status");
+    var answer = $("#hw-answer");
+    if (!state.homeworkFile) {
+      status.hidden = false;
+      status.textContent = "Сначала выберите фото задания.";
+      return;
+    }
+    status.hidden = false;
+    status.textContent = "Смотрю задание…";
+    answer.hidden = true;
+
+    var form = new FormData();
+    form.append("photo", state.homeworkFile);
+    form.append("note", $("#hw-note").value.trim());
+
+    request("/api/miniapp/homework", { method: "POST", body: form, timeout: 90000 })
+      .then(function (data) {
+        if (data.__status === 403) {
+          status.textContent = data.error || "Раздел откроется после регистрации.";
+          return;
+        }
+        if (data.reply) {
+          status.hidden = true;
+          answer.hidden = false;
+          answer.textContent = data.reply;
+          haptic("success");
+        } else {
+          status.textContent = data.error || "Не получилось разобрать задание.";
+        }
+      })
+      .catch(function () {
+        status.textContent = "Нет связи. Попробуйте позже.";
+      });
+  }
+
+  /* ------------------------------------------------------------------ чат */
+
+  function greetInChat() {
+    var log = $("#chat-log");
+    if (log.dataset.greeted) return;
+    log.dataset.greeted = "1";
+    addMessage("bot", "Спросите что угодно: программы, цены, расписание, как проходят занятия.");
+  }
+
+  function addMessage(role, text) {
+    var log = $("#chat-log");
+    var bubble = document.createElement("div");
+    bubble.className = "bubble bubble--" + role;
+    bubble.textContent = text;
+    log.appendChild(bubble);
+    log.scrollTop = log.scrollHeight;
+    return bubble;
+  }
+
+  function sendChat(event) {
+    event.preventDefault();
+    var input = $("#chat-input");
+    var text = input.value.trim();
+    if (!text || state.chatBusy) return;
+    input.value = "";
+    addMessage("me", text);
+    state.chatBusy = true;
+
+    var typing = addMessage("bot", "…");
+    typing.classList.add("bubble--typing");
+
+    postJSON("/api/miniapp/chat", { text: text })
+      .then(function (data) {
+        typing.remove();
+        if (data.__status === 403) {
+          addMessage("bot", data.error || "Чат откроется после регистрации.");
+          return;
+        }
+        addMessage("bot", data.reply || "Не удалось получить ответ.");
+      })
+      .catch(function () {
+        typing.remove();
+        addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+      })
+      .finally(function () {
+        state.chatBusy = false;
+      });
+  }
+
+  /* -------------------------------------------------------------- витрина */
+
   function renderHome() {
     if (!state.info) return;
+    renderPromo();
     renderAdvantages();
-    renderProgramsRail();
+    renderPath();
     renderFaq();
     renderHomeBranches();
+    renderPulse();
     armReveals();
+  }
+
+  /** Персональная полоса: что мы уже знаем о человеке и что логично дальше. */
+  function renderPulse() {
+    var me = state.me || {};
+    var pulse = $("#pulse");
+    if (!pulse) return;
+    if (me.level && me.age) {
+      $("#pulse-title").textContent = "Уровень " + me.level + ", возраст " + me.age;
+      $("#pulse-text").textContent = "Показать подходящие программы";
+      pulse.dataset.sheet = "picker";
+    } else if (me.level) {
+      $("#pulse-title").textContent = "Ваш уровень: " + me.level;
+      $("#pulse-text").textContent = "Подобрать программу под него";
+      pulse.dataset.sheet = "picker";
+    } else {
+      $("#pulse-title").textContent = "Узнать уровень за минуту";
+      $("#pulse-text").textContent = "Пять заданий — и сразу видно, с чего начинать";
+      pulse.dataset.sheet = "quiz";
+    }
+  }
+
+  function renderPromo() {
+    var box = $("#promo-slot");
+    var promos = (state.info.promos || []).filter(Boolean);
+    var academy = state.info.summer_academy || null;
+    var text = promos[0] || (academy && academy.note) || "";
+    if (!text) {
+      box.innerHTML = "";
+      return;
+    }
+    box.innerHTML =
+      '<div class="promo reveal">' +
+      '<span class="promo__badge">Сейчас в школе</span>' +
+      '<p class="promo__text">' + esc(text) + "</p>" +
+      "</div>";
   }
 
   function renderAdvantages() {
     var box = $("#home-advantages");
-    if (!box) return;
-    var items = (state.info.advantages || []).slice(0, 4);
-    if (!items.length) {
-      box.innerHTML = "";
-      return;
-    }
-    box.innerHTML = items
+    box.innerHTML = (state.info.advantages || [])
+      .slice(0, 4)
       .map(function (item) {
         return (
           '<article class="card">' +
@@ -317,22 +721,16 @@
       .join("");
   }
 
-  function renderProgramsRail() {
-    var box = $("#home-programs");
-    if (!box) return;
-    var items = (state.info.age_programs || []).slice(0, 6);
-    if (!items.length) {
-      box.innerHTML = "";
-      return;
-    }
-    box.innerHTML = items
-      .map(function (item) {
+  function renderPath() {
+    var box = $("#home-path");
+    box.innerHTML = (state.info.enrollment_steps || [])
+      .map(function (step) {
         return (
-          '<article class="rail__card">' +
-          (item.age ? '<span class="rail__age">' + esc(item.age) + "</span>" : "") +
-          '<h3 class="rail__name">' + esc(item.name) + "</h3>" +
-          '<p class="rail__text">' + esc(item.text) + "</p>" +
-          "</article>"
+          '<li class="path__item">' +
+          '<span class="path__num">' + esc(step.step) + "</span>" +
+          '<div><h3 class="path__title">' + esc(step.title) + "</h3>" +
+          '<p class="path__text">' + esc(step.text) + "</p></div>" +
+          "</li>"
         );
       })
       .join("");
@@ -340,13 +738,8 @@
 
   function renderFaq() {
     var box = $("#home-faq");
-    if (!box) return;
-    var items = (state.info.faq || []).slice(0, 5);
-    if (!items.length) {
-      box.innerHTML = "";
-      return;
-    }
-    box.innerHTML = items
+    box.innerHTML = (state.info.faq || [])
+      .slice(0, 5)
       .map(function (item) {
         return (
           '<div class="faq__item">' +
@@ -360,13 +753,12 @@
       })
       .join("");
 
-    box.querySelectorAll(".faq__q").forEach(function (button) {
+    all(".faq__q", box).forEach(function (button) {
       button.addEventListener("click", function () {
         var item = button.parentNode;
         var open = item.classList.contains("is-open");
-        // Раскрыт всегда один вопрос: список из пяти развёрнутых ответов
-        // читать невозможно.
-        box.querySelectorAll(".faq__item").forEach(function (other) {
+        // Раскрыт всегда один вопрос: пять развёрнутых ответов не читаются.
+        all(".faq__item", box).forEach(function (other) {
           other.classList.remove("is-open");
         });
         if (!open) item.classList.add("is-open");
@@ -377,9 +769,8 @@
 
   function renderHomeBranches() {
     var box = $("#home-branches");
-    if (!box) return;
-    var items = (state.info.branches || []).slice(0, 2);
-    box.innerHTML = items
+    box.innerHTML = (state.info.branches || [])
+      .slice(0, 2)
       .map(function (b) {
         return (
           '<article class="card">' +
@@ -392,15 +783,205 @@
       .join("");
   }
 
-  /** Появление блоков и набегающие цифры.
-   *
-   *  Классы ставит скрипт, а не разметка: если скрипт не выполнится, блоки
-   *  просто видны — это важнее эффекта. */
+  /* ------------------------------------------------------------- программы */
+
+  function inAgeFilter(item) {
+    if (!state.ageFilter) return true;
+    var text = String(item.age || item.ages || "");
+    var numbers = (text.match(/\d+/g) || []).map(Number);
+    // «2-3 класс» — это классы, а не возраст: в первый класс идут в семь лет.
+    // Без пересчёта курс для второклассников попадал в фильтр «3–6 лет».
+    if (/класс/i.test(text)) {
+      numbers = numbers.map(function (n) {
+        return n + 6;
+      });
+    }
+    if (state.ageFilter === "adult") {
+      return /взросл/i.test(text) || numbers.some(function (n) {
+        return n >= 18;
+      });
+    }
+    if (!numbers.length) return false;
+    var bounds = state.ageFilter.split("-").map(Number);
+    var low = Math.min.apply(null, numbers);
+    var high = Math.max.apply(null, numbers);
+    return high >= bounds[0] && low <= bounds[1];
+  }
+
+  function renderCatalog() {
+    var box = $("#catalog");
+    if (!state.info) {
+      box.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+      return;
+    }
+    var items = (state.info.age_programs || [])
+      .concat(state.info.courses || [])
+      .filter(inAgeFilter);
+    box.innerHTML =
+      items
+        .map(function (item) {
+          var age = item.age || item.ages || "";
+          var price = item.price || "";
+          return (
+            '<article class="result-card">' +
+            (age ? '<span class="rail__age">' + esc(age) + "</span>" : "") +
+            '<h3 class="rail__name">' + esc(item.name) + "</h3>" +
+            '<p class="rail__text">' + esc(item.text || item.description || "") + "</p>" +
+            (price ? '<p class="price">' + esc(price) + "</p>" : "") +
+            '<button class="ghost" data-sheet="signup">Записаться</button>' +
+            "</article>"
+          );
+        })
+        .join("") || '<p class="empty">Под этот возраст программ не нашлось.</p>';
+  }
+
+  /* -------------------------------------------------------------- педагоги */
+
+  function renderTeam() {
+    var box = $("#team-list");
+    if (!state.info) {
+      box.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+      return;
+    }
+    var people = (state.info.team || []).filter(function (person) {
+      return person.name;
+    });
+    box.innerHTML =
+      people
+        .map(function (person, index) {
+          var video = person.video_intro || person.video_lesson || "";
+          return (
+            '<article class="person">' +
+            '<div class="person__top">' +
+            '<span class="person__avatar" aria-hidden="true">' +
+            esc(String(person.name).slice(0, 1)) + "</span>" +
+            '<div><h3 class="person__name">' + esc(person.name) + "</h3>" +
+            '<p class="person__role">' + esc(person.role || "") + "</p></div>" +
+            "</div>" +
+            (person.about ? '<p class="person__about">' + esc(person.about) + "</p>" : "") +
+            (video ? '<button class="ghost" data-video="' + index + '">Смотреть видео</button>' : "") +
+            "</article>"
+          );
+        })
+        .join("") || '<p class="empty">Список педагогов пока не загрузился.</p>';
+
+    all("[data-video]", box).forEach(function (button) {
+      button.addEventListener("click", function () {
+        openVideo(people[Number(button.dataset.video)]);
+      });
+    });
+  }
+
+  /** Видео педагога в листе. Без автозапуска: тяжёлое видео в вебвью
+   *  съедает трафик человека без спроса. */
+  function openVideo(person) {
+    if (!person) return;
+    var sources = [
+      { url: person.video_intro, label: "Видеовизитка" },
+      { url: person.video_lesson, label: "Фрагмент урока" },
+    ].filter(function (item) {
+      return item.url;
+    });
+    if (!sources.length) return;
+
+    state.sheet = "video";
+    showSheet(
+      person.name,
+      '<div class="video">' +
+        sources
+          .map(function (item) {
+            return (
+              '<p class="video__label">' + esc(item.label) + "</p>" +
+              '<video controls preload="none" playsinline src="' + esc(item.url) + '"></video>'
+            );
+          })
+          .join("") +
+        "</div>"
+    );
+    haptic("light");
+  }
+
+  /* -------------------------------------------------------------- кабинет */
+
+  function loadProfile() {
+    var box = $("#profile");
+    if (!inTelegram()) {
+      box.innerHTML =
+        '<p class="empty">Кабинет открывается из чата с ботом в Telegram — там приложение знает, кто вы.</p>';
+      renderBranches();
+      return;
+    }
+    box.innerHTML = '<div class="skeleton"></div>';
+    request("/api/miniapp/profile")
+      .then(function (data) {
+        if (data.__status === 403 || (data.access && data.access.locked)) {
+          box.innerHTML =
+            '<p class="empty">' +
+            esc((data.access && data.access.message) || "Кабинет откроется после регистрации в чате с ботом.") +
+            "</p>";
+          renderBranches();
+          return;
+        }
+        state.profile = data;
+        var rows = [
+          ["Родитель", data.fio_parent],
+          ["Ребёнок", data.fio_child],
+          ["Возраст", data.age],
+          ["Телефон", data.phone],
+          ["Филиал", data.branch],
+          ["Программа", data.course],
+        ];
+        if (state.me && state.me.level) rows.push(["Уровень по тесту", state.me.level]);
+        box.innerHTML =
+          rows
+            .filter(function (row) {
+              return row[1];
+            })
+            .map(function (row) {
+              return (
+                '<div class="kv"><span class="kv__k">' + esc(row[0]) + "</span>" +
+                '<span class="kv__v">' + esc(row[1]) + "</span></div>"
+              );
+            })
+            .join("") || '<p class="empty">Профиль пока пустой.</p>';
+        renderBranches();
+      })
+      .catch(function () {
+        box.innerHTML = '<p class="empty">Не удалось загрузить профиль.</p>';
+      });
+  }
+
+  function renderBranches() {
+    var box = $("#branches");
+    if (!state.info) return;
+    box.innerHTML = (state.info.branches || [])
+      .map(function (b) {
+        return (
+          '<article class="card">' +
+          '<h3 class="card__title">' + esc(b.name) + "</h3>" +
+          '<p class="card__text">' +
+          (b.maps
+            ? '<a href="' + esc(b.maps) + '" target="_blank" rel="noopener">' + esc(b.address) + "</a>"
+            : esc(b.address)) +
+          "</p>" +
+          (b.phone
+            ? '<p class="card__text"><a href="tel:' + esc(b.phone_tel || b.phone) + '">' +
+              esc(b.phone) + "</a></p>"
+            : "") +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  /* ------------------------------------------------------------- появление */
+
   function armReveals() {
-    var blocks = document.querySelectorAll(".reveal");
+    var blocks = all(".reveal");
     if (!("IntersectionObserver" in window)) {
-      blocks.forEach(function (block) { block.classList.add("is-in"); });
-      countUp();
+      blocks.forEach(function (block) {
+        block.classList.add("is-in");
+      });
       return;
     }
     var observer = new IntersectionObserver(
@@ -417,307 +998,9 @@
       block.classList.add("is-armed");
       observer.observe(block);
     });
-    countUp();
   }
 
-  function countUp() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    document.querySelectorAll(".count").forEach(function (el) {
-      var target = parseInt(el.dataset.count, 10);
-      if (!target) return;
-      var started = null;
-      var duration = 900;
-      function step(now) {
-        if (started === null) started = now;
-        var progress = Math.min(1, (now - started) / duration);
-        // Замедление к концу: равномерный счёт выглядит механическим.
-        var eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = String(Math.round(target * eased));
-        if (progress < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    });
-  }
-
-  function renderCatalog() {
-    var box = $("#catalog");
-    if (!state.info) {
-      box.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
-      return;
-    }
-    var formats = state.info.formats || [];
-    var courses = state.info.courses || [];
-    box.innerHTML =
-      formats
-        .map(function (f) {
-          return (
-            '<article class="card">' +
-            (f.price ? '<span class="pill">' + esc(f.price) + "</span>" : "") +
-            '<h3 class="card__title">' + esc(f.name) + "</h3>" +
-            (f.location ? '<p class="card__text">' + esc(f.location) + "</p>" : "") +
-            "</article>"
-          );
-        })
-        .join("") +
-      courses
-        .map(function (c) {
-          return (
-            '<article class="card">' +
-            '<h3 class="card__title">' + esc(c.name) + "</h3>" +
-            '<p class="card__text">' + esc(c.description || c.note || "") + "</p>" +
-            (c.price ? '<p class="card__meta">' + esc(c.price) + "</p>" : "") +
-            "</article>"
-          );
-        })
-        .join("") ||
-      '<p class="empty">Каталог пока не загрузился.</p>';
-  }
-
-  function renderBranches() {
-    var box = $("#branches");
-    if (!state.info) {
-      box.innerHTML = '<div class="skeleton"></div>';
-      return;
-    }
-    var branches = state.info.branches || [];
-    box.innerHTML =
-      branches
-        .map(function (b) {
-          return (
-            '<article class="card">' +
-            '<h3 class="card__title">' + esc(b.name) + "</h3>" +
-            '<p class="card__meta"><svg class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg> ' +
-            (b.maps
-              ? '<a href="' + esc(b.maps) + '" target="_blank" rel="noopener">' + esc(b.address) + "</a>"
-              : esc(b.address)) +
-            "</p>" +
-            (b.phone
-              ? '<p class="card__meta"><svg class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.4a12 12 0 0 0 5.6 5.6L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 6.2 2 2 0 0 1 5 4h1.5Z"/></svg> <a href="tel:' + esc(b.phone_tel || b.phone) + '">' + esc(b.phone) + "</a></p>"
-              : "") +
-            (b.work_hours ? '<p class="card__text"><svg class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg> ' + esc(b.work_hours) + "</p>" : "") +
-            "</article>"
-          );
-        })
-        .join("") || '<p class="empty">Список филиалов пока не загрузился.</p>';
-  }
-
-  /* --- профиль ------------------------------------------------------ */
-
-  function loadProfile() {
-    var box = $("#profile");
-    box.innerHTML = '<div class="skeleton"></div>';
-    if (!inTelegram()) {
-      box.innerHTML =
-        '<p class="empty">Профиль доступен только внутри Telegram — ' +
-        "откройте приложение кнопкой в чате с ботом.</p>";
-      return;
-    }
-    request("/api/miniapp/profile")
-      .then(function (data) {
-        if (data.__status === 401) {
-          box.innerHTML =
-            '<p class="empty">Сессия истекла. Закройте и откройте приложение заново.</p>';
-          return;
-        }
-        state.profile = data;
-        var p = data.profile || {};
-        var rows = [
-          ["Родитель", p.fio_parent],
-          ["Ребёнок", p.fio_child],
-          ["Возраст", p.age],
-          ["Телефон", p.phone],
-          ["Филиал", p.branch],
-          ["Программа", p.course],
-        ].filter(function (row) {
-          return row[1];
-        });
-
-        box.innerHTML =
-          '<article class="card">' +
-          '<h3 class="card__title">' + esc(data.display_name || "Ваш профиль") + "</h3>" +
-          '<p class="card__text">' +
-          (data.registered ? "Регистрация подтверждена" : "Регистрация не завершена") +
-          "</p>" +
-          "</article>" +
-          (rows.length
-            ? '<article class="card">' +
-              rows
-                .map(function (row) {
-                  return '<p class="card__meta">' + esc(row[0]) + ": " + esc(row[1]) + "</p>";
-                })
-                .join("") +
-              "</article>"
-            : '<p class="empty">Пока пусто. Оставьте заявку — данные появятся здесь.</p>');
-      })
-      .catch(function () {
-        box.innerHTML = '<p class="empty">Не удалось загрузить профиль. Попробуйте позже.</p>';
-      });
-  }
-
-  /* --- заявка ------------------------------------------------------- */
-
-  function setStatus(el, message, kind) {
-    el.textContent = message;
-    el.className = "status" + (kind ? " status--" + kind : "");
-    el.hidden = !message;
-  }
-
-  function submitLead() {
-    var status = $("#lead-status");
-    var parent = $("#lf-parent");
-    var phone = $("#lf-phone");
-    var body = {
-      fio_parent: parent.value.trim(),
-      fio_child: $("#lf-child").value.trim(),
-      age: $("#lf-age").value.trim(),
-      phone: phone.value.trim(),
-      branch: $("#lf-branch").value,
-      comment: $("#lf-comment").value.trim(),
-    };
-
-    parent.setAttribute("aria-invalid", body.fio_parent ? "false" : "true");
-    phone.setAttribute("aria-invalid", body.phone ? "false" : "true");
-    if (!body.fio_parent || !body.phone) {
-      haptic("error");
-      setStatus(status, "Заполните имя и телефон — по ним администратор свяжется с вами.", "error");
-      (body.fio_parent ? phone : parent).focus();
-      return;
-    }
-
-    mainButtonProgress(true);
-    setStatus(status, "Отправляю заявку…");
-
-    postJSON("/api/miniapp/lead", body)
-      .then(function (data) {
-        if (data.ok) {
-          haptic("success");
-          setStatus(status, "Готово. Администратор перезвонит в рабочее время.", "ok");
-          setMainButton(null, null);
-          showFallbackButtons(null);
-        } else {
-          haptic("error");
-          setStatus(status, data.error || "Заявка не ушла. Попробуйте ещё раз или позвоните нам.", "error");
-        }
-      })
-      .catch(function () {
-        haptic("error");
-        setStatus(status, "Нет связи с сервером. Проверьте интернет и повторите.", "error");
-      })
-      .finally(function () {
-        mainButtonProgress(false);
-      });
-  }
-
-  /* --- домашка ------------------------------------------------------ */
-
-  function submitHomework() {
-    var status = $("#hw-status");
-    var answer = $("#hw-answer");
-    answer.hidden = true;
-
-    if (!state.homeworkFile) {
-      haptic("error");
-      setStatus(status, "Сначала прикрепите фото задания.", "error");
-      return;
-    }
-
-    var form = new FormData();
-    form.append("image", state.homeworkFile);
-    form.append("note", $("#hw-note").value.trim());
-    if (initData()) form.append("init_data", initData());
-
-    mainButtonProgress(true);
-    setStatus(status, "Фокси разбирает задание — обычно 10–20 секунд…");
-
-    request("/api/miniapp/homework", { method: "POST", body: form, timeout: 90000 })
-      .then(function (data) {
-        if (data.ok && data.explanation) {
-          haptic("success");
-          setStatus(status, "Разбор готов:", "ok");
-          answer.textContent = data.explanation;
-          answer.hidden = false;
-        } else {
-          haptic("error");
-          setStatus(
-            status,
-            data.error || data.detail || "Не получилось прочитать фото. Снимите задание крупнее и ровнее.",
-            "error"
-          );
-        }
-      })
-      .catch(function () {
-        haptic("error");
-        setStatus(status, "Не дождался ответа. Попробуйте ещё раз через минуту.", "error");
-      })
-      .finally(function () {
-        mainButtonProgress(false);
-      });
-  }
-
-  /* --- чат ---------------------------------------------------------- */
-
-  function addBubble(text, who, extraClass) {
-    var log = $("#chat-log");
-    var bubble = document.createElement("div");
-    bubble.className = "bubble bubble--" + who + (extraClass ? " " + extraClass : "");
-    bubble.textContent = text;
-    log.appendChild(bubble);
-    bubble.scrollIntoView({ block: "nearest" });
-    return bubble;
-  }
-
-  function focusChat() {
-    if (!$("#chat-log").children.length) {
-      addBubble(
-        inTelegram()
-          ? "Привет! Спросите о курсах, ценах или записи — отвечу здесь же."
-          : "Чат доступен внутри Telegram. Откройте приложение кнопкой в чате с ботом.",
-        "bot"
-      );
-    }
-  }
-
-  function sendChat(event) {
-    event.preventDefault();
-    var input = $("#chat-input");
-    var text = input.value.trim();
-    if (!text || state.chatBusy) return;
-    if (!inTelegram()) {
-      addBubble("Здесь нужна авторизация Telegram — откройте приложение из чата с ботом.", "bot");
-      return;
-    }
-
-    state.chatBusy = true;
-    $(".composer__send").disabled = true;
-    input.value = "";
-    addBubble(text, "user");
-    var pending = addBubble("Фокси печатает…", "bot", "bubble--typing");
-
-    postJSON("/api/miniapp/chat", { text: text })
-      .then(function (data) {
-        pending.classList.remove("bubble--typing");
-        pending.textContent =
-          data.reply ||
-          data.error ||
-          "Не получилось ответить с первого раза. Напишите ещё раз, пожалуйста.";
-        if (data.reply) haptic("light");
-      })
-      .catch(function () {
-        pending.classList.remove("bubble--typing");
-        pending.textContent = "Связь пропала. Попробуйте отправить сообщение ещё раз.";
-      })
-      .finally(function () {
-        state.chatBusy = false;
-        $(".composer__send").disabled = false;
-      });
-  }
-
-  /* ------------------------------------------------------------ старт */
-
-  function applyTheme() {
-    if (!tg) return;
-    document.documentElement.style.colorScheme = tg.colorScheme || "light";
-  }
+  /* ------------------------------------------------------------- загрузка */
 
   function loadInfo() {
     return request("/api/miniapp/info")
@@ -728,59 +1011,72 @@
           $("#greeting-title").textContent = "Здравствуйте, " + state.access.display_name;
           $("#greeting-sub").textContent = "Чем помочь сегодня?";
         }
-        $("#profile-teaser").textContent =
-          state.access && state.access.registered ? "Открыт" : "Заполнить";
         renderHome();
-        if (current() === "catalog") renderCatalog();
-        if (current() === "branches") renderBranches();
+        if (state.tab === "programs") renderCatalog();
+        if (state.tab === "team") renderTeam();
       })
       .catch(function () {
-        $("#profile-teaser").textContent = "Нет связи";
+        $("#offline").hidden = false;
+        toast("Не удалось загрузить данные школы");
       });
   }
 
+  function applyTheme() {
+    if (!tg) return;
+    // Приложение светлое всегда: тема клиента делала экран тёмным и
+    // нечитаемым, поэтому её мы намеренно не копируем.
+    document.documentElement.style.colorScheme = "light";
+  }
+
   function bind() {
-    document.querySelectorAll("[data-go]").forEach(function (el) {
-      el.addEventListener("click", function () {
-        go(el.dataset.go);
+    all("[data-tab-go]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        goTab(button.dataset.tabGo);
       });
     });
 
-    $("#age").addEventListener("input", runPicker);
-
-    document.querySelectorAll(".segmented__opt").forEach(function (opt) {
-      opt.addEventListener("click", function () {
-        document.querySelectorAll(".segmented__opt").forEach(function (other) {
-          other.classList.toggle("is-active", other === opt);
-        });
-        state.format = opt.dataset.format;
-        haptic("light");
-        runPicker();
-      });
-    });
-
-    $("#hw-file").addEventListener("change", function (event) {
-      var file = event.target.files && event.target.files[0];
-      state.homeworkFile = file || null;
-      var preview = $("#hw-preview");
-      if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.hidden = false;
-        $("#hw-hint").textContent = "Заменить фото";
-      } else {
-        preview.hidden = true;
-        $("#hw-hint").textContent = "Выбрать фото задания";
+    // Лист открывает любая кнопка с data-sheet, включая появившиеся позже:
+    // слушатель один на документ, а не по кнопке.
+    document.addEventListener("click", function (event) {
+      var target = event.target;
+      if (!target || !target.closest) return;
+      if (target.closest("[data-sheet-close]")) {
+        closeSheet();
+        return;
       }
+      var opener = target.closest("[data-sheet]");
+      if (opener) openSheet(opener.dataset.sheet);
     });
 
-    document
-      .querySelector('[data-fallback-action="homework"]')
-      .addEventListener("click", submitHomework);
+    all(".chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        all(".chip").forEach(function (other) {
+          other.classList.toggle("is-active", other === chip);
+        });
+        state.ageFilter = chip.dataset.agefilter;
+        haptic("light");
+        renderCatalog();
+      });
+    });
 
     $("#chat-form").addEventListener("submit", sendChat);
-    $("#lead-form").addEventListener("submit", function (event) {
-      event.preventDefault();
-      submitLead();
+
+    // Свайп вниз по листу закрывает его — жест, а не только кнопка.
+    var panel = $(".sheet__panel");
+    var startY = null;
+    panel.addEventListener("touchstart", function (event) {
+      startY = event.touches[0].clientY;
+    }, { passive: true });
+    panel.addEventListener("touchmove", function (event) {
+      if (startY === null) return;
+      var delta = event.touches[0].clientY - startY;
+      if (delta > 0) panel.style.transform = "translateY(" + delta + "px)";
+    }, { passive: true });
+    panel.addEventListener("touchend", function (event) {
+      var delta = event.changedTouches[0].clientY - (startY || 0);
+      panel.style.transform = "";
+      startY = null;
+      if (delta > 90) closeSheet();
     });
 
     window.addEventListener("online", function () {
@@ -790,39 +1086,33 @@
     window.addEventListener("offline", function () {
       $("#offline").hidden = false;
     });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeSheet();
+    });
   }
 
   function start() {
     if (tg) {
       tg.ready();
       tg.expand();
-      if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
       applyTheme();
       tg.onEvent("themeChanged", applyTheme);
-      if (tg.BackButton) tg.BackButton.onClick(back);
-      // Приветствие по имени — из initDataUnsafe: это исключительно текст на
-      // экране, никаких прав оно не даёт (права — только по подписи).
-      var user = tg.initDataUnsafe && tg.initDataUnsafe.user;
-      if (user && user.first_name) {
-        $("#greeting-title").textContent = "Здравствуйте, " + user.first_name;
-        $("#greeting-sub").textContent = "Чем помочь сегодня?";
+      try {
+        tg.BackButton.onClick(function () {
+          if (state.sheet) closeSheet();
+          else goTab("home");
+        });
+      } catch (e) {
+        /* старый клиент */
       }
     }
-
-    bind();
+    state.me = recall("me") || null;
     if (!navigator.onLine) $("#offline").hidden = false;
-
-    // Глубокие ссылки: t.me/bot/app?startapp=signup открывает нужный экран.
-    var startParam =
-      (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) ||
-      (location.hash || "").replace("#", "");
-    if (startParam && screenEl(startParam) && startParam !== HOME) {
-      state.stack = [HOME, startParam];
-    }
-
-    render();
-    onEnter(current());
+    bind();
+    renderPulse();
     loadInfo();
+    mascot("greet");
   }
 
   if (document.readyState === "loading") {

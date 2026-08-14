@@ -55,10 +55,10 @@ def test_static_mascot_is_shown_immediately():
     assert 'alt="Фокси, маскот школы Фоксинбург"' in HTML
 
 
-def test_tiles_use_inline_svg_icons():
+def test_icons_are_inline_svg():
     """Иконки — векторные и фирменные, а не системные картинки из шрифта."""
-    assert HTML.count("<svg") >= 6
-    assert 'class="tile__ic"' in HTML
+    assert HTML.count("<svg") >= 8
+    assert 'class="qa__ic"' in HTML
 
 
 # --------------------------- 3D: лениво и безопасно ---------------------------
@@ -112,8 +112,10 @@ def test_3d_pixel_ratio_is_capped():
 
 def test_mascot_reacts_to_real_success_not_decoration():
     """Реакция маскота привязана к результату действия, а не к таймеру."""
-    assert 'if (kind === "success") mascot("success");' in JS
+    assert 'mascot("success")' in JS
     assert "foxi:success" in MASCOT
+    # Радость наступает после успешного ответа сервера, а не по расписанию.
+    assert "setInterval" not in JS
 
 
 def test_mascot_reacts_to_touch():
@@ -165,19 +167,68 @@ def test_app_stays_light_and_readable_in_any_client_theme():
     assert "--bg: var(--tg-theme" not in CSS
 
 
-def test_screen_ids_used_by_app_js_are_intact():
-    """Редизайн не должен ломать логику: контракт DOM тот же."""
+def test_dom_contract_of_the_shell_is_intact():
+    """Постоянная часть приложения: разделы, док, лист, чат, витрина."""
     for element_id in (
-        "greeting-title", "greeting-sub", "profile-teaser", "age", "age-value",
-        "picker-results", "lead-form", "lf-parent", "lf-phone", "lead-status",
-        "hw-file", "hw-preview", "hw-hint", "hw-note", "hw-status", "hw-answer",
-        "chat-log", "chat-form", "chat-input", "catalog", "branches", "profile",
-        "offline",
+        "greeting-title", "greeting-sub", "chat-log", "chat-form", "chat-input",
+        "catalog", "branches", "profile", "offline", "dock", "sheet",
+        "sheet-title", "sheet-body", "toast", "pulse", "team-list",
+        "home-advantages", "home-path", "home-faq", "home-branches",
     ):
         assert f'id="{element_id}"' in HTML, f"потерян элемент #{element_id}"
 
 
-def test_all_screens_are_present():
-    for screen in ("home", "picker", "signup", "homework", "chat", "catalog",
-                   "branches", "profile"):
-        assert f'data-screen="{screen}"' in HTML
+def test_all_tabs_and_dock_buttons_exist():
+    """Навигация — постоянный док, а не стопка экранов с кнопкой «назад»."""
+    for tab in ("home", "programs", "team", "chat", "profile"):
+        assert f'data-tab="{tab}"' in HTML
+        assert f'data-tab-go="{tab}"' in HTML
+
+
+def test_actions_open_as_sheets():
+    """Действия — лист снизу поверх раздела, а не отдельный экран."""
+    for sheet in ("quiz", "picker", "signup", "homework"):
+        assert f'{sheet}: {{ title:' in JS, f"нет листа {sheet}"
+    assert 'data-sheet="quiz"' in HTML or 'data-sheet="picker"' in HTML
+    # Лист закрывается жестом, а не только кнопкой.
+    assert "touchmove" in JS and "closeSheet()" in JS
+
+
+def test_sheet_forms_are_built_in_js_with_escaping():
+    """Формы листов собираются скриптом — значит там же и экранирование."""
+    for element_id in ("lf-parent", "lf-phone", "lead-status", "hw-file",
+                       "hw-preview", "hw-status", "hw-answer", "age", "age-value",
+                       "picker-results"):
+        assert f'id="{element_id}"' in JS, f"потерян элемент #{element_id}"
+
+
+def test_level_test_answers_never_reach_the_client():
+    """Тест, решаемый просмотром исходника страницы, бесполезен."""
+    assert "/api/miniapp/level-test" in JS
+    # Правильные ответы приходят только на сервер — в приложении их нет.
+    assert "question.answer" not in JS
+    assert "right_option" not in JS
+
+
+def test_age_filter_understands_grades():
+    """«2-3 класс» — это классы, а не возраст: без пересчёта курс для
+    второклассников попадал в фильтр «3–6 лет»."""
+    assert "/класс/i.test(text)" in JS
+    assert "n + 6" in JS
+
+
+def test_personal_state_survives_restart():
+    """Уровень и возраст помнятся между запусками, но приложение переживает
+    запрет хранилища в вебвью."""
+    assert "localStorage" in JS
+    assert "catch" in JS.split("localStorage")[1][:400]
+
+
+
+def test_home_tells_the_story_not_just_buttons():
+    """Главная — рассказ о школе, а не один экран с кнопками: путь ученика,
+    преимущества, вопросы и филиалы приходят из базы знаний."""
+    for block in ("home-advantages", "home-path", "home-faq", "home-branches"):
+        assert f'id="{block}"' in HTML
+    # Ни одного факта о школе в вёрстке: они разошлись бы с реальностью.
+    assert "8 200" not in HTML and "9 000" not in HTML
