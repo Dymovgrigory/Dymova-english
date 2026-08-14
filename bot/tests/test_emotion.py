@@ -85,7 +85,18 @@ def test_neutral_statement_is_neutral():
 
 def test_anger_does_not_evaporate_on_the_next_message():
     """Недовольство не проходит от того, что следующая реплика спокойнее."""
-    assert emotion.detect("Хорошо", previous=emotion.ANGRY) == emotion.ANGRY
+    cooled = emotion.detect("Хорошо", previous=emotion.ANGRY)
+    assert cooled == emotion.COOLING
+    assert not emotion.allows_offer(cooled), "сразу после всплеска не предлагаем"
+
+
+def test_anger_stops_being_apologised_for_two_messages_later():
+    """Бот отвечал «Извините за эту ситуацию» на нейтральное «Расписание»."""
+    cooled = emotion.detect("Ну так что там?", previous=emotion.ANGRY)
+    later = emotion.detect("Расписание", previous=cooled)
+    assert later == emotion.NEUTRAL
+    assert emotion.opening(later) == ""
+    assert emotion.opening(cooled) == "", "второй раз извиняться не за что"
 
 
 def test_thanks_after_anger_returns_to_neutral_not_cheer():
@@ -164,10 +175,13 @@ async def test_complaint_gets_no_advertising():
 
 
 async def test_mood_survives_into_the_next_message():
+    """Тон после всплеска остаётся щадящим, но извинение не повторяется."""
     uid = "angry-live-2"
     await handle_message(uid, "Это уже претензия, никто не отвечает")
     await handle_message(uid, "Ну так что?")
-    assert get_store().get(uid).last_user_mood == emotion.ANGRY
+    mood = get_store().get(uid).last_user_mood
+    assert mood == emotion.COOLING
+    assert not emotion.allows_offer(mood)
 
 
 def _ready_profile() -> NeedProfile:

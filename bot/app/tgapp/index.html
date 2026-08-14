@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="color-scheme" content="light dark" />
+  <!-- Светлая схема закреплена: в тёмной теме мессенджера экран
+       становился тёмным и плохо читаемым. -->
+  <meta name="color-scheme" content="light" />
   <title>Фоксинбург</title>
   <!-- Фавикон — фирменный маскот, а не системная emoji-лиса. -->
   <link rel="icon" href="assets/foxi.webp" />
@@ -36,6 +38,7 @@
   <div class="ambient" aria-hidden="true">
     <span class="ambient__glow ambient__glow--amber"></span>
     <span class="ambient__glow ambient__glow--violet"></span>
+    <span class="ambient__glow ambient__glow--mint"></span>
   </div>
 
   <div id="offline" class="banner banner--offline" hidden>
@@ -47,6 +50,7 @@
     <section class="screen" data-screen="home">
       <header class="hero">
         <div class="hero__stage">
+          <span class="hero__halo" aria-hidden="true"></span>
           <!-- Статичный маскот виден мгновенно; 3D, если устройство его
                потянет, встаёт на то же место и плавно подменяет картинку. -->
           <img
@@ -56,9 +60,28 @@
           />
           <div class="hero__mascot3d" id="mascot-3d" aria-hidden="true"></div>
         </div>
-        <p class="hero__eyebrow">Языковая школа</p>
+        <p class="hero__eyebrow">Языковая школа · Долгопрудный</p>
         <h1 class="hero__title" id="greeting-title">Фоксинбург</h1>
         <p class="hero__sub" id="greeting-sub">Английский не для школы, а для жизни</p>
+
+        <!-- Цифры школы: то, что родитель хочет знать в первые пять секунд. -->
+        <dl class="stats" aria-label="Коротко о школе">
+          <div class="stats__item">
+            <dt class="stats__label">в группе</dt>
+            <dd class="stats__value"><span class="count" data-count="7">7</span></dd>
+            <p class="stats__note">детей максимум</p>
+          </div>
+          <div class="stats__item">
+            <dt class="stats__label">возраст</dt>
+            <dd class="stats__value">2<span class="stats__dash">–</span><span class="count" data-count="18">18</span></dd>
+            <p class="stats__note">и взрослые</p>
+          </div>
+          <div class="stats__item">
+            <dt class="stats__label">языка</dt>
+            <dd class="stats__value"><span class="count" data-count="3">3</span></dd>
+            <p class="stats__note">англ · нем · кит</p>
+          </div>
+        </dl>
       </header>
 
       <nav class="tiles" aria-label="Разделы">
@@ -137,6 +160,49 @@
           </span>
         </button>
       </nav>
+
+      <!-- Почему сюда: факты из базы знаний, а не текст в вёрстке. -->
+      <section class="block reveal" aria-labelledby="why-title">
+        <h2 class="block__title" id="why-title">Почему Фоксинбург</h2>
+        <div class="cards" id="home-advantages">
+          <div class="card card--skeleton" aria-hidden="true"></div>
+          <div class="card card--skeleton" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- Программы по возрасту: горизонтальная лента с прилипанием. -->
+      <section class="block reveal" aria-labelledby="programs-title">
+        <div class="block__head">
+          <h2 class="block__title" id="programs-title">Программы</h2>
+          <button class="block__more" data-go="catalog">Все программы</button>
+        </div>
+        <div class="rail" id="home-programs">
+          <article class="rail__card card--skeleton" aria-hidden="true"></article>
+          <article class="rail__card card--skeleton" aria-hidden="true"></article>
+        </div>
+      </section>
+
+      <!-- Частые вопросы: без перехода на другой экран. -->
+      <section class="block reveal" aria-labelledby="faq-title">
+        <h2 class="block__title" id="faq-title">Частые вопросы</h2>
+        <div class="faq" id="home-faq"></div>
+      </section>
+
+      <!-- Куда прийти. -->
+      <section class="block reveal" aria-labelledby="where-title">
+        <div class="block__head">
+          <h2 class="block__title" id="where-title">Где мы</h2>
+          <button class="block__more" data-go="branches">Все филиалы</button>
+        </div>
+        <div class="cards" id="home-branches"></div>
+      </section>
+
+      <!-- Последний экран — призыв, уместный уже после всего рассказа. -->
+      <section class="cta reveal">
+        <p class="cta__title">Начать проще, чем кажется</p>
+        <p class="cta__text">Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.</p>
+        <button class="primary primary--glow" data-go="signup">Записаться на диагностику</button>
+      </section>
 
       <button class="rowlink" data-go="profile">
         <span class="rowlink__label">Мой профиль</span>

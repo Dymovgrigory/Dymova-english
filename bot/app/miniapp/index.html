@@ -17,42 +17,56 @@
        а тёмная тема берётся из системной настройки устройства.
        ============================================================ */
     :root {
-      color-scheme: light dark;
+      /* Светлая схема закреплена: в тёмной теме экран становился тёмным и
+         плохо читаемым, на что и пожаловались. */
+      color-scheme: light;
 
-      /* Фирменные цвета: янтарь лисы и глубокий фиолетовый брендбука. */
-      --amber: #ffc53d;
-      --amber-deep: #f0a020;
+      --amber: #ffb703;
+      --amber-deep: #f08a00;
       --violet: #6b4de6;
       --violet-deep: #4a2f9e;
+      --mint: #24c6a0;
+      --rose: #ff6b8b;
 
-      --bg: #f7f4ee;
+      --bg: #fbfaf7;
       --bg-elev: #ffffff;
-      --ink: #171310;
-      --ink-soft: #5c534a;
-      --ink-faint: #8e8479;
-      --line: rgba(23, 19, 16, .10);
-      --shadow: 0 1px 2px rgba(23, 19, 16, .05), 0 8px 24px -12px rgba(23, 19, 16, .18);
-      --shadow-lift: 0 2px 4px rgba(23, 19, 16, .06), 0 18px 40px -16px rgba(23, 19, 16, .28);
-      --radius: 20px;
-      --radius-sm: 14px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #14110f;
-        --bg-elev: #1e1a17;
-        --ink: #f6f1ea;
-        --ink-soft: #c3b9ac;
-        --ink-faint: #8e8479;
-        --line: rgba(246, 241, 234, .12);
-        --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .6);
-        --shadow-lift: 0 2px 4px rgba(0, 0, 0, .5), 0 18px 40px -16px rgba(0, 0, 0, .7);
-      }
+      --ink: #14110c;
+      --ink-soft: #4a4238;
+      --ink-faint: #6b6357;
+      --line: rgba(20, 17, 12, .09);
+      --glass: rgba(255, 255, 255, .78);
+      /* Тени цветные: серая тень гасит цвет, а нужно свечение. */
+      --shadow: 0 1px 2px rgba(20, 17, 12, .05), 0 10px 26px -14px rgba(107, 77, 230, .28);
+      --shadow-lift: 0 2px 6px rgba(20, 17, 12, .06), 0 22px 50px -20px rgba(107, 77, 230, .45);
+      --glow-amber: 0 12px 40px -14px rgba(255, 183, 3, .65);
+      --radius: 22px;
+      --radius-sm: 15px;
+      --ease: cubic-bezier(.22, .61, .36, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* Живой свет: три цветных пятна медленно дрейфуют за содержимым. */
+    .ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .ambient span {
+      position: absolute; width: 74vmax; height: 74vmax; border-radius: 50%;
+      filter: blur(64px); will-change: transform;
+    }
+    .ambient .a { top: -36vmax; right: -24vmax; opacity: .42;
+      background: radial-gradient(circle at 50% 50%, var(--amber) 0%, transparent 65%);
+      animation: drift-a 26s var(--ease) infinite alternate; }
+    .ambient .b { bottom: -42vmax; left: -30vmax; opacity: .3;
+      background: radial-gradient(circle at 50% 50%, var(--violet) 0%, transparent 65%);
+      animation: drift-b 32s var(--ease) infinite alternate; }
+    .ambient .c { top: 30vmax; left: -34vmax; width: 54vmax; height: 54vmax; opacity: .22;
+      background: radial-gradient(circle at 50% 50%, var(--mint) 0%, transparent 66%);
+      animation: drift-c 38s var(--ease) infinite alternate; }
+    @keyframes drift-a { to { transform: translate3d(-6vmax, 5vmax, 0) scale(1.1); } }
+    @keyframes drift-b { to { transform: translate3d(5vmax, -6vmax, 0) scale(1.14); } }
+    @keyframes drift-c { to { transform: translate3d(7vmax, 4vmax, 0) scale(1.08); } }
+
     body {
+      position: relative;
       font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
       background: var(--bg);
       color: var(--ink);
@@ -64,6 +78,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    section, header, nav { position: relative; z-index: 1; }
     h1 { font-size: 30px; line-height: 1.1; letter-spacing: -.02em; font-weight: 800; }
     h2 { font-size: 19px; letter-spacing: -.01em; margin-bottom: 6px; font-weight: 700; }
     p.muted { color: var(--ink-soft); font-size: 14px; }
@@ -85,7 +100,9 @@
       box-shadow: var(--shadow-lift);
       overflow: hidden;
     }
-    .hero__mark { width: 72px; height: 72px; object-fit: contain; }
+    .hero__mark { width: 72px; height: 72px; object-fit: contain;
+      animation: float 5.2s var(--ease) infinite alternate; }
+    @keyframes float { from { transform: translateY(0); } to { transform: translateY(-6px); } }
     .hero p { opacity: .88; font-size: 14px; margin-top: 4px; }
 
     /* --- Плитки меню: асимметричная сетка вместо списка кнопок --- */
@@ -105,6 +122,18 @@
     .menu-tile:last-child { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 14px; min-height: 96px; }
     .menu-tile:first-child .tile__body,
     .menu-tile:last-child .tile__body { flex: 1; }
+    .menu-tile { position: relative; overflow: hidden; }
+    /* Цветная полоса сверху: шесть одинаковых карточек читаются как список,
+       а с ней каждая различима с одного взгляда. */
+    .menu-tile::before {
+      content: ""; position: absolute; inset: 0 0 auto; height: 3px; opacity: .9;
+      background: linear-gradient(90deg, var(--amber), var(--violet));
+    }
+    .menu-tile:nth-child(3)::before { background: linear-gradient(90deg, var(--mint), var(--violet)); }
+    .menu-tile:nth-child(4)::before { background: linear-gradient(90deg, var(--violet), var(--rose)); }
+    .menu-tile:nth-child(5)::before { background: linear-gradient(90deg, var(--amber), var(--mint)); }
+    .menu-tile:nth-child(6)::before { background: linear-gradient(90deg, var(--rose), var(--amber)); }
+    .menu-tile:first-child { box-shadow: var(--glow-amber); }
     .menu-tile:active { transform: scale(.985); }
     .menu-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
     /* Заголовок плитки — основной цвет текста. Обёртка .tile__body тоже
@@ -194,6 +223,8 @@
   </style>
 </head>
 <body>
+  <div class="ambient" aria-hidden="true"><span class="a"></span><span class="b"></span><span class="c"></span></div>
+
   <header class="hero">
     <img class="hero__mark" src="img/fox-head-yellow.png" alt="" width="72" height="72" />
     <div>

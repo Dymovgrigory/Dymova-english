@@ -25,6 +25,7 @@ from app.llm_gateway import ROLE_REASONING, get_gateway
 from app.max_client import get_max
 from app import critic
 from app import emotion
+from app import grammar
 from app import intent_ai
 from app import pii
 from app import recall
@@ -78,13 +79,17 @@ _TOPIC_MAP = {
 
 def _capture_entities(conv: Conversation, text: str) -> None:
     """Опортунистически вытаскиваем возраст/телефон/формат из любого сообщения."""
-    age = I.extract_age(text)
-    if age and not conv.lead.age:
+    # Возраст из свежей реплики перезаписывает прежний: человек поправляет
+    # себя («ей 8, а не 6»), и держаться первого значения — это ровно то, за
+    # что бота называют глухим. Из класса возраст тоже выводится: «во втором
+    # классе» надёжнее, чем цифра, услышанная при регистрации полгода назад.
+    low = text.lower()
+    age = smart.age_in_text(low) or smart.age_for_grade(smart.grade_in_text(low))
+    if age:
         conv.lead.age = age
     phone = I.extract_phone(text)
     if phone and not conv.lead.phone:
         conv.lead.phone = phone
-    low = text.lower()
     if "онлайн" in low and not conv.selected_format:
         conv.selected_format = "Онлайн"
     elif ("офлайн" in low or "оффлайн" in low) and not conv.selected_format:
@@ -563,6 +568,11 @@ async def _review(conv: Conversation, user_text: str, reply: str) -> str:
     """
     if not reply:
         return reply
+    # Имя в именительном падеже там, где нужен другой, — первое, что выдаёт
+    # робота: «поможет Аделина», «у Аделина». Плейсхолдеры уже склоняются при
+    # разворачивании; здесь подстраховка на случай, когда имя попало в ответ
+    # мимо них.
+    reply = grammar.fix_names(reply, _known_names(conv))
     allowed = sales.offer_allowed(conv)
     issues = critic.inspect(reply, conv, allowed)
     if not issues:
@@ -586,6 +596,16 @@ async def _review(conv: Conversation, user_text: str, reply: str) -> str:
         runtime.log_event("CRITIC_REWRITTEN", user_id=conv.user_id)
         return fixed
     return reply
+
+
+def _known_names(conv: Conversation) -> list[str]:
+    """Имена из этого разговора — то, что вообще имеет смысл склонять."""
+    lead = conv.lead
+    return [
+        name
+        for name in (conv.child_label(), lead.fio_parent.split()[-1] if lead.fio_parent else "")
+        if name
+    ]
 
 
 async def _rewrite(
@@ -794,17 +814,17 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     #    Срабатывает на любое приветствие, не только на первое сообщение —
     #    иначе повторное «привет» уходит в KB-поиск, не находит документов
     #    и ошибочно логируется как пробел базы знаний (см. insights.jsonl).
-    if intent == I.GREETING:
+    # 7. Приветствие — только в начале разговора. Посреди диалога «здравствуйте»
+    #    это либо вежливость в потоке речи, либо ошибка разбора намерения; в
+    #    живой переписке бот из-за этого поздоровался с человеком трижды и на
+    #    рассказ про сильный ветер ответил «Здравствуйте! Чем могу помочь?».
+    if intent == I.GREETING and len(conv.history) <= 2:
         conv.stage = STAGE_DISCOVERY
-        if len(conv.history) <= 2:
-            # Приветствие не продаёт: сначала выясняем, для кого занятия.
-            # Прежний вариант сразу предлагал диагностику — ровно та ранняя
-            # продажа, которую запрещает SMART.
-            question = smart.next_question(conv.need)
-            smart.mark_asked(conv.need, question)
-            opener = "Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург»."
-            return f"{opener} {question}" if question else opener
-        return "Здравствуйте! Чем могу помочь?"
+        # Приветствие не продаёт: сначала выясняем, для кого занятия.
+        question = smart.next_question(conv.need)
+        smart.mark_asked(conv.need, question)
+        opener = "Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург»."
+        return f"{opener} {question}" if question else opener
 
     # 9. Во всех прочих случаях — консультативный ответ по базе знаний.
     #    Веб-поиск подключаем только для содержательных вопросов (не для

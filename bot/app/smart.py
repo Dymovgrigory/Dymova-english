@@ -262,7 +262,70 @@ def _clean(data: dict) -> dict:
 # --- детерминированные подсказки: работают и без LLM ---
 
 _AGE_RE = re.compile(r"(\d{1,2})\s*(?:лет|год[а]?|годик)")
+# Возраст называют и без слова «лет»: «ей 8», «сыну 9». Отдельным
+# выражением, потому что голая цифра в тексте — это чаще не возраст.
+_AGE_SHORT_RE = re.compile(
+    r"(?:сын\w*|доч\w*|ребёнк\w*|ребенк\w*|мальчик\w*|девочк\w*|ему|ей)\s+(\d{1,2})\b"
+)
+
+
+# Возраст рядом с этими словами — про кого-то другого: «а брату 14 лет»,
+# «мне 35». Такой возраст не должен подменять возраст ученика.
+_OTHER_PERSON_RE = re.compile(
+    r"(?:брат\w*|сестр\w*|старш\w*|младш\w*|муж\w*|жен\w*|мам\w*|пап\w*|"
+    r"друг\w*|подруг\w*|\bмне\b|\bсебе\b|\bя\b)\W{0,12}$"
+)
+
+
+def age_in_text(text: str) -> str:
+    """Возраст ученика, названный прямо. Пустая строка — не нашли.
+
+    Возраст рядом с упоминанием другого человека («а брату 14 лет»)
+    пропускается: иначе фраза про брата переписывала бы возраст ребёнка,
+    ради которого весь разговор.
+    """
+    for pattern in (_AGE_RE, _AGE_SHORT_RE):
+        for match in pattern.finditer(text):
+            if not 1 <= int(match.group(1)) <= 99:
+                continue
+            if _OTHER_PERSON_RE.search(text[: match.start()]):
+                continue
+            return match.group(1)
+    return ""
 _GRADE_RE = re.compile(r"(\d{1,2})\s*(?:-?[ыи]й\s*)?класс")
+# Класс называют и словами: «во втором классе», «в третьем классе».
+_GRADE_WORDS = {
+    "перв": 1, "втор": 2, "трет": 3, "четв": 4, "пят": 5, "шест": 6,
+    "седьм": 7, "восьм": 8, "девят": 9, "десят": 10, "одиннадцат": 11,
+}
+_GRADE_WORD_RE = re.compile(
+    r"\b(перв|втор|трет|четв[её]рт|пят|шест|седьм|восьм|девят|десят|одиннадцат)\w*\s+класс"
+)
+# В первый класс идут в семь лет. Возраст из класса приблизительный, но он
+# несравнимо ближе к правде, чем возраст, услышанный полгода назад при
+# регистрации: по нему бот предлагал второкласснице программу для дошкольников.
+_FIRST_GRADE_AGE = 6
+
+
+def grade_in_text(text: str) -> str:
+    """Класс, названный цифрой или словом. Пустая строка — не нашли."""
+    match = _GRADE_RE.search(text)
+    if match:
+        return match.group(1)
+    match = _GRADE_WORD_RE.search(text)
+    if match:
+        stem = match.group(1).replace("ё", "е")[:5]
+        for key, number in _GRADE_WORDS.items():
+            if stem.startswith(key[:5]):
+                return str(number)
+    return ""
+
+
+def age_for_grade(grade: str) -> str:
+    try:
+        return str(int(grade) + _FIRST_GRADE_AGE)
+    except (TypeError, ValueError):
+        return ""
 _ADULT_RE = re.compile(r"для себя|я сам|мне \d{2}|взросл\w*|для меня", re.IGNORECASE)
 _PARENT_RE = re.compile(r"\bсын\w*|\bдоч\w*|ребён\w*|ребен\w*|мальчик\w*|девочк\w*", re.IGNORECASE)
 
@@ -320,14 +383,20 @@ def enrich_from_text(profile: NeedProfile, text: str) -> None:
     if not low:
         return
 
-    if not profile.child_age:
-        match = _AGE_RE.search(low)
-        if match and 1 <= int(match.group(1)) <= 99:
-            profile.child_age = match.group(1)
-    if not profile.child_grade:
-        match = _GRADE_RE.search(low)
-        if match:
-            profile.child_grade = match.group(1)
+    # Свежая реплика важнее того, что записано раньше: человек поправляет
+    # себя («ей 8, а не 6»), и упрямо держаться прежнего значения — это ровно
+    # то, за что бота называют глухим.
+    said_age = age_in_text(low)
+    if said_age:
+        profile.child_age = said_age
+    grade = grade_in_text(low)
+    if grade:
+        profile.child_grade = grade
+        derived = age_for_grade(grade)
+        # Возраст из класса ставим, только если в этой же реплике возраст не
+        # назвали прямо: сказанное человеком всегда точнее вычисленного.
+        if derived and not said_age:
+            profile.child_age = derived
     if not profile.who:
         if _PARENT_RE.search(low):
             profile.who = WHO_PARENT
@@ -495,6 +564,9 @@ __all__ = [
     "extract",
     "mark_asked",
     "next_question",
+    "age_for_grade",
+    "age_in_text",
+    "grade_in_text",
     "sales_allowed",
     "summary",
 ]

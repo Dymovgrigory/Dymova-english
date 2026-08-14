@@ -38,9 +38,11 @@ def test_mini_app_is_mobile_first_and_theme_aware():
     css = (TGAPP / "app.css").read_text(encoding="utf-8")
 
     assert "viewport-fit=cover" in html
-    assert 'name="color-scheme" content="light dark"' in html
-    # Поверхности берутся из темы клиента, а не зашиты в один режим.
-    assert "--tg-theme-bg-color" in css
+    # Приложение сознательно светлое в любой теме мессенджера: в тёмной теме
+    # экран становился тёмным и плохо читаемым, на что и пожаловались.
+    assert 'name="color-scheme" content="light"' in html
+    assert "color-scheme: light;" in css
+    # Тема клиента остаётся подсказкой для акцентов и системного хрома.
     assert "--tg-theme-text-color" in css
     # Безопасные зоны и запрет горизонтального скролла.
     assert "safe-area-inset-bottom" in css
@@ -101,10 +103,48 @@ def test_webapp_button_is_added_to_menu(monkeypatch):
     monkeypatch.setattr(settings, "MINIAPP_BASE_URL", "https://bot.example/app/", raising=False)
     monkeypatch.setattr(settings, "TELEGRAM_MINIAPP_URL", "", raising=False)
 
-    rows = main_module._telegram_menu_buttons()
+    rows = main_module._telegram_menu_buttons("tg-user")
 
     assert rows[0][0]["type"] == "web_app"
     assert rows[0][0]["web_app"] == "https://bot.example/tg/"
+
+
+def test_webapp_button_hidden_until_registration(monkeypatch):
+    """Кнопка, ведущая в анкету, — худший вид кнопки: её просто нет."""
+    monkeypatch.setattr(settings, "MINIAPP_BASE_URL", "https://bot.example/app/", raising=False)
+    monkeypatch.setattr(settings, "TELEGRAM_MINIAPP_URL", "", raising=False)
+    monkeypatch.setattr(settings, "REGISTRATION_REQUIRED", True, raising=False)
+
+    from app.memory import get_store
+
+    store = get_store()
+    store.reset("tg-newbie", platform="telegram")
+    rows = main_module._telegram_menu_buttons("tg-newbie")
+    assert all(button["type"] != "web_app" for row in rows for button in row)
+
+    conv = store.get("tg-newbie", platform="telegram")
+    conv.registered = True
+    store.save(conv)
+    rows = main_module._telegram_menu_buttons("tg-newbie")
+    assert rows[0][0]["type"] == "web_app"
+
+
+def test_max_menu_hides_cabinet_until_registration(monkeypatch):
+    monkeypatch.setattr(settings, "MINIAPP_BASE_URL", "https://bot.example/app/", raising=False)
+    monkeypatch.setattr(settings, "REGISTRATION_REQUIRED", True, raising=False)
+
+    from app.memory import get_store
+
+    store = get_store()
+    store.reset("max-newbie")
+    titles = [b.get("text", "") for row in main_module._main_menu("max-newbie") for b in row]
+    assert not any("кабинет" in t.lower() for t in titles)
+
+    conv = store.get("max-newbie")
+    conv.registered = True
+    store.save(conv)
+    titles = [b.get("text", "") for row in main_module._main_menu("max-newbie") for b in row]
+    assert any("кабинет" in t.lower() for t in titles)
 
 
 def test_webapp_button_skipped_without_https(monkeypatch):

@@ -63,9 +63,12 @@ def test_brand_palette_is_declared():
         assert token in HTML, f"нет фирменного токена {token}"
 
 
-def test_dark_theme_is_supported():
-    assert "prefers-color-scheme: dark" in HTML
-    assert "color-scheme: light dark" in HTML
+def test_app_stays_light_and_readable():
+    """Тёмная тема делала экран тёмным и плохо читаемым — от неё отказались
+    сознательно, в пользу постоянной светлой и контрастной палитры."""
+    assert "color-scheme: light;" in HTML
+    assert "prefers-color-scheme: dark" not in HTML
+    assert "--ink: #14110c;" in HTML
 
 
 def test_motion_can_be_switched_off():

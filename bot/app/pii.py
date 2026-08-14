@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import re
 
+from app import grammar
 from app.morph import CASES, NOMINATIVE, decline
 
 # Телефон в свободном тексте прячем всегда, даже если он ещё не попал в лид:
@@ -94,13 +95,19 @@ class PiiVault:
         return _PLACEHOLDER_RE.sub(self._restore_one, text)
 
     def _restore_one(self, match: re.Match[str]) -> str:
-        label, case = match.group(1), (match.group(2) or NOMINATIVE)
+        label = match.group(1)
         value = self._to_real.get(f"{{{{{label}}}}}")
         if value is None:
             # Модель выдумала плейсхолдер, которого мы не регистрировали.
             # Оставляем как есть — пусть это будет видно, а не молча исчезнет.
             return match.group(0)
-        if "NAME" not in label or case not in CASES:
+        if "NAME" not in label:
+            return value
+        # Падеж берём из пометки модели, а если её нет — из места в
+        # предложении. Иначе имя всегда разворачивалось в именительном:
+        # «поможет Аделина», «у Аделина» — так живые люди не пишут.
+        case = match.group(2) or grammar.case_for(match.string[: match.start()])
+        if case not in CASES:
             return value
         return decline(value, case)
 
