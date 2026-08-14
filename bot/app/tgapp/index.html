@@ -34,7 +34,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <!-- Мягкий световой фон. aria-hidden: для скринридера это пустой шум. -->
+  <!-- Живой свет за содержимым. aria-hidden: для скринридера это пустой шум. -->
   <div class="ambient" aria-hidden="true">
     <span class="ambient__glow ambient__glow--amber"></span>
     <span class="ambient__glow ambient__glow--violet"></span>
@@ -45,9 +45,9 @@
     Нет связи. Экран покажет последние загруженные данные.
   </div>
 
-  <main id="root" class="stack" aria-live="polite">
-    <!-- ГЛАВНАЯ -->
-    <section class="screen" data-screen="home">
+  <main id="root" class="app" aria-live="polite">
+    <!-- ===================== ДОМ ===================== -->
+    <section class="tab" data-tab="home">
       <header class="hero">
         <div class="hero__stage">
           <span class="hero__halo" aria-hidden="true"></span>
@@ -63,105 +63,53 @@
         <p class="hero__eyebrow">Языковая школа · Долгопрудный</p>
         <h1 class="hero__title" id="greeting-title">Фоксинбург</h1>
         <p class="hero__sub" id="greeting-sub">Английский не для школы, а для жизни</p>
-
-        <!-- Цифры школы: то, что родитель хочет знать в первые пять секунд. -->
-        <dl class="stats" aria-label="Коротко о школе">
-          <div class="stats__item">
-            <dt class="stats__label">в группе</dt>
-            <dd class="stats__value"><span class="count" data-count="7">7</span></dd>
-            <p class="stats__note">детей максимум</p>
-          </div>
-          <div class="stats__item">
-            <dt class="stats__label">возраст</dt>
-            <dd class="stats__value">2<span class="stats__dash">–</span><span class="count" data-count="18">18</span></dd>
-            <p class="stats__note">и взрослые</p>
-          </div>
-          <div class="stats__item">
-            <dt class="stats__label">языка</dt>
-            <dd class="stats__value"><span class="count" data-count="3">3</span></dd>
-            <p class="stats__note">англ · нем · кит</p>
-          </div>
-        </dl>
       </header>
 
-      <nav class="tiles" aria-label="Разделы">
-        <button class="tile tile--wide tile--accent" data-go="picker">
-          <span class="tile__ic" aria-hidden="true">
+      <!-- Персональная полоса: меняется после теста и подбора. До этого —
+           приглашение начать, а не пустое место. -->
+      <button class="pulse" id="pulse" data-sheet="quiz">
+        <span class="pulse__dot" aria-hidden="true"></span>
+        <span class="pulse__body">
+          <span class="pulse__title" id="pulse-title">Узнать уровень за минуту</span>
+          <span class="pulse__text" id="pulse-text">Пять заданий — и сразу видно, с чего начинать</span>
+        </span>
+        <span class="pulse__chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+
+      <!-- Быстрые действия: не список кнопок, а разноразмерная сетка. -->
+      <nav class="quick" aria-label="Быстрые действия">
+        <button class="qa qa--hero" data-sheet="picker">
+          <span class="qa__ic" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z"/><path d="M7 10v5.5c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V10"/><path d="M21 7.5V14"/>
+              <path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z"/><path d="M7 10v5.5c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V10"/>
             </svg>
           </span>
-          <span class="tile__body">
-            <span class="tile__name">Подобрать курс</span>
-            <span class="tile__hint">По возрасту и формату — за минуту</span>
-          </span>
-          <span class="tile__chev" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
-          </span>
+          <span class="qa__name">Подобрать курс</span>
+          <span class="qa__hint">Три вопроса — и готово</span>
         </button>
-
-        <button class="tile" data-go="signup">
-          <span class="tile__ic" aria-hidden="true">
+        <button class="qa" data-sheet="signup">
+          <span class="qa__ic" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/><path d="m9 16 2 2 4-4"/>
             </svg>
           </span>
-          <span class="tile__body">
-            <span class="tile__name">Записаться</span>
-            <span class="tile__hint">Бесплатная диагностика</span>
-          </span>
+          <span class="qa__name">Записаться</span>
         </button>
-
-        <button class="tile" data-go="homework">
-          <span class="tile__ic" aria-hidden="true">
+        <button class="qa" data-sheet="homework">
+          <span class="qa__ic" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.4"/><path d="M8.5 6 10 3.5h4L15.5 6"/>
             </svg>
           </span>
-          <span class="tile__body">
-            <span class="tile__name">Помощь с домашкой</span>
-            <span class="tile__hint">Фото задания — разбор</span>
-          </span>
-        </button>
-
-        <button class="tile" data-go="chat">
-          <span class="tile__ic" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/><path d="M9 11h6M9 15h4"/>
-            </svg>
-          </span>
-          <span class="tile__body">
-            <span class="tile__name">Спросить Фокси</span>
-            <span class="tile__hint">Отвечает здесь и в чате</span>
-          </span>
-        </button>
-
-        <button class="tile" data-go="catalog">
-          <span class="tile__ic" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5Z"/>
-            </svg>
-          </span>
-          <span class="tile__body">
-            <span class="tile__name">Программы и цены</span>
-            <span class="tile__hint">Курсы и форматы</span>
-          </span>
-        </button>
-
-        <button class="tile" data-go="branches">
-          <span class="tile__ic" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>
-            </svg>
-          </span>
-          <span class="tile__body">
-            <span class="tile__name">Филиалы</span>
-            <span class="tile__hint">Адреса и телефоны</span>
-          </span>
+          <span class="qa__name">Домашка</span>
         </button>
       </nav>
 
-      <!-- Почему сюда: факты из базы знаний, а не текст в вёрстке. -->
+      <!-- Акция школы, если она есть в базе знаний. -->
+      <div id="promo-slot"></div>
+
       <section class="block reveal" aria-labelledby="why-title">
         <h2 class="block__title" id="why-title">Почему Фоксинбург</h2>
         <div class="cards" id="home-advantages">
@@ -170,172 +118,108 @@
         </div>
       </section>
 
-      <!-- Программы по возрасту: горизонтальная лента с прилипанием. -->
-      <section class="block reveal" aria-labelledby="programs-title">
-        <div class="block__head">
-          <h2 class="block__title" id="programs-title">Программы</h2>
-          <button class="block__more" data-go="catalog">Все программы</button>
-        </div>
-        <div class="rail" id="home-programs">
-          <article class="rail__card card--skeleton" aria-hidden="true"></article>
-          <article class="rail__card card--skeleton" aria-hidden="true"></article>
-        </div>
+      <!-- Путь ученика: шаги зачисления лежали в базе и не показывались. -->
+      <section class="block reveal" aria-labelledby="path-title">
+        <h2 class="block__title" id="path-title">Как начать</h2>
+        <ol class="path" id="home-path"></ol>
       </section>
 
-      <!-- Частые вопросы: без перехода на другой экран. -->
       <section class="block reveal" aria-labelledby="faq-title">
         <h2 class="block__title" id="faq-title">Частые вопросы</h2>
         <div class="faq" id="home-faq"></div>
       </section>
 
-      <!-- Куда прийти. -->
       <section class="block reveal" aria-labelledby="where-title">
-        <div class="block__head">
-          <h2 class="block__title" id="where-title">Где мы</h2>
-          <button class="block__more" data-go="branches">Все филиалы</button>
-        </div>
+        <h2 class="block__title" id="where-title">Где мы</h2>
         <div class="cards" id="home-branches"></div>
       </section>
 
-      <!-- Последний экран — призыв, уместный уже после всего рассказа. -->
       <section class="cta reveal">
         <p class="cta__title">Начать проще, чем кажется</p>
         <p class="cta__text">Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.</p>
-        <button class="primary primary--glow" data-go="signup">Записаться на диагностику</button>
+        <button class="primary primary--glow" data-sheet="signup">Записаться на диагностику</button>
       </section>
-
-      <button class="rowlink" data-go="profile">
-        <span class="rowlink__label">Мой профиль</span>
-        <span class="rowlink__value" id="profile-teaser">—</span>
-        <span class="rowlink__chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
-        </span>
-      </button>
     </section>
 
-    <!-- ПОДБОР КУРСА: возрастная линейка -->
-    <section class="screen" data-screen="picker" hidden>
-      <h2 class="title">Подобрать курс</h2>
-      <p class="lede">Сдвиньте линейку к возрасту ученика — покажу подходящие программы.</p>
+    <!-- ===================== ПРОГРАММЫ ===================== -->
+    <section class="tab" data-tab="programs" hidden>
+      <h2 class="title">Программы</h2>
+      <p class="lede">Возраст, формат и цена — всё, что нужно, чтобы выбрать.</p>
 
-      <div class="ruler">
-        <input
-          id="age" class="ruler__input" type="range"
-          min="3" max="20" step="1" value="9"
-          aria-label="Возраст ученика"
-        />
-        <div class="ruler__scale" aria-hidden="true">
-          <span>3</span><span>7</span><span>11</span><span>15</span><span>взрослым</span>
-        </div>
-        <output class="ruler__value" id="age-value" for="age">9 лет</output>
+      <div class="chips" role="group" aria-label="Возраст">
+        <button class="chip is-active" data-agefilter="">Все</button>
+        <button class="chip" data-agefilter="3-6">3–6 лет</button>
+        <button class="chip" data-agefilter="7-10">7–10 лет</button>
+        <button class="chip" data-agefilter="11-17">11–17 лет</button>
+        <button class="chip" data-agefilter="adult">Взрослым</button>
       </div>
 
-      <div class="segmented" role="radiogroup" aria-label="Формат занятий">
-        <button class="segmented__opt is-active" data-format="">Любой</button>
-        <button class="segmented__opt" data-format="offline">Офлайн</button>
-        <button class="segmented__opt" data-format="online">Онлайн</button>
-      </div>
-
-      <div id="picker-results" class="results"></div>
-    </section>
-
-    <!-- ЗАПИСЬ -->
-    <section class="screen" data-screen="signup" hidden>
-      <h2 class="title">Запись на занятие</h2>
-      <p class="lede">Оставьте контакты — администратор перезвонит, подберёт группу и время.</p>
-
-      <form id="lead-form" class="form" novalidate>
-        <label class="field">
-          <span class="field__label">Ваше имя <em>обязательно</em></span>
-          <input id="lf-parent" name="fio_parent" type="text" autocomplete="name" placeholder="Иванова Анна" required />
-        </label>
-        <label class="field">
-          <span class="field__label">Имя ребёнка</span>
-          <input id="lf-child" name="fio_child" type="text" placeholder="Миша" />
-        </label>
-        <div class="field-row">
-          <label class="field">
-            <span class="field__label">Возраст</span>
-            <input id="lf-age" name="age" type="number" inputmode="numeric" min="1" max="99" placeholder="9" />
-          </label>
-          <label class="field">
-            <span class="field__label">Телефон <em>обязательно</em></span>
-            <input id="lf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 999 123-45-67" required />
-          </label>
-        </div>
-        <label class="field">
-          <span class="field__label">Филиал или формат</span>
-          <select id="lf-branch" name="branch">
-            <option value="">Выберите</option>
-            <option>Филиал на Лихачевском</option>
-            <option>Филиал на Ракетостроителей</option>
-            <option>Онлайн</option>
-          </select>
-        </label>
-        <label class="field">
-          <span class="field__label">Комментарий</span>
-          <textarea id="lf-comment" name="comment" rows="2" placeholder="Удобное время, пожелания"></textarea>
-        </label>
-        <p id="lead-status" class="status" hidden></p>
-        <!-- Запасная кнопка: в старых клиентах Telegram MainButton не
-             поддерживается, и без неё экран становится тупиком. -->
-        <button type="submit" class="primary" data-fallback-action="signup" hidden>
-          Отправить заявку
-        </button>
-      </form>
-    </section>
-
-    <!-- ДОМАШКА -->
-    <section class="screen" data-screen="homework" hidden>
-      <h2 class="title">Помощь с домашкой</h2>
-      <p class="lede">Сфотографируйте задание — Фокси объяснит, как его разобрать. Бесплатно и без готовых ответов.</p>
-
-      <label class="dropzone" for="hw-file">
-        <input id="hw-file" type="file" accept="image/*" capture="environment" hidden />
-        <img id="hw-preview" class="dropzone__preview" alt="" hidden />
-        <span class="dropzone__hint" id="hw-hint">Выбрать фото задания</span>
-      </label>
-      <label class="field">
-        <span class="field__label">Что именно непонятно</span>
-        <input id="hw-note" type="text" placeholder="Задание 3, перевести предложения" />
-      </label>
-      <p id="hw-status" class="status" hidden></p>
-      <button type="button" class="primary" data-fallback-action="homework" hidden>
-        Разобрать задание
-      </button>
-      <article id="hw-answer" class="answer" hidden></article>
-    </section>
-
-    <!-- ЧАТ -->
-    <section class="screen screen--chat" data-screen="chat" hidden>
-      <h2 class="title">Спросить Фокси</h2>
-      <div id="chat-log" class="chat" role="log" aria-live="polite"></div>
-      <form id="chat-form" class="composer">
-        <input id="chat-input" type="text" placeholder="Спросите о курсах, ценах, записи" autocomplete="off" />
-        <button class="composer__send" type="submit" aria-label="Отправить">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-        </button>
-      </form>
-    </section>
-
-    <!-- КАТАЛОГ -->
-    <section class="screen" data-screen="catalog" hidden>
-      <h2 class="title">Программы и цены</h2>
       <div id="catalog" class="results"></div>
     </section>
 
-    <!-- ФИЛИАЛЫ -->
-    <section class="screen" data-screen="branches" hidden>
-      <h2 class="title">Филиалы</h2>
-      <div id="branches" class="results"></div>
+    <!-- ===================== ПЕДАГОГИ ===================== -->
+    <section class="tab" data-tab="team" hidden>
+      <h2 class="title">Педагоги</h2>
+      <p class="lede">Видеовизитки и фрагменты уроков — видно, как человек ведёт занятие.</p>
+      <div id="team-list" class="team"></div>
     </section>
 
-    <!-- ПРОФИЛЬ -->
-    <section class="screen" data-screen="profile" hidden>
-      <h2 class="title">Профиль</h2>
-      <div id="profile" class="results"></div>
+    <!-- ===================== ФОКСИ ===================== -->
+    <section class="tab tab--chat" data-tab="chat" hidden>
+      <div id="chat-log" class="chat" role="log" aria-label="Диалог с Фокси"></div>
+      <form id="chat-form" class="composer" autocomplete="off">
+        <input id="chat-input" type="text" placeholder="Спросите что угодно о школе" aria-label="Сообщение" />
+        <button type="submit" class="composer__send" aria-label="Отправить">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- ===================== КАБИНЕТ ===================== -->
+    <section class="tab" data-tab="profile" hidden>
+      <h2 class="title">Кабинет</h2>
+      <div id="profile" class="profile"></div>
+      <div id="branches" class="cards"></div>
     </section>
   </main>
+
+  <!-- Постоянная навигация: переход между разделами не теряет контекст и не
+       требует кнопки «назад» на каждом экране. -->
+  <nav class="dock" id="dock" aria-label="Разделы">
+    <button class="dock__btn is-active" data-tab-go="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10.5 9-7 9 7V20a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20Z"/></svg>
+      <span>Дом</span>
+    </button>
+    <button class="dock__btn" data-tab-go="programs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/></svg>
+      <span>Курсы</span>
+    </button>
+    <button class="dock__btn" data-tab-go="team">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.2"/><path d="M2.8 19a6.2 6.2 0 0 1 12.4 0"/><path d="M16.5 6.2a3 3 0 0 1 0 5.6M18 19a5.6 5.6 0 0 0-1.7-4"/></svg>
+      <span>Педагоги</span>
+    </button>
+    <button class="dock__btn" data-tab-go="chat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/></svg>
+      <span>Фокси</span>
+    </button>
+    <button class="dock__btn" data-tab-go="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+      <span>Кабинет</span>
+    </button>
+  </nav>
+
+  <!-- Действия открываются листом снизу, а не отдельным экраном: контекст
+       остаётся на месте, закрытие — свайпом или кнопкой. -->
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet__scrim" data-sheet-close></div>
+    <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <button class="sheet__grip" data-sheet-close aria-label="Закрыть"></button>
+      <h2 class="sheet__title" id="sheet-title"></h2>
+      <div class="sheet__body" id="sheet-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
 
   <script src="app.js"></script>
   <script type="module" src="mascot.js"></script>
