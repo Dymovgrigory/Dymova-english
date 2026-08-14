@@ -14,7 +14,7 @@
        Дальше версию можно не трогать — заголовок заставляет браузер
        проверять файл при каждой загрузке, — но при крупной правке её проще
        поднять, чем объяснять человеку, почему у него старый экран. -->
-  <link rel="stylesheet" href="/tg/app.css?v=3" />
+  <link rel="stylesheet" href="/tg/app.css?v=4" />
   <!-- Хиро-картинка маскота решает первый экран: грузим её раньше всего. -->
   <link rel="preload" as="image" href="/tg/assets/foxi.webp" />
   <!-- Мост площадки подставляет сервер: на /tg/ — SDK Telegram, на /app/ —
@@ -176,10 +176,32 @@
     </section>
 
     <!-- ===================== КАБИНЕТ ===================== -->
+    <!-- Кабинет — лента блоков: сначала «кто я», потом «что дальше», потом
+         «что было». Статичный каркас виден и без скрипта: блоки появляются
+         ступенчато через CSS-анимацию, а не классом из JS. -->
     <section class="tab" data-tab="profile" hidden>
-      <h2 class="title">Кабинет</h2>
-      <div id="profile" class="profile"></div>
-      <div id="branches" class="cards"></div>
+      <div class="cab" id="cabinet">
+        <header class="cab__head">
+          <h2 class="title" id="cab-greeting">Кабинет</h2>
+          <p class="lede" id="cab-sub">Ваши дети, прогресс и занятия — всё своё в одном месте.</p>
+          <div class="cab__kids" id="cab-kids" role="group" aria-label="Дети"></div>
+        </header>
+        <section class="cab__block" id="cab-child" aria-label="Карточка ребёнка">
+          <p class="cab__loading">Данные загрузятся в приложении…</p>
+        </section>
+        <section class="cab__block" id="cab-lesson" aria-label="Ближайшее занятие">
+          <p class="cab__loading">Данные загрузятся в приложении…</p>
+        </section>
+        <section class="cab__block" id="cab-progress" aria-label="Прогресс">
+          <p class="cab__loading">Данные загрузятся в приложении…</p>
+        </section>
+        <section class="cab__block" id="cab-lead" aria-label="Мои заявки">
+          <p class="cab__loading">Данные загрузятся в приложении…</p>
+        </section>
+        <section class="cab__block" id="cab-next" aria-label="Что дальше">
+          <p class="cab__loading">Данные загрузятся в приложении…</p>
+        </section>
+      </div>
     </section>
   </main>
 
@@ -221,7 +243,7 @@
 
   <div id="toast" class="toast" hidden></div>
 
-  <script src="/tg/fluid.js?v=3"></script>
-  <script src="/tg/app.js?v=3"></script>
+  <script src="/tg/fluid.js?v=4"></script>
+  <script src="/tg/app.js?v=4"></script>
 </body>
 </html>

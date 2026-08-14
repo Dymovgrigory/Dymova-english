@@ -255,3 +255,12 @@ main { padding: 16px; }
 @media (prefers-reduced-motion: no-preference) {
   .row, .btn { transition: border-color .15s ease, background .15s ease; }
 }
+
+/* --- импорт расписания --- */
+.import-status { margin-bottom: 14px; }
+.import-batch { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #f7f3ea; }
+.import-status .empty { padding: 12px 14px; border: 1px dashed var(--line); border-radius: 10px; color: #6b6357; }
+.unmatched { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.unmatched select { max-width: 320px; }
+#import-report { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: #e8f7f1; border: 1px solid #bfe8d8; }
+#import-mapping pre { max-height: 220px; overflow: auto; font-size: 12px; background: #faf8f2; padding: 10px; border-radius: 8px; }

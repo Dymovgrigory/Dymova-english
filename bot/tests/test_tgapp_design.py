@@ -143,7 +143,8 @@ def test_dom_contract_of_the_shell_is_intact():
     """Постоянная часть приложения: разделы, док, лист, чат, витрина."""
     for element_id in (
         "greeting-title", "greeting-sub", "chat-log", "chat-form", "chat-input",
-        "catalog", "branches", "profile", "offline", "dock", "sheet",
+        "catalog", "cabinet", "cab-child", "cab-lesson", "cab-progress",
+        "cab-lead", "cab-next", "cab-greeting", "cab-kids", "offline", "dock", "sheet",
         "sheet-title", "sheet-body", "toast", "pulse", "team-list",
         "home-advantages", "home-path", "home-faq", "home-branches",
     ):
@@ -223,7 +224,7 @@ def test_menu_enters_in_order_without_javascript():
 
 def test_menu_press_stirs_the_ink():
     """Интерфейс и фон — одно целое: нажатие отзывается в шапке."""
-    assert 'closest(".qa, .pulse, .dock__btn")' in JS
+    assert 'closest(".qa, .pulse, .dock__btn, .cab__card, .cab__kid")' in JS
     assert "foxiSplash(1)" in JS
 
 

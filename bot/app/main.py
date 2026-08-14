@@ -11,9 +11,11 @@ from __future__ import annotations
 import base64
 import asyncio
 import hmac
+import json
 import logging
 import time
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
@@ -24,6 +26,7 @@ from fastapi.staticfiles import StaticFiles
 from app import ai_core
 from app.ai_core import handle_message, handle_start
 from app import broadcast
+from app import cabinet
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
@@ -31,6 +34,7 @@ from app.email_notify import send_lead_email
 from app import intent as I
 from app import group_chat
 from app import insights
+from app import importer
 from app import leveltest
 from app import nudge
 from app import profile
@@ -928,6 +932,112 @@ async def admin_user_detail(user_id: str, request: Request) -> dict:
     return detail
 
 
+# --------- Админка: импорт расписания из выгрузки ---------
+
+
+@app.get("/admin/import/status")
+async def admin_import_status(request: Request) -> dict:
+    """Состояние импорта: последняя партия, запомненный маппинг, свежесть."""
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return importer.status(get_store())
+
+
+@app.post("/admin/import/preview")
+async def admin_import_preview(request: Request, file: UploadFile = File(...)) -> dict:
+    """Первый шаг: заголовки файла + предположение по колонкам.
+
+    Файл нигде не сохраняется: он нужен только на время разбора.
+    """
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    content = await file.read()
+    try:
+        headers, rows = importer.parse_upload(file.filename or "", content)
+    except importer.ImportError_ as exc:
+        return JSONResponse({"ok": False, "error": str(exc)}, status_code=400)
+    store = get_store()
+    saved = importer.cabinet.saved_mapping(store)
+    guessed = importer.guess_mapping(headers)
+    # Запомненное сопоставление важнее угадайки, но только для колонок,
+    # которые реально есть в этом файле.
+    mapping = {**guessed, **{k: v for k, v in saved.items() if v in headers}}
+    sample = [
+        {h: (row.get(h, "") or "")[:60] for h in headers}
+        for row in rows[:5]
+    ]
+    return {
+        "ok": True,
+        "filename": file.filename or "",
+        "headers": headers,
+        "rows_count": len(rows),
+        "sample": sample,
+        "mapping": mapping,
+        "fields": list(importer.FIELDS),
+    }
+
+
+@app.post("/admin/import/commit")
+async def admin_import_commit(
+    request: Request,
+    file: UploadFile = File(...),
+    mapping: str = Form(""),
+) -> dict:
+    """Загрузка выгрузки с выбранным сопоставлением. Возвращает отчёт."""
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    content = await file.read()
+    try:
+        headers, rows = importer.parse_upload(file.filename or "", content)
+        chosen = {k: v for k, v in json.loads(mapping or "{}").items() if v in headers}
+        report = importer.import_schedule(
+            get_store(),
+            filename=file.filename or "",
+            rows=rows,
+            mapping=chosen,
+            actor="admin",
+        )
+    except importer.ImportError_ as exc:
+        return JSONResponse({"ok": False, "error": str(exc)}, status_code=400)
+    except json.JSONDecodeError:
+        return JSONResponse({"ok": False, "error": "Некорректное сопоставление"}, status_code=400)
+    # Отчёт — часть импорта: показываем его администратору, а не прячем
+    # в логи.
+    logger.info(
+        "import: batch=%s rows=%s matched=%s unmatched=%s",
+        report["batch_id"], report["rows_total"], report["rows_matched"],
+        report["rows_unmatched"],
+    )
+    return {"ok": True, "report": report}
+
+
+@app.post("/admin/import/match")
+async def admin_import_match(request: Request, data: dict) -> dict:
+    """Ручное сопоставление строки отчёта с родителем из бота."""
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    try:
+        batch_id = int(data.get("batch_id"))
+        row_index = int(data.get("row_index"))
+    except (TypeError, ValueError):
+        return JSONResponse({"ok": False, "error": "Нужны batch_id и row_index"}, status_code=400)
+    platform = str(data.get("platform", "")).strip()
+    user_id = str(data.get("user_id", "")).strip()
+    if not platform or not user_id:
+        return JSONResponse({"ok": False, "error": "Нужны platform и user_id"}, status_code=400)
+    store = get_store()
+    # Сопоставить можно только с реальным диалогом — иначе «ручное
+    # сопоставление» приклеит расписание к произвольной строке.
+    conv = store._load_conversation(platform, user_id)
+    if conv is None:
+        return JSONResponse({"ok": False, "error": "Такого пользователя нет в боте"}, status_code=404)
+    try:
+        report = importer.match_manually(store, batch_id, row_index, platform, user_id)
+    except LookupError as exc:
+        return JSONResponse({"ok": False, "error": str(exc)}, status_code=404)
+    return {"ok": True, "report": report}
+
+
 @app.get("/health")
 async def health() -> dict:
     store = get_store()
@@ -1205,16 +1315,30 @@ async def miniapp_level_test() -> dict:
 
 
 @app.post("/api/miniapp/level-test")
-async def miniapp_level_test_result(data: dict) -> dict:
-    """Проверка ответов теста. Ничего не сохраняет и авторизации не требует.
+async def miniapp_level_test_result(request: Request, data: dict) -> dict:
+    """Проверка ответов теста. Авторизации не требует: это витринный
+    инструмент, он работает до регистрации.
 
-    Это витринный инструмент: он должен работать до регистрации, иначе
-    человек упрётся в анкету ровно там, где мы обещали пользу.
+    Если личность подписана — попытка сохраняется на сервере (раньше
+    результат жил только в localStorage и терялся с чисткой кэша, а без
+    истории попыток нет динамики — главной ценности кабинета на старте).
     """
     answers = data.get("answers")
     if not isinstance(answers, dict):
         return JSONResponse({"ok": False, "error": "Нет ответов"}, status_code=400)
-    return {"ok": True, "result": leveltest.grade(answers)}
+    result = leveltest.grade(answers)
+    identity = _identity_from_request(request)
+    if identity is not None and identity.verified:
+        try:
+            child_id = data.get("child_id")
+            child_id = int(child_id) if child_id is not None else None
+        except (TypeError, ValueError):
+            child_id = None
+        cabinet.record_attempt(
+            get_store(), identity.platform, identity.user_id,
+            result, answers, child_id=child_id,
+        )
+    return {"ok": True, "result": result}
 
 
 @app.get("/api/miniapp/recommend")
@@ -1263,6 +1387,72 @@ async def miniapp_profile(request: Request) -> dict:
     }
 
 
+def _verified_identity(request: Request) -> miniapp_auth.MiniAppIdentity | None:
+    """Личность для личных данных кабинета: только подписанный initData.
+
+    `user_id` из запроса здесь не передаётся даже как fallback: доверять
+    ему — значит отдавать чужой кабинет любому желающему.
+    """
+    identity = _identity_from_request(request)
+    if identity is None or not identity.verified:
+        return None
+    return identity
+
+
+@app.get("/api/miniapp/cabinet")
+async def miniapp_cabinet(request: Request) -> dict:
+    """Личный кабинет: дети, прогресс, заявки, расписание из выгрузки."""
+    identity = _verified_identity(request)
+    if identity is None:
+        return JSONResponse(
+            {"ok": False, "error": "Кабинет открывается из чата с ботом"},
+            status_code=401,
+        )
+    store = get_store()
+    conv = store.get(identity.user_id, platform=identity.platform)
+    payload = cabinet.build_cabinet(store, conv, identity.display_name or "")
+    payload["ok"] = True
+    return payload
+
+
+@app.post("/api/miniapp/cabinet/child")
+async def miniapp_cabinet_child(request: Request, data: dict) -> dict:
+    """Создание/правка карточки ребёнка.
+
+    Правка сразу уходит в профиль, которым пользуется бот в чате, — иначе
+    человек поправил возраст в кабинете, а Фокси продолжает называть старый.
+    """
+    identity = _verified_identity(request)
+    if identity is None:
+        return JSONResponse(
+            {"ok": False, "error": "Кабинет открывается из чата с ботом"},
+            status_code=401,
+        )
+    child_id = data.get("id")
+    try:
+        child_id = int(child_id) if child_id is not None else None
+    except (TypeError, ValueError):
+        return JSONResponse({"ok": False, "error": "Некорректный id"}, status_code=400)
+    store = get_store()
+    # Синхронизация в диалог — только для правки существующего ребёнка или
+    # самого первого: иначе добавление второго ребёнка затирало бы данные
+    # первого в заявке, которой пользуется бот.
+    had_children = bool(cabinet.list_children(store, identity.platform, identity.user_id))
+    try:
+        child = cabinet.upsert_child(
+            store, identity.platform, identity.user_id, child_id, data
+        )
+    except LookupError:
+        return JSONResponse({"ok": False, "error": "Ребёнок не найден"}, status_code=404)
+    except ValueError as exc:
+        return JSONResponse({"ok": False, "error": str(exc)}, status_code=400)
+    if child_id is not None or not had_children:
+        conv = store.get(identity.user_id, platform=identity.platform)
+        cabinet.sync_child_into_conversation(store, conv, child)
+    return {"ok": True, "child": child,
+            "children": cabinet.list_children(store, identity.platform, identity.user_id)}
+
+
 @app.post("/api/miniapp/lead")
 async def miniapp_lead(request: Request, data: dict) -> dict:
     """Приём заявки из мини-приложения и отправка в BigBen CRM."""
@@ -1309,6 +1499,7 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
         conv = store.get(identity.user_id, platform=identity.platform)
         conv.lead = lead
         conv.lead_submitted = True
+        conv.lead_submitted_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
         if lead.branch:
             conv.selected_branch = lead.branch
         store.save(conv)

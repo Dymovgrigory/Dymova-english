@@ -1840,3 +1840,152 @@ body.is-locked { overflow: hidden; }
 }
 
 .drop__preview { max-width: 160px; border-radius: var(--radius-sm); }
+
+/* ---------------- личный кабинет ---------------- */
+
+/* Лента блоков: «кто я», «что дальше», «что было». Появление задаёт CSS,
+   а не класс из скрипта: при незагрузившемся JS кабинет виден. */
+.cab { display: grid; gap: 14px; }
+
+.cab > * {
+  animation: cab-in var(--duration-entrance) var(--ease-entrance) both;
+}
+.cab > *:nth-child(2) { animation-delay: 120ms; }
+.cab > *:nth-child(3) { animation-delay: 200ms; }
+.cab > *:nth-child(4) { animation-delay: 280ms; }
+.cab > *:nth-child(5) { animation-delay: 360ms; }
+.cab > *:nth-child(6) { animation-delay: 440ms; }
+
+@keyframes cab-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+.cab__head .title { margin-bottom: 4px; }
+.cab__head .lede { margin-top: 0; }
+
+.cab__loading { margin: 0; font-size: .88rem; color: var(--ink-faint); }
+
+/* Переключатель детей: горизонтальные пилюли с именем и возрастом. */
+.cab__kids {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cab__kids::-webkit-scrollbar { display: none; }
+
+.cab__kid {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform var(--duration-fast) var(--ease-entrance),
+              border-color var(--duration-fast) var(--ease-entrance),
+              box-shadow var(--duration-fast) var(--ease-entrance);
+}
+.cab__kid:active { transform: scale(.96); }
+.cab__kid.is-active {
+  border-color: transparent;
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--amber), #ffd45e);
+  box-shadow: 0 8px 20px rgba(240, 138, 0, .28);
+}
+.cab__kid-age { font-size: .8rem; font-weight: 500; opacity: .75; }
+.cab__kid--add { font-size: 1.1rem; color: var(--violet); }
+
+/* Карточки ленты: стекло с цветной тенью, как остальные поверхности. */
+.cab__card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-top-color: rgba(255, 255, 255, .85);
+  border-radius: var(--radius);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+  transition: transform var(--duration-fast) var(--ease-entrance);
+}
+.cab__card:active { transform: scale(.985); }
+
+.cab__card--next {
+  background: linear-gradient(150deg, rgba(255, 183, 3, .16), rgba(107, 77, 230, .1)), var(--glass);
+  box-shadow: 0 14px 34px rgba(240, 138, 0, .18);
+}
+
+.cab__title { margin: 0; font-size: 1.02rem; }
+.cab__text { margin: 0; font-size: .92rem; color: var(--ink-soft); line-height: 1.45; }
+.cab__note { margin: 0; font-size: .8rem; color: var(--ink-faint); }
+.cab__next-title { margin: 0; font-weight: 700; font-size: 1.06rem; }
+.cab__cta { justify-self: start; text-decoration: none; }
+.cab__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.kv-list { display: grid; gap: 8px; }
+
+/* Ближайшее занятие. */
+.cab__next-lesson {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(36, 198, 160, .1);
+  border: 1px solid rgba(36, 198, 160, .28);
+}
+.cab__next-when { margin: 0; font-weight: 700; text-transform: capitalize; }
+.cab__next-what { margin: 0; font-size: .95rem; color: var(--ink); }
+.cab__next-meta { margin: 0; font-size: .85rem; color: var(--ink-faint); }
+
+.cab__week { margin: 0; padding: 0 0 0 18px; display: grid; gap: 6px; font-size: .9rem; color: var(--ink-soft); }
+
+/* График прогресса: линия и точки, без процентов, которых мы не измеряли. */
+.cab__chart { width: 100%; height: auto; display: block; }
+.cab__line {
+  fill: none;
+  stroke: var(--violet);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cab__dot { fill: var(--bg-elev); stroke: var(--violet); stroke-width: 2.5; }
+.cab__dot.is-last { fill: var(--amber); stroke: var(--amber-deep); }
+.cab__axis { font-size: 9px; fill: var(--ink-faint); }
+
+/* Три пункта выгоды регистрации. */
+.cab__perks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  font-size: .92rem;
+  color: var(--ink-soft);
+}
+.cab__perks li { padding-left: 22px; position: relative; }
+.cab__perks li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: .5em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(255, 183, 3, .22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cab > * { animation: none; }
+  .cab__card:active, .cab__kid:active { transform: none; }
+}

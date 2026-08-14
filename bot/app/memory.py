@@ -95,6 +95,10 @@ class Conversation:
     # Что бот порекомендовал (движок подбора). Хранится, чтобы не
     # рекомендовать в следующей реплике что-то другое без причины.
     recommended_program: str = ""
+    # Когда заявка ушла в CRM. Нужен кабинету («Мои заявки» — дата), а не
+    # воронке: без него датой заявки пришлось бы называть updated_at, который
+    # меняется с каждым сообщением.
+    lead_submitted_at: str = ""
 
     def add(self, role: str, content: str) -> None:
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -308,6 +312,12 @@ class MemoryStore:
                 );
                 """
             )
+            # Таблицы личного кабинета (дети, попытки теста, импорт
+            # расписания, аудит) живут в той же базе. IF NOT EXISTS — старые
+            # базы просто дорастают новыми таблицами при старте.
+            from app import cabinet
+
+            cabinet.init_schema(self._conn)
 
     def _load_conversation(self, platform: str, user_id: str) -> Conversation | None:
         row = self._conn.execute(
@@ -359,6 +369,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         digest=d.get("digest", ""),
         dropped=d.get("dropped", []) or [],
         recommended_program=d.get("recommended_program", ""),
+        lead_submitted_at=d.get("lead_submitted_at", ""),
     )
 
 

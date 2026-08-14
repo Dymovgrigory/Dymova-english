@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import re
+from datetime import datetime, timezone
 
 from app.bigben import BigBenClient
 from app.intent import extract_age, extract_birthday, extract_phone
@@ -340,6 +341,7 @@ async def _submit(conv: Conversation, bigben: BigBenClient, max_client: MaxClien
     ok = await bigben.create_lead(lead, source=source)
     conv.stage = STAGE_DONE
     conv.lead_submitted = True
+    conv.lead_submitted_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     # уведомляем администратора о новой заявке (без переключения в режим handoff)
     if max_client.configured:
