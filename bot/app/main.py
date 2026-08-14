@@ -18,7 +18,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app import ai_core
@@ -1380,20 +1380,44 @@ async def site_lead(request: Request, data: dict) -> dict:
 _TGAPP_DIR = Path(__file__).with_name("tgapp")
 
 
+# Мосты площадок. Оба файла версионируются самими платформами, поэтому
+# подключаются по имени, без версии и без SRI.
+_BRIDGES = {
+    "telegram": '<script src="https://telegram.org/js/telegram-web-app.js"></script>',
+    "max": '<script src="https://st.max.ru/js/max-web-app.js"></script>',
+}
+
+
+def _miniapp_page(platform: str) -> HTMLResponse:
+    """Одна страница мини-приложения с мостом нужной площадки.
+
+    Оба моста в одной странице держать нельзя: telegram.org из сети MAX
+    недоступен, а тег script блокирующий — приложение не открывалось, пока
+    запрос не отвалится по таймауту. Разметка при этом остаётся общей:
+    именно две отдельные копии привели к тому, что MAX отстал на редизайн.
+
+    Страница собирается на каждый запрос — файл маленький, а перезапуск для
+    подхвата правки дороже, чем чтение с диска.
+    """
+    html = (_TGAPP_DIR / "index.html").read_text(encoding="utf-8")
+    html = html.replace("<!--BRIDGE-->", _BRIDGES.get(platform, ""))
+    # Разметку кэшировать нельзя: она уже один раз разъехалась с кодом.
+    return HTMLResponse(html, headers={"Cache-Control": "no-store"})
+
+
 @app.get("/app/", include_in_schema=False)
 @app.get("/app", include_in_schema=False)
-async def miniapp_index() -> FileResponse:
-    """MAX получает то же приложение, что и Telegram.
+async def miniapp_index_max() -> HTMLResponse:
+    """Мини-приложение для MAX. Объявлено до монтирования статики, поэтому
+    админка и картинки того же каталога отдаются по-прежнему."""
+    return _miniapp_page("max")
 
-    Раньше у площадок были две копии, и MAX отставал: редизайн и новые
-    разделы доехали только до Telegram. Теперь страница одна, площадку
-    приложение определяет по мосту, а ссылки на файлы абсолютные — поэтому
-    одна и та же разметка работает и на /tg/, и на /app/.
 
-    Маршрут объявлен до монтирования статики: остальные файлы каталога
-    (админка мини-приложения, картинки) отдаются по-прежнему.
-    """
-    return FileResponse(_TGAPP_DIR / "index.html")
+@app.get("/tg/", include_in_schema=False)
+@app.get("/tg", include_in_schema=False)
+async def miniapp_index_telegram() -> HTMLResponse:
+    """Мини-приложение для Telegram."""
+    return _miniapp_page("telegram")
 
 
 # Статика мини-приложения MAX: админка и картинки (если каталог есть).

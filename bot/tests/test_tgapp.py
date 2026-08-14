@@ -25,10 +25,17 @@ def test_mini_app_is_served():
     assert "Фоксинбург" in resp.text
 
 
-def test_mini_app_loads_telegram_sdk_and_own_assets():
+def test_mini_app_loads_platform_bridge_and_own_assets():
+    """Мост подставляет сервер: в разметке — только место под него.
+
+    Оба моста в одной странице держать нельзя: telegram.org из сети MAX
+    недоступен, а тег script блокирующий — приложение не открывалось.
+    """
     html = (TGAPP / "index.html").read_text(encoding="utf-8")
 
-    assert "telegram-web-app.js" in html
+    assert "<!--BRIDGE-->" in html
+    assert "telegram-web-app.js" not in html
+    assert "max-web-app.js" not in html
     assert 'href="/tg/app.css?v=' in html
     assert 'src="/tg/app.js?v=' in html
 
@@ -188,3 +195,23 @@ def test_menu_command_answers_with_buttons(monkeypatch):
     assert len(sent) == 1
     assert sent[0]["buttons"]
     assert any(b.get("type") == "web_app" for row in sent[0]["buttons"] for b in row)
+
+
+def test_each_platform_gets_only_its_own_bridge():
+    """Telegram получает свой SDK, MAX — свой, и никогда наоборот."""
+    client = TestClient(main_module.app)
+
+    tg = client.get("/tg/").text
+    assert "telegram-web-app.js" in tg
+    assert "max-web-app.js" not in tg
+
+    mx = client.get("/app/").text
+    assert "max-web-app.js" in mx
+    assert "telegram-web-app.js" not in mx
+
+
+def test_miniapp_markup_is_never_cached():
+    """Разметка уже один раз разъехалась с кодом из-за кэша."""
+    client = TestClient(main_module.app)
+    for path in ("/tg/", "/app/"):
+        assert client.get(path).headers["cache-control"] == "no-store"

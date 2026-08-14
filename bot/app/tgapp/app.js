@@ -79,22 +79,11 @@
     });
   }
 
-  /** Реакция маскота. Раньше событие уходило в трёхмерный модуль; теперь
-   *  анимируется сама картинка — дешевле, надёжнее и, как показала практика,
-   *  красивее сгенерированной модели. */
+  /** Всплеск чернил в шапке как реакция на успех: жидкость вспыхивает
+   *  цветом там, где раньше подпрыгивал маскот. */
   function mascot(event) {
-    var node = $("#mascot-still");
-    if (!node) return;
-    var animation = event === "success" ? "cheer" : "greet";
-    node.classList.remove("is-cheer", "is-greet");
-    // Перезапуск анимации требует кадра без класса, иначе повторное
-    // добавление того же класса ничего не меняет.
-    requestAnimationFrame(function () {
-      node.classList.add("is-" + animation);
-      setTimeout(function () {
-        node.classList.remove("is-" + animation);
-      }, animation === "cheer" ? 1200 : 900);
-    });
+    if (event !== "success") return;
+    if (typeof window.foxiSplash === "function") window.foxiSplash();
   }
 
   function haptic(kind) {
@@ -690,6 +679,68 @@
       });
   }
 
+  /* ------------------------------------------------------- фразы в шапке */
+
+  /** Фразы школы, которые сменяют друг друга под заголовком.
+   *
+   *  Это позиционирование, а не факты: ни цен, ни расписания, ни цифр,
+   *  которые способны разойтись с базой знаний. Слоган школы стоит первым и
+   *  остаётся в разметке — он виден и без скрипта.
+   */
+  var PHRASES = [
+    "Английский не для школы, а для жизни",
+    "Говорить — с первого занятия",
+    "Мини-группы, а не поток",
+    "Среда, в которой не переходят на русский",
+    "Учим не для оценки, а для уверенности",
+    "Тот случай, когда на занятия просятся сами",
+  ];
+
+  var PHRASE_HOLD_MS = 3200;   // сколько фраза стоит собранной
+  var WORD_STAGGER_MS = 90;    // задержка между словами
+  var phraseTimer = null;
+
+  function startPhrases() {
+    var box = $("#greeting-sub");
+    if (!box) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var index = 0;
+    showPhrase(box, PHRASES[0]);
+
+    function next() {
+      box.classList.add("is-out");
+      phraseTimer = setTimeout(function () {
+        index = (index + 1) % PHRASES.length;
+        box.classList.remove("is-out");
+        showPhrase(box, PHRASES[index]);
+        phraseTimer = setTimeout(next, PHRASE_HOLD_MS + PHRASES[index].split(" ").length * WORD_STAGGER_MS);
+      }, 340);
+    }
+
+    phraseTimer = setTimeout(next, PHRASE_HOLD_MS + PHRASES[0].split(" ").length * WORD_STAGGER_MS);
+  }
+
+  /** Фраза собирается по слову: каждое слово — свой элемент со своей
+   *  задержкой. Пробел ставим отдельно, иначе строка не переносится. */
+  function showPhrase(box, text) {
+    box.textContent = "";
+    text.split(" ").forEach(function (word, i) {
+      var span = document.createElement("span");
+      span.className = "word";
+      span.textContent = word;
+      span.style.transitionDelay = i * WORD_STAGGER_MS + "ms";
+      box.appendChild(span);
+      box.appendChild(document.createTextNode(" "));
+      // Кадр без класса нужен, чтобы переход действительно проигрался.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          span.classList.add("is-in");
+        });
+      });
+    });
+  }
+
   /* -------------------------------------------------------------- витрина */
 
   function renderHome() {
@@ -1061,6 +1112,19 @@
     document.documentElement.style.colorScheme = "light";
   }
 
+  /** Жидкие чернила в шапке. Необязательны: без WebGL и при выключенной
+   *  анимации остаётся градиент, и это нормальный вид шапки. */
+  function startFluid() {
+    var canvas = $("#fluid");
+    if (!canvas || typeof window.fluidSimulation !== "function") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    try {
+      window.fluidSimulation(canvas);
+    } catch (e) {
+      console.warn("[foxi] чернила не запустились", e);
+    }
+  }
+
   function bind() {
     all("[data-tab-go]").forEach(function (button) {
       button.addEventListener("click", function () {
@@ -1147,6 +1211,8 @@
         /* старый клиент */
       }
     }
+    startFluid();
+    startPhrases();
     state.me = recall("me") || null;
     var offline = $("#offline");
     if (offline && !navigator.onLine) offline.hidden = false;
