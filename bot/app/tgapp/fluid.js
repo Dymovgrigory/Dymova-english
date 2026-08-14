@@ -516,6 +516,10 @@
       // Кадры считаем, только когда шапку видно: невидимая симуляция — это
       // чистый расход батареи телефона.
       if (!visible) return;
+      // Скрытый раздел даёт холсту нулевой размер. Пересобрать буферы на
+      // 0×0 значит убить симуляцию: человек возвращался на главную и видел
+      // чёрный прямоугольник вместо чернил.
+      if (!canvas.clientWidth || !canvas.clientHeight) return;
       resizeCanvas();
       driveVirtualPointer();
       input();
@@ -696,6 +700,7 @@
     }
 
     function resizeCanvas() {
+      if (!canvas.clientWidth || !canvas.clientHeight) return;
       if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
