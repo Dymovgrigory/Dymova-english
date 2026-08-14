@@ -19,12 +19,12 @@ def reset_state():
     main_module._BACKGROUND_TASKS.clear()
     memory_module._store = None
     ai_core.reset_conversation_locks()
-    main_module._chat_hits.clear()
+    main_module._hits.clear()
     yield
     main_module._BACKGROUND_TASKS.clear()
     memory_module._store = None
     ai_core.reset_conversation_locks()
-    main_module._chat_hits.clear()
+    main_module._hits.clear()
 
 
 class RecordingTelegram:

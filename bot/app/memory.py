@@ -16,6 +16,9 @@ from app.config import settings
 from app.smart import NeedProfile
 
 MAX_HISTORY = 20
+# Сколько дней хранится журнал обработанных событий: повторный вебхук
+# приходит в пределах минут, недели с запасом хватает на любые сбои сети.
+PROCESSED_EVENTS_TTL_DAYS = 7
 # Сколько выпавших сообщений ждут сжатия. Больше — значит человек говорил
 # долго и без ответа бота, что невозможно: сворачиваем на каждой реплике.
 MAX_DROPPED = 40
@@ -245,6 +248,22 @@ class MemoryStore:
                 (platform, event_id, user_id, event_type),
             )
             return cur.rowcount == 1
+
+    def purge_old_events(self, days: int = PROCESSED_EVENTS_TTL_DAYS) -> int:
+        """Удаляет старые записи журнала обработанных событий.
+
+        Журнал нужен, чтобы не обработать один и тот же вебхук дважды, — но
+        повтор приходит в пределах минут, а строки копились вечно. На
+        долгоживущем боте это единственная таблица, которая росла без
+        ограничений.
+        """
+        with self._lock:
+            cur = self._conn.execute(
+                "DELETE FROM processed_events "
+                "WHERE created_at < datetime('now', ?)",
+                (f"-{max(1, int(days))} days",),
+            )
+            return cur.rowcount
 
     def ping(self) -> bool:
         with self._lock:

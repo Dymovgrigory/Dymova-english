@@ -4,7 +4,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import ai_core
-from app import dedup as dedup_module
 from app import main as main_module
 from app import memory as memory_module
 from app import telegram_client as telegram_module
@@ -76,7 +75,6 @@ class FakeHttpxAsyncClient:
 @pytest.fixture(autouse=True)
 def reset_state():
     main_module._BACKGROUND_TASKS.clear()
-    dedup_module._store = None
     memory_module._store = None
     telegram_module._client = None
     FakeHttpxAsyncClient.created_kwargs = []
@@ -84,7 +82,6 @@ def reset_state():
     FakeHttpxAsyncClient.next_response = FakeHttpxResponse()
     yield
     main_module._BACKGROUND_TASKS.clear()
-    dedup_module._store = None
     memory_module._store = None
     telegram_module._client = None
     FakeHttpxAsyncClient.created_kwargs = []

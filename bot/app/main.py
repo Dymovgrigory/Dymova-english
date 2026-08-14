@@ -299,22 +299,38 @@ async def _notify_admins_for_telegram(conv, reason: str) -> None:
 MAX_CHAT_TEXT_CHARS = 2000
 _CHAT_RATE_LIMIT = 20          # сообщений
 _CHAT_RATE_WINDOW_SEC = 60.0   # за окно
-_chat_hits: dict[str, list[float]] = {}
+# Заявка с сайта дороже сообщения: она пишется в CRM, уходит письмом и
+# сообщением каждому администратору. Поток таких «заявок» — это спам по всем
+# трём каналам сразу, поэтому лимит на порядок строже.
+_LEAD_RATE_LIMIT = 5
+_LEAD_RATE_WINDOW_SEC = 600.0
+_hits: dict[tuple[str, str], list[float]] = {}
+
+
+def _rate_limited(bucket: str, key: str, limit: int, window: float) -> bool:
+    """Скользящее окно на пару «эндпоинт + клиент»."""
+    now = time.monotonic()
+    slot = (bucket, key)
+    hits = [t for t in _hits.get(slot, []) if now - t < window]
+    if len(hits) >= limit:
+        _hits[slot] = hits
+        return True
+    hits.append(now)
+    _hits[slot] = hits
+    if len(_hits) > 10_000:
+        # Грубая, но достаточная защита словаря от неограниченного роста.
+        stale = [k for k, v in _hits.items() if not v or now - v[-1] > window]
+        for stale_key in stale:
+            _hits.pop(stale_key, None)
+    return False
 
 
 def _chat_rate_limited(key: str) -> bool:
-    now = time.monotonic()
-    hits = [t for t in _chat_hits.get(key, []) if now - t < _CHAT_RATE_WINDOW_SEC]
-    if len(hits) >= _CHAT_RATE_LIMIT:
-        _chat_hits[key] = hits
-        return True
-    hits.append(now)
-    _chat_hits[key] = hits
-    if len(_chat_hits) > 10_000:
-        # Грубая, но достаточная защита словаря от неограниченного роста.
-        for stale_key in [k for k, v in _chat_hits.items() if not v or now - v[-1] > _CHAT_RATE_WINDOW_SEC]:
-            _chat_hits.pop(stale_key, None)
-    return False
+    return _rate_limited("chat", key, _CHAT_RATE_LIMIT, _CHAT_RATE_WINDOW_SEC)
+
+
+def _lead_rate_limited(key: str) -> bool:
+    return _rate_limited("lead", key, _LEAD_RATE_LIMIT, _LEAD_RATE_WINDOW_SEC)
 
 
 @app.post("/api/chat")
@@ -1204,6 +1220,16 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
     access = _miniapp_access_state(identity)
     if access["locked"]:
         return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
+    client_host = request.client.host if request.client else "unknown"
+    if _lead_rate_limited(client_host):
+        # Форма открыта всему интернету, а каждая заявка идёт в CRM, на почту
+        # и в MAX администраторам. Без ограничения один скрипт заваливает
+        # школу так, что настоящую заявку в этом потоке не найти.
+        logger.warning("api/lead: превышен лимит заявок с %s", client_host)
+        return JSONResponse(
+            {"ok": False, "error": "Слишком много заявок подряд, попробуйте позже"},
+            status_code=429,
+        )
     lead = Lead(
         fio_parent=str(data.get("fio_parent", ""))[:255],
         fio_child=str(data.get("fio_child", ""))[:255],
@@ -1249,7 +1275,7 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
 
 
 @app.post("/api/lead")
-async def site_lead(data: dict) -> dict:
+async def site_lead(request: Request, data: dict) -> dict:
     """Приём заявки со статического сайта dymova-english.ru (миграция с Tilda).
 
     Реплицирует то, что раньше делала форма Tilda через встроенные "сервисы
@@ -1257,6 +1283,16 @@ async def site_lead(data: dict) -> dict:
     каналом, что уже получает уведомления от бота — MAX, ADMIN_MAX_IDS) +
     email-дубль на dymovgrigory@gmail.com/kidsfoxclub@yandex.ru.
     """
+    client_host = request.client.host if request.client else "unknown"
+    if _lead_rate_limited(client_host):
+        # Форма открыта всему интернету, а каждая заявка идёт в CRM, на почту
+        # и в MAX администраторам. Без ограничения один скрипт заваливает
+        # школу так, что настоящую заявку в этом потоке не найти.
+        logger.warning("api/lead: превышен лимит заявок с %s", client_host)
+        return JSONResponse(
+            {"ok": False, "error": "Слишком много заявок подряд, попробуйте позже"},
+            status_code=429,
+        )
     lead = Lead(
         fio_parent=str(data.get("fio_parent", ""))[:255],
         fio_child=str(data.get("fio_child", ""))[:255],
