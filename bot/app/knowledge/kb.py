@@ -23,6 +23,19 @@ _DEFAULT_PATH = Path(__file__).with_name("data.yaml")
 _WORD_RE = re.compile(r"[а-яёa-z0-9]+", re.IGNORECASE)
 # Насколько сильнее совпадение в заголовке документа, чем в его тексте.
 _TITLE_BONUS = 0.4
+
+# Подписи полей курса по-русски. Раньше в текст документа попадали имена
+# ключей из YAML — и когда модель недоступна, человек читал в чате
+# «trial_price: Пробный урок — 1 125 ₽». Русские подписи заодно понятнее и
+# самой модели, которой этот же текст уходит контекстом.
+_COURSE_FIELDS = (
+    ("language", "Язык"),
+    ("ages", "Возраст"),
+    ("teacher", "Педагог"),
+    ("format", "Формат"),
+    ("price", "Стоимость"),
+    ("trial_price", "Пробный урок"),
+)
 # Служебные слова не несут смысла для поиска. Местоимения и вопросительные
 # слова здесь особенно важны: они редкие, поэтому при взвешивании по
 # редкости именно они начинали перевешивать содержательные слова —
@@ -57,7 +70,18 @@ def _stem(word: str) -> str:
 
 
 def _tokens(text: str) -> list[str]:
-    return [_stem(w) for w in _WORD_RE.findall(text or "") if w.lower() not in _STOPWORDS]
+    """Слова запроса или документа, приведённые к основе.
+
+    Короткие числа выброшены намеренно: «4» в вопросе «не рано ли в 4 года»
+    попадало в документ про курс «за 4 недели» и перевешивало смысл. Возраст
+    и сроки в этом корпусе сталкиваются постоянно, а различить их лексический
+    поиск всё равно не может.
+    """
+    return [
+        _stem(w)
+        for w in _WORD_RE.findall(text or "")
+        if w.lower() not in _STOPWORDS and not (w.isdigit() and len(w) <= 2)
+    ]
 
 
 @dataclass
@@ -144,10 +168,9 @@ class KnowledgeBase:
 
         for c in r.get("courses", []):
             parts = [c.get("description", ""), c.get("note", "")]
-            meta = []
-            for k in ("language", "ages", "teacher", "format", "price", "trial_price"):
-                if c.get(k):
-                    meta.append(f"{k}: {c[k]}")
+            meta = [
+                f"{label}: {c[key]}" for key, label in _COURSE_FIELDS if c.get(key)
+            ]
             self._add("courses", c.get("name", ""),
                       " ".join([p for p in parts if p]) + " " + "; ".join(meta))
 

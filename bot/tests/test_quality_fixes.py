@@ -1,6 +1,7 @@
 import pytest
 
 from app import emotion
+from app.smart import NeedProfile
 
 from app import intent as I
 from app import ai_core, llm_gateway
@@ -125,11 +126,24 @@ async def test_lead_soft_exit_keeps_fields_and_switches_to_discovery():
     assert "позже" in reply.lower() or "без проблем" in reply.lower()
 
 
-def test_sales_nudge_is_more_empathic_when_user_is_upset():
+def test_sales_nudge_softens_the_offer_for_an_anxious_person():
+    """Тревожному предлагают без давления — «чтобы не гадать», а не «спешите»."""
     conv = Conversation(user_id="quality-sales-nudge")
+    conv.need = NeedProfile(
+        who="родитель", child_age="9", level="начальный",
+        goals=["заговорить"], motivations=["поездка"],
+    )
     conv.last_user_mood = emotion.ANXIOUS
     text = sales.sales_nudge(conv)
-    assert "понимаю" in text.lower()
+    assert "не гадать" in text.lower()
+
+
+def test_sales_nudge_does_not_repeat_the_empathy_opener():
+    """Признание эмоции ставит начало ответа; в хвосте оно звучало дважды."""
+    conv = Conversation(user_id="quality-sales-nudge-2")
+    conv.last_user_mood = emotion.DISCOURAGED
+    text = sales.sales_nudge(conv)
+    assert "выматывает" not in text.lower()
 
 
 @pytest.mark.asyncio

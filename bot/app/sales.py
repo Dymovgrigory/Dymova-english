@@ -212,9 +212,9 @@ def sales_nudge(conv: Conversation) -> str:
         question = smart.next_question(profile) if profile is not None else ""
         if question:
             smart.mark_asked(profile, question)
-            opener = emotion.opening(mood)
-            if opener:
-                return f"{opener}{question[0].lower()}{question[1:]}"
+            # Признание эмоции ставит начало ответа, а не его хвост: иначе
+            # «Понимаю, это выматывает» звучало дважды в одной реплике — и
+            # второй раз посреди текста, со строчной буквы после точки.
             return question
         return ""
     if mood == emotion.ANXIOUS:

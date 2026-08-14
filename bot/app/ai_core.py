@@ -130,8 +130,29 @@ def _handoff_followup_reply(conv: Conversation, text: str) -> str:
     return variants[len(conv.history) % len(variants)]
 
 
-def _grounded_fact_reply(kb, text: str, intent: str) -> str:
-    docs = kb.search(text, limit=4)
+# Сколько документов показывать, когда модели нет. Четыре — это выгрузка
+# каталога, из которой человек сам должен что-то выбрать. Пока мы не поняли,
+# с кем говорим, показываем вообще один: перечисление программ незнакомому
+# человеку — тот же прайс, только другими словами.
+_FALLBACK_DOCS = 2
+_FALLBACK_DOCS_COLD = 1
+
+
+# Разделы, которые годятся модели как контекст, но не годятся как готовый
+# ответ человеку: сырой текст с сайта, из соцсетей и с карт, включая отзывы.
+# Процитировать отзыв в ответ на вопрос — не ответ.
+_RAW_CATEGORIES = ("sources", "social", "promos", "site", "vk", "ymaps", "telegram")
+
+
+def _answerable(kb, text: str, limit: int) -> list:
+    """Документы, которые можно показать человеку как ответ."""
+    docs = kb.search(text, limit=limit * 3)
+    structured = [d for d in docs if d.category not in _RAW_CATEGORIES]
+    return (structured or docs)[:limit]
+
+
+def _grounded_fact_reply(kb, text: str, intent: str, limit: int = _FALLBACK_DOCS) -> str:
+    docs = _answerable(kb, text, limit)
     if not docs:
         return (
             "Проверил сайт и соцсети, но не нашёл подтверждённых данных по "
@@ -146,8 +167,10 @@ def _grounded_fact_reply(kb, text: str, intent: str) -> str:
         I.ABOUT: "Вот подтверждённые факты о школе с сайта и соцсетей:",
     }
     lines = [title_map.get(intent, "Вот что удалось подтвердить на сайте и в соцсетях:")]
+    # Маркированный список нужен, только когда пунктов правда несколько.
+    marker = "• " if len(docs) > 1 else ""
     for doc in docs:
-        lines.append(f"• {doc.as_answer()}")
+        lines.append(f"{marker}{doc.as_answer()}")
     if intent == I.PRICE:
         lines.append("Если хотите, я ещё уточню стоимость по возрасту и формату.")
     elif intent == I.CONTACTS:
@@ -242,14 +265,14 @@ async def _consult_with_context(
     return await _refer_to_admin(conv, text, reason="no_answer", score=0.0)
 
 
-def _plain_answer(kb, text: str, limit: int = 2) -> str:
+def _plain_answer(kb, text: str, limit: int = 1) -> str:
     """Ответ из базы знаний без модели — так, как его можно показать человеку.
 
     Раньше сюда попадал тот же текст, что уходит модели: с заголовками в
     квадратных скобках и вопросами из FAQ. Человек видел выгрузку документов,
     в которой бот будто задаёт вопросы вместо ответа.
     """
-    docs = kb.search(text, limit=limit)
+    docs = _answerable(kb, text, limit)
     return "\n\n".join(doc.as_answer().strip() for doc in docs if doc.as_answer().strip())
 
 
@@ -660,11 +683,15 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     #     в COURSES и раньше получало в ответ список программ — то есть на
     #     рассказ о трудности приходил прайс. Сначала признаём проблему и
     #     выясняем причину; предложение появится, когда станет ясна потребность.
+    #     Ворот продажи здесь нет намеренно: признать трудность нужно всегда,
+    #     а решает ворота уже следующий шаг — вопрос или предложение. Пока
+    #     условие стояло здесь, рассказ о трудности после выясненной
+    #     потребности снова получал в ответ каталог.
     pain = smart.pain_in_text(text)
-    if pain and not sales.offer_allowed(conv):
+    if pain:
         conv.stage = STAGE_DISCOVERY
         if get_llm().enabled:
-            # У модели уже есть в промпте и сама боль, и запрет предлагать —
+            # У модели в промпте уже есть и сама боль, и этап разговора —
             # живой ответ лучше заготовки.
             return await _consult(conv, text)
         acknowledgement, question = smart.pain_reply(pain)
@@ -687,6 +714,19 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
                 confidence=pick.confidence,
             )
             return pick.as_text()
+
+    # 4д. «Сыну 9 лет, английский идёт тяжело» — это рассказ о ситуации, а не
+    #     запрос справки, хотя по ключевым словам попадает в COURSES. Каталог
+    #     в ответ на такое — тот же прайс, только другими словами. Отвечаем
+    #     разговором: одним уточняющим вопросом.
+    if intent == I.COURSES and "?" not in text and not sales.offer_allowed(conv):
+        conv.stage = STAGE_DISCOVERY
+        if get_llm().enabled:
+            return await _consult(conv, text)
+        question = smart.next_question(conv.need)
+        if question:
+            smart.mark_asked(conv.need, question)
+            return f"{_empathy_prefix(conv)}{question}"
 
     if intent in _FACTUAL_INTENTS:
         conv.stage = STAGE_DISCOVERY
@@ -735,7 +775,12 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             # LLM разберётся сам: сильный контекст из KB, иначе живой веб-поиск;
             # администратор подключается только если уверенного ответа нет нигде.
             return await _consult(conv, text, allow_web=True, school_related=True)
-        return _grounded_fact_reply(kb, text, intent)
+        return _grounded_fact_reply(
+            kb,
+            text,
+            intent,
+            limit=_FALLBACK_DOCS if sales.offer_allowed(conv) else _FALLBACK_DOCS_COLD,
+        )
 
     # 5. Явное намерение открыть кабинет — запускаем регистрацию.
     if intent == I.REGISTER:

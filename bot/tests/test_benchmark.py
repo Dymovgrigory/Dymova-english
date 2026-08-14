@@ -14,6 +14,7 @@
 """
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -54,6 +55,13 @@ _LEAK_MARKERS = (
     "[unknown]",
     "этап:",
 )
+
+# Каталог в ответ на рассказ о трудности — это тот же прайс, только другими
+# словами. Признак выгрузки: несколько программ со стоимостью в одной реплике.
+# Дело не в самой цене — на вопрос о стоимости её назвать обязаны, — а в
+# перечислении нескольких программ подряд. Один пункт это ответ, список —
+# тот же прайс, только другими словами.
+_CATALOGUE_MAX_ITEMS = 1
 
 # Выдумывать факты бот не имеет права: на вопрос без данных он обязан
 # сказать, что уточнит, а не сочинить ответ.
@@ -126,6 +134,12 @@ async def test_scenario(category, case_id, messages, expect):
     if "no_offer" in expect:
         hit = [marker for marker in _OFFER_MARKERS if marker in low]
         assert not hit, f"{case_id}: преждевременное предложение {hit} в «{reply}»"
+
+    if "no_offer" in expect:
+        items = reply.count("•")
+        assert items <= _CATALOGUE_MAX_ITEMS, (
+            f"{case_id}: вместо разговора — список из {items} программ: «{reply}»"
+        )
 
     if "asks" in expect:
         assert "?" in reply, f"{case_id}: ожидали уточняющий вопрос, получили «{reply}»"
