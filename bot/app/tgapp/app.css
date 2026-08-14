@@ -1,63 +1,66 @@
 /* ============================================================
-   FOXINBURG FUTURE EDUCATION — дизайн-система мини-приложения
+   FOXINBURG AURORA — дизайн-система мини-приложения
 
-   Задача — не выглядеть стандартным Mini App. Отсюда три решения:
-   1. Собственная палитра поверх темы клиента. Переменные Telegram
-      используются как подсказка (светло/темно), но цвет ведём свой,
-      иначе приложение растворяется в интерфейсе мессенджера.
-   2. Крупная выразительная типографика и асимметричная сетка вместо
-      вертикального списка одинаковых кнопок.
-   3. Дорогая фактура дозированно: мягкий ambient-свет, frosted glass,
-      тонкая зернистость. Ничего, что мешает читать или тормозит.
+   Второй заход. Первая версия подстраивалась под тему мессенджера, и в
+   тёмной теме экран становился тёмным и плохо читаемым. Здесь принято
+   обратное решение: приложение всегда светлое и контрастное. Переменные
+   Telegram остаются подсказкой для акцентов и системного хрома, но
+   поверхность и текст мы ведём сами — читаемость важнее слияния с
+   интерфейсом.
 
-   Всё движение отключается при prefers-reduced-motion.
+   Три опоры образа:
+   1. Живой свет. Три цветных пятна медленно дрейфуют за содержимым, у
+      маскота собственное гало. Это даёт ощущение глубины без картинок.
+   2. Крупная типографика и бенто-сетка: разные по размеру плитки вместо
+      столбика одинаковых кнопок.
+   3. Появление по мере прокрутки: блоки всплывают, цифры набегают. Экран
+      длинный и рассказывает о школе, а не только предлагает разделы.
+
+   Всё движение выключается при prefers-reduced-motion.
    ============================================================ */
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  /* Фирменные цвета: янтарь лисы и глубокий фиолетовый из брендбука. */
-  --amber: #ffc53d;
-  --amber-deep: #f0a020;
+  /* Фирменные цвета: янтарь лисы, глубокий фиолетовый, мятный акцент. */
+  --amber: #ffb703;
+  --amber-deep: #f08a00;
   --violet: #6b4de6;
   --violet-soft: #a58bff;
+  --mint: #24c6a0;
+  --rose: #ff6b8b;
 
-  /* Светлая тема — тёплая бумага, а не стерильно-белый.
-     Базовая поверхность и цвет текста берутся из темы клиента, если она
-     есть: приложение должно жить в мессенджере, а не спорить с ним. Всё
-     фирменное (акценты, стекло, карточки) остаётся нашим — иначе Mini App
-     растворяется в интерфейсе и выглядит как системный экран. */
-  --bg: var(--tg-theme-secondary-bg-color, #f7f4ee);
-  --bg-elev: var(--tg-theme-bg-color, #ffffff);
-  --ink: var(--tg-theme-text-color, #171310);
-  --ink-soft: #5c534a;
-  --ink-faint: #8e8479;
-  --line: rgba(23, 19, 16, 0.10);
-  --glass: rgba(255, 255, 255, 0.72);
-  --shadow: 0 1px 2px rgba(23, 19, 16, .05), 0 8px 24px -12px rgba(23, 19, 16, .18);
-  --shadow-lift: 0 2px 4px rgba(23, 19, 16, .06), 0 18px 40px -16px rgba(23, 19, 16, .28);
+  /* Поверхности светлые всегда. Значение из темы клиента используется как
+     запасное, но приложение не уходит в тёмный: в переписке жаловались
+     именно на тёмный и плохо читаемый экран. */
+  --bg: #fbfaf7;
+  --bg-elev: #ffffff;
+  --bg-tint: var(--tg-theme-secondary-bg-color, #f4f1ff);
+  --ink: #14110c;
+  --ink-soft: #4a4238;
+  /* Самый светлый текст всё равно обязан читаться: на 4.5:1 подписи под
+     цифрами были на грани, теперь запас есть. */
+  --ink-faint: #6b6357;
+  --line: rgba(20, 17, 12, 0.09);
+  --glass: rgba(255, 255, 255, 0.78);
 
-  --radius: 20px;
-  --radius-sm: 14px;
+  /* Тени цветные: обычная серая тень гасит цвет, а нам нужно свечение. */
+  --shadow: 0 1px 2px rgba(20, 17, 12, .05), 0 10px 26px -14px rgba(107, 77, 230, .28);
+  --shadow-lift: 0 2px 6px rgba(20, 17, 12, .06), 0 22px 50px -20px rgba(107, 77, 230, .45);
+  --glow-amber: 0 12px 40px -14px rgba(255, 183, 3, .65);
+  --glow-violet: 0 12px 40px -14px rgba(107, 77, 230, .55);
+
+  --radius: 22px;
+  --radius-sm: 15px;
   --gap: 12px;
   --pad: 20px;
 
   --ease: cubic-bezier(.22, .61, .36, 1);
   --ease-out-back: cubic-bezier(.34, 1.4, .64, 1);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: var(--tg-theme-secondary-bg-color, #100e14);
-    --bg-elev: var(--tg-theme-bg-color, #191722);
-    --ink: var(--tg-theme-text-color, #f4f1ec);
-    --ink-soft: #b3aec5;
-    --ink-faint: #7e788f;
-    --line: rgba(244, 241, 236, 0.12);
-    --glass: rgba(35, 32, 46, 0.66);
-    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px -14px rgba(0, 0, 0, .7);
-    --shadow-lift: 0 2px 6px rgba(0, 0, 0, .5), 0 22px 48px -18px rgba(0, 0, 0, .8);
-  }
+  /* Цвет текста клиента используется только для системных элементов, где
+     мессенджер рисует свой хром поверх нашего. */
+  --tg-ink: var(--tg-theme-text-color, var(--ink));
 }
 
 * { box-sizing: border-box; }
@@ -77,19 +80,19 @@ html, body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: contain;
-  /* Ambient-пятна намеренно выходят за границы экрана — без этого
+  /* Световые пятна намеренно выходят за границы экрана — без этого
      появляется горизонтальный скролл на всю страницу. */
   overflow-x: hidden;
 }
 
 body {
   min-height: 100dvh;
-  /* Тонкая зернистость: убирает «пластиковость» плоских заливок.
+  /* Тонкая зернистость убирает «пластиковость» плоских заливок.
      SVG-шум инлайном — без сетевого запроса. */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
 }
 
-/* ---------------- ambient light ---------------- */
+/* ---------------- живой свет ---------------- */
 
 .ambient {
   position: fixed;
@@ -101,32 +104,44 @@ body {
 
 .ambient__glow {
   position: absolute;
-  width: 70vmax;
-  height: 70vmax;
+  width: 74vmax;
+  height: 74vmax;
   border-radius: 50%;
-  filter: blur(60px);
-  opacity: .5;
+  filter: blur(64px);
   will-change: transform;
 }
 
 .ambient__glow--amber {
-  top: -34vmax;
-  right: -26vmax;
-  background: radial-gradient(circle at 50% 50%, var(--amber) 0%, transparent 66%);
-  opacity: .38;
+  top: -36vmax;
+  right: -24vmax;
+  background: radial-gradient(circle at 50% 50%, var(--amber) 0%, transparent 65%);
+  opacity: .42;
   animation: drift-a 26s var(--ease) infinite alternate;
 }
 
 .ambient__glow--violet {
-  bottom: -40vmax;
+  bottom: -42vmax;
   left: -30vmax;
-  background: radial-gradient(circle at 50% 50%, var(--violet) 0%, transparent 66%);
-  opacity: .26;
+  background: radial-gradient(circle at 50% 50%, var(--violet) 0%, transparent 65%);
+  opacity: .3;
   animation: drift-b 32s var(--ease) infinite alternate;
+}
+
+/* Третье пятно достаётся мятному: два цвета читаются как градиент, три —
+   уже как свет. */
+.ambient__glow--mint {
+  top: 32vmax;
+  left: -34vmax;
+  width: 54vmax;
+  height: 54vmax;
+  background: radial-gradient(circle at 50% 50%, var(--mint) 0%, transparent 66%);
+  opacity: .22;
+  animation: drift-c 38s var(--ease) infinite alternate;
 }
 
 @keyframes drift-a { to { transform: translate3d(-6vmax, 5vmax, 0) scale(1.1); } }
 @keyframes drift-b { to { transform: translate3d(5vmax, -6vmax, 0) scale(1.14); } }
+@keyframes drift-c { to { transform: translate3d(7vmax, 4vmax, 0) scale(1.08); } }
 
 /* ---------------- каркас ---------------- */
 
@@ -147,52 +162,75 @@ body {
   to   { opacity: 1; transform: none; }
 }
 
+/* Появление блока при прокрутке: экран длинный, и содержимое должно
+   раскрываться, а не вываливаться разом.
+
+   Прячет блок не сам класс `.reveal`, а `is-armed`, который ставит скрипт.
+   Иначе при сломанном или незагрузившемся JS половина главной осталась бы
+   невидимой — цена красивого появления не должна быть такой. */
+.reveal.is-armed {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.reveal.is-armed.is-in { opacity: 1; transform: none; }
+
 /* ---------------- герой ---------------- */
 
-.hero { padding: 8px 0 22px; }
+.hero { padding: 6px 0 20px; text-align: center; }
 
 .hero__stage {
   position: relative;
-  height: 208px;
+  width: min(62vw, 240px);
+  aspect-ratio: 1;
   margin: 0 auto 6px;
   display: grid;
   place-items: center;
 }
 
-/* Мягкая «подушка» света под маскотом — он стоит на сцене, а не висит. */
+/* Гало маскота: цветное свечение вместо серой тени под картинкой. */
+.hero__halo {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 183, 3, .55), transparent 62%),
+    radial-gradient(circle at 60% 70%, rgba(107, 77, 230, .42), transparent 66%);
+  filter: blur(18px);
+  animation: halo 6s var(--ease) infinite alternate;
+}
+
+@keyframes halo {
+  from { transform: scale(.94); opacity: .75; }
+  to   { transform: scale(1.06); opacity: 1; }
+}
+
 .hero__stage::after {
   content: "";
   position: absolute;
-  bottom: 16px;
-  width: 190px;
-  height: 26px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(23, 19, 16, .22), transparent 70%);
-  filter: blur(9px);
-  z-index: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  .hero__stage::after { background: radial-gradient(ellipse at center, rgba(0, 0, 0, .55), transparent 70%); }
+  left: 50%;
+  bottom: 4%;
+  width: 46%;
+  height: 12px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(20, 17, 12, .22), transparent 70%);
+  filter: blur(6px);
 }
 
 .hero__mascot,
 .hero__mascot3d {
   position: relative;
-  z-index: 1;
-  width: 208px;
-  height: 208px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  transition: opacity .5s var(--ease);
+  transition: opacity .45s var(--ease);
 }
 
 .hero__mascot { animation: float 5.2s var(--ease) infinite alternate; }
 
-/* 3D появляется поверх картинки только когда действительно готов. */
 .hero__mascot3d {
   position: absolute;
   inset: 0;
-  margin: auto;
   opacity: 0;
   pointer-events: none;
 }
@@ -202,92 +240,142 @@ body {
 
 @keyframes float {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(0, -9px, 0); }
+  to   { transform: translate3d(0, -10px, 0); }
 }
 
 .hero__eyebrow {
   margin: 0;
   font-size: .74rem;
-  font-weight: 600;
-  letter-spacing: .14em;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.hero__title {
+  margin: 4px 0 6px;
+  font-size: clamp(2.3rem, 12vw, 3.2rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  font-weight: 800;
+  /* Градиентный текст — главный акцент экрана. Fallback-цвет задан до
+     подмены, иначе в браузере без background-clip заголовок исчезнет. */
+  color: var(--ink);
+  background: linear-gradient(96deg, var(--ink) 12%, var(--violet) 58%, var(--amber-deep) 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero__sub {
+  margin: 0 auto;
+  max-width: 30ch;
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+}
+
+/* ---------------- цифры школы ---------------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 18px 0 0;
+}
+
+.stats__item {
+  margin: 0;
+  padding: 12px 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.stats__label {
+  font-size: .68rem;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
 
-.hero__title {
-  margin: 2px 0 4px;
-  font-size: clamp(2.5rem, 13vw, 3.4rem);
+.stats__value {
+  margin: 2px 0 0;
+  font-size: 1.7rem;
   font-weight: 800;
-  letter-spacing: -.035em;
-  line-height: .96;
-  background: linear-gradient(96deg, var(--ink) 30%, var(--amber-deep) 130%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  letter-spacing: -.03em;
+  color: var(--violet);
+  font-variant-numeric: tabular-nums;
 }
 
-.hero__sub {
-  margin: 0;
-  max-width: 22ch;
-  font-size: 1.02rem;
-  color: var(--ink-soft);
-}
+.stats__dash { color: var(--ink-faint); margin: 0 1px; }
+.stats__note { margin: 0; font-size: .72rem; color: var(--ink-faint); }
 
-/* ---------------- плитки ---------------- */
+/* ---------------- бенто-плитки ---------------- */
 
 .tiles {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: var(--gap);
-  margin-bottom: var(--gap);
+  margin-top: 20px;
 }
 
 .tile {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-height: 132px;
+  min-height: 124px;
   padding: 16px;
-  text-align: left;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--glass);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
-  backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(12px);
   box-shadow: var(--shadow);
   color: inherit;
   font: inherit;
+  text-align: left;
   cursor: pointer;
-  transition: transform .22s var(--ease-out-back), box-shadow .22s var(--ease),
-              border-color .22s var(--ease);
+  overflow: hidden;
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease);
 }
 
-/* Широкая плитка ломает монотонную сетку 2×3 — это главное действие. */
+/* Цветная полоса сверху даёт плиткам характер и различимость с одного
+   взгляда — иначе шесть одинаковых карточек читаются как список. */
+.tile::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--amber), var(--violet));
+  opacity: .85;
+}
+
+.tile:nth-child(3)::before { background: linear-gradient(90deg, var(--mint), var(--violet)); }
+.tile:nth-child(4)::before { background: linear-gradient(90deg, var(--violet), var(--rose)); }
+.tile:nth-child(5)::before { background: linear-gradient(90deg, var(--amber), var(--mint)); }
+.tile:nth-child(6)::before { background: linear-gradient(90deg, var(--rose), var(--amber)); }
+
 .tile--wide {
   grid-column: 1 / -1;
   flex-direction: row;
   align-items: center;
-  min-height: 0;
-  padding: 18px;
+  gap: 14px;
+  min-height: 96px;
 }
 
 .tile--wide .tile__body { flex: 1; }
 
 .tile--accent {
-  border-color: transparent;
-  background:
-    linear-gradient(var(--bg-elev), var(--bg-elev)) padding-box,
-    linear-gradient(112deg, var(--amber), var(--violet-soft)) border-box;
-  border: 1.5px solid transparent;
+  background: linear-gradient(150deg, rgba(255, 183, 3, .22), rgba(107, 77, 230, .16)), var(--bg-elev);
+  box-shadow: var(--glow-amber);
 }
 
-.tile:active {
-  transform: scale(.975);
-  box-shadow: var(--shadow-lift);
-}
+.tile:active { transform: scale(.975); }
 
 @media (hover: hover) {
-  .tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
+  .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
 }
 
 .tile__ic {
@@ -295,32 +383,194 @@ body {
   place-items: center;
   width: 42px;
   height: 42px;
-  flex: none;
   border-radius: 13px;
-  background: linear-gradient(140deg, rgba(255, 197, 61, .22), rgba(107, 77, 230, .16));
-  color: var(--amber-deep);
+  background: linear-gradient(150deg, rgba(255, 183, 3, .3), rgba(107, 77, 230, .22));
+  color: var(--violet);
 }
-
-@media (prefers-color-scheme: dark) { .tile__ic { color: var(--amber); } }
 
 .tile__ic svg { width: 21px; height: 21px; }
 
 .tile__body { display: flex; flex-direction: column; gap: 2px; }
 
 .tile__name {
+  font-weight: 700;
   font-size: 1rem;
-  font-weight: 650;
-  letter-spacing: -.012em;
+  letter-spacing: -.01em;
+  color: var(--ink);
 }
 
 .tile__hint {
-  font-size: .82rem;
-  color: var(--ink-faint);
-  line-height: 1.35;
+  font-size: .81rem;
+  color: var(--ink-soft);
 }
 
 .tile__chev { color: var(--ink-faint); }
 .tile__chev svg { width: 20px; height: 20px; display: block; }
+
+/* ---------------- блоки главной ---------------- */
+
+.block { margin-top: 30px; }
+
+.block__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.block__title {
+  margin: 0 0 12px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+
+.block__more {
+  border: none;
+  background: none;
+  color: var(--violet);
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.cards { display: grid; gap: 10px; }
+
+.card {
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.card__title {
+  margin: 0 0 4px;
+  font-size: .98rem;
+  font-weight: 700;
+}
+
+.card__text { margin: 0; font-size: .88rem; color: var(--ink-soft); }
+
+.card--skeleton {
+  min-height: 68px;
+  border: none;
+  background: linear-gradient(100deg, rgba(20,17,12,.05) 30%, rgba(20,17,12,.10) 50%, rgba(20,17,12,.05) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s linear infinite;
+}
+
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* Горизонтальная лента программ: прилипание по карточкам. */
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 76%;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* Лента должна доходить до края экрана, а не обрываться по отступу. */
+  margin: 0 calc(var(--pad) * -1);
+  padding: 4px var(--pad) 12px;
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar { display: none; }
+
+.rail__card {
+  scroll-snap-align: start;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rail__age {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--violet);
+  background: rgba(107, 77, 230, .12);
+}
+
+.rail__name { margin: 0; font-size: 1.02rem; font-weight: 700; }
+.rail__text { margin: 0; font-size: .85rem; color: var(--ink-soft); }
+
+/* Вопросы-ответы прямо на главной. */
+.faq { display: grid; gap: 8px; }
+
+.faq__item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--glass);
+  overflow: hidden;
+}
+
+.faq__q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 14px;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: .92rem;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.faq__sign {
+  margin-left: auto;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--violet);
+  transition: transform .2s var(--ease);
+}
+
+.faq__item.is-open .faq__sign { transform: rotate(45deg); }
+
+.faq__a {
+  margin: 0;
+  padding: 0 14px;
+  max-height: 0;
+  overflow: hidden;
+  font-size: .88rem;
+  color: var(--ink-soft);
+  transition: max-height .28s var(--ease), padding .28s var(--ease);
+}
+
+.faq__item.is-open .faq__a { max-height: 320px; padding: 0 14px 14px; }
+
+/* Финальный призыв. */
+.cta {
+  margin-top: 30px;
+  padding: 22px 20px;
+  border-radius: var(--radius);
+  color: #fff;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(255, 183, 3, .55), transparent 58%),
+    linear-gradient(140deg, #4a2f9e, var(--violet));
+  box-shadow: var(--glow-violet);
+}
+
+.cta__title { margin: 0 0 6px; font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; }
+.cta__text { margin: 0 0 14px; font-size: .9rem; opacity: .9; }
 
 /* ---------------- строка-ссылка ---------------- */
 
@@ -552,6 +802,15 @@ body {
   transition: transform .2s var(--ease-out-back), opacity .2s var(--ease);
 }
 
+/* Янтарная кнопка призыва. Объявлена после базовой `.primary`: при равной
+   специфичности выигрывает последнее правило, и раньше кнопка на фиолетовом
+   блоке оставалась чёрной. */
+.primary--glow {
+  background: linear-gradient(140deg, var(--amber), var(--amber-deep));
+  color: #2a1c00;
+  box-shadow: var(--glow-amber);
+}
+
 .primary:active { transform: scale(.98); }
 .primary:disabled { opacity: .5; cursor: default; }
 
@@ -740,6 +999,8 @@ body {
     transition-duration: .001ms !important;
   }
   .ambient__glow { animation: none; }
+  /* Без анимации блок обязан быть просто видимым. */
+  .reveal.is-armed { opacity: 1; transform: none; }
 }
 
 /* Экономия трафика и слабые устройства: тяжёлые эффекты выключаем,

@@ -1176,6 +1176,11 @@ async def miniapp_info(request: Request, user_id: str = "") -> dict:
         "age_programs": kb.age_programs,
         "courses": kb.courses,
         "social": kb.social,
+        # Преимущества и вопросы-ответы нужны витрине: главный экран
+        # рассказывает о школе фактами из базы знаний, а не выдуманным
+        # маркетинговым текстом в вёрстке, который разъедется с реальностью.
+        "advantages": kb.raw.get("advantages", []),
+        "faq": kb.raw.get("faq", []),
         "access": access,
     }
 

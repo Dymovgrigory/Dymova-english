@@ -283,6 +283,162 @@
 
   /* --- каталог и филиалы ------------------------------------------- */
 
+  /* ------------------------------------------------------ витрина главной */
+
+  /** Главный экран рассказывает о школе фактами из базы знаний.
+   *  Ничего из этого не зашито в вёрстку: расходиться с реальностью текст
+   *  в разметке начинает на первой же правке прайса или расписания. */
+  function renderHome() {
+    if (!state.info) return;
+    renderAdvantages();
+    renderProgramsRail();
+    renderFaq();
+    renderHomeBranches();
+    armReveals();
+  }
+
+  function renderAdvantages() {
+    var box = $("#home-advantages");
+    if (!box) return;
+    var items = (state.info.advantages || []).slice(0, 4);
+    if (!items.length) {
+      box.innerHTML = "";
+      return;
+    }
+    box.innerHTML = items
+      .map(function (item) {
+        return (
+          '<article class="card">' +
+          '<h3 class="card__title">' + esc(item.title) + "</h3>" +
+          '<p class="card__text">' + esc(item.text) + "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function renderProgramsRail() {
+    var box = $("#home-programs");
+    if (!box) return;
+    var items = (state.info.age_programs || []).slice(0, 6);
+    if (!items.length) {
+      box.innerHTML = "";
+      return;
+    }
+    box.innerHTML = items
+      .map(function (item) {
+        return (
+          '<article class="rail__card">' +
+          (item.age ? '<span class="rail__age">' + esc(item.age) + "</span>" : "") +
+          '<h3 class="rail__name">' + esc(item.name) + "</h3>" +
+          '<p class="rail__text">' + esc(item.text) + "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function renderFaq() {
+    var box = $("#home-faq");
+    if (!box) return;
+    var items = (state.info.faq || []).slice(0, 5);
+    if (!items.length) {
+      box.innerHTML = "";
+      return;
+    }
+    box.innerHTML = items
+      .map(function (item) {
+        return (
+          '<div class="faq__item">' +
+          '<button type="button" class="faq__q">' + esc(item.q) +
+          '<span class="faq__sign" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
+          "</span></button>" +
+          '<p class="faq__a">' + esc(item.a) + "</p>" +
+          "</div>"
+        );
+      })
+      .join("");
+
+    box.querySelectorAll(".faq__q").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var item = button.parentNode;
+        var open = item.classList.contains("is-open");
+        // Раскрыт всегда один вопрос: список из пяти развёрнутых ответов
+        // читать невозможно.
+        box.querySelectorAll(".faq__item").forEach(function (other) {
+          other.classList.remove("is-open");
+        });
+        if (!open) item.classList.add("is-open");
+        haptic("light");
+      });
+    });
+  }
+
+  function renderHomeBranches() {
+    var box = $("#home-branches");
+    if (!box) return;
+    var items = (state.info.branches || []).slice(0, 2);
+    box.innerHTML = items
+      .map(function (b) {
+        return (
+          '<article class="card">' +
+          '<h3 class="card__title">' + esc(b.name) + "</h3>" +
+          '<p class="card__text">' + esc(b.address || "") + "</p>" +
+          (b.work_hours ? '<p class="card__text">' + esc(b.work_hours) + "</p>" : "") +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  /** Появление блоков и набегающие цифры.
+   *
+   *  Классы ставит скрипт, а не разметка: если скрипт не выполнится, блоки
+   *  просто видны — это важнее эффекта. */
+  function armReveals() {
+    var blocks = document.querySelectorAll(".reveal");
+    if (!("IntersectionObserver" in window)) {
+      blocks.forEach(function (block) { block.classList.add("is-in"); });
+      countUp();
+      return;
+    }
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px" }
+    );
+    blocks.forEach(function (block) {
+      block.classList.add("is-armed");
+      observer.observe(block);
+    });
+    countUp();
+  }
+
+  function countUp() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.querySelectorAll(".count").forEach(function (el) {
+      var target = parseInt(el.dataset.count, 10);
+      if (!target) return;
+      var started = null;
+      var duration = 900;
+      function step(now) {
+        if (started === null) started = now;
+        var progress = Math.min(1, (now - started) / duration);
+        // Замедление к концу: равномерный счёт выглядит механическим.
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = String(Math.round(target * eased));
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
   function renderCatalog() {
     var box = $("#catalog");
     if (!state.info) {
@@ -574,6 +730,7 @@
         }
         $("#profile-teaser").textContent =
           state.access && state.access.registered ? "Открыт" : "Заполнить";
+        renderHome();
         if (current() === "catalog") renderCatalog();
         if (current() === "branches") renderBranches();
       })

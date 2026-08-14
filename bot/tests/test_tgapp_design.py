@@ -154,11 +154,15 @@ def test_layout_survives_narrow_screens():
     assert "@media (max-width: 340px)" in CSS
 
 
-def test_own_palette_layered_over_client_theme():
-    """Приложение живёт в мессенджере, но не растворяется в нём."""
-    assert "--tg-theme-bg-color" in CSS      # база берётся из темы клиента
-    assert "--amber: #ffc53d" in CSS          # акценты остаются фирменными
-    assert "backdrop-filter" in CSS           # собственная фактура
+def test_app_stays_light_and_readable_in_any_client_theme():
+    """Раньше поверхности брались из темы клиента, и в тёмной теме экран
+    становился тёмным и плохо читаемым. Теперь приложение светлое всегда."""
+    assert "color-scheme: light;" in CSS
+    assert "--bg: #fbfaf7;" in CSS
+    assert "--ink: #14110c;" in CSS
+    # Тема клиента остаётся подсказкой для акцентов, а не источником фона.
+    assert "--tg-theme-text-color" in CSS
+    assert "--bg: var(--tg-theme" not in CSS
 
 
 def test_screen_ids_used_by_app_js_are_intact():

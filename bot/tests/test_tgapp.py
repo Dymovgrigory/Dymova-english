@@ -38,9 +38,11 @@ def test_mini_app_is_mobile_first_and_theme_aware():
     css = (TGAPP / "app.css").read_text(encoding="utf-8")
 
     assert "viewport-fit=cover" in html
-    assert 'name="color-scheme" content="light dark"' in html
-    # Поверхности берутся из темы клиента, а не зашиты в один режим.
-    assert "--tg-theme-bg-color" in css
+    # Приложение сознательно светлое в любой теме мессенджера: в тёмной теме
+    # экран становился тёмным и плохо читаемым, на что и пожаловались.
+    assert 'name="color-scheme" content="light"' in html
+    assert "color-scheme: light;" in css
+    # Тема клиента остаётся подсказкой для акцентов и системного хрома.
     assert "--tg-theme-text-color" in css
     # Безопасные зоны и запрет горизонтального скролла.
     assert "safe-area-inset-bottom" in css
