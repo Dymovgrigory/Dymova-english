@@ -1132,6 +1132,15 @@
       });
     });
 
+    // Нажатие на кнопку меню бьёт всплеск чернил в шапке: интерфейс и
+    // фон — одно целое, а не картинка и кнопки поверх неё.
+    document.addEventListener("pointerdown", function (event) {
+      if (!event.target || !event.target.closest) return;
+      if (event.target.closest(".qa, .pulse, .dock__btn")) {
+        if (typeof window.foxiSplash === "function") window.foxiSplash(1);
+      }
+    }, { passive: true });
+
     // Лист открывает любая кнопка с data-sheet, включая появившиеся позже:
     // слушатель один на документ, а не по кнопке.
     document.addEventListener("click", function (event) {

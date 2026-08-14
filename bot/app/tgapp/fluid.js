@@ -805,9 +805,10 @@
 
     // Наружу отдаём короткий залп: приложение зовёт его на успешное
     // действие — там, где раньше подпрыгивал маскот.
-    global.foxiSplash = function () {
+    global.foxiSplash = function (strength) {
       if (destroyed) return;
-      multipleSplats(12);
+      // Нажатие на кнопку — короткий кивок чернил, успех — заметный залп.
+      multipleSplats(strength === 1 ? 3 : 12);
     };
 
     return function destroy() {
