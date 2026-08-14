@@ -5,7 +5,7 @@
 """
 import pytest
 
-from app import cabinet, importer
+from app import cabinet
 from app import intent as I
 from app import lead_manager
 from app import recommender
@@ -118,59 +118,81 @@ def test_english_request_keeps_age_programs():
     assert any("дошкол" in p["name"].lower() for p in programs)
 
 
-# --- Расписание в чате ----------------------------------------------------------
-
-@pytest.mark.asyncio
-async def test_schedule_reply_from_import():
-    from app.ai_core import _schedule_reply
-
-    store = get_store()
-    conv = store.get("u6", platform="max")
-    conv.lead.fio_child = "Маша"
-    conv.lead.phone = "8 926 111 22 33"
-    store.save(conv)
-
-    importer.import_schedule(
-        store,
-        filename="schedule.csv",
-        rows=[{"Ученик": "Маша", "Телефон": "89261112233", "День": "понедельник",
-               "Время": "17:30", "Программа": "Kids", "Педагог": "Анна", "Филиал": "Лихачёвский"}],
-        mapping={"student": "Ученик", "phone": "Телефон", "weekday": "День",
-                 "time": "Время", "program": "Программа", "teacher": "Педагог",
-                 "filial": "Филиал"},
-        actor="test",
-    )
-
-    class FakeMax:
-        configured = False
-
-        async def send_message(self, *a, **kw):
-            return False
-
-    reply = await _schedule_reply(conv, FakeMax())
-    assert reply is not None
-    assert "понедельник" in reply
-    assert "17:30" in reply
-    assert "Расписание на" in reply
-
-
-@pytest.mark.asyncio
-async def test_schedule_reply_without_import_is_none_for_stranger():
-    from app.ai_core import _schedule_reply
-
-    conv = Conversation(user_id="u7", platform="max")
-
-    class FakeMax:
-        configured = False
-
-    # Ни выгрузки, ни заявки — отвечает обычный путь (база знаний).
-    assert await _schedule_reply(conv, FakeMax()) is None
-
-
-# --- Род Фокси ------------------------------------------------------------------
+# --- Род Фокси# --- Род Фокси ------------------------------------------------------------------
 
 def test_foxi_gender_is_pinned_in_prompt():
     from app.sales import SYSTEM_PROMPT
 
     assert "МУЖСКОГО рода" in SYSTEM_PROMPT
     assert "я понял" in SYSTEM_PROMPT
+
+
+# --- Тест уровня: 10 заданий, картинки, сбор предложения ----------------------
+
+def test_level_test_has_ten_varied_questions():
+    from app import leveltest
+
+    assert len(leveltest.QUESTIONS) == 10
+    types = {q["type"] for q in leveltest.QUESTIONS}
+    assert {"choice", "picture", "order"} <= types
+    # Картинки — это SVG, а не системные emoji.
+    for q in leveltest.QUESTIONS:
+        if q["type"] == "picture":
+            assert q["art"].startswith("<svg")
+
+
+def test_level_test_public_hides_answers_but_shows_art():
+    from app import leveltest
+
+    for q in leveltest.public_questions():
+        assert "answer" not in q
+    assert any("art" in q for q in leveltest.public_questions())
+
+
+def test_level_test_order_question_grading():
+    from app import leveltest
+
+    order_q = next(q for q in leveltest.QUESTIONS if q["type"] == "order")
+    good = leveltest.grade({order_q["id"]: list(order_q["answer"])})
+    assert good["details"][5]["correct"] is True
+    bad = leveltest.grade({order_q["id"]: [0, 1, 2]})
+    assert bad["details"][5]["correct"] is False
+
+
+def test_level_test_thresholds():
+    from app import leveltest
+
+    all_right = {q["id"]: q["answer"] for q in leveltest.QUESTIONS}
+    assert leveltest.grade(all_right)["level"] == "B1+"
+    assert leveltest.grade({})["level"] == "A0–A1"
+
+
+# --- Две формы записи ---------------------------------------------------------
+
+def test_two_signup_sheets_exist():
+    from app import main as main_module
+
+    js = (main_module._TGAPP_DIR / "app.js").read_text(encoding="utf-8")
+    html = (main_module._TGAPP_DIR / "index.html").read_text(encoding="utf-8")
+    # «Записаться на занятия» — форма с выбором направления; «на диагностику» —
+    # отдельный лист, где уровень определяет методист, а не анкета.
+    assert 'diagnostic: { title: "Запись на диагностику"' in js
+    assert 'data-sheet="diagnostic"' in html
+    assert "Записаться на занятия" in html
+    assert "Методист определит уровень" in js
+    assert "Подготовка к школе" in js and "Репетитор (1–4 классы)" in js
+    # Кнопка подбора — «Оставить заявку», а не «Записаться на это».
+    assert "Записаться на это" not in js
+    assert "Оставить заявку" in js
+
+
+def test_picker_age_ranges_by_audience():
+    from app import main as main_module
+
+    js = (main_module._TGAPP_DIR / "app.js").read_text(encoding="utf-8")
+    # Ребёнку 3–10, подростку 11–17, себе — без ползунка.
+    assert '["Ребёнку", 3, 10]' in js
+    assert '["Подростку", 11, 17]' in js
+    assert '["Себе", 0, 0]' in js
+    # Ползунок не перезапрашивает подбор на каждый пиксель.
+    assert "schedulePicker" in js

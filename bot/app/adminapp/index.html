@@ -37,7 +37,6 @@
     <button class="tab" data-tab="leads">Заявки<span class="tab__count" id="count-leads"></span></button>
     <button class="tab" data-tab="broadcast">Рассылка</button>
     <button class="tab" data-tab="insights">Вопросы</button>
-    <button class="tab" data-tab="schedule">Расписание</button>
   </nav>
 
   <main>
@@ -93,21 +92,6 @@
       <div class="insights" id="insights"></div>
     </section>
 
-    <!-- Импорт расписания из еженедельной выгрузки -->
-    <section class="panel panel--form" id="panel-schedule" hidden>
-      <div class="import-status" id="import-status"></div>
-      <label class="field">
-        <span>Файл выгрузки (CSV или XLSX)</span>
-        <input type="file" id="import-file" accept=".csv,.xlsx" />
-      </label>
-      <div id="import-mapping" hidden></div>
-      <div class="actions">
-        <button class="btn" id="import-commit" hidden>Загрузить расписание</button>
-      </div>
-      <div class="result" id="import-report" hidden></div>
-      <div id="import-unmatched"></div>
-      <p class="hint">Выгрузка заменяет расписание целиком: повторная загрузка того же файла не удвоит занятия. Несопоставленные строки не теряются — их можно привязать к клиенту вручную ниже.</p>
-    </section>
   </main>
 </div>
 

@@ -1953,3 +1953,75 @@ body.is-locked { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .lead-success__ring { animation: none; }
 }
+
+/* ---------------- тест уровня: картинки и сбор предложения ---------------- */
+
+/* Каждый шаг теста въезжает заново: вопрос сменяется движением, а не скачком. */
+.quiz__stepbody { animation: quiz-step .38s var(--ease-entrance) both; }
+@keyframes quiz-step {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.quiz__art {
+  display: grid;
+  place-items: center;
+  margin: 4px 0 8px;
+  padding: 14px;
+  border-radius: var(--radius);
+  background: linear-gradient(150deg, rgba(255, 183, 3, .12), rgba(107, 77, 230, .08));
+  border: 1px solid var(--line);
+}
+.quiz__art svg { width: 132px; height: 110px; }
+
+.quiz__sentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 52px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1.5px dashed rgba(107, 77, 230, .35);
+  border-radius: var(--radius-sm);
+  background: rgba(107, 77, 230, .05);
+  margin-bottom: 10px;
+}
+.quiz__placeholder { font-size: .86rem; color: var(--ink-faint); }
+.quiz__token {
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--violet);
+  color: #fff;
+  font-weight: 600;
+  font-size: .95rem;
+  animation: quiz-step .25s var(--ease-entrance) both;
+}
+
+.quiz__bank { display: flex; flex-wrap: wrap; gap: 8px; }
+.quiz__chip {
+  min-height: 44px;
+  padding: 9px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-elev);
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-entrance),
+              opacity var(--duration-fast) var(--ease-entrance),
+              border-color var(--duration-fast) var(--ease-entrance);
+}
+.quiz__chip:active { transform: scale(.94); }
+.quiz__chip.is-used { opacity: .3; border-style: dashed; }
+
+@media (prefers-reduced-motion: reduce) {
+  .quiz__stepbody, .quiz__token { animation: none; }
+}
+
+/* Пилюли направлений в форме записи: их пять, они переносятся. */
+.lead__branches--wrap {
+  grid-template-columns: 1fr 1fr;
+  display: grid;
+}
+.lead__branches--wrap .lead__branch { min-height: 48px; }

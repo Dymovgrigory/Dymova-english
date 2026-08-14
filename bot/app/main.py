@@ -34,7 +34,6 @@ from app.email_notify import send_lead_email
 from app import intent as I
 from app import group_chat
 from app import insights
-from app import importer
 from app import leveltest
 from app import nudge
 from app import profile
@@ -932,112 +931,6 @@ async def admin_user_detail(user_id: str, request: Request) -> dict:
     return detail
 
 
-# --------- Админка: импорт расписания из выгрузки ---------
-
-
-@app.get("/admin/import/status")
-async def admin_import_status(request: Request) -> dict:
-    """Состояние импорта: последняя партия, запомненный маппинг, свежесть."""
-    if not _admin_authorized(request):
-        return JSONResponse({"detail": "unauthorized"}, status_code=401)
-    return importer.status(get_store())
-
-
-@app.post("/admin/import/preview")
-async def admin_import_preview(request: Request, file: UploadFile = File(...)) -> dict:
-    """Первый шаг: заголовки файла + предположение по колонкам.
-
-    Файл нигде не сохраняется: он нужен только на время разбора.
-    """
-    if not _admin_authorized(request):
-        return JSONResponse({"detail": "unauthorized"}, status_code=401)
-    content = await file.read()
-    try:
-        headers, rows = importer.parse_upload(file.filename or "", content)
-    except importer.ImportError_ as exc:
-        return JSONResponse({"ok": False, "error": str(exc)}, status_code=400)
-    store = get_store()
-    saved = importer.cabinet.saved_mapping(store)
-    guessed = importer.guess_mapping(headers)
-    # Запомненное сопоставление важнее угадайки, но только для колонок,
-    # которые реально есть в этом файле.
-    mapping = {**guessed, **{k: v for k, v in saved.items() if v in headers}}
-    sample = [
-        {h: (row.get(h, "") or "")[:60] for h in headers}
-        for row in rows[:5]
-    ]
-    return {
-        "ok": True,
-        "filename": file.filename or "",
-        "headers": headers,
-        "rows_count": len(rows),
-        "sample": sample,
-        "mapping": mapping,
-        "fields": list(importer.FIELDS),
-    }
-
-
-@app.post("/admin/import/commit")
-async def admin_import_commit(
-    request: Request,
-    file: UploadFile = File(...),
-    mapping: str = Form(""),
-) -> dict:
-    """Загрузка выгрузки с выбранным сопоставлением. Возвращает отчёт."""
-    if not _admin_authorized(request):
-        return JSONResponse({"detail": "unauthorized"}, status_code=401)
-    content = await file.read()
-    try:
-        headers, rows = importer.parse_upload(file.filename or "", content)
-        chosen = {k: v for k, v in json.loads(mapping or "{}").items() if v in headers}
-        report = importer.import_schedule(
-            get_store(),
-            filename=file.filename or "",
-            rows=rows,
-            mapping=chosen,
-            actor="admin",
-        )
-    except importer.ImportError_ as exc:
-        return JSONResponse({"ok": False, "error": str(exc)}, status_code=400)
-    except json.JSONDecodeError:
-        return JSONResponse({"ok": False, "error": "Некорректное сопоставление"}, status_code=400)
-    # Отчёт — часть импорта: показываем его администратору, а не прячем
-    # в логи.
-    logger.info(
-        "import: batch=%s rows=%s matched=%s unmatched=%s",
-        report["batch_id"], report["rows_total"], report["rows_matched"],
-        report["rows_unmatched"],
-    )
-    return {"ok": True, "report": report}
-
-
-@app.post("/admin/import/match")
-async def admin_import_match(request: Request, data: dict) -> dict:
-    """Ручное сопоставление строки отчёта с родителем из бота."""
-    if not _admin_authorized(request):
-        return JSONResponse({"detail": "unauthorized"}, status_code=401)
-    try:
-        batch_id = int(data.get("batch_id"))
-        row_index = int(data.get("row_index"))
-    except (TypeError, ValueError):
-        return JSONResponse({"ok": False, "error": "Нужны batch_id и row_index"}, status_code=400)
-    platform = str(data.get("platform", "")).strip()
-    user_id = str(data.get("user_id", "")).strip()
-    if not platform or not user_id:
-        return JSONResponse({"ok": False, "error": "Нужны platform и user_id"}, status_code=400)
-    store = get_store()
-    # Сопоставить можно только с реальным диалогом — иначе «ручное
-    # сопоставление» приклеит расписание к произвольной строке.
-    conv = store._load_conversation(platform, user_id)
-    if conv is None:
-        return JSONResponse({"ok": False, "error": "Такого пользователя нет в боте"}, status_code=404)
-    try:
-        report = importer.match_manually(store, batch_id, row_index, platform, user_id)
-    except LookupError as exc:
-        return JSONResponse({"ok": False, "error": str(exc)}, status_code=404)
-    return {"ok": True, "report": report}
-
-
 @app.get("/health")
 async def health() -> dict:
     store = get_store()
@@ -1482,8 +1375,8 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
         course=str(data.get("course", "")),
         comment=str(data.get("comment", ""))[:255],
     )
-    if not lead.fio_parent or not lead.phone:
-        return {"ok": False, "error": "Укажите имя и телефон"}
+    if not lead.phone or not (lead.fio_parent or lead.fio_child):
+        return {"ok": False, "error": "Укажите телефон и имя (ваше или ребёнка)"}
     platform_label = {
         "telegram": "Telegram мини-приложение Фоксинбург",
         "max": "MAX мини-приложение Фоксинбург",

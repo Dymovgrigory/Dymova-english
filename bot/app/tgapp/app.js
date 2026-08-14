@@ -211,7 +211,8 @@
   var SHEETS = {
     quiz: { title: "Тест уровня", build: buildQuiz },
     picker: { title: "Подбор курса", build: buildPicker },
-    signup: { title: "Запись на занятие", build: buildSignup },
+    signup: { title: "Запись на занятия", build: buildSignup },
+    diagnostic: { title: "Запись на диагностику", build: buildDiagnostic },
     homework: { title: "Помощь с домашкой", build: buildHomework },
   };
 
@@ -294,7 +295,7 @@
     }
 
     // Точки вместо полосы: видно не только «сколько прошли», но и сколько
-    // всего — пять коротких шагов не пугают, а полоса на 20% пугает.
+    // всего — короткие шаги не пугают, а полоса на 20% пугает.
     var dots = quiz.questions
       .map(function (_, i) {
         var state_ = i < quiz.index ? " is-done" : i === quiz.index ? " is-now" : "";
@@ -302,19 +303,45 @@
       })
       .join("");
 
+    var art = question.art ? '<div class="quiz__art">' + question.art + "</div>" : "";
+    var body;
+    if (question.type === "order") {
+      // Собери предложение: слова-фишки нажимаются в нужном порядке.
+      body =
+        '<div class="quiz__sentence" id="quiz-sentence"></div>' +
+        '<div class="quiz__bank">' +
+        (question.options || [])
+          .map(function (option, index) {
+            return '<button class="quiz__chip" data-word="' + index + '">' + esc(option) + "</button>";
+          })
+          .join("") +
+        "</div>";
+    } else {
+      body =
+        '<div class="quiz__options">' +
+        (question.options || [])
+          .map(function (option, index) {
+            return '<button class="quiz__opt" data-answer="' + index + '">' + esc(option) + "</button>";
+          })
+          .join("") +
+        "</div>";
+    }
+
     box.innerHTML =
       '<div class="quiz">' +
       '<div class="quiz__dots">' + dots + "</div>" +
+      '<div class="quiz__stepbody" data-step="' + quiz.index + '">' +
       '<p class="quiz__step">Вопрос ' + (quiz.index + 1) + " из " + quiz.questions.length + "</p>" +
+      art +
       '<p class="quiz__prompt">' + esc(question.prompt) + "</p>" +
       '<p class="quiz__hint">' + esc(question.hint) + "</p>" +
-      '<div class="quiz__options">' +
-      (question.options || [])
-        .map(function (option, index) {
-          return '<button class="quiz__opt" data-answer="' + index + '">' + esc(option) + "</button>";
-        })
-        .join("") +
+      body +
       "</div></div>";
+
+    if (question.type === "order") {
+      bindOrderStep(box, question);
+      return;
+    }
 
     all(".quiz__opt", box).forEach(function (button) {
       button.addEventListener("click", function () {
@@ -332,6 +359,43 @@
         }, 260);
       });
     });
+  }
+
+  /** Вопрос «собери предложение»: нажатое слово уходит в строку ответа,
+   *  повторное нажатие возвращает. Когда слова кончились — засчитываем. */
+  function bindOrderStep(box, question) {
+    var picked = [];
+    var sentence = $("#quiz-sentence", box);
+    all(".quiz__chip", box).forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        if (box.dataset.locked) return;
+        var index = Number(chip.dataset.word);
+        var at = picked.indexOf(index);
+        if (at >= 0) {
+          picked.splice(at, 1);
+          chip.classList.remove("is-used");
+        } else {
+          picked.push(index);
+          chip.classList.add("is-used");
+        }
+        haptic("light");
+        sentence.innerHTML = picked
+          .map(function (i) {
+            return '<span class="quiz__token">' + esc(question.options[i]) + "</span>";
+          })
+          .join("") || '<span class="quiz__placeholder">Нажимайте слова внизу</span>';
+        if (picked.length === question.options.length) {
+          box.dataset.locked = "1";
+          state.quiz.answers[question.id] = picked.slice();
+          setTimeout(function () {
+            delete box.dataset.locked;
+            state.quiz.index += 1;
+            renderQuizStep(box);
+          }, 420);
+        }
+      });
+    });
+    sentence.innerHTML = '<span class="quiz__placeholder">Нажимайте слова внизу</span>';
   }
 
   function finishQuiz(box) {
@@ -369,7 +433,7 @@
           '<div class="result__marks">' + marks + "</div>" +
           '<p class="result__text">' + esc(result.text) + "</p>" +
           '<p class="result__note">' + esc(result.disclaimer) + "</p>" +
-          '<button class="primary primary--glow" data-sheet="signup">Записаться на диагностику</button>' +
+          '<button class="primary primary--glow" data-sheet="diagnostic">Записаться на диагностику</button>' +
           '<button class="ghost" data-sheet="picker">Подобрать программу под уровень</button>' +
           '<button class="ghost ghost--quiet" data-sheet="quiz">Пройти ещё раз</button>' +
           "</div>";
@@ -435,21 +499,22 @@
       '<div class="picker">' +
       '<p class="picker__q">Для кого подбираем?</p>' +
       '<div class="picker__row" data-group="who">' +
-      ["Ребёнку", "Подростку", "Себе"]
-        .map(function (label, index) {
+      [["Ребёнку", 3, 10], ["Подростку", 11, 17], ["Себе", 0, 0]]
+        .map(function (item, index) {
           return (
             '<button class="pill' + (index === 0 ? " is-active" : "") + '" data-value="' +
-            esc(label) + '">' + esc(label) + "</button>"
+            esc(item[0]) + '" data-min="' + item[1] + '" data-max="' + item[2] + '">' + esc(item[0]) + "</button>"
           );
         })
         .join("") +
       "</div>" +
+      '<div id="picker-age">' +
       '<p class="picker__q">Возраст</p>' +
       '<div class="ruler">' +
-      '<input id="age" class="ruler__input" type="range" min="3" max="20" step="1" value="' +
+      '<input id="age" class="ruler__input" type="range" min="3" max="10" step="1" value="' +
       (me.age || 9) + '" aria-label="Возраст ученика" />' +
       '<output class="ruler__value" id="age-value" for="age">' + (me.age || 9) + " лет</output>" +
-      "</div>" +
+      "</div></div>" +
       '<p class="picker__q">Формат</p>' +
       '<div class="picker__row" data-group="format">' +
       '<button class="pill is-active" data-value="">Любой</button>' +
@@ -465,34 +530,72 @@
         all(".pill", group).forEach(function (other) {
           other.classList.toggle("is-active", other === pill);
         });
-        if (group.dataset.group === "format") state.format = pill.dataset.value;
+        if (group.dataset.group === "format") {
+          state.format = pill.dataset.value;
+        } else {
+          // «Для кого» определяет возможные возрасты: ребёнку — 3–10,
+          // подростку — 11–17, а себе возраст не нужен вовсе.
+          var min = Number(pill.dataset.min);
+          var max = Number(pill.dataset.max);
+          var ageBlock = $("#picker-age", box);
+          var ageInput = $("#age", box);
+          if (!min) {
+            ageBlock.hidden = true;
+          } else {
+            ageBlock.hidden = false;
+            ageInput.min = min;
+            ageInput.max = max;
+            if (Number(ageInput.value) < min) ageInput.value = min;
+            if (Number(ageInput.value) > max) ageInput.value = max;
+            $("#age-value", box).textContent = ageInput.value + " лет";
+            state.me = Object.assign({}, state.me, { age: Number(ageInput.value) });
+          }
+        }
         haptic("light");
-        runPicker();
+        schedulePicker();
       });
     });
 
-    $("#age", box).addEventListener("input", function (event) {
+    var ageInput = $("#age", box);
+    ageInput.addEventListener("input", function (event) {
       $("#age-value", box).textContent = event.target.value + " лет";
       state.me = Object.assign({}, state.me, { age: Number(event.target.value) });
       remember("me", state.me);
       renderPulse();
-      runPicker();
+      schedulePicker();
     });
+    // Отпустили ползунок — обновляем сразу, не дожидаясь тишины.
+    ageInput.addEventListener("change", runPicker);
 
     runPicker();
+  }
+
+  /** Подбор с задержкой: пока ползунок движется, результаты не дёргаются
+   *  на каждый пиксель — обновляем, когда движение закончилось. */
+  function schedulePicker() {
+    clearTimeout(schedulePicker._timer);
+    schedulePicker._timer = setTimeout(runPicker, 280);
+  }
+
+  function pickerAge() {
+    var ageBlock = $("#picker-age");
+    if (ageBlock && ageBlock.hidden) return "25"; // «Себе» — взрослые программы
+    var ageInput = $("#age");
+    return (ageInput && ageInput.value) || "9";
   }
 
   function runPicker() {
     var box = $("#picker-results");
     if (!box) return;
-    var ageInput = $("#age");
-    var age = (ageInput && ageInput.value) || "9";
-    box.innerHTML = '<div class="skeleton"></div>';
+    // Контент не стираем на время запроса: мигание скелетона на каждое
+    // движение ползунка и было тем самым «прыгает всё».
+    var seq = (runPicker._seq = (runPicker._seq || 0) + 1);
     request(
-      "/api/miniapp/recommend?age=" + encodeURIComponent(age) +
+      "/api/miniapp/recommend?age=" + encodeURIComponent(pickerAge()) +
         "&fmt=" + encodeURIComponent(state.format)
     )
       .then(function (data) {
+        if (seq !== runPicker._seq) return; // пришёл ответ на устаревший запрос
         if (data.__status === 403) {
           box.innerHTML =
             '<p class="empty">' + esc(data.error || "Раздел откроется после регистрации") + "</p>";
@@ -507,7 +610,7 @@
                 (item.age ? '<span class="rail__age">' + esc(item.age) + "</span>" : "") +
                 '<h3 class="rail__name">' + esc(item.name) + "</h3>" +
                 '<p class="rail__text">' + esc(item.text || "") + "</p>" +
-                '<button class="ghost" data-sheet="signup">Записаться на это</button>' +
+                '<button class="primary" data-sheet="signup">Оставить заявку</button>' +
                 "</article>"
               );
             })
@@ -520,20 +623,49 @@
 
   /* ---------------------------------------------------------------- запись */
 
+  /* Направления для записи на занятия — то, что реально ведёт школа. */
+  var LEAD_DIRECTIONS = [
+    "Английский язык",
+    "Немецкий язык",
+    "Китайский язык",
+    "Подготовка к школе",
+    "Репетитор (1–4 классы)",
+  ];
+
   function buildSignup(box) {
+    buildLeadForm(box, {
+      kind: "lessons",
+      badge: "Запись на занятия",
+      title: "Запись за 30 секунд",
+      sub: "Оставьте контакты — администратор перезвонит и запишет на занятия.",
+      directions: LEAD_DIRECTIONS,
+      submitLabel: "Оставить заявку",
+      // Для записи на занятия обязательны: направление, филиал, имя и
+      // возраст ребёнка, телефон. Имя родителя — по желанию.
+      required: ["phone", "fio_child", "age"],
+    });
+  }
+
+  function buildDiagnostic(box) {
+    buildLeadForm(box, {
+      kind: "diagnostic",
+      badge: "Бесплатная диагностика",
+      title: "Методист определит уровень",
+      sub: "На диагностике методист определит уровень и даст рекомендации по группе. Это бесплатно и ни к чему не обязывает.",
+      directions: null,
+      submitLabel: "Записаться на диагностику",
+      required: ["phone"],
+      course: "Бесплатная диагностика",
+    });
+  }
+
+  function buildLeadForm(box, opts) {
     var me = state.me || {};
     var branches = (state.info && state.info.branches) || [];
-    var branchOptions = branches.length
-      ? branches.map(function (b) {
-          return {
-            value: b.name,
-            label: String(b.name || "").replace(/^Филиал на /, ""),
-            hint: "",
-          };
-        })
-      : [];
-    branchOptions.push({ value: "Онлайн", label: "Онлайн", hint: "из дома" });
-    // дедуп, если «Онлайн» пришёл из базы
+    var branchOptions = branches.map(function (b) {
+      return { value: b.name, label: String(b.name || "").replace(/^Филиал на /, "") };
+    });
+    branchOptions.push({ value: "Онлайн", label: "Онлайн" });
     var seen = {};
     branchOptions = branchOptions.filter(function (o) {
       if (seen[o.value]) return false;
@@ -544,52 +676,66 @@
     box.innerHTML =
       '<div class="lead">' +
       '<div class="lead__hero">' +
-      '<span class="lead__badge">Бесплатная диагностика</span>' +
-      '<p class="lead__title">Запись за 30 секунд</p>' +
-      '<p class="lead__sub">Оставьте контакты — администратор перезвонит, определит уровень и подберёт группу.</p>' +
+      '<span class="lead__badge">' + esc(opts.badge) + "</span>" +
+      '<p class="lead__title">' + esc(opts.title) + "</p>" +
+      '<p class="lead__sub">' + esc(opts.sub) + "</p>" +
       "</div>" +
       '<form id="lead-form" class="form" novalidate>' +
-      '<label class="field"><span class="field__label">Ваше имя <em>обязательно</em></span>' +
-      '<input id="lf-parent" name="fio_parent" type="text" autocomplete="name" placeholder="Иванова Анна" required /></label>' +
-      '<div class="field-row">' +
-      '<label class="field"><span class="field__label">Имя ребёнка</span>' +
-      '<input id="lf-child" name="fio_child" type="text" placeholder="Миша" /></label>' +
-      '<label class="field"><span class="field__label">Возраст</span>' +
-      '<input id="lf-age" name="age" type="number" min="2" max="17" value="' +
-      esc(me.age || "") + '" placeholder="9" /></label>' +
-      "</div>" +
-      '<label class="field"><span class="field__label">Телефон <em>обязательно</em></span>' +
-      '<input id="lf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 999 000-00-00" required /></label>' +
-      '<div class="field"><span class="field__label">Филиал или онлайн</span>' +
+      (opts.directions
+        ? '<div class="field"><span class="field__label">Направление</span>' +
+          '<div class="lead__branches lead__branches--wrap" id="lf-course-pills" role="radiogroup" aria-label="Направление">' +
+          opts.directions.map(function (d, i) {
+            return (
+              '<button type="button" class="lead__branch' + (i === 0 ? " is-active" : "") +
+              '" data-value="' + esc(d) + '" role="radio" aria-checked="' + (i === 0) + '">' +
+              '<span class="lead__branch-name">' + esc(d) + "</span></button>"
+            );
+          }).join("") +
+          "</div>" +
+          '<input id="lf-course" type="hidden" name="course" value="' + esc(opts.directions[0]) + '" />' +
+          "</div>"
+        : '<input id="lf-course" type="hidden" name="course" value="' + esc(opts.course || "") + '" />') +
+      '<div class="field"><span class="field__label">Филиал или онлайн <em>обязательно</em></span>' +
       '<div class="lead__branches" id="lf-branch-pills" role="radiogroup" aria-label="Филиал">' +
       branchOptions.map(function (o, i) {
         return (
           '<button type="button" class="lead__branch' + (i === 0 ? " is-active" : "") +
           '" data-value="' + esc(o.value) + '" role="radio" aria-checked="' + (i === 0) + '">' +
-          '<span class="lead__branch-name">' + esc(o.label) + "</span>" +
-          (o.hint ? '<span class="lead__branch-hint">' + esc(o.hint) + "</span>" : "") +
-          "</button>"
+          '<span class="lead__branch-name">' + esc(o.label) + "</span></button>"
         );
       }).join("") +
       "</div>" +
       '<input id="lf-branch" type="hidden" name="branch" value="' + esc(branchOptions[0].value) + '" />' +
       "</div>" +
+      '<div class="field-row">' +
+      '<label class="field"><span class="field__label">Имя ребёнка' + (opts.required.indexOf("fio_child") >= 0 ? " <em>обязательно</em>" : "") + '</span>' +
+      '<input id="lf-child" name="fio_child" type="text" placeholder="Миша" /></label>' +
+      '<label class="field"><span class="field__label">Возраст' + (opts.required.indexOf("age") >= 0 ? " <em>обязательно</em>" : "") + '</span>' +
+      '<input id="lf-age" name="age" type="number" min="2" max="17" value="' +
+      esc(me.age || "") + '" placeholder="9" /></label>' +
+      "</div>" +
+      '<label class="field"><span class="field__label">Телефон <em>обязательно</em></span>' +
+      '<input id="lf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 999 000-00-00" required /></label>' +
+      '<label class="field"><span class="field__label">Ваше имя</span>' +
+      '<input id="lf-parent" name="fio_parent" type="text" autocomplete="name" placeholder="Иванова Анна" /></label>' +
       '<label class="field"><span class="field__label">Комментарий</span>' +
       '<textarea id="lf-comment" name="comment" rows="2" placeholder="Удобное время, пожелания"></textarea></label>' +
-      '<button type="submit" class="lead__submit">Записаться на диагностику</button>' +
+      '<button type="submit" class="lead__submit">' + esc(opts.submitLabel) + "</button>" +
       '<p class="lead__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>' +
       '<p id="lead-status" class="status" hidden></p>' +
+      '<input id="lf-required" type="hidden" value="' + esc(opts.required.join(",")) + '" />' +
       "</form></div>";
 
-    // Пилюли филиалов вместо системного select: крупные цели, видно все
-    // варианты сразу — выбор без выпадающего списка.
+    // Пилюли вместо системных select: крупные цели, все варианты видны сразу.
     all(".lead__branch", box).forEach(function (pill) {
       pill.addEventListener("click", function () {
-        all(".lead__branch", box).forEach(function (other) {
+        var group = pill.parentElement;
+        all(".lead__branch", group).forEach(function (other) {
           other.classList.toggle("is-active", other === pill);
           other.setAttribute("aria-checked", other === pill ? "true" : "false");
         });
-        $("#lf-branch").value = pill.dataset.value;
+        var target = group.id === "lf-course-pills" ? "#lf-course" : "#lf-branch";
+        $(target, box).value = pill.dataset.value;
         haptic("light");
       });
     });
@@ -622,19 +768,26 @@
 
   function submitLead() {
     var status = $("#lead-status");
+    var required = ($("#lf-required").value || "phone").split(",");
     var body = {
       fio_parent: $("#lf-parent").value.trim(),
       fio_child: $("#lf-child").value.trim(),
       age: $("#lf-age").value.trim(),
       phone: $("#lf-phone").value.trim(),
       branch: $("#lf-branch").value,
+      course: $("#lf-course").value,
       comment: $("#lf-comment").value.trim(),
     };
-    if (!body.fio_parent || !body.phone) {
+    var missing = [];
+    if (required.indexOf("phone") >= 0 && !body.phone) missing.push("телефон");
+    if (required.indexOf("fio_child") >= 0 && !body.fio_child) missing.push("имя ребёнка");
+    if (required.indexOf("age") >= 0 && !body.age) missing.push("возраст");
+    if (required.indexOf("fio_parent") >= 0 && !body.fio_parent) missing.push("ваше имя");
+    if (missing.length) {
       var form = $("#lead-form");
       if (form) form.classList.add("is-tried");
       status.hidden = false;
-      status.textContent = "Заполните имя и телефон — без них не сможем перезвонить.";
+      status.textContent = "Заполните, пожалуйста: " + missing.join(", ") + ".";
       haptic("error");
       return;
     }
@@ -883,8 +1036,8 @@
       $("#pulse-text").textContent = "Подобрать программу под него";
       pulse.dataset.sheet = "picker";
     } else {
-      $("#pulse-title").textContent = "Узнать уровень за минуту";
-      $("#pulse-text").textContent = "Пять заданий — и сразу видно, с чего начинать";
+      $("#pulse-title").textContent = "Узнать уровень";
+      $("#pulse-text").textContent = "Десять заданий с картинками — и сразу видно, с чего начинать";
       pulse.dataset.sheet = "quiz";
     }
   }
@@ -1021,7 +1174,11 @@
         return n >= 18;
       });
     }
-    if (!numbers.length) return false;
+    if (!numbers.length) {
+      // Возраст не указан вовсе (немецкий, китайский) — не прячем:
+      // отсутствие данных не значит «не подходит».
+      return true;
+    }
     var bounds = state.ageFilter.split("-").map(Number);
     var low = Math.min.apply(null, numbers);
     var high = Math.max.apply(null, numbers);
@@ -1048,7 +1205,7 @@
             '<h3 class="rail__name">' + esc(item.name) + "</h3>" +
             '<p class="rail__text">' + esc(item.text || item.description || "") + "</p>" +
             (price ? '<p class="price">' + esc(price) + "</p>" : "") +
-            '<button class="ghost" data-sheet="signup">Записаться</button>' +
+            '<button class="ghost" data-sheet="signup">Оставить заявку</button>' +
             "</article>"
           );
         })

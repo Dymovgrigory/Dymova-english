@@ -141,57 +141,9 @@ async def _sources_sync_loop() -> None:
         await asyncio.sleep(max(5, settings.SITE_SYNC_INTERVAL_MIN) * 60)
 
 
-def import_reminder_text(age_days: float | None) -> str | None:
-    """Текст напоминания о выгрузке. None — напоминать не нужно."""
-    from app import cabinet
-
-    if age_days is None:
-        return (
-            "📅 Расписание в личном кабинете ещё ни разу не загружали. "
-            "Загрузите выгрузку в админке бота (вкладка «Расписание»), "
-            "и у учеников появятся их занятия."
-        )
-    if age_days > cabinet.IMPORT_STALE_DAYS:
-        return (
-            f"📅 Выгрузке расписания уже {int(age_days)} дн. — кабинет "
-            "показывает ученикам устаревшие данные. Загрузите свежий "
-            "файл в админке бота (вкладка «Расписание»)."
-        )
-    return None
-
-
-async def _import_reminder_loop() -> None:
-    """Напоминает администраторам о протухшей выгрузке расписания.
-
-    Еженедельная выгрузка — единственный источник расписания в кабинете, и
-    про неё легко забыть. Если импорта не было дольше девяти дней, раз в
-    сутки шлём напоминание в чат администратора.
-    """
-    from app import cabinet
-    from app.memory import get_store
-
-    while True:
-        try:
-            store = get_store()
-            age = await asyncio.to_thread(cabinet.import_age_days, store)
-            text = import_reminder_text(age)
-            if text:
-                max_client = get_max()
-                if max_client.configured and settings.admin_ids:
-                    for admin_id in settings.admin_ids:
-                        try:
-                            await max_client.send_message(admin_id, text)
-                        except Exception:
-                            logger.exception("import-reminder: не удалось написать администратору")
-        except Exception:
-            logger.exception("import-reminder: ошибка проверки свежести выгрузки")
-        await asyncio.sleep(24 * 60 * 60)
-
-
 def start() -> list[asyncio.Task]:
     """Запускает фоновые задачи (отчёт + напоминания)."""
     tasks: list[asyncio.Task] = [asyncio.create_task(_purge_loop())]
-    tasks.append(asyncio.create_task(_import_reminder_loop()))
     if settings.DIGEST_ENABLED:
         tasks.append(asyncio.create_task(_loop()))
     else:

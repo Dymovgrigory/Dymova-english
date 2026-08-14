@@ -14,7 +14,7 @@
        Дальше версию можно не трогать — заголовок заставляет браузер
        проверять файл при каждой загрузке, — но при крупной правке её проще
        поднять, чем объяснять человеку, почему у него старый экран. -->
-  <link rel="stylesheet" href="/tg/app.css?v=5" />
+  <link rel="stylesheet" href="/tg/app.css?v=6" />
   <!-- Хиро-картинка маскота решает первый экран: грузим её раньше всего. -->
   <link rel="preload" as="image" href="/tg/assets/foxi.webp" />
   <!-- Мост площадки подставляет сервер: на /tg/ — SDK Telegram, на /app/ —
@@ -69,8 +69,8 @@
       <button class="pulse" id="pulse" data-sheet="quiz">
         <span class="pulse__dot" aria-hidden="true"></span>
         <span class="pulse__body">
-          <span class="pulse__title" id="pulse-title">Узнать уровень за минуту</span>
-          <span class="pulse__text" id="pulse-text">Пять заданий — и сразу видно, с чего начинать</span>
+          <span class="pulse__title" id="pulse-title">Узнать уровень</span>
+          <span class="pulse__text" id="pulse-text">Десять заданий с картинками — и сразу видно, с чего начинать</span>
         </span>
         <span class="pulse__chev" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
@@ -94,7 +94,7 @@
               <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/><path d="m9 16 2 2 4-4"/>
             </svg>
           </span>
-          <span class="qa__name">Записаться</span>
+          <span class="qa__name">Записаться на занятия</span>
         </button>
         <button class="qa" data-sheet="homework">
           <span class="qa__ic" aria-hidden="true">
@@ -137,7 +137,7 @@
       <section class="cta reveal">
         <p class="cta__title">Начать проще, чем кажется</p>
         <p class="cta__text">Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.</p>
-        <button class="primary primary--glow" data-sheet="signup">Записаться на диагностику</button>
+        <button class="primary primary--glow" data-sheet="diagnostic">Записаться на диагностику</button>
       </section>
     </section>
 
@@ -211,7 +211,7 @@
 
   <div id="toast" class="toast" hidden></div>
 
-  <script src="/tg/fluid.js?v=5"></script>
-  <script src="/tg/app.js?v=5"></script>
+  <script src="/tg/fluid.js?v=6"></script>
+  <script src="/tg/app.js?v=6"></script>
 </body>
 </html>
