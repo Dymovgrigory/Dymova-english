@@ -18,7 +18,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app import ai_core
@@ -1375,13 +1375,31 @@ async def site_lead(request: Request, data: dict) -> dict:
     return {"ok": ok}
 
 
-# Статика мини-приложения (если каталог есть).
-if _MINIAPP_DIR.exists():
-    app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
-
 # Telegram Mini App: отдельная сборка под гайдлайны Telegram (тема клиента,
 # BackButton/MainButton, haptics). Открывается кнопкой web_app в чате бота.
 _TGAPP_DIR = Path(__file__).with_name("tgapp")
+
+
+@app.get("/app/", include_in_schema=False)
+@app.get("/app", include_in_schema=False)
+async def miniapp_index() -> FileResponse:
+    """MAX получает то же приложение, что и Telegram.
+
+    Раньше у площадок были две копии, и MAX отставал: редизайн и новые
+    разделы доехали только до Telegram. Теперь страница одна, площадку
+    приложение определяет по мосту, а ссылки на файлы абсолютные — поэтому
+    одна и та же разметка работает и на /tg/, и на /app/.
+
+    Маршрут объявлен до монтирования статики: остальные файлы каталога
+    (админка мини-приложения, картинки) отдаются по-прежнему.
+    """
+    return FileResponse(_TGAPP_DIR / "index.html")
+
+
+# Статика мини-приложения MAX: админка и картинки (если каталог есть).
+if _MINIAPP_DIR.exists():
+    app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
+
 if _TGAPP_DIR.exists():
     app.mount("/tg", StaticFiles(directory=str(_TGAPP_DIR), html=True), name="tgapp")
 
