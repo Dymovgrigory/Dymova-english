@@ -34,7 +34,7 @@ def test_bridge_is_loaded_before_own_script():
     """Порядок обязателен: app.js читает window.WebApp сразу при запуске."""
     html = (MINIAPP / "index.html").read_text(encoding="utf-8")
 
-    assert html.index(BRIDGE_SRC) < html.index('src="app.js"')
+    assert html.index(BRIDGE_SRC) < html.index('src="app.js?v=')
 
 
 def test_bridge_script_is_not_deferred():

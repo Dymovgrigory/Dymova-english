@@ -107,5 +107,5 @@ def test_all_screens_and_controls_survived_the_redesign():
 
 def test_max_bridge_still_loads_before_the_app():
     bridge = HTML.index("max-web-app.js")
-    own = HTML.index('src="app.js"')
+    own = HTML.index('src="app.js?v=')
     assert bridge < own

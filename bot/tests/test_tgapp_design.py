@@ -67,7 +67,7 @@ def test_three_js_is_not_loaded_eagerly():
     """Рантайм 3D весит больше мегабайта — в начальную загрузку он не входит."""
     assert "await import('three')" in MASCOT
     assert '<script src="./vendor/three' not in HTML
-    assert 'type="module" src="mascot.js"' in HTML
+    assert 'type="module" src="mascot.js?v=' in HTML
 
 
 def test_three_js_is_self_hosted_not_from_cdn():
