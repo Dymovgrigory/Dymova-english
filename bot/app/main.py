@@ -33,6 +33,7 @@ from app import group_chat
 from app import insights
 from app import nudge
 from app import profile
+from app import registration
 from app import runtime
 from app import scheduler
 from app import watchdog
@@ -94,7 +95,19 @@ async def _start_scheduler() -> None:
         task.add_done_callback(_BACKGROUND_TASKS.discard)
 
 
-def _main_menu() -> list[list[dict]]:
+def _miniapp_open(user_id: str, platform: str = PLATFORM) -> bool:
+    """Показывать ли кнопку запуска мини-приложения.
+
+    Личный кабинет открывается только зарегистрированным: незарегистрированный
+    человек всё равно упрётся в анкету уже внутри приложения, а кнопка,
+    ведущая в тупик, — худший вид кнопки.
+    """
+    if not user_id:
+        return False
+    return registration.is_registered(get_store().get(user_id, platform=platform))
+
+
+def _main_menu(user_id: str = "") -> list[list[dict]]:
     rows = [
         [callback_button("🎓 Подобрать курс", "menu:courses")],
         [callback_button("📅 Записаться на пробное", "menu:signup")],
@@ -102,7 +115,7 @@ def _main_menu() -> list[list[dict]]:
         [callback_button("🏫 Наши филиалы", "menu:branches")],
         [callback_button("☎ Связаться с администратором", "menu:admin")],
     ]
-    if settings.MINIAPP_BASE_URL:
+    if settings.MINIAPP_BASE_URL and _miniapp_open(user_id):
         rows.insert(0, [link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
     return rows
 
@@ -430,17 +443,19 @@ def _telegram_buttons(text: str, reply: str) -> list[list[dict]]:
     return [[button] for button in buttons]
 
 
-def _telegram_webapp_button() -> dict | None:
+def _telegram_webapp_button(user_id: str = "") -> dict | None:
     """Кнопка открытия Telegram Mini App прямо внутри чата."""
     url = settings.telegram_miniapp_url
     if not url.startswith("https://"):
         return None
+    if not _miniapp_open(user_id, platform=TELEGRAM_PLATFORM):
+        return None
     return {"type": "web_app", "text": "📱 Личный кабинет", "web_app": url}
 
 
-def _telegram_menu_buttons() -> list[list[dict]]:
+def _telegram_menu_buttons(user_id: str = "") -> list[list[dict]]:
     rows: list[list[dict]] = []
-    webapp = _telegram_webapp_button()
+    webapp = _telegram_webapp_button(user_id)
     if webapp:
         rows.append([webapp])
     rows.extend(
@@ -455,10 +470,10 @@ def _telegram_menu_buttons() -> list[list[dict]]:
     return rows
 
 
-def _telegram_start_buttons(text: str, reply: str) -> list[list[dict]] | None:
+def _telegram_start_buttons(text: str, reply: str, user_id: str = "") -> list[list[dict]] | None:
     """На /start показываем меню целиком — иначе новый пользователь видит
     только текст и не знает, что у бота вообще есть кнопки."""
-    return _telegram_menu_buttons() or _telegram_buttons(text, reply) or None
+    return _telegram_menu_buttons(user_id) or _telegram_buttons(text, reply) or None
 
 
 def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
@@ -670,12 +685,12 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             # payload (источник перехода) терялся вместе с ней.
             _remember_deeplink(user_id, TELEGRAM_PLATFORM, text)
             reply = await handle_start(user_id, platform=TELEGRAM_PLATFORM)
-            await telegram.send_message(chat_id, reply, buttons=_telegram_start_buttons(text, reply))
+            await telegram.send_message(chat_id, reply, buttons=_telegram_start_buttons(text, reply, user_id))
             return
 
         if low in ("/menu", "меню", "/app", "кабинет"):
             await telegram.send_message(
-                chat_id, "Чем помочь? 😊", buttons=_telegram_menu_buttons()
+                chat_id, "Чем помочь? 😊", buttons=_telegram_menu_buttons(user_id)
             )
             return
 
@@ -1011,7 +1026,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         user_id = _extract_user_id(update)
         if user_id:
             reply = await handle_start(user_id)
-            await max_client.send_message(user_id, reply, buttons=_main_menu())
+            await max_client.send_message(user_id, reply, buttons=_main_menu(user_id))
         return
 
     if update_type == "message_created":
@@ -1039,13 +1054,13 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         low = text.lower()
         if low in ("/start", "start"):
             reply = await handle_start(user_id)
-            await max_client.send_message(user_id, reply, buttons=_main_menu())
+            await max_client.send_message(user_id, reply, buttons=_main_menu(user_id))
         elif I.detect_intent(text) == I.HANDOFF:
             conv = get_store().get(user_id)
             if conv.selected_branch:
                 await _notify_admins_for_telegram(conv, "запрос администратора")
                 reply = f"Свяжу вас с администратором {conv.selected_branch}. Он скоро ответит."
-                await max_client.send_message(user_id, reply, buttons=_main_menu())
+                await max_client.send_message(user_id, reply, buttons=_main_menu(user_id))
             else:
                 await max_client.send_message(
                     user_id,
@@ -1057,7 +1072,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             buttons = _link_button_rows(text, reply)
             await max_client.send_message(user_id, reply, buttons=buttons or None)
         elif low in ("/menu", "меню"):
-            await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu())
+            await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu(user_id))
         else:
             reply = await _reply_while_alive(
                 max_client,

@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 # Шаги регистрации в строгом порядке.
 REG_STEPS = ["fio_parent", "fio_child", "birthday", "phone"]
 
+REG_RESUME = "Вернёмся к анкете. "
+
 REG_PROMPTS = {
     "fio_parent": "Как вас зовут? (ФИО родителя)",
     "fio_child": "Как зовут вашего ребёнка? (имя)",
@@ -155,7 +157,13 @@ def _current_step(conv: Conversation) -> str:
 
 
 def start_registration(conv: Conversation) -> str:
-    """Begin the registration flow. Returns the welcome + first question."""
+    """Начинает регистрацию. Возвращает приветствие и первый вопрос.
+
+    Приветствие звучит один раз за разговор. Раньше анкета перезапускалась
+    с полного «Привет! Я Фокси…» каждый раз, когда этап уходил в сторону, —
+    в живом диалоге человек услышал это знакомство трижды и решил, что бот
+    его не помнит.
+    """
     conv.stage = STAGE_REGISTRATION
     conv.registration_step = "fio_parent"
     step = _current_step(conv)
@@ -163,7 +171,19 @@ def start_registration(conv: Conversation) -> str:
         conv.registered = True
         return REG_COMPLETE
     conv.registration_step = step
+    if _already_greeted(conv):
+        return REG_RESUME + REG_PROMPTS[step]
     return REG_WELCOME + REG_PROMPTS[step]
+
+
+def _already_greeted(conv: Conversation) -> bool:
+    """Здоровались ли мы в этом разговоре."""
+    marker = REG_WELCOME.split("!")[0]
+    return any(
+        marker in (m.get("content") or "")
+        for m in (getattr(conv, "history", None) or [])
+        if m.get("role") == "assistant"
+    )
 
 
 async def handle_registration_step(

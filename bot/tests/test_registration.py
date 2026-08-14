@@ -278,3 +278,20 @@ class TestRegistrationIntegration:
         assert "познакомимся" not in reply
         conv = store.get(uid)
         assert conv.registered is True
+
+
+@pytest.mark.asyncio
+async def test_registration_greets_once(_enable_registration):
+    """Анкета не должна каждый раз начинаться со знакомства заново."""
+    from app import registration
+    from app.memory import Conversation
+
+    conv = Conversation(user_id="reg-greet")
+    first = registration.start_registration(conv)
+    conv.add("assistant", first)
+    conv.stage = "discovery"
+    second = registration.start_registration(conv)
+
+    assert "Я — Фокси" in first
+    assert "Я — Фокси" not in second
+    assert "Как вас зовут" in second

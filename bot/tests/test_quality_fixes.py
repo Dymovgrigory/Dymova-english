@@ -39,7 +39,10 @@ async def test_lead_name_validation_rejects_non_names_and_captures_age():
 
     reply = await handle_message(uid, "сыну 8 лет")
     conv = get_store().get(uid)
-    assert conv.lead.age == "7"
+    # Возраст, названный позже про того же ребёнка, — это поправка, и она
+    # побеждает. Раньше бот держался первого значения: в живом диалоге из-за
+    # этого второкласснице предлагали программу для дошкольников.
+    assert conv.lead.age == "8"
     assert conv.lead.fio_child == ""
     assert conv.lead_step == "fio_child"
     assert "имя ребёнка" in reply.lower()

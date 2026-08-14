@@ -211,3 +211,26 @@ def test_situational_messages_do_trigger_extraction():
         "Мы переезжаем в другую страну и нужно быстро подтянуть разговорный язык "
         "до уровня свободного общения"
     )
+
+
+# ----------------- бот не здоровается по второму разу -----------------
+
+
+async def test_greeting_is_said_once_not_every_time():
+    """В живой переписке бот поздоровался трижды — человек решил, что его забыли."""
+    uid = "greet-once"
+    first = await handle_message(uid, "Привет")
+    await handle_message(uid, "Сыну 9 лет")
+    later = await handle_message(uid, "Привет ещё раз")
+
+    assert "Меня зовут Фокси" in first
+    assert "Меня зовут Фокси" not in later
+    assert later.strip()
+
+
+async def test_small_talk_does_not_get_a_greeting():
+    """«В целом неплохо, ветер сильный» — это разговор, а не приветствие."""
+    uid = "greet-smalltalk"
+    await handle_message(uid, "Здравствуйте")
+    reply = await handle_message(uid, "В целом неплохо, только ветер сильный на улице")
+    assert "Чем могу помочь" not in reply
