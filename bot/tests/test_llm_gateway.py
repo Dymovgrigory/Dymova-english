@@ -253,3 +253,29 @@ def test_matches_rejects_bool_for_number_field():
 def test_matches_allows_extra_fields():
     schema = {"type": "object", "properties": {"a": {"type": "string"}}, "required": ["a"]}
     assert _matches({"a": "x", "b": 1}, schema)
+
+
+def test_strict_schema_satisfies_openai_requirements():
+    """Строгий режим отвечает 400, если additionalProperties не задан."""
+    from app.llm_gateway import _strict_schema
+
+    schema = {
+        "type": "object",
+        "properties": {
+            "who": {"type": "string"},
+            "child": {"type": "object", "properties": {"age": {"type": "string"}}},
+            "goals": {"type": "array", "items": {"type": "object",
+                                                 "properties": {"text": {"type": "string"}}}},
+        },
+        "required": ["who"],
+    }
+    strict = _strict_schema(schema)
+
+    assert strict["additionalProperties"] is False
+    assert strict["properties"]["child"]["additionalProperties"] is False
+    assert strict["properties"]["goals"]["items"]["additionalProperties"] is False
+    # Строгий режим требует перечислить все свойства.
+    assert set(strict["required"]) == {"who", "child", "goals"}
+    # Исходную схему не трогаем — по ней проверяется ответ.
+    assert schema["required"] == ["who"]
+    assert "additionalProperties" not in schema

@@ -252,3 +252,9 @@ async def test_live_dialogue_never_leaks_markers_or_canned_phrases():
         assert reply.strip()
         assert critic._LEAK_RE.search(reply) is None
         assert critic._CANNED_RE.search(reply) is None
+
+
+def test_repair_leaves_no_hole_where_a_token_was():
+    """Вырезанный токен оставлял «А сколько лет ?» — дыру перед знаком."""
+    fixed = critic.repair("А сколько лет {{CHILD_NAME}}?", ["leaked_marker"])
+    assert fixed == "А сколько лет?"
