@@ -8,35 +8,26 @@
   <meta name="color-scheme" content="light" />
   <title>Фоксинбург</title>
   <!-- Фавикон — фирменный маскот, а не системная emoji-лиса. -->
-  <link rel="icon" href="assets/foxi.webp" />
+  <link rel="icon" href="/tg/assets/foxi.webp" />
   <!-- Версия в адресе нужна, чтобы вырваться из кэша, накопленного до того,
        как Caddy начал отдавать мини-приложения с Cache-Control: no-cache.
        Дальше версию можно не трогать — заголовок заставляет браузер
        проверять файл при каждой загрузке, — но при крупной правке её проще
        поднять, чем объяснять человеку, почему у него старый экран. -->
-  <link rel="stylesheet" href="app.css?v=2" />
+  <link rel="stylesheet" href="/tg/app.css?v=3" />
   <!-- Хиро-картинка маскота решает первый экран: грузим её раньше всего. -->
-  <link rel="preload" as="image" href="assets/foxi.webp" />
-  <!--
-    Импорт-карта для трёхмерного маскота. Указывает на локальные файлы, а не
-    на CDN: вебвью мессенджера часто сидит за плохой сетью, а сторонний домен
-    ещё и блокируется. Сами файлы подгружаются только тогда, когда устройство
-    потянет 3D (см. mascot.js) — карта же не стоит ничего.
-  -->
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "./vendor/three/three.module.min.js",
-        "three/addons/": "./vendor/three/addons/"
-      }
-    }
-  </script>
+  <link rel="preload" as="image" href="/tg/assets/foxi.webp" />
   <!-- SDK Telegram грузится только с telegram.org и версионируется самой
        платформой (файл обновляется по месту), поэтому SRI-хэш пришлось бы
        менять при каждом их релизе — и до тех пор приложение не открывалось
        бы вообще. Вместо этого app.js рассчитан на отсутствие SDK: без него
        страница работает как обычная витрина, а личные разделы закрыты. -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Мост MAX. Грузится рядом с SDK Telegram: приложение одно на обе
+       площадки, и лишний мост на чужой платформе просто не создаёт своего
+       объекта. Раньше у MAX была отдельная копия приложения — и она
+       отстала от телеграмной на целый редизайн. -->
+  <script src="https://st.max.ru/js/max-web-app.js"></script>
 </head>
 <body>
   <!-- Живой свет за содержимым. aria-hidden: для скринридера это пустой шум. -->
@@ -56,14 +47,15 @@
       <header class="hero">
         <div class="hero__stage">
           <span class="hero__halo" aria-hidden="true"></span>
-          <!-- Статичный маскот виден мгновенно; 3D, если устройство его
-               потянет, встаёт на то же место и плавно подменяет картинку. -->
+          <!-- Рисованный маскот вместо трёхмерного. Сгенерированная модель
+               рендерилась тускло и в неудачной позе — то есть проигрывала
+               той самой картинке, ради которой её ставили. Живость даём
+               движением, а не полигонами. -->
           <img
             class="hero__mascot" id="mascot-still"
-            src="assets/foxi.webp" alt="Фокси, маскот школы Фоксинбург"
+            src="/tg/assets/foxi.webp" alt="Фокси, маскот школы Фоксинбург"
             width="360" height="360" decoding="async"
           />
-          <div class="hero__mascot3d" id="mascot-3d" aria-hidden="true"></div>
         </div>
         <p class="hero__eyebrow">Языковая школа · Долгопрудный</p>
         <h1 class="hero__title" id="greeting-title">Фоксинбург</h1>
@@ -226,7 +218,6 @@
 
   <div id="toast" class="toast" hidden></div>
 
-  <script src="app.js?v=2"></script>
-  <script type="module" src="mascot.js?v=2"></script>
+  <script src="/tg/app.js?v=3"></script>
 </body>
 </html>

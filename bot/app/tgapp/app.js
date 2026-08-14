@@ -23,7 +23,14 @@
 (function () {
   "use strict";
 
+  /* Одно приложение на две площадки. Мост определяется по тому, кто из них
+     создал свой объект: у Telegram это window.Telegram.WebApp, у MAX —
+     window.WebApp. Всё остальное — общее, поэтому MAX больше не может
+     отстать от Telegram на редизайн, как это уже случилось. */
   var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  var max = !tg ? window.WebApp || (window.max && window.max.WebApp) || null : null;
+  var bridge = tg || max;
+  var PLATFORM = tg ? "telegram" : max ? "max" : "web";
   var REQUEST_TIMEOUT_MS = 15000;
   var TABS = ["home", "programs", "team", "chat", "profile"];
 
@@ -72,14 +79,27 @@
     });
   }
 
-  /** Событие для трёхмерного маскота: он живёт в своём модуле. */
+  /** Реакция маскота. Раньше событие уходило в трёхмерный модуль; теперь
+   *  анимируется сама картинка — дешевле, надёжнее и, как показала практика,
+   *  красивее сгенерированной модели. */
   function mascot(event) {
-    document.dispatchEvent(new CustomEvent("foxi:" + event));
+    var node = $("#mascot-still");
+    if (!node) return;
+    var animation = event === "success" ? "cheer" : "greet";
+    node.classList.remove("is-cheer", "is-greet");
+    // Перезапуск анимации требует кадра без класса, иначе повторное
+    // добавление того же класса ничего не меняет.
+    requestAnimationFrame(function () {
+      node.classList.add("is-" + animation);
+      setTimeout(function () {
+        node.classList.remove("is-" + animation);
+      }, animation === "cheer" ? 1200 : 900);
+    });
   }
 
   function haptic(kind) {
     try {
-      var hf = tg && tg.HapticFeedback;
+      var hf = bridge && bridge.HapticFeedback;
       if (!hf) return;
       if (kind === "success" || kind === "error" || kind === "warning") {
         hf.notificationOccurred(kind);
@@ -92,10 +112,11 @@
   }
 
   function initData() {
-    return (tg && tg.initData) || "";
+    return (bridge && bridge.initData) || "";
   }
 
-  function inTelegram() {
+  /** Есть ли подписанная личность: только с ней открыт личный кабинет. */
+  function signedIn() {
     return Boolean(initData());
   }
 
@@ -139,7 +160,7 @@
     var headers = options.headers || {};
     if (initData()) {
       headers["X-Miniapp-Init-Data"] = initData();
-      headers["X-Miniapp-Platform"] = "telegram";
+      headers["X-Miniapp-Platform"] = PLATFORM;
     }
 
     return fetch(path, {
@@ -245,11 +266,11 @@
 
   /** Системная кнопка «назад» закрывает лист, а не приложение. */
   function syncChrome() {
-    if (!tg) return;
+    if (!bridge || !bridge.BackButton) return;
     try {
-      if (state.sheet || state.tab !== "home") tg.BackButton.show();
-      else tg.BackButton.hide();
-      tg.MainButton.hide();
+      if (state.sheet || state.tab !== "home") bridge.BackButton.show();
+      else bridge.BackButton.hide();
+      if (bridge.MainButton) bridge.MainButton.hide();
     } catch (e) {
       /* старые версии клиента не знают этих кнопок */
     }
@@ -917,9 +938,9 @@
 
   function loadProfile() {
     var box = $("#profile");
-    if (!inTelegram()) {
+    if (!signedIn()) {
       box.innerHTML =
-        '<p class="empty">Кабинет открывается из чата с ботом в Telegram — там приложение знает, кто вы.</p>';
+        '<p class="empty">Кабинет открывается из чата с ботом — там приложение знает, кто вы.</p>';
       renderBranches();
       return;
     }
@@ -1034,7 +1055,7 @@
   }
 
   function applyTheme() {
-    if (!tg) return;
+    if (!bridge) return;
     // Приложение светлое всегда: тема клиента делала экран тёмным и
     // нечитаемым, поэтому её мы намеренно не копируем.
     document.documentElement.style.colorScheme = "light";
@@ -1105,16 +1126,23 @@
   }
 
   function start() {
-    if (tg) {
-      tg.ready();
-      tg.expand();
-      applyTheme();
-      tg.onEvent("themeChanged", applyTheme);
+    if (bridge) {
+      // Оба моста умеют ready/expand, но не обязаны — вызываем осторожно.
       try {
-        tg.BackButton.onClick(function () {
-          if (state.sheet) closeSheet();
-          else goTab("home");
-        });
+        if (bridge.ready) bridge.ready();
+        if (bridge.expand) bridge.expand();
+        if (bridge.onEvent) bridge.onEvent("themeChanged", applyTheme);
+      } catch (e) {
+        /* мост урезан — приложение работает и так */
+      }
+      applyTheme();
+      try {
+        if (bridge.BackButton && bridge.BackButton.onClick) {
+          bridge.BackButton.onClick(function () {
+            if (state.sheet) closeSheet();
+            else goTab("home");
+          });
+        }
       } catch (e) {
         /* старый клиент */
       }
