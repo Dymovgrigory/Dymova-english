@@ -1379,20 +1379,19 @@ body.is-locked { overflow: hidden; }
 
 .quiz { display: grid; gap: 10px; }
 
-.quiz__bar {
-  height: 6px;
+/* Точки шагов: видно и сколько пройдено, и сколько всего. */
+.quiz__dots { display: flex; gap: 6px; }
+
+.quiz__dot {
+  flex: 1;
+  height: 5px;
   border-radius: 999px;
-  background: rgba(107, 77, 230, .14);
-  overflow: hidden;
+  background: rgba(107, 77, 230, .16);
+  transition: background .3s var(--ease-entrance), transform .3s var(--ease-entrance);
 }
 
-.quiz__bar span {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--amber), var(--violet));
-  transition: width .3s var(--ease);
-}
+.quiz__dot.is-done { background: linear-gradient(90deg, var(--amber), var(--violet)); }
+.quiz__dot.is-now { background: var(--violet); transform: scaleY(1.6); }
 
 .quiz__step { margin: 2px 0 0; font-size: .76rem; color: var(--ink-faint); letter-spacing: .06em; text-transform: uppercase; }
 .quiz__prompt { margin: 0; font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; }
@@ -1645,3 +1644,199 @@ body.is-locked { overflow: hidden; }
   .quick .qa,
   .dock { animation: none; }
 }
+
+
+/* ---------------- филиалы: адрес и телефон как действия ---------------- */
+
+.branch { display: grid; gap: 6px; }
+
+/* Строка целиком — цель нажатия: попасть пальцем в текст ссылки трудно. */
+.branch__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  margin: 0 -6px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-entrance);
+}
+
+.branch__row:active { background: rgba(107, 77, 230, .08); }
+
+.branch__ic {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 11px;
+  color: var(--violet);
+  background: rgba(107, 77, 230, .1);
+}
+
+.branch__ic svg { width: 17px; height: 17px; }
+.branch__text { display: flex; flex-direction: column; font-size: .9rem; }
+
+.branch__hint {
+  font-size: .74rem;
+  color: var(--violet);
+  font-weight: 600;
+}
+
+.branch__hours { margin: 2px 0 0 44px; font-size: .82rem; color: var(--ink-faint); }
+
+/* ---------------- фото педагогов ---------------- */
+
+.person__photo {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  /* Кольцо в фирменном градиенте: фото садится в интерфейс, а не лежит на нём. */
+  box-shadow: 0 0 0 2px var(--bg-elev), 0 0 0 4px rgba(107, 77, 230, .35);
+}
+
+
+/* ---------------- результат теста ---------------- */
+
+/* Кольцо: доля верных ответов читается одним взглядом, без процентов. */
+.result__ring {
+  --ratio: 0;
+  width: 148px;
+  height: 148px;
+  margin: 4px auto 10px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    conic-gradient(var(--violet) calc(var(--ratio) * 360deg), rgba(107, 77, 230, .14) 0),
+    var(--bg-elev);
+  box-shadow: var(--glow-violet);
+  position: relative;
+}
+
+.result__ring::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: var(--bg-elev);
+}
+
+.result__level {
+  position: relative;
+  z-index: 1;
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  background: linear-gradient(96deg, var(--violet), var(--amber-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Разбор по вопросам: где ответили верно, а где нет. */
+.result__marks { display: flex; justify-content: center; gap: 6px; margin: 8px 0 4px; }
+
+.mark {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  background: rgba(20, 17, 12, .06);
+}
+
+.mark.is-ok { color: #0d7a5f; background: rgba(36, 198, 160, .18); }
+
+.ghost--quiet { border: none; color: var(--ink-faint); font-weight: 500; }
+
+/* ---------------- формы в общем языке ---------------- */
+
+.form { display: grid; gap: 4px; }
+
+.field { display: grid; gap: 6px; }
+
+.field__label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.field__label em {
+  font-style: normal;
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--violet);
+}
+
+.form input,
+.form select,
+.form textarea,
+.hw input[type="text"] {
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  /* Те же стеклянные поверхности, что у кнопок: форма не выглядит
+     системной вставкой посреди приложения. */
+  background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .6)), var(--bg-elev);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px; /* меньше — и iOS приближает страницу при фокусе */
+  transition: border-color var(--duration-fast) var(--ease-entrance),
+              box-shadow var(--duration-fast) var(--ease-entrance);
+}
+
+.form textarea { min-height: 84px; resize: vertical; }
+
+.form input::placeholder,
+.hw input::placeholder { color: var(--ink-faint); }
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus,
+.hw input:focus {
+  outline: none;
+  border-color: var(--violet);
+  box-shadow: 0 0 0 4px rgba(107, 77, 230, .14);
+}
+
+/* Незаполненное обязательное поле подсвечивается только после попытки
+   отправки: красная рамка на пустой форме — это упрёк ни за что. */
+.form.is-tried input:invalid { border-color: var(--rose); }
+
+.status {
+  margin: 10px 0 0;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  font-size: .88rem;
+  color: var(--ink-soft);
+  background: rgba(107, 77, 230, .08);
+}
+
+/* Загрузка фото домашки: большая цель вместо системной кнопки файла. */
+.drop {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  min-height: 116px;
+  padding: 16px;
+  border: 1.5px dashed rgba(107, 77, 230, .35);
+  border-radius: var(--radius);
+  background: rgba(107, 77, 230, .05);
+  color: var(--violet);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.drop__preview { max-width: 160px; border-radius: var(--radius-sm); }

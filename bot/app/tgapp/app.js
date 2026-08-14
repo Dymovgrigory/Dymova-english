@@ -295,10 +295,18 @@
       return;
     }
 
-    var progress = (quiz.index / quiz.questions.length) * 100;
+    // Точки вместо полосы: видно не только «сколько прошли», но и сколько
+    // всего — пять коротких шагов не пугают, а полоса на 20% пугает.
+    var dots = quiz.questions
+      .map(function (_, i) {
+        var state_ = i < quiz.index ? " is-done" : i === quiz.index ? " is-now" : "";
+        return '<span class="quiz__dot' + state_ + '"></span>';
+      })
+      .join("");
+
     box.innerHTML =
       '<div class="quiz">' +
-      '<div class="quiz__bar"><span style="width:' + progress + '%"></span></div>' +
+      '<div class="quiz__dots">' + dots + "</div>" +
       '<p class="quiz__step">Вопрос ' + (quiz.index + 1) + " из " + quiz.questions.length + "</p>" +
       '<p class="quiz__prompt">' + esc(question.prompt) + "</p>" +
       '<p class="quiz__hint">' + esc(question.hint) + "</p>" +
@@ -312,13 +320,18 @@
 
     all(".quiz__opt", box).forEach(function (button) {
       button.addEventListener("click", function () {
+        if (box.dataset.locked) return;
+        // Замок на время показа ответа: два быстрых нажатия иначе
+        // проскакивают вопрос.
+        box.dataset.locked = "1";
         quiz.answers[question.id] = Number(button.dataset.answer);
         button.classList.add("is-picked");
         haptic("light");
         setTimeout(function () {
+          delete box.dataset.locked;
           quiz.index += 1;
           renderQuizStep(box);
-        }, 180);
+        }, 260);
       });
     });
   }
@@ -337,16 +350,30 @@
         mascot("success");
         celebrate();
 
+        // Кольцо результата: доля верных ответов видна одним взглядом.
+        var ratio = result.total ? result.correct / result.total : 0;
+        var marks = (result.details || [])
+          .map(function (d, i) {
+            return (
+              '<span class="mark' + (d.correct ? " is-ok" : "") + '">' +
+              (i + 1) + "</span>"
+            );
+          })
+          .join("");
+
         box.innerHTML =
           '<div class="result">' +
-          '<p class="result__label">Ваш уровень</p>' +
-          '<p class="result__level">' + esc(result.level) + "</p>" +
+          '<div class="result__ring" style="--ratio:' + ratio + '">' +
+          '<span class="result__level">' + esc(result.level) + "</span>" +
+          "</div>" +
           '<p class="result__title">' + esc(result.title) + "</p>" +
           '<p class="result__score">Верно ' + result.correct + " из " + result.total + "</p>" +
+          '<div class="result__marks">' + marks + "</div>" +
           '<p class="result__text">' + esc(result.text) + "</p>" +
           '<p class="result__note">' + esc(result.disclaimer) + "</p>" +
           '<button class="primary primary--glow" data-sheet="signup">Записаться на диагностику</button>' +
-          '<button class="ghost" data-sheet="picker">Подобрать программу</button>' +
+          '<button class="ghost" data-sheet="picker">Подобрать программу под уровень</button>' +
+          '<button class="ghost ghost--quiet" data-sheet="quiz">Пройти ещё раз</button>' +
           "</div>";
       })
       .catch(function () {
@@ -535,6 +562,8 @@
       comment: $("#lf-comment").value.trim(),
     };
     if (!body.fio_parent || !body.phone) {
+      var form = $("#lead-form");
+      if (form) form.classList.add("is-tried");
       status.hidden = false;
       status.textContent = "Заполните имя и телефон — без них не сможем перезвонить.";
       haptic("error");
@@ -853,18 +882,39 @@
 
   function renderHomeBranches() {
     var box = $("#home-branches");
-    box.innerHTML = (state.info.branches || [])
-      .slice(0, 2)
-      .map(function (b) {
-        return (
-          '<article class="card">' +
-          '<h3 class="card__title">' + esc(b.name) + "</h3>" +
-          '<p class="card__text">' + esc(b.address || "") + "</p>" +
-          (b.work_hours ? '<p class="card__text">' + esc(b.work_hours) + "</p>" : "") +
-          "</article>"
-        );
-      })
-      .join("");
+    box.innerHTML = (state.info.branches || []).slice(0, 2).map(branchCard).join("");
+  }
+
+  /** Карточка филиала: адрес ведёт в маршрут, телефон — в звонок.
+   *
+   *  Человеку с телефона нужно ровно два действия — доехать и позвонить.
+   *  Раньше и то и другое было простым текстом, который приходилось
+   *  выделять и копировать. */
+  function branchCard(b) {
+    var route = b.maps || ("https://yandex.ru/maps/?rtext=~" + encodeURIComponent(b.address || b.name));
+    var phone = b.phone_tel || b.phone;
+    return (
+      '<article class="card branch">' +
+      '<h3 class="card__title">' + esc(b.name) + "</h3>" +
+      (b.address
+        ? '<a class="branch__row" href="' + esc(route) + '" target="_blank" rel="noopener">' +
+          '<span class="branch__ic" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>' +
+          "</span>" +
+          '<span class="branch__text">' + esc(b.address) + '<span class="branch__hint">Построить маршрут</span></span>' +
+          "</a>"
+        : "") +
+      (phone
+        ? '<a class="branch__row" href="tel:' + esc(phone) + '">' +
+          '<span class="branch__ic" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h3l1.5 4-2 1.4a12 12 0 0 0 5.6 5.6L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 6.2 2 2 0 0 1 5 4h1.5Z"/></svg>' +
+          "</span>" +
+          '<span class="branch__text">' + esc(b.phone) + '<span class="branch__hint">Позвонить</span></span>' +
+          "</a>"
+        : "") +
+      (b.work_hours ? '<p class="branch__hours">' + esc(b.work_hours) + "</p>" : "") +
+      "</article>"
+    );
   }
 
   /* ------------------------------------------------------------- программы */
@@ -937,8 +987,11 @@
           return (
             '<article class="person">' +
             '<div class="person__top">' +
-            '<span class="person__avatar" aria-hidden="true">' +
-            esc(String(person.name).slice(0, 1)) + "</span>" +
+            (person.photo
+              ? '<img class="person__photo" src="' + esc(person.photo) + '" alt="" ' +
+                'width="56" height="56" loading="lazy" decoding="async" />'
+              : '<span class="person__avatar" aria-hidden="true">' +
+                esc(String(person.name).slice(0, 1)) + "</span>") +
             '<div><h3 class="person__name">' + esc(person.name) + "</h3>" +
             '<p class="person__role">' + esc(person.role || "") + "</p></div>" +
             "</div>" +
@@ -1038,24 +1091,7 @@
   function renderBranches() {
     var box = $("#branches");
     if (!state.info) return;
-    box.innerHTML = (state.info.branches || [])
-      .map(function (b) {
-        return (
-          '<article class="card">' +
-          '<h3 class="card__title">' + esc(b.name) + "</h3>" +
-          '<p class="card__text">' +
-          (b.maps
-            ? '<a href="' + esc(b.maps) + '" target="_blank" rel="noopener">' + esc(b.address) + "</a>"
-            : esc(b.address)) +
-          "</p>" +
-          (b.phone
-            ? '<p class="card__text"><a href="tel:' + esc(b.phone_tel || b.phone) + '">' +
-              esc(b.phone) + "</a></p>"
-            : "") +
-          "</article>"
-        );
-      })
-      .join("");
+    box.innerHTML = (state.info.branches || []).map(branchCard).join("");
   }
 
   /* ------------------------------------------------------------- появление */
