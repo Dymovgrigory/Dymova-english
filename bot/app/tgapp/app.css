@@ -176,112 +176,91 @@ body {
 }
 .reveal.is-armed.is-in { opacity: 1; transform: none; }
 
-/* ---------------- герой ---------------- */
+/* ---------------- шапка: жидкие чернила ---------------- */
 
-.hero { padding: 6px 0 20px; text-align: center; }
-
-.hero__stage {
+.hero {
   position: relative;
-  width: min(62vw, 240px);
-  aspect-ratio: 1;
-  margin: 0 auto 6px;
+  /* Во всю ширину экрана, а не по колонке: чернила должны доходить до края. */
+  margin: calc(max(16px, env(safe-area-inset-top)) * -1) calc(var(--pad) * -1) 0;
+  padding: 0;
+  min-height: 46dvh;
   display: grid;
   place-items: center;
-}
-
-/* Гало маскота: цветное свечение вместо серой тени под картинкой. */
-.hero__halo {
-  position: absolute;
-  inset: 6%;
-  border-radius: 50%;
+  overflow: hidden;
+  border-radius: 0 0 28px 28px;
+  /* Запасной вид, если WebGL недоступен: тёмная глубина того же настроения. */
   background:
-    radial-gradient(circle at 50% 45%, rgba(255, 183, 3, .55), transparent 62%),
-    radial-gradient(circle at 60% 70%, rgba(107, 77, 230, .42), transparent 66%);
-  filter: blur(18px);
-  animation: halo 6s var(--ease) infinite alternate;
+    radial-gradient(120% 90% at 20% 20%, rgba(107, 77, 230, .55), transparent 60%),
+    radial-gradient(110% 90% at 85% 30%, rgba(36, 198, 160, .35), transparent 62%),
+    linear-gradient(160deg, #0b0a1a, #04050c);
 }
 
-@keyframes halo {
-  from { transform: scale(.94); opacity: .75; }
-  to   { transform: scale(1.06); opacity: 1; }
-}
+.hero__fluid { position: absolute; inset: 0; }
 
-.hero__stage::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 4%;
-  width: 46%;
-  height: 12px;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(20, 17, 12, .22), transparent 70%);
-  filter: blur(6px);
-}
-
-.hero__mascot {
-  position: relative;
+.hero__fluid canvas {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  /* Постоянное лёгкое покачивание: маскот выглядит живым, не отвлекая. */
-  animation: float 5.2s var(--ease) infinite alternate;
-  transform-origin: 50% 92%;
 }
 
-@keyframes float {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(0, -10px, 0); }
+/* Линза поверх чернил: без неё яркая вспышка съедает белый текст. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(115% 95% at 50% 46%,
+    rgba(4, 5, 12, .68) 0%, rgba(4, 5, 12, .68) 24%,
+    rgba(4, 5, 12, .46) 52%, rgba(4, 5, 12, .12) 100%);
 }
 
-/* Реакции на события: приветствие при запуске и радость на успех. */
-.hero__mascot.is-greet { animation: greet .9s var(--ease) 1; }
-.hero__mascot.is-cheer { animation: cheer 1.2s var(--ease-out-back) 1; }
-
-@keyframes greet {
-  0%   { transform: rotate(0) translateY(0); }
-  30%  { transform: rotate(-5deg) translateY(-6px); }
-  60%  { transform: rotate(4deg) translateY(-3px); }
-  100% { transform: rotate(0) translateY(0); }
-}
-
-@keyframes cheer {
-  0%   { transform: scale(1) translateY(0); }
-  25%  { transform: scale(1.06) translateY(-16px); }
-  45%  { transform: scale(.98) translateY(0); }
-  65%  { transform: scale(1.03) translateY(-8px); }
-  100% { transform: scale(1) translateY(0); }
+.hero__content {
+  position: relative;
+  z-index: 1;
+  padding: 34px var(--pad) 30px;
+  text-align: center;
 }
 
 .hero__eyebrow {
   margin: 0;
-  font-size: .74rem;
+  font-size: .72rem;
   font-weight: 700;
-  letter-spacing: .16em;
+  letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--violet);
+  color: rgba(255, 255, 255, .72);
 }
 
 .hero__title {
-  margin: 4px 0 6px;
-  font-size: clamp(2.3rem, 12vw, 3.2rem);
-  line-height: .98;
+  margin: 6px 0 8px;
+  font-size: clamp(2.2rem, 11vw, 3rem);
+  line-height: 1;
   letter-spacing: -.035em;
   font-weight: 800;
-  /* Градиентный текст — главный акцент экрана. Fallback-цвет задан до
-     подмены, иначе в браузере без background-clip заголовок исчезнет. */
-  color: var(--ink);
-  background: linear-gradient(96deg, var(--ink) 12%, var(--violet) 58%, var(--amber-deep) 96%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(4, 5, 12, .55);
 }
 
+/* Строка со сменяющимися фразами. Высота фиксирована в строках, иначе при
+   смене фразы прыгает вся шапка. */
 .hero__sub {
   margin: 0 auto;
-  max-width: 30ch;
-  color: var(--ink-soft);
+  max-width: 24ch;
+  min-height: 3em;
   font-size: 1.02rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, .88);
+  text-shadow: 0 1px 16px rgba(4, 5, 12, .6);
 }
+
+/* Каждое слово появляется само по себе — фраза набирается на глазах. */
+.hero__sub .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+
+.hero__sub .word.is-in { opacity: 1; transform: none; }
+.hero__sub.is-out .word { opacity: 0; transform: translateY(-10px); transition-duration: .32s; }
 
 /* ---------------- цифры школы ---------------- */
 

@@ -37,63 +37,61 @@ def test_favicon_is_the_brand_mascot_not_an_emoji():
     assert "text>🦊" not in HTML
 
 
-def test_real_mascot_asset_is_shipped_and_light():
-    """Маскот лежит в репозитории и уже работает на сайте — используем его.
+def test_hero_is_a_live_fluid_not_a_picture():
+    """В шапке симуляция жидкости: чернила расходятся и реагируют на палец.
 
-    Трёхмерная модель и рантайм three.js (около двух мегабайт) удалены:
-    сгенерированная модель выглядела хуже рисованного маскота, а платил за
-    неё человек с телефоном.
+    Рисованный маскот из шапки убран — он остаётся знаком школы в фавиконе,
+    а шапку держит движение, которое нельзя перепутать с картинкой.
     """
-    still = TGAPP / "assets" / "foxi.webp"
-    assert still.exists()
-    # Он на первом экране, поэтому обязан быть лёгким.
-    assert still.stat().st_size < 60_000
-    assert not (TGAPP / "assets" / "foxi.glb").exists()
-    assert not (TGAPP / "vendor").exists()
+    assert 'id="fluid"' in HTML
+    assert "fluid.js" in HTML
+    assert "hero__scrim" in HTML, "яркая вспышка съедает белый текст без линзы"
 
 
-def test_static_mascot_is_shown_immediately():
-    """Первый экран не должен ждать 3D — картинка видна сразу."""
-    assert 'id="mascot-still"' in HTML
-    assert 'rel="preload" as="image" href="/tg/assets/foxi.webp"' in HTML
-    assert 'alt="Фокси, маскот школы Фоксинбург"' in HTML
+def test_fluid_is_optional_and_cheap():
+    """Эффект не имеет права стоить человеку батареи и не имеет права
+    ломать шапку, если WebGL недоступен."""
+    fluid = (TGAPP / "fluid.js").read_text(encoding="utf-8")
+    # Без WebGL — просто градиент.
+    assert "if (!gl) return null" in fluid
+    assert "background:" in CSS.split(".hero {")[1][:600]
+    # Кадры не считаются, когда шапки не видно.
+    assert "visibilitychange" in fluid and "IntersectionObserver" in fluid
+    assert "if (!visible) return" in fluid
+    # На телефоне сетка мельче.
+    assert "isMobile() ? 128 : 200" in fluid
+    # При «уменьшить движение» симуляция не запускается.
+    assert 'prefers-reduced-motion' in JS.split("function startFluid")[1][:400]
 
 
-def test_icons_are_inline_svg():
-    """Иконки — векторные и фирменные, а не системные картинки из шрифта."""
-    assert HTML.count("<svg") >= 8
-    assert 'class="qa__ic"' in HTML
+def test_hero_phrases_rotate_word_by_word():
+    """Фразы сменяют друг друга и набираются по слову."""
+    assert "PHRASES" in JS
+    assert "Английский не для школы, а для жизни" in HTML, "слоган виден и без скрипта"
+    assert "WORD_STAGGER_MS" in JS
+    assert ".hero__sub .word" in CSS
 
 
-# --------------------------- маскот ---------------------------
-
-def test_mascot_is_drawn_not_generated_3d():
-    """Сгенерированная трёхмерная модель рендерилась тускло и в неудачной
-    позе — то есть проигрывала той самой картинке, ради которой её ставили.
-    Живость даём движением, а не полигонами."""
-    assert "mascot.js" not in HTML
-    assert "importmap" not in HTML
-    assert "three" not in HTML
-    assert 'id="mascot-still"' in HTML
-
-
-def test_mascot_moves_and_reacts():
-    assert "@keyframes float" in CSS
-    assert "@keyframes greet" in CSS and "@keyframes cheer" in CSS
-    assert "is-cheer" in JS
+def test_hero_phrases_carry_no_facts_that_can_drift():
+    """В бегущих фразах нет цен, расписания и цифр: они разошлись бы с базой."""
+    phrases = JS.split("var PHRASES = [")[1].split("];")[0]
+    assert "₽" not in phrases
+    assert not any(ch.isdigit() for ch in phrases)
 
 
 # --------------------------- микровзаимодействия ---------------------------
 
-def test_mascot_reacts_to_real_success_not_decoration():
-    """Реакция маскота привязана к результату действия, а не к таймеру."""
+def test_success_is_celebrated_by_the_ink_not_by_a_timer():
+    """Реакция привязана к результату действия, а не к таймеру."""
     assert 'mascot("success")' in JS
+    assert "foxiSplash" in JS
     # Радость наступает после успешного ответа сервера, а не по расписанию.
     assert "setInterval" not in JS
 
 
-def test_mascot_reacts_to_touch():
-    assert "touchstart" in JS
+def test_ink_reacts_to_touch():
+    fluid = (TGAPP / "fluid.js").read_text(encoding="utf-8")
+    assert "touchmove" in fluid
 
 
 def test_loading_state_has_skeletons():
