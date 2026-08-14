@@ -52,6 +52,18 @@
     return Array.prototype.slice.call((scope || document).querySelectorAll(selector));
   }
 
+  /** Подписка, которая переживает отсутствие элемента.
+   *
+   *  После обновления браузер может отдать закэшированную разметку вместе с
+   *  новым скриптом. Одного null в bind() хватало, чтобы приложение не
+   *  запустилось вообще: человек видел пустой экран вместо витрины. */
+  function on(selector, event, handler, options) {
+    var node = typeof selector === "string" ? $(selector) : selector;
+    if (!node) return null;
+    node.addEventListener(event, handler, options);
+    return node;
+  }
+
   /** Экранирование: данные приходят из базы знаний и от LLM — в innerHTML их
    *  вставлять без экранирования нельзя. */
   function esc(value) {
@@ -1059,20 +1071,20 @@
       });
     });
 
-    $("#chat-form").addEventListener("submit", sendChat);
+    on("#chat-form", "submit", sendChat);
 
     // Свайп вниз по листу закрывает его — жест, а не только кнопка.
     var panel = $(".sheet__panel");
     var startY = null;
-    panel.addEventListener("touchstart", function (event) {
+    on(panel, "touchstart", function (event) {
       startY = event.touches[0].clientY;
     }, { passive: true });
-    panel.addEventListener("touchmove", function (event) {
+    on(panel, "touchmove", function (event) {
       if (startY === null) return;
       var delta = event.touches[0].clientY - startY;
       if (delta > 0) panel.style.transform = "translateY(" + delta + "px)";
     }, { passive: true });
-    panel.addEventListener("touchend", function (event) {
+    on(panel, "touchend", function (event) {
       var delta = event.changedTouches[0].clientY - (startY || 0);
       panel.style.transform = "";
       startY = null;
@@ -1108,8 +1120,15 @@
       }
     }
     state.me = recall("me") || null;
-    if (!navigator.onLine) $("#offline").hidden = false;
-    bind();
+    var offline = $("#offline");
+    if (offline && !navigator.onLine) offline.hidden = false;
+    try {
+      bind();
+    } catch (e) {
+      // Витрина важнее интерактива: даже если часть подписок не встала,
+      // человек должен увидеть школу, а не пустой экран.
+      console.warn("[foxi] часть обработчиков не подключилась", e);
+    }
     renderPulse();
     loadInfo();
     mascot("greet");

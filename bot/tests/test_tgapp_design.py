@@ -232,3 +232,9 @@ def test_home_tells_the_story_not_just_buttons():
         assert f'id="{block}"' in HTML
     # Ни одного факта о школе в вёрстке: они разошлись бы с реальностью.
     assert "8 200" not in HTML and "9 000" not in HTML
+
+def test_binding_survives_missing_elements():
+    """Кэш мессенджера может отдать старую разметку со свежим скриптом.
+    Один null не должен мешать приложению запуститься."""
+    assert "function on(" in JS
+    assert "console.warn" in JS.split("bind();")[1][:400] or "catch" in JS.split("try {")[1][:200]
