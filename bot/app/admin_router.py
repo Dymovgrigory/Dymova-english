@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 
+from app import profile
 from app.config import settings
 from app.max_client import MaxClient
 from app.memory import Conversation, STAGE_HANDOFF
@@ -66,7 +67,7 @@ async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") 
     message = (
         f"{header}\n\n"
         f"{_client_contact_block(conv)}\n"
-        f"{conv.summary()}\n\n"
+        f"{profile.lead_summary(conv)}\n\n"
         f"История диалога:\n{_format_history(conv)}"
     )
     ok_any = False

@@ -4,10 +4,10 @@ from app.main import _homework_system_prompt, _homework_user_prompt
 
 def test_system_prompt_forbids_solving():
     p = _homework_system_prompt().lower()
-    assert "не давать готовые ответы" in p or "не давай готовые ответы" in p
-    assert "не выполнять его за ученика" in p or "решать за него" in p
+    assert "не давай готовых ответов" in p
+    assert "не решай задание за него" in p
     assert "пример" in p
-    assert "как это сделать" in p
+    assert "подсказки" in p
 
 
 def test_user_prompt_forbids_solving():

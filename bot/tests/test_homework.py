@@ -2,6 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import app.main as main
+from app import llm_gateway
 
 
 class FakeVisionLLM:
@@ -38,6 +39,8 @@ def test_homework_bad_content_type(client):
 async def test_homework_success_uses_vision_llm(monkeypatch, client):
     fake = FakeVisionLLM("1) Это задание просит вставить am/is/are.\n2) Подставьте am для I.\n3) I am nine.\n4) Проверьте с учителем.")
     monkeypatch.setattr(main, "get_llm", lambda: fake)
+    # Разбор фото идёт через LLM Gateway — у него собственный шов вызова.
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: fake)
 
     resp = client.post(
         "/api/miniapp/homework",

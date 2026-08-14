@@ -4,12 +4,32 @@
 
 const API = ""; // тот же origin, что и бот
 let MINIAPP_USER_ID = "";
+let MINIAPP_INIT_DATA = "";
 let ACCESS = { has_identity: false, registered: false, locked: false, message: "" };
+
+// Личность подтверждается подписью initData на бэкенде. user_id остаётся
+// только для локальной отладки (MINIAPP_AUTH_REQUIRED=false) и сам по себе
+// никаких прав не даёт.
+function authHeaders() {
+  if (!MINIAPP_INIT_DATA) return {};
+  return {
+    "X-Miniapp-Init-Data": MINIAPP_INIT_DATA,
+    "X-Miniapp-Platform": "max",
+  };
+}
+
+// Данные приходят из базы знаний и от LLM — в innerHTML без экранирования
+// их вставлять нельзя.
+function esc(value) {
+  return String(value == null ? "" : value).replace(/[&<>"']/g, (ch) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])
+  );
+}
 
 async function getJSON(url) {
   const u = new URL(API + url, window.location.origin);
   if (MINIAPP_USER_ID) u.searchParams.set("user_id", MINIAPP_USER_ID);
-  const r = await fetch(u.toString());
+  const r = await fetch(u.toString(), { headers: authHeaders() });
   return r.json();
 }
 async function postJSON(url, body) {
@@ -17,7 +37,7 @@ async function postJSON(url, body) {
   if (MINIAPP_USER_ID) payload.user_id = MINIAPP_USER_ID;
   const r = await fetch(API + url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(payload),
   });
   return r.json();
@@ -54,9 +74,9 @@ document.getElementById("sel-go").addEventListener("click", async () => {
       items
         .map(
           (p) =>
-            `<div class="card course-card"><span class="pill">${p.age || "любой возраст"}</span>
-             <h2 style="margin-top:8px">${p.name || ""}</h2>
-             <p class="muted">${p.text || ""}</p></div>`
+            `<div class="card course-card"><span class="pill">${esc(p.age || "любой возраст")}</span>
+             <h2 style="margin-top:8px">${esc(p.name || "")}</h2>
+             <p class="muted">${esc(p.text || "")}</p></div>`
         )
         .join("");
   }
@@ -73,21 +93,21 @@ function renderCatalog() {
     formats
       .map(
         (f) =>
-          `<div class="card"><h2>${f.name}</h2><p class="muted">${f.location || ""}</p>
+          `<div class="card"><h2>${esc(f.name)}</h2><p class="muted">${esc(f.location || "")}</p>
            <ul style="margin:8px 0 8px 18px; font-size:14px;">${(f.details || [])
-             .map((d) => `<li>${d}</li>`)
+             .map((d) => `<li>${esc(d)}</li>`)
              .join("")}</ul>
-           <span class="pill">${f.price || ""}</span></div>`
+           <span class="pill">${esc(f.price || "")}</span></div>`
       )
       .join("") +
     "<h2>Курсы</h2>" +
     courses
       .map(
         (c) =>
-          `<div class="card course-card"><h2>${c.name}</h2>
-           <p class="muted">${c.description || c.note || ""}</p>
-           ${c.price ? `<span class="pill">${c.price}</span>` : ""}
-           ${c.teacher ? `<p class="muted" style="margin-top:6px">Педагог: ${c.teacher}</p>` : ""}</div>`
+          `<div class="card course-card"><h2>${esc(c.name)}</h2>
+           <p class="muted">${esc(c.description || c.note || "")}</p>
+           ${c.price ? `<span class="pill">${esc(c.price)}</span>` : ""}
+           ${c.teacher ? `<p class="muted" style="margin-top:6px">Педагог: ${esc(c.teacher)}</p>` : ""}</div>`
       )
       .join("");
 }
@@ -101,13 +121,27 @@ function renderBranches() {
     branches
       .map(
         (b) =>
-          `<div class="card"><h2>${b.name}</h2>
-           <p>📍 <a href="${b.maps}" target="_blank">${b.address}</a></p>
-           <p>☎ <a href="tel:${b.phone_tel}">${b.phone}</a></p>
-           <p class="muted">🕘 ${b.work_hours || ""}</p></div>`
+          `<div class="card"><h2>${esc(b.name)}</h2>
+           <p>${IC_PIN}<a href="${esc(b.maps)}" target="_blank" rel="noopener">${esc(b.address)}</a></p>
+           <p>${IC_PHONE}<a href="tel:${esc(b.phone_tel)}">${esc(b.phone)}</a></p>
+           <p class="muted">${IC_CLOCK}${esc(b.work_hours || "")}</p></div>`
       )
       .join("");
 }
+
+// Иконки списков — тот же язык, что и на плитках меню. Эмодзи не годятся:
+// они рисуются шрифтом системы, то есть выглядят по-разному на каждом
+// устройстве и к фирменному стилю школы отношения не имеют.
+const IC_ATTRS =
+  'class="meta__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+const IC_PIN =
+  `<svg ${IC_ATTRS}><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/>` +
+  '<circle cx="12" cy="10" r="2.6"/></svg>';
+const IC_PHONE =
+  `<svg ${IC_ATTRS}><path d="M5 4h3l2 5-2 1.5a12 12 0 0 0 5.5 5.5L15 14l5 2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 6.2 2 2 0 0 1 5 4Z"/></svg>`;
+const IC_CLOCK =
+  `<svg ${IC_ATTRS}><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg>`;
 
 // --- Форма заявки ---
 function openLeadForm(prefill = {}) {
@@ -137,7 +171,7 @@ document.getElementById("lf-submit").addEventListener("click", async () => {
   showStatus("Отправляю...", true);
   const res = await postJSON("/api/miniapp/lead", body);
   if (res.ok) {
-    showStatus("Готово! ✅ Заявка отправлена, администратор скоро свяжется с вами.", true);
+    showStatus("Готово — заявка отправлена. Администратор скоро свяжется с вами.", true);
   } else {
     showStatus("Не удалось отправить заявку: " + (res.error || "попробуйте позже или позвоните нам."), false);
   }
@@ -190,7 +224,12 @@ document.getElementById("hw-submit").addEventListener("click", async () => {
     fd.append("image", file);
     fd.append("note", document.getElementById("hw-note").value.trim());
     if (MINIAPP_USER_ID) fd.append("user_id", MINIAPP_USER_ID);
-    const r = await fetch(API + "/api/miniapp/homework", { method: "POST", body: fd });
+    if (MINIAPP_INIT_DATA) fd.append("init_data", MINIAPP_INIT_DATA);
+    const r = await fetch(API + "/api/miniapp/homework", {
+      method: "POST",
+      headers: authHeaders(),
+      body: fd,
+    });
     const res = await r.json();
     if (res.ok && res.explanation) {
       hwStatus("Готово! Вот разбор:", true);
@@ -210,7 +249,10 @@ document.getElementById("hw-submit").addEventListener("click", async () => {
 function initMaxBridge() {
   try {
     const wa = window.WebApp || (window.max && window.max.WebApp);
-    if (wa && wa.initDataUnsafe && wa.initDataUnsafe.user) {
+    if (!wa) return;
+    // Подписанная строка — единственное, что бэкенд принимает как личность.
+    MINIAPP_INIT_DATA = wa.initData || "";
+    if (wa.initDataUnsafe && wa.initDataUnsafe.user) {
       MINIAPP_USER_ID = String(wa.initDataUnsafe.user.id || "");
       const name = wa.initDataUnsafe.user.first_name || "";
       if (name) {

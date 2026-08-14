@@ -170,3 +170,65 @@ async def test_ensure_bot_identity_parses_flat_me_response(monkeypatch):
     assert await client.ensure_bot_identity() is True
     assert client.bot_user_id == "299985016"
     assert client.bot_username == "id611904726658_bot"
+
+
+@pytest.mark.asyncio
+async def test_group_message_is_routed_from_webhook(monkeypatch):
+    """Модуль group_chat был написан и протестирован, но не подключён к
+    /webhook — в группах бот молчал на прямое упоминание."""
+    from app import main as main_module
+
+    routed = []
+
+    async def fake_handle_group_message(message, max_client):
+        routed.append(message)
+
+    monkeypatch.setattr(group_chat, "handle_group_message", fake_handle_group_message)
+    monkeypatch.setattr(main_module.settings, "GROUP_MODE_ENABLED", True, raising=False)
+
+    class FakeMax:
+        async def send_message(self, *a, **k):
+            raise AssertionError("групповое сообщение не должно уходить в личку")
+
+    update = {
+        "message": {
+            "sender": {"user_id": 5, "name": "Мама"},
+            "recipient": {"chat_type": "chat", "chat_id": -100},
+            "body": {"text": "@foxy сколько стоит?"},
+        }
+    }
+
+    await main_module._process_update(update, "message_created", FakeMax())
+
+    assert len(routed) == 1
+
+
+@pytest.mark.asyncio
+async def test_private_message_is_not_routed_to_group_handler(monkeypatch):
+    from app import main as main_module
+
+    monkeypatch.setattr(main_module.settings, "GROUP_MODE_ENABLED", True, raising=False)
+
+    async def boom(message, max_client):
+        raise AssertionError("личное сообщение не групповое")
+
+    monkeypatch.setattr(group_chat, "handle_group_message", boom)
+
+    sent = []
+
+    class FakeMax:
+        async def send_message(self, user_id, text, buttons=None):
+            sent.append(text)
+            return True
+
+    update = {
+        "message": {
+            "sender": {"user_id": 6},
+            "recipient": {"chat_type": "dialog"},
+            "body": {"text": "/start"},
+        }
+    }
+
+    await main_module._process_update(update, "message_created", FakeMax())
+
+    assert sent

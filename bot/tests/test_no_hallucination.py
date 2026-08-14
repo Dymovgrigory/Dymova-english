@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from app import ai_core
+from app import ai_core, llm_gateway
 from app import insights
 from app.config import settings
 from app.knowledge.kb import get_kb
@@ -47,7 +47,7 @@ async def test_uncertain_llm_reply_refers_to_admin_and_logs_gap(monkeypatch, ins
     class FakeLLM:
         enabled = True
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             return "[UNKNOWN] Точной информации у меня нет."
 
     notified = []
@@ -58,12 +58,14 @@ async def test_uncertain_llm_reply_refers_to_admin_and_logs_gap(monkeypatch, ins
         return True
 
     monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: FakeLLM())
     monkeypatch.setattr(ai_core, "hand_off", fake_hand_off)
 
     reply = await ai_core.handle_message(uid, "Есть ли у вас парковка для самокатов?")
 
     assert "администратор" in reply.lower()
-    assert "придумывать не хочу" in reply.lower() or "точной информации" in reply.lower()
+    # Проверяем обещание честности, а не конкретную формулировку.
+    assert "придумыв" in reply.lower()
     assert notified, "администраторы должны получить уведомление"
 
     gaps = _read_gaps(insights_file)
@@ -84,7 +86,7 @@ async def test_no_answer_without_llm_refers_to_admin_and_logs(monkeypatch, insig
     class DisabledLLM:
         enabled = False
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             return None
 
     notified = []
@@ -94,6 +96,7 @@ async def test_no_answer_without_llm_refers_to_admin_and_logs(monkeypatch, insig
         return True
 
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: DisabledLLM())
     monkeypatch.setattr(ai_core, "hand_off", fake_hand_off)
 
     reply = await ai_core._consult_with_context(get_store().get(uid), "Вопрос про ксзчш?", "")
@@ -113,10 +116,11 @@ async def test_weak_kb_match_is_logged_but_still_answered(monkeypatch, insights_
     class FakeLLM:
         enabled = True
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             return "Отвечаю уверенно по контексту."
 
     monkeypatch.setattr(ai_core, "get_llm", lambda: FakeLLM())
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: FakeLLM())
 
     class _KBWrap:
         def __init__(self, kb):

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Фоксинбург</title>
+  <!-- Фавикон — фирменный маскот, а не системная emoji-лиса. -->
+  <link rel="icon" href="assets/foxi.webp" />
+  <link rel="stylesheet" href="app.css" />
+  <!-- Хиро-картинка маскота решает первый экран: грузим её раньше всего. -->
+  <link rel="preload" as="image" href="assets/foxi.webp" />
+  <!--
+    Импорт-карта для трёхмерного маскота. Указывает на локальные файлы, а не
+    на CDN: вебвью мессенджера часто сидит за плохой сетью, а сторонний домен
+    ещё и блокируется. Сами файлы подгружаются только тогда, когда устройство
+    потянет 3D (см. mascot.js) — карта же не стоит ничего.
+  -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/three.module.min.js",
+        "three/addons/": "./vendor/three/addons/"
+      }
+    }
+  </script>
+  <!-- SDK Telegram грузится только с telegram.org и версионируется самой
+       платформой (файл обновляется по месту), поэтому SRI-хэш пришлось бы
+       менять при каждом их релизе — и до тех пор приложение не открывалось
+       бы вообще. Вместо этого app.js рассчитан на отсутствие SDK: без него
+       страница работает как обычная витрина, а личные разделы закрыты. -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <!-- Мягкий световой фон. aria-hidden: для скринридера это пустой шум. -->
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient__glow ambient__glow--amber"></span>
+    <span class="ambient__glow ambient__glow--violet"></span>
+  </div>
+
+  <div id="offline" class="banner banner--offline" hidden>
+    Нет связи. Экран покажет последние загруженные данные.
+  </div>
+
+  <main id="root" class="stack" aria-live="polite">
+    <!-- ГЛАВНАЯ -->
+    <section class="screen" data-screen="home">
+      <header class="hero">
+        <div class="hero__stage">
+          <!-- Статичный маскот виден мгновенно; 3D, если устройство его
+               потянет, встаёт на то же место и плавно подменяет картинку. -->
+          <img
+            class="hero__mascot" id="mascot-still"
+            src="assets/foxi.webp" alt="Фокси, маскот школы Фоксинбург"
+            width="360" height="360" decoding="async"
+          />
+          <div class="hero__mascot3d" id="mascot-3d" aria-hidden="true"></div>
+        </div>
+        <p class="hero__eyebrow">Языковая школа</p>
+        <h1 class="hero__title" id="greeting-title">Фоксинбург</h1>
+        <p class="hero__sub" id="greeting-sub">Английский не для школы, а для жизни</p>
+      </header>
+
+      <nav class="tiles" aria-label="Разделы">
+        <button class="tile tile--wide tile--accent" data-go="picker">
+          <span class="tile__ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z"/><path d="M7 10v5.5c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V10"/><path d="M21 7.5V14"/>
+            </svg>
+          </span>
+          <span class="tile__body">
+            <span class="tile__name">Подобрать курс</span>
+            <span class="tile__hint">По возрасту и формату — за минуту</span>
+          </span>
+          <span class="tile__chev" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+          </span>
+        </button>
+
+        <button class="tile" data-go="signup">
+          <span class="tile__ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/><path d="m9 16 2 2 4-4"/>
+            </svg>
+          </span>
+          <span class="tile__body">
+            <span class="tile__name">Записаться</span>
+            <span class="tile__hint">Бесплатная диагностика</span>
+          </span>
+        </button>
+
+        <button class="tile" data-go="homework">
+          <span class="tile__ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.4"/><path d="M8.5 6 10 3.5h4L15.5 6"/>
+            </svg>
+          </span>
+          <span class="tile__body">
+            <span class="tile__name">Помощь с домашкой</span>
+            <span class="tile__hint">Фото задания — разбор</span>
+          </span>
+        </button>
+
+        <button class="tile" data-go="chat">
+          <span class="tile__ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/><path d="M9 11h6M9 15h4"/>
+            </svg>
+          </span>
+          <span class="tile__body">
+            <span class="tile__name">Спросить Фокси</span>
+            <span class="tile__hint">Отвечает здесь и в чате</span>
+          </span>
+        </button>
+
+        <button class="tile" data-go="catalog">
+          <span class="tile__ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5Z"/>
+            </svg>
+          </span>
+          <span class="tile__body">
+            <span class="tile__name">Программы и цены</span>
+            <span class="tile__hint">Курсы и форматы</span>
+          </span>
+        </button>
+
+        <button class="tile" data-go="branches">
+          <span class="tile__ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>
+            </svg>
+          </span>
+          <span class="tile__body">
+            <span class="tile__name">Филиалы</span>
+            <span class="tile__hint">Адреса и телефоны</span>
+          </span>
+        </button>
+      </nav>
+
+      <button class="rowlink" data-go="profile">
+        <span class="rowlink__label">Мой профиль</span>
+        <span class="rowlink__value" id="profile-teaser">—</span>
+        <span class="rowlink__chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+    </section>
+
+    <!-- ПОДБОР КУРСА: возрастная линейка -->
+    <section class="screen" data-screen="picker" hidden>
+      <h2 class="title">Подобрать курс</h2>
+      <p class="lede">Сдвиньте линейку к возрасту ученика — покажу подходящие программы.</p>
+
+      <div class="ruler">
+        <input
+          id="age" class="ruler__input" type="range"
+          min="3" max="20" step="1" value="9"
+          aria-label="Возраст ученика"
+        />
+        <div class="ruler__scale" aria-hidden="true">
+          <span>3</span><span>7</span><span>11</span><span>15</span><span>взрослым</span>
+        </div>
+        <output class="ruler__value" id="age-value" for="age">9 лет</output>
+      </div>
+
+      <div class="segmented" role="radiogroup" aria-label="Формат занятий">
+        <button class="segmented__opt is-active" data-format="">Любой</button>
+        <button class="segmented__opt" data-format="offline">Офлайн</button>
+        <button class="segmented__opt" data-format="online">Онлайн</button>
+      </div>
+
+      <div id="picker-results" class="results"></div>
+    </section>
+
+    <!-- ЗАПИСЬ -->
+    <section class="screen" data-screen="signup" hidden>
+      <h2 class="title">Запись на занятие</h2>
+      <p class="lede">Оставьте контакты — администратор перезвонит, подберёт группу и время.</p>
+
+      <form id="lead-form" class="form" novalidate>
+        <label class="field">
+          <span class="field__label">Ваше имя <em>обязательно</em></span>
+          <input id="lf-parent" name="fio_parent" type="text" autocomplete="name" placeholder="Иванова Анна" required />
+        </label>
+        <label class="field">
+          <span class="field__label">Имя ребёнка</span>
+          <input id="lf-child" name="fio_child" type="text" placeholder="Миша" />
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span class="field__label">Возраст</span>
+            <input id="lf-age" name="age" type="number" inputmode="numeric" min="1" max="99" placeholder="9" />
+          </label>
+          <label class="field">
+            <span class="field__label">Телефон <em>обязательно</em></span>
+            <input id="lf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 999 123-45-67" required />
+          </label>
+        </div>
+        <label class="field">
+          <span class="field__label">Филиал или формат</span>
+          <select id="lf-branch" name="branch">
+            <option value="">Выберите</option>
+            <option>Филиал на Лихачевском</option>
+            <option>Филиал на Ракетостроителей</option>
+            <option>Онлайн</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="field__label">Комментарий</span>
+          <textarea id="lf-comment" name="comment" rows="2" placeholder="Удобное время, пожелания"></textarea>
+        </label>
+        <p id="lead-status" class="status" hidden></p>
+        <!-- Запасная кнопка: в старых клиентах Telegram MainButton не
+             поддерживается, и без неё экран становится тупиком. -->
+        <button type="submit" class="primary" data-fallback-action="signup" hidden>
+          Отправить заявку
+        </button>
+      </form>
+    </section>
+
+    <!-- ДОМАШКА -->
+    <section class="screen" data-screen="homework" hidden>
+      <h2 class="title">Помощь с домашкой</h2>
+      <p class="lede">Сфотографируйте задание — Фокси объяснит, как его разобрать. Бесплатно и без готовых ответов.</p>
+
+      <label class="dropzone" for="hw-file">
+        <input id="hw-file" type="file" accept="image/*" capture="environment" hidden />
+        <img id="hw-preview" class="dropzone__preview" alt="" hidden />
+        <span class="dropzone__hint" id="hw-hint">Выбрать фото задания</span>
+      </label>
+      <label class="field">
+        <span class="field__label">Что именно непонятно</span>
+        <input id="hw-note" type="text" placeholder="Задание 3, перевести предложения" />
+      </label>
+      <p id="hw-status" class="status" hidden></p>
+      <button type="button" class="primary" data-fallback-action="homework" hidden>
+        Разобрать задание
+      </button>
+      <article id="hw-answer" class="answer" hidden></article>
+    </section>
+
+    <!-- ЧАТ -->
+    <section class="screen screen--chat" data-screen="chat" hidden>
+      <h2 class="title">Спросить Фокси</h2>
+      <div id="chat-log" class="chat" role="log" aria-live="polite"></div>
+      <form id="chat-form" class="composer">
+        <input id="chat-input" type="text" placeholder="Спросите о курсах, ценах, записи" autocomplete="off" />
+        <button class="composer__send" type="submit" aria-label="Отправить">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- КАТАЛОГ -->
+    <section class="screen" data-screen="catalog" hidden>
+      <h2 class="title">Программы и цены</h2>
+      <div id="catalog" class="results"></div>
+    </section>
+
+    <!-- ФИЛИАЛЫ -->
+    <section class="screen" data-screen="branches" hidden>
+      <h2 class="title">Филиалы</h2>
+      <div id="branches" class="results"></div>
+    </section>
+
+    <!-- ПРОФИЛЬ -->
+    <section class="screen" data-screen="profile" hidden>
+      <h2 class="title">Профиль</h2>
+      <div id="profile" class="results"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script type="module" src="mascot.js"></script>
+</body>
+</html>

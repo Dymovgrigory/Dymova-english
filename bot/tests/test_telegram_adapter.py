@@ -4,7 +4,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import ai_core
-from app import dedup as dedup_module
 from app import main as main_module
 from app import memory as memory_module
 from app import telegram_client as telegram_module
@@ -76,7 +75,6 @@ class FakeHttpxAsyncClient:
 @pytest.fixture(autouse=True)
 def reset_state():
     main_module._BACKGROUND_TASKS.clear()
-    dedup_module._store = None
     memory_module._store = None
     telegram_module._client = None
     FakeHttpxAsyncClient.created_kwargs = []
@@ -84,7 +82,6 @@ def reset_state():
     FakeHttpxAsyncClient.next_response = FakeHttpxResponse()
     yield
     main_module._BACKGROUND_TASKS.clear()
-    dedup_module._store = None
     memory_module._store = None
     telegram_module._client = None
     FakeHttpxAsyncClient.created_kwargs = []
@@ -111,7 +108,8 @@ def test_telegram_webhook_secret_guard(monkeypatch):
 async def test_telegram_message_route_uses_handle_message(monkeypatch):
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
 
-    async def fake_handle_message(user_id, text):
+    async def fake_handle_message(user_id, text, platform="max"):
+        assert platform == "telegram"
         return "Спасибо!"
 
     monkeypatch.setattr(main_module, "handle_message", fake_handle_message)
@@ -166,7 +164,8 @@ async def test_telegram_start_and_homework_routes(monkeypatch):
     assert len(telegram.sent) == 2
     start_reply = telegram.sent[0]
     homework_reply = telegram.sent[1]
-    assert start_reply["text"].startswith("Привет!")
+    # Проверяем маршрутизацию /start, а не конкретную формулировку приветствия.
+    assert "Фокси" in start_reply["text"]
     assert homework_reply["text"].startswith("Помощь с домашкой у нас бесплатная")
     assert homework_reply["buttons"]
     assert homework_reply["buttons"][0][0]["url"].endswith("#homework")
@@ -197,7 +196,7 @@ async def test_telegram_non_text_message_gets_reply_not_silence(monkeypatch):
 async def test_telegram_photo_with_caption_is_read_as_text(monkeypatch):
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
 
-    async def fake_handle_message(user_id, text):
+    async def fake_handle_message(user_id, text, platform="max"):
         assert text == "Сколько стоит?"
         return "Отвечаю на подпись к фото"
 
@@ -263,7 +262,7 @@ async def test_telegram_service_message_without_media_is_ignored(monkeypatch):
 async def test_telegram_edited_message_is_handled(monkeypatch):
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
 
-    async def fake_handle_message(user_id, text):
+    async def fake_handle_message(user_id, text, platform="max"):
         return "Понял!"
 
     monkeypatch.setattr(main_module, "handle_message", fake_handle_message)
@@ -292,7 +291,7 @@ async def test_telegram_unhandled_error_sends_fallback_instead_of_silence(monkey
     аналогичного класса бага в STAGE_HANDOFF)."""
     monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
 
-    async def broken_handle_message(user_id, text):
+    async def broken_handle_message(user_id, text, platform="max"):
         raise RuntimeError("boom")
 
     monkeypatch.setattr(main_module, "handle_message", broken_handle_message)
@@ -321,7 +320,7 @@ async def test_telegram_handoff_uses_max_for_admins(monkeypatch):
     fake_max = FakeMaxClient()
     monkeypatch.setattr(main_module, "get_max", lambda: fake_max)
     store = memory_module.get_store()
-    conv = store.get("tg:77")
+    conv = store.get("tg:77", platform="telegram")
     conv.selected_branch = "Филиал на Лихачевском"
     store.save(conv)
     telegram = FakeTelegramClient()
@@ -440,7 +439,9 @@ async def test_telegram_get_updates_uses_proxy_and_parses_result(monkeypatch):
     assert post["url"].endswith("/getUpdates")
     assert post["data"]["offset"] == "9"
     assert post["data"]["timeout"] == "25"
-    assert post["data"]["allowed_updates"] == '["message"]'
+    assert post["data"]["allowed_updates"] == (
+        '["message", "edited_message", "callback_query"]'
+    )
 
 
 @pytest.mark.asyncio

@@ -8,6 +8,8 @@ from app.ai_core import handle_message, handle_start
 from app.knowledge.kb import get_kb
 from app.memory import Conversation, STAGE_DISCOVERY, STAGE_DONE, get_store
 
+from tests.conftest import make_telegram_init_data
+
 
 def test_extract_phone_tolerates_messy_separators():
     assert I.extract_phone("+7 999 123 45 67") == "+79991234567"
@@ -330,10 +332,12 @@ async def test_signup_after_previous_submission_starts_with_a_clean_lead():
 
 
 @pytest.mark.asyncio
-async def test_confirm_step_off_topic_question_gets_a_bridge_not_silence():
-    """"Хочу узнать про китайский" at the confirm screen used to silently
-    re-show the identical confirmation block with zero acknowledgement of
-    what was actually asked — reported as "отвечает одно и то же на всё"."""
+async def test_confirm_step_off_topic_question_is_handed_back_for_a_real_answer():
+    """"Хочу узнать про китайский" на экране подтверждения сначала молча
+    повторяло тот же блок, потом — «сначала завершим заявку» с тем же блоком.
+    И то и другое читалось как «отвечает одно и то же на всё»: вопрос так и
+    оставался без ответа. Теперь step отдаёт маркер, а ai_core отвечает по
+    существу и лишь затем напоминает про заявку."""
     class FakeBigBen:
         async def create_lead(self, *a, **k):
             raise AssertionError("should not submit on an unrelated question")
@@ -357,8 +361,9 @@ async def test_confirm_step_off_topic_question_gets_a_bridge_not_silence():
     )
 
     assert submitted is False
-    assert "Проверьте" in reply  # still shows the confirmation
-    assert "секунду" in reply.lower() or "сначала" in reply.lower()
+    assert reply == lead_manager.OFF_TOPIC
+    assert conv.lead_step == "confirm"  # заявка не потеряна
+    assert "Проверьте" in lead_manager.pending_question(conv)
 
 
 def test_miniapp_lead_notifies_admins(monkeypatch):
@@ -398,18 +403,26 @@ def test_miniapp_lead_notifies_admins(monkeypatch):
 
 
 def test_miniapp_lead_blocks_unregistered_user(monkeypatch):
+    """Гейт регистрации применяется к ОПОЗНАННОМУ пользователю.
+
+    Личность берётся из подписанного initData: открытый `user_id` в теле
+    запроса личностью не является (иначе гейт обходится подстановкой чужого
+    id, см. app/miniapp_auth.py).
+    """
     class FakeBigBen:
         async def create_lead(self, *args, **kwargs):
             raise AssertionError("should not submit")
 
     monkeypatch.setattr(main, "get_bigben", lambda: FakeBigBen())
     monkeypatch.setattr(main.settings, "ADMIN_MAX_IDS", "111,222")
+    monkeypatch.setattr(main.settings, "TELEGRAM_BOT_TOKEN", "test-token", raising=False)
+    init_data = make_telegram_init_data("test-token", telegram_user_id=4242)
 
     client = TestClient(main.app)
     resp = client.post(
         "/api/miniapp/lead",
+        headers={"X-Miniapp-Init-Data": init_data},
         json={
-            "user_id": "max:unregistered",
             "fio_parent": "Иванова Анна",
             "phone": "+79991234567",
         },

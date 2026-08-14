@@ -13,8 +13,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from app.config import settings
+from app.smart import NeedProfile
 
 MAX_HISTORY = 20
+# Сколько дней хранится журнал обработанных событий: повторный вебхук
+# приходит в пределах минут, недели с запасом хватает на любые сбои сети.
+PROCESSED_EVENTS_TTL_DAYS = 7
+# Сколько выпавших сообщений ждут сжатия. Больше — значит человек говорил
+# долго и без ответа бота, что невозможно: сворачиваем на каждой реплике.
+MAX_DROPPED = 40
 
 STAGE_GREETING = "greeting"
 STAGE_DISCOVERY = "discovery"
@@ -77,12 +84,31 @@ class Conversation:
     utm: dict = field(default_factory=dict)
     client_name: str = ""
     max_username: str = ""
+    # Что мы поняли о потребности человека (протокол SMART). Именно этот
+    # объект решает, можно ли уже предлагать курс, — раньше это решал
+    # системный промпт, и предложение звучало с первой реплики.
+    need: NeedProfile = field(default_factory=NeedProfile)
+    # Долгосрочная память: сжатый пересказ того, что вышло за окно истории.
+    digest: str = ""
+    # Сообщения, выпавшие из окна и ещё не свёрнутые в digest.
+    dropped: list[dict] = field(default_factory=list)
+    # Что бот порекомендовал (движок подбора). Хранится, чтобы не
+    # рекомендовать в следующей реплике что-то другое без причины.
+    recommended_program: str = ""
 
     def add(self, role: str, content: str) -> None:
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
         self.history.append({"role": role, "content": content})
         self.transcript.append({"role": role, "content": content, "ts": ts})
         if len(self.history) > MAX_HISTORY:
+            # Выпавшие сообщения не выбрасываем: они уходят в очередь на
+            # сжатие. Раньше здесь терялось всё начало разговора — человек
+            # рассказывал про ребёнка, а через двадцать реплик бот об этом
+            # уже не знал.
+            cut = self.history[:-MAX_HISTORY]
+            self.dropped.extend(cut)
+            if len(self.dropped) > MAX_DROPPED:
+                self.dropped = self.dropped[-MAX_DROPPED:]
             self.history = self.history[-MAX_HISTORY:]
         if len(self.transcript) > 1000:
             self.transcript = self.transcript[-1000:]
@@ -157,16 +183,24 @@ class MemoryStore:
         self._lock = threading.RLock()
         self._conn = self._connect()
         self._init_schema()
-        self._data: dict[str, Conversation] = {}
+        self._data: dict[tuple[str, str], Conversation] = {}
 
     def get(self, user_id: str, platform: str = "max") -> Conversation:
+        """Диалог пользователя на конкретной платформе.
+
+        Кэш обязан учитывать платформу: раньше ключом был только user_id, и
+        обращение store.get(uid) (платформа по умолчанию "max") и
+        store.get(uid, platform="telegram") давали разные строки в БД —
+        telegram-диалог раздваивался и после перезапуска терял историю.
+        """
         with self._lock:
-            conv = self._data.get(user_id)
+            key = (platform, user_id)
+            conv = self._data.get(key)
             if conv is None:
                 conv = self._load_conversation(platform, user_id)
             if conv is None:
                 conv = Conversation(platform=platform, user_id=user_id)
-            self._data[user_id] = conv
+            self._data[key] = conv
             return conv
 
     def save(self, conv: Conversation) -> None:
@@ -175,7 +209,7 @@ class MemoryStore:
             if not conv.created_at:
                 conv.created_at = now
             conv.updated_at = now
-            self._data[conv.user_id] = conv
+            self._data[(conv.platform, conv.user_id)] = conv
             self._conn.execute(
                 """
                 INSERT INTO conversations(platform, user_id, payload, updated_at)
@@ -200,7 +234,7 @@ class MemoryStore:
             convs: list[Conversation] = []
             for row in rows:
                 conv = _conv_from_dict(json.loads(row["payload"]))
-                self._data[conv.user_id] = conv
+                self._data[(conv.platform, conv.user_id)] = conv
                 convs.append(conv)
             return convs
 
@@ -214,6 +248,22 @@ class MemoryStore:
                 (platform, event_id, user_id, event_type),
             )
             return cur.rowcount == 1
+
+    def purge_old_events(self, days: int = PROCESSED_EVENTS_TTL_DAYS) -> int:
+        """Удаляет старые записи журнала обработанных событий.
+
+        Журнал нужен, чтобы не обработать один и тот же вебхук дважды, — но
+        повтор приходит в пределах минут, а строки копились вечно. На
+        долгоживущем боте это единственная таблица, которая росла без
+        ограничений.
+        """
+        with self._lock:
+            cur = self._conn.execute(
+                "DELETE FROM processed_events "
+                "WHERE created_at < datetime('now', ?)",
+                (f"-{max(1, int(days))} days",),
+            )
+            return cur.rowcount
 
     def ping(self) -> bool:
         with self._lock:
@@ -290,6 +340,12 @@ def _conv_from_dict(d: dict) -> Conversation:
         lead_submitted=d.get("lead_submitted", False),
         nudge_sent=d.get("nudge_sent", False),
         last_objection=d.get("last_objection", ""),
+        # Настроение/тема/намерение тоже часть контекста: без них после
+        # перезапуска бот забывал, о чём был предыдущий вопрос, и на «а
+        # сколько стоит?» отвечал вслепую.
+        last_user_intent=d.get("last_user_intent", ""),
+        last_user_mood=d.get("last_user_mood", ""),
+        last_user_topic=d.get("last_user_topic", ""),
         created_at=d.get("created_at", ""),
         updated_at=d.get("updated_at", ""),
         registered=d.get("registered", False),
@@ -297,15 +353,27 @@ def _conv_from_dict(d: dict) -> Conversation:
         utm=d.get("utm", {}) or {},
         client_name=d.get("client_name", ""),
         max_username=d.get("max_username", ""),
+        # Записи, сделанные до появления SMART, ключа "need" не содержат —
+        # from_dict отдаёт для них пустой профиль, и диалог продолжается.
+        need=NeedProfile.from_dict(d.get("need")),
+        digest=d.get("digest", ""),
+        dropped=d.get("dropped", []) or [],
+        recommended_program=d.get("recommended_program", ""),
     )
 
 
 def _resolve_db_path() -> str:
+    """Путь к SQLite-файлу состояния.
+
+    Раньше значение по умолчанию (./data/bot.db) специально игнорировалось и
+    подменялось на ":memory:" — то есть «из коробки» бот терял ВСЮ историю
+    диалогов и таблицу processed_events при каждом рестарте. Теперь DB_PATH
+    работает как написано в .env.example, а in-memory включается явным
+    DB_PATH=":memory:" (так делают тесты).
+    """
     if settings.STATE_FILE:
         return settings.STATE_FILE
-    if settings.DB_PATH and settings.DB_PATH != "./data/bot.db":
-        return settings.DB_PATH
-    return ":memory:"
+    return settings.DB_PATH or ":memory:"
 
 
 _store: MemoryStore | None = None

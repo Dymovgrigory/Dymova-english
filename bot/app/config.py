@@ -18,12 +18,14 @@ class Settings(BaseSettings):
 
     # --- MAX Bot API ---
     MAX_BOT_TOKEN: str = ""
-    # Рабочий домен MAX Bot API. botapi.max.ru работает без доп. сертификатов.
-    # Новый домен platform-api2.max.ru (миграция до 19.07.2026) требует установки
-    # корневого сертификата Минцифры в доверенные — переключайтесь на него только
-    # после установки сертификата на хосте.
-    MAX_BOT_API_URL: str = "https://botapi.max.ru"
+    # Рабочий домен MAX Bot API. Срок миграции с botapi.max.ru истёк 19.07.2026,
+    # поэтому по умолчанию — актуальный platform-api2.max.ru.
+    MAX_BOT_API_URL: str = "https://platform-api2.max.ru"
     MAX_WEBHOOK_SECRET: str = ""
+    # Домен обслуживается сертификатом Минцифры, которого нет в стандартном
+    # списке доверенных. Если он не установлен в систему, укажите путь к
+    # PEM-файлу здесь — иначе каждый запрос упадёт на проверке TLS.
+    MAX_CA_BUNDLE: str = ""
 
     # --- LLM (провайдер-агностик, OpenAI-совместимый) ---
     # По умолчанию OpenRouter (бесплатные модели). Можно заменить на Groq,
@@ -38,6 +40,30 @@ class Settings(BaseSettings):
     LLM_MAX_TOKENS: int = 700
     LLM_TIMEOUT: int = 40
     LLM_HISTORY_TURNS: int = 8
+    # Общий бюджет каскада провайдеров: 3 попытки × N провайдеров × LLM_TIMEOUT
+    # в худшем случае складываются в минуты молчания. Каскад обязан уложиться
+    # в это окно, чтобы вызывающий успел отправить живой фолбэк.
+    LLM_TOTAL_BUDGET_SEC: float = 45.0
+
+    # --- Роли моделей (LLM Gateway) ---
+    # Разные задачи требуют разных моделей: диалогу нужна лучшая, служебной
+    # классификации хватит быстрой и дешёвой. Пусто = использовать LLM_MODEL.
+    # Подменяется только модель основного провайдера; запасные из
+    # LLM_FALLBACKS остаются со своими собственными моделями.
+    LLM_ROLE_REASONING: str = ""   # диалог с клиентом, SMART, рекомендации
+    LLM_ROLE_FAST: str = ""        # намерение, эмоция, классификация
+    LLM_ROLE_VISION: str = ""      # разбор фото домашнего задания
+    LLM_ROLE_CRITIC: str = ""      # оценка ответа перед отправкой
+    # Прятать ФИО/телефон/даты за плейсхолдерами перед отправкой в модель.
+    # Выключать стоит только для локальной отладки промптов.
+    LLM_PII_REDACTION: bool = True
+
+    # --- Дедлайны диалога ---
+    # Максимум, сколько пользователь ждёт ответ (включая очередь своих же
+    # предыдущих сообщений). По истечении — честный фолбэк, а не молчание.
+    REPLY_TIMEOUT_SEC: float = 60.0
+    # Через сколько секунд ожидания отправить промежуточное «секунду, уточняю».
+    SLOW_NOTICE_SEC: float = 12.0
 
     # --- BigBen CRM ---
     # Эндпоинт интеграции «с сайтом через API» (GET-запрос с лид-полями).
@@ -60,6 +86,10 @@ class Settings(BaseSettings):
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
     MINIAPP_REQUIRE_REGISTRATION: bool = True
+    # Если true, API мини-приложения принимает личность ТОЛЬКО из подписанного
+    # initData (Telegram/MAX). Открытый ?user_id= перестаёт что-либо значить —
+    # иначе любой может прочитать и изменить чужой профиль (IDOR).
+    MINIAPP_AUTH_REQUIRED: bool = True
     CONV_LOG_FILE: str = ""
     GROUP_MODE_ENABLED: bool = True
     GROUP_CHAT_WHITELIST: str = ""
@@ -90,6 +120,26 @@ class Settings(BaseSettings):
     TELEGRAM_POLLING: bool = True
     TELEGRAM_WEBHOOK_URL: str = ""
     TELEGRAM_WEBHOOK_SECRET: str = ""
+    # Публичный HTTPS-URL Telegram Mini App (кнопка web_app в чате).
+    # Пусто = взять {MINIAPP_BASE_URL origin}/tg/ , если он задан.
+    TELEGRAM_MINIAPP_URL: str = ""
+    # Известные адреса api.telegram.org. Сторож проверяет их, чтобы при
+    # обрыве связи сразу подсказать администратору рабочий адрес для
+    # extra_hosts, а не просто сообщить «всё сломалось».
+    TELEGRAM_API_IPS: str = (
+        "149.154.167.220,149.154.166.110,149.154.167.197,149.154.171.5,91.108.56.130"
+    )
+
+    # --- Сторож доступности ---
+    WATCHDOG_ENABLED: bool = True
+    WATCHDOG_INTERVAL_MIN: int = 5
+    # Сколько проверок подряд должны провалиться до тревоги (защита от
+    # одиночной сетевой осечки).
+    WATCHDOG_FAILURES_BEFORE_ALERT: int = 2
+    WATCHDOG_ALERT_COOLDOWN_MIN: int = 60
+    # Опрос Telegram считается вставшим, если успешных циклов не было
+    # дольше этого времени (обычный цикл — 25 секунд).
+    WATCHDOG_POLL_SILENCE_MIN: int = 5
 
     # --- Email-уведомления о заявках (Gmail SMTP, App Password) ---
     GMAIL_SMTP_USER: str = ""
@@ -120,6 +170,24 @@ class Settings(BaseSettings):
     def _strip_secret(cls, v: object) -> object:
         # Пробелы/переводы строк в ключах ломают HTTP-заголовки провайдеров.
         return v.strip() if isinstance(v, str) else v
+
+    @property
+    def telegram_miniapp_url(self) -> str:
+        """URL Telegram Mini App: явный или производный от MINIAPP_BASE_URL.
+
+        MAX-приложение живёт на /app/, Telegram-версия — на /tg/ того же
+        хоста, поэтому отдельную переменную окружения задавать не обязательно.
+        """
+        explicit = self.TELEGRAM_MINIAPP_URL.strip()
+        if explicit:
+            return explicit
+        base = self.MINIAPP_BASE_URL.strip()
+        if not base:
+            return ""
+        origin = base.split("#", 1)[0].split("?", 1)[0].rstrip("/")
+        if origin.endswith("/app"):
+            origin = origin[: -len("/app")]
+        return f"{origin}/tg/"
 
     @property
     def admin_ids(self) -> list[str]:

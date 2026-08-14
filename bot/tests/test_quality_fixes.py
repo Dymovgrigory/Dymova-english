@@ -1,7 +1,10 @@
 import pytest
 
+from app import emotion
+from app.smart import NeedProfile
+
 from app import intent as I
-from app import ai_core
+from app import ai_core, llm_gateway
 from app.ai_core import handle_message
 from app.knowledge.kb import get_kb
 from app.llm import _mostly_russian
@@ -90,10 +93,10 @@ def test_build_system_prompt_includes_real_branch_addresses():
 def test_build_system_prompt_includes_emotional_state():
     kb = get_kb()
     conv = Conversation(user_id="quality-sales-empathy")
-    conv.last_user_mood = "needs_empathy"
+    conv.last_user_mood = emotion.ANXIOUS
     conv.last_user_topic = "цены"
     prompt = sales.build_system_prompt(kb, conv, "")
-    assert "настроение собеседника: needs_empathy" in prompt
+    assert f"настроение собеседника: {emotion.ANXIOUS}" in prompt
     assert "последняя тема: цены" in prompt
 
 
@@ -123,11 +126,24 @@ async def test_lead_soft_exit_keeps_fields_and_switches_to_discovery():
     assert "позже" in reply.lower() or "без проблем" in reply.lower()
 
 
-def test_sales_nudge_is_more_empathic_when_user_is_upset():
+def test_sales_nudge_softens_the_offer_for_an_anxious_person():
+    """Тревожному предлагают без давления — «чтобы не гадать», а не «спешите»."""
     conv = Conversation(user_id="quality-sales-nudge")
-    conv.last_user_mood = "needs_empathy"
+    conv.need = NeedProfile(
+        who="родитель", child_age="9", level="начальный",
+        goals=["заговорить"], motivations=["поездка"],
+    )
+    conv.last_user_mood = emotion.ANXIOUS
     text = sales.sales_nudge(conv)
-    assert "понимаю" in text.lower()
+    assert "не гадать" in text.lower()
+
+
+def test_sales_nudge_does_not_repeat_the_empathy_opener():
+    """Признание эмоции ставит начало ответа; в хвосте оно звучало дважды."""
+    conv = Conversation(user_id="quality-sales-nudge-2")
+    conv.last_user_mood = emotion.DISCOURAGED
+    text = sales.sales_nudge(conv)
+    assert "выматывает" not in text.lower()
 
 
 @pytest.mark.asyncio
@@ -141,12 +157,13 @@ async def test_objection_route_uses_llm(monkeypatch):
         def __init__(self):
             self.calls = []
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             self.calls.append(messages)
             return "Понимаю сомнения — давайте подберём удобный вариант."
 
     fake = FakeLLM()
     monkeypatch.setattr(ai_core, "get_llm", lambda: fake)
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: fake)
 
     reply = await handle_message(uid, "это дорого")
 
@@ -162,6 +179,10 @@ async def test_factual_questions_do_not_invent_prices(monkeypatch):
     он отвечает [UNKNOWN], и только тогда включается handoff."""
     class FakeKB:
         branches = []
+        # Подбор программы теперь тоже спрашивает базу — двойник обязан
+        # отвечать на те же вопросы, что и настоящая KB.
+        age_programs = []
+        courses = []
 
         def search(self, query, limit=5):
             return []
@@ -176,7 +197,11 @@ async def test_factual_questions_do_not_invent_prices(monkeypatch):
         enabled = True
         calls = 0
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
+            # Разбор потребности (SMART) ходит в ту же модель, но это
+            # служебный запрос, а не ответ клиенту — считаем только диалоговые.
+            if "карточку потребности" in messages[0].get("content", ""):
+                return None
             self.calls += 1
             return "[UNKNOWN] точных данных по стоимости в источниках нет."
 
@@ -186,6 +211,7 @@ async def test_factual_questions_do_not_invent_prices(monkeypatch):
     fake_llm = FakeLLM()
     monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB())
     monkeypatch.setattr(ai_core, "get_llm", lambda: fake_llm)
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: fake_llm)
     monkeypatch.setattr(ai_core, "search_web", fake_search_web)
 
     uid = "quality-factual"
@@ -214,7 +240,9 @@ async def test_bare_price_question_asks_clarifying_question_instead_of_giving_up
     reply = await handle_message("quality-price-clarify", "Сколько стоит?")
 
     assert "администратор" not in reply.lower()
-    assert "курс" in reply.lower() or "возраст" in reply.lower()
+    # Формулировку уточняющего вопроса теперь даёт SMART, поэтому проверяем
+    # смысл (спросили про ученика), а не слово из прежней заготовки.
+    assert "сколько лет" in reply.lower() or "возраст" in reply.lower()
 
 
 @pytest.mark.asyncio
@@ -238,6 +266,10 @@ async def test_uncertain_answer_retries_with_web_search(monkeypatch):
     передавать вопрос администратору (сессия 36)."""
     class FakeKB:
         branches = []
+        # Подбор программы теперь тоже спрашивает базу — двойник обязан
+        # отвечать на те же вопросы, что и настоящая KB.
+        age_programs = []
+        courses = []
 
         def search(self, query, limit=5):
             return []
@@ -260,7 +292,7 @@ async def test_uncertain_answer_retries_with_web_search(monkeypatch):
         enabled = True
         calls = 0
 
-        async def complete(self, messages, temperature=None):
+        async def complete(self, messages, temperature=None, **kwargs):
             self.calls += 1
             if self.calls == 1:
                 return "[UNKNOWN] нет актуальных данных."
@@ -272,6 +304,7 @@ async def test_uncertain_answer_retries_with_web_search(monkeypatch):
     fake_llm = FakeLLM()
     monkeypatch.setattr(ai_core, "get_kb", lambda: FakeKB2())
     monkeypatch.setattr(ai_core, "get_llm", lambda: fake_llm)
+    monkeypatch.setattr(llm_gateway, "get_llm", lambda: fake_llm)
     monkeypatch.setattr(ai_core, "search_web", fake_search_web)
 
     uid = "quality-web-retry"

@@ -3,7 +3,6 @@ import json
 import httpx
 import pytest
 
-from app import dedup as dedup_module
 from app import llm as llm_module
 from app import main as main_module
 from app.config import settings
@@ -14,7 +13,9 @@ class FakeClient:
         self.responses = list(responses)
         self.calls = []
 
-    async def post(self, url, headers=None, json=None):
+    # timeout передаётся на каждый запрос: каскад укладывается в общий
+    # бюджет LLM_TOTAL_BUDGET_SEC (см. llm._complete_with_provider).
+    async def post(self, url, headers=None, json=None, timeout=None):
         self.calls.append({"url": url, "headers": headers, "json": json})
         if not self.responses:
             raise AssertionError("unexpected extra request")
@@ -31,12 +32,10 @@ def reset_singletons(monkeypatch):
     llm_module._client = None
     llm_module._http_client = None
     main_module._BACKGROUND_TASKS.clear()
-    dedup_module._store = None
     yield
     llm_module._client = None
     llm_module._http_client = None
     main_module._BACKGROUND_TASKS.clear()
-    dedup_module._store = None
 
 
 def _response(status_code: int, payload):
@@ -116,7 +115,6 @@ async def test_llm_retries_on_429_and_5xx(monkeypatch):
 
 def test_webhook_deduplicates_same_update_id(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "STATE_FILE", str(tmp_path / "state.json"), raising=False)
-    dedup_module._store = None
     main_module._BACKGROUND_TASKS.clear()
 
     scheduled = []

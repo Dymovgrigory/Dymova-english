@@ -18,6 +18,7 @@ from app import nudge as nudge_mod
 from app.config import settings
 from app.knowledge import site_sync
 from app.max_client import get_max
+from app import watchdog
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +99,24 @@ async def _nudge_loop() -> None:
         await asyncio.sleep(60)
 
 
+async def _purge_loop() -> None:
+    """Раз в сутки чистит журнал обработанных событий.
+
+    Единственная таблица, которая росла без ограничений: записи нужны на
+    минуты (защита от повторного вебхука), а лежали вечно.
+    """
+    from app.memory import get_store
+
+    while True:
+        try:
+            removed = await asyncio.to_thread(get_store().purge_old_events)
+            if removed:
+                logger.info("purge: удалено старых событий: %d", removed)
+        except Exception:
+            logger.exception("purge: не удалось почистить журнал событий")
+        await asyncio.sleep(24 * 60 * 60)
+
+
 async def _site_sync_loop() -> None:
     while True:
         try:
@@ -124,7 +143,7 @@ async def _sources_sync_loop() -> None:
 
 def start() -> list[asyncio.Task]:
     """Запускает фоновые задачи (отчёт + напоминания)."""
-    tasks: list[asyncio.Task] = []
+    tasks: list[asyncio.Task] = [asyncio.create_task(_purge_loop())]
     if settings.DIGEST_ENABLED:
         tasks.append(asyncio.create_task(_loop()))
     else:
@@ -138,4 +157,8 @@ def start() -> list[asyncio.Task]:
         tasks.append(asyncio.create_task(_sources_sync_loop()))
     else:
         logger.info("site_sync: синхронизация с сайтом выключена (SITE_SYNC_ENABLED=false)")
+    if settings.WATCHDOG_ENABLED:
+        tasks.append(asyncio.create_task(watchdog.loop()))
+    else:
+        logger.info("watchdog: сторож доступности выключен (WATCHDOG_ENABLED=false)")
     return tasks
