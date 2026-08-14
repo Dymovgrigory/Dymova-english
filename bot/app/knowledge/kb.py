@@ -69,7 +69,19 @@ class Document:
     title_tokens: set[str] = field(default_factory=set)
 
     def render(self) -> str:
+        """Документ как контекст для модели: с заголовком, для ориентировки."""
         return f"[{self.title}]\n{self.text}".strip()
+
+    def as_answer(self) -> str:
+        """Документ как текст для человека.
+
+        Заголовок FAQ — это вопрос («До скольки вы работаете?»), и показывать
+        его собеседнику нельзя: получается, что бот задаёт вопросы вместо
+        ответа. Человеку нужен ответ, ориентировка нужна только модели.
+        """
+        if self.category == "faq" or not self.title:
+            return self.text
+        return f"{self.title}: {self.text}"
 
 
 class KnowledgeBase:

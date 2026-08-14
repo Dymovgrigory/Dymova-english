@@ -190,8 +190,16 @@ def test_parse_ddg_results_respects_limit():
     assert parse_ddg_results("", limit=4) == []
 
 
+@pytest.fixture
+def _web_search_on(monkeypatch):
+    """Тесты самого поиска включают его явно: по умолчанию он в тестах выключен."""
+    monkeypatch.setattr(
+        sources_config.get_sources_settings(), "WEB_SEARCH_ENABLED", True
+    )
+
+
 @pytest.mark.asyncio
-async def test_search_web_parses_response(monkeypatch):
+async def test_search_web_parses_response(monkeypatch, _web_search_on):
     _FakeClient.scenario = {
         "get": _FakeResponse(DDG_HTML),
         "post": httpx.ConnectError("should not be called"),
@@ -203,7 +211,7 @@ async def test_search_web_parses_response(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_search_web_falls_back_to_post_on_antibot(monkeypatch):
+async def test_search_web_falls_back_to_post_on_antibot(monkeypatch, _web_search_on):
     _FakeClient.scenario = {
         "get": _FakeResponse("<html>anomaly challenge</html>", status_code=202),
         "post": _FakeResponse(DDG_HTML),
@@ -214,7 +222,7 @@ async def test_search_web_falls_back_to_post_on_antibot(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_search_web_network_error_returns_empty(monkeypatch):
+async def test_search_web_network_error_returns_empty(monkeypatch, _web_search_on):
     _FakeClient.scenario = {
         "get": httpx.ConnectError("boom"),
         "post": httpx.ConnectError("boom"),
@@ -224,7 +232,7 @@ async def test_search_web_network_error_returns_empty(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_search_web_uses_cache(monkeypatch):
+async def test_search_web_uses_cache(monkeypatch, _web_search_on):
     _FakeClient.scenario = {"get": _FakeResponse(DDG_HTML)}
     monkeypatch.setattr(web_module.httpx, "AsyncClient", _FakeClient)
     first = await search_web("кэш-запрос")

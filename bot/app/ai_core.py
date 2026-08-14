@@ -147,7 +147,7 @@ def _grounded_fact_reply(kb, text: str, intent: str) -> str:
     }
     lines = [title_map.get(intent, "Вот что удалось подтвердить на сайте и в соцсетях:")]
     for doc in docs:
-        lines.append(f"• {doc.title}: {doc.text}")
+        lines.append(f"• {doc.as_answer()}")
     if intent == I.PRICE:
         lines.append("Если хотите, я ещё уточню стоимость по возрасту и формату.")
     elif intent == I.CONTACTS:
@@ -234,11 +234,23 @@ async def _consult_with_context(
                 return await _refer_to_admin(conv, text, reason="llm_uncertain", score=kb_score)
             return reply
     if kb_context:
-        return (
-            f"{_empathy_prefix(conv)}Вот что у меня есть по вашему вопросу:\n\n"
-            f"{kb_context}\n\n{sales.sales_nudge(conv)}"
-        )
+        plain = _plain_answer(kb, text)
+        if plain:
+            nudge = sales.sales_nudge(conv)
+            reply = f"{_empathy_prefix(conv)}{plain}"
+            return f"{reply}\n\n{nudge}" if nudge else reply
     return await _refer_to_admin(conv, text, reason="no_answer", score=0.0)
+
+
+def _plain_answer(kb, text: str, limit: int = 2) -> str:
+    """Ответ из базы знаний без модели — так, как его можно показать человеку.
+
+    Раньше сюда попадал тот же текст, что уходит модели: с заголовками в
+    квадратных скобках и вопросами из FAQ. Человек видел выгрузку документов,
+    в которой бот будто задаёт вопросы вместо ответа.
+    """
+    docs = kb.search(text, limit=limit)
+    return "\n\n".join(doc.as_answer().strip() for doc in docs if doc.as_answer().strip())
 
 
 async def _web_context_for(text: str, school_related: bool) -> str:

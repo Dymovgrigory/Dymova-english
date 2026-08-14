@@ -10,6 +10,7 @@ import pytest
 from app import llm
 from app import llm_gateway
 from app.config import settings
+from app.sources_config import get_sources_settings
 
 
 def make_telegram_init_data(
@@ -71,6 +72,10 @@ def _disable_registration(monkeypatch):
     """
     monkeypatch.setattr(settings, "REGISTRATION_REQUIRED", False)
     monkeypatch.setattr(settings, "SITE_SYNC_ENABLED", False)
+    # Живой веб-поиск в тестах — это настоящий запрос в интернет: он делает
+    # прогон медленным и зависящим от сети. Тесты самого поиска подменяют
+    # search_web и включают настройку сами.
+    monkeypatch.setattr(get_sources_settings(), "WEB_SEARCH_ENABLED", False)
     # Тесты не должны писать в ./data/bot.db рабочего дерева. В проде DB_PATH
     # persistent (см. memory._resolve_db_path), здесь — явный in-memory.
     monkeypatch.setattr(settings, "DB_PATH", ":memory:")
