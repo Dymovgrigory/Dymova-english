@@ -60,6 +60,51 @@ async def test_refusal_does_not_start_the_lead_form():
 # ------------------------- модельный слой -------------------------
 
 
+def test_prompt_separates_browsing_from_signup():
+    """«Ищу занятия для дочки» — это не заявка.
+
+    Модельный слой однажды классифицировал присматривающегося родителя как
+    want_signup, и бот начинал оформление заявки человеку, который просто
+    интересовался. Промпт обязан явно разделять эти случаи — тест сторожит
+    эту границу от случайного вычитания при правках промпта.
+    """
+    assert "присматривается" in intent_ai._PROMPT
+    assert "НЕ want_signup" in intent_ai._PROMPT
+
+
+# ------------------------- возражения из брендбука -------------------------
+
+
+@pytest.mark.parametrize(
+    "text,key",
+    [
+        ("Мы, наверное, начнём попозже", "попозже"),
+        ("Нам ещё рано, ему бы сначала по-русски научиться", "рано"),
+        ("Он не хочет заниматься английским", "не хочет"),
+        ("Ребёнок отказывается ходить на занятия", "не хочет"),
+        ("Нам не подходит расписание", "расписание"),
+        ("Нет удобного времени у групп", "расписание"),
+    ],
+)
+def test_brandbook_objections_are_recognised(text, key):
+    assert I.detect_objection(text) == key
+
+
+def test_refusal_is_still_not_an_objection():
+    """«Я не хочу записываться» — отказ, а не «ребёнок не хочет»."""
+    assert I.detect_objection("Я не хочу записываться, просто спрашиваю") != "не хочет"
+
+
+def test_new_objection_keys_have_answers():
+    """Каждый распознаваемый ключ обязан иметь ответ в базе знаний."""
+    from app.knowledge.kb import get_kb
+
+    kb = get_kb()
+    for key in ("попозже", "не хочет", "расписание", "рано"):
+        assert kb.objection(key), key
+
+
+
 async def test_refine_is_skipped_without_a_model():
     assert await intent_ai.refine("хотелось бы уже начать заниматься") is None
 
