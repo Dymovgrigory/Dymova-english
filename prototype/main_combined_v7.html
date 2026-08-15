@@ -328,13 +328,16 @@
   #fxb-hero .fxb-slogan-text{font-size:25px}
 }
 
-/* === CINEMA MODE: единая сцена — одно видео и вуаль на шапку + блок записи === */
-#fxb-cinema{position:relative;overflow:hidden;background:#1e1433}
+/* === CINEMA MODE: единая сцена — чернила на почти чёрном (как в боте) === */
+#fxb-cinema{position:relative;overflow:hidden;background:
+  radial-gradient(120% 90% at 20% 20%,rgba(107,77,230,.55),transparent 60%),
+  radial-gradient(110% 90% at 85% 30%,rgba(36,198,160,.35),transparent 62%),
+  linear-gradient(160deg,#0b0a1a,#04050c)}
 #fxb-cinema .fxb-cinema-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 #fxb-cinema .fxb-cinema-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(90% 70% at 50% 62%,rgba(20,13,36,.5) 0%,rgba(20,13,36,0) 62%),
-    linear-gradient(165deg,rgba(30,20,51,.9) 0%,rgba(57,40,82,.84) 40%,rgba(102,45,146,.8) 100%)}
+    radial-gradient(120% 60% at 50% 30%,rgba(4,5,12,.6) 0%,rgba(4,5,12,.35) 45%,rgba(4,5,12,0) 75%),
+    linear-gradient(180deg,rgba(4,5,12,.55) 0%,rgba(4,5,12,.22) 35%,rgba(4,5,12,.5) 100%)}
 /* Уплотняем топлайн на десктопе: «Вход в ЛК» обрезался overflow:hidden */
 @media(min-width:961px){
   #fxb-hero .fxb-act-link{display:none}
@@ -360,9 +363,11 @@
 
 <script>
 /* FLUID: WebGL-симуляция чернил в шапке (Pavel Dobryakov, MIT).
-   Авто-курсор бесконечно орбитирует центр и рисует яркие вихри cyan→magenta;
+   Настройки 1-в-1 как в мини-приложении бота (bot/app/tgapp/fluid.js):
+   почти чёрный фон, электрические чернила cyan→magenta, пониженная сетка на
+   телефонах, пауза когда холст вне экрана. Авто-курсор орбитирует центр;
    реальный курсор/тач тоже мешает жидкость. При prefers-reduced-motion и
-   отсутствии WebGL — просто не запускаем (остаётся фиолетовая подложка). */
+   отсутствии WebGL — не запускаем (остаётся тёмная градиентная подложка). */
 (function(){
   var canvas=document.getElementById('fxb-fluid');
   if(!canvas)return;
@@ -374,18 +379,18 @@ function fluidSimulation(canvas) {
     canvas.height = canvas.clientHeight;
 
     let config = {
-        SIM_RESOLUTION: 200,
-        DYE_RESOLUTION: 512,
+        SIM_RESOLUTION: isMobile() ? 128 : 200,
+        DYE_RESOLUTION: isMobile() ? 384 : 512,
         DENSITY_DISSIPATION: 0.958,
         VELOCITY_DISSIPATION: 0.96,
         PRESSURE_DISSIPATION: 0.8,
-        PRESSURE_ITERATIONS: 20,
+        PRESSURE_ITERATIONS: isMobile() ? 14 : 20,
         CURL: 42,
         SPLAT_RADIUS: 0.22,
         SHADING: true,
         COLORFUL: true,
         PAUSED: false,
-        BACK_COLOR: { r: 30, g: 20, b: 51 }, // фирменный тёмно-фиолетовый (#1e1433)
+        BACK_COLOR: { r: 4, g: 5, b: 12 }, // почти чёрный — как в мини-приложении бота
         TRANSPARENT: false,
         BLOOM: false,
         BLOOM_ITERATIONS: 8,
@@ -1132,18 +1137,24 @@ function fluidSimulation(canvas) {
 
     let rafHandle = 0;
     let destroyed = false;
+    let visible = true;
 
     update();
 
     function update() {
         if (destroyed) return;
+        rafHandle = requestAnimationFrame(update);
+        // Кадры считаем, только когда холст видно: невидимая симуляция —
+        // чистый расход батареи (поведение как в мини-приложении бота).
+        if (!visible) return;
+        // Нулевой размер холста: пересборка буферов на 0×0 убила бы симуляцию.
+        if (!canvas.clientWidth || !canvas.clientHeight) return;
         resizeCanvas();
         driveVirtualPointer();
         input();
         if (!config.PAUSED)
             step(0.016);
         render(null);
-        rafHandle = requestAnimationFrame(update);
     }
 
     // Невидимый авто-курсор вечно орбитирует центр, рисуя яркие вихри.
@@ -1408,6 +1419,7 @@ function fluidSimulation(canvas) {
     }
 
     function resizeCanvas() {
+        if (!canvas.clientWidth || !canvas.clientHeight) return;
         if (canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight) {
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
@@ -1490,6 +1502,19 @@ function fluidSimulation(canvas) {
                 if (touches[i].identifier == pointers[j].id)
                     pointers[j].down = false;
     });
+
+    // Вкладка в фоне и уход холста за экран останавливают счёт кадров.
+    on(document, 'visibilitychange', () => {
+        visible = document.visibilityState === 'visible';
+    });
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+            visible = entries[0].isIntersecting && document.visibilityState === 'visible';
+        });
+        observer.observe(canvas);
+        teardown.push(() => observer.disconnect());
+    }
 
     return function destroy() {
         destroyed = true;
