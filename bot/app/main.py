@@ -1401,9 +1401,11 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
             "Новая заявка из мини-приложения\n"
             f"Родитель: {lead.fio_parent}\n"
             f"Ребёнок: {lead.fio_child or '—'}\n"
+            f"Дата рождения: {lead.birthday or '—'}\n"
             f"Телефон: {lead.phone}\n"
             f"Филиал: {lead.branch or '—'}\n"
-            f"Интерес: {lead.course or data.get('interest_value', '') or data.get('interest_type', '')}"
+            f"Интерес: {lead.course or data.get('interest_value', '') or data.get('interest_type', '')}\n"
+            f"Детали: {lead.comment or '—'}"
         )
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)
@@ -1447,9 +1449,11 @@ async def site_lead(request: Request, data: dict) -> dict:
         "Новая заявка с сайта\n"
         f"Родитель: {lead.fio_parent}\n"
         f"Ребёнок: {lead.fio_child or '—'}\n"
+        f"Дата рождения: {lead.birthday or '—'}\n"
         f"Телефон: {lead.phone}\n"
         f"Филиал: {lead.branch or '—'}\n"
         f"Интерес: {lead.course or '—'}\n"
+        f"Детали: {lead.comment or '—'}\n"
         f"Источник: {source}"
     )
     if ok and settings.admin_ids:

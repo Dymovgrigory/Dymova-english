@@ -1812,7 +1812,8 @@ body.is-locked { overflow: hidden; }
 
 /* Незаполненное обязательное поле подсвечивается только после попытки
    отправки: красная рамка на пустой форме — это упрёк ни за что. */
-.form.is-tried input:invalid { border-color: var(--rose); }
+.form.is-tried input:invalid,
+.form.is-tried select:invalid { border-color: var(--rose); }
 
 .status {
   margin: 10px 0 0;

@@ -156,16 +156,24 @@ document.getElementById("lf-submit").addEventListener("click", async () => {
     showStatus(ACCESS.message || "Сначала зарегистрируйтесь в чате.", false);
     return;
   }
+  const courseKind = document.getElementById("lf-course-kind").value;
+  const experience = document.getElementById("lf-experience").value;
+  const userComment = document.getElementById("lf-comment").value.trim();
+  const commentParts = [];
+  if (courseKind) commentParts.push("Раздел: " + courseKind);
+  if (experience) commentParts.push("Опыт: " + experience);
+  if (userComment) commentParts.push(userComment);
   const body = {
     fio_parent: document.getElementById("lf-parent").value.trim(),
     fio_child: document.getElementById("lf-child").value.trim(),
     age: document.getElementById("lf-age").value.trim(),
+    birthday: document.getElementById("lf-birthday").value,
     phone: document.getElementById("lf-phone").value.trim(),
     branch: document.getElementById("lf-branch").value,
-    comment: document.getElementById("lf-comment").value.trim(),
+    comment: commentParts.join("; ").slice(0, 255),
   };
-  if (!body.fio_parent || !body.phone) {
-    showStatus("Пожалуйста, укажите имя и телефон.", false);
+  if (!body.fio_parent || !body.phone || !body.fio_child || !body.birthday || !experience) {
+    showStatus("Пожалуйста, заполните обязательные поля: имя, телефон, имя и дату рождения ребёнка, опыт занятий.", false);
     return;
   }
   showStatus("Отправляю...", true);

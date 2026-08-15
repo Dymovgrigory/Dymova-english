@@ -296,12 +296,28 @@
       <p class="muted">Оставьте контакты — перезвоним, расскажем расписание и подберём группу.</p>
       <label for="lf-parent">Ваше имя (родитель) *</label>
       <input id="lf-parent" placeholder="Иванова Анна" />
-      <label for="lf-child">Имя ребёнка</label>
+      <label for="lf-child">Имя ребёнка *</label>
       <input id="lf-child" placeholder="Иванов Миша" />
       <div class="grid">
-        <div><label for="lf-age">Возраст</label><input id="lf-age" type="number" placeholder="9" /></div>
+        <div><label for="lf-birthday">Дата рождения ребёнка *</label><input id="lf-birthday" type="date" min="2007-01-01" max="2025-12-31" /></div>
         <div><label for="lf-phone">Телефон *</label><input id="lf-phone" placeholder="+7..." /></div>
       </div>
+      <input id="lf-age" type="hidden" />
+      <label for="lf-course-kind">Какой курс интересует</label>
+      <select id="lf-course-kind">
+        <option>Пока не определился</option>
+        <option>Языки (английский, немецкий, китайский)</option>
+        <option>Интенсивы</option>
+        <option>Подготовка к школе</option>
+        <option>Репетиторские услуги (1–4 класс)</option>
+      </select>
+      <label for="lf-experience">Опыт занятий *</label>
+      <select id="lf-experience">
+        <option value="">Выберите</option>
+        <option>Никогда не занимались</option>
+        <option>Занимались в школе</option>
+        <option>Занимались дополнительно (английским или другим языком)</option>
+      </select>
       <label for="lf-branch">Формат / филиал</label>
       <select id="lf-branch">
         <option value="">Выберите</option>

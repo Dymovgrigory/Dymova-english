@@ -632,6 +632,30 @@
     "Репетитор (1–4 классы)",
   ];
 
+  /* Категории курсов в выпадающем списке — те же, что на сайте. */
+  var LEAD_COURSE_KINDS = [
+    "Пока не определился",
+    "Языки (английский, немецкий, китайский)",
+    "Интенсивы",
+    "Подготовка к школе",
+    "Репетиторские услуги (1–4 класс)",
+  ];
+
+  /* Пилюля направления — это категория в списке курсов. */
+  function courseKindFor(direction) {
+    if (/подготовка/i.test(direction)) return "Подготовка к школе";
+    if (/репетитор/i.test(direction)) return "Репетиторские услуги (1–4 класс)";
+    if (/язык/i.test(direction)) return "Языки (английский, немецкий, китайский)";
+    return "Пока не определился";
+  }
+
+  /* Язык в предложном падеже для подписи «Занимались дополнительно …». */
+  function langSuffixFor(direction) {
+    if (/немецк/i.test(direction)) return "немецким";
+    if (/китайск/i.test(direction)) return "китайским";
+    return "английским";
+  }
+
   function buildSignup(box) {
     buildLeadForm(box, {
       kind: "lessons",
@@ -641,8 +665,8 @@
       directions: LEAD_DIRECTIONS,
       submitLabel: "Оставить заявку",
       // Для записи на занятия обязательны: направление, филиал, имя и
-      // возраст ребёнка, телефон. Имя родителя — по желанию.
-      required: ["phone", "fio_child", "age"],
+      // дата рождения ребёнка, телефон и опыт занятий. Имя родителя — по желанию.
+      required: ["phone", "fio_child", "birthday", "experience"],
     });
   }
 
@@ -654,13 +678,12 @@
       sub: "На диагностике методист определит уровень и даст рекомендации по группе. Это бесплатно и ни к чему не обязывает.",
       directions: null,
       submitLabel: "Записаться на диагностику",
-      required: ["phone"],
+      required: ["phone", "fio_child", "birthday", "experience"],
       course: "Бесплатная диагностика",
     });
   }
 
   function buildLeadForm(box, opts) {
-    var me = state.me || {};
     var branches = (state.info && state.info.branches) || [];
     var branchOptions = branches.map(function (b) {
       return { value: b.name, label: String(b.name || "").replace(/^Филиал на /, "") };
@@ -707,12 +730,26 @@
       "</div>" +
       '<input id="lf-branch" type="hidden" name="branch" value="' + esc(branchOptions[0].value) + '" />' +
       "</div>" +
+      '<div class="field"><span class="field__label">Какой курс интересует</span>' +
+      '<select id="lf-course-kind" name="course_kind">' +
+      LEAD_COURSE_KINDS.map(function (k) {
+        return '<option value="' + esc(k) + '">' + esc(k) + "</option>";
+      }).join("") +
+      "</select></div>" +
+      '<div class="field"><span class="field__label">Опыт занятий' + (opts.required.indexOf("experience") >= 0 ? " <em>обязательно</em>" : "") + '</span>' +
+      '<select id="lf-experience" name="experience"' + (opts.required.indexOf("experience") >= 0 ? " required" : "") + '>' +
+      '<option value="" selected disabled>Выберите…</option>' +
+      '<option value="Никогда не занимались">Никогда не занимались</option>' +
+      '<option value="Занимались в школе">Занимались в школе</option>' +
+      '<option id="lf-exp-extra" value="Занимались дополнительно">Занимались дополнительно ' +
+      esc(langSuffixFor(opts.directions ? opts.directions[0] : "")) +
+      "</option>" +
+      "</select></div>" +
       '<div class="field-row">' +
       '<label class="field"><span class="field__label">Имя ребёнка' + (opts.required.indexOf("fio_child") >= 0 ? " <em>обязательно</em>" : "") + '</span>' +
-      '<input id="lf-child" name="fio_child" type="text" placeholder="Миша" /></label>' +
-      '<label class="field"><span class="field__label">Возраст' + (opts.required.indexOf("age") >= 0 ? " <em>обязательно</em>" : "") + '</span>' +
-      '<input id="lf-age" name="age" type="number" min="2" max="17" value="' +
-      esc(me.age || "") + '" placeholder="9" /></label>' +
+      '<input id="lf-child" name="fio_child" type="text" placeholder="Миша"' + (opts.required.indexOf("fio_child") >= 0 ? " required" : "") + ' /></label>' +
+      '<label class="field"><span class="field__label">Дата рождения ребёнка' + (opts.required.indexOf("birthday") >= 0 ? " <em>обязательно</em>" : "") + '</span>' +
+      '<input id="lf-birthday" name="birthday" type="date" min="2007-01-01" max="2025-12-31"' + (opts.required.indexOf("birthday") >= 0 ? " required" : "") + ' /></label>' +
       "</div>" +
       '<label class="field"><span class="field__label">Телефон <em>обязательно</em></span>' +
       '<input id="lf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 999 000-00-00" required /></label>' +
@@ -736,9 +773,21 @@
         });
         var target = group.id === "lf-course-pills" ? "#lf-course" : "#lf-branch";
         $(target, box).value = pill.dataset.value;
+        if (group.id === "lf-course-pills") syncCourseFields(pill.dataset.value);
         haptic("light");
       });
     });
+
+    // Направление-пилюля подтягивает категорию курса и язык в «Опыте занятий».
+    function syncCourseFields(direction) {
+      var kind = $("#lf-course-kind", box);
+      if (kind) {
+        var want = courseKindFor(direction);
+        if (LEAD_COURSE_KINDS.indexOf(want) >= 0) kind.value = want;
+      }
+      var extra = $("#lf-exp-extra", box);
+      if (extra) extra.textContent = "Занимались дополнительно " + langSuffixFor(direction);
+    }
 
     // Мягкая маска телефона: человек вводит цифры, формат появляется сам.
     $("#lf-phone", box).addEventListener("input", function (event) {
@@ -769,19 +818,27 @@
   function submitLead() {
     var status = $("#lead-status");
     var required = ($("#lf-required").value || "phone").split(",");
+    var courseKind = $("#lf-course-kind") ? $("#lf-course-kind").value : "";
+    var experience = $("#lf-experience") ? $("#lf-experience").value : "";
+    var userComment = $("#lf-comment").value.trim();
+    var commentParts = [];
+    if (courseKind) commentParts.push("Раздел: " + courseKind);
+    if (experience) commentParts.push("Опыт: " + experience);
+    if (userComment) commentParts.push(userComment);
     var body = {
       fio_parent: $("#lf-parent").value.trim(),
       fio_child: $("#lf-child").value.trim(),
-      age: $("#lf-age").value.trim(),
+      birthday: $("#lf-birthday").value,
       phone: $("#lf-phone").value.trim(),
       branch: $("#lf-branch").value,
       course: $("#lf-course").value,
-      comment: $("#lf-comment").value.trim(),
+      comment: commentParts.join("; ").slice(0, 255),
     };
     var missing = [];
     if (required.indexOf("phone") >= 0 && !body.phone) missing.push("телефон");
     if (required.indexOf("fio_child") >= 0 && !body.fio_child) missing.push("имя ребёнка");
-    if (required.indexOf("age") >= 0 && !body.age) missing.push("возраст");
+    if (required.indexOf("birthday") >= 0 && !body.birthday) missing.push("дату рождения ребёнка");
+    if (required.indexOf("experience") >= 0 && !experience) missing.push("опыт занятий");
     if (required.indexOf("fio_parent") >= 0 && !body.fio_parent) missing.push("ваше имя");
     if (missing.length) {
       var form = $("#lead-form");

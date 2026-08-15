@@ -230,3 +230,14 @@ def test_menu_press_stirs_the_ink():
 def test_keyboard_focus_is_as_visible_as_a_press():
     assert ".dock__btn:focus-visible" in CSS
     assert ".quick .qa:focus-visible" in CSS
+
+
+def test_lead_form_collects_birthday_course_and_experience():
+    """Форма заявки собирает то, что просит школа: дату рождения ребёнка,
+    категорию курса (по умолчанию «Пока не определился») и опыт занятий."""
+    assert 'id="lf-birthday"' in JS and 'type="date"' in JS
+    assert 'id="lf-course-kind"' in JS and "Пока не определился" in JS
+    assert 'id="lf-experience"' in JS and "Никогда не занимались" in JS
+    assert "birthday" in JS and "experience" in JS
+    # Валидация подсвечивает и селекты, не только текстовые поля.
+    assert ".form.is-tried select:invalid" in CSS
