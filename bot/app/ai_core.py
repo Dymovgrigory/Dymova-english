@@ -519,11 +519,14 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
             reply = answer
             if started:
                 # Из приветствия убираем вопрос анкеты — он уже стоит после
-                # ответа (или подавлен лимитом напоминаний).
+                # ответа (или подавлен лимитом напоминаний). Голое «Вернёмся
+                # к анкете.» без вопроса перед ответом — мусор, тоже режем.
                 greeting_only = welcome
                 prompt = registration.current_prompt(conv)
                 if prompt and greeting_only.endswith(prompt):
                     greeting_only = greeting_only[: -len(prompt)].rstrip()
+                if greeting_only.strip() == registration.REG_RESUME.strip():
+                    greeting_only = ""
                 reply = f"{greeting_only}\n\n{answer}" if greeting_only else answer
             reply = await _review(conv, text, reply)
             result = "registration_offtopic"
