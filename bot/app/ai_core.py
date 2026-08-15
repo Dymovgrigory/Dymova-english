@@ -834,7 +834,9 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     # 4а. «Как добраться / на метро / на чём доехать» — только факты из базы.
     #     Детерминированно, без модели: в Долгопрудном нет метро, и LLM без
     #     точных данных честно выдумывала станции и автобусы (сессия 54).
-    if intent == I.CONTACTS and _DIRECTIONS_RE.search(text):
+    #     Intent тут не важен: «как до вас добраться на метро» по ключевым
+    #     словам не попадает в CONTACTS и уезжал в свободный ответ модели.
+    if _DIRECTIONS_RE.search(text) and intent != I.WANT_SIGNUP:
         conv.stage = STAGE_DISCOVERY
         return _directions_reply(kb)
 
