@@ -201,3 +201,61 @@ async def test_thanks_gets_short_human_reply():
     reply = await handle_message("stick-thanks", "спасибо!", platform="web")
     assert len(reply) < 120
     assert "пожалуйста" in reply.lower()
+
+
+# --- 9. Первое сообщение с вопросом получает и приветствие, и ответ ---
+
+
+@pytest.mark.asyncio
+async def test_first_message_question_is_answered(_enable_registration):
+    reply = await handle_message("stick-first", "Сколько стоит английский для ребёнка 7 лет?", platform="web")
+    assert "Как вас зовут" in reply
+    # Не только анкета: есть и содержательная часть ответа.
+    assert len(reply) > len("Как вас зовут? (ФИО родителя)") + 40
+
+
+# --- 10. «сыну 10 лет» не принимается за имя родителя ---
+
+
+@pytest.mark.asyncio
+async def test_age_phrase_is_not_taken_as_name(_enable_registration):
+    await handle_message("stick-age", "привет", platform="web")
+    await handle_message("stick-age", "сыну 10 лет", platform="web")
+    conv = get_store().get("stick-age", platform="web")
+    assert conv.lead.fio_parent.lower() != "сыну"
+    assert conv.lead.age == "10"
+
+
+# --- 11. «спасибо большое 🙏» посреди анкеты — не голое «ваше имя» ---
+
+
+@pytest.mark.asyncio
+async def test_thanks_during_registration_is_human(_enable_registration):
+    await handle_message("stick-thanks-reg", "привет", platform="web")
+    reply = await handle_message("stick-thanks-reg", "спасибо большое 🙏❤️", platform="web")
+    assert reply != "Напишите, пожалуйста, ваше имя и фамилию 😊"
+    assert "пожалуйста" in reply.lower()
+
+
+# --- 12. Анкета не дёргает человека в каждом сообщении ---
+
+
+@pytest.mark.asyncio
+async def test_registration_nudge_is_capped(_enable_registration):
+    uid = "stick-nudge"
+    await handle_message(uid, "привет", platform="web")
+    await handle_message(uid, "Где вы находитесь?", platform="web")
+    await handle_message(uid, "А онлайн есть?", platform="web")
+    third = await handle_message(uid, "А немецкий у вас есть?", platform="web")
+    assert "Как вас зовут" not in third
+
+
+# --- 13. Короткое уточнение ищет по теме предыдущей реплики ---
+
+
+@pytest.mark.asyncio
+async def test_short_followup_uses_previous_topic():
+    uid = "stick-followup"
+    await handle_message(uid, "есть ли у вас китайский для подростка 13 лет?", platform="web")
+    reply = await handle_message(uid, "а сколько стоит?", platform="web")
+    assert "₽" in reply or "стоимост" in reply.lower() or "9 000" in reply

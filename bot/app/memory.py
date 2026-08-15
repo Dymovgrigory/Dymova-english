@@ -95,6 +95,10 @@ class Conversation:
     # Что бот порекомендовал (движок подбора). Хранится, чтобы не
     # рекомендовать в следующей реплике что-то другое без причины.
     recommended_program: str = ""
+    # Сколько раз подряд анкета регистрации напомнила о себе после off-topic
+    # ответов. По достижении registration.MAX_REG_NUDGES перестаём дёргать
+    # человека анкетой в каждом сообщении.
+    reg_nudges: int = 0
     # Когда заявка ушла в CRM. Нужен кабинету («Мои заявки» — дата), а не
     # воронке: без него датой заявки пришлось бы называть updated_at, который
     # меняется с каждым сообщением.
@@ -369,6 +373,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         digest=d.get("digest", ""),
         dropped=d.get("dropped", []) or [],
         recommended_program=d.get("recommended_program", ""),
+        reg_nudges=d.get("reg_nudges", 0),
         lead_submitted_at=d.get("lead_submitted_at", ""),
     )
 

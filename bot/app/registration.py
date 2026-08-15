@@ -27,6 +27,7 @@ from app.intent import (
     extract_age,
     extract_birthday,
     extract_phone,
+    is_smalltalk,
 )
 from app.memory import Conversation, STAGE_REGISTRATION
 
@@ -72,6 +73,10 @@ _NAME_STOPWORDS = {
     "давай", "давайте", "не", "знаю", "никак", "хз", "спасибо", "пока", "бот",
     "админ", "asdf", "qwerty", "фыва", "йцукен", "ааа", "ясно", "понятно",
     "меня", "зовут", "имя", "ребенок", "ребёнок", "мама", "папа", "сын", "дочь",
+    # Формы, которыми отвечают про ребёнка вместо имени: «сыну 10 лет» раньше
+    # распознавалось как имя родителя «Сыну» и уезжало в CRM.
+    "сыну", "сыне", "дочке", "дочери", "дочке", "ребёнку", "ребенку",
+    "ему", "ей", "нам", "дорого", "дороговато",
 }
 
 _VOWELS = set("аеёиоуыэюяaeiouy")
@@ -203,7 +208,15 @@ def looks_off_topic(conv: Conversation, text: str) -> bool:
         INTENT_OBJECTION, INTENT_HANDOFF, INTENT_WANT_SIGNUP, INTENT_HOMEWORK,
     ):
         return True
+    # Благодарность/подтверждение — не ответ на шаг анкеты: на «спасибо
+    # большое 🙏» нельзя переспрашивать «ваше имя и фамилию».
+    if is_smalltalk(clean):
+        return True
     if step in ("fio_parent", "fio_child"):
+        # Возраст/дата вместо имени — это информация, а не имя: она уже
+        # подхвачена сбором сущностей, анкете нужно ответить и переспросить.
+        if extract_age(clean) or extract_birthday(clean):
+            return True
         # Сначала вопрос/тема: «Сколько стоит обучение?» формально похоже на
         # ФИО (три слова с гласными), и наивная проверка имени принимала его
         # за ответ — анкета уезжала дальше с «именем»-вопросом в CRM.
@@ -229,6 +242,16 @@ def current_prompt(conv: Conversation) -> str:
     """Текст текущего шага анкеты — чтобы вернуться к ней после ответа."""
     step = conv.registration_step or _current_step(conv)
     return REG_PROMPTS.get(step, "")
+
+
+# Сколько раз подряд анкета напоминает о себе после off-topic ответов.
+# Если человек задаёт вопросы подряд, дальше отвечаем без назойливого
+# «Как вас зовут?» в каждом сообщении — анкета остаётся ждать.
+MAX_REG_NUDGES = 2
+
+
+def should_nudge(conv: Conversation) -> bool:
+    return getattr(conv, "reg_nudges", 0) < MAX_REG_NUDGES
 
 
 def start_registration(conv: Conversation) -> str:
@@ -313,6 +336,10 @@ async def handle_registration_step(
 
     # Move to next step
     next_step = _current_step(conv)
+    if next_step != step:
+        # Шаг сдвинулся — человек отвечает на анкету, счётчик «напоминаний
+        # после off-topic» начинаем заново.
+        conv.reg_nudges = 0
     if next_step == "done":
         conv.registered = True
         conv.registration_step = ""

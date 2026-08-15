@@ -245,6 +245,7 @@ def _vault_for(conv: Conversation):
 async def _consult_with_context(
     conv: Conversation, text: str, kb_context: str, kb_score: float = 1.0,
     allow_web_retry: bool = False, school_related: bool | None = None,
+    search_text: str | None = None,
 ) -> str:
     kb = get_kb()
     llm = get_llm()
@@ -282,7 +283,7 @@ async def _consult_with_context(
                 return await _refer_to_admin(conv, text, reason="llm_uncertain", score=kb_score)
             return reply
     if kb_context:
-        plain = _plain_answer(kb, text)
+        plain = _plain_answer(kb, search_text or text)
         if plain:
             nudge = sales.sales_nudge(conv)
             reply = f"{_empathy_prefix(conv)}{plain}"
@@ -330,13 +331,7 @@ _SCHOOL_SCOPE_RE = re.compile(
 )
 
 # Короткая вежливая реплика без вопроса: благодарность, подтверждение.
-# Нарочно без «да»/«ок» — они бывают ответом на вопрос бота («Записать вас?»),
-# и глушить их дежурной фразой нельзя.
-_SMALLTALK_RE = re.compile(
-    r"(?:спасибо|спс|благодарю|благодарим|понятно|ясно|отлично|супер|здорово|договорились)"
-    r"[\s!.…😊🙏👍❤️]*",
-    re.IGNORECASE,
-)
+# Само распознавание — I.is_smalltalk; здесь только варианты ответа.
 _SMALLTALK_REPLIES = (
     "Пожалуйста! 😊 Если появятся вопросы — я здесь.",
     "Всегда пожалуйста! Обращайтесь, если что-то понадобится.",
@@ -347,7 +342,20 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
     """Свободный консультативный ответ: база знаний + живые источники,
     при слабом покрытии — живой веб-поиск (RAG-lite)."""
     kb = get_kb()
-    scored = kb.search_scored(text, limit=5)
+    # Короткие уточнения («а сколько стоит?», «это за месяц или за курс?») не
+    # несут темы сами — тема в предыдущей реплике. Без подмешивания контекста
+    # поиск находил нерелевантные документы, и LLM честно отвечала «не знаю»
+    # при готовом ответе в базе (китайский, 13 лет → «а сколько стоит?»).
+    search_text = text
+    if len(text.strip()) < 30:
+        prev_user = next(
+            (m.get("content", "") for m in reversed(conv.history[:-1])
+             if m.get("role") == "user"),
+            "",
+        )
+        if prev_user:
+            search_text = f"{prev_user} {text}"
+    scored = kb.search_scored(search_text, limit=5)
     kb_context = "\n\n".join(doc.render() for _, doc in scored)
     top_score = scored[0][0] if scored else 0.0
     if scored and top_score < _WEAK_KB_SCORE:
@@ -362,6 +370,7 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
     return await _consult_with_context(
         conv, text, context, kb_score=top_score,
         allow_web_retry=allow_web, school_related=school_related,
+        search_text=search_text,
     )
 
 
@@ -477,21 +486,21 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     _remember_dialogue_state(conv, text, intent)
 
     if not registration.is_registered(conv):
-        if conv.stage != registration.STAGE_REGISTRATION:
-            reply = registration.start_registration(conv)
-            result = "registration"
-        elif intent == I.HANDOFF:
+        started = conv.stage != registration.STAGE_REGISTRATION
+        # start_registration склеивает приветствие и первый вопрос анкеты.
+        welcome = registration.start_registration(conv) if started else ""
+        result = "registration"
+        if intent == I.HANDOFF:
             # Просьба позвать человека важнее анкеты: передаём диалог,
             # регистрация продолжится после ответа администратора.
             await hand_off(get_max(), conv, reason="запрос оператора")
             reply = _handoff_reply()
             result = "handoff"
         elif registration.looks_off_topic(conv, text):
-            # Вместо ответа на шаг анкеты человек задал вопрос. Раньше анкета
-            # отвечала на него тем же «Напишите ваше имя» — бесконечно, это и
-            # было главным «залипанием» бота. Теперь вопрос проходит тот же
-            # маршрут, что и у зарегистрированного клиента (факты, цены,
-            # возражения), а анкета ждёт и мягко напоминает о себе после ответа.
+            # Вопрос вместо ответа на шаг анкеты отвечается по существу тем же
+            # маршрутом, что и у зарегистрированного клиента. Правило действует
+            # и на САМОЕ ПЕРВОЕ сообщение: «Сколько стоит английский?» не
+            # должно получать в ответ одно лишь приветствие с анкетой.
             if intent == I.GREETING:
                 answer = "Здравствуйте! 😊"
             else:
@@ -502,20 +511,28 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
                     # сбросить этап — анкету это обнуляло молча, и следующая
                     # реплика начинала регистрацию заново. Возвращаем шаг.
                     conv.stage, conv.registration_step = saved_stage, saved_step
-            if conv.stage == registration.STAGE_REGISTRATION:
+            if conv.stage == registration.STAGE_REGISTRATION and registration.should_nudge(conv):
                 prompt = registration.current_prompt(conv)
-                reply = f"{answer}\n\n{prompt}" if prompt else answer
-            else:
-                # Вопрос сам запустил сценарий (заявка/передача админу) —
-                # он важнее анкеты, не дёргаем человека регистрацией.
-                reply = answer
+                if prompt:
+                    answer = f"{answer}\n\n{prompt}"
+                    conv.reg_nudges += 1
+            reply = answer
+            if started:
+                # Из приветствия убираем вопрос анкеты — он уже стоит после
+                # ответа (или подавлен лимитом напоминаний).
+                greeting_only = welcome
+                prompt = registration.current_prompt(conv)
+                if prompt and greeting_only.endswith(prompt):
+                    greeting_only = greeting_only[: -len(prompt)].rstrip()
+                reply = f"{greeting_only}\n\n{answer}" if greeting_only else answer
             reply = await _review(conv, text, reply)
             result = "registration_offtopic"
+        elif started:
+            reply = welcome
         else:
             reply, _done = await registration.handle_registration_step(
                 conv, text, get_bigben()
             )
-            result = "registration"
         conv.add("assistant", reply)
         store.save(conv)
         convlog.log_turn(user_id, text, reply, intent, conv.stage, result)
@@ -950,7 +967,7 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     #    выгрузки из базы знаний и без продажи. «Спасибо!» раньше уходило в
     #    KB-поиск и получало в ответ дословный отзыв с сайта — худший из
     #    возможных ответов на вежливость.
-    if _SMALLTALK_RE.fullmatch(text.strip()):
+    if I.is_smalltalk(text):
         return _SMALLTALK_REPLIES[len(conv.history) % len(_SMALLTALK_REPLIES)]
 
     # 9. Во всех прочих случаях — консультативный ответ по базе знаний.
