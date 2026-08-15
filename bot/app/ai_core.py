@@ -356,6 +356,18 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
         if prev_user:
             search_text = f"{prev_user} {text}"
     scored = kb.search_scored(search_text, limit=5)
+    if I.detect_intent(text) == I.PRICE:
+        # Вопрос о цене обязан видеть документы с ценами, даже если лексический
+        # поиск вытащил наверх FAQ про режим работы или возрастную программу
+        # без стоимости. Иначе модель честно отвечает «не знаю» при готовом
+        # ответе в базе (прод: «ей 6 лет» → «а сколько стоит?» → handoff).
+        in_context = {id(doc) for _, doc in scored}
+        priced = [
+            doc
+            for doc in kb.search(search_text, limit=20)
+            if _PRICE_DOC_RE.search(doc.text) and id(doc) not in in_context
+        ]
+        scored.extend((0.0, doc) for doc in priced[:3])
     kb_context = "\n\n".join(doc.render() for _, doc in scored)
     top_score = scored[0][0] if scored else 0.0
     if scored and top_score < _WEAK_KB_SCORE:
