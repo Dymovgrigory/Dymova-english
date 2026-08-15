@@ -36,6 +36,9 @@
        Движок: WebGL fluid sim Pavel Dobryakov (MIT), авто-курсор орбитирует центр.
        Canvas позиционируется тем же классом .fxb-cinema-video, что и старое видео. -->
   <canvas id="fxb-fluid" class="fxb-cinema-video fxb-anim-fade" style="animation-delay:.2s" aria-hidden="true"></canvas>
+  <!-- След чернил за курсором на всей странице: прозрачный fixed-холст, та же
+       симуляция без фона и автовсплесков. Должен стоять РАНЬШЕ fluid-скрипта. -->
+  <canvas id="fxb-fluid-trail" aria-hidden="true"></canvas>
   <div class="fxb-cinema-veil"></div>
 <div id="fxb-hero">
   <!-- декоративные swirl/zigzag/fox-head убраны (сессия 52) — мешались поверх fluid-фона -->
@@ -334,6 +337,8 @@
   radial-gradient(110% 90% at 85% 30%,rgba(36,198,160,.35),transparent 62%),
   linear-gradient(160deg,#0b0a1a,#04050c)}
 #fxb-cinema .fxb-cinema-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+/* След чернил за курсором: поверх контента, ниже шапки (9000) и модалок (9999+) */
+#fxb-fluid-trail{position:fixed;inset:0;width:100%;height:100%;z-index:900;pointer-events:none}
 #fxb-cinema .fxb-cinema-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
     radial-gradient(120% 60% at 50% 30%,rgba(4,5,12,.6) 0%,rgba(4,5,12,.35) 45%,rgba(4,5,12,0) 75%),
@@ -374,24 +379,33 @@
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   try{ fluidSimulation(canvas); }catch(e){ canvas.style.display='none'; }
 
-function fluidSimulation(canvas) {
+  // След чернил за курсором на всей странице — только движение мыши,
+  // без фона и автовсплесков; на тач-устройствах не запускаем вовсе.
+  var trail=document.getElementById('fxb-fluid-trail');
+  if(trail&&!/Mobi|Android/i.test(navigator.userAgent)){
+    try{ fluidSimulation(trail,{transparent:true,auto:false,touch:false,sim:112,dye:320,pressure:14}); }
+    catch(e){ trail.style.display='none'; }
+  }
+
+function fluidSimulation(canvas, opts) {
+    opts = opts || {};
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
     let config = {
-        SIM_RESOLUTION: isMobile() ? 128 : 200,
-        DYE_RESOLUTION: isMobile() ? 384 : 512,
+        SIM_RESOLUTION: opts.sim || (isMobile() ? 128 : 200),
+        DYE_RESOLUTION: opts.dye || (isMobile() ? 384 : 512),
         DENSITY_DISSIPATION: 0.958,
         VELOCITY_DISSIPATION: 0.96,
         PRESSURE_DISSIPATION: 0.8,
-        PRESSURE_ITERATIONS: isMobile() ? 14 : 20,
+        PRESSURE_ITERATIONS: opts.pressure || (isMobile() ? 14 : 20),
         CURL: 42,
         SPLAT_RADIUS: 0.22,
         SHADING: true,
         COLORFUL: true,
         PAUSED: false,
         BACK_COLOR: { r: 4, g: 5, b: 12 }, // почти чёрный — как в мини-приложении бота
-        TRANSPARENT: false,
+        TRANSPARENT: !!opts.transparent,
         BLOOM: false,
         BLOOM_ITERATIONS: 8,
         BLOOM_RESOLUTION: 256,
@@ -445,7 +459,7 @@ function fluidSimulation(canvas) {
             supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
         }
 
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clearColor(0.0, 0.0, 0.0, config.TRANSPARENT ? 0.0 : 1.0);
 
         const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES;
         let formatRGBA;
@@ -1120,9 +1134,14 @@ function fluidSimulation(canvas) {
 
     initFramebuffers();
     // Сильный вход: плотный всплеск + 8 быстрых волн (по одной на кадр в input()).
-    multipleSplats(34);
-    for (let i = 0; i < 8; i++)
-        splatStack.push(10 + parseInt(Math.random() * 10));
+    // У «следящего» холста (opts.auto === false) входа и авто-курсора нет —
+    // чернила появляются только от движения мыши.
+    const auto = opts.auto !== false;
+    if (auto) {
+        multipleSplats(34);
+        for (let i = 0; i < 8; i++)
+            splatStack.push(10 + parseInt(Math.random() * 10));
+    }
 
     let lastColorChangeTime = Date.now();
     let virtualSeeded = false;
@@ -1150,7 +1169,7 @@ function fluidSimulation(canvas) {
         // Нулевой размер холста: пересборка буферов на 0×0 убила бы симуляцию.
         if (!canvas.clientWidth || !canvas.clientHeight) return;
         resizeCanvas();
-        driveVirtualPointer();
+        if (auto) driveVirtualPointer();
         input();
         if (!config.PAUSED)
             step(0.016);
@@ -1303,12 +1322,8 @@ function fluidSimulation(canvas) {
             gl.uniform4f(colorProgram.uniforms.color, bc.r / 255, bc.g / 255, bc.b / 255, 1);
             blit(target);
         }
-
-        if (target == null && config.TRANSPARENT) {
-            backgroundProgram.bind();
-            gl.uniform1f(backgroundProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-            blit(null);
-        }
+        // В прозрачном режиме фон не рисуем вовсе: холст — чистый след чернил
+        // поверх страницы (display-шейдеры дают alpha = яркость краски).
 
         if (config.SHADING) {
             let program = config.BLOOM ? displayBloomShadingProgram : displayShadingProgram;
@@ -1459,6 +1474,7 @@ function fluidSimulation(canvas) {
         p.color = generateColor();
     });
 
+    if (opts.touch !== false) {
     on(window, 'touchmove', e => {
         const touches = e.targetTouches;
         for (let i = 0; i < touches.length; i++) {
@@ -1502,6 +1518,7 @@ function fluidSimulation(canvas) {
                 if (touches[i].identifier == pointers[j].id)
                     pointers[j].down = false;
     });
+    }
 
     // Вкладка в фоне и уход холста за экран останавливают счёт кадров.
     on(document, 'visibilitychange', () => {
