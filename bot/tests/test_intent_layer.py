@@ -104,6 +104,25 @@ def test_new_objection_keys_have_answers():
         assert kb.objection(key), key
 
 
+# ------------------------- приветствие + вопрос -------------------------
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("Здравствуйте! Сколько стоит английский для ребёнка?", I.PRICE),
+        ("Привет, а где вы находитесь?", I.CONTACTS),
+        ("Добрый день, ищу курс английского для сына", I.COURSES),
+        ("Здравствуйте", I.GREETING),
+        ("Привет!", I.GREETING),
+        ("Здравствуйте, я пока не хочу записываться", I.GREETING),
+    ],
+)
+def test_greeting_does_not_swallow_the_question(text, expected):
+    """Приветствие не должно глушить содержательную часть сообщения."""
+    assert I.detect_intent(text) == expected
+
+
 
 async def test_refine_is_skipped_without_a_model():
     assert await intent_ai.refine("хотелось бы уже начать заниматься") is None

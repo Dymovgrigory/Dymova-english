@@ -34,8 +34,9 @@ _PATTERNS: list[tuple[str, list[str]]] = [
     (COURSES, ["курс", "программ", "какие занятия", "направлен", "немецк",
                "китайск", "английск", "чтени", "грамматик", "летн", "академи",
                "онлайн", "оффлайн", "офлайн", "группа", "уровень"]),
-    (CONTACTS, ["адрес", "филиал", "где наход", "как добраться", "телефон",
-                "контакт", "режим работы", "часы работы", "как с вами связаться"]),
+    (CONTACTS, ["адрес", "филиал", "где наход", "находитесь", "находится",
+                "как добраться", "телефон", "контакт", "режим работы",
+                "часы работы", "как с вами связаться"]),
     (ABOUT, ["о школе", "о вас", "кто вы", "методик", "лицензи", "преподавател",
              "педагог", "отзыв", "результат", "почему вы", "преимуществ",
              "руководител", "директор", "кто ведёт", "кто ведет", "команд",
@@ -163,6 +164,7 @@ def detect_intent(text: str) -> str:
         return HOMEWORK
     if "дз" in low and not re.search(r"[а-яёa-z]дз[а-яёa-z]", low):
         return HOMEWORK
+    first = None
     for intent, words in _PATTERNS:
         for word in words:
             position = low.find(word)
@@ -172,7 +174,28 @@ def detect_intent(text: str) -> str:
                 # Отказ от записи — не намерение записаться. Пропускаем этот
                 # шаблон и ищем, о чём человек спрашивает на самом деле.
                 continue
-            return intent
+            first = intent
+            break
+        if first:
+            break
+    if first == GREETING:
+        # «Здравствуйте! Сколько стоит обучение?» — это вопрос о цене,
+        # а не приветствие: голое слово-приветствие не должно глушить
+        # содержательную часть сообщения. Убираем приветственные слова
+        # и смотрим, о чём человек на самом деле спрашивает.
+        rest = low
+        for word in _PATTERNS[0][1]:
+            rest = rest.replace(word.strip(), " ")
+        for intent, words in _PATTERNS[1:]:
+            for word in words:
+                position = rest.find(word)
+                if position < 0:
+                    continue
+                if intent in _NEGATABLE and _is_negated(rest, position):
+                    continue
+                return intent
+    if first:
+        return first
     if "?" in low:
         return QUESTION
     return QUESTION
