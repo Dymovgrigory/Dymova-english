@@ -562,7 +562,11 @@ async def _detect_intent(conv: Conversation, text: str) -> str:
     """
     intent = I.detect_intent(text)
     if intent != I.QUESTION:
-        return intent
+        # «Здравствуйте, ищу занятия для дочки» — формально приветствие,
+        # но по смыслу это запрос программ. Голое «привет» уточнять нечего —
+        # модель подключаем только когда кроме приветствия есть содержание.
+        if intent != I.GREETING or len(text.split()) < 4:
+            return intent
     try:
         refined = await asyncio.wait_for(
             intent_ai.refine(text, conv.history, vault=_vault_for(conv)),
