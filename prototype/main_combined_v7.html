@@ -379,11 +379,12 @@
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   try{ fluidSimulation(canvas); }catch(e){ canvas.style.display='none'; }
 
-  // След чернил за курсором на всей странице — только движение мыши,
-  // без фона и автовсплесков; на тач-устройствах не запускаем вовсе.
+  // След чернил за указателем на всей странице — без фона и автовсплесков.
+  // Десктоп — мышь, мобильный — касание (сетка ещё ниже: 96/256).
   var trail=document.getElementById('fxb-fluid-trail');
-  if(trail&&!/Mobi|Android/i.test(navigator.userAgent)){
-    try{ fluidSimulation(trail,{transparent:true,auto:false,touch:false,sim:112,dye:320,pressure:14}); }
+  if(trail){
+    var trailMobile=/Mobi|Android/i.test(navigator.userAgent);
+    try{ fluidSimulation(trail,{transparent:true,auto:false,sim:trailMobile?96:112,dye:trailMobile?256:320,pressure:14}); }
     catch(e){ trail.style.display='none'; }
   }
 
@@ -400,7 +401,9 @@ function fluidSimulation(canvas, opts) {
         PRESSURE_DISSIPATION: 0.8,
         PRESSURE_ITERATIONS: opts.pressure || (isMobile() ? 14 : 20),
         CURL: 42,
-        SPLAT_RADIUS: 0.22,
+        // На узком экране телефона радиус 0.22 давал огромные размытые
+        // кляксы — уменьшаем, чернила остаются чёткими, как в боте.
+        SPLAT_RADIUS: isMobile() ? 0.12 : 0.22,
         SHADING: true,
         COLORFUL: true,
         PAUSED: false,
