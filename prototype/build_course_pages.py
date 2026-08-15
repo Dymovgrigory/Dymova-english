@@ -329,7 +329,22 @@ def zayavka_modal():
             '<input type="hidden" name="Раздел" value="">'
             '<input type="hidden" name="Страница" value="">'
             '<label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" required aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label>'
+            '<label class="fxb-zfield"><span>Имя ребёнка</span><input type="text" name="ChildName" required aria-required="true" placeholder="Как зовут ребёнка"></label>'
+            '<label class="fxb-zfield"><span>Дата рождения ребёнка</span><input type="date" name="BirthDate" required aria-required="true" min="2007-01-01" max="2025-12-31"></label>'
             '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" required aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
+            '<label class="fxb-zfield"><span>Какой курс интересует</span><select name="Course" class="fxb-zselect">'
+            '<option value="Пока не определился" selected>Пока не определился</option>'
+            '<option value="Языки (английский, немецкий, китайский)">Языки (английский, немецкий, китайский)</option>'
+            '<option value="Интенсивы">Интенсивы</option>'
+            '<option value="Подготовка к школе">Подготовка к школе</option>'
+            '<option value="Репетиторские услуги (1–4 класс)">Репетиторские услуги (1–4 класс)</option>'
+            '</select></label>'
+            '<label class="fxb-zfield"><span>Опыт занятий</span><select name="Experience" class="fxb-zselect" required aria-required="true">'
+            '<option value="" disabled selected>Выберите вариант</option>'
+            '<option value="Никогда не занимались">Никогда не занимались</option>'
+            '<option value="Занимались в школе">Занимались в школе</option>'
+            '<option value="Занимались дополнительно английским" data-fxb-exp-extra>Занимались дополнительно английским</option>'
+            '</select></label>'
             '<button type="submit" class="fxb-btn-main fxb-zsubmit">%sОтправить заявку</button>'
             '<p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p>'
             '<div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-top:6px"></div></div>'
@@ -361,9 +376,10 @@ ZAYAVKA_CSS = """
 #fxb-page .fxb-zform{display:grid;gap:14px}
 #fxb-page .fxb-zfield{display:grid;gap:6px}
 #fxb-page .fxb-zfield span{font-size:12.5px;font-weight:700;color:var(--purple-2);letter-spacing:.02em}
-#fxb-page .fxb-zfield input{font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 16px;border:1.6px solid rgba(57,40,82,.14);border-radius:13px;background:#faf8fe;transition:border-color .2s,box-shadow .2s;width:100%}
-#fxb-page .fxb-zfield input:focus{outline:0;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.12)}
-#fxb-page .fxb-zfield.fxb-zerr input{border-color:#e0526a;background:#fdf2f4}
+#fxb-page .fxb-zfield input,#fxb-page .fxb-zfield select{font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 16px;border:1.6px solid rgba(57,40,82,.14);border-radius:13px;background:#faf8fe;transition:border-color .2s,box-shadow .2s;width:100%}
+#fxb-page .fxb-zfield select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23662d92' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;cursor:pointer}
+#fxb-page .fxb-zfield input:focus,#fxb-page .fxb-zfield select:focus{outline:0;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.12)}
+#fxb-page .fxb-zfield.fxb-zerr input,#fxb-page .fxb-zfield.fxb-zerr select{border-color:#e0526a;background:#fdf2f4}
 #fxb-page .fxb-zsubmit{width:100%;justify-content:center;margin-top:4px;border:0;cursor:pointer;font-family:inherit}
 #fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:var(--purple)}
 #fxb-page .fxb-znote{font-size:11px;color:#a89fbd;font-weight:500;line-height:1.45;margin-top:2px;text-align:center}
@@ -398,6 +414,19 @@ ZAYAVKA_JS = """
     var fxbZpage=fxbZ.querySelector('[name="Страница"]');
     var fxbZwrite=function(el,v){if(el)el.value=v;};
     var fxbZtext=function(el,v){if(el)el.textContent=v;};
+    // Язык заявки определяет подпись третьего пункта про опыт и пресет курса.
+    var fxbZlang=function(subject){
+      if(/немецк/i.test(subject))return 'немецким';
+      if(/китайск/i.test(subject))return 'китайским';
+      return 'английским';
+    };
+    var fxbZcoursePreset=function(subject){
+      if(/интенсив/i.test(subject))return 'Интенсивы';
+      if(/подготовк/i.test(subject))return 'Подготовка к школе';
+      if(/репетитор/i.test(subject))return 'Репетиторские услуги (1–4 класс)';
+      if(/английск|немецк|китайск|язык/i.test(subject))return 'Языки (английский, немецкий, китайский)';
+      return '';
+    };
     var fxbZopen=function(z){
       var subject=(z&&z.getAttribute('data-fxb-subject')||'').trim();
       var win=(z&&z.getAttribute('data-fxb-window')||'').trim();
@@ -409,7 +438,11 @@ ZAYAVKA_JS = """
       fxbZwrite(fxbZpage,(document.title||location.pathname)+' ['+location.pathname+']');
       fxbZwrite(fxbZformname,title);
       fxbZtext(fxbZtitle,title);
-      fxbZtext(fxbZsub,'Оставьте имя и телефон — перезвоним, расскажем подробности и подберём удобный формат.');
+      fxbZtext(fxbZsub,'Оставьте контакты — перезвоним, расскажем подробности и подберём удобный формат.');
+      var extra=fxbZ.querySelector('[data-fxb-exp-extra]');
+      if(extra){var ev='Занимались дополнительно '+fxbZlang(subject);extra.value=ev;extra.textContent=ev;}
+      var courseSel=fxbZ.querySelector('[name="Course"]');
+      if(courseSel)courseSel.value=fxbZcoursePreset(subject)||'Пока не определился';
       fxbZvForm.hidden=false;fxbZvThx.hidden=true;fxbZ.hidden=false;document.body.style.overflow='hidden';
     };
     var fxbZclose=function(){fxbZ.hidden=true;document.body.style.overflow='';};
@@ -426,27 +459,41 @@ ZAYAVKA_JS = """
     fxbForm.addEventListener('submit',function(e){
       e.preventDefault();
       var nameEl=fxbForm.querySelector('[name="Name"]');
+      var childEl=fxbForm.querySelector('[name="ChildName"]');
+      var birthEl=fxbForm.querySelector('[name="BirthDate"]');
       var phoneEl=fxbForm.querySelector('[name="Phone"]');
+      var courseEl=fxbForm.querySelector('[name="Course"]');
+      var expEl=fxbForm.querySelector('[name="Experience"]');
       var name=(nameEl&&nameEl.value||'').trim();
+      var child=(childEl&&childEl.value||'').trim();
+      var birth=(birthEl&&birthEl.value||'').trim();
       var phone=(phoneEl&&phoneEl.value||'').trim();
+      var exp=(expEl&&expEl.value||'').trim();
       var errBox=fxbForm.querySelector('.js-errorbox-all .js-rule-error-all');
-      [nameEl,phoneEl].forEach(function(el){if(el)el.closest('.fxb-zfield').classList.remove('fxb-zerr');});
-      if(!name||!phone){
-        if(!name&&nameEl)nameEl.closest('.fxb-zfield').classList.add('fxb-zerr');
-        if(!phone&&phoneEl)phoneEl.closest('.fxb-zfield').classList.add('fxb-zerr');
-        if(errBox){errBox.textContent='Укажите имя и телефон.';errBox.closest('.js-errorbox-all').style.display='block';}
+      [nameEl,childEl,birthEl,phoneEl,expEl].forEach(function(el){if(el)el.closest('.fxb-zfield').classList.remove('fxb-zerr');});
+      var bad=[];
+      if(!name&&nameEl)bad.push(nameEl);
+      if(!child&&childEl)bad.push(childEl);
+      if(!birth&&birthEl)bad.push(birthEl);
+      if(!phone&&phoneEl)bad.push(phoneEl);
+      if(!exp&&expEl)bad.push(expEl);
+      if(bad.length){
+        bad.forEach(function(el){el.closest('.fxb-zfield').classList.add('fxb-zerr');});
+        if(errBox){errBox.textContent='Заполните все обязательные поля: имя, имя ребёнка, дата рождения, телефон и опыт занятий.';errBox.closest('.js-errorbox-all').style.display='block';}
         return;
       }
       if(errBox)errBox.closest('.js-errorbox-all').style.display='none';
       var subject=(fxbForm.querySelector('[name="Предмет"]')||{}).value||'';
       var section=(fxbForm.querySelector('[name="Раздел"]')||{}).value||'';
       var page=(fxbForm.querySelector('[name="Страница"]')||{}).value||'';
+      var coursePick=(courseEl&&courseEl.value)||'Пока не определился';
+      var comment=section+'; Курс: '+coursePick+'; Опыт: '+exp;
       var submitBtn=fxbForm.querySelector('.fxb-zsubmit');
       if(submitBtn)submitBtn.disabled=true;
       fetch('%s',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({fio_parent:name,phone:phone,course:subject,comment:section,source:'Сайт dymova-english.ru — '+(subject||'заявка')+' ('+page+')'})
+        body:JSON.stringify({fio_parent:name,fio_child:child,phone:phone,birthday:birth,course:subject,comment:comment,source:'Сайт dymova-english.ru — '+(subject||'заявка')+' ('+page+')'})
       }).then(function(r){return r.json();}).then(function(data){
         if(submitBtn)submitBtn.disabled=false;
         if(data&&data.ok){window.fxbZSuccess();}
