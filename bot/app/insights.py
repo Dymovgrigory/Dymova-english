@@ -56,6 +56,15 @@ def log_gap(question: str, reason: str, score: float, user_id: str = "") -> None
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception:
         logger.exception("insights: не удалось записать пробел")
+    # Дублируем «пробел» в CRM-журнал событий AI, чтобы вопрос был виден
+    # в карточке клиента, а не только в сводном дайджесте.
+    if user_id:
+        try:
+            from app import crm_ingest
+
+            crm_ingest.ingest_no_answer(user_id, question, reason)
+        except Exception:
+            logger.exception("insights: не удалось записать ai_event")
 
 
 def _read(since_ts: int = 0) -> list[dict]:

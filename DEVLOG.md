@@ -1058,6 +1058,8 @@ bot/
 
 ## Текущий статус / Где остановились
 
+**Обновлено в Сессии 56 (2026-08-16):** построен полный Control Center поверх бота — постоянная CRM (клиенты/идентичности/вся история сообщений в crm_* таблицах того же bot.db), omnichannel inbox, карточки клиентов, рассылки с историей и retry, kanban-воронка, аналитика, KB из БД, версии AI-промпта, RBAC (5 ролей), бэкапы `scripts/backup_db.sh`. Код в рабочем дереве, **947 тестов зелёные, PR и деплой НЕ выполнены — ждут подтверждения владельца**. Перед деплоем: `BOT_DATA_DIR=/opt/foxinburg/data` в прод .env + перенос bot.db + cron на backup_db.sh + ADMIN_BOOTSTRAP_PASSWORD (см. DEVLOG «Сессия 56» и bot/DEPLOY.md).
+
 **Последний влитый PR:** **#115** (BigBen lead defaults). В работе: PR «не выдумываем + перевод на администратора + журнал пробелов» (ветка `devin/1783540723-foxi-no-hallucination`) — после мержа переразвернуть прод из `main`.
 
 **Telegram:** @foxinburg_bot работает через long-polling + SOCKS5-прокси (РКН блокирует и inbound, и outbound к api.telegram.org). `TELEGRAM_POLLING=true`, `TELEGRAM_PROXY_URL` в прод `.env`.
@@ -3821,3 +3823,47 @@ bot/
 **Тесты:** 889 passed (+6 регрессионных: greeting+question матрица). Повторный живой smoke на проде после деплоя — ниже.
 10. «Здравствуйте, ищу занятия для дочки» (приветствие без ключевых слов из 4+ слов) — модельный слой intent_ai не вызывался: теперь refine подключается и для GREETING с содержательным хвостом (`_detect_intent`).
 11. Финальный повторный прогон на проде: «ищу занятия для дочки» больше не стартует заявку (уточняет возраст), «а сколько стоит?» после возраста отвечает реальной ценой (8 200/9 000 ₽) — раньше там был ложный handoff: KB-поиск по «6 лет + цена» не поднимал документы с ₽. Фикс: для PRICE-интента в `_consult` принудительно докладываются до 3 документов с ценами в контекст модели. 889 тестов зелёные, прод пересобран.
+
+### Сессия 56 (Kimi Code) — полный Control Center: CRM, omnichannel inbox, рассылки, AI control, RBAC
+
+**Дата:** 2026-08-16
+**PR:** не создавался (ждёт подтверждения владельца), коммитов нет.
+**Запрос владельца:** устранить исчезновение клиентов/переписок раз и навсегда и построить полный Control Center поверх бота: постоянное хранилище диалогов, единый inbox по каналам, карточки клиентов, рассылки с историей, управление AI, аналитика, роли пользователей.
+
+**Аудит — корневые причины исчезновения данных (найдены до кода):**
+1. Legacy `conversations` хранит весь диалог одним JSON-payload, перезаписываемым при каждом сообщении (`memory.py:save`) — вся история в одной строке, легко теряется целиком.
+2. Окна обрезки: `history` ≤ 20 сообщений, `transcript` ≤ 1000 — старые переписки стираются по факту переполнения.
+3. Исторически `DB_PATH` по умолчанию игнорировался и подменялся на `:memory:` — бот терял ВСЁ при каждом рестарте (исправлено ранее, но наследие осталось в поведении).
+4. Docker volume `./data:/app/data` — относительный путь: запуск compose из другого каталога поднимал бота с пустой базой.
+5. Виджет сайта: session_id только в localStorage — новый браузер/очистка = новый «клиент».
+6. Каналы (MAX/Telegram/web) жили раздельно: один человек = несколько несвязанных «пользователей».
+
+**Что сделано (этапы 2–14 мастер-плана):**
+
+*Хранилище (bot/app/crm_store.py, новая схема рядом с legacy в том же bot.db):*
+- Таблицы: `customers` (только soft delete — архивация), `customer_identities` (UNIQUE channel+external_id, склейка каналов по телефону), `crm_conversations` (ai_mode/ai_paused_until/unread_count/агрегаты), `crm_messages` (частичный UNIQUE по внешнему id — идемпотентность, 4 индекса), `crm_messages_fts` (FTS5 + триггеры), `inbound_events` (дедуп событий, статусы), `audit_log`, `customer_notes`, `customer_tasks`, `tags`/`customer_tags`, `ai_events`, `broadcasts`/`broadcast_recipients`, `segments`, `kb_documents`, `ai_prompts`, `admin_users`/`admin_sessions`. Все записи в транзакциях, DELETE клиентских данных нет нигде.
+- Ingestion (`crm_ingest.py`) подключён ко всем трём каналам (MAX webhook, Telegram polling, /api/chat): входящее/исходящее пишутся всегда, сбой CRM никогда не ломает ответ клиенту; handoff и «bot не знал» (no_answer) дублируются в ai_events; ошибки отправки — status failed + error.
+- Миграция `migrate_from_legacy` + `scripts/migrate_crm.py`: однократная, идемпотентная (маркер в crm_meta + проверка уже перенесённых). Локальная база: **11 диалогов → 11 клиентов, 46 сообщений перенесено полностью**, FTS-индекс наполнен.
+
+*Админка (bot/app/adminapp/ переписана, bot/app/admin_api.py — /admin/api/*):*
+- Разделы: Дашборд, Входящие (3 колонки: список с фильтрами/полнотекстом по сообщениям — чат с lazy-load и ответами менеджера — карточка клиента), Клиенты (поиск/пагинация/экспорт CSV), Воронка (kanban drag-and-drop → lead_status с аудитом), Рассылки (сегменты-конструктор правил, preview, подтверждение, фоновая отправка, история, retry failed до 3 раз), Вопросы, Аналитика (SVG-графики без библиотек), База знаний (документы БД подмешиваются в поиск kb, кэш 60с, fail-safe на yaml), AI (версии системного промпта: активация/откат, fallback на кодовый SYSTEM_PROMPT при любом сбое), Ошибки (единая лента: AI/каналы/ingestion/рассылки), Настройки/Система (health, размер БД, uptime).
+- Ответы менеджера channel-aware: MAX/Telegram через клиентов, web — pending + поллинг виджета (`/api/chat/pending`, foxi.js забирает каждые 5с). Ответ менеджера переводит диалог в ai_mode=manager — AI не перебивает; пауза AI (30м/1ч/3ч/eod/вручную) с авто-возвратом по истечении (проверка в ai_core.handle_message).
+- Глобальный поиск Ctrl+K, polling inbox 5с, русский UI, responsive (мобила: список↔чат, карточка — drawer).
+
+*Security (этап 13):*
+- RBAC поверх старого ADMIN_TOKEN (он = super_admin, обратная совместимость): admin_users (scrypt-хэши из stdlib), admin_sessions (hex-токены, 7 дней), роли super_admin/admin/manager/marketing/support с матрицей прав в `admin_api.py:ROLE_PERMISSIONS`, 403 при недостатке, actor=username в audit_log.
+- POST /admin/api/login с rate-limit 5/мин по IP; /logout; /me; CRUD пользователей только super_admin. Bootstrap: первый пользователь admin с паролем из ADMIN_BOOTSTRAP_PASSWORD или сгенерированным (один раз в лог).
+- Security pass: /system отдаёт только bool «настроен» (без значений токенов), XSS-проверка app.js (весь пользовательский контент через esc()/textContent), CORS к /admin/api не добавлялся, ошибки API без stack traces.
+
+*Защита данных на проде (этап 14):*
+- docker-compose.yml: volume `${BOT_DATA_DIR:-./data}:/app/data` + абзац в DEPLOY.md (перенос базы в /opt/foxinburg/data один раз, предупреждение про относительный путь).
+- `scripts/backup_db.sh` — онлайн-бэкап SQLite (`.backup`) с ротацией 14 копий, инструкция для cron в DEPLOY.md.
+
+**Как проверено:**
+- тесты: `cd bot && .venv313/bin/pytest -q` → **947 passed** (новые: test_crm_store 10, test_crm_ingest 5, test_admin_api 16, test_broadcast_center 7, test_pipeline 4, test_analytics_ai 8, test_rbac 8).
+- живые smoke (uvicorn + Playwright) каждого раздела: inbox/чат/карточка, kanban, конструктор рассылки, аналитика, KB, промпты, логин manager → видны только его разделы; reply в web → pending доехал до виджет-поллинга.
+- контрактные тесты админки (токен не в исходниках) и `node --check` — зелёные.
+
+**Решения и нюансы:** legacy-таблица `conversations` не тронута (state для AI) — CRM построена рядом; SSE не делали, polling 5с допущен брифом; фоновые рассылки в тестах догоняются прямым вызовом runner (TestClient гасит loop).
+**Деплой:** НЕ выполнялся — ждёт подтверждения владельца. Перед деплоем: задать BOT_DATA_DIR=/opt/foxinburg/data в прод .env, перенести bot.db, поставить backup_db.sh в cron, задать ADMIN_BOOTSTRAP_PASSWORD.
+**Осталось / следующий шаг:** подтверждение владельца → PR + деплой; далее по желанию — SSE вместо polling, вложения в сообщениях, сбор отзывов (п.10 плана фич).

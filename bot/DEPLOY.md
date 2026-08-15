@@ -4,6 +4,27 @@
 HTTPS-доменом. Базы данных не требуется: состояние диалогов и журнал «пробелов»
 хранятся в файлах в каталоге `/data`.
 
+> **ВАЖНО про данные (bot.db):** в `bot.db` теперь живут не только состояния
+> диалогов, но и постоянная CRM (клиенты, вся история сообщений, рассылки).
+> Volume в docker-compose — `${BOT_DATA_DIR:-./data}:/app/data`. Относительный
+> `./data` привязан к каталогу, из которого запущен `docker compose`: запуск
+> из другого каталога поднимет бота с ПУСТОЙ базой — именно так на проде
+> «исчезали» клиенты. Один раз выполните:
+>
+> ```bash
+> sudo mkdir -p /opt/foxinburg/data
+> sudo cp -a ./data/bot.db* /opt/foxinburg/data/   # перенос существующей базы
+> echo 'BOT_DATA_DIR=/opt/foxinburg/data' >> .env
+> sudo docker compose up -d
+> ```
+>
+> **Бэкапы:** `scripts/backup_db.sh` делает согласованный снимок работающей
+> базы (`.backup`) с ротацией (14 последних). Поставьте в cron:
+>
+> ```cron
+> 0 4 * * * /opt/foxinburg/bot/scripts/backup_db.sh /opt/foxinburg/data/bot.db /opt/foxinburg/data/backups
+> ```
+
 ## Что подготовить заранее
 
 1. **Сервер** (например ВМ в Yandex Cloud): Ubuntu 22.04+, 1–2 vCPU, 1–2 ГБ RAM,

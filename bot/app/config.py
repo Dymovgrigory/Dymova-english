@@ -151,6 +151,9 @@ class Settings(BaseSettings):
 
     # --- Прочее ---
     REGISTRATION_REQUIRED: bool = False
+    # Пароль первого пользователя админки (логин admin) при начальной
+    # инициализации RBAC. Пусто = сгенерировать и напечатать в лог один раз.
+    ADMIN_BOOTSTRAP_PASSWORD: str = ""
     BOT_NAME: str = "Фоксинбург"
     DATA_DIR: str = ""  # переопределение пути к knowledge/data.yaml (опц.)
     DB_PATH: str = "./data/bot.db"

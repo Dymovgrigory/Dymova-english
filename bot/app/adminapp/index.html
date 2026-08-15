@@ -3,96 +3,384 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Фоксинбург — админка бота</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🦊</text></svg>" />
+  <title>Фоксинбург — CRM</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23f59e0b'/></svg>" />
   <link rel="stylesheet" href="app.css" />
 </head>
 <body>
 
-<!-- Ворота: без токена ничего не показываем и никуда не ходим. -->
+<!-- Ворота: логин/пароль (RBAC) или старый статический токен. -->
 <section class="gate" id="gate">
   <div class="gate__card">
-    <div class="gate__mark">🦊</div>
-    <h1>Админка бота</h1>
-    <p class="muted">Введите админ-токен. Он сохранится только в этом браузере.</p>
+    <div class="gate__mark">F</div>
+    <h1>Фоксинбург CRM</h1>
     <form id="gate-form">
-      <input type="password" id="gate-token" placeholder="Админ-токен" autocomplete="current-password" required />
+      <input type="text" id="gate-username" placeholder="Логин" autocomplete="username" required />
+      <input type="password" id="gate-password" placeholder="Пароль" autocomplete="current-password" required />
       <button class="btn" type="submit">Войти</button>
     </form>
     <p class="gate__error" id="gate-error" hidden></p>
+    <button class="btn btn--ghost btn--sm" id="gate-token-toggle" type="button">Вход по токену (старый способ)</button>
+    <form id="gate-token-form" hidden>
+      <input type="password" id="gate-token" placeholder="Админ-токен" autocomplete="off" />
+      <button class="btn btn--ghost" type="submit">Войти по токену</button>
+    </form>
   </div>
 </section>
 
 <div class="app" id="app" hidden>
-  <header class="topbar">
-    <div class="topbar__brand"><span>🦊</span> Фоксинбург <em>админка</em></div>
-    <div class="topbar__actions">
-      <button class="btn btn--ghost" id="refresh">Обновить</button>
-      <button class="btn btn--ghost" id="logout">Выйти</button>
+  <!-- Левая навигация -->
+  <aside class="sidebar">
+    <div class="sidebar__brand"><span class="brand-mark">F</span> Фоксинбург</div>
+    <nav class="sidebar__nav" id="nav">
+      <button class="nav-item nav-item--active" data-section="dashboard" data-perm="stats">
+        <svg viewBox="0 0 16 16"><rect x="1" y="8" width="4" height="7" rx="1"/><rect x="6" y="4" width="4" height="11" rx="1"/><rect x="11" y="1" width="4" height="14" rx="1"/></svg>
+        Дашборд</button>
+      <button class="nav-item" data-section="inbox" data-perm="inbox">
+        <svg viewBox="0 0 16 16"><path d="M2 3h12v9H6l-4 3z"/></svg>
+        Входящие <span class="nav-badge" id="nav-unread" hidden></span></button>
+      <button class="nav-item" data-section="customers" data-perm="customers">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 15c0-3 3-5 6-5s6 2 6 5"/></svg>
+        Клиенты</button>
+      <button class="nav-item" data-section="pipeline" data-perm="pipeline">
+        <svg viewBox="0 0 16 16"><path d="M2 2h12l-4 5v6l-4 2V7z"/></svg>
+        Воронка</button>
+      <button class="nav-item" data-section="broadcast" data-perm="broadcasts">
+        <svg viewBox="0 0 16 16"><path d="M2 6l11-4v12L2 10z"/><path d="M5 11v4h3v-4"/></svg>
+        Рассылки</button>
+      <button class="nav-item" data-section="insights" data-perm="stats">
+        <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l4 4"/></svg>
+        Вопросы</button>
+      <button class="nav-item" data-section="analytics" data-perm="analytics">
+        <svg viewBox="0 0 16 16"><path d="M2 14V8M6 14V4M10 14V9M14 14V2"/></svg>
+        Аналитика</button>
+      <button class="nav-item" data-section="kb" data-perm="kb">
+        <svg viewBox="0 0 16 16"><path d="M2 2h12v12H2z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>
+        База знаний</button>
+      <button class="nav-item" data-section="ai" data-perm="prompts">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>
+        AI</button>
+      <button class="nav-item" data-section="errors" data-perm="errors">
+        <svg viewBox="0 0 16 16"><path d="M8 2L1 14h14z"/><path d="M8 7v3M8 12v.5"/></svg>
+        Ошибки <span class="nav-badge" id="nav-errors" hidden></span></button>
+      <button class="nav-item" data-section="users" data-perm="users">
+        <svg viewBox="0 0 16 16"><circle cx="6" cy="5" r="3"/><path d="M1 14c0-3 2-5 5-5s5 2 5 5"/><path d="M12 4v4M10 6h4"/></svg>
+        Пользователи</button>
+      <button class="nav-item" data-section="settings" data-perm="system">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3M3 3l2 2M11 11l2 2M13 3l-2 2M5 11l-2 2"/></svg>
+        Настройки</button>
+    </nav>
+    <div class="sidebar__footer">
+      <button class="nav-item" id="logout">
+        <svg viewBox="0 0 16 16"><path d="M6 2H2v12h4M10 5l4 3-4 3M14 8H6"/></svg>
+        Выйти</button>
     </div>
-  </header>
+  </aside>
 
-  <nav class="tabs" id="tabs">
-    <button class="tab tab--active" data-tab="clients">Клиенты<span class="tab__count" id="count-clients"></span></button>
-    <button class="tab" data-tab="leads">Заявки<span class="tab__count" id="count-leads"></span></button>
-    <button class="tab" data-tab="broadcast">Рассылка</button>
-    <button class="tab" data-tab="insights">Вопросы</button>
-  </nav>
+  <div class="main">
+    <header class="topbar">
+      <button class="topbar__burger" id="burger" aria-label="Меню">☰</button>
+      <div class="topbar__search">
+        <input type="search" id="global-search" placeholder="Поиск: клиенты и сообщения (Ctrl+K)" />
+        <div class="search-results" id="search-results" hidden></div>
+      </div>
+      <div class="topbar__health" id="health-dots" title="Состояние каналов"></div>
+      <div class="topbar__user" id="topbar-user"></div>
+    </header>
 
-  <main>
+    <!-- Дашборд -->
+    <section class="page" id="page-dashboard">
+      <div class="cards" id="dash-cards"></div>
+      <div class="dash-grid">
+        <div class="widget">
+          <h3>Сообщения сегодня по каналам</h3>
+          <div id="dash-channels"></div>
+        </div>
+        <div class="widget">
+          <h3>Последние обращения</h3>
+          <div id="dash-latest"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inbox: 3 колонки -->
+    <section class="page page--inbox" id="page-inbox" hidden>
+      <div class="inbox-list" id="inbox-col-list">
+        <div class="inbox-filters">
+          <input type="search" id="inbox-search" placeholder="Имя, телефон, username" />
+          <div class="inbox-filters__row">
+            <select id="inbox-channel">
+              <option value="">Все каналы</option>
+              <option value="max">MAX</option>
+              <option value="telegram">Telegram</option>
+              <option value="web">Веб</option>
+            </select>
+            <select id="inbox-ai">
+              <option value="">AI: любой</option>
+              <option value="active">AI активен</option>
+              <option value="paused">AI на паузе</option>
+              <option value="manager">Менеджер</option>
+            </select>
+          </div>
+          <div class="inbox-filters__row">
+            <select id="inbox-lead">
+              <option value="">Любой статус</option>
+              <option value="new">Новый</option>
+              <option value="contacted">Контакт</option>
+              <option value="qualified">Квалифицирован</option>
+              <option value="trial">Пробный</option>
+              <option value="offer">Предложение</option>
+              <option value="payment">Оплата</option>
+              <option value="client">Клиент</option>
+              <option value="lost">Потерян</option>
+            </select>
+            <label class="check"><input type="checkbox" id="inbox-unread" /> Непрочитанные</label>
+          </div>
+          <div class="inbox-filters__row">
+            <input type="date" id="inbox-from" title="С даты" />
+            <input type="date" id="inbox-to" title="По дату" />
+          </div>
+        </div>
+        <div class="inbox-items" id="inbox-items"></div>
+      </div>
+
+      <div class="inbox-chat" id="inbox-col-chat">
+        <div class="chat-empty" id="chat-empty">Выберите диалог слева</div>
+        <div class="chat-wrap" id="chat-wrap" hidden>
+          <div class="chat-head">
+            <button class="btn btn--ghost btn--sm chat-back" id="chat-back">← К списку</button>
+            <div class="chat-head__title" id="chat-title"></div>
+            <div class="chat-head__actions">
+              <div class="ai-menu">
+                <button class="btn btn--sm" id="ai-toggle">AI</button>
+                <div class="ai-menu__drop" id="ai-drop" hidden>
+                  <button data-ai="active">AI активен</button>
+                  <button data-ai="paused" data-until="30m">Пауза 30 минут</button>
+                  <button data-ai="paused" data-until="1h">Пауза 1 час</button>
+                  <button data-ai="paused" data-until="3h">Пауза 3 часа</button>
+                  <button data-ai="paused" data-until="eod">Пауза до конца дня</button>
+                  <button data-ai="paused" data-until="">Пауза до ручного включения</button>
+                  <button data-ai="manager">Режим менеджера</button>
+                </div>
+              </div>
+              <button class="btn btn--ghost btn--sm" id="chat-customer-btn">Карточка</button>
+            </div>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <button class="btn btn--ghost btn--sm chat-more" id="chat-more" hidden>Загрузить раньше</button>
+          </div>
+          <form class="chat-input" id="chat-form">
+            <textarea id="chat-text" rows="2" placeholder="Ответить клиенту… (Enter — отправить, Shift+Enter — перенос)"></textarea>
+            <button class="btn" type="submit">Отправить</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="inbox-customer" id="inbox-col-customer">
+        <div class="customer-empty">Карточка клиента появится здесь</div>
+      </div>
+    </section>
+
     <!-- Клиенты -->
-    <section class="panel" id="panel-clients">
+    <section class="page" id="page-customers" hidden>
       <div class="toolbar">
-        <input type="search" id="search" placeholder="Поиск по имени, телефону, вопросу" />
+        <input type="search" id="customers-search" placeholder="Поиск по имени, телефону, ребёнку" />
+        <select id="customers-lead">
+          <option value="">Любой статус</option>
+          <option value="new">Новый</option>
+          <option value="contacted">Контакт</option>
+          <option value="qualified">Квалифицирован</option>
+          <option value="trial">Пробный</option>
+          <option value="client">Клиент</option>
+          <option value="lost">Потерян</option>
+        </select>
+        <label class="check"><input type="checkbox" id="customers-archived" /> Архивные</label>
+        <button class="btn btn--ghost btn--sm" id="export-customers">Экспорт CSV</button>
+        <button class="btn btn--ghost btn--sm" id="export-messages">Сообщения CSV</button>
       </div>
-      <div class="split">
-        <div class="list" id="clients-list"></div>
-        <aside class="detail" id="detail">
-          <div class="detail__empty">Выберите клиента, чтобы увидеть переписку</div>
-        </aside>
+      <div class="customers-list" id="customers-list"></div>
+      <div class="pager">
+        <button class="btn btn--ghost btn--sm" id="customers-prev">Назад</button>
+        <span id="customers-page" class="muted"></span>
+        <button class="btn btn--ghost btn--sm" id="customers-next">Вперёд</button>
       </div>
     </section>
 
-    <!-- Заявки -->
-    <section class="panel" id="panel-leads" hidden>
-      <div class="split">
-        <div class="list" id="leads-list"></div>
-        <aside class="detail" id="detail-leads">
-          <div class="detail__empty">Выберите заявку</div>
-        </aside>
+    <!-- Воронка (kanban) -->
+    <section class="page" id="page-pipeline" hidden>
+      <div class="kanban" id="kanban"></div>
+    </section>
+
+    <!-- Рассылки: история + конструктор -->
+    <section class="page" id="page-broadcast" hidden>
+      <div class="bc-layout">
+        <div class="bc-history">
+          <div class="bc-history__head">
+            <h3>История рассылок</h3>
+            <button class="btn btn--sm" id="bc-new">Новая рассылка</button>
+          </div>
+          <div id="bc-list"></div>
+        </div>
+        <div class="bc-main" id="bc-main">
+          <div class="empty">Выберите рассылку или создайте новую</div>
+        </div>
       </div>
     </section>
 
-    <!-- Рассылка -->
-    <section class="panel panel--form" id="panel-broadcast" hidden>
-      <div class="audience" id="audience"></div>
-      <label class="field">
-        <span>Текст сообщения</span>
-        <textarea id="bc-text" rows="6" placeholder="Что отправить клиентам"></textarea>
-      </label>
-      <div class="field-row">
-        <label class="field">
-          <span>Кому</span>
-          <select id="bc-segment">
-            <option value="all">Всем</option>
-            <option value="leads">Только с заявкой</option>
-          </select>
-        </label>
-      </div>
-      <div class="actions">
-        <button class="btn btn--ghost" id="bc-test">Отправить себе</button>
-        <button class="btn btn--danger" id="bc-send">Отправить выбранным</button>
-      </div>
-      <p class="hint">«Отправить себе» уходит только администраторам из ADMIN_MAX_IDS — проверьте текст на себе, прежде чем отправлять клиентам.</p>
-      <div class="result" id="bc-result" hidden></div>
-    </section>
-
-    <!-- Вопросы без ответа -->
-    <section class="panel" id="panel-insights" hidden>
+    <!-- Вопросы без ответа (старое) + AI-события -->
+    <section class="page" id="page-insights" hidden>
+      <h3 class="page-sub">Вопросы, на которые бот ответил неуверенно (30 дней)</h3>
       <div class="insights" id="insights"></div>
+      <h3 class="page-sub">События AI за 7 дней</h3>
+      <div class="insights" id="ai-events"></div>
     </section>
 
-  </main>
+    <!-- Настройки -->
+    <section class="page" id="page-settings" hidden>
+      <div class="widget">
+        <h3>Состояние системы</h3>
+        <div id="settings-health"></div>
+      </div>
+      <div class="widget">
+        <h3>О панели</h3>
+        <p class="muted">CRM поверх бота Фоксинбург: входящие со всех каналов (MAX, Telegram, веб-виджет),
+        карточки клиентов, ответы менеджера, пауза AI. Данные хранятся в SQLite рядом с состоянием бота.</p>
+      </div>
+    </section>
+
+    <!-- Пользователи админки (super_admin) -->
+    <section class="page" id="page-users" hidden>
+      <div class="widget">
+        <h3>Пользователи админки</h3>
+        <div class="toolbar">
+          <input id="au-username" placeholder="Логин" style="max-width:180px" />
+          <input id="au-password" type="password" placeholder="Пароль (мин. 6)" style="max-width:180px" />
+          <select id="au-role" style="max-width:180px">
+            <option value="manager">manager — диалоги и клиенты</option>
+            <option value="marketing">marketing — рассылки и аналитика</option>
+            <option value="support">support — минимум</option>
+            <option value="admin">admin — всё, кроме пользователей и промптов</option>
+            <option value="super_admin">super_admin — всё</option>
+          </select>
+          <button class="btn btn--sm" id="au-add">Добавить</button>
+        </div>
+        <div id="au-list"></div>
+      </div>
+    </section>
+
+    <!-- Аналитика -->
+    <section class="page" id="page-analytics" hidden>
+      <div class="toolbar">
+        <select id="analytics-days">
+          <option value="7">7 дней</option>
+          <option value="30" selected>30 дней</option>
+          <option value="90">90 дней</option>
+        </select>
+      </div>
+      <div class="cards" id="an-cards"></div>
+      <div class="dash-grid">
+        <div class="widget"><h3>Новые клиенты по дням</h3><div id="an-customers-chart"></div></div>
+        <div class="widget"><h3>Сообщения по дням</h3><div id="an-messages-chart"></div></div>
+      </div>
+      <div class="dash-grid" style="margin-top:16px">
+        <div class="widget"><h3>Каналы</h3><div id="an-channels"></div></div>
+        <div class="widget"><h3>Лиды по статусам</h3><div id="an-leads"></div></div>
+      </div>
+    </section>
+
+    <!-- База знаний -->
+    <section class="page" id="page-kb" hidden>
+      <div class="toolbar">
+        <button class="btn btn--sm" id="kb-add">Добавить документ</button>
+        <span class="muted">Документы из БД подмешиваются к базе знаний сайта при поиске.</span>
+      </div>
+      <div id="kb-list"></div>
+    </section>
+
+    <!-- AI: промпты и качество -->
+    <section class="page" id="page-ai" hidden>
+      <div class="widget">
+        <h3>Системный промпт</h3>
+        <p class="muted">Влияет на все ответы бота во всех каналах. Активация применяется сразу,
+        откат — выбором предыдущей версии.</p>
+        <div id="ai-prompt-view"></div>
+        <div class="dash-grid" style="margin-top:12px">
+          <div>
+            <h4 class="page-sub">Версии</h4>
+            <div id="ai-prompt-versions"></div>
+          </div>
+          <div>
+            <h4 class="page-sub">Новая версия</h4>
+            <textarea id="ai-prompt-new" rows="10" placeholder="Текст новой версии промпта"></textarea>
+            <div class="actions" style="margin-top:8px">
+              <button class="btn btn--sm" id="ai-prompt-save">Сохранить версию</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="widget" style="margin-top:16px">
+        <h3>Качество AI</h3>
+        <div class="toolbar">
+          <select id="aiq-kind">
+            <option value="">Все события</option>
+            <option value="error">Ошибки</option>
+            <option value="no_answer">Без ответа</option>
+            <option value="handoff">Передачи менеджеру</option>
+          </select>
+          <select id="aiq-days">
+            <option value="1">Сегодня</option>
+            <option value="7" selected>7 дней</option>
+            <option value="30">30 дней</option>
+          </select>
+        </div>
+        <div id="aiq-list"></div>
+      </div>
+    </section>
+
+    <!-- Ошибки -->
+    <section class="page" id="page-errors" hidden>
+      <div class="toolbar">
+        <select id="errors-category">
+          <option value="">Все категории</option>
+          <option value="ai">AI</option>
+          <option value="channel">Каналы (доставка)</option>
+          <option value="ingestion">Ingestion</option>
+          <option value="broadcast">Рассылки</option>
+        </select>
+        <select id="errors-days">
+          <option value="1">Сегодня</option>
+          <option value="7" selected>7 дней</option>
+          <option value="30">30 дней</option>
+        </select>
+      </div>
+      <div id="errors-list"></div>
+    </section>
+  </div>
+</div>
+
+<!-- Дроер клиента / полной истории -->
+<div class="drawer" id="drawer" hidden>
+  <div class="drawer__backdrop" id="drawer-backdrop"></div>
+  <div class="drawer__panel">
+    <div class="drawer__head">
+      <div class="drawer__title" id="drawer-title"></div>
+      <button class="btn btn--ghost btn--sm" id="drawer-close">Закрыть</button>
+    </div>
+    <div class="drawer__body" id="drawer-body"></div>
+  </div>
+</div>
+
+<!-- Модалка подтверждения рассылки -->
+<div class="modal" id="modal" hidden>
+  <div class="modal__backdrop" id="modal-backdrop"></div>
+  <div class="modal__card">
+    <h3 id="modal-title">Подтверждение</h3>
+    <div id="modal-body"></div>
+    <div class="actions">
+      <button class="btn btn--ghost" id="modal-cancel">Отмена</button>
+      <button class="btn btn--danger" id="modal-ok">Отправить</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast" hidden></div>

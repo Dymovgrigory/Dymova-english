@@ -24,7 +24,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data
+      # Данные бота (bot.db — клиенты, диалоги, CRM). Относительный ./data
+      # привязывается к каталогу, откуда запущен compose, — при запуске из
+      # другого каталога бот стартует с ПУСТОЙ базой (историческая причина
+      # «исчезновения» клиентов). Задайте BOT_DATA_DIR абсолютным путём,
+      # например BOT_DATA_DIR=/opt/foxinburg/data в .env (см. DEPLOY.md).
+      - ${BOT_DATA_DIR:-./data}:/app/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health').read()"]

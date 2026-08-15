@@ -66,6 +66,11 @@ async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") 
         logger.info("hand_off: повторная эскалация без уведомления user=%s", conv.user_id)
         return True
 
+    # Фиксируем эскалацию в CRM-журнале (сбой записи не влияет на уведомление).
+    from app import crm_ingest
+
+    crm_ingest.ingest_handoff(conv.platform, conv.user_id, reason)
+
     if not settings.admin_ids:
         logger.warning("ADMIN_MAX_IDS не настроен — некому передать диалог")
         return False

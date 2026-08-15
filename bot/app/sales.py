@@ -7,6 +7,8 @@
 """
 from __future__ import annotations
 
+import time
+
 from app import emotion
 from app import recall
 from app import smart
@@ -87,13 +89,54 @@ English Only, игры как инструмент обучения, фоник�
 """
 
 
+# Кэш активного промпта из БД: читаем ai_prompts раз в 60 секунд, при любой
+# ошибке/пустоте БД работает кодовый SYSTEM_PROMPT (поведение по умолчанию
+# не ломается никогда).
+_prompt_cache: tuple[float, str] = (0.0, "")
+_PROMPT_CACHE_TTL = 60.0
+
+
+def base_prompt() -> str:
+    """Активный системный промпт: версия из ai_prompts или кодовый дефолт.
+
+    Первое обращение при пустой таблице сеет SYSTEM_PROMPT как версию 1 —
+    откат в админке всегда есть на что.
+    """
+    cached_at, cached = _prompt_cache
+    if cached and time.monotonic() - cached_at < _PROMPT_CACHE_TTL:
+        return cached
+    prompt = SYSTEM_PROMPT
+    try:
+        from app import crm_store
+
+        crm_store.prompt_seed(SYSTEM_PROMPT)
+        row = crm_store.prompt_active()
+        if row and row["content"].strip():
+            prompt = row["content"]
+    except Exception:
+        prompt = SYSTEM_PROMPT
+    _cache_prompt(prompt)
+    return prompt
+
+
+def _cache_prompt(prompt: str) -> None:
+    global _prompt_cache
+    _prompt_cache = (time.monotonic(), prompt)
+
+
+def reset_prompt_cache() -> None:
+    """Сброс кэша — вызывается после активации версии в админке (и в тестах)."""
+    global _prompt_cache
+    _prompt_cache = (0.0, "")
+
+
 def build_system_prompt(
     kb: KnowledgeBase,
     conv: Conversation,
     kb_context: str,
     vault: PiiVault | None = None,
 ) -> str:
-    parts = [SYSTEM_PROMPT]
+    parts = [base_prompt()]
     parts.append(_discovery_block(conv))
     mood_block = emotion.prompt_block(getattr(conv, "last_user_mood", ""))
     if mood_block:

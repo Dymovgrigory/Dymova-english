@@ -208,10 +208,20 @@
       }
       const data = await response.json();
       persistSession(data.session_id);
-      const reply = typeof data.reply === "string" ? data.reply : "Извините, не удалось получить ответ.";
+      startPendingPolling();
+      // Ответы менеджера, накопленные пока диалог был у человека.
+      (Array.isArray(data.pending_messages) ? data.pending_messages : []).forEach((msg) => {
+        if (msg && msg.text) {
+          state.messages.push({ role: "bot", text: msg.text });
+          addMessage("bot", msg.text);
+        }
+      });
+      const reply = typeof data.reply === "string" ? data.reply : "";
       const buttons = Array.isArray(data.buttons) ? data.buttons : [];
-      state.messages.push({ role: "bot", text: reply });
-      addMessage("bot", reply, buttons);
+      if (reply) {
+        state.messages.push({ role: "bot", text: reply });
+        addMessage("bot", reply, buttons);
+      }
     } catch (error) {
       addMessage("bot", "Не получилось отправить сообщение. Попробуйте ещё раз чуть позже 🙏");
     } finally {
@@ -224,6 +234,33 @@
 
   toggle.addEventListener("click", () => setOpen(!state.open));
   closeBtn.addEventListener("click", () => setOpen(false));
+
+  // У веб-канала push нет: ответы менеджера забираем поллингом раз в 5 секунд,
+  // пока виджет открыт. Когда AI на паузе и пишет живой человек, сообщения
+  // появляются без необходимости что-то отправлять.
+  let pendingTimer = null;
+
+  function startPendingPolling() {
+    if (pendingTimer || !sessionId) return;
+    pendingTimer = setInterval(async () => {
+      if (!sessionId) return;
+      try {
+        const resp = await fetch(`${baseUrl}/api/chat/pending?session_id=${encodeURIComponent(sessionId)}`);
+        if (!resp.ok) return;
+        const data = await resp.json();
+        (Array.isArray(data.messages) ? data.messages : []).forEach((msg) => {
+          if (msg && msg.text) {
+            state.messages.push({ role: "bot", text: msg.text });
+            addMessage("bot", msg.text);
+          }
+        });
+      } catch (_) {
+        /* сеть моргнула — следующий тик заберёт */
+      }
+    }, 5000);
+  }
+
+  if (sessionId) startPendingPolling();
 
   composer.addEventListener("submit", (event) => {
     event.preventDefault();

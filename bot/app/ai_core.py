@@ -13,6 +13,7 @@ import asyncio
 import logging
 import re
 import time
+from datetime import datetime, timezone
 
 from app import intent as I
 from app import runtime
@@ -453,6 +454,15 @@ async def handle_message(user_id: str, text: str, platform: str = "max") -> str:
         status = "error"
         logger.exception("handle_message failed user_id=%s platform=%s", user_id, platform)
         reply = _record_fallback(user_id, text, platform, ERROR_REPLY)
+    if status in ("timeout", "error"):
+        # Лента ошибок в админке: таймауты и падения LLM видны отдельно от
+        # «бот не знал ответа».
+        from app import crm_ingest
+
+        crm_ingest.ingest_ai_event(
+            "error", platform, user_id,
+            {"reason": status, "text": text[:200], "request_id": request_id},
+        )
     runtime.log_event(
         "RESPONSE_READY",
         user_id=user_id,
@@ -487,11 +497,50 @@ async def _handle_message_serialized(user_id: str, text: str, platform: str) -> 
         return await _handle_message_locked(user_id, text, platform)
 
 
+def _crm_ai_silenced(platform: str, user_id: str) -> bool:
+    """Диалог на паузе или у менеджера в CRM — бот молчит до включения обратно.
+
+    Пауза с истёкшим paused_until снимается автоматически (режим снова
+    active). Любой сбой CRM-проверки трактуем как «отвечать»: молчание бота
+    из-за упавшей CRM-таблицы хуже, чем лишний ответ.
+    """
+    try:
+        from app import crm_store
+
+        row = crm_store.find_conversation(platform, user_id)
+        if not row:
+            return False
+        mode = row.get("ai_mode") or "active"
+        if mode == "active":
+            return False
+        paused_until = row.get("ai_paused_until")
+        if mode == "paused" and paused_until:
+            try:
+                until = datetime.fromisoformat(paused_until)
+                if until.tzinfo is None:
+                    until = until.replace(tzinfo=timezone.utc)
+                if until <= datetime.now(timezone.utc):
+                    crm_store.set_ai_mode(row["id"], "active", actor="auto-expire")
+                    return False
+            except ValueError:
+                pass
+        return True
+    except Exception:
+        logger.exception("ai_core: ошибка проверки AI-режима CRM")
+        return False
+
+
 async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     store = get_store()
     kb = get_kb()
     conv = store.get(user_id, platform=platform)
     conv.add("user", text)
+    # AI-режим диалога из CRM: менеджер ответил сам или поставил паузу — бот
+    # молчит. Входящее при этом не теряется: оно уже в crm_messages (ingestion
+    # в main.py) и в истории диалога выше. Сбой проверки не глушит бота.
+    if _crm_ai_silenced(platform, user_id):
+        store.save(conv)
+        return ""
     _capture_entities(conv, text)
     await _update_need(conv, text)
     intent = await _detect_intent(conv, text)

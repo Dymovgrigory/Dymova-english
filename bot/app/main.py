@@ -28,6 +28,7 @@ from app import ai_core
 from app.ai_core import handle_message, handle_start
 from app import broadcast
 from app import cabinet
+from app import crm_ingest
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
@@ -89,6 +90,18 @@ _BACKGROUND_TASKS: set[asyncio.Task] = set()
 
 @app.on_event("startup")
 async def _start_scheduler() -> None:
+    # CRM-хранилище: схема рядом с legacy-таблицами и однократный перенос
+    # истории. Сбой здесь не должен мешать запуску бота — логируем и живём.
+    try:
+        from app import crm_store
+
+        crm_store.get_conn()
+        report = crm_store.migrate_from_legacy()
+        crm_store.seed_bootstrap_admin()
+        if not report.get("skipped"):
+            logger.info("crm: миграция legacy-истории: %s", report)
+    except Exception:
+        logger.exception("crm: ошибка инициализации/миграции")
     for task in scheduler.start():
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
@@ -367,12 +380,32 @@ async def api_chat(request: Request, data: dict) -> dict:
             {"detail": "Слишком много сообщений подряд, попробуйте через минуту"},
             status_code=429,
         )
+    # У веб-виджета нет внешнего id события — генерируем свой, чтобы журнал
+    # входящих событий был полным по всем каналам.
+    crm_ctx = crm_ingest.ingest_inbound(
+        "web", f"web:{session_id}", text, external_event_id=f"web:{uuid.uuid4().hex}",
+    )
     reply = await handle_message(f"web:{session_id}", text, platform="web")
+    if reply:
+        crm_ingest.ingest_outbound(crm_ctx, reply, ai_model=settings.LLM_MODEL)
+    # Пустой ответ = диалог на паузе/у менеджера: вместо реплики бота виджет
+    # получает накопившиеся ответы менеджера.
+    pending = crm_ingest.pop_pending_web(session_id)
     return {
         "session_id": session_id,
         "reply": reply,
         "buttons": _contextual_buttons(text, reply),
+        "pending_messages": pending,
     }
+
+
+@app.get("/api/chat/pending")
+async def api_chat_pending(session_id: str = "") -> dict:
+    """Поллинг виджета: недоставленные ответы менеджера (push у веба нет)."""
+    session_id = str(session_id or "")[:64]
+    if not session_id:
+        return JSONResponse({"detail": "session_id required"}, status_code=400)
+    return {"messages": crm_ingest.pop_pending_web(session_id)}
 
 
 @app.post("/api/miniapp/chat")
@@ -446,6 +479,29 @@ async def api_homework(
 def _telegram_buttons(text: str, reply: str) -> list[list[dict]]:
     buttons = _contextual_buttons(text, reply)
     return [[button] for button in buttons]
+
+
+async def _send_tg_logged(telegram, chat_id, text: str, crm_ctx: dict | None,
+                          buttons: list | None = None) -> bool:
+    """Отправка в Telegram с записью исходящего сообщения в CRM.
+    Пустой text — «бот молчит» (AI на паузе/у менеджера)."""
+    if not text:
+        return True
+    ok = await telegram.send_message(chat_id, text, buttons=buttons)
+    crm_ingest.ingest_outbound(crm_ctx, text, ai_model=settings.LLM_MODEL, ok=bool(ok))
+    return ok
+
+
+def _telegram_inbound_ctx(update: dict, message: dict, user_id: str, text: str) -> dict | None:
+    sender = message.get("from") or {}
+    return crm_ingest.ingest_inbound(
+        TELEGRAM_PLATFORM, user_id, text,
+        external_event_id=str(update.get("update_id") or "") or None,
+        external_message_id=str(message.get("message_id") or "") or None,
+        first_name=str(sender.get("first_name") or ""),
+        last_name=str(sender.get("last_name") or ""),
+        username=str(sender.get("username") or ""),
+    )
 
 
 def _telegram_webapp_button(user_id: str = "") -> dict | None:
@@ -682,6 +738,7 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             return
 
         user_id = f"tg:{chat_id}"
+        crm_ctx = _telegram_inbound_ctx(update, message, user_id, text)
         low = text.lower()
         if low.split(maxsplit=1)[0] in ("/start", "start"):
             # У /start бывает payload: `t.me/bot?start=utm_source-vk` приходит
@@ -690,12 +747,12 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             # payload (источник перехода) терялся вместе с ней.
             _remember_deeplink(user_id, TELEGRAM_PLATFORM, text)
             reply = await handle_start(user_id, platform=TELEGRAM_PLATFORM)
-            await telegram.send_message(chat_id, reply, buttons=_telegram_start_buttons(text, reply, user_id))
+            await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_start_buttons(text, reply, user_id))
             return
 
         if low in ("/menu", "меню", "/app", "кабинет"):
-            await telegram.send_message(
-                chat_id, "Чем помочь? 😊", buttons=_telegram_menu_buttons(user_id)
+            await _send_tg_logged(
+                telegram, chat_id, "Чем помочь? 😊", crm_ctx, buttons=_telegram_menu_buttons(user_id)
             )
             return
 
@@ -705,15 +762,15 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             if branch:
                 await _notify_admins_for_telegram(conv, "запрос администратора")
                 reply = f"Свяжу вас с администратором {branch}. Он скоро ответит."
-                await telegram.send_message(chat_id, reply)
+                await _send_tg_logged(telegram, chat_id, reply, crm_ctx)
             else:
                 reply = "Подскажите, пожалуйста, какой филиал вам удобнее?"
-                await telegram.send_message(chat_id, reply, buttons=_branch_admin_buttons())
+                await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_branch_admin_buttons())
             return
 
         if "домаш" in low or "дз" in low:
             reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
-            await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+            await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_buttons(text, reply) or None)
             return
 
         reply = await _reply_while_alive(
@@ -721,7 +778,7 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             chat_id,
             lambda: handle_message(user_id, text, platform=TELEGRAM_PLATFORM),
         )
-        await telegram.send_message(chat_id, reply, buttons=_telegram_buttons(text, reply) or None)
+        await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_buttons(text, reply) or None)
     except Exception:
         # Раньше исключение здесь просто убивало фоновую задачу молча —
         # пользователь не получал вообще ничего, что выглядело как
@@ -1039,8 +1096,12 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
     if update_type == "bot_started":
         user_id = _extract_user_id(update)
         if user_id:
+            crm_ctx = crm_ingest.ingest_inbound(
+                PLATFORM, user_id, "/start",
+                external_event_id=_extract_update_id(update),
+            )
             reply = await handle_start(user_id)
-            await max_client.send_message(user_id, reply, buttons=_main_menu(user_id))
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
         return
 
     if update_type == "message_created":
@@ -1065,35 +1126,44 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         if not text:
             return
         _remember_sender(user_id, sender)
+        crm_ctx = crm_ingest.ingest_inbound(
+            PLATFORM, user_id, text,
+            external_event_id=_extract_update_id(update),
+            external_message_id=_max_message_external_id(message),
+            name=str(sender.get("name") or ""),
+            username=str(sender.get("username") or ""),
+        )
         low = text.lower()
         if low in ("/start", "start"):
             reply = await handle_start(user_id)
-            await max_client.send_message(user_id, reply, buttons=_main_menu(user_id))
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
         elif I.detect_intent(text) == I.HANDOFF:
             conv = get_store().get(user_id)
             if conv.selected_branch:
                 await _notify_admins_for_telegram(conv, "запрос администратора")
                 reply = f"Свяжу вас с администратором {conv.selected_branch}. Он скоро ответит."
-                await max_client.send_message(user_id, reply, buttons=_main_menu(user_id))
+                await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
             else:
-                await max_client.send_message(
+                await _send_max_logged(
+                    max_client,
                     user_id,
                     "Подскажите, пожалуйста, какой филиал вам удобнее?",
+                    crm_ctx,
                     buttons=_branch_admin_buttons(),
                 )
         elif I.detect_intent(text) == I.HOMEWORK:
             reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
             buttons = _link_button_rows(text, reply)
-            await max_client.send_message(user_id, reply, buttons=buttons or None)
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=buttons or None)
         elif low in ("/menu", "меню"):
-            await max_client.send_message(user_id, "Чем помочь? 😊", buttons=_main_menu(user_id))
+            await _send_max_logged(max_client, user_id, "Чем помочь? 😊", crm_ctx, buttons=_main_menu(user_id))
         else:
             reply = await _reply_while_alive(
                 max_client,
                 user_id,
                 lambda: handle_message(user_id, text, platform=PLATFORM),
             )
-            await max_client.send_message(user_id, reply, buttons=_link_button_rows(text, reply) or None)
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_link_button_rows(text, reply) or None)
         return
 
     if update_type == "message_callback":
@@ -1122,7 +1192,8 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             )
         elif user_id and payload in _CALLBACK_TEXT:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
-            await max_client.send_message(user_id, reply)
+            if reply:  # пустой ответ — AI на паузе/у менеджера, молчим
+                await max_client.send_message(user_id, reply)
         return
 
 
@@ -1152,6 +1223,31 @@ def _remember_sender(user_id: str, sender: dict) -> None:
         conv.client_name = name
     if username:
         conv.max_username = username
+
+
+def _max_message_external_id(message: dict) -> str | None:
+    """Внешний id сообщения MAX для дедупликации в CRM."""
+    for container in (message, message.get("body") or {}):
+        for key in ("id", "mid", "message_id"):
+            value = container.get(key)
+            if value:
+                return str(value)
+    return None
+
+
+async def _send_max_logged(max_client, user_id: str, text: str, crm_ctx: dict | None,
+                           buttons: list | None = None) -> bool:
+    """Отправка в MAX с записью исходящего сообщения в CRM.
+
+    CRM-запись не влияет на доставку: её сбой глушится внутри crm_ingest.
+    Пустой text — сигнал «бот молчит» (AI на паузе/у менеджера): ничего
+    не отправляем и не пишем исходящее.
+    """
+    if not text:
+        return True
+    ok = await max_client.send_message(user_id, text, buttons=buttons)
+    crm_ingest.ingest_outbound(crm_ctx, text, ai_model=settings.LLM_MODEL, ok=bool(ok))
+    return ok
 
 
 def _extract_user_id(update: dict):
@@ -1550,6 +1646,12 @@ async def admin_set_webhook(request: Request, data: dict) -> dict:
 
 # Админка: список клиентов, переписка, заявки, рассылки.
 #
+# CRM Admin API регистрируется ДО StaticFiles: монтирование перехватывает всё
+# под /admin, что не совпало с уже объявленными маршрутами.
+from app import admin_api
+
+app.include_router(admin_api.router)
+
 # Монтируется В САМОМ КОНЦЕ файла осознанно: StaticFiles на "/admin"
 # перехватывает всё, что не совпало с уже объявленными маршрутами, поэтому
 # любая ручка /admin/* должна быть зарегистрирована выше этой строки.

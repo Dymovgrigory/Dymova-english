@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import math
 import re
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -139,7 +140,38 @@ class KnowledgeBase:
         # Веса слов считаются лениво и сбрасываются при смене документов.
         self._idf: dict[str, float] = {}
         self._unknown_weight: float = 1.0
+        # Документы из CRM-базы (раздел «База знаний» админки): кэш на 60с,
+        # чтобы поиск не ходил в SQLite на каждый запрос.
+        self._db_docs_cached_at: float = 0.0
+        self._db_documents: list[Document] = []
         self.load()
+
+    def _db_docs(self) -> list[Document]:
+        """Документы из kb_documents. Любой сбой БД — работаем как раньше,
+        только на yaml/живых документах."""
+        now = time.monotonic()
+        if self._db_docs_cached_at and now - self._db_docs_cached_at < 60:
+            return self._db_documents
+        try:
+            from app import crm_store
+
+            docs: list[Document] = []
+            for row in crm_store.kb_list(enabled_only=True):
+                doc = Document(category=row["category"], title=row["title"], text=row["text"])
+                doc.tokens = set(_tokens(f"{doc.title} {doc.text}"))
+                doc.title_tokens = set(_tokens(doc.title))
+                docs.append(doc)
+            self._db_documents = docs
+            self._db_docs_cached_at = now
+            self._idf = {}  # состав документов мог измениться
+        except Exception:
+            # Не меняем cached_at: следующий запрос попробует снова, но поиск
+            # при этом никогда не падает.
+            pass
+        return self._db_documents
+
+    def _all_documents(self) -> list[Document]:
+        return self.documents + self.live_documents + self._db_docs()
 
     # ---------- загрузка ----------
     def load(self) -> None:
@@ -257,7 +289,7 @@ class KnowledgeBase:
         """
         if self._idf:
             return self._idf
-        docs = self.documents + self.live_documents
+        docs = self._all_documents()
         total = len(docs) or 1
         frequency: dict[str, int] = {}
         for doc in docs:
@@ -291,7 +323,7 @@ class KnowledgeBase:
             self._weight_of(t, weights) * f for t, f in q_weights.items()
         ) or 1.0
         scored: list[tuple[float, Document]] = []
-        for doc in self.documents + self.live_documents:
+        for doc in self._all_documents():
             if not doc.tokens:
                 continue
             overlap = set(q_weights) & doc.tokens
