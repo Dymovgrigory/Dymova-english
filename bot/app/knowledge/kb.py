@@ -53,6 +53,26 @@ _STOPWORDS = {
 }
 
 
+# Разговорные формулировки → слова, под которыми факт реально лежит в базе.
+# «Где вы находитесь?» буквально не пересекается ни с одним документом (в базе
+# филиалы описаны как «Адрес: …»), и честный поиск возвращал пусто при готовом
+# ответе — дальше срабатывала эскалация «не знаю». Ключи — основы после _stem.
+_EXPANSION_WEIGHT = 0.8
+_QUERY_EXPANSIONS: dict[str, tuple[str, ...]] = {
+    "находитесь": ("адрес", "филиал"),
+    "находится": ("адрес", "филиал"),
+    "расположен": ("адрес", "филиал"),
+    "добраться": ("адрес", "маршрут", "филиал"),
+    "доехать": ("адрес", "маршрут", "филиал"),
+    "сто": ("цен", "стоимость"),
+    "прайс": ("цен", "стоимость"),
+    "записаться": ("запись", "пробн", "диагностик"),
+    "перенести": ("перенос",),
+    "заморозить": ("заморозк",),
+    "расписан": ("время", "расписан"),
+}
+
+
 def _stem(word: str) -> str:
     """Грубое усечение русских окончаний, чтобы «курсы»~«курс», «детей»~«дет»,
     «работаете»~«работы» (глагольные окончания тоже срезаем)."""
@@ -259,26 +279,39 @@ class KnowledgeBase:
         q_tokens = set(_tokens(query))
         if not q_tokens:
             return []
+        # Вес 1.0 — у слов самого запроса, _EXPANSION_WEIGHT — у синонимов:
+        # они помогают найти документ, но не должны перевешивать прямое
+        # совпадение.
+        q_weights: dict[str, float] = {t: 1.0 for t in q_tokens}
+        for token in q_tokens:
+            for extra in _QUERY_EXPANSIONS.get(token, ()):
+                q_weights.setdefault(extra, _EXPANSION_WEIGHT)
         weights = self._weights()
-        total_weight = sum(self._weight_of(t, weights) for t in q_tokens) or 1.0
+        total_weight = sum(
+            self._weight_of(t, weights) * f for t, f in q_weights.items()
+        ) or 1.0
         scored: list[tuple[float, Document]] = []
         for doc in self.documents + self.live_documents:
             if not doc.tokens:
                 continue
-            overlap = q_tokens & doc.tokens
+            overlap = set(q_weights) & doc.tokens
             if not overlap:
                 continue
             # Доля «смысловой массы» запроса, которую покрыл документ,
             # плюс небольшой бонус разделам, где чаще лежит прямой ответ.
-            score = sum(self._weight_of(t, weights) for t in overlap) / total_weight
+            score = (
+                sum(self._weight_of(t, weights) * q_weights[t] for t in overlap)
+                / total_weight
+            )
             # Совпадение в заголовке — куда более сильное свидетельство, чем
             # то же слово где-то в тексте: заголовок это и есть тема
             # документа. Без этого запрос из одного слова давал одинаковый
             # балл всем документам, где оно вообще встречается.
-            in_title = q_tokens & doc.title_tokens
+            in_title = set(q_weights) & doc.title_tokens
             if in_title:
                 score += _TITLE_BONUS * (
-                    sum(self._weight_of(t, weights) for t in in_title) / total_weight
+                    sum(self._weight_of(t, weights) * q_weights[t] for t in in_title)
+                    / total_weight
                 )
             if doc.category in ("faq", "courses", "formats", "team"):
                 score += 0.1

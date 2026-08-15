@@ -54,8 +54,17 @@ def _client_contact_block(conv: Conversation) -> str:
 
 async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") -> bool:
     """Уведомляет администраторов и помечает диалог как переданный."""
+    # Повторная эскалация внутри того же эпизода (бот снова «не знает», клиент
+    # снова просит человека) не должна спамить админ-чат: контекст уже у них.
+    # Эпизод заканчивается, когда диалог уходит из STAGE_HANDOFF (например,
+    # клиент сменил тему и получил ответ), — следующая эскалация снова
+    # пришлёт уведомление.
+    already_in_handoff = conv.handed_off and conv.stage == STAGE_HANDOFF
     conv.stage = STAGE_HANDOFF
     conv.handed_off = True
+    if already_in_handoff:
+        logger.info("hand_off: повторная эскалация без уведомления user=%s", conv.user_id)
+        return True
 
     if not settings.admin_ids:
         logger.warning("ADMIN_MAX_IDS не настроен — некому передать диалог")

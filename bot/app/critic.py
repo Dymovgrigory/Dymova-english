@@ -86,7 +86,11 @@ def inspect(reply: str, conv, sales_allowed: bool) -> list[str]:
     if not sales_allowed and _CTA_RE.search(reply):
         issues.append("premature_sales")
 
-    if reply.count("?") > MAX_QUESTIONS:
+    # URL не считаются вопросами: «?» в query-строке ссылки на карты —
+    # это не вопрос к собеседнику, и адрес филиала со ссылкой на маршрут
+    # раньше фальшиво помечался как «простыня вопросов».
+    reply_no_urls = re.sub(r"https?://\S+", "", reply)
+    if reply_no_urls.count("?") > MAX_QUESTIONS:
         issues.append("too_many_questions")
 
     if len(_EMOJI_RE.findall(reply)) > MAX_EMOJI:

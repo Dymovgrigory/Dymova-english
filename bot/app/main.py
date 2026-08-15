@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import base64
 import asyncio
+import hashlib
 import hmac
 import json
 import logging
@@ -997,11 +998,20 @@ async def webhook(request: Request):
 def _schedule_update(update: dict, update_type: str, max_client) -> bool:
     update_id = _extract_update_id(update)
     user_id = _extract_user_id(update) or _extract_user_id(update.get("message") or {}) or _extract_user_id(update.get("callback") or {})
-    if update_id:
-        store = get_store()
-        if not store.mark_event_seen(update_id, platform=PLATFORM, user_id=user_id or "", event_type=update_type or ""):
-            logger.info("Duplicate update skipped id=%s type=%s", update_id, update_type)
-            return False
+    if not update_id:
+        # Апдейт без id: раньше дедупликация просто отключалась, и ретрай
+        # вебхука обрабатывался второй раз — клиент получал дубль ответа.
+        # Ретрай приходит байт-в-байт таким же, поэтому хэш канонической
+        # формы апдейта даёт надёжный ключ; у живого пользователя, написавшего
+        # то же слово позже, отличается timestamp, и хэш другой.
+        digest = hashlib.sha256(
+            json.dumps(update, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
+        ).hexdigest()
+        update_id = f"hash:{digest[:32]}"
+    store = get_store()
+    if not store.mark_event_seen(update_id, platform=PLATFORM, user_id=user_id or "", event_type=update_type or ""):
+        logger.info("Duplicate update skipped id=%s type=%s", update_id, update_type)
+        return False
 
     task = asyncio.create_task(_process_update_safe(update, update_type, max_client))
     _BACKGROUND_TASKS.add(task)

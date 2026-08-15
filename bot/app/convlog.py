@@ -18,6 +18,12 @@ def _resolve_path() -> Path | None:
     state_file = (settings.STATE_FILE or "").strip()
     if state_file:
         return Path(state_file).expanduser().resolve().parent / "conversations.jsonl"
+    # Раньше без явных STATE_FILE/CONV_LOG_FILE лог диалогов молча не вёлся
+    # вообще — диагностировать «залипания» было не по чем. Деградируем в
+    # файл рядом с основной базой: она в проде всегда persistent.
+    db_path = (settings.DB_PATH or "").strip()
+    if db_path and db_path != ":memory:":
+        return Path(db_path).expanduser().resolve().parent / "conversations.jsonl"
     return None
 
 

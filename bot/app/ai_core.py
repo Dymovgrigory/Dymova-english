@@ -17,6 +17,7 @@ import time
 from app import intent as I
 from app import runtime
 from app import registration
+from app import convlog
 from app.bigben import get_bigben
 from app.config import settings
 from app.knowledge.kb import get_kb, _stem, _tokens
@@ -156,8 +157,18 @@ def _answerable(kb, text: str, limit: int) -> list:
     return (structured or docs)[:limit]
 
 
+_PRICE_DOC_RE = re.compile(r"₽|руб|стоимость|цена", re.IGNORECASE)
+
+
 def _grounded_fact_reply(kb, text: str, intent: str, limit: int = _FALLBACK_DOCS) -> str:
     docs = _answerable(kb, text, limit)
+    if intent == I.PRICE:
+        # Лексическое совпадение по «сколько» находит FAQ про режим работы
+        # («До скольки вы работаете?») раньше документов с ценами. Для вопроса
+        # о стоимости предпочитаем документы, где цена действительно есть.
+        priced = [d for d in _answerable(kb, text, limit * 3) if _PRICE_DOC_RE.search(d.text)]
+        if priced:
+            docs = priced[:limit]
     if not docs:
         return (
             "Проверил сайт и соцсети, но не нашёл подтверждённых данных по "
@@ -242,7 +253,16 @@ async def _consult_with_context(
         system = sales.build_system_prompt(kb, conv, kb_context, vault=vault)
         messages = [{"role": "system", "content": system}]
         history_turns = max(0, int(getattr(settings, "LLM_HISTORY_TURNS", 8)))
-        messages.extend(conv.history[-history_turns:])
+        # Служебные фолбэки (таймаут/ошибка) — не реплики диалога: в контексте
+        # модели они учат её отвечать тем же шаблоном. Пропускаем их.
+        history = [
+            m for m in conv.history
+            if not (
+                m.get("role") == "assistant"
+                and m.get("content") in _SERVICE_REPLIES
+            )
+        ]
+        messages.extend(history[-history_turns:])
         reply = await _ask(messages, vault)
         if reply:
             if _is_uncertain_reply(reply) and allow_web_retry:
@@ -309,6 +329,19 @@ _SCHOOL_SCOPE_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Короткая вежливая реплика без вопроса: благодарность, подтверждение.
+# Нарочно без «да»/«ок» — они бывают ответом на вопрос бота («Записать вас?»),
+# и глушить их дежурной фразой нельзя.
+_SMALLTALK_RE = re.compile(
+    r"(?:спасибо|спс|благодарю|благодарим|понятно|ясно|отлично|супер|здорово|договорились)"
+    r"[\s!.…😊🙏👍❤️]*",
+    re.IGNORECASE,
+)
+_SMALLTALK_REPLIES = (
+    "Пожалуйста! 😊 Если появятся вопросы — я здесь.",
+    "Всегда пожалуйста! Обращайтесь, если что-то понадобится.",
+)
+
 
 async def _consult(conv: Conversation, text: str, allow_web: bool = False, school_related: bool | None = None) -> str:
     """Свободный консультативный ответ: база знаний + живые источники,
@@ -360,6 +393,10 @@ ERROR_REPLY = (
     "Попробуйте, пожалуйста, ещё раз через минуту — или позвоните: "
     "8 993 923-23-09 (Лихачевский), 8 916 732-31-69 (Ракетостроителей)."
 )
+
+# Служебные реплики, которые не должны попадать в контекст LLM как будто
+# это настоящие ответы бота (см. _consult_with_context).
+_SERVICE_REPLIES = frozenset({TIMEOUT_REPLY, ERROR_REPLY})
 
 
 async def handle_message(user_id: str, text: str, platform: str = "max") -> str:
@@ -418,6 +455,7 @@ def _record_fallback(user_id: str, text: str, platform: str, reply: str) -> str:
             conv.add("user", text)
         conv.add("assistant", reply)
         store.save(conv)
+        convlog.log_turn(user_id, text, reply, "", conv.stage, "fallback")
     except Exception:
         logger.exception("не удалось сохранить фолбэк для user_id=%s", user_id)
     return reply
@@ -441,12 +479,46 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     if not registration.is_registered(conv):
         if conv.stage != registration.STAGE_REGISTRATION:
             reply = registration.start_registration(conv)
+            result = "registration"
+        elif intent == I.HANDOFF:
+            # Просьба позвать человека важнее анкеты: передаём диалог,
+            # регистрация продолжится после ответа администратора.
+            await hand_off(get_max(), conv, reason="запрос оператора")
+            reply = _handoff_reply()
+            result = "handoff"
+        elif registration.looks_off_topic(conv, text):
+            # Вместо ответа на шаг анкеты человек задал вопрос. Раньше анкета
+            # отвечала на него тем же «Напишите ваше имя» — бесконечно, это и
+            # было главным «залипанием» бота. Теперь вопрос проходит тот же
+            # маршрут, что и у зарегистрированного клиента (факты, цены,
+            # возражения), а анкета ждёт и мягко напоминает о себе после ответа.
+            if intent == I.GREETING:
+                answer = "Здравствуйте! 😊"
+            else:
+                saved_stage, saved_step = conv.stage, conv.registration_step
+                answer = await _route(conv, text, kb, intent)
+                if conv.stage not in (STAGE_LEAD, STAGE_HANDOFF):
+                    # Ответ мог эскалировать диалог («не знаю» → админ) и
+                    # сбросить этап — анкету это обнуляло молча, и следующая
+                    # реплика начинала регистрацию заново. Возвращаем шаг.
+                    conv.stage, conv.registration_step = saved_stage, saved_step
+            if conv.stage == registration.STAGE_REGISTRATION:
+                prompt = registration.current_prompt(conv)
+                reply = f"{answer}\n\n{prompt}" if prompt else answer
+            else:
+                # Вопрос сам запустил сценарий (заявка/передача админу) —
+                # он важнее анкеты, не дёргаем человека регистрацией.
+                reply = answer
+            reply = await _review(conv, text, reply)
+            result = "registration_offtopic"
         else:
             reply, _done = await registration.handle_registration_step(
                 conv, text, get_bigben()
             )
+            result = "registration"
         conv.add("assistant", reply)
         store.save(conv)
+        convlog.log_turn(user_id, text, reply, intent, conv.stage, result)
         return reply
 
     await _fold_memory(conv)
@@ -457,6 +529,7 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
 
     conv.add("assistant", reply)
     store.save(conv)
+    convlog.log_turn(user_id, text, reply, intent, conv.stage, "ok")
     return reply
 
 
@@ -586,6 +659,14 @@ async def _review(conv: Conversation, user_text: str, reply: str) -> str:
 
     rewritten = await _rewrite(conv, user_text, reply, remaining)
     if not rewritten:
+        if "repeats_previous" in remaining:
+            # Модель для переписывания недоступна, а дословный повтор —
+            # самое заметное для человека «залипание». Вместо повтора двигаем
+            # диалог вперёд: суть ответа одной фразой + следующий шаг.
+            varied = _vary_unavoidable_repeat(conv, reply)
+            if varied:
+                runtime.log_event("REPEAT_VARIED", user_id=conv.user_id)
+                return varied
         # Переписать не вышло — отдаём то, что есть. Молчание или
         # шаблонная отписка хуже неидеальной, но осмысленной реплики.
         return reply
@@ -606,6 +687,31 @@ def _known_names(conv: Conversation) -> list[str]:
         for name in (conv.child_label(), lead.fio_parent.split()[-1] if lead.fio_parent else "")
         if name
     ]
+
+
+def _vary_unavoidable_repeat(conv: Conversation, reply: str) -> str:
+    """Детерминированная замена повтора, когда переписать моделью не вышло.
+
+    Оставляем первую фразу ответа (суть) и добавляем шаг, который двигает
+    диалог вперёд. Если и получившийся текст слишком похож на недавний —
+    честно возвращаем пусто, вызывающий отдаст исходник.
+    """
+    first = re.split(r"(?<=[.!?…])\s+", reply.strip(), maxsplit=1)[0].strip()
+    if not first:
+        return ""
+    question = smart.next_question(conv.need)
+    if question:
+        smart.mark_asked(conv.need, question)
+        candidate = f"{first}\n\n{question}"
+    else:
+        variants = [
+            "Подсказать что-то ещё — про цены, расписание или филиалы?",
+            "Могу ещё рассказать про программы, педагогов или свободные места — что интересно?",
+        ]
+        candidate = f"{first}\n\n{variants[len(conv.history) % len(variants)]}"
+    if critic._repeats_previous(candidate, conv):
+        return ""
+    return candidate
 
 
 async def _rewrite(
@@ -676,7 +782,21 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             conv.stage = STAGE_LEAD
             reply, _submitted = await lead_manager.step(conv, text, kb, bigben, max_client)
             return reply
-        return _handoff_followup_reply(conv, text)
+        if intent == I.HANDOFF or _wants_manager(text):
+            # Повторная просьба о человеке: администратор уже уведомлён
+            # (hand_off не шлёт дубль), просто подтверждаем ожидание.
+            return _handoff_followup_reply(conv, text)
+        if intent in (
+            I.PRICE, I.COURSES, I.CONTACTS, I.ABOUT, I.QUESTION, I.OBJECTION,
+            I.HOMEWORK,
+        ):
+            # Смена темы: человек задал обычный вопрос — выходим из режима
+            # «ждём администратора» и отвечаем по существу. Раньше любой
+            # вопрос после эскалации навсегда получал «вопрос уже у
+            # администратора» — второй механизм «залипания».
+            conv.stage = STAGE_DISCOVERY
+        else:
+            return _handoff_followup_reply(conv, text)
 
     # 3. Запрос живого человека / нестандартная ситуация.
     if intent == I.HANDOFF:
@@ -825,6 +945,13 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
         smart.mark_asked(conv.need, question)
         opener = "Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург»."
         return f"{opener} {question}" if question else opener
+
+    # 8. Короткая благодарность/подтверждение — человеческий ответ без
+    #    выгрузки из базы знаний и без продажи. «Спасибо!» раньше уходило в
+    #    KB-поиск и получало в ответ дословный отзыв с сайта — худший из
+    #    возможных ответов на вежливость.
+    if _SMALLTALK_RE.fullmatch(text.strip()):
+        return _SMALLTALK_REPLIES[len(conv.history) % len(_SMALLTALK_REPLIES)]
 
     # 9. Во всех прочих случаях — консультативный ответ по базе знаний.
     #    Веб-поиск подключаем только для содержательных вопросов (не для

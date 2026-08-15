@@ -14,7 +14,20 @@ from datetime import date
 
 from app.bigben import BigBenClient
 from app.config import settings
-from app.intent import extract_age, extract_birthday, extract_phone
+from app.intent import (
+    ABOUT as INTENT_ABOUT,
+    CONTACTS as INTENT_CONTACTS,
+    COURSES as INTENT_COURSES,
+    HANDOFF as INTENT_HANDOFF,
+    HOMEWORK as INTENT_HOMEWORK,
+    OBJECTION as INTENT_OBJECTION,
+    PRICE as INTENT_PRICE,
+    WANT_SIGNUP as INTENT_WANT_SIGNUP,
+    detect_intent,
+    extract_age,
+    extract_birthday,
+    extract_phone,
+)
 from app.memory import Conversation, STAGE_REGISTRATION
 
 logger = logging.getLogger(__name__)
@@ -154,6 +167,68 @@ def _current_step(conv: Conversation) -> str:
     if not lead.phone:
         return "phone"
     return "done"
+
+
+# Маркеры содержательного вопроса: человек пишет это вместо ответа на шаг
+# анкеты не из вредности, а потому что сначала хочет что-то узнать о школе.
+_OFFTOPIC_CUES = (
+    "сколько", "стоит", "стоимость", "цена", "цены", "почём", "почем", "прайс",
+    "где ", "адрес", "филиал", "находит", "добраться", "курс", "программ",
+    "занят", "расписан", "преподав", "педагог", "учител", "онлайн", "офлайн",
+    "оффлайн", "есть ли", "можно ли", "почему", "какие", "как проход",
+    "пробн", "диагностик", "индивидуальн", "групп", "английск", "немецк",
+    "китайск", "возраст", "лет можно", "скидк", "оплат", "перенос", "перенести",
+)
+
+
+def looks_off_topic(conv: Conversation, text: str) -> bool:
+    """Сообщение не является ответом на текущий шаг анкеты.
+
+    Главный источник «залипшего» бота: человек на вопрос «Как вас зовут?»
+    отвечает «Сколько стоит обучение?» — имя из этого не извлечь, и анкета
+    бесконечно переспрашивала одно и то же. Такую реплику надо сначала
+    ответить по существу, а уже потом мягко вернуться к анкете.
+    """
+    step = conv.registration_step or _current_step(conv)
+    clean = text.strip()
+    if not clean or step == "done":
+        return False
+    low = clean.lower()
+    # Намерение говорит само за себя: вопрос о цене, возражение или просьба
+    # позвать человека — не ответ на шаг анкеты, даже если формально похоже
+    # на имя («дорого как-то» — два слова с гласными, и наивная проверка
+    # принимала это за имя ребёнка и отправляла в CRM).
+    if detect_intent(clean) in (
+        INTENT_PRICE, INTENT_COURSES, INTENT_CONTACTS, INTENT_ABOUT,
+        INTENT_OBJECTION, INTENT_HANDOFF, INTENT_WANT_SIGNUP, INTENT_HOMEWORK,
+    ):
+        return True
+    if step in ("fio_parent", "fio_child"):
+        # Сначала вопрос/тема: «Сколько стоит обучение?» формально похоже на
+        # ФИО (три слова с гласными), и наивная проверка имени принимала его
+        # за ответ — анкета уезжала дальше с «именем»-вопросом в CRM.
+        if "?" in clean or any(cue in low for cue in _OFFTOPIC_CUES):
+            return True
+        if _extract_name(clean):
+            return False
+        return len(clean.split()) > 3
+    if step == "birthday":
+        if extract_birthday(clean) or extract_age(clean):
+            return False
+        if clean.isdigit() and 1 <= len(clean) <= 2:
+            return False
+        return "?" in clean or any(cue in low for cue in _OFFTOPIC_CUES)
+    if step == "phone":
+        if extract_phone(clean):
+            return False
+        return "?" in clean or any(cue in low for cue in _OFFTOPIC_CUES)
+    return False
+
+
+def current_prompt(conv: Conversation) -> str:
+    """Текст текущего шага анкеты — чтобы вернуться к ней после ответа."""
+    step = conv.registration_step or _current_step(conv)
+    return REG_PROMPTS.get(step, "")
 
 
 def start_registration(conv: Conversation) -> str:

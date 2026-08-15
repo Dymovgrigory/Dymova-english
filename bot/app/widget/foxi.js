@@ -16,10 +16,17 @@
   } catch (_) {
     sessionId = "";
   }
+  if (!sessionId) {
+    // localStorage недоступен (приватный режим, ITP) — без запасного канала
+    // каждый запрос уходил с новой сессией, и бот «забывал» диалог.
+    const match = document.cookie.match(/(?:^|;\s*)fxb_foxi_sid=([a-z0-9]+)/i);
+    if (match) sessionId = match[1];
+  }
 
   const state = {
     open: false,
     greeted: false,
+    sending: false,
     messages: [],
   };
 
@@ -119,6 +126,12 @@
     } catch (_) {
       /* ignore */
     }
+    if (sessionId) {
+      // Запасной канал на случай недоступного localStorage: без него сессия
+      // жила только в памяти вкладки, и перезагрузка страницы начинала
+      // диалог с нуля.
+      document.cookie = `fxb_foxi_sid=${sessionId};path=/;max-age=31536000;SameSite=Lax`;
+    }
   }
 
   function scrollToBottom() {
@@ -169,7 +182,11 @@
 
   async function submitMessage(text) {
     const cleanText = text.trim();
-    if (!cleanText) return;
+    // Защита от двойной отправки: Enter и кнопка/сабмит формы оба вызывают
+    // submitMessage, и быстрое повторное нажатие раньше отправляло вопрос
+    // дважды — бот честно отвечал дважды.
+    if (!cleanText || state.sending) return;
+    state.sending = true;
 
     state.messages.push({ role: "user", text: cleanText });
     addMessage("user", cleanText);
@@ -198,6 +215,7 @@
     } catch (error) {
       addMessage("bot", "Не получилось отправить сообщение. Попробуйте ещё раз чуть позже 🙏");
     } finally {
+      state.sending = false;
       typing.hidden = true;
       sendBtn.disabled = false;
       input.focus();
