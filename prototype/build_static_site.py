@@ -179,6 +179,7 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
 # 3D-маскот Фокси (prototype/mascot/): ригнутая модель с 17 клипами
 # (сессия 41) — ходит по нижней кромке, реагирует на скорость скролла,
 # курсор и CTA. three.js и GLB грузятся ПОСЛЕ load + requestIdleCallback.
+# (сессия 52: снимали по недоразумению — владелец вернул: «он не мешает».)
 # ВАЖНО: importmap обязан идти раньше первого <script type="module"> —
 # поэтому он вынесен в PRELOADER_BODY (самое начало <body>).
 # Чат-виджет Фокси (бот, POST /api/chat) — на всех страницах, правый нижний угол.
@@ -238,15 +239,15 @@ PRELOADER_HEAD = (
     "#fxb-splash::after{animation:none}.fxb-splash-bar span{animation:none;width:60%}}"
     "</style>"
     # three.js вендорен локально (prototype/mascot/vendor, min-сборки) — без задержек на CDN;
-    # modulepreload начинает качать модули сразу, fetch в <head> — GLB и draco-wasm,
+    # modulepreload начинает качать модули сразу, fetch в <head> — GLB,
     # поэтому живой Фокси появляется практически сразу с началом загрузки
+    # (дублирующий prefetch draco-wasm убран в сессии 52 — wasm грузит сам DRACOLoader)
     '<link rel="modulepreload" href="/mascot/vendor/three/build/three.module.min.js">'
     '<link rel="modulepreload" href="/mascot/vendor/three/build/three.core.min.js">'
     '<link rel="modulepreload" href="/mascot/vendor/three/examples/jsm/loaders/GLTFLoader.js">'
     '<link rel="modulepreload" href="/mascot/vendor/three/examples/jsm/loaders/DRACOLoader.js">'
     "<script>window.__fxbPre={"
-    "glb:fetch('/mascot/foxi-splash.glb').then(function(r){return r.arrayBuffer();}).catch(function(){return null;}),"
-    "wasm:fetch('/mascot/vendor/draco/draco_decoder.wasm').catch(function(){})"
+    "glb:fetch('/mascot/foxi-splash.glb').then(function(r){return r.arrayBuffer();}).catch(function(){return null;})"
     "};</script>"
 )
 
