@@ -831,6 +831,13 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             return await _consult_with_context(conv, text, sales.handle_objection(kb, key, conv))
         return sales.handle_objection(kb, key, conv)
 
+    # 4а. «Как добраться / на метро / на чём доехать» — только факты из базы.
+    #     Детерминированно, без модели: в Долгопрудном нет метро, и LLM без
+    #     точных данных честно выдумывала станции и автобусы (сессия 54).
+    if intent == I.CONTACTS and _DIRECTIONS_RE.search(text):
+        conv.stage = STAGE_DISCOVERY
+        return _directions_reply(kb)
+
     # 4б. Вопрос о педагогах — структурированный ответ со ссылками на видео.
     if intent != I.WANT_SIGNUP:
         team = team_reply(kb, text)
@@ -980,6 +987,29 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
         conv.stage = STAGE_DISCOVERY
     looks_like_question = "?" in text or len(text.strip()) >= 25
     return await _consult(conv, text, allow_web=looks_like_question)
+
+
+_DIRECTIONS_RE = re.compile(
+    r"добраться|доехать|на\s+метро|метро|маршрут|транспорт|проезд|проехать",
+    re.IGNORECASE,
+)
+
+
+def _directions_reply(kb) -> str:
+    """Маршрут до филиалов — строго из базы знаний, без фантазий модели."""
+    lines = ["Наша школа в Долгопрудном, у нас два филиала:"]
+    for b in kb.branches:
+        line = f"• {b.get('name', 'Филиал')}: {b.get('address', '')}"
+        if b.get("phone"):
+            line += f", тел. {b['phone']}"
+        lines.append(line)
+        if b.get("maps"):
+            lines.append(f"  Маршрут: {b['maps']}")
+    lines.append(
+        "По ссылке Яндекс.Карты сами построят маршрут от вашего дома — "
+        "на автомобиле или общественным транспортом."
+    )
+    return "\n".join(lines)
 
 
 def _teacher_language(about: str) -> str:

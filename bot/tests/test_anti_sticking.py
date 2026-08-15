@@ -259,3 +259,13 @@ async def test_short_followup_uses_previous_topic():
     await handle_message(uid, "есть ли у вас китайский для подростка 13 лет?", platform="web")
     reply = await handle_message(uid, "а сколько стоит?", platform="web")
     assert "₽" in reply or "стоимост" in reply.lower() or "9 000" in reply
+
+
+# --- 14. «Как добраться» — только факты из базы, без выдуманного метро ---
+
+
+@pytest.mark.asyncio
+async def test_directions_are_grounded_no_metro_fantasy():
+    reply = await handle_message("stick-directions", "Как до вас добраться на метро?", platform="web")
+    assert "Лихачевский" in reply and "Ракетостроителей" in reply
+    assert "Речной вокзал" not in reply and "Сходненская" not in reply
