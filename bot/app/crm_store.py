@@ -355,6 +355,7 @@ def init_schema(conn: sqlite3.Connection) -> None:
         init_kb_tables(conn)
         init_rbac_tables(conn)
         _migrate_messages_client_id(conn)
+        _migrate_sender_names(conn)
         try:
             conn.executescript(_FTS_SCHEMA)
             _fts5_ok = True
@@ -379,6 +380,21 @@ def _migrate_messages_client_id(conn: sqlite3.Connection) -> None:
         "CREATE UNIQUE INDEX IF NOT EXISTS idx_crm_messages_client_id"
         " ON crm_messages(client_message_id) WHERE client_message_id IS NOT NULL"
     )
+
+
+def _migrate_sender_names(conn: sqlite3.Connection) -> None:
+    """Догоняет старые базы: кто именно из менеджеров написал/ведёт диалог.
+
+    sender_name у сообщения — логин менеджера из админки (в админке видно не
+    безликое «Менеджер», а конкретный человек); manager у диалога — кто сейчас
+    ведёт клиента в режиме менеджера.
+    """
+    msg_cols = {row["name"] for row in conn.execute("PRAGMA table_info(crm_messages)")}
+    if "sender_name" not in msg_cols:
+        conn.execute("ALTER TABLE crm_messages ADD COLUMN sender_name TEXT NOT NULL DEFAULT ''")
+    conv_cols = {row["name"] for row in conn.execute("PRAGMA table_info(crm_conversations)")}
+    if "manager" not in conv_cols:
+        conn.execute("ALTER TABLE crm_conversations ADD COLUMN manager TEXT NOT NULL DEFAULT ''")
 
 
 def _rows(cur: sqlite3.Cursor) -> list[dict]:
@@ -616,6 +632,7 @@ def add_message(
     ai_model: str | None = None,
     created_at: str | None = None,
     client_message_id: str | None = None,
+    sender_name: str = "",
 ) -> tuple[int, bool]:
     """Пишет сообщение. Идемпотентно по (channel, external_message_id),
     а для менеджерских ответов — по client_message_id.
@@ -646,15 +663,15 @@ def add_message(
             """
             INSERT INTO crm_messages(conversation_id, customer_id, channel, external_message_id,
                 direction, sender_type, text, payload_json, status, error, reply_to,
-                intent, stage, ai_model, created_at, client_message_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                intent, stage, ai_model, created_at, client_message_id, sender_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 conversation_id, customer_id, channel, external_message_id,
                 direction, sender_type, text or "",
                 json.dumps(payload or {}, ensure_ascii=False, default=str),
                 status, error, reply_to, intent, stage, ai_model, now,
-                client_message_id,
+                client_message_id, sender_name,
             ),
         )
         message_id = int(cur.lastrowid)
@@ -671,6 +688,19 @@ def add_message(
         return message_id, False
 
 
+def set_conversation_manager(conversation_id: int, manager: str, actor: str = "system") -> None:
+    """Кто из менеджеров сейчас ведёт диалог (пустая строка — никто)."""
+    conn = get_conn()
+    with _tx(conn):
+        conn.execute(
+            "UPDATE crm_conversations SET manager = ?, updated_at = ? WHERE id = ?",
+            (manager, _now(), conversation_id),
+        )
+    if manager:
+        audit(actor, "set_conversation_manager", "crm_conversation", conversation_id,
+              after={"manager": manager})
+
+
 def mark_conversation_read(conversation_id: int) -> None:
     conn = get_conn()
     with _tx(conn):
@@ -682,15 +712,20 @@ def mark_conversation_read(conversation_id: int) -> None:
 
 def set_ai_mode(conversation_id: int, mode: str, paused_until: str | None = None,
                 actor: str = "system") -> None:
-    """Перевод диалога в режим active/paused/manager (AI pause / handoff)."""
+    """Перевод диалога в режим active/paused/manager (AI pause / handoff).
+
+    Возврат в active снимает и назначенного менеджера диалога: раз бот снова
+    отвечает сам, «ведёт клиента» уже никто."""
     conn = get_conn()
     with _tx(conn):
         before = conn.execute(
             "SELECT ai_mode, ai_paused_until FROM crm_conversations WHERE id = ?",
             (conversation_id,),
         ).fetchone()
+        manager_reset = ", manager = ''" if mode == "active" else ""
         conn.execute(
-            "UPDATE crm_conversations SET ai_mode = ?, ai_paused_until = ?, updated_at = ? WHERE id = ?",
+            "UPDATE crm_conversations SET ai_mode = ?, ai_paused_until = ?, updated_at = ?"
+            f"{manager_reset} WHERE id = ?",
             (mode, paused_until, _now(), conversation_id),
         )
     audit(actor, "set_ai_mode", "crm_conversation", conversation_id,
@@ -2188,7 +2223,16 @@ def create_callback_request(
 
 def _callback_request_row(row: sqlite3.Row) -> dict:
     item = dict(row)
-    item["contact"] = json.loads(item.pop("contact_json") or "{}")
+    contact = json.loads(item.pop("contact_json") or "{}")
+    item["contact"] = contact
+    # Имя для списка/карточки: из клиента, иначе из снапшота лида (заявки с
+    # сайта часто без склеенного клиента, но с ФИО из формы).
+    item["display_name"] = (
+        (item.get("customer_name") or "").strip()
+        or (item.get("name") or "").strip()
+        or contact.get("fio_parent") or contact.get("fio_child")
+        or contact.get("name") or contact.get("phone") or ""
+    )
     return item
 
 

@@ -211,9 +211,10 @@ async def conversation_reply(request: Request, conversation_id: int, data: dict)
     external_message_id = None
     status = "sent"
     # Пометка «не бот»: в мессенджерах сообщение менеджера идёт от имени
-    # бота, поэтому клиенту явно подписываем, кто пишет. В БД храним тот
-    # же текст, что ушёл клиенту, — история админки совпадает с его чатом.
-    wire_text = text if channel == "web" else f"👤 Менеджер:\n{text}"
+    # бота, поэтому клиенту явно подписываем, кто пишет — с именем менеджера.
+    # В БД храним тот же текст, что ушёл клиенту, — история админки
+    # совпадает с его чатом.
+    wire_text = text if channel == "web" else f"👤 {actor} (менеджер):\n{text}"
     if channel == "web":
         # Доставка при следующем поллинге виджета (/api/chat/pending).
         status = "pending"
@@ -227,7 +228,11 @@ async def conversation_reply(request: Request, conversation_id: int, data: dict)
         status=status, error=error,
         external_message_id=external_message_id,
         client_message_id=client_message_id,
+        sender_name=actor,
     )
+    # Диалог помечаем ведущим: во «Входящих» и в шапке чата видно, кто
+    # именно общается с клиентом (у диалогов нескольких менеджеров).
+    crm_store.set_conversation_manager(conversation_id, actor, actor=actor)
     if conv["ai_mode"] != "paused":
         # Ответ менеджера держит режим менеджера ещё MANAGER_AUTO_RESUME_MIN
         # минут после этого сообщения, затем бот вернётся сам.
@@ -395,6 +400,10 @@ async def request_assign(request: Request, request_id: int, data: dict) -> dict:
     if item["status"] == "new":
         fields["status"] = "in_progress"
     crm_store.update_callback_request(request_id, fields, actor=actor)
+    # Заявка и диалог — одна работа: назначенный на заявку менеджер виден
+    # и как ведущий диалога с клиентом.
+    if fields["manager"] and item.get("conversation_id"):
+        crm_store.set_conversation_manager(item["conversation_id"], fields["manager"], actor=actor)
     return {"ok": True, "request": crm_store.get_callback_request(request_id)}
 
 

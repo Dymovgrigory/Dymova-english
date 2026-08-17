@@ -252,6 +252,7 @@ h1, h2, h3 { margin: 0 0 8px; }
 .pill--ai { color: var(--ok); border-color: var(--ok); background: #f0fdf4; }
 .pill--paused, .pill--manager { color: var(--bad); border-color: var(--bad); background: #fef2f2; }
 .pill--lead { color: #92400e; border-color: var(--accent); background: var(--accent-soft); }
+.pill--mgr { color: #075985; border-color: #7dd3fc; background: #e0f2fe; }
 .pill--tag { color: var(--muted); }
 
 .inbox-chat { display: flex; flex-direction: column; min-height: 0; background: var(--bg); }

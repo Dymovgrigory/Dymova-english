@@ -156,7 +156,7 @@ def test_reply_client_message_id_dedupes(client, monkeypatch):
     assert resp1.status_code == 200 and resp2.status_code == 200
     assert resp2.json()["duplicate"] is True
     assert resp2.json()["message_id"] == resp1.json()["message_id"]
-    assert sent == ["👤 Менеджер:\nОтвет менеджера"]  # клиенту ушло ровно одно сообщение
+    assert sent == ["👤 super_admin (менеджер):\nОтвет менеджера"]  # клиенту ушло ровно одно сообщение
     msg = crm_store.get_message(resp1.json()["message_id"])
     assert msg["external_message_id"] == "ext-100"
 
@@ -329,7 +329,7 @@ def test_miniapp_messages_returns_manager_replies(client):
     crm_store.add_message(conv_id, cid, "telegram", "in", "customer", "позовите менеджера")
     bot_msg, _ = crm_store.add_message(conv_id, cid, "telegram", "out", "ai", "Подключаю.")
     mgr_msg, _ = crm_store.add_message(
-        conv_id, cid, "telegram", "out", "manager", "👤 Менеджер:\nЗдравствуйте!")
+        conv_id, cid, "telegram", "out", "manager", "👤 super_admin (менеджер):\nЗдравствуйте!")
 
     init_data = make_telegram_init_data(TG_TOKEN, telegram_user_id=777)
     resp = client.get("/api/miniapp/messages",
@@ -338,7 +338,7 @@ def test_miniapp_messages_returns_manager_replies(client):
     msgs = resp.json()["messages"]
     # Входящие клиента не отдаём: своё сообщение у него и так на экране.
     assert [(m["id"], m["role"]) for m in msgs] == [(bot_msg, "bot"), (mgr_msg, "manager")]
-    assert msgs[-1]["text"].startswith("👤 Менеджер:")
+    assert msgs[-1]["text"].startswith("👤 super_admin (менеджер):")
 
     # Курсор: уже показанное не приезжает повторно.
     resp2 = client.get(f"/api/miniapp/messages?after_id={mgr_msg}",

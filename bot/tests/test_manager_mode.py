@@ -213,8 +213,52 @@ def test_reply_sets_auto_resume(client, fake_max):
     conv = crm_store.get_conversation(conv_id)
     assert conv["ai_mode"] == "manager" and conv["ai_paused_until"]
     # Клиенту ушло с пометкой менеджера.
-    assert fake_max.sent[-1][1].startswith("👤 Менеджер:")
+    assert fake_max.sent[-1][1].startswith("👤 super_admin (менеджер):")
 
 
 def test_admin_base_url_uses_origin_not_app_path():
     assert main_module._admin_base_url() == "https://example.test/admin/"
+
+
+# --------- кто ведёт диалог ---------
+
+
+def test_reply_marks_conversation_manager_and_sender_name(client, fake_max):
+    cid = crm_store.upsert_customer_for_identity("max", "u-mgr")
+    conv_id = crm_store.get_or_create_conversation(cid, "max", "u-mgr")
+    resp = client.post(f"/admin/api/conversations/{conv_id}/reply",
+                       headers=AUTH, json={"text": "Я веду этого клиента"})
+    assert resp.status_code == 200 and resp.json()["ok"]
+
+    conv = crm_store.get_conversation(conv_id)
+    assert conv["manager"] == "super_admin"
+    msg = crm_store.get_message(resp.json()["message_id"])
+    assert msg["sender_name"] == "super_admin"
+    assert msg["text"].startswith("👤 super_admin (менеджер):")
+
+    # Возврат бота снимает ведущего.
+    crm_store.set_ai_mode(conv_id, "active", actor="test")
+    assert crm_store.get_conversation(conv_id)["manager"] == ""
+
+
+def test_request_assign_marks_conversation_manager(client):
+    cid = crm_store.upsert_customer_for_identity("max", "u-asg")
+    conv_id = crm_store.get_or_create_conversation(cid, "max", "u-asg")
+    req_id = crm_store.create_callback_request(
+        customer_id=cid, conversation_id=conv_id, channel="max",
+        kind="admin_request", reason="тест")
+    resp = client.post(f"/admin/api/requests/{req_id}/assign",
+                       headers=AUTH, json={"manager": "Григорий"})
+    assert resp.status_code == 200
+    assert crm_store.get_conversation(conv_id)["manager"] == "Григорий"
+
+
+# --------- имя клиента в заявке ---------
+
+
+def test_request_display_name_from_lead_contact():
+    req_id = crm_store.create_callback_request(
+        channel="web", kind="lead", reason="курс",
+        contact={"fio_parent": "Екатерина", "phone": "89100000000"})
+    item = crm_store.get_callback_request(req_id)
+    assert item["display_name"] == "Екатерина"

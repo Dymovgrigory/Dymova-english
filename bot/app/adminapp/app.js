@@ -372,6 +372,7 @@ function convRowHtml(item) {
         <span class="conv__last">${esc(item.last_message_text || "")}</span>
         <span class="conv__meta">
           ${channelPill(item.channel)} ${aiPill(item.ai_mode)}
+          ${item.manager ? `<span class="pill pill--mgr" title="Кто ведёт диалог">Ведёт: ${esc(item.manager)}</span>` : ""}
           ${item.lead_status && item.lead_status !== "none" ? `<span class="pill pill--lead">${esc(LEAD_LABELS[item.lead_status] || item.lead_status)}</span>` : ""}
           ${tags}
           ${item.unread_count ? `<span class="unread-badge">${item.unread_count}</span>` : ""}
@@ -490,6 +491,12 @@ function renderChatHead(conv) {
   const name = conv.customer_name || conv.customer_phone || conv.external_user_id;
   $("chat-title").textContent = name;
   updateAiButton(conv.ai_mode, conv.ai_paused_until);
+  const mgr = $("chat-manager");
+  if (mgr) {
+    // Кто ведёт диалог в режиме менеджера — видно всей команде.
+    mgr.hidden = !conv.manager;
+    mgr.textContent = conv.manager ? `Ведёт: ${conv.manager}` : "";
+  }
 }
 
 function updateAiButton(mode, pausedUntil) {
@@ -504,7 +511,10 @@ function updateAiButton(mode, pausedUntil) {
 /* --- сообщения ------------------------------------------------------------ */
 
 function messageHtml(msg) {
-  const who = { customer: "Клиент", ai: "AI", manager: "Менеджер", system: "Система" }[msg.sender_type] || msg.sender_type;
+  const baseWho = { customer: "Клиент", ai: "AI", manager: "Менеджер", system: "Система" }[msg.sender_type] || msg.sender_type;
+  // У сообщения менеджера показываем, кто именно писал (несколько менеджеров
+  // видят все чаты — важно, кто ведёт диалог).
+  const who = msg.sender_type === "manager" && msg.sender_name ? msg.sender_name : baseWho;
   const cls = msg.direction === "in" ? "in" : (msg.sender_type === "manager" ? "manager" : "out");
   let statusLine = "";
   if (msg.direction === "out") {
@@ -1012,7 +1022,7 @@ function reqContact(r) {
 
 function requestRowHtml(r) {
   const contact = reqContact(r);
-  const name = r.name || contact.name || r.phone || contact.phone || `Клиент #${r.customer_id || "—"}`;
+  const name = r.display_name || r.name || contact.name || contact.fio_parent || r.phone || contact.phone || `Клиент #${r.customer_id || "—"}`;
   const isNew = r.status === "new";
   return `
     <button class="customer-row req-row ${isNew ? "req-row--new" : ""}" data-req="${r.id}">
@@ -1111,7 +1121,7 @@ function renderRequestDetail(data) {
   const conv = data.conversation || null;
   const messages = data.recent_messages || [];
   const contact = reqContact(r);
-  const name = r.name || contact.name || (customer && customer.name) || "Без имени";
+  const name = r.display_name || r.name || contact.name || contact.fio_parent || (customer && customer.name) || "Без имени";
   const phone = r.phone || contact.phone || (customer && customer.phone) || "";
   const email = contact.email || (customer && customer.email) || "";
   const username = contact.username || (customer && customer.username) || "";

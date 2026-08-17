@@ -84,7 +84,7 @@ def test_reply_max_channel(client, monkeypatch):
     resp = client.post(f"/admin/api/conversations/{conv}/reply",
                        headers=AUTH, json={"text": "Здравствуйте, я менеджер"})
     assert resp.status_code == 200 and resp.json()["ok"]
-    assert sent == [("u-max", "👤 Менеджер:\nЗдравствуйте, я менеджер")]
+    assert sent == [("u-max", "👤 super_admin (менеджер):\nЗдравствуйте, я менеджер")]
 
     msg = crm_store.get_conn().execute(
         "SELECT * FROM crm_messages WHERE conversation_id = ?", (conv,)).fetchone()
@@ -108,7 +108,7 @@ def test_reply_telegram_channel(client, monkeypatch):
                        headers=AUTH, json={"text": "Ответ из админки"})
     assert resp.json()["ok"]
     # Префикс tg: срезается — клиенту нужен голый chat_id.
-    assert sent == [("12345", "👤 Менеджер:\nОтвет из админки")]
+    assert sent == [("12345", "👤 super_admin (менеджер):\nОтвет из админки")]
 
 
 def test_reply_send_failure_marked_failed(client, monkeypatch):
