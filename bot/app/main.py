@@ -132,7 +132,7 @@ def _main_menu(user_id: str = "") -> list[list[dict]]:
         [callback_button("📅 Записаться на пробное", "menu:signup")],
         [callback_button("💳 Стоимость обучения", "menu:price")],
         [callback_button("🏫 Наши филиалы", "menu:branches")],
-        [callback_button("☎ Связаться с администратором", "menu:admin")],
+        [callback_button("🙋 Позвать менеджера", "menu:admin")],
     ]
     if settings.MINIAPP_BASE_URL and _miniapp_open(user_id):
         rows.insert(0, [link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
@@ -348,6 +348,27 @@ async def _notify_admins_for_telegram(conv, reason: str) -> None:
     await notify_slack(f"MAX handoff ({reason})\n\n{profile.lead_summary(conv)}")
 
 
+async def _request_manager(user_id: str, platform: str) -> str:
+    """Кнопка «Позвать менеджера»: заявка + уведомление админов + режим менеджера.
+
+    Повторное нажатие не спамит админов: диалог уже у менеджера — клиенту
+    отвечаем подтверждением без новой эскалации. Режим менеджера сам
+    снимется через MANAGER_AUTO_RESUME_MIN минут тишины (см. ai_core).
+    """
+    crm_conv = crm_store.find_conversation(platform, user_id)
+    if crm_conv and crm_conv.get("ai_mode") == "manager":
+        return "Менеджер уже подключён к диалогу и скоро ответит 🙌"
+    conv = get_store().get(user_id, platform=platform)
+    conv.stage = STAGE_HANDOFF
+    conv.handed_off = True
+    get_store().save(conv)
+    await _notify_admins_for_telegram(conv, "кнопка «Позвать менеджера»")
+    return (
+        "Передаю диалог менеджеру 🙌 Он скоро ответит вам прямо здесь. "
+        "Если передумаете — просто продолжайте писать, я на связи."
+    )
+
+
 # Публичный чат-эндпоинт ходит в платный LLM, поэтому ограничиваем частоту:
 # без этого один скрипт способен сжечь квоту провайдера за минуты.
 MAX_CHAT_TEXT_CHARS = 2000
@@ -506,6 +527,36 @@ async def miniapp_messages(request: Request, after_id: int = 0, limit: int = 50)
     }
 
 
+@app.post("/api/miniapp/manager-call")
+async def miniapp_manager_call(request: Request) -> dict:
+    """Кнопка «Позвать менеджера» в чате мини-приложения.
+
+    Та же логика, что у кнопки меню в мессенджерах: заявка админам (MAX +
+    ссылка на админку), диалог переходит в режим менеджера, клиент видит
+    подтверждение. Режим сам снимется через MANAGER_AUTO_RESUME_MIN минут
+    тишины.
+    """
+    identity = _identity_from_request(request)
+    if identity is None:
+        return JSONResponse(
+            {"ok": False, "error": "Нужна авторизация внутри Telegram или MAX"},
+            status_code=401,
+        )
+    if _chat_rate_limited(identity.user_id):
+        return JSONResponse(
+            {"ok": False, "error": "Слишком много сообщений подряд, попробуйте через минуту"},
+            status_code=429,
+        )
+    crm_ctx = crm_ingest.ingest_inbound(
+        identity.platform, identity.user_id, "[кнопка: Позвать менеджера]",
+        external_event_id=f"miniapp:{uuid.uuid4().hex}",
+        name=str(getattr(identity, "display_name", "") or ""),
+    )
+    reply = await _request_manager(identity.user_id, identity.platform)
+    crm_ingest.ingest_outbound(crm_ctx, reply, ai_model=settings.LLM_MODEL)
+    return {"ok": True, "reply": reply}
+
+
 # Больше 8 МБ фото задания быть не может, а вот OOM от «загрузки» на 2 ГБ —
 # вполне: UploadFile.read() без лимита читает всё тело в память.
 MAX_HOMEWORK_IMAGE_BYTES = 8 * 1024 * 1024
@@ -600,7 +651,7 @@ def _telegram_menu_buttons(user_id: str = "") -> list[list[dict]]:
             [callback_button("📅 Записаться на пробное", "menu:signup")],
             [callback_button("💳 Стоимость обучения", "menu:price")],
             [callback_button("🏫 Наши филиалы", "menu:branches")],
-            [callback_button("☎ Связаться с администратором", "menu:admin")],
+            [callback_button("🙋 Позвать менеджера", "menu:admin")],
         ]
     )
     return rows
@@ -717,6 +768,16 @@ async def _telegram_callback(update: dict, telegram) -> None:
             "Подскажите, пожалуйста, какой филиал вам удобнее?",
             buttons=_branch_admin_buttons(),
         )
+        return
+    if payload == "menu:admin":
+        # Кнопка «Позвать менеджера»: заявка админам + режим менеджера.
+        crm_ctx = crm_ingest.ingest_inbound(
+            TELEGRAM_PLATFORM, user_id, "[кнопка: menu:admin]",
+            external_event_id=str(update.get("update_id") or "") or None,
+        )
+        reply = await _request_manager(user_id, TELEGRAM_PLATFORM)
+        await _send_tg_logged(telegram, chat_id, reply, crm_ctx,
+                              buttons=_telegram_menu_buttons(user_id) or None)
         return
     if payload in _CALLBACK_TEXT:
         text = _CALLBACK_TEXT[payload]
@@ -1290,6 +1351,11 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 crm_ctx,
                 buttons=_branch_admin_buttons(),
             )
+        elif user_id and payload == "menu:admin":
+            # Кнопка «Позвать менеджера»: заявка админам + режим менеджера,
+            # а не имитация текстового вопроса через _CALLBACK_TEXT.
+            reply = await _request_manager(user_id, PLATFORM)
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
         elif user_id and payload in _CALLBACK_TEXT:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
             if reply:  # пустой ответ — AI на паузе/у менеджера, молчим

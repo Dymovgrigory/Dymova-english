@@ -161,7 +161,13 @@ def ingest_handoff(platform: str, user_id: str, reason: str = "") -> int | None:
             detail={"reason": reason, "user_id": user_id},
         )
         if conv:
-            crm_store.set_ai_mode(conv["id"], "manager", actor="bot")
+            # Режим менеджера — не навсегда: через MANAGER_AUTO_RESUME_MIN
+            # минут тишины бот вернётся в диалог сам (см. ai_core).
+            crm_store.set_ai_mode(
+                conv["id"], "manager",
+                paused_until=crm_store.auto_resume_until(),
+                actor="bot",
+            )
         customer = crm_store.get_customer(conv["customer_id"]) if conv else None
         return crm_store.create_callback_request(
             customer_id=conv["customer_id"] if conv else None,

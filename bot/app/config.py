@@ -92,6 +92,10 @@ class Settings(BaseSettings):
     MINIAPP_AUTH_REQUIRED: bool = True
     CONV_LOG_FILE: str = ""
     GROUP_MODE_ENABLED: bool = True
+    # Сколько минут тишины держится режим менеджера: после последнего
+    # сообщения (клиента или менеджера) диалог автоматически возвращается
+    # боту. Окно скользящее — каждое новое сообщение его продлевает.
+    MANAGER_AUTO_RESUME_MIN: int = 15
     GROUP_CHAT_WHITELIST: str = ""
     NUDGE_DELAY_HOURS: int = 36
     NUDGE_MAX_AGE_HOURS: int = 100

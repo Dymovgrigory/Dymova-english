@@ -1484,6 +1484,29 @@
 
     on("#chat-form", "submit", sendChat);
 
+    on("#chat-manager-call", "click", function () {
+      // Кнопка «Позвать менеджера»: заявка админам + режим менеджера.
+      if (state.chatBusy) return;
+      state.chatBusy = true;
+      haptic("light");
+      postJSON("/api/miniapp/manager-call")
+        .then(function (data) {
+          if (data.__status === 403 || data.__status === 401) {
+            addMessage("bot", data.error || "Чат откроется после регистрации.");
+            return;
+          }
+          addMessage("bot", data.reply || "Передаю диалог менеджеру.");
+          // Подтверждение уже на экране — двигаем курсор поллинга.
+          pollChatMessages(true);
+        })
+        .catch(function () {
+          addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+        })
+        .finally(function () {
+          state.chatBusy = false;
+        });
+    });
+
     // Свайп вниз по листу закрывает его — жест, а не только кнопка.
     var panel = $(".sheet__panel");
     var startY = null;

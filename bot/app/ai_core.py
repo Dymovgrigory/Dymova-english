@@ -514,16 +514,33 @@ def _crm_ai_silenced(platform: str, user_id: str) -> bool:
         if mode == "active":
             return False
         paused_until = row.get("ai_paused_until")
-        if mode == "paused" and paused_until:
+        if mode in ("paused", "manager") and paused_until:
             try:
                 until = datetime.fromisoformat(paused_until)
                 if until.tzinfo is None:
                     until = until.replace(tzinfo=timezone.utc)
                 if until <= datetime.now(timezone.utc):
+                    # Тишина дольше окна — диалог возвращается боту.
                     crm_store.set_ai_mode(row["id"], "active", actor="auto-expire")
                     return False
+                if mode == "manager":
+                    # Окно скользящее: каждое сообщение клиента продлевает
+                    # режим менеджера ещё на MANAGER_AUTO_RESUME_MIN.
+                    crm_store.set_ai_mode(
+                        row["id"], "manager",
+                        paused_until=crm_store.auto_resume_until(),
+                        actor="auto-extend",
+                    )
             except ValueError:
                 pass
+        elif mode == "manager":
+            # Режим включён до появления авто-возврата (paused_until пуст):
+            # стартуем окно сейчас, чтобы диалог не завис у менеджера навсегда.
+            crm_store.set_ai_mode(
+                row["id"], "manager",
+                paused_until=crm_store.auto_resume_until(),
+                actor="auto-migrate",
+            )
         return True
     except Exception:
         logger.exception("ai_core: ошибка проверки AI-режима CRM")

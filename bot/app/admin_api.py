@@ -229,7 +229,10 @@ async def conversation_reply(request: Request, conversation_id: int, data: dict)
         client_message_id=client_message_id,
     )
     if conv["ai_mode"] != "paused":
-        crm_store.set_ai_mode(conversation_id, "manager", actor=actor)
+        # Ответ менеджера держит режим менеджера ещё MANAGER_AUTO_RESUME_MIN
+        # минут после этого сообщения, затем бот вернётся сам.
+        crm_store.set_ai_mode(conversation_id, "manager",
+                              paused_until=crm_store.auto_resume_until(), actor=actor)
     crm_store.audit(actor, "reply", "crm_conversation", conversation_id,
                     after={"status": status, "channel": channel})
     return {"ok": ok, "message_id": message_id, "status": status, "error": error}
@@ -247,6 +250,9 @@ async def conversation_ai_mode(request: Request, conversation_id: int, data: dic
     paused_until = data.get("paused_until") or None
     if mode != "paused":
         paused_until = None
+    if mode == "manager" and paused_until is None:
+        # Режим менеджера всегда с авто-возвратом: не должен зависать навсегда.
+        paused_until = crm_store.auto_resume_until()
     crm_store.set_ai_mode(conversation_id, mode, paused_until=paused_until, actor=actor)
     return {"ok": True, "ai_mode": mode, "ai_paused_until": paused_until}
 

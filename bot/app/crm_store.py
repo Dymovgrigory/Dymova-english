@@ -21,7 +21,7 @@ import logging
 import os
 import sqlite3
 import threading
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from app.config import settings
@@ -283,6 +283,16 @@ def _tx(conn: sqlite3.Connection):
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def auto_resume_until(minutes: int | None = None) -> str:
+    """Момент авто-возврата диалога боту: now + MANAGER_AUTO_RESUME_MIN.
+
+    Режим менеджера не вечный: если ни клиент, ни менеджер ничего не пишут,
+    через это время бот снова начинает отвечать (см. ai_core._crm_ai_silenced).
+    """
+    mins = minutes if minutes is not None else getattr(settings, "MANAGER_AUTO_RESUME_MIN", 15)
+    return (datetime.now(timezone.utc) + timedelta(minutes=mins)).isoformat(timespec="seconds")
 
 
 def _resolve_db_path() -> str:
