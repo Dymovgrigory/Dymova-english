@@ -962,6 +962,7 @@
     if (log.dataset.greeted) return;
     log.dataset.greeted = "1";
     addMessage("bot", "Спросите что угодно: программы, цены, расписание, как проходят занятия.");
+    startChatPolling();
   }
 
   function addMessage(role, text) {
@@ -972,6 +973,39 @@
     log.appendChild(bubble);
     log.scrollTop = log.scrollHeight;
     return bubble;
+  }
+
+  /* Ответы менеджера из админки уходят клиенту и в нативный чат мессенджера,
+   * но человек, общающийся внутри мини-аппа, мог бы их не увидеть. Поллим
+   * новые исходящие сообщения диалога и докидываем в чат. Курсор по id —
+   * дублей нет; свежий ответ бота, уже показанный локально, лишь двигает
+   * курсор (см. sendChat). */
+  var CHAT_POLL_MS = 5000;
+
+  function pollChatMessages(cursorOnly) {
+    return request("/api/miniapp/messages?after_id=" + (state.chatLastId || 0))
+      .then(function (data) {
+        if (!data || !data.ok || !data.messages) return;
+        data.messages.forEach(function (m) {
+          if (m.id <= (state.chatLastId || 0)) return;
+          state.chatLastId = m.id;
+          if (!cursorOnly) {
+            addMessage(m.role === "manager" ? "manager" : "bot", m.text);
+          }
+        });
+      })
+      .catch(function () { /* поллинг молчит: следующая попытка через 5с */ });
+  }
+
+  function startChatPolling() {
+    if (state.chatPollTimer) return;
+    // Сначала только курсор: старую историю в чат не вываливаем.
+    // Цепочка setTimeout вместо интервала: после ошибки сети темп не дрожит.
+    pollChatMessages(true).finally(function tick() {
+      state.chatPollTimer = setTimeout(function () {
+        pollChatMessages(false).finally(tick);
+      }, CHAT_POLL_MS);
+    });
   }
 
   function sendChat(event) {
@@ -994,6 +1028,9 @@
           return;
         }
         addMessage("bot", data.reply || "Не удалось получить ответ.");
+        // Ответ уже показан локально — двигаем курсор поллинга, чтобы через
+        // несколько секунд он не приехал вторым пузырём.
+        pollChatMessages(true);
       })
       .catch(function () {
         typing.remove();

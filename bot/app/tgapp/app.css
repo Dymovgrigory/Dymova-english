@@ -916,6 +916,14 @@ body {
   border-bottom-left-radius: 7px;
 }
 
+/* Живой человек из админки: тёплая подсветка, чтобы не путать с ботом. */
+.bubble--manager {
+  align-self: flex-start;
+  background: var(--accent-soft, #fff3c4);
+  border: 1px solid var(--accent, #f2c94c);
+  border-bottom-left-radius: 7px;
+}
+
 /* Три точки вместо текста «печатает»: молчащий и думающий бот
    для пользователя выглядят одинаково, и это надо различать. */
 .bubble--typing { color: transparent; min-width: 62px; position: relative; }

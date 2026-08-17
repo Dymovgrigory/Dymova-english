@@ -319,3 +319,33 @@ def test_backfill_dry_run_then_apply(tmp_path, monkeypatch):
     crm_store.reset()
     conn = crm_store.get_conn(str(db_path))
     assert conn.execute("SELECT COUNT(*) c FROM crm_messages").fetchone()["c"] == 2
+
+
+# --------- лента сообщений для мини-аппа ---------
+
+
+def test_miniapp_messages_returns_manager_replies(client):
+    cid, conv_id = _dialog("telegram", "tg:777")
+    crm_store.add_message(conv_id, cid, "telegram", "in", "customer", "позовите менеджера")
+    bot_msg, _ = crm_store.add_message(conv_id, cid, "telegram", "out", "ai", "Подключаю.")
+    mgr_msg, _ = crm_store.add_message(
+        conv_id, cid, "telegram", "out", "manager", "👤 Менеджер:\nЗдравствуйте!")
+
+    init_data = make_telegram_init_data(TG_TOKEN, telegram_user_id=777)
+    resp = client.get("/api/miniapp/messages",
+                      headers={main_module.INIT_DATA_HEADER: init_data})
+    assert resp.status_code == 200
+    msgs = resp.json()["messages"]
+    # Входящие клиента не отдаём: своё сообщение у него и так на экране.
+    assert [(m["id"], m["role"]) for m in msgs] == [(bot_msg, "bot"), (mgr_msg, "manager")]
+    assert msgs[-1]["text"].startswith("👤 Менеджер:")
+
+    # Курсор: уже показанное не приезжает повторно.
+    resp2 = client.get(f"/api/miniapp/messages?after_id={mgr_msg}",
+                       headers={main_module.INIT_DATA_HEADER: init_data})
+    assert resp2.status_code == 200 and resp2.json()["messages"] == []
+
+
+def test_miniapp_messages_requires_auth(client):
+    resp = client.get("/api/miniapp/messages")
+    assert resp.status_code == 401

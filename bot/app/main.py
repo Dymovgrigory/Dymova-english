@@ -468,6 +468,44 @@ async def miniapp_chat(request: Request, data: dict) -> dict:
     return {"ok": True, "reply": reply}
 
 
+@app.get("/api/miniapp/messages")
+async def miniapp_messages(request: Request, after_id: int = 0, limit: int = 50) -> dict:
+    """Новые исходящие сообщения диалога для чата мини-приложения.
+
+    Ответ менеджера из админки уходит клиенту в нативный чат мессенджера,
+    но если человек общается внутри мини-аппа, нативное сообщение он может
+    не заметить. Мини-апп поллит эту ручку и показывает реплики менеджера
+    (и бота) прямо в своём чате. Курсор — id последнего показанного
+    сообщения, поэтому дублей нет.
+    """
+    identity = _identity_from_request(request)
+    if identity is None:
+        return JSONResponse(
+            {"ok": False, "error": "Нужна авторизация внутри Telegram или MAX"},
+            status_code=401,
+        )
+    conv = crm_store.find_conversation(identity.platform, identity.user_id)
+    if conv is None:
+        return {"ok": True, "messages": []}
+    limit = max(1, min(int(limit), 100))
+    rows = [
+        m for m in crm_store.get_messages(conv["id"], limit=200)
+        if m["direction"] == "out" and int(m["id"]) > int(after_id or 0)
+    ][-limit:]
+    return {
+        "ok": True,
+        "messages": [
+            {
+                "id": m["id"],
+                "role": "manager" if m["sender_type"] == "manager" else "bot",
+                "text": m["text"],
+                "created_at": m["created_at"],
+            }
+            for m in rows
+        ],
+    }
+
+
 # Больше 8 МБ фото задания быть не может, а вот OOM от «загрузки» на 2 ГБ —
 # вполне: UploadFile.read() без лимита читает всё тело в память.
 MAX_HOMEWORK_IMAGE_BYTES = 8 * 1024 * 1024
