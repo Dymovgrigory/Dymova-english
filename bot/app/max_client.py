@@ -112,6 +112,21 @@ def _retry_after(resp: httpx.Response) -> float | None:
     return None
 
 
+def _max_error_description(resp: httpx.Response) -> str:
+    """Человекочитаемая причина ошибки MAX из тела ответа (code/message)."""
+    try:
+        payload = resp.json()
+    except Exception:
+        return f"HTTP {resp.status_code}"
+    if isinstance(payload, dict):
+        code = str(payload.get("code") or "").strip()
+        message = str(payload.get("message") or payload.get("error") or "").strip()
+        text = ": ".join(part for part in (code, message) if part)
+        if text:
+            return f"HTTP {resp.status_code}: {text}"[:300]
+    return f"HTTP {resp.status_code}"
+
+
 class MaxClient:
     def __init__(self) -> None:
         self.token = settings.MAX_BOT_TOKEN
@@ -136,9 +151,25 @@ class MaxClient:
         attempts: int = _MAX_ATTEMPTS,
     ) -> dict | None:
         """Запрос к MAX API с ретраями. Возвращает тело ответа или None."""
+        body, _error = await self._request_ext(
+            method, path, params=params, json_body=json_body, attempts=attempts)
+        return body
+
+    async def _request_ext(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: dict | None = None,
+        json_body: dict | None = None,
+        attempts: int = _MAX_ATTEMPTS,
+    ) -> tuple[dict | None, str | None]:
+        """Тот же запрос, но возвращает (тело, описание ошибки): описание
+        из ответа платформы нужно CRM, чтобы менеджер видел причину
+        недоставки (например, «пользователь заблокировал бота»)."""
         if not self.configured:
             logger.warning("MAX бот не настроен — %s %s не выполнен", method, path)
-            return None
+            return None, "MAX бот не настроен"
         url = f"{self.base}{path}"
         delay = _INITIAL_BACKOFF
         client = _http()
@@ -148,33 +179,33 @@ class MaxClient:
                 resp = await client.request(
                     method, url, params=params, headers=self._headers(), json=json_body
                 )
-            except httpx.RequestError:
+            except httpx.RequestError as exc:
                 logger.warning(
                     "MAX %s %s сетевая ошибка, попытка %s/%s",
                     method, path, attempt, attempts, exc_info=True,
                 )
                 if attempt >= attempts:
-                    return None
+                    return None, f"сетевая ошибка: {type(exc).__name__}"
                 await asyncio.sleep(delay)
                 delay *= 2
                 continue
-            except Exception:
+            except Exception as exc:
                 logger.exception("MAX %s %s неожиданная ошибка", method, path)
-                return None
+                return None, str(exc)[:300]
 
             if resp.status_code == 200:
                 try:
                     body = resp.json()
                 except Exception:
                     # Успешный ответ без тела — это не ошибка доставки.
-                    return {}
-                return body if isinstance(body, dict) else {}
+                    return {}, None
+                return (body if isinstance(body, dict) else {}), None
 
             if resp.status_code == 429:
                 wait = _retry_after(resp) or delay
                 logger.warning("MAX %s %s лимит частоты, жду %.1fs", method, path, wait)
                 if attempt >= attempts:
-                    return None
+                    return None, "лимит частоты запросов (429)"
                 await asyncio.sleep(wait)
                 delay *= 2
                 continue
@@ -185,7 +216,7 @@ class MaxClient:
                     method, path, resp.status_code, attempt, attempts,
                 )
                 if attempt >= attempts:
-                    return None
+                    return None, f"ошибка платформы {resp.status_code}"
                 await asyncio.sleep(delay)
                 delay *= 2
                 continue
@@ -194,8 +225,8 @@ class MaxClient:
                 "MAX %s %s ошибка status=%s body=%s",
                 method, path, resp.status_code, resp.text[:300],
             )
-            return None
-        return None
+            return None, _max_error_description(resp)
+        return None, "send failed"
 
     async def get_bot_info(self) -> Optional[dict]:
         return await self._request("GET", "/me")
@@ -224,13 +255,37 @@ class MaxClient:
         text: str,
         buttons: Optional[list[list[dict]]] = None,
     ) -> bool:
+        ok, _external_id, _error = await self.send_message_ext(user_id, text, buttons)
+        return ok
+
+    async def send_message_ext(
+        self,
+        user_id: str,
+        text: str,
+        buttons: Optional[list[list[dict]]] = None,
+    ) -> tuple[bool, str | None, str | None]:
+        """Отправка с фактом доставки: (ok, id сообщения в MAX, описание ошибки).
+
+        Id сообщения в ответе платформы нужен CRM для жизненного цикла
+        доставки; описание ошибки — чтобы менеджер видел причину недоставки.
+        """
         body: dict = {"text": text}
         if buttons:
             body["attachments"] = keyboard(buttons)
-        result = await self._request(
+        result, error = await self._request_ext(
             "POST", "/messages", params={"user_id": user_id}, json_body=body
         )
-        return result is not None
+        if result is None:
+            return False, None, error or "send failed"
+        # Формат ответа POST /messages: {"message": {... "id"/"mid" ...}} либо
+        # плоское тело — берём то, что платформа реально вернула.
+        container = result.get("message") if isinstance(result.get("message"), dict) else result
+        external_id = None
+        for key in ("id", "mid", "message_id"):
+            if container.get(key):
+                external_id = str(container[key])
+                break
+        return True, external_id, None
 
     async def send_to_chat(
         self,

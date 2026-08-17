@@ -503,3 +503,35 @@ h1, h2, h3 { margin: 0 0 8px; }
 @media (max-width: 900px) {
   .bc-layout { grid-template-columns: 1fr; }
 }
+
+/* --- заявки --- */
+.req-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.req-tab {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.req-tab--active { background: var(--accent-soft); border-color: var(--accent); color: var(--text); font-weight: 600; }
+.req-tab__count { background: var(--bg); border-radius: 999px; padding: 0 7px; font-size: 12px; }
+.req-tab--active .req-tab__count { background: var(--panel); }
+.req-row--new { border-color: var(--accent); }
+.req-row .customer-row__name .unread-badge { margin-left: 6px; }
+.pill--req-new { color: var(--bad); border-color: var(--bad); background: #fef2f2; }
+.req-card dd .btn { margin-left: 6px; }
+
+/* --- доступность канала в чате --- */
+.chat-avail {
+  background: #fef2f2;
+  border-bottom: 1px solid var(--bad);
+  color: var(--bad);
+  padding: 8px 14px;
+  font-size: 13px;
+}
+.chat-avail__contacts { margin-top: 6px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.chat-avail__contacts a { color: var(--bad); font-weight: 600; }
+
+/* --- статусы сообщений --- */
+.bubble__status .btn { margin-left: 6px; padding: 1px 8px; font-size: 11px; }

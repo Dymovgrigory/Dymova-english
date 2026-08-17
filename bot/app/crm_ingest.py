@@ -128,8 +128,29 @@ def pop_pending_web(session_id: str) -> list[dict]:
         return []
 
 
-def ingest_handoff(platform: str, user_id: str, reason: str = "") -> None:
-    """Фиксирует передачу диалога администратору."""
+def make_contact_snapshot(customer: dict | None, extra: dict | None = None) -> dict:
+    """Снапшот контактов на момент заявки: имя, телефон, email, username и
+    список каналов. extra (например, поля формы заявки) дополняет карточку."""
+    snapshot: dict = {"name": "", "phone": "", "email": "", "username": "", "channels": []}
+    if customer:
+        snapshot.update({
+            "name": customer.get("name") or "",
+            "phone": customer.get("phone") or "",
+            "email": customer.get("email") or "",
+            "username": customer.get("username") or "",
+            "channels": [i["channel"] for i in customer.get("identities") or []],
+        })
+    for key, value in (extra or {}).items():
+        if value is not None:
+            snapshot[key] = value
+    return snapshot
+
+
+def ingest_handoff(platform: str, user_id: str, reason: str = "") -> int | None:
+    """Фиксирует передачу диалога администратору и создаёт заявку.
+
+    Возвращает id заявки (или None при сбое записи — ответ клиенту сбой
+    CRM никогда не ломает)."""
     try:
         channel = platform or _channel_for_user(user_id)
         conv = crm_store.find_conversation(channel, user_id)
@@ -141,8 +162,76 @@ def ingest_handoff(platform: str, user_id: str, reason: str = "") -> None:
         )
         if conv:
             crm_store.set_ai_mode(conv["id"], "manager", actor="bot")
+        customer = crm_store.get_customer(conv["customer_id"]) if conv else None
+        return crm_store.create_callback_request(
+            customer_id=conv["customer_id"] if conv else None,
+            conversation_id=conv["id"] if conv else None,
+            channel=channel,
+            kind="admin_request",
+            reason=reason,
+            contact=make_contact_snapshot(customer),
+            source=channel,
+            last_message_id=crm_store.last_message_id(conv["id"]) if conv else None,
+        )
     except Exception:
         logger.exception("crm: ошибка записи handoff")
+        return None
+
+
+def ingest_lead_request(
+    channel: str,
+    external_user_id: str = "",
+    lead: dict | None = None,
+    source: str = "",
+) -> int | None:
+    """Заявка из формы (сайт / мини-приложение) как заявка в CRM.
+
+    Клиент резолвится по идентичности канала, иначе — по телефону (склейка
+    с уже известным клиентом), иначе заявка остаётся без привязки. reason —
+    человекочитаемое резюме для списка заявок.
+    """
+    try:
+        lead = lead or {}
+        customer_id: int | None = None
+        conversation_id: int | None = None
+        if external_user_id:
+            customer_id = crm_store.upsert_customer_for_identity(
+                channel, external_user_id,
+                name=str(lead.get("fio_parent") or ""),
+                phone=str(lead.get("phone") or ""),
+                child_name=str(lead.get("fio_child") or ""),
+            )
+            conversation_id = crm_store.get_or_create_conversation(
+                customer_id, channel, external_user_id)
+        elif lead.get("phone"):
+            found = crm_store.find_customer_by_phone(str(lead["phone"]))
+            if found:
+                customer_id = int(found["id"])
+        summary = ", ".join(
+            part for part in (
+                str(lead.get("course") or ""),
+                str(lead.get("branch") or ""),
+                str(lead.get("comment") or "")[:200],
+            ) if part
+        )
+        contact = make_contact_snapshot(
+            crm_store.get_customer(customer_id) if customer_id else None,
+            extra={k: lead.get(k) for k in
+                   ("fio_parent", "fio_child", "phone", "birthday", "course", "branch")},
+        )
+        return crm_store.create_callback_request(
+            customer_id=customer_id,
+            conversation_id=conversation_id,
+            channel=channel,
+            kind="lead",
+            reason=summary or "Заявка на запись",
+            contact=contact,
+            source=source or channel,
+            last_message_id=crm_store.last_message_id(conversation_id) if conversation_id else None,
+        )
+    except Exception:
+        logger.exception("crm: ошибка записи lead-заявки")
+        return None
 
 
 def ingest_no_answer(user_id: str, question: str, reason: str = "") -> None:

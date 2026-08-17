@@ -39,6 +39,9 @@
       <button class="nav-item" data-section="inbox" data-perm="inbox">
         <svg viewBox="0 0 16 16"><path d="M2 3h12v9H6l-4 3z"/></svg>
         Входящие <span class="nav-badge" id="nav-unread" hidden></span></button>
+      <button class="nav-item" data-section="requests" data-perm="inbox">
+        <svg viewBox="0 0 16 16"><path d="M3 14V2h8l-2 3 2 3H3"/></svg>
+        Заявки <span class="nav-badge" id="nav-requests" hidden></span></button>
       <button class="nav-item" data-section="customers" data-perm="customers">
         <svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 15c0-3 3-5 6-5s6 2 6 5"/></svg>
         Клиенты</button>
@@ -166,6 +169,7 @@
               <button class="btn btn--ghost btn--sm" id="chat-customer-btn">Карточка</button>
             </div>
           </div>
+          <div class="chat-avail" id="chat-avail" hidden></div>
           <div class="chat-messages" id="chat-messages">
             <button class="btn btn--ghost btn--sm chat-more" id="chat-more" hidden>Загрузить раньше</button>
           </div>
@@ -179,6 +183,12 @@
       <div class="inbox-customer" id="inbox-col-customer">
         <div class="customer-empty">Карточка клиента появится здесь</div>
       </div>
+    </section>
+
+    <!-- Заявки (admin_request / lead) -->
+    <section class="page" id="page-requests" hidden>
+      <div class="req-tabs" id="req-tabs"></div>
+      <div class="customers-list" id="requests-list"></div>
     </section>
 
     <!-- Клиенты -->

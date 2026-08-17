@@ -29,6 +29,7 @@ from app.ai_core import handle_message, handle_start
 from app import broadcast
 from app import cabinet
 from app import crm_ingest
+from app import crm_store
 from app.bigben import get_bigben
 from app.config import settings
 from app.course_selector import recommend
@@ -315,13 +316,35 @@ def _branch_admin_buttons() -> list[list[dict]]:
 
 
 async def _notify_admins_for_telegram(conv, reason: str) -> None:
+    """Эскалация администраторам: заявка в CRM + уведомление в MAX/Slack.
+
+    Вызывается из веток «запрос администратора» вместо admin_router.hand_off,
+    поэтому заявку (callback_request) создаём здесь — иначе у эскалации не
+    было бы сущности, на которую админка могла бы сослаться.
+    """
+    # Дедупликация внутри create_callback_request не даст повторной эскалации
+    # плодить заявки: открытая заявка диалога просто обновится.
+    request_id = crm_ingest.ingest_handoff(conv.platform, conv.user_id, reason)
+    crm_conv = None
+    try:
+        crm_conv = crm_store.find_conversation(conv.platform, conv.user_id)
+    except Exception:
+        logger.exception("crm: не удалось найти диалог для уведомления админов")
+    lines = [f"🔔 Требуется администратор ({reason})", ""]
+    if request_id:
+        lines.append(f"Заявка: #{request_id}")
+    if crm_conv:
+        lines.append(f"Клиент: #{crm_conv['customer_id']}")
+        lines.append(f"Диалог: #{crm_conv['id']}")
+    lines.extend(["", profile.lead_summary(conv)])
+    message = "\n".join(lines)
+    buttons = None
+    base = _miniapp_url()
+    if request_id and base:
+        buttons = [[link_button("Открыть заявку", f"{base}/admin/#/requests/{request_id}")]]
     admin_client = get_max()
-    message = (
-        f"🔔 Требуется администратор ({reason})\n\n"
-        f"{profile.lead_summary(conv)}"
-    )
     for admin_id in settings.admin_ids:
-        await admin_client.send_message(admin_id, message)
+        await admin_client.send_message(admin_id, message, buttons=buttons)
     await notify_slack(f"MAX handoff ({reason})\n\n{profile.lead_summary(conv)}")
 
 
@@ -427,7 +450,21 @@ async def miniapp_chat(request: Request, data: dict) -> dict:
             {"ok": False, "error": "Слишком много сообщений подряд, попробуйте через минуту"},
             status_code=429,
         )
+    # Переписка мини-приложения — полноценный канал CRM: раньше она шла мимо
+    # хранилища, и админка не видела ни вопросов, ни ответов. Пишем входящее
+    # ДО ответа: handoff внутри handle_message привяжется к диалогу.
+    crm_ctx = crm_ingest.ingest_inbound(
+        identity.platform, identity.user_id, text,
+        external_event_id=f"miniapp:{uuid.uuid4().hex}",
+        name=str(getattr(identity, "display_name", "") or ""),
+        first_name=str(getattr(identity, "first_name", "") or ""),
+        last_name=str(getattr(identity, "last_name", "") or ""),
+        username=str(getattr(identity, "username", "") or ""),
+    )
     reply = await handle_message(identity.user_id, text, platform=identity.platform)
+    if reply:
+        # Пустой ответ = AI на паузе/у менеджера: исходящее не пишем.
+        crm_ingest.ingest_outbound(crm_ctx, reply, ai_model=settings.LLM_MODEL)
     return {"ok": True, "reply": reply}
 
 
@@ -807,6 +844,18 @@ async def _handle_telegram_photo(message: dict, chat_id, telegram) -> None:
         return
 
     note = str(message.get("caption") or "").strip()
+    # Фото — тоже сообщение клиента: пишем в CRM, чтобы в админке было видно,
+    # что человек прислал задание (раньше такие обращения терялись).
+    photo_message_id = str(message.get("message_id") or "") or None
+    sender = message.get("from") or {}
+    crm_ctx = crm_ingest.ingest_inbound(
+        TELEGRAM_PLATFORM, f"tg:{chat_id}", f"[фото] {note}".strip(),
+        external_event_id=photo_message_id,
+        external_message_id=photo_message_id,
+        first_name=str(sender.get("first_name") or ""),
+        last_name=str(sender.get("last_name") or ""),
+        username=str(sender.get("username") or ""),
+    )
     download = getattr(telegram, "download_file", None)
     if not callable(download):
         # Клиент без скачивания файлов (старая сборка, урезанный адаптер) —
@@ -836,7 +885,8 @@ async def _handle_telegram_photo(message: dict, chat_id, telegram) -> None:
             "что именно нужно сделать — помогу разобраться.",
         )
         return
-    await telegram.send_message(chat_id, explanation)
+    ok = await telegram.send_message(chat_id, explanation)
+    crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL, ok=bool(ok))
 
 
 def _schedule_telegram_update(update: dict, telegram) -> bool:
@@ -1173,27 +1223,39 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         user_id = _extract_user_id(update) or _extract_user_id(callback)
         if callback_id:
             await max_client.answer_callback(callback_id)
+        # Нажатие кнопки — тоже сообщение клиента: пишем в CRM, чтобы
+        # ответы бота ниже логировались в тот же диалог (а не шли мимо).
+        crm_ctx = None
+        if user_id:
+            crm_ctx = crm_ingest.ingest_inbound(
+                PLATFORM, user_id, f"[кнопка: {payload}]",
+                external_event_id=str(callback_id or _extract_update_id(update) or "") or None,
+            )
         if user_id and payload in _BRANCH_CONTACTS:
             conv = get_store().get(user_id)
             info = _BRANCH_CONTACTS[payload]
             conv.selected_branch = info["name"]
             conv.stage = STAGE_HANDOFF
             await _notify_admins_for_telegram(conv, "контакт по филиалу")
-            await max_client.send_message(
+            await _send_max_logged(
+                max_client,
                 user_id,
                 f"Свяжу вас с администратором {info['name']}.",
+                crm_ctx,
                 buttons=[[link_button(info["name"], info["url"])]],
             )
         elif user_id and str(payload).startswith("contact:"):
-            await max_client.send_message(
+            await _send_max_logged(
+                max_client,
                 user_id,
                 "Подскажите, пожалуйста, какой филиал вам удобнее?",
+                crm_ctx,
                 buttons=_branch_admin_buttons(),
             )
         elif user_id and payload in _CALLBACK_TEXT:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
             if reply:  # пустой ответ — AI на паузе/у менеджера, молчим
-                await max_client.send_message(user_id, reply)
+                await _send_max_logged(max_client, user_id, reply, crm_ctx)
         return
 
 
@@ -1491,6 +1553,21 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
         identity.platform if identity else "", "Мини-приложение Фоксинбург"
     )
     ok = await get_bigben().create_lead(lead, source=source)
+    request_id = None
+    if ok:
+        # Заявка из мини-приложения — сущность CRM (карточка «Заявки» в
+        # админке), а не только письмо админам: иначе её не отследить.
+        request_id = crm_ingest.ingest_lead_request(
+            channel=identity.platform if identity else "web",
+            external_user_id=identity.user_id if identity else "",
+            lead={
+                "fio_parent": lead.fio_parent, "fio_child": lead.fio_child,
+                "phone": lead.phone, "birthday": lead.birthday,
+                "course": lead.course, "branch": lead.branch,
+                "comment": lead.comment,
+            },
+            source=source,
+        )
     if ok and identity is not None:
         # Заявка из кабинета — часть того же диалога: сохраняем, чтобы бот
         # в чате не спрашивал заново то, что человек уже заполнил.
@@ -1513,6 +1590,10 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
             f"Интерес: {lead.course or data.get('interest_value', '') or data.get('interest_type', '')}\n"
             f"Детали: {lead.comment or '—'}"
         )
+        if request_id:
+            admin_note += f"\nЗаявка: #{request_id}"
+            if _miniapp_url():
+                admin_note += f"\n{_miniapp_url()}/admin/#/requests/{request_id}"
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)
     return {"ok": ok}
@@ -1551,6 +1632,20 @@ async def site_lead(request: Request, data: dict) -> dict:
         return {"ok": False, "error": "Укажите имя и телефон"}
     source = str(data.get("source") or "Сайт dymova-english.ru")[:255]
     ok = await get_bigben().create_lead(lead, source=source)
+    request_id = None
+    if ok:
+        # Заявка с сайта — сущность CRM: склеиваем с клиентом по телефону,
+        # чтобы админ видел заявку в карточке, а не только письмо в почте.
+        request_id = crm_ingest.ingest_lead_request(
+            channel="web",
+            lead={
+                "fio_parent": lead.fio_parent, "fio_child": lead.fio_child,
+                "phone": lead.phone, "birthday": lead.birthday,
+                "course": lead.course, "branch": lead.branch,
+                "comment": lead.comment,
+            },
+            source=source,
+        )
     admin_note = (
         "Новая заявка с сайта\n"
         f"Родитель: {lead.fio_parent}\n"
@@ -1562,6 +1657,10 @@ async def site_lead(request: Request, data: dict) -> dict:
         f"Детали: {lead.comment or '—'}\n"
         f"Источник: {source}"
     )
+    if request_id:
+        admin_note += f"\nЗаявка: #{request_id}"
+        if _miniapp_url():
+            admin_note += f"\n{_miniapp_url()}/admin/#/requests/{request_id}"
     if ok and settings.admin_ids:
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)

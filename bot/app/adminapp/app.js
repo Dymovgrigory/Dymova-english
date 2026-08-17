@@ -123,7 +123,11 @@ async function enter(value) {
   applyPermissions();
   $("gate").hidden = true;
   $("app").hidden = false;
-  showSection(hasPerm("stats") ? "dashboard" : "inbox");
+  if (location.hash.replace(/^#\/?/, "")) {
+    routeFromHash();
+  } else {
+    showSection(hasPerm("stats") ? "dashboard" : "inbox");
+  }
   startPolling();
 }
 
@@ -194,24 +198,26 @@ $("burger").addEventListener("click", () => {
 
 /* --- навигация ------------------------------------------------------------ */
 
-function showSection(name) {
+function showSection(name, options = {}) {
   document.querySelectorAll(".nav-item[data-section]").forEach((el) =>
     el.classList.toggle("nav-item--active", el.dataset.section === name));
   const sectionPerms = {
-    dashboard: "stats", inbox: "inbox", customers: "customers",
+    dashboard: "stats", inbox: "inbox", requests: "inbox", customers: "customers",
     pipeline: "pipeline", broadcast: "broadcasts", insights: "stats",
     analytics: "analytics", kb: "kb", ai: "prompts", errors: "errors",
     users: "users", settings: "system",
   };
   if (!hasPerm(sectionPerms[name] || "stats")) name = "inbox";
   SECTION = name;
-  ["dashboard", "inbox", "customers", "pipeline", "broadcast", "insights",
+  ["dashboard", "inbox", "requests", "customers", "pipeline", "broadcast", "insights",
    "analytics", "kb", "ai", "errors", "users", "settings"].forEach((s) => {
     $(`page-${s}`).hidden = s !== name;
   });
   document.querySelector(".sidebar").classList.remove("sidebar--open");
+  if (!options.keepHash) setHash("#/" + name);
   if (name === "dashboard") loadDashboard();
   if (name === "inbox") loadInbox();
+  if (name === "requests") loadRequests();
   if (name === "customers") loadCustomers();
   if (name === "pipeline") loadPipeline();
   if (name === "broadcast") loadBroadcastCenter();
@@ -229,6 +235,46 @@ $("nav").addEventListener("click", (event) => {
   if (item) showSection(item.dataset.section);
 });
 
+/* --- hash-роутинг (shareable deep links) ----------------------------------- */
+
+/* setHash выставляет location.hash без навигации; свой же hashchange
+   подавляем флагом, чтобы не было зацикливания с routeFromHash. */
+let HASH_SILENT = false;
+
+function setHash(hash) {
+  if (location.hash === hash) return;
+  HASH_SILENT = true;
+  location.hash = hash;
+}
+
+window.addEventListener("hashchange", () => {
+  if (HASH_SILENT) {
+    HASH_SILENT = false;
+    return;
+  }
+  routeFromHash();
+});
+
+function routeFromHash() {
+  if ($("app").hidden) return; // до входа в админку роутить нечего
+  const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  const section = parts[0];
+  const id = Number(parts[1]) || 0;
+  if (!section) return;
+  if (section === "requests") {
+    showSection("requests", { keepHash: true });
+    if (id) openRequest(id);
+  } else if (section === "inbox") {
+    showSection("inbox", { keepHash: true });
+    if (id) openConversationById(id);
+  } else if (section === "customers") {
+    showSection("customers", { keepHash: true });
+    if (id) openCustomerById(id);
+  } else if (document.querySelector(`.nav-item[data-section="${section}"]`)) {
+    showSection(section, { keepHash: true });
+  }
+}
+
 /* --- поллинт -------------------------------------------------------------- */
 
 let pollTimer = null;
@@ -241,6 +287,7 @@ function startPolling() {
       loadInbox({ silent: true });
       if (INBOX.activeId) loadMessages(INBOX.activeId, { silent: true });
     }
+    if (SECTION === "requests") loadRequests({ silent: true });
     if (SECTION === "dashboard") loadDashboard({ silent: true });
   }, POLL_MS);
 }
@@ -364,22 +411,74 @@ $("dash-latest").addEventListener("click", (event) => {
 async function openConversation(event) {
   const row = event.target.closest("[data-conv]");
   if (!row) return;
-  const id = Number(row.dataset.conv);
+  await openConversationById(Number(row.dataset.conv));
+}
+
+/* Адаптер для deep links и глобального поиска: открывает диалог по id,
+   даже если он не попал в текущую выдачу фильтров (фильтры сбрасываем). */
+async function openConversationById(id) {
+  if (!id) return;
+  if (!INBOX.items.some((item) => item.id === id)) {
+    ["inbox-channel", "inbox-ai", "inbox-lead"].forEach((fid) => { $(fid).value = ""; });
+    $("inbox-unread").checked = false;
+    $("inbox-search").value = "";
+    await loadInbox();
+  }
   INBOX.activeId = id;
   INBOX.oldestMessageId = 0;
+  pendingClientMessageId = null;
   loadInbox({ silent: true });
   document.querySelector(".page--inbox").classList.add("inbox--chat");
   const conv = INBOX.items.find((item) => item.id === id) || null;
   INBOX.active = conv;
+  setHash("#/inbox/" + id);
   $("chat-empty").hidden = true;
   $("chat-wrap").hidden = false;
   renderChatHead(conv);
   await Promise.all([
     loadMessages(id),
     loadCustomerCard(conv ? conv.customer_id : 0),
+    loadAvailability(id),
     api(`/admin/api/conversations/${id}/read`, { method: "POST" }).catch(() => {}),
   ]);
   loadInbox({ silent: true });
+}
+
+/* --- связь с клиентом (доступность канала) --------------------------------- */
+
+async function loadAvailability(convId) {
+  const box = $("chat-avail");
+  try {
+    const av = await api(`/admin/api/conversations/${convId}/availability`);
+    if (av.can_send) {
+      box.hidden = true;
+      box.innerHTML = "";
+      return;
+    }
+    const c = av.contacts || {};
+    const contacts = [];
+    if (c.phone) {
+      contacts.push(`<a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>
+        <button class="btn btn--sm btn--ghost" data-copy="${esc(c.phone)}">Скопировать</button>`);
+    }
+    if (c.email) {
+      contacts.push(`<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>
+        <button class="btn btn--sm btn--ghost" data-copy="${esc(c.email)}">Скопировать</button>`);
+    }
+    if (c.telegram_username) {
+      const uname = "@" + String(c.telegram_username).replace(/^@/, "");
+      contacts.push(`<span>${esc(uname)}</span>
+        <button class="btn btn--sm btn--ghost" data-copy="${esc(uname)}">Скопировать</button>`);
+    }
+    box.innerHTML = `
+      <b>Клиент вне окна доставки (${esc(CHANNEL_LABEL[av.channel] || av.channel)}):</b>
+      ${esc(av.reason || "сообщение из чата может не дойти")}
+      ${contacts.length ? `<div class="chat-avail__contacts">Связаться напрямую: ${contacts.join(" ")}</div>` : ""}`;
+    box.hidden = false;
+  } catch (err) {
+    box.hidden = true;
+    box.innerHTML = "";
+  }
 }
 
 $("chat-back").addEventListener("click", () => {
@@ -407,10 +506,18 @@ function updateAiButton(mode, pausedUntil) {
 function messageHtml(msg) {
   const who = { customer: "Клиент", ai: "AI", manager: "Менеджер", system: "Система" }[msg.sender_type] || msg.sender_type;
   const cls = msg.direction === "in" ? "in" : (msg.sender_type === "manager" ? "manager" : "out");
-  const failed = msg.status === "failed";
-  const statusLine = msg.direction === "out"
-    ? `<div class="bubble__status ${failed ? "bubble__status--failed" : ""}">${failed ? `не доставлено: ${esc(msg.error || "")}` : esc(msg.status)}</div>`
-    : "";
+  let statusLine = "";
+  if (msg.direction === "out") {
+    if (msg.status === "failed") {
+      statusLine = `<div class="bubble__status bubble__status--failed" title="${esc(msg.error || "Ошибка доставки")}">
+        ✖ не доставлено${msg.error ? `: ${esc(msg.error)}` : ""}
+        <button class="btn btn--sm btn--ghost" data-msg-retry="${msg.id}">Повторить</button></div>`;
+    } else if (msg.status === "pending") {
+      statusLine = `<div class="bubble__status">⏳ ожидает доставки</div>`;
+    } else {
+      statusLine = `<div class="bubble__status">✓</div>`;
+    }
+  }
   return `<div class="bubble bubble--${cls}" data-mid="${msg.id}">
     <div class="bubble__meta"><b>${esc(who)}</b><span>${esc(fmtTime(msg.created_at))}</span></div>
     ${esc(msg.text)}${statusLine}</div>`;
@@ -452,19 +559,64 @@ $("chat-more").addEventListener("click", async () => {
 
 $("chat-messages").addEventListener("scroll", () => { renderMessages._touched = true; });
 
+/* Повторная отправка недоставленного сообщения. */
+$("chat-messages").addEventListener("click", async (event) => {
+  const retry = event.target.closest("[data-msg-retry]");
+  if (!retry) return;
+  retry.disabled = true;
+  try {
+    const result = await api(`/admin/api/messages/${retry.dataset.msgRetry}/retry`,
+      { method: "POST", body: "{}" });
+    if (result.ok) {
+      toast("Сообщение отправлено повторно");
+    } else {
+      toast(`Снова не доставлено: ${result.error || "ошибка отправки"}`);
+    }
+  } catch (err) {
+    toast(err.message);
+  }
+  if (INBOX.activeId) loadMessages(INBOX.activeId, { silent: true });
+});
+
 /* --- ответ менеджера ------------------------------------------------------ */
+
+/* client_message_id генерируется один раз на черновик: при повторном клике
+   или сбое сети тот же идентификатор не даст backend'у отправить дубль. */
+let pendingClientMessageId = null;
+
+function newClientMessageId() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return "cmid-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+}
+
+$("chat-text").addEventListener("input", () => {
+  if (!pendingClientMessageId && $("chat-text").value.trim()) {
+    pendingClientMessageId = newClientMessageId();
+  }
+});
 
 $("chat-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const text = $("chat-text").value.trim();
   if (!text || !INBOX.activeId) return;
-  $("chat-text").value = "";
+  if (!pendingClientMessageId) pendingClientMessageId = newClientMessageId();
+  const clientMessageId = pendingClientMessageId;
+  const submitBtn = $("chat-form").querySelector("button[type=submit]");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Отправка…";
   try {
     const result = await api(`/admin/api/conversations/${INBOX.activeId}/reply`, {
       method: "POST",
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, client_message_id: clientMessageId }),
     });
-    if (!result.ok) toast(`Не доставлено: ${result.error || "ошибка отправки"}`);
+    if (!result.ok || result.status === "failed") {
+      toast(`Не доставлено: ${result.error || "ошибка отправки"}`);
+    } else {
+      // Сообщение принято в отправку — черновик закрыт, следующее сообщение
+      // получит новый client_message_id.
+      pendingClientMessageId = null;
+      $("chat-text").value = "";
+    }
     if (INBOX.active && INBOX.active.ai_mode !== "paused") {
       INBOX.active.ai_mode = "manager";
       updateAiButton("manager");
@@ -472,7 +624,10 @@ $("chat-form").addEventListener("submit", async (event) => {
     await loadMessages(INBOX.activeId, { silent: true });
   } catch (err) {
     toast(err.message);
-    $("chat-text").value = text;
+    // Текст и client_message_id сохраняем: повторная отправка идемпотентна.
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Отправить";
   }
 });
 
@@ -813,7 +968,309 @@ $("customers-next").addEventListener("click", () => { CUSTOMERS_OFFSET += CUSTOM
 $("customers-list").addEventListener("click", (event) => {
   const row = event.target.closest("[data-open-customer]");
   if (!row) return;
-  openDrawer("Карточка клиента", () => loadCustomerCard(Number(row.dataset.openCustomer), $("drawer-body")));
+  openCustomerById(Number(row.dataset.openCustomer));
+});
+
+/* Адаптер для deep links и переходов из других разделов. */
+function openCustomerById(id) {
+  if (!id) return;
+  setHash("#/customers/" + id);
+  openDrawer("Карточка клиента", () => loadCustomerCard(id, $("drawer-body")));
+}
+
+/* --- заявки (позвать администратора / лид с сайта) -------------------------- */
+
+const REQ_STATUS_LABELS = {
+  new: "Новая", in_progress: "В работе", contacted: "Связались",
+  waiting: "Ожидает", resolved: "Решена", cancelled: "Отменена",
+};
+const REQ_KIND_LABELS = { admin_request: "Администратор", lead: "Заявка с сайта" };
+const REQ_TABS = [
+  ["new", "Новые"],
+  ["in_progress", "В работе"],
+  ["pending", "Ожидают"],
+  ["done", "Завершённые"],
+  ["all", "Все"],
+];
+const REQ_TAB_STATUSES = {
+  new: ["new"], in_progress: ["in_progress"],
+  pending: ["waiting", "contacted"], done: ["resolved", "cancelled"], all: [],
+};
+const REQUESTS = { items: [], counts: {}, tab: "new" };
+
+function reqStatusPill(status) {
+  const cls = { new: "pill--req-new", in_progress: "pill--lead", resolved: "pill--ai",
+    cancelled: "pill--paused" }[status] || "";
+  return `<span class="pill ${cls}">${esc(REQ_STATUS_LABELS[status] || status)}</span>`;
+}
+
+function reqContact(r) {
+  let contact = {};
+  try { contact = JSON.parse(r.contact_json || "{}"); } catch (_) { /* игнор */ }
+  return contact;
+}
+
+function requestRowHtml(r) {
+  const contact = reqContact(r);
+  const name = r.name || contact.name || r.phone || contact.phone || `Клиент #${r.customer_id || "—"}`;
+  const isNew = r.status === "new";
+  return `
+    <button class="customer-row req-row ${isNew ? "req-row--new" : ""}" data-req="${r.id}">
+      <span class="avatar avatar--${esc(r.channel || "web")}">${esc(initials(name, CHANNEL_LABEL[r.channel]))}</span>
+      <span class="customer-row__main">
+        <span class="customer-row__name">
+          <span class="muted">#${esc(r.id)}</span> ${esc(name)}
+          ${isNew ? `<span class="unread-badge">new</span>` : ""}
+        </span>
+        <span class="customer-row__meta">
+          ${channelPill(r.channel)} <span class="pill">${esc(REQ_KIND_LABELS[r.kind] || r.kind)}</span>
+          ${esc((r.reason || "").slice(0, 90))}${(r.reason || "").length > 90 ? "…" : ""}
+        </span>
+        <span class="customer-row__meta">
+          ${esc(fmtTime(r.created_at))}${r.manager ? ` · ${esc(r.manager)}` : ""}
+        </span>
+      </span>
+      ${reqStatusPill(r.status)}
+    </button>`;
+}
+
+async function loadRequests(options = {}) {
+  try {
+    const data = await api("/admin/api/requests?limit=200");
+    REQUESTS.items = data.items || [];
+    REQUESTS.counts = data.counts || {};
+    const newCount = REQUESTS.counts.new || 0;
+    $("nav-requests").hidden = !newCount;
+    $("nav-requests").textContent = newCount || "";
+    renderRequestTabs();
+    renderRequestList();
+  } catch (err) {
+    if (!options.silent) {
+      if (err.message === "unauthorized") showGate("Токен больше не подходит");
+      else toast(err.message);
+    }
+  }
+}
+
+function renderRequestTabs() {
+  const c = REQUESTS.counts;
+  const tabCounts = {
+    new: c.new || 0,
+    in_progress: c.in_progress || 0,
+    pending: (c.waiting || 0) + (c.contacted || 0),
+    done: (c.resolved || 0) + (c.cancelled || 0),
+    all: c.total || 0,
+  };
+  $("req-tabs").innerHTML = REQ_TABS.map(([key, label]) =>
+    `<button class="req-tab ${REQUESTS.tab === key ? "req-tab--active" : ""}" data-req-tab="${key}">
+      ${label} <span class="req-tab__count">${tabCounts[key]}</span></button>`).join("");
+}
+
+function renderRequestList() {
+  const statuses = REQ_TAB_STATUSES[REQUESTS.tab] || [];
+  const items = statuses.length
+    ? REQUESTS.items.filter((r) => statuses.includes(r.status))
+    : REQUESTS.items;
+  $("requests-list").innerHTML = items.length
+    ? items.map(requestRowHtml).join("")
+    : `<div class="empty">Заявок нет</div>`;
+}
+
+$("req-tabs").addEventListener("click", (event) => {
+  const tab = event.target.closest("[data-req-tab]");
+  if (!tab) return;
+  REQUESTS.tab = tab.dataset.reqTab;
+  renderRequestTabs();
+  renderRequestList();
+});
+
+$("requests-list").addEventListener("click", (event) => {
+  const row = event.target.closest("[data-req]");
+  if (row) openRequest(Number(row.dataset.req));
+});
+
+/* --- карточка заявки (drawer) ------------------------------------------------ */
+
+async function openRequest(id) {
+  if (!id) return;
+  setHash("#/requests/" + id);
+  if (SECTION !== "requests") showSection("requests", { keepHash: true });
+  openDrawer(`Заявка #${id}`, async () => {
+    try {
+      const data = await api(`/admin/api/requests/${id}`);
+      renderRequestDetail(data);
+    } catch (err) {
+      $("drawer-body").innerHTML = `<div class="empty">${esc(err.message)}</div>`;
+    }
+  });
+}
+
+function renderRequestDetail(data) {
+  const r = data.request || {};
+  const customer = data.customer || null;
+  const conv = data.conversation || null;
+  const messages = data.recent_messages || [];
+  const contact = reqContact(r);
+  const name = r.name || contact.name || (customer && customer.name) || "Без имени";
+  const phone = r.phone || contact.phone || (customer && customer.phone) || "";
+  const email = contact.email || (customer && customer.email) || "";
+  const username = contact.username || (customer && customer.username) || "";
+  const lastIn = [...messages].reverse().find((m) => m.direction === "in");
+  const statusOptions = Object.entries(REQ_STATUS_LABELS).map(([key, label]) =>
+    `<option value="${key}" ${r.status === key ? "selected" : ""}>${label}</option>`).join("");
+  const history = messages.map((m) => {
+    const who = { customer: "Клиент", ai: "AI", manager: "Менеджер", system: "Система" }[m.sender_type] || m.sender_type;
+    return `<div class="tl-item tl-item--message">
+      <div class="tl-item__meta">${esc(fmtTime(m.created_at))} · ${esc(who)}</div>${esc(m.text)}</div>`;
+  }).join("");
+  $("drawer-body").innerHTML = `
+  <div class="c360 req-card" data-req-id="${r.id}" data-conv-id="${r.conversation_id || (conv && conv.id) || ""}"
+       data-customer-id="${r.customer_id || ""}">
+    <div>
+      <div class="c360__name">Заявка #${esc(r.id)} ${reqStatusPill(r.status)}</div>
+      <div class="muted">создана ${esc(fmtTime(r.created_at))}${r.updated_at ? ` · обновлена ${esc(fmtTime(r.updated_at))}` : ""}</div>
+    </div>
+    <div class="c360__section">
+      <h4>Клиент</h4>
+      <dl class="kv">
+        <dt>Имя</dt><dd>${esc(name)}</dd>
+        <dt>Телефон</dt><dd>${phone
+          ? `<a href="tel:${esc(phone)}">${esc(phone)}</a>
+             <a class="btn btn--sm btn--ghost" href="tel:${esc(phone)}">Позвонить</a>
+             <button class="btn btn--sm btn--ghost" data-copy="${esc(phone)}">Скопировать</button>`
+          : `<span class="muted">Телефон не указан</span>`}</dd>
+        ${email ? `<dt>E-mail</dt><dd><a href="mailto:${esc(email)}">${esc(email)}</a>
+          <button class="btn btn--sm btn--ghost" data-copy="${esc(email)}">Скопировать</button></dd>` : ""}
+        ${username ? `<dt>Telegram</dt><dd>${esc("@" + String(username).replace(/^@/, ""))}</dd>` : ""}
+        ${contact.fio_child ? `<dt>Ребёнок</dt><dd>${esc(contact.fio_child)}${contact.birthday ? `, ${esc(contact.birthday)}` : ""}</dd>` : ""}
+        ${contact.course ? `<dt>Курс</dt><dd>${esc(contact.course)}</dd>` : ""}
+        ${contact.branch ? `<dt>Филиал</dt><dd>${esc(contact.branch)}</dd>` : ""}
+        <dt>Канал</dt><dd>${channelPill(r.channel)} ${esc(REQ_KIND_LABELS[r.kind] || r.kind || "")}</dd>
+        ${conv && conv.external_user_id ? `<dt>ID канала</dt><dd class="muted">${esc(conv.external_user_id)}</dd>` : ""}
+      </dl>
+    </div>
+    <div class="c360__section">
+      <h4>Обращение</h4>
+      <dl class="kv">
+        <dt>Причина</dt><dd>${esc(r.reason || "—")}</dd>
+        ${r.source ? `<dt>Источник</dt><dd>${esc(r.source)}</dd>` : ""}
+        <dt>Последнее сообщение</dt><dd>${lastIn ? esc(lastIn.text) : "—"}</dd>
+      </dl>
+    </div>
+    <div class="c360__section">
+      <h4>Статус и ответственный</h4>
+      <dl class="kv">
+        <dt>Статус</dt><dd><select data-req-status>${statusOptions}</select></dd>
+        <dt>Менеджер</dt><dd>${esc(r.manager || "—")}</dd>
+      </dl>
+    </div>
+    <div class="c360__actions">
+      ${r.conversation_id ? `<button class="btn btn--sm" data-req-action="open-chat">Открыть чат</button>` : ""}
+      ${r.customer_id ? `<button class="btn btn--sm btn--ghost" data-req-action="open-customer">Открыть клиента</button>` : ""}
+      <button class="btn btn--sm btn--ghost" data-req-action="take">Взять в работу</button>
+      <button class="btn btn--sm btn--ghost" data-req-action="assign">Назначить менеджера…</button>
+      ${r.status !== "resolved" ? `<button class="btn btn--sm btn--ghost" data-req-action="resolve">Завершить</button>` : ""}
+    </div>
+    <div class="c360__section">
+      <h4>Комментарий менеджера</h4>
+      <textarea id="req-notes" rows="3" placeholder="Заметки по заявке">${esc(r.notes || "")}</textarea>
+      <div class="actions" style="margin-top:8px">
+        <button class="btn btn--sm" data-req-action="save-notes">Сохранить комментарий</button>
+      </div>
+    </div>
+    <div class="c360__section">
+      <h4>История разговора</h4>
+      ${history || `<div class="muted">Сообщений нет</div>`}
+      ${r.conversation_id ? `<div class="actions" style="margin-top:8px">
+        <button class="btn btn--sm btn--ghost" data-req-action="open-chat">Открыть полный диалог</button>
+      </div>` : ""}
+    </div>
+  </div>`;
+}
+
+async function reqRefresh(id) {
+  loadRequests({ silent: true });
+  openRequest(id);
+}
+
+/* Действия карточки заявки — делегирование из drawer. */
+$("drawer-body").addEventListener("click", async (event) => {
+  const action = event.target.closest("[data-req-action]");
+  if (!action) return;
+  const card = action.closest("[data-req-id]");
+  if (!card) return;
+  const id = Number(card.dataset.reqId);
+  const convId = Number(card.dataset.convId) || 0;
+  const customerId = Number(card.dataset.customerId) || 0;
+  const kind = action.dataset.reqAction;
+  try {
+    if (kind === "open-chat") {
+      closeDrawer();
+      showSection("inbox");
+      openConversationById(convId);
+      return;
+    }
+    if (kind === "open-customer") {
+      openCustomerById(customerId);
+      return;
+    }
+    if (kind === "take") {
+      const manager = (SESSION && SESSION.username) || prompt("Ваше имя для поля «ответственный»:");
+      await api(`/admin/api/requests/${id}/status`, {
+        method: "POST", body: JSON.stringify({ status: "in_progress" }) });
+      if (manager) {
+        await api(`/admin/api/requests/${id}/assign`, {
+          method: "POST", body: JSON.stringify({ manager }) });
+      }
+      toast("Заявка в работе");
+    } else if (kind === "assign") {
+      const manager = prompt("Имя менеджера:", (SESSION && SESSION.username) || "");
+      if (!manager) return;
+      await api(`/admin/api/requests/${id}/assign`, {
+        method: "POST", body: JSON.stringify({ manager }) });
+      toast("Менеджер назначен");
+    } else if (kind === "resolve") {
+      if (!confirm("Завершить заявку? Статус станет «Решена».")) return;
+      await api(`/admin/api/requests/${id}/status`, {
+        method: "POST", body: JSON.stringify({ status: "resolved" }) });
+      toast("Заявка завершена");
+    } else if (kind === "save-notes") {
+      await api(`/admin/api/requests/${id}/notes`, {
+        method: "POST", body: JSON.stringify({ notes: $("req-notes").value }) });
+      toast("Комментарий сохранён");
+    }
+    reqRefresh(id);
+  } catch (err) {
+    toast(err.message);
+  }
+});
+
+$("drawer-body").addEventListener("change", async (event) => {
+  const select = event.target.closest("[data-req-status]");
+  if (!select) return;
+  const card = select.closest("[data-req-id]");
+  if (!card) return;
+  const id = Number(card.dataset.reqId);
+  try {
+    await api(`/admin/api/requests/${id}/status`, {
+      method: "POST", body: JSON.stringify({ status: select.value }) });
+    toast("Статус обновлён");
+    reqRefresh(id);
+  } catch (err) {
+    toast(err.message);
+  }
+});
+
+/* Копирование контактов (карточка заявки, предупреждение о доставке). */
+document.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-copy]");
+  if (!btn) return;
+  const value = btn.dataset.copy;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(value).then(() => toast("Скопировано")).catch(() => toast(value));
+  } else {
+    toast(value);
+  }
 });
 
 /* --- глобальный поиск (Ctrl+K) -------------------------------------------- */
@@ -863,28 +1320,15 @@ $("search-results").addEventListener("click", (event) => {
   $("search-results").hidden = true;
   const customerRow = event.target.closest("[data-open-customer]");
   if (customerRow) {
-    openDrawer("Карточка клиента", () => loadCustomerCard(Number(customerRow.dataset.openCustomer), $("drawer-body")));
+    openCustomerById(Number(customerRow.dataset.openCustomer));
     return;
   }
   const convRow = event.target.closest("[data-conv]");
   if (convRow) {
     showSection("inbox");
-    // Диалог может не попасть в текущую выдачу фильтров — сбрасываем их.
-    ["inbox-channel", "inbox-ai", "inbox-lead"].forEach((id) => { $(id).value = ""; });
-    $("inbox-unread").checked = false;
-    $("inbox-search").value = "";
-    loadInbox().then(() => {
-      INBOX.activeId = Number(convRow.dataset.conv);
-      const conv = INBOX.items.find((item) => item.id === INBOX.activeId) || null;
-      if (conv) {
-        INBOX.active = conv;
-        $("chat-empty").hidden = true;
-        $("chat-wrap").hidden = false;
-        renderChatHead(conv);
-        loadMessages(conv.id);
-        loadCustomerCard(conv.customer_id);
-      }
-    });
+    // Диалог может не попасть в текущую выдачу фильтров — сбрасываем их
+    // внутри openConversationById.
+    openConversationById(Number(convRow.dataset.conv));
   }
 });
 
@@ -1260,9 +1704,7 @@ $("kanban").addEventListener("drop", async (event) => {
 });
 $("kanban").addEventListener("click", (event) => {
   const card = event.target.closest("[data-card]");
-  if (card) {
-    openDrawer("Карточка клиента", () => loadCustomerCard(Number(card.dataset.card), $("drawer-body")));
-  }
+  if (card) openCustomerById(Number(card.dataset.card));
 });
 
 /* --- экспорт CSV ------------------------------------------------------------ */

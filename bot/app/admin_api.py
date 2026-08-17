@@ -42,15 +42,15 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
     # admin — всё, кроме управления пользователями и AI-промптов.
     "admin": {"inbox", "customers", "pipeline", "reply", "ai_mode", "stats",
               "health", "broadcasts", "segments", "analytics", "export",
-              "kb", "errors", "system"},
+              "kb", "errors", "system", "requests"},
     # manager — операционная работа: диалоги, клиенты, воронка, ответы, пауза AI.
     "manager": {"inbox", "customers", "pipeline", "reply", "ai_mode", "stats",
-                "health"},
+                "health", "requests"},
     # marketing — рассылки, сегменты, аналитика, экспорт; отвечать может.
     "marketing": {"broadcasts", "segments", "analytics", "export", "inbox",
                   "customers", "reply", "stats", "health"},
-    # support — минимум: диалоги, клиенты, ответы, сводка.
-    "support": {"inbox", "customers", "reply", "stats", "health"},
+    # support — минимум: диалоги, клиенты, ответы, сводка, заявки.
+    "support": {"inbox", "customers", "reply", "stats", "health", "requests"},
 }
 
 # Rate-limit логина: 5 попыток в минуту по IP (защита от перебора пароля).
@@ -155,6 +155,32 @@ async def conversation_read(request: Request, conversation_id: int) -> dict:
     return {"ok": True}
 
 
+async def _send_to_channel(channel: str, external_id: str, text: str) -> tuple[bool, str | None, str | None]:
+    """Отправка в канал диалога с фактом доставки: (ok, external_message_id,
+    описание ошибки из API канала).
+
+    Клиент без send_message_ext (старый адаптер, тестовый фейк) деградирует
+    до bool-семантики send_message — вызовы не ломаются.
+    """
+    try:
+        if channel == "max":
+            client = get_max()
+            chat_id = external_id
+        elif channel == "telegram":
+            client = get_telegram()
+            chat_id = external_id.removeprefix("tg:")
+        else:
+            return False, None, f"канал {channel} не поддерживает отправку"
+        send_ext = getattr(client, "send_message_ext", None)
+        if callable(send_ext):
+            return await send_ext(chat_id, text)
+        ok = bool(await client.send_message(chat_id, text))
+        return ok, None, None if ok else "send failed"
+    except Exception as exc:
+        logger.exception("admin reply: ошибка отправки в %s", channel)
+        return False, None, str(exc)[:300]
+
+
 @router.post("/conversations/{conversation_id}/reply")
 async def conversation_reply(request: Request, conversation_id: int, data: dict) -> dict:
     """Ответ менеджера клиенту в канал диалога.
@@ -162,38 +188,41 @@ async def conversation_reply(request: Request, conversation_id: int, data: dict)
     MAX и Telegram уходят через клиентов мессенджеров; у веб-виджета push
     нет — сообщение ждёт поллинга (status pending). Ответ менеджера переводит
     диалог в ai_mode=manager: бот не перебивает живой разговор.
+
+    client_message_id — ключ идемпотентности из админки: повторный клик
+    «отправить» (или ретрай сети) возвращает уже записанное сообщение,
+    не отправляя дубль клиенту.
     """
     actor = _authorize(request, "reply")
     conv = _conversation_or_404(conversation_id)
     text = str(data.get("text", "")).strip()
     if not text:
         raise HTTPException(status_code=400, detail="text required")
+    client_message_id = str(data.get("client_message_id") or "").strip()[:64] or None
+    if client_message_id:
+        existing = crm_store.find_message_by_client_id(client_message_id)
+        if existing is not None:
+            return {"ok": existing["status"] != "failed", "message_id": existing["id"],
+                    "status": existing["status"], "error": existing["error"],
+                    "duplicate": True}
     channel = conv["channel"]
     external_id = conv["external_user_id"]
     ok, error = True, None
+    external_message_id = None
     status = "sent"
-    if channel == "max":
-        try:
-            ok = bool(await get_max().send_message(external_id, text))
-        except Exception as exc:
-            logger.exception("admin reply: ошибка отправки в MAX")
-            ok, error = False, str(exc)[:300]
-    elif channel == "telegram":
-        try:
-            chat_id = external_id.removeprefix("tg:")
-            ok = bool(await get_telegram().send_message(chat_id, text))
-        except Exception as exc:
-            logger.exception("admin reply: ошибка отправки в Telegram")
-            ok, error = False, str(exc)[:300]
-    elif channel == "web":
+    if channel == "web":
         # Доставка при следующем поллинге виджета (/api/chat/pending).
         status = "pending"
+    else:
+        ok, external_message_id, error = await _send_to_channel(channel, external_id, text)
     if not ok:
         status = "failed"
         error = error or "send failed"
     message_id, _ = crm_store.add_message(
         conversation_id, conv["customer_id"], channel, "out", "manager", text,
         status=status, error=error,
+        external_message_id=external_message_id,
+        client_message_id=client_message_id,
     )
     if conv["ai_mode"] != "paused":
         crm_store.set_ai_mode(conversation_id, "manager", actor=actor)
@@ -216,6 +245,156 @@ async def conversation_ai_mode(request: Request, conversation_id: int, data: dic
         paused_until = None
     crm_store.set_ai_mode(conversation_id, mode, paused_until=paused_until, actor=actor)
     return {"ok": True, "ai_mode": mode, "ai_paused_until": paused_until}
+
+
+def _human_send_reason(error: str) -> str | None:
+    """Причина недоставки человеческим языком — что менеджеру делать дальше."""
+    low = (error or "").lower()
+    if "403" in low or "blocked" in low or "deactivated" in low:
+        return ("Пользователь заблокировал бота — напишите ему с рабочего "
+                "телефона или в другом канале")
+    if "chat not found" in low:
+        return ("Бот не может инициировать диалог с этим пользователем; "
+                "используйте телефон/email")
+    return None
+
+
+@router.get("/conversations/{conversation_id}/availability")
+async def conversation_availability(request: Request, conversation_id: int) -> dict:
+    """Честная проверка канала перед ответом: куда реально можно написать.
+
+    У веб-виджета push нет — ответ уйдёт поллингом. У мессенджеров смотрим
+    последнее исходящее: если оно failed с «blocked»/«chat not found»,
+    кнопка отправки в админке должна быть честно выключена.
+    """
+    actor = _authorize(request, "inbox")
+    conv = _conversation_or_404(conversation_id)
+    channel = conv["channel"]
+    can_send = True
+    reason = ""
+    if channel == "web":
+        reason = ("Ответ будет доставлен при следующем поллинге виджета "
+                  "(push у веб-чата нет)")
+    else:
+        last_out = crm_store.get_conn().execute(
+            "SELECT status, error FROM crm_messages"
+            " WHERE conversation_id = ? AND direction = 'out' ORDER BY id DESC LIMIT 1",
+            (conversation_id,),
+        ).fetchone()
+        if last_out is not None and last_out["status"] == "failed":
+            reason = _human_send_reason(last_out["error"] or "")
+            if reason is None:
+                reason = f"Последнее сообщение не доставлено: {last_out['error'] or 'ошибка отправки'}"
+            can_send = False
+    contacts: dict = {"phone": "", "email": "", "telegram_username": "",
+                      "max_user_id": "", "website": ""}
+    customer = crm_store.get_customer(conv["customer_id"])
+    if customer:
+        contacts["phone"] = customer.get("phone") or ""
+        contacts["email"] = customer.get("email") or ""
+        for identity in customer.get("identities") or []:
+            if identity["channel"] == "telegram":
+                contacts["telegram_username"] = customer.get("username") or ""
+            if identity["channel"] == "max":
+                contacts["max_user_id"] = identity["external_id"]
+            if identity["channel"] == "web":
+                contacts["website"] = identity["external_id"]
+    return {"channel": channel, "can_send": can_send, "reason": reason,
+            "contacts": contacts}
+
+
+@router.post("/messages/{message_id}/retry")
+async def message_retry(request: Request, message_id: int) -> dict:
+    """Повторная отправка недоставленного исходящего сообщения.
+
+    Только direction=out AND status=failed: ретраить доставленное — значит
+    слать клиенту дубль."""
+    actor = _authorize(request, "reply")
+    message = crm_store.get_message(message_id)
+    if message is None:
+        raise HTTPException(status_code=404, detail="message not found")
+    if message["direction"] != "out" or message["status"] != "failed":
+        raise HTTPException(status_code=400, detail="retry allowed only for failed outbound messages")
+    conv = _conversation_or_404(int(message["conversation_id"]))
+    ok, external_message_id, error = await _send_to_channel(
+        conv["channel"], conv["external_user_id"], message["text"])
+    status = "sent" if ok else "failed"
+    crm_store.update_message_delivery(
+        message_id, status,
+        error=None if ok else (error or "send failed"),
+        external_message_id=external_message_id,
+    )
+    crm_store.audit(actor, "retry", "crm_message", message_id,
+                    before={"status": "failed", "error": message["error"]},
+                    after={"status": status, "error": error})
+    return {"ok": ok, "status": status, "error": None if ok else (error or "send failed")}
+
+
+# --------- Заявки (callback_requests) ---------
+
+
+@router.get("/requests")
+async def requests_list(request: Request, status: str = "", kind: str = "",
+                        limit: int = 50, offset: int = 0) -> dict:
+    actor = _authorize(request, "requests")
+    return {
+        "items": crm_store.list_callback_requests(
+            status=status or None, kind=kind or None, limit=limit, offset=offset),
+        "counts": crm_store.requests_counts(),
+    }
+
+
+@router.get("/requests/{request_id}")
+async def request_detail(request: Request, request_id: int) -> dict:
+    """Карточка заявки: клиент, диалог и свежие сообщения для контекста."""
+    actor = _authorize(request, "requests")
+    item = crm_store.get_callback_request(request_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="request not found")
+    customer = crm_store.get_customer(item["customer_id"]) if item["customer_id"] else None
+    conversation = None
+    recent_messages: list[dict] = []
+    if item["conversation_id"]:
+        conversation = crm_store.get_conversation(item["conversation_id"])
+        recent_messages = crm_store.get_messages(item["conversation_id"], limit=30)
+    return {"request": item, "customer": customer,
+            "conversation": conversation, "recent_messages": recent_messages}
+
+
+@router.post("/requests/{request_id}/status")
+async def request_set_status(request: Request, request_id: int, data: dict) -> dict:
+    actor = _authorize(request, "requests")
+    status = str(data.get("status", ""))
+    if status not in crm_store.REQUEST_STATUSES:
+        raise HTTPException(status_code=400,
+                            detail=f"status must be one of {crm_store.REQUEST_STATUSES}")
+    if not crm_store.update_callback_request(request_id, {"status": status}, actor=actor):
+        raise HTTPException(status_code=404, detail="request not found")
+    return {"ok": True, "request": crm_store.get_callback_request(request_id)}
+
+
+@router.post("/requests/{request_id}/assign")
+async def request_assign(request: Request, request_id: int, data: dict) -> dict:
+    """Назначение менеджера. Новая заявка при этом уходит в работу:
+    «взял в работу» и «назначен ответственный» — одно действие."""
+    actor = _authorize(request, "requests")
+    item = crm_store.get_callback_request(request_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="request not found")
+    fields = {"manager": str(data.get("manager", "")).strip()}
+    if item["status"] == "new":
+        fields["status"] = "in_progress"
+    crm_store.update_callback_request(request_id, fields, actor=actor)
+    return {"ok": True, "request": crm_store.get_callback_request(request_id)}
+
+
+@router.post("/requests/{request_id}/notes")
+async def request_notes(request: Request, request_id: int, data: dict) -> dict:
+    actor = _authorize(request, "requests")
+    if not crm_store.update_callback_request(
+            request_id, {"notes": str(data.get("notes", ""))}, actor=actor):
+        raise HTTPException(status_code=404, detail="request not found")
+    return {"ok": True, "request": crm_store.get_callback_request(request_id)}
 
 
 # --------- Customer 360 ---------

@@ -140,21 +140,35 @@ class TelegramClient:
         attempts: int = _MAX_SEND_ATTEMPTS,
     ) -> dict | None:
         """POST к Bot API с ретраями. Возвращает result или None."""
+        result, _error = await self._post_ext(method, data, timeout=timeout, attempts=attempts)
+        return result
+
+    async def _post_ext(
+        self,
+        method: str,
+        data: dict,
+        *,
+        timeout: int = 30,
+        attempts: int = _MAX_SEND_ATTEMPTS,
+    ) -> tuple[dict | list | None, str | None]:
+        """Тот же POST, но с описанием ошибки из ответа Telegram
+        (поле description, напр. «Forbidden: bot was blocked by the user») —
+        CRM показывает менеджеру настоящую причину недоставки."""
         if not self.configured:
             logger.warning("telegram: токен не настроен — %s не выполнен", method)
-            return None
+            return None, "telegram бот не настроен"
         delay = _INITIAL_BACKOFF
         for attempt in range(1, attempts + 1):
             try:
                 async with httpx.AsyncClient(**_client_kwargs(timeout)) as client:
                     resp = await client.post(f"{self.base}/{method}", data=data)
-            except Exception:
+            except Exception as exc:
                 logger.warning(
                     "telegram: %s сетевая ошибка, попытка %s/%s", method, attempt, attempts,
                     exc_info=True,
                 )
                 if attempt >= attempts:
-                    return None
+                    return None, f"сетевая ошибка: {type(exc).__name__}"
                 await asyncio.sleep(delay)
                 delay *= 2
                 continue
@@ -164,15 +178,15 @@ class TelegramClient:
                     payload = resp.json()
                 except Exception:
                     logger.error("telegram: %s вернул не-JSON", method)
-                    return None
+                    return None, "не-JSON ответ Telegram"
                 result = payload.get("result") if isinstance(payload, dict) else None
-                return result if isinstance(result, (dict, list)) else {}
+                return (result if isinstance(result, (dict, list)) else {}), None
 
             if resp.status_code == 429:
                 wait = _retry_after(resp) or delay
                 logger.warning("telegram: %s flood control, жду %.1fs", method, wait)
                 if attempt >= attempts:
-                    return None
+                    return None, "flood control (429)"
                 await asyncio.sleep(wait)
                 delay *= 2
                 continue
@@ -182,7 +196,7 @@ class TelegramClient:
                     "telegram: %s status=%s, попытка %s/%s", method, resp.status_code, attempt, attempts
                 )
                 if attempt >= attempts:
-                    return None
+                    return None, f"ошибка платформы {resp.status_code}"
                 await asyncio.sleep(delay)
                 delay *= 2
                 continue
@@ -190,8 +204,15 @@ class TelegramClient:
             logger.error(
                 "telegram: %s ошибка status=%s body=%s", method, resp.status_code, resp.text[:300]
             )
-            return None
-        return None
+            description = ""
+            try:
+                payload = resp.json()
+                if isinstance(payload, dict):
+                    description = str(payload.get("description") or "")
+            except Exception:
+                pass
+            return None, description or f"HTTP {resp.status_code}"
+        return None, "send failed"
 
     async def send_message(
         self,
@@ -199,20 +220,41 @@ class TelegramClient:
         text: str,
         buttons: Optional[list[list[dict]]] = None,
     ) -> bool:
+        ok, _external_id, _error = await self.send_message_ext(chat_id, text, buttons)
+        return ok
+
+    async def send_message_ext(
+        self,
+        chat_id: str | int,
+        text: str,
+        buttons: Optional[list[list[dict]]] = None,
+    ) -> tuple[bool, str | None, str | None]:
+        """Отправка с фактом доставки: (ok, message_id в Telegram, ошибка).
+
+        Длинный текст режется на части: внешний id берём у последней части
+        (она несёт клавиатуру), ошибка — от первой неудачной части.
+        """
         chunks = split_message(text)
         if not chunks:
-            return False
+            return False, None, "пустой текст"
         rows = _normalize_buttons(buttons)
         delivered = False
+        external_id: str | None = None
+        first_error: str | None = None
         for index, chunk in enumerate(chunks):
             data: dict[str, str] = {"chat_id": str(chat_id), "text": chunk}
             # Клавиатуру вешаем только на последнее сообщение — иначе она
             # дублируется под каждым куском длинного ответа.
             if rows and index == len(chunks) - 1:
                 data["reply_markup"] = json.dumps({"inline_keyboard": rows}, ensure_ascii=False)
-            result = await self._post("sendMessage", data)
-            delivered = delivered or result is not None
-        return delivered
+            result, error = await self._post_ext("sendMessage", data)
+            if result is None:
+                first_error = first_error or error
+                continue
+            delivered = True
+            if isinstance(result, dict) and result.get("message_id") is not None:
+                external_id = str(result["message_id"])
+        return delivered, external_id, None if delivered else (first_error or "send failed")
 
     async def send_chat_action(self, chat_id: str | int, action: str = "typing") -> bool:
         """Индикатор «печатает». Не ретраим: это косметика, а не доставка."""

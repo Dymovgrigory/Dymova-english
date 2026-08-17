@@ -212,6 +212,27 @@ CREATE TABLE IF NOT EXISTS broadcast_recipients (
     UNIQUE(broadcast_id, customer_id, channel)
 );
 
+CREATE TABLE IF NOT EXISTS callback_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER REFERENCES customers(id),
+    conversation_id INTEGER REFERENCES crm_conversations(id),
+    last_message_id INTEGER,
+    channel TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT 'admin_request',
+    reason TEXT NOT NULL DEFAULT '',
+    priority TEXT NOT NULL DEFAULT 'normal',
+    status TEXT NOT NULL DEFAULT 'new',
+    manager TEXT NOT NULL DEFAULT '',
+    notes TEXT NOT NULL DEFAULT '',
+    contact_json TEXT NOT NULL DEFAULT '{}',
+    source TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_callback_requests_status ON callback_requests(status);
+CREATE INDEX IF NOT EXISTS idx_callback_requests_customer ON callback_requests(customer_id);
+CREATE INDEX IF NOT EXISTS idx_callback_requests_conv ON callback_requests(conversation_id);
+
 CREATE TABLE IF NOT EXISTS crm_meta (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL DEFAULT ''
@@ -323,6 +344,7 @@ def init_schema(conn: sqlite3.Connection) -> None:
         init_segments_table(conn)
         init_kb_tables(conn)
         init_rbac_tables(conn)
+        _migrate_messages_client_id(conn)
         try:
             conn.executescript(_FTS_SCHEMA)
             _fts5_ok = True
@@ -331,6 +353,22 @@ def init_schema(conn: sqlite3.Connection) -> None:
             # прозрачно деградирует до LIKE.
             _fts5_ok = False
             logger.warning("crm_store: FTS5 недоступен, поиск сообщений через LIKE")
+
+
+def _migrate_messages_client_id(conn: sqlite3.Connection) -> None:
+    """Догоняет старые базы: колонка client_message_id у crm_messages.
+
+    Колонка — ключ идемпотентности ответов менеджера (повторный клик «отправить»
+    в админке не должен плодить дубли). Частичный UNIQUE-индекс: NULL (старые
+    записи и входящие) не конфликтуют между собой.
+    """
+    cols = {row["name"] for row in conn.execute("PRAGMA table_info(crm_messages)")}
+    if "client_message_id" not in cols:
+        conn.execute("ALTER TABLE crm_messages ADD COLUMN client_message_id TEXT")
+    conn.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_crm_messages_client_id"
+        " ON crm_messages(client_message_id) WHERE client_message_id IS NOT NULL"
+    )
 
 
 def _rows(cur: sqlite3.Cursor) -> list[dict]:
@@ -567,8 +605,10 @@ def add_message(
     stage: str | None = None,
     ai_model: str | None = None,
     created_at: str | None = None,
+    client_message_id: str | None = None,
 ) -> tuple[int, bool]:
-    """Пишет сообщение. Идемпотентно по (channel, external_message_id).
+    """Пишет сообщение. Идемпотентно по (channel, external_message_id),
+    а для менеджерских ответов — по client_message_id.
 
     Возвращает (message_id, is_duplicate). Заодно обновляет агрегаты диалога:
     последнее сообщение и счётчик непрочитанных (для входящих).
@@ -585,18 +625,26 @@ def add_message(
             ).fetchone()
             if row is not None:
                 return int(row["id"]), True
+        if client_message_id:
+            row = conn.execute(
+                "SELECT id FROM crm_messages WHERE client_message_id = ?",
+                (client_message_id,),
+            ).fetchone()
+            if row is not None:
+                return int(row["id"]), True
         cur = conn.execute(
             """
             INSERT INTO crm_messages(conversation_id, customer_id, channel, external_message_id,
                 direction, sender_type, text, payload_json, status, error, reply_to,
-                intent, stage, ai_model, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                intent, stage, ai_model, created_at, client_message_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 conversation_id, customer_id, channel, external_message_id,
                 direction, sender_type, text or "",
                 json.dumps(payload or {}, ensure_ascii=False, default=str),
                 status, error, reply_to, intent, stage, ai_model, now,
+                client_message_id,
             ),
         )
         message_id = int(cur.lastrowid)
@@ -2052,3 +2100,217 @@ def seed_bootstrap_admin() -> None:
         "смените его после первого входа (или задайте ADMIN_BOOTSTRAP_PASSWORD)",
         password,
     )
+
+
+# --------- Заявки на обратную связь (callback_requests) ---------
+
+
+# Статусы заявки. Открытые — всё, кроме двух финальных: дедупликация и
+# счётчик «активных заявок» опираются на это множество.
+REQUEST_STATUSES = ("new", "in_progress", "contacted", "waiting", "resolved", "cancelled")
+_REQUEST_CLOSED = ("resolved", "cancelled")
+# Поля, которые менеджер может менять через update_callback_request.
+_REQUEST_EDITABLE = ("status", "manager", "notes", "priority")
+
+
+def create_callback_request(
+    customer_id: int | None = None,
+    conversation_id: int | None = None,
+    channel: str = "",
+    kind: str = "admin_request",
+    reason: str = "",
+    priority: str = "normal",
+    contact: dict | None = None,
+    source: str = "",
+    last_message_id: int | None = None,
+) -> int:
+    """Создаёт заявку с дедупликацией: открытая заявка того же диалога
+    (или того же клиента того же вида, когда диалога нет) обновляется,
+    а не плодит новую строку — иначе повторная эскалация засоряла бы список.
+    """
+    conn = get_conn()
+    now = _now()
+    with _tx(conn):
+        existing = None
+        if conversation_id is not None:
+            existing = conn.execute(
+                "SELECT id FROM callback_requests"
+                " WHERE conversation_id = ? AND status NOT IN ('resolved', 'cancelled')"
+                " ORDER BY id DESC LIMIT 1",
+                (conversation_id,),
+            ).fetchone()
+        elif customer_id is not None:
+            existing = conn.execute(
+                "SELECT id FROM callback_requests"
+                " WHERE customer_id = ? AND conversation_id IS NULL AND kind = ?"
+                " AND status NOT IN ('resolved', 'cancelled')"
+                " ORDER BY id DESC LIMIT 1",
+                (customer_id, kind),
+            ).fetchone()
+        if existing is not None:
+            request_id = int(existing["id"])
+            conn.execute(
+                "UPDATE callback_requests SET reason = ?, last_message_id = ?,"
+                " priority = ?, contact_json = ?, source = ?, updated_at = ? WHERE id = ?",
+                (
+                    reason or "", last_message_id, priority or "normal",
+                    json.dumps(contact or {}, ensure_ascii=False, default=str),
+                    source or "", now, request_id,
+                ),
+            )
+            return request_id
+        cur = conn.execute(
+            """
+            INSERT INTO callback_requests(customer_id, conversation_id, last_message_id,
+                channel, kind, reason, priority, status, contact_json, source,
+                created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'new', ?, ?, ?, ?)
+            """,
+            (
+                customer_id, conversation_id, last_message_id, channel or "",
+                kind or "admin_request", reason or "", priority or "normal",
+                json.dumps(contact or {}, ensure_ascii=False, default=str),
+                source or "", now, now,
+            ),
+        )
+        return int(cur.lastrowid)
+
+
+def _callback_request_row(row: sqlite3.Row) -> dict:
+    item = dict(row)
+    item["contact"] = json.loads(item.pop("contact_json") or "{}")
+    return item
+
+
+def get_callback_request(request_id: int) -> dict | None:
+    """Заявка с именем и телефоном клиента (LEFT JOIN — заявка может быть
+    без клиента, если лид пришёл с сайта и ни с кем не склеился)."""
+    row = get_conn().execute(
+        "SELECT r.*, c.name AS customer_name, c.phone AS customer_phone"
+        " FROM callback_requests r LEFT JOIN customers c ON c.id = r.customer_id"
+        " WHERE r.id = ?",
+        (request_id,),
+    ).fetchone()
+    return _callback_request_row(row) if row else None
+
+
+def list_callback_requests(
+    status: str | None = None,
+    kind: str | None = None,
+    limit: int = 50,
+    offset: int = 0,
+) -> list[dict]:
+    sql = ("SELECT r.*, c.name AS customer_name, c.phone AS customer_phone"
+           " FROM callback_requests r LEFT JOIN customers c ON c.id = r.customer_id")
+    where: list[str] = []
+    params: list = []
+    if status:
+        where.append("r.status = ?")
+        params.append(status)
+    if kind:
+        where.append("r.kind = ?")
+        params.append(kind)
+    if where:
+        sql += f" WHERE {' AND '.join(where)}"
+    sql += " ORDER BY r.id DESC LIMIT ? OFFSET ?"
+    params.extend([max(1, min(int(limit), 200)), max(0, int(offset))])
+    return [_callback_request_row(r) for r in get_conn().execute(sql, params).fetchall()]
+
+
+def update_callback_request(request_id: int, fields: dict, actor: str = "admin") -> bool:
+    """Точечное обновление заявки. Только status/manager/notes/priority,
+    статус проверяется по REQUEST_STATUSES — всё это пишется в аудит."""
+    updates = {k: str(v) for k, v in fields.items() if k in _REQUEST_EDITABLE and v is not None}
+    if not updates:
+        return False
+    if "status" in updates and updates["status"] not in REQUEST_STATUSES:
+        return False
+    conn = get_conn()
+    with _tx(conn):
+        before = conn.execute(
+            "SELECT * FROM callback_requests WHERE id = ?", (request_id,)
+        ).fetchone()
+        if before is None:
+            return False
+        sets = ", ".join(f"{key} = ?" for key in updates)
+        conn.execute(
+            f"UPDATE callback_requests SET {sets}, updated_at = ? WHERE id = ?",
+            [*updates.values(), _now(), request_id],
+        )
+    audit(actor, "update", "callback_request", request_id,
+          before={k: before[k] for k in updates}, after=updates)
+    return True
+
+
+def requests_counts() -> dict:
+    """Счётчики по статусам + total — для бейджей списка заявок."""
+    counts: dict = {status: 0 for status in REQUEST_STATUSES}
+    total = 0
+    for row in get_conn().execute(
+        "SELECT status, COUNT(*) c FROM callback_requests GROUP BY status"
+    ).fetchall():
+        counts[row["status"]] = int(row["c"])
+        total += int(row["c"])
+    counts["total"] = total
+    return counts
+
+
+def find_customer_by_phone(phone: str) -> dict | None:
+    """Клиент по телефону (нормализация как у склейки каналов):
+    сначала точное совпадение по customers.phone, затем идентичность,
+    у которой external_id — тот же номер (веб-лиды без мессенджера)."""
+    norm = _norm_phone(phone)
+    if not norm:
+        return None
+    conn = get_conn()
+    for cand in conn.execute(
+        "SELECT id, phone FROM customers WHERE phone != '' AND status != 'archived'"
+    ).fetchall():
+        if _norm_phone(cand["phone"]) == norm:
+            return get_customer(int(cand["id"]))
+    for cand in conn.execute(
+        "SELECT customer_id, external_id FROM customer_identities"
+    ).fetchall():
+        if _norm_phone(str(cand["external_id"])) == norm:
+            return get_customer(int(cand["customer_id"]))
+    return None
+
+
+def last_message_id(conversation_id: int) -> int | None:
+    """Id последнего сообщения диалога — точка контекста для заявки."""
+    row = get_conn().execute(
+        "SELECT id FROM crm_messages WHERE conversation_id = ? ORDER BY id DESC LIMIT 1",
+        (conversation_id,),
+    ).fetchone()
+    return int(row["id"]) if row else None
+
+
+def find_message_by_client_id(client_message_id: str) -> dict | None:
+    """Сообщение по ключу идемпотентности менеджерского ответа."""
+    if not client_message_id:
+        return None
+    row = get_conn().execute(
+        "SELECT * FROM crm_messages WHERE client_message_id = ?",
+        (client_message_id,),
+    ).fetchone()
+    return dict(row) if row else None
+
+
+def get_message(message_id: int) -> dict | None:
+    row = get_conn().execute(
+        "SELECT * FROM crm_messages WHERE id = ?", (message_id,)
+    ).fetchone()
+    return dict(row) if row else None
+
+
+def update_message_delivery(message_id: int, status: str, error: str | None = None,
+                            external_message_id: str | None = None) -> None:
+    """Обновляет факт доставки исходящего (первичная отправка менеджера,
+    ретрай): status, текст ошибки и внешний id сообщения в канале."""
+    conn = get_conn()
+    with _tx(conn):
+        conn.execute(
+            "UPDATE crm_messages SET status = ?, error = ?, external_message_id = ?"
+            " WHERE id = ?",
+            (status, error, external_message_id, message_id),
+        )
