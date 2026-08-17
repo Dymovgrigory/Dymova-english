@@ -72,6 +72,10 @@ PAGE_ALIASES = {
     "page_novosti_anglijskij_dlya_vzroslyh_s_nulya_s_chego_nachat.html": "novosti-anglijskij-dlya-vzroslyh-s-nulya-s-chego-nachat",
     "page_novosti_lozhnye_druzya_perevodchika_slova_kotorye_obmanyvayut.html": "novosti-lozhnye-druzya-perevodchika-slova-kotorye-obmanyvayut",
     "page_novosti_komu_nuzhen_repetitor_po_anglijskomu_5_priznakov.html": "novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov",
+    "page_novosti_otkryt_nabor_na_novyj_uchebnyj_god_2026.html": "novosti-otkryt-nabor-na-novyj-uchebnyj-god-2026",
+    "page_novosti_kak_vybrat_programmu_anglijskogo_dlya_rebenka.html": "novosti-kak-vybrat-programmu-anglijskogo-dlya-rebenka",
+    "page_novosti_podgotovka_k_novomu_uchebnomu_godu_anglijskij.html": "novosti-podgotovka-k-novomu-uchebnomu-godu-anglijskij",
+    "page_novosti_start_novogo_uchebnogo_goda_2026.html": "novosti-start-novogo-uchebnogo-goda-2026",
 }
 
 # Статьи уже несут собственную Article+BreadcrumbList JSON-LD внутри себя
@@ -193,6 +197,15 @@ WOW_SNIPPET = (
     '<script type="module" src="/mascot/mascot.js"></script>\n'
     '<script src="https://bot.dymova-english.ru/widget/foxi.js" defer></script>\n'
     '<script src="/wow/foxi-consent.js" defer></script>'
+)
+
+# ATMOS (сессия 58): единая «кинематографичная» атмосфера внутренних страниц —
+# те же WebGL-чернила в hero, след за указателем, cursor-glow, glass-карточки.
+# Подключается ТОЛЬКО на внутренних страницах: у главной своя встроенная
+# fluid-система, и она не меняется. Цвет glow — data-fxb-glow на #fxb-page.
+ATMOS_SNIPPET = (
+    '<link rel="stylesheet" href="/wow/foxi-atmos.css">\n'
+    '<script src="/wow/foxi-atmos.js" defer></script>'
 )
 
 
@@ -350,7 +363,9 @@ def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, no
         "<!DOCTYPE html>\n"
         '<html lang="ru">\n<head>\n' + head + "\n</head>\n<body>\n"
         + PRELOADER_BODY + "\n" + body + "\n"
-        + WOW_SNIPPET + "\n</body>\n</html>\n"
+        + WOW_SNIPPET + "\n"
+        + ("" if alias == "index" else ATMOS_SNIPPET + "\n")
+        + "</body>\n</html>\n"
     )
 
 

@@ -1,0 +1,95 @@
+/* Фокси ATMOS — визуальная система главной на внутренних страницах.
+   Подключается только на page_* (главная не меняется).
+   Цветовые токены страницы: --page-glow-rgb выставляет foxi-atmos.js
+   из data-fxb-glow на корневом блоке; здесь — дефолт violet. */
+
+:root{--page-glow-rgb:150,110,230}
+
+/* ---------- 1. Единое полотно «шапка + hero» (как #fxb-cinema на главной) ---------- */
+.fxb-atmos-hero{isolation:isolate}
+.fxb-ink-stage{position:absolute;left:0;right:0;top:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:linear-gradient(180deg,#0b0a1a,#04050c)} /* подложка на время прогрева canvas */
+.fxb-ink-stage .fxb-hero-fluid{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* скрим для читаемости на всём полотне — как .fxb-cinema-veil на главной */
+.fxb-ink-stage .fxb-hero-veil{position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(90% 70% at 50% 62%,rgba(4,5,12,.5) 0%,rgba(4,5,12,0) 70%),
+    linear-gradient(180deg,rgba(4,5,12,.42) 0%,rgba(4,5,12,0) 30%,rgba(4,5,12,0) 62%,rgba(4,5,12,.5) 100%)}
+/* шапка поверх чернил: фон/декор гасим, структуру и меню не трогаем */
+#fxb-shapka.fxb-atmos-ink{background:none}
+#fxb-shapka.fxb-atmos-ink .fxb-hero-bg{display:none}
+/* hero поверх чернил: старый inline-градиент и декор гасим */
+#fxb-page .fxb-hero.fxb-hero--ink{background:transparent!important}
+#fxb-page .fxb-hero.fxb-hero--ink .fxb-hero-bg{display:none}
+#fxb-page .fxb-hero .fxb-hero-inner{position:relative;z-index:2}
+/* glow-акцент страницы поверх чернил — единственное цветовое отличие страниц */
+.fxb-ink-stage.fxb-ink-on::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(70% 90% at 50% 110%,rgba(var(--page-glow-rgb),.22),transparent 65%)}
+/* контакты/политика: под полотном — ровный светлый фон без лавандового радиала */
+#fxb-contacts.fxb-atmos-plain,#fxb-policy.fxb-atmos-plain{background:#fff}
+/* их head-зона лежит поверх чернил — текст делаем светлым */
+#fxb-contacts.fxb-atmos-plain .fxb-head .fxb-h1,
+#fxb-contacts.fxb-atmos-plain .fxb-head .fxb-h2,
+#fxb-policy.fxb-atmos-plain .fxb-head .fxb-h1,
+#fxb-policy.fxb-atmos-plain .fxb-head .fxb-h2{color:#fff}
+#fxb-contacts.fxb-atmos-plain .fxb-head .fxb-accent,
+#fxb-policy.fxb-atmos-plain .fxb-head .fxb-accent{color:#fff}
+#fxb-contacts.fxb-atmos-plain .fxb-head .fxb-sub,
+#fxb-policy.fxb-atmos-plain .fxb-head .fxb-sub{color:rgba(255,255,255,.85)}
+#fxb-contacts.fxb-atmos-plain .fxb-head .fxb-eyebrow,
+#fxb-policy.fxb-atmos-plain .fxb-head .fxb-eyebrow{color:#f0e8ff;background:rgba(255,255,255,.12)}
+
+/* ---------- 2. След чернил и cursor-glow ---------- */
+#fxb-atmos-trail{position:fixed;inset:0;width:100%;height:100%;z-index:900;pointer-events:none}
+.fxb-cursor-glow{position:fixed;left:0;top:0;width:560px;height:560px;z-index:1;pointer-events:none;
+  border-radius:50%;opacity:0;transition:opacity .9s ease;
+  background:radial-gradient(circle,rgba(var(--page-glow-rgb),.16) 0%,rgba(var(--page-glow-rgb),.06) 42%,transparent 68%)}
+.fxb-cursor-glow.fxb-on{opacity:1}
+
+/* ---------- 3. Шапка: только свет (структура/фон не меняются) ---------- */
+#fxb-shapka.fxb-atmos-shapka{position:relative} /* overflow не трогаем: выпадающие меню absolute */
+#fxb-shapka.fxb-atmos-shapka::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(420px circle at var(--hx,50%) var(--hy,30%),rgba(var(--page-glow-rgb),.18),transparent 70%);
+  opacity:0;transition:opacity .5s ease}
+#fxb-shapka.fxb-atmos-shapka:hover::after{opacity:1}
+
+/* ---------- 4. Glass-карточки: глубина, блик, glow ---------- */
+#fxb-page .fxb-card,#fxb-page .fxb-news-card,#fxb-page .fxb-step,#fxb-page .fxb-fact,
+#fxb-page .fxb-price-mini,#fxb-page .fxb-book,#fxb-page .fxb-fw-i,
+#fxb-contacts .fxb-branch-card,#fxb-contacts .fxb-extra-card{position:relative}
+#fxb-page .fxb-glass,#fxb-contacts .fxb-glass{
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s,opacity .45s;
+  will-change:transform}
+/* бегающий блик по «стеклу» */
+#fxb-page .fxb-glass::after,#fxb-contacts .fxb-glass::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.5),rgba(255,255,255,.06) 45%,transparent 65%);
+  mix-blend-mode:soft-light;opacity:0;transition:opacity .35s ease}
+#fxb-page .fxb-glass:hover::after,#fxb-contacts .fxb-glass:hover::after{opacity:1}
+/* свечение страницы под карточкой при hover */
+#fxb-page .fxb-glass:hover,#fxb-contacts .fxb-glass:hover{
+  border-color:rgba(var(--page-glow-rgb),.35);
+  box-shadow:0 24px 48px -20px rgba(var(--page-glow-rgb),.45),0 4px 14px -6px rgba(57,40,82,.18)}
+
+/* ---------- 5. Reveal hero-типографики (stagger, blur→0) ---------- */
+.fxb-atmos-hero .fxb-hero-inner>*{animation:fxbAtmosUp .85s cubic-bezier(.2,.7,.2,1) both}
+.fxb-atmos-hero .fxb-hero-inner>*:nth-child(1){animation-delay:.05s}
+.fxb-atmos-hero .fxb-hero-inner>*:nth-child(2){animation-delay:.16s}
+.fxb-atmos-hero .fxb-hero-inner>*:nth-child(3){animation-delay:.28s}
+.fxb-atmos-hero .fxb-hero-inner>*:nth-child(4){animation-delay:.4s}
+.fxb-atmos-hero .fxb-hero-inner>*:nth-child(5){animation-delay:.5s}
+@keyframes fxbAtmosUp{from{opacity:0;transform:translateY(22px);filter:blur(14px)}to{opacity:1;transform:none;filter:blur(0)}}
+
+/* ---------- 6. Mobile: лёгкий ambient вместо интерактива ---------- */
+@media(max-width:680px){
+  .fxb-cursor-glow{display:none}
+  .fxb-ink-stage.fxb-ink-on::after{background:radial-gradient(90% 70% at 50% 115%,rgba(var(--page-glow-rgb),.2),transparent 60%)}
+}
+
+/* ---------- 7. Reduced motion: структура и иерархия сохраняются ---------- */
+@media(prefers-reduced-motion:reduce){
+  #fxb-atmos-trail,.fxb-cursor-glow{display:none}
+  .fxb-atmos-hero .fxb-hero-inner>*{animation:none}
+  #fxb-page .fxb-glass,#fxb-contacts .fxb-glass{transition:none;will-change:auto}
+  #fxb-shapka.fxb-atmos-shapka::after{display:none}
+}
