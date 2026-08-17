@@ -35,24 +35,28 @@ _DUP_WINDOW_SEC = 5
 
 
 def _norm_ts(raw: object, fallback: str) -> str:
-    """ISO-метка из транскрипта приводится к формату SQLite '%Y-%m-%d %H:%M:%S'
-    (UTC): иначе строковое сравнение created_at с окном datetime() мимо."""
+    """ISO-метка транскрипта приводится к формату остальных строк crm_messages
+    ('%Y-%m-%dT%H:%M:%S+00:00', UTC): смешанные форматы ломают и дедуп, и
+    сортировку истории (строковое сравнение ' ' против 'T')."""
     ts = str(raw or "")
     try:
         dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
     except ValueError:
         dt = datetime.fromisoformat(fallback.replace("Z", "+00:00"))
     if dt.tzinfo is not None:
-        dt = dt.astimezone(timezone.utc).replace(tzinfo=None)
-    return dt.strftime("%Y-%m-%d %H:%M:%S")
+        dt = dt.astimezone(timezone.utc)
+    else:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
 
 def _find_duplicate(conn, conv_id: int, text: str, ts: str) -> bool:
-    # Модификаторы ±N seconds — обычные аргументы функции datetime().
+    # datetime() с обеих сторон: существующие строки хранят ISO с tz,
+    # naive-строки без него — приводим всё к UTC-секундам перед сравнением.
     row = conn.execute(
         "SELECT id FROM crm_messages"
         " WHERE conversation_id = ? AND text = ?"
-        " AND created_at BETWEEN datetime(?, ?) AND datetime(?, ?) LIMIT 1",
+        " AND datetime(created_at) BETWEEN datetime(?, ?) AND datetime(?, ?) LIMIT 1",
         (conv_id, text, ts, f"-{_DUP_WINDOW_SEC} seconds", ts, f"+{_DUP_WINDOW_SEC} seconds"),
     ).fetchone()
     return row is not None
