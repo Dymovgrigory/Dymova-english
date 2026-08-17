@@ -104,7 +104,9 @@ async def test_menu_admin_button_creates_request_and_notifies(fake_max):
     admin_msgs = [(u, t, b) for u, t, b in fake_max.sent if u == "admin-1"]
     assert len(admin_msgs) == 1
     assert "Заявка: #" in admin_msgs[0][1]
-    assert admin_msgs[0][2] and "requests" in admin_msgs[0][2][0][0]["url"]
+    # Ссылка ведёт в /admin/ в корне хоста, а не в /app/admin/ (404).
+    assert admin_msgs[0][2]
+    assert admin_msgs[0][2][0][0]["url"].startswith("https://example.test/admin/#/requests/")
     # Заявка создана, режим менеджера с авто-возвратом.
     reqs = crm_store.list_callback_requests()
     assert len(reqs) == 1 and reqs[0]["kind"] == "admin_request"
@@ -212,3 +214,7 @@ def test_reply_sets_auto_resume(client, fake_max):
     assert conv["ai_mode"] == "manager" and conv["ai_paused_until"]
     # Клиенту ушло с пометкой менеджера.
     assert fake_max.sent[-1][1].startswith("👤 Менеджер:")
+
+
+def test_admin_base_url_uses_origin_not_app_path():
+    assert main_module._admin_base_url() == "https://example.test/admin/"

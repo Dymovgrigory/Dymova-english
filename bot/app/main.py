@@ -16,6 +16,7 @@ import json
 import logging
 import time
 import uuid
+from urllib.parse import urlsplit
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -231,6 +232,19 @@ def _miniapp_url() -> str:
     return settings.MINIAPP_BASE_URL.rstrip("/")
 
 
+def _admin_base_url() -> str:
+    """Публичный URL админки: MINIAPP_BASE_URL ведёт на /app/ (мини-приложение
+    MAX), а админка живёт в корне хоста — берём только схему и хост. Иначе
+    ссылки «Открыть заявку» вели на несуществующий /app/admin/."""
+    base = settings.MINIAPP_BASE_URL.strip()
+    if not base:
+        return ""
+    parts = urlsplit(base if "://" in base else f"https://{base}")
+    if not parts.netloc:
+        return ""
+    return f"{parts.scheme}://{parts.netloc}/admin/"
+
+
 def _miniapp_user_id(data: dict | None) -> str:
     if not data:
         return ""
@@ -339,9 +353,9 @@ async def _notify_admins_for_telegram(conv, reason: str) -> None:
     lines.extend(["", profile.lead_summary(conv)])
     message = "\n".join(lines)
     buttons = None
-    base = _miniapp_url()
-    if request_id and base:
-        buttons = [[link_button("Открыть заявку", f"{base}/admin/#/requests/{request_id}")]]
+    admin_base = _admin_base_url()
+    if request_id and admin_base:
+        buttons = [[link_button("Открыть заявку", f"{admin_base}#/requests/{request_id}")]]
     admin_client = get_max()
     for admin_id in settings.admin_ids:
         await admin_client.send_message(admin_id, message, buttons=buttons)
@@ -1696,8 +1710,8 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
         )
         if request_id:
             admin_note += f"\nЗаявка: #{request_id}"
-            if _miniapp_url():
-                admin_note += f"\n{_miniapp_url()}/admin/#/requests/{request_id}"
+            if _admin_base_url():
+                admin_note += f"\n{_admin_base_url()}#/requests/{request_id}"
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)
     return {"ok": ok}
@@ -1763,8 +1777,8 @@ async def site_lead(request: Request, data: dict) -> dict:
     )
     if request_id:
         admin_note += f"\nЗаявка: #{request_id}"
-        if _miniapp_url():
-            admin_note += f"\n{_miniapp_url()}/admin/#/requests/{request_id}"
+        if _admin_base_url():
+            admin_note += f"\n{_admin_base_url()}#/requests/{request_id}"
     if ok and settings.admin_ids:
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)
