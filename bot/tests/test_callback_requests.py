@@ -156,7 +156,7 @@ def test_reply_client_message_id_dedupes(client, monkeypatch):
     assert resp1.status_code == 200 and resp2.status_code == 200
     assert resp2.json()["duplicate"] is True
     assert resp2.json()["message_id"] == resp1.json()["message_id"]
-    assert sent == ["Ответ менеджера"]  # клиенту ушло ровно одно сообщение
+    assert sent == ["👤 Менеджер:\nОтвет менеджера"]  # клиенту ушло ровно одно сообщение
     msg = crm_store.get_message(resp1.json()["message_id"])
     assert msg["external_message_id"] == "ext-100"
 

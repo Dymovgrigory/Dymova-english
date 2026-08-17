@@ -210,16 +210,20 @@ async def conversation_reply(request: Request, conversation_id: int, data: dict)
     ok, error = True, None
     external_message_id = None
     status = "sent"
+    # Пометка «не бот»: в мессенджерах сообщение менеджера идёт от имени
+    # бота, поэтому клиенту явно подписываем, кто пишет. В БД храним тот
+    # же текст, что ушёл клиенту, — история админки совпадает с его чатом.
+    wire_text = text if channel == "web" else f"👤 Менеджер:\n{text}"
     if channel == "web":
         # Доставка при следующем поллинге виджета (/api/chat/pending).
         status = "pending"
     else:
-        ok, external_message_id, error = await _send_to_channel(channel, external_id, text)
+        ok, external_message_id, error = await _send_to_channel(channel, external_id, wire_text)
     if not ok:
         status = "failed"
         error = error or "send failed"
     message_id, _ = crm_store.add_message(
-        conversation_id, conv["customer_id"], channel, "out", "manager", text,
+        conversation_id, conv["customer_id"], channel, "out", "manager", wire_text,
         status=status, error=error,
         external_message_id=external_message_id,
         client_message_id=client_message_id,
