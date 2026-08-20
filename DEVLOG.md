@@ -3995,3 +3995,26 @@ bot/
 **Осталось:** подтверждение владельца → коммит + push + rsync dist_prod на прод.
 
 **Деплой сессии 58 (подтверждение владельца «делай!»):** коммит `34bd189` в main, push, rsync `prototype/dist_prod/` → прод (exit 0). Проверка прода: `/`, `/novosti/`, `/novosti-start-novogo-uchebnogo-goda-2026/`, `/kontakty/`, `/wow/foxi-atmos.js` — все 200; на главной atmos отсутствует (0 упоминаний), на внутренних — `fxb-ink-stage fxb-ink-on`; в ленте новостей даты 12/14/16/18 августа 2026. Живой скриншот прода (1440): единое чернильное полотно шапка→hero, cookie-баннер и виджет на месте.
+
+### Сессия 59 (Kimi Code) — SEO & AI Domination Program: аудит, 8 документов, P0-пакет
+
+**Дата:** 2026-08-20
+**Запрос владельца:** мастер-промпт «FOXINBURG — SEO & AI DOMINATION PROGRAM»: полный аудит → SEO_MASTER_PLAN и рабочие документы → реализация; «начинай!», «делай все».
+
+**Аудит (проверено на проде и в коде, не по предположениям):**
+- 39 URL в sitemap, уникальные title/description, canonical, www→apex 301, staging noindex — техфундамент 74/100 (`SEO_TECHNICAL_AUDIT.md`).
+- Критично: на проде НЕТ Яндекс.Метрики и GA4 ни на одной странице (счётчик 109945462 и цели существуют с лета, но код никогда не подключался); GSC не подключён. Сайт работал слепым.
+- `/news` и старые Tilda-URL (`/page32889798.html`) → дефолтный Caddy 404; кастомной 404 не было.
+- ~2 МБ 3D на каждой странице + мёртвые GLB (foxi.glb 1,2 МБ, foxi-rigged-v1-17clips.glb 1,2 МБ, wow/foxi.glb 0,4 МБ) уезжали в прод.
+- Созданы документы: `SEO_MASTER_PLAN.md` (Command Center: SEO Score 412/1000, roadmap 12 мес, KPI), `SEO_BACKLOG.md` (50 задач, ICE), `SEO_SEMANTIC_MAP.md` (514 запросов, 22 кластера, гео L1–L5), `SEO_CONTENT_MAP.md` (100→300→500→1000 страниц, Quality Gate), `SEO_COMPETITOR_ANALYSIS.md` (9 локальных + федеральные), `SEO_LOCAL_DOMINATION_PLAN.md`, `SEO_AI_VISIBILITY_PLAN.md`, `SEO_TECHNICAL_AUDIT.md`.
+
+**Что сделано (P0-пакет):**
+- **Аналитика через согласие:** новый `prototype/wow/foxi-analytics.js` — Метрика 109945462 (webvisor/clickmap/trackLinks/accurateTrackBounce, defer) + GA4 G-9XMYR6MJGL грузятся ТОЛЬКО после события `fxb-consent` с v=accept (152-ФЗ). Подключён в `WOW_SNIPPET` РАНЬШЕ foxi-consent.js — иначе при сохранённом согласии announce() на DOMContentLoaded пришёл бы до подписки. Цели 578168283/578168629/578168992/578169121 начинают работать автоматически.
+- **404:** сборка генерирует `/404.html` (noindex, шапка+подвал, карточки Главная/Дети/Цены/Контакты); в Caddyfile `handle_errors` — rewrite на /404.html с сохранением статуса 404.
+- **Редиректы в Caddyfile:** `/news` и `/news/*` → `/novosti` 301; `/page32889798.html` → `/` 301; остальные `/page*.html` → `/` 301.
+- **Чистка раздачи:** ignore-паттерны в build_static_site.py для wow/foxi.glb, mascot/foxi.glb, mascot/foxi-rigged-v1-17clips.glb (~2,8 МБ из прода; файлы остаются в репо как бэкапы).
+
+**Как проверено:** пересборка dist+dist_prod (38 страниц + 404.html, без warnings); Chrome DevTools MCP на :8899 — сохранённое согласие: mc.yandex.ru/metrika/tag.js и gtag/js?id=G-9XMYR6MJGL загружены (200), ym/gtag активны; отказ (decline): ни одного аналитического скрипта, ym/gtag undefined. 404.html отдаётся с корректным title. Sitemap не содержит 404-страницы.
+**Решения и нюансы:** noscript-пиксель Метрики сознательно не добавлен (несогласованный трекинг); GA4 оставлен по явному запросу владельца, оба счётчика под одним гейтингом. Визуальных breadcrumbs на программных страницах в P0 не делали — это P1 из бэклога.
+**Деплой:** см. ниже (подтверждение владельца «делай все»).
+**Осталось / следующий шаг:** P1 бэклога: повторный Lighthouse-baseline, условная загрузка 3D (прелоад только на главной), Яндекс.Бизнес 100% (нужен доступ владельца), GSC-подключение (нужен доступ к домену/Search Console), 9 недостающих посадочных (ВПР, разговорный, цены, отзывы, /about).

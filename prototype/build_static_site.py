@@ -196,6 +196,10 @@ WOW_SNIPPET = (
     "<script>window.FOXI_CONFIG={modelUrl:'/mascot/foxi-rigged.glb'};</script>\n"
     '<script type="module" src="/mascot/mascot.js"></script>\n'
     '<script src="https://bot.dymova-english.ru/widget/foxi.js" defer></script>\n'
+    # Аналитика (Метрика 109945462 + GA4) — гейтится согласием fxb-consent;
+    # должна идти РАНЬШЕ foxi-consent.js, чтобы успеть подписаться на событие
+    # до announce() сохранённого выбора на DOMContentLoaded.
+    '<script src="/wow/foxi-analytics.js" defer></script>\n'
     '<script src="/wow/foxi-consent.js" defer></script>'
 )
 
@@ -440,17 +444,53 @@ def main() -> None:
     with open(os.path.join(out_dir, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
 
-    # WOW-ассеты (scroll-эффекты; foxi-3d.js/foxi.glb лежат про запас, не подключаются)
+    # 404-страница (сессия 59, SEO P0): Caddy отдаёт её через handle_errors
+    # при промахе try_files. Всегда noindex — статуса 404 достаточно, но
+    # мета страхует от индексации при ошибках конфигурации. Не входит в
+    # sitemap и в список written.
+    not_found_content = (
+        '<section class="fxb-section" style="text-align:center;padding:120px 20px 80px">'
+        '<p class="fxb-eyebrow">Ошибка 404</p>'
+        "<h1>Страница не найдена</h1>"
+        '<p class="fxb-sub">Похоже, такой страницы нет или она переехала. '
+        "Вот что может помочь:</p>"
+        '<div class="fxb-card-grid" style="max-width:900px;margin:40px auto 0">'
+        '<a class="fxb-card" href="/"><h3>Главная</h3>'
+        "<p>Программы, цены и запись на бесплатную диагностику.</p></a>"
+        '<a class="fxb-card" href="/doshkolniki"><h3>Английский для детей</h3>'
+        "<p>Дошкольники, младшие школьники и подростки.</p></a>"
+        '<a class="fxb-card" href="/tseny"><h3>Цены</h3>'
+        "<p>Стоимость всех программ и форматов.</p></a>"
+        '<a class="fxb-card" href="/kontakty"><h3>Контакты</h3>'
+        "<p>Адреса филиалов, телефон и мессенджеры.</p></a>"
+        "</div></section>"
+    )
+    not_found_html = wrap_page(
+        "404", not_found_content, shapka, footer,
+        {"title": "Страница не найдена — Фоксинбург",
+         "description": "Такой страницы нет. Перейдите на главную, к программам или контактам школы Фоксинбург в Долгопрудном.",
+         "canonical": f"{SITE}/404"},
+        True,
+    )
+    with open(os.path.join(out_dir, "404.html"), "w", encoding="utf-8") as f:
+        f.write(not_found_html)
+
+    # WOW-ассеты (scroll-эффекты; foxi-3d.js лежит про запас, не подключается;
+    # wow/foxi.glb — 1.2 МБ модель только для него — в прод НЕ уходит, сессия 59)
     wow_src = os.path.join(DIR, "wow")
     if os.path.isdir(wow_src):
-        shutil.copytree(wow_src, os.path.join(out_dir, "wow"), dirs_exist_ok=True)
+        shutil.copytree(wow_src, os.path.join(out_dir, "wow"), dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("foxi.glb"))
 
     # 3D-маскот (mascot.js + ригнутый foxi-rigged.glb). Демо-страницы
-    # (index.html, test-rigged.html) и README в прод не уходят.
+    # (index.html, test-rigged.html), README и неиспользуемые модели
+    # (foxi.glb ~1.2 МБ, foxi-rigged-v1-17clips.glb ~1.2 МБ — бэкапы,
+    # сессия 59) в прод не уходят; файлы остаются в репозитории.
     mascot_src = os.path.join(DIR, "mascot")
     if os.path.isdir(mascot_src):
         shutil.copytree(mascot_src, os.path.join(out_dir, "mascot"), dirs_exist_ok=True,
-                        ignore=shutil.ignore_patterns("*.html", "README.md"))
+                        ignore=shutil.ignore_patterns("*.html", "README.md",
+                                                      "foxi.glb", "foxi-rigged-v1-17clips.glb"))
 
     # Общие ассеты сайта (og-cover.png, fonts/, brand/ и т.п.)
     assets_src = os.path.join(DIR, "assets")

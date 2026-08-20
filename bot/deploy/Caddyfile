@@ -75,8 +75,26 @@ dymova-english.ru {
         redir https://tilda-members.tilda.ws{uri} 302
     }
 
+    # SEO-редиректы (сессия 59): старые URL из индекса/ссылок не должны
+    # падать в 404 — переносим их вес на актуальные страницы (301).
+    redir /news /novosti 301
+    redir /news/* /novosti 301
+    # Старые адреса эпохи Tilda (pageXXXXX.html): главная известна точно,
+    # остальные — на главную, чтобы не терять переходы из выдачи.
+    redir /page32889798.html / 301
+    @oldtilda path /page*.html
+    redir @oldtilda / 301
+
     root * /srv/foxinburg-site
     try_files {path} {path}/index.html
+
+    # Кастомная 404 (генерируется сборкой в /404.html): сохраняет статус
+    # 404, но отдаёт фирменную страницу с навигацией вместо дефолта Caddy.
+    handle_errors {
+        @404 expression `{http.error.status_code} == 404`
+        rewrite @404 /404.html
+        file_server
+    }
 
     # Кэширование статики. Имена файлов БЕЗ хэшей в URL — поэтому только
     # неделя (max-age=604800), immutable и год ставить НЕЛЬЗЯ: при замене
