@@ -303,3 +303,19 @@ curl -sI https://dymova-english.ru/ | grep -iE "strict-transport|referrer|conten
 curl -s https://dymova-english.ru/sitemap.xml | grep -c "<loc>"   # 39
 curl -s https://dymova-english.ru/robots.txt
 ```
+
+---
+
+## Повторный baseline 20.08.2026 (после чистки GLB, сессия 59)
+
+Замер: Chrome DevTools performance trace, мобильный профиль (390×844, Fast 4G, CPU 4x), прод https://dymova-english.ru/:
+
+| Метрика | 04.07.2026 (старый аудит) | 20.08.2026 | Бюджет | Статус |
+|---|---|---|---|---|
+| LCP mobile (главная) | 18.6 s | **0.39 s** | < 2.5 s | ✅ |
+| CLS (главная) | — | **0.00** | < 0.1 | ✅ |
+| Lighthouse SEO | — | **100** | 100 | ✅ |
+| Lighthouse Accessibility | — | **85** | ≥ 95 | ⚠️ color-contrast, aria-prohibited-attr, frame-title, select-name |
+| Lighthouse Best Practices | — | **69** | ≥ 95 | ⚠️ image-aspect-ratio, third-party cookies (Яндекс.Карта), console errors (локальный /api — не прод) |
+
+Вывод: главная по CWV укладывается в бюджеты с запасом (сессии 51–58 + чистка GLB дали эффект). Задача «условная загрузка 3D» понижена до P2: LCP не страдает, риск ломать сознательную wow-фичу владельца выше выгоды. Приоритет смещён на a11y/best-practices находки (P2) и повторный замер внутренних страниц после появления полевых данных из Метрики (через 28 дней).

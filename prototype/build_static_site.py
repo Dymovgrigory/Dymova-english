@@ -76,6 +76,10 @@ PAGE_ALIASES = {
     "page_novosti_kak_vybrat_programmu_anglijskogo_dlya_rebenka.html": "novosti-kak-vybrat-programmu-anglijskogo-dlya-rebenka",
     "page_novosti_podgotovka_k_novomu_uchebnomu_godu_anglijskij.html": "novosti-podgotovka-k-novomu-uchebnomu-godu-anglijskij",
     "page_novosti_start_novogo_uchebnogo_goda_2026.html": "novosti-start-novogo-uchebnogo-goda-2026",
+    "page_vpr_anglijskij.html": "vpr-anglijskij",
+    "page_razgovornyj_anglijskij.html": "razgovornyj-anglijskij",
+    "page_otzyvy.html": "otzyvy",
+    "page_about.html": "about",
 }
 
 # Статьи уже несут собственную Article+BreadcrumbList JSON-LD внутри себя
@@ -107,6 +111,10 @@ SCHEMA_MAP = {
     "repetitor": ["course_repetitor.html", "breadcrumb_repetitor.html"],
     "repetitor-nachalnaya-shkola": ["course_repetitor-nachalnaya-shkola.html", "breadcrumb_repetitor-nachalnaya-shkola.html"],
     "tseny": ["breadcrumb_tseny.html"],
+    # vpr-anglijskij / razgovornyj-anglijskij / otzyvy / about несут
+    # Course/WebPage + BreadcrumbList инлайн в контенте (extra_jsonld в
+    # build_subpages.py) — файлы seo_schema/ в той сессии не создавались,
+    # поэтому здесь записей нет.
 }
 INDEX_SCHEMA = ["faq.html"]
 

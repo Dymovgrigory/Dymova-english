@@ -4043,3 +4043,22 @@ bot/
 
 **Деплой:** GSC-метатег — коммиты в main (метатег + его замена по запросу владельца), rsync dist_prod на прод. Изменения в Бизнесе/Вебмастере — в веб-интерфейсах Яндекса, кода не касаются.
 **Осталось / следующий шаг:** через 2–3 недели выгрузить реальную семантику из GSC+Вебмастера; фид education — исправить ошибки модерации; P1 по коду: повторный Lighthouse-baseline, условная загрузка 3D; посадочные ВПР/разговорный/цены/отзывы//about; фото в карточки Бизнеса (нужны свежие фото филиалов от владельца).
+
+### Сессия 59, продолжение 2 (Kimi Code) — Lighthouse-baseline + 4 новые посадочные
+
+**Дата:** 2026-08-20
+**Запрос владельца:** «продолжай сразу обе задачи» (посадочные + Lighthouse/3D).
+
+**Lighthouse-baseline (зафиксирован в SEO_TECHNICAL_AUDIT.md):** прод, мобильный профиль (Fast 4G, CPU 4x): **LCP 0,39 с** (июльский аудит: 18,6 с), **CLS 0,00**, Lighthouse SEO 100, Accessibility 85, Best Practices 69. CWV в бюджетах с запасом — задача «условная загрузка 3D» понижена до P2 (риск ломать сознательную wow-фичу владельца выше выгоды). A11y/BP находки (color-contrast, aria-prohibited-attr, frame-title, select-name, image-aspect-ratio) — в P2 бэклога.
+
+**Новые посадочные (субагент, проверено вручную):**
+- `/vpr-anglijskij` — подготовка к ВПР 4–8 классы (Course+FAQ+Breadcrumb JSON-LD, 6 FAQ)
+- `/razgovornyj-anglijskij` — разговорный английский (Course+FAQ+Breadcrumb, 6 FAQ)
+- `/otzyvy` — ★5.0 оба филиала, «Хорошее место 2026», ссылки на карточки Я.Карт, темы реальных отзывов (без выдуманных цитат, без AggregateRating — анти-спам)
+- `/about` — AI Entity Page: кто мы, основатель, направления, методика, филиалы, соцсети (AboutPage+Breadcrumb)
+- Расширен `landing_page()` в build_subpages.py (page_class/extra_sections/extra_jsonld, хелперы breadcrumb/course/webpage jsonld) — существующие страницы не затронуты. PAGE_ALIASES +4 записи (build_static_site.py). Sitemap: 38 → 42 URL.
+- **Перелинковка:** футер (tilda_footer.html) — «О нас» (/about) и «Отзывы» (/otzyvy) в колонку «О школе», ВПР и разговорный — в «Навигацию». На главной футер встроен в main_combined_v7.html — она не тронута по договорённости.
+
+**Как проверено:** сборки dist+dist_prod чистые (42 страницы, без missing-meta warnings); у каждой новой страницы уникальные title/description, 1 h1, canonical, валидные JSON-LD; скриншоты /about и /vpr-anglijskij на :8899 — единый стиль, hero с чернилами, CTA на месте.
+**Деплой:** ждёт подтверждения владельца (rsync dist_prod).
+**Осталось:** фид education (ошибки модерации Яндекса), a11y/best-practices P2, выгрузка семантики из GSC через 2–3 недели, фото филиалов для карточек Бизнеса (от владельца).
