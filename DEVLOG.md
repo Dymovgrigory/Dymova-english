@@ -4062,3 +4062,5 @@ bot/
 **Как проверено:** сборки dist+dist_prod чистые (42 страницы, без missing-meta warnings); у каждой новой страницы уникальные title/description, 1 h1, canonical, валидные JSON-LD; скриншоты /about и /vpr-anglijskij на :8899 — единый стиль, hero с чернилами, CTA на месте.
 **Деплой:** ждёт подтверждения владельца (rsync dist_prod).
 **Осталось:** фид education (ошибки модерации Яндекса), a11y/best-practices P2, выгрузка семантики из GSC через 2–3 недели, фото филиалов для карточек Бизнеса (от владельца).
+
+**Деплой сессии 59 прод.2 (подтверждение владельца «да!»):** rsync `prototype/dist_prod/` → прод (exit 0). Проверка прода: `/vpr-anglijskij`, `/razgovornyj-anglijskij`, `/otzyvy`, `/about` — все 200; sitemap 42 URL; футер с новыми ссылками на внутренних страницах.
