@@ -163,7 +163,7 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
         # подтверждение владения сайтом для Яндекс.Вебмастера (сессия 47)
         '<meta name="yandex-verification" content="c08742055e803bc5">',
         # подтверждение владения для Google Search Console (сессия 59)
-        '<meta name="google-site-verification" content="l4VOyVkJScGam2sENuAB4iWdpuCuRTxLL4FPpFK7j0A">',
+        '<meta name="google-site-verification" content="ZvzgMgWANwISH6Ke2ApOXh6a-KjCxK-RQPrmjerGoOs">',
         f'<meta property="og:title" content="{title}">',
         f'<meta property="og:description" content="{description}">',
         f'<meta property="og:url" content="{canonical}">',
