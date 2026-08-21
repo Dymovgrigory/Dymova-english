@@ -78,6 +78,8 @@ PAGE_ALIASES = {
     "page_novosti_start_novogo_uchebnogo_goda_2026.html": "novosti-start-novogo-uchebnogo-goda-2026",
     "page_vpr_anglijskij.html": "vpr-anglijskij",
     "page_razgovornyj_anglijskij.html": "razgovornyj-anglijskij",
+    "page_meropriyatiya.html": "meropriyatiya",
+    "page_nositel_yazyka.html": "nositel-yazyka",
     "page_otzyvy.html": "otzyvy",
     "page_about.html": "about",
     "page_test_uroven.html": "test-uroven",
