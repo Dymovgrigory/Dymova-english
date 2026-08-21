@@ -4183,12 +4183,17 @@ var fxbForm=document.querySelector('#fxbZform');
     });
   }
 
-  /* Hero-слоган: блок home.hero.slogan {line1, line2, highlight} */
+  /* Hero-слоган: блок home.hero.slogan {line1, line2, highlight}.
+     ВАЖНО (сессия 61, LCP): не трогаем DOM, если текст не изменился —
+     перерисовка h1 после загрузки сдвигала LCP на время ответа API. */
   get('/api/v1/site/public/blocks/home.hero.slogan').then(function(d){
     if(!d||!d.content)return;
     var h1=document.querySelector('#fxb-hero .fxb-slogan-text');if(!h1)return;
     var c=d.content;
-    h1.innerHTML=esc(c.line1)+'<br>'+esc(c.line2)+' <span class="fxb-life">'+esc(c.highlight)+'</span>';
+    var next=esc(c.line1)+'<br>'+esc(c.line2)+' <span class="fxb-life">'+esc(c.highlight)+'</span>';
+    var plain=function(s){var t=document.createElement('div');t.innerHTML=s;return t.textContent.replace(/\s+/g,' ').trim();};
+    if(plain(next)===plain(h1.innerHTML))return;
+    h1.innerHTML=next;
   });
 
   /* FAQ: блок home.faq {items:[{q,a}]}. Аккордеон для новых узлов — делегирование. */

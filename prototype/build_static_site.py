@@ -203,6 +203,12 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
         PRELOADER_HEAD,
         FONT_FACE_STYLE,
         '<link rel="preload" href="/assets/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin>',
+        '<link rel="preload" href="/assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>',
+        # ранние соединения к нашим поддоменам: LMS CMS API и чат-бот (сессия 61)
+        '<link rel="preconnect" href="https://lms.dymova-english.ru" crossorigin>',
+        '<link rel="dns-prefetch" href="https://lms.dymova-english.ru">',
+        '<link rel="preconnect" href="https://bot.dymova-english.ru" crossorigin>',
+        '<link rel="dns-prefetch" href="https://bot.dymova-english.ru">',
         '<link rel="icon" type="image/png" href="/favicon.png">',
         f"<title>{title}</title>",
         f'<meta name="description" content="{description}">',
@@ -336,7 +342,7 @@ PRELOADER_BODY = (
     "<script>(function(){var s=document.getElementById('fxb-splash');if(!s)return;"
     "var bar=s.querySelector('.fxb-splash-bar span'),t0=performance.now(),done=false,loaded=false;"
     "var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;"
-    "var MIN=rm?0:1200,WAIT3D=rm?0:5000,MAX=8000;"
+    "var MIN=rm?0:900,WAIT3D=rm?0:1500,MAX=3500;"
     "function pct(v){if(bar)bar.style.width=v+'%';}"
     "function tick(){if(done)return;var t=(performance.now()-t0)/1800;"
     "pct(Math.min(90,Math.round(t*90)));if(t<1)requestAnimationFrame(tick);}"
