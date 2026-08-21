@@ -74,7 +74,7 @@ def svg(name):
 # ---------------------------------------------------------------- общий CSS
 CSS = """
 <style>
-#fxb-page{--purple:#392852;--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;--bg:#f4f1fa;
+#fxb-page{--purple:#392852;--purple-2:#662d92;--purple-3:#6237a2;--orange:#c24712;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;--bg:#f4f1fa;
   font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:#fff}
 #fxb-page *{box-sizing:border-box;margin:0;padding:0}
 #fxb-page a{text-decoration:none}
@@ -217,7 +217,7 @@ PRICE_CSS = """
 
 TEAM_CSS = """
 <style>
-#fxb-team{--purple-2:#662d92;--purple-3:#6237a2;--orange:#ee7349;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:#ffffff}
+#fxb-team{--purple-2:#662d92;--purple-3:#6237a2;--orange:#c24712;--yellow:#fcf951;--ink:#241a36;--muted:#6f6883;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:#ffffff}
 #fxb-team *{box-sizing:border-box;margin:0;padding:0}
 #fxb-team .fxb-section{max-width:1200px;margin:0 auto;padding:90px 24px 100px}
 #fxb-team .fxb-eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-2);background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px}
@@ -1020,7 +1020,7 @@ PAGES["page_podrostki.html"] = {
 
 # ----- летние программы -----
 PAGES["page_letnyaya_akademiya.html"] = {
-    "hero_grad": "linear-gradient(135deg,#ee7349 0%,#f7971e 50%,#fcc419 100%)",
+    "hero_grad": "linear-gradient(135deg,#c24712 0%,#f7971e 50%,#fcc419 100%)",
     "eyebrow": "Летние программы",
     "h1": 'Летняя <span class="fxb-accent">Академия</span>',
     "sub": "Интенсив на лето: развиваем английский, не теряя форму. Игры, проекты и общение — без скучных уроков.",
@@ -2024,19 +2024,19 @@ TEST_UROVEN_CSS = """
 .fxb-qz-progress{height:8px;border-radius:99px;background:#ece7f7;overflow:hidden;margin-bottom:14px}
 .fxb-qz-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#7b4fc0,#5a2d8f);border-radius:99px;transition:width .3s ease}
 @media (prefers-reduced-motion:reduce){.fxb-qz-progress-bar{transition:none}}
-.fxb-qz-counter{font-size:14px;color:#7a7392;margin:0 0 8px}
+.fxb-qz-counter{font-size:14px;color:#6b6480;margin:0 0 8px}
 .fxb-qz-question{font-size:22px;font-weight:700;color:#241a36;margin:0 0 20px;line-height:1.4}
 .fxb-qz-options{display:grid;gap:12px}
 .fxb-qz-opt{min-height:48px;padding:12px 18px;border:2px solid #e4ddf3;border-radius:14px;background:#fff;font:inherit;font-size:16px;text-align:left;cursor:pointer;color:#241a36;transition:border-color .15s,background .15s}
 .fxb-qz-opt:hover,.fxb-qz-opt:focus-visible{border-color:#7b4fc0;background:#f6f1fd;outline:none}
 .fxb-qz-result{text-align:center}
 .fxb-qz-level{display:inline-block;font-size:28px;font-weight:800;color:#fff;background:linear-gradient(135deg,#7b4fc0,#5a2d8f);border-radius:16px;padding:14px 28px;margin-bottom:18px}
-.fxb-qz-score{font-size:15px;color:#7a7392;margin:0 0 14px}
+.fxb-qz-score{font-size:15px;color:#6b6480;margin:0 0 14px}
 .fxb-qz-text{font-size:17px;line-height:1.6;color:#4a4360;text-align:left;margin:0 0 20px}
 .fxb-qz-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px}
 .fxb-qz-links a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;border:2px solid #e4ddf3;border-radius:99px;color:#5a2d8f;font-weight:600;text-decoration:none}
 .fxb-qz-links a:hover{border-color:#7b4fc0;background:#f6f1fd}
-.fxb-qz-restart{display:inline-block;margin-top:14px;background:none;border:0;color:#7a7392;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+.fxb-qz-restart{display:inline-block;margin-top:14px;background:none;border:0;color:#6b6480;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
 @media (max-width:640px){.fxb-qz{padding:22px 16px}.fxb-qz-question{font-size:19px}}
 </style>
 """
@@ -2439,7 +2439,7 @@ NEWS_POST_3 = {
     "category": "События школы",
     "date": "2025-06-25",
     "reading_time": "7 минут чтения",
-    "hero_grad": "linear-gradient(135deg,#ee7349 0%,#f7971e 50%,#fcc419 100%)",
+    "hero_grad": "linear-gradient(135deg,#c24712 0%,#f7971e 50%,#fcc419 100%)",
     "body": [
         ("video", {
             "kicker": "Видео",
@@ -2600,7 +2600,7 @@ NEWS_POST_7 = {
     "category": "Новости школы",
     "date": "2026-08-01",
     "reading_time": "6 минут чтения",
-    "hero_grad": "linear-gradient(135deg,#392852 0%,#662d92 55%,#ee7349 100%)",
+    "hero_grad": "linear-gradient(135deg,#392852 0%,#662d92 55%,#c24712 100%)",
     "body": [
         ("h2", "Три языка, один принцип"),
         ("p", "К новому учебному году в Фоксинбурге можно записаться на английский, немецкий или китайский — и по всем трём мы ведём занятия по одной и той же методике: понятная система языка, живое общение с первых занятий и мини-группы, где педагог успевает уделить время каждому. Разница между языками — в содержании, а не в подходе: во сколько бы вы ни начинали, ребёнку или взрослому не приходится заново учиться быть учеником при смене языка."),
@@ -2682,7 +2682,7 @@ NEWS_POST_9 = {
     "category": "Полезное для взрослых",
     "date": "2026-08-06",
     "reading_time": "8 минут чтения",
-    "hero_grad": "linear-gradient(135deg,#2e1a47 0%,#7b4fc0 55%,#ee7349 100%)",
+    "hero_grad": "linear-gradient(135deg,#2e1a47 0%,#7b4fc0 55%,#c24712 100%)",
     "body": [
         ("h2", "Правда ли, что взрослым учить язык сложнее"),
         ("p", "Один из самых частых поводов отложить английский «на потом» — уверенность, что после школы поезд ушёл, а мозг взрослого уже не так гибок, как у ребёнка. Крупные современные исследования эту идею не подтверждают: жёсткого возраста, после которого язык выучить нельзя, не существует. Снижение пластичности происходит плавно, а не обрывается в одной точке. Единственное, что действительно даётся взрослым труднее, — произношение без малейшего акцента: способность к идеальной имитации звуков снижается после подросткового возраста. А вот грамматика, словарный запас и свободное общение — абсолютно достижимы в любом возрасте, если заниматься регулярно."),
@@ -2724,7 +2724,7 @@ NEWS_POST_10 = {
     "category": "Занимательный английский",
     "date": "2026-08-08",
     "reading_time": "5 минут чтения",
-    "hero_grad": "linear-gradient(135deg,#241a36 0%,#ee7349 55%,#fcc419 100%)",
+    "hero_grad": "linear-gradient(135deg,#241a36 0%,#c24712 55%,#fcc419 100%)",
     "body": [
         ("h2", "Почему они называются «ложными друзьями»"),
         ("p", "Ложные друзья переводчика — слова, которые звучат почти как русские и очень хочется перевести «в лоб», но на деле означают что-то совсем другое. Термин придумали ещё лингвисты в начале XX века, и с тех пор список таких слов между русским и английским никуда не делся. Собрали десять примеров, на которых чаще всего спотыкаются — даже те, кто неплохо говорит по-английски."),
@@ -2758,7 +2758,7 @@ NEWS_POST_11 = {
     "category": "Экспертное мнение",
     "date": "2026-08-10",
     "reading_time": "6 минут чтения",
-    "hero_grad": "linear-gradient(135deg,#241a36 0%,#5a2d8f 55%,#ee7349 100%)",
+    "hero_grad": "linear-gradient(135deg,#241a36 0%,#5a2d8f 55%,#c24712 100%)",
     "body": [
         ("h2", "Почему «всем нужен репетитор» — это миф"),
         ("p", "Индивидуальное занятие — самый дорогой формат обучения, и честный ответ на вопрос «нужен ли репетитор» почти всегда начинается с встречного: «а какая задача?». Мини-группа даёт живое общение, соревновательность и цену вдвое ниже — и для большинства детей, которые учат язык «для жизни», этого достаточно. Но есть ситуации, где групповой формат упирается в потолок, и тогда индивидуальные занятия окупаются очень быстро. Вот пять таких ситуаций."),
@@ -2830,7 +2830,7 @@ NEWS_POST_13 = {
     "category": "Полезное для родителей",
     "date": "2026-08-14",
     "reading_time": "8 минут чтения",
-    "hero_grad": "linear-gradient(135deg,#241a36 0%,#4a2a7a 55%,#ee7349 100%)",
+    "hero_grad": "linear-gradient(135deg,#241a36 0%,#4a2a7a 55%,#c24712 100%)",
     "body": [
         ("p", "Перед учебным годом родители заваливают себя одним и тем же вопросом: какую программу выбрать, чтобы и результат был, и ребёнок не возненавидел английский к октябрю. Хорошая новость: выбор проще, чем кажется, если идти не от рекламных обещаний, а от четырёх понятных вещей — возраста, уровня, цели и формата. Разберём каждый."),
         ("h2", "Шаг 1. Возраст определяет подачу, а не «сложность»"),
@@ -2902,7 +2902,7 @@ NEWS_POST_15 = {
     "category": "Новости школы",
     "date": "2026-08-18",
     "reading_time": "6 минут чтения",
-    "hero_grad": "linear-gradient(135deg,#2e1a47 0%,#ee7349 55%,#9d5fc9 100%)",
+    "hero_grad": "linear-gradient(135deg,#2e1a47 0%,#c24712 55%,#9d5fc9 100%)",
     "body": [
         ("p", "Новый учебный год в Фоксинбурге стартует совсем скоро — группы уже формируются, педагоги готовят программы, а мы финализируем расписание. Рассказываем, как всё будет устроено, чтобы и дети, и родители пришли на первое занятие спокойными и подготовленными."),
         ("h2", "Знакомство с педагогом — до первого урока"),

@@ -271,7 +271,7 @@ PRELOADER_HEAD = (
     ".fxb-splash-bar{width:220px;height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;"
     "box-shadow:0 2px 12px rgba(0,0,0,.25)}"
     ".fxb-splash-bar span{display:block;height:100%;width:0;border-radius:99px;"
-    "background:linear-gradient(90deg,#fcf951,#ee7349);transition:width .25s ease;"
+    "background:linear-gradient(90deg,#fcf951,#c24712);transition:width .25s ease;"
     "animation:fxbSplashBar 1.9s ease-out forwards}"
     "@keyframes fxbSplashBar{0%{width:0}60%{width:55%}100%{width:88%}}"
     "@media (prefers-reduced-motion:reduce){"
