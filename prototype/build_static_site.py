@@ -93,6 +93,16 @@ PAGE_ALIASES = {
     "page_blog_onlajn_ili_oflajn_anglijskij.html": "blog-onlajn-ili-oflajn-anglijskij",
     "page_blog_kitajskij_dlya_detej.html": "blog-kitajskij-dlya-detej",
     "page_blog_repetitor_ili_gruppa.html": "blog-repetitor-ili-gruppa",
+    "page_blog_kak_vyuchit_anglijskie_slova_bystro.html": "blog-kak-vyuchit-anglijskie-slova-bystro",
+    "page_blog_present_simple_dlya_roditelej.html": "blog-present-simple-dlya-roditelej",
+    "page_blog_anglijskij_v_5_klasse_chto_zhdat.html": "blog-anglijskij-v-5-klasse-chto-zhdat",
+    "page_blog_skolko_stoit_anglijskij_dlya_rebenka.html": "blog-skolko-stoit-anglijskij-dlya-rebenka",
+    "page_blog_chtenie_na_anglijskom_s_chego_nachat.html": "blog-chtenie-na-anglijskom-s-chego-nachat",
+    "page_blog_kak_vybrat_posobie_po_anglijskomu.html": "blog-kak-vybrat-posobie-po-anglijskomu",
+    "page_blog_letnij_intensiv_itogi_i_plany.html": "blog-letnij-intensiv-itogi-i-plany",
+    "page_blog_oshibki_v_anglijskom_top_15.html": "blog-oshibki-v-anglijskom-top-15",
+    "page_blog_audirovanie_kak_nauchitsya_ponimat.html": "blog-audirovanie-kak-nauchitsya-ponimat",
+    "page_blog_anglijskij_pered_1_sentyabrya.html": "blog-anglijskij-pered-1-sentyabrya",
 }
 
 # Статьи уже несут собственную Article+BreadcrumbList JSON-LD внутри себя
