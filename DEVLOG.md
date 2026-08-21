@@ -4211,3 +4211,5 @@ bot/
 **SEO-аудит (82 страницы):** дублей title/description нет, пустых alt нет, canonical/robots/sitemap/OG в порядке, yandex+google verification на месте. Подрезаны 3 description >200 символов (/about, /test-gotov-k-shkole, /razgovornyj-anglijskij).
 **Результат:** локальный trace — LCP **796 мс**, CLS 0.00 (было 9.9 с на проде). Сборка 82 страницы.
 **Осталось:** деплой + контрольный trace на проде; клейм 2ГИС; семантика из GSC.
+
+**Деплой сессии 62 (подтверждение «да»):** rsync → прод. Контрольный performance trace на https://dymova-english.ru/: **LCP 658 мс (было 9955 мс), CLS 0.00**. Ускорение в 15 раз.
