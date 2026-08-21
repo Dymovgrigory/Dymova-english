@@ -2003,13 +2003,14 @@ TEST_UROVEN_SECTION = (
     '<p class="fxb-lead">15 вопросов от простых к сложным. Отвечайте честно, не подглядывая в словарь — так результат будет точнее. Тест бесплатный и не требует регистрации.</p></div>'
     '<div class="fxb-qz" id="fxb-qz">'
     '<div class="fxb-qz-start" id="fxb-qz-start">'
+    '<span class="fxb-qz-start-badge">15 вопросов · ~5 минут</span>'
     '<p class="fxb-qz-start-text">Проверим грамматику и лексику от уровня A1 до B1+. По итогу покажем ваш уровень и подскажем, какая программа Фоксинбурга подойдёт именно вам.</p>'
     '<button type="button" class="fxb-btn-main fxb-qz-btn" id="fxb-qz-begin">Начать тест</button>'
     '</div>'
     '<div class="fxb-qz-quiz" id="fxb-qz-quiz" hidden>'
     '<div class="fxb-qz-progress" role="progressbar" aria-label="Прогресс теста" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0" id="fxb-qz-progress">'
     '<div class="fxb-qz-progress-bar" id="fxb-qz-bar"></div></div>'
-    '<p class="fxb-qz-counter" id="fxb-qz-counter" aria-live="polite"></p>'
+    '<div class="fxb-qz-top"><p class="fxb-qz-counter" id="fxb-qz-counter" aria-live="polite"></p><p class="fxb-qz-pct" id="fxb-qz-pct" aria-hidden="true"></p></div>'
     '<p class="fxb-qz-question" id="fxb-qz-question"></p>'
     '<div class="fxb-qz-options" id="fxb-qz-options"></div>'
     '</div>'
@@ -2020,27 +2021,46 @@ TEST_UROVEN_SECTION = (
 
 TEST_UROVEN_CSS = """
 <style>
-.fxb-qz{max-width:720px;margin:0 auto;background:#fff;border-radius:24px;padding:32px 28px;box-shadow:0 12px 40px rgba(30,20,51,.08)}
-.fxb-qz-start{text-align:center}
-.fxb-qz-start-text{font-size:17px;line-height:1.6;color:#4a4360;margin:0 0 24px}
-.fxb-qz-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 32px;border:0;cursor:pointer;font:inherit;font-weight:700}
-.fxb-qz-progress{height:8px;border-radius:99px;background:#ece7f7;overflow:hidden;margin-bottom:14px}
-.fxb-qz-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#7b4fc0,#5a2d8f);border-radius:99px;transition:width .3s ease}
-@media (prefers-reduced-motion:reduce){.fxb-qz-progress-bar{transition:none}}
-.fxb-qz-counter{font-size:14px;color:#6b6480;margin:0 0 8px}
-.fxb-qz-question{font-size:22px;font-weight:700;color:#241a36;margin:0 0 20px;line-height:1.4}
-.fxb-qz-options{display:grid;gap:12px}
-.fxb-qz-opt{min-height:48px;padding:12px 18px;border:2px solid #e4ddf3;border-radius:14px;background:#fff;font:inherit;font-size:16px;text-align:left;cursor:pointer;color:#241a36;transition:border-color .15s,background .15s}
-.fxb-qz-opt:hover,.fxb-qz-opt:focus-visible{border-color:#7b4fc0;background:#f6f1fd;outline:none}
-.fxb-qz-result{text-align:center}
-.fxb-qz-level{display:inline-block;font-size:28px;font-weight:800;color:#fff;background:linear-gradient(135deg,#7b4fc0,#5a2d8f);border-radius:16px;padding:14px 28px;margin-bottom:18px}
-.fxb-qz-score{font-size:15px;color:#6b6480;margin:0 0 14px}
-.fxb-qz-text{font-size:17px;line-height:1.6;color:#4a4360;text-align:left;margin:0 0 20px}
-.fxb-qz-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px}
-.fxb-qz-links a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;border:2px solid #e4ddf3;border-radius:99px;color:#5a2d8f;font-weight:600;text-decoration:none}
-.fxb-qz-links a:hover{border-color:#7b4fc0;background:#f6f1fd}
-.fxb-qz-restart{display:inline-block;margin-top:14px;background:none;border:0;color:#6b6480;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
-@media (max-width:640px){.fxb-qz{padding:22px 16px}.fxb-qz-question{font-size:19px}}
+#fxb-page .fxb-qz{max-width:760px;margin:0 auto;background:#fff;border-radius:28px;padding:40px 42px 36px;position:relative;overflow:hidden;box-shadow:0 24px 60px -18px rgba(46,26,86,.28),0 0 0 1px rgba(123,79,192,.10)}
+#fxb-page .fxb-qz::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#7b4fc0,#a86ee0 55%,#ffd23f)}
+#fxb-page .fxb-qz-start{text-align:center;padding:12px 8px}
+#fxb-page .fxb-qz-start-badge{display:inline-block;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6b3fa8;background:#f3eefc;border-radius:99px;padding:7px 16px;margin-bottom:18px}
+#fxb-page .fxb-qz-start-text{font-size:18px;line-height:1.65;color:#4a4360;margin:0 auto 26px;max-width:560px}
+#fxb-page .fxb-qz-btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 40px;border:0;cursor:pointer;font:inherit;font-weight:800;font-size:17px;border-radius:16px;background:linear-gradient(135deg,#7b4fc0,#5a2d8f);color:#fff;box-shadow:0 14px 30px -10px rgba(123,79,192,.55);transition:transform .16s ease,box-shadow .16s ease}
+#fxb-page .fxb-qz-btn:hover{transform:translateY(-2px);box-shadow:0 18px 36px -10px rgba(123,79,192,.6)}
+#fxb-page .fxb-qz-btn:active{transform:translateY(0)}
+#fxb-page .fxb-qz-btn:focus-visible{outline:3px solid rgba(123,79,192,.45);outline-offset:2px}
+#fxb-page .fxb-qz-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+#fxb-page .fxb-qz-counter{display:inline-flex;align-items:center;font-size:13px;font-weight:800;letter-spacing:.06em;color:#5a2d8f;background:#f3eefc;border-radius:99px;padding:6px 14px;margin:0}
+#fxb-page .fxb-qz-pct{font-size:13px;font-weight:700;color:#6b6480;margin:0;font-variant-numeric:tabular-nums}
+#fxb-page .fxb-qz-progress{height:10px;border-radius:99px;background:#eee8f9;overflow:hidden;margin-bottom:22px}
+#fxb-page .fxb-qz-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#7b4fc0,#a86ee0);border-radius:99px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+@media (prefers-reduced-motion:reduce){#fxb-page .fxb-qz-progress-bar,#fxb-page .fxb-qz-btn,#fxb-page .fxb-qz-opt{transition:none}#fxb-page .fxb-qz-quiz.is-anim .fxb-qz-question,#fxb-page .fxb-qz-quiz.is-anim .fxb-qz-options{animation:none}}
+#fxb-page .fxb-qz-question{font-size:24px;font-weight:800;color:#241a36;margin:0 0 22px;line-height:1.35}
+#fxb-page .fxb-qz-options{display:grid;gap:12px}
+#fxb-page .fxb-qz-quiz.is-anim .fxb-qz-question, #fxb-page .fxb-qz-quiz.is-anim .fxb-qz-options{animation:fxbQzIn .26s ease}
+@keyframes fxbQzIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#fxb-page .fxb-qz-opt{display:flex;align-items:center;gap:14px;min-height:58px;padding:14px 18px;border:2px solid #e9e2f6;border-radius:16px;background:#fbfaff;font:inherit;font-size:17px;font-weight:600;text-align:left;cursor:pointer;color:#241a36;transition:transform .15s ease,border-color .15s,background .15s,box-shadow .15s}
+#fxb-page .fxb-qz-letter{display:inline-flex;align-items:center;justify-content:center;flex:none;width:32px;height:32px;border-radius:10px;background:#efe8fa;color:#6b3fa8;font-size:14px;font-weight:800;transition:background .15s,color .15s}
+#fxb-page .fxb-qz-opt:hover{transform:translateY(-2px);border-color:#7b4fc0;background:#fff;box-shadow:0 12px 26px -12px rgba(123,79,192,.45)}
+#fxb-page .fxb-qz-opt:hover .fxb-qz-letter{background:linear-gradient(135deg,#7b4fc0,#5a2d8f);color:#fff}
+#fxb-page .fxb-qz-opt:focus-visible{outline:3px solid rgba(123,79,192,.45);outline-offset:2px}
+#fxb-page .fxb-qz-opt.is-sel{border-color:transparent;background:linear-gradient(135deg,#7b4fc0,#5a2d8f);color:#fff;box-shadow:0 12px 26px -10px rgba(90,45,143,.55)}
+#fxb-page .fxb-qz-opt.is-sel .fxb-qz-letter{background:rgba(255,255,255,.22);color:#fff}
+#fxb-page .fxb-qz-options.is-lock{pointer-events:none}
+#fxb-page .fxb-qz-result{text-align:center;padding:8px 4px}
+#fxb-page .fxb-qz-done-wrap{margin:0 0 18px}
+#fxb-page .fxb-qz-done{display:inline-block;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#2d7a4f;background:#e5f5ec;border-radius:99px;padding:7px 16px}
+#fxb-page .fxb-qz-level{display:inline-block;font-size:30px;font-weight:800;color:#fff;background:linear-gradient(135deg,#7b4fc0,#5a2d8f);border-radius:20px;padding:16px 32px;margin-bottom:16px;box-shadow:0 18px 38px -12px rgba(90,45,143,.5)}
+#fxb-page .fxb-qz-score{font-size:15px;font-weight:600;color:#6b6480;margin:0 0 16px}
+#fxb-page .fxb-qz-text{font-size:17px;line-height:1.65;color:#4a4360;text-align:left;margin:0 0 22px}
+#fxb-page .fxb-qz-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:24px}
+#fxb-page .fxb-qz-links a{display:inline-flex;align-items:center;min-height:46px;padding:8px 20px;border:2px solid #e4ddf3;border-radius:99px;color:#5a2d8f;font-weight:700;text-decoration:none;transition:transform .15s,border-color .15s,background .15s}
+#fxb-page .fxb-qz-links a:hover{transform:translateY(-2px);border-color:#7b4fc0;background:#f6f1fd}
+#fxb-page .fxb-qz-restart{display:inline-block;margin-top:16px;background:none;border:0;color:#6b6480;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+#fxb-page .fxb-qz-restart:hover{color:#5a2d8f}
+@media (max-width:640px){#fxb-page .fxb-qz{padding:28px 18px 24px;border-radius:22px}#fxb-page .fxb-qz-question{font-size:20px}#fxb-page .fxb-qz-level{font-size:24px;padding:14px 24px}#fxb-page .fxb-qz-btn{width:100%}}
+
 </style>
 """
 
@@ -2056,13 +2076,16 @@ TEST_UROVEN_JS = """
   var progress = document.getElementById('fxb-qz-progress');
   var bar = document.getElementById('fxb-qz-bar');
   var counter = document.getElementById('fxb-qz-counter');
+  var pctEl = document.getElementById('fxb-qz-pct');
   var qEl = document.getElementById('fxb-qz-question');
   var optsEl = document.getElementById('fxb-qz-options');
   if (!beginBtn || !qs.length) return;
   var idx = 0, score = 0;
+  var LETTERS = 'ABCDEFGH';
   function showQuestion(){
     var item = qs[idx];
     counter.textContent = 'Вопрос ' + (idx + 1) + ' из ' + qs.length;
+    if (pctEl) pctEl.textContent = Math.round(idx / qs.length * 100) + '%';
     progress.setAttribute('aria-valuenow', String(idx));
     bar.style.width = (idx / qs.length * 100) + '%';
     qEl.textContent = item.q;
@@ -2071,12 +2094,30 @@ TEST_UROVEN_JS = """
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'fxb-qz-opt';
-      b.textContent = opt;
-      b.addEventListener('click', function(){ answer(i); });
+      var chip = document.createElement('span');
+      chip.className = 'fxb-qz-letter';
+      chip.setAttribute('aria-hidden', 'true');
+      chip.textContent = LETTERS[i] || (i + 1);
+      var label = document.createElement('span');
+      label.textContent = opt;
+      b.appendChild(chip);
+      b.appendChild(label);
+      b.addEventListener('click', function(){ pick(b, i); });
       optsEl.appendChild(b);
     });
+    quiz.classList.remove('is-anim');
+    void quiz.offsetWidth;
+    quiz.classList.add('is-anim');
     var first = optsEl.querySelector('button');
     if (first) first.focus();
+  }
+  function pick(btn, i){
+    optsEl.classList.add('is-lock');
+    btn.classList.add('is-sel');
+    window.setTimeout(function(){
+      optsEl.classList.remove('is-lock');
+      answer(i);
+    }, 220);
   }
   function answer(i){
     if (i === qs[idx].answer) score++;
@@ -2093,8 +2134,10 @@ TEST_UROVEN_JS = """
     quiz.hidden = true;
     result.hidden = false;
     bar.style.width = '100%';
+    if (pctEl) pctEl.textContent = '100%';
     var l = levelFor(score);
-    var html = '<div class="fxb-qz-level">' + l.title + '</div>'
+    var html = '<div class="fxb-qz-done-wrap"><span class="fxb-qz-done">Тест пройден</span></div>'
+      + '<div class="fxb-qz-level">' + l.title + '</div>'
       + '<p class="fxb-qz-score">Правильных ответов: ' + score + ' из ' + qs.length + '</p>'
       + '<p class="fxb-qz-text">' + l.text + '</p>'
       + '<div class="fxb-qz-links">'
@@ -2243,13 +2286,14 @@ GOTOV_SECTION = (
     '<p class="fxb-lead">Тест оценивает не «знания», а готовность: внимание, речь, моторику, самостоятельность и общение. Отвечайте по текущей ситуации, а не «как хотелось бы». Это ориентир, а не диагноз.</p></div>'
     '<div class="fxb-qz" id="fxb-qz">'
     '<div class="fxb-qz-start" id="fxb-qz-start">'
+    '<span class="fxb-qz-start-badge">12 вопросов · ~3 минуты</span>'
     '<p class="fxb-qz-start-text">На каждый вопрос три варианта: «Да» (2 балла), «Частично» (1) и «Пока нет» (0). По итогу покажем общую картину и подскажем, что развивать.</p>'
     '<button type="button" class="fxb-btn-main fxb-qz-btn" id="fxb-qz-begin">Начать тест</button>'
     '</div>'
     '<div class="fxb-qz-quiz" id="fxb-qz-quiz" hidden>'
     '<div class="fxb-qz-progress" role="progressbar" aria-label="Прогресс теста" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" id="fxb-qz-progress">'
     '<div class="fxb-qz-progress-bar" id="fxb-qz-bar"></div></div>'
-    '<p class="fxb-qz-counter" id="fxb-qz-counter" aria-live="polite"></p>'
+    '<div class="fxb-qz-top"><p class="fxb-qz-counter" id="fxb-qz-counter" aria-live="polite"></p><p class="fxb-qz-pct" id="fxb-qz-pct" aria-hidden="true"></p></div>'
     '<p class="fxb-qz-question" id="fxb-qz-question"></p>'
     '<div class="fxb-qz-options" id="fxb-qz-options"></div>'
     '</div>'
@@ -2271,26 +2315,47 @@ GOTOV_JS = """
   var progress = document.getElementById('fxb-qz-progress');
   var bar = document.getElementById('fxb-qz-bar');
   var counter = document.getElementById('fxb-qz-counter');
+  var pctEl = document.getElementById('fxb-qz-pct');
   var qEl = document.getElementById('fxb-qz-question');
   var optsEl = document.getElementById('fxb-qz-options');
   if (!beginBtn || !qs.length) return;
   var idx = 0, score = 0;
+  var LETTERS = 'ABCDEFGH';
   function showQuestion(){
     counter.textContent = 'Вопрос ' + (idx + 1) + ' из ' + qs.length;
+    if (pctEl) pctEl.textContent = Math.round(idx / qs.length * 100) + '%';
     progress.setAttribute('aria-valuenow', String(idx));
     bar.style.width = (idx / qs.length * 100) + '%';
     qEl.textContent = qs[idx];
     optsEl.innerHTML = '';
-    OPTS.forEach(function(o){
+    OPTS.forEach(function(o, i){
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'fxb-qz-opt';
-      b.textContent = o[0];
-      b.addEventListener('click', function(){ answer(o[1]); });
+      var chip = document.createElement('span');
+      chip.className = 'fxb-qz-letter';
+      chip.setAttribute('aria-hidden', 'true');
+      chip.textContent = LETTERS[i] || (i + 1);
+      var label = document.createElement('span');
+      label.textContent = o[0];
+      b.appendChild(chip);
+      b.appendChild(label);
+      b.addEventListener('click', function(){ pick(b, o[1]); });
       optsEl.appendChild(b);
     });
+    quiz.classList.remove('is-anim');
+    void quiz.offsetWidth;
+    quiz.classList.add('is-anim');
     var first = optsEl.querySelector('button');
     if (first) first.focus();
+  }
+  function pick(btn, points){
+    optsEl.classList.add('is-lock');
+    btn.classList.add('is-sel');
+    window.setTimeout(function(){
+      optsEl.classList.remove('is-lock');
+      answer(points);
+    }, 220);
   }
   function answer(points){
     score += points;
@@ -2307,8 +2372,10 @@ GOTOV_JS = """
     quiz.hidden = true;
     result.hidden = false;
     bar.style.width = '100%';
+    if (pctEl) pctEl.textContent = '100%';
     var l = levelFor(score);
-    var html = '<div class="fxb-qz-level">' + l.title + '</div>'
+    var html = '<div class="fxb-qz-done-wrap"><span class="fxb-qz-done">Тест пройден</span></div>'
+      + '<div class="fxb-qz-level">' + l.title + '</div>'
       + '<p class="fxb-qz-score">Баллы: ' + score + ' из ' + (qs.length * 2) + '</p>'
       + '<p class="fxb-qz-text">' + l.text + '</p>'
       + '<div class="fxb-qz-links">'
@@ -2508,13 +2575,14 @@ FORMAT_SECTION = (
     '<p class="fxb-lead">Отвечайте как есть, а не «как правильно». Квиз учитывает возраст, цель, логистику, характер ученика, темп и бюджет — и рекомендует один из четырёх форматов Фоксинбурга.</p></div>'
     '<div class="fxb-qz" id="fxb-qz">'
     '<div class="fxb-qz-start" id="fxb-qz-start">'
+    '<span class="fxb-qz-start-badge">7 вопросов · ~2 минуты</span>'
     '<p class="fxb-qz-start-text">Мини-группа очно, индивидуально, онлайн или интенсив? Ошибка в выборе формата стоит потерянного года и потухшего интереса. Потратьте 2 минуты — и выбирайте осознанно.</p>'
     '<button type="button" class="fxb-btn-main fxb-qz-btn" id="fxb-qz-begin">Подобрать формат</button>'
     '</div>'
     '<div class="fxb-qz-quiz" id="fxb-qz-quiz" hidden>'
     '<div class="fxb-qz-progress" role="progressbar" aria-label="Прогресс квиза" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0" id="fxb-qz-progress">'
     '<div class="fxb-qz-progress-bar" id="fxb-qz-bar"></div></div>'
-    '<p class="fxb-qz-counter" id="fxb-qz-counter" aria-live="polite"></p>'
+    '<div class="fxb-qz-top"><p class="fxb-qz-counter" id="fxb-qz-counter" aria-live="polite"></p><p class="fxb-qz-pct" id="fxb-qz-pct" aria-hidden="true"></p></div>'
     '<p class="fxb-qz-question" id="fxb-qz-question"></p>'
     '<div class="fxb-qz-options" id="fxb-qz-options"></div>'
     '</div>'
@@ -2537,10 +2605,12 @@ FORMAT_JS = """
   var progress = document.getElementById('fxb-qz-progress');
   var bar = document.getElementById('fxb-qz-bar');
   var counter = document.getElementById('fxb-qz-counter');
+  var pctEl = document.getElementById('fxb-qz-pct');
   var qEl = document.getElementById('fxb-qz-question');
   var optsEl = document.getElementById('fxb-qz-options');
   if (!beginBtn || !qs.length) return;
   var idx = 0, scores = {}, age = null;
+  var LETTERS = 'ABCDEFGH';
   function reset(){
     idx = 0; age = null;
     scores = {group_offline: 0, individual: 0, online: 0, intensive: 0};
@@ -2549,20 +2619,39 @@ FORMAT_JS = """
   function showQuestion(){
     var item = qs[idx];
     counter.textContent = 'Вопрос ' + (idx + 1) + ' из ' + qs.length;
+    if (pctEl) pctEl.textContent = Math.round(idx / qs.length * 100) + '%';
     progress.setAttribute('aria-valuenow', String(idx));
     bar.style.width = (idx / qs.length * 100) + '%';
     qEl.textContent = item.q;
     optsEl.innerHTML = '';
-    item.options.forEach(function(opt){
+    item.options.forEach(function(opt, i){
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'fxb-qz-opt';
-      b.textContent = opt.t;
-      b.addEventListener('click', function(){ answer(opt); });
+      var chip = document.createElement('span');
+      chip.className = 'fxb-qz-letter';
+      chip.setAttribute('aria-hidden', 'true');
+      chip.textContent = LETTERS[i] || (i + 1);
+      var label = document.createElement('span');
+      label.textContent = opt.t;
+      b.appendChild(chip);
+      b.appendChild(label);
+      b.addEventListener('click', function(){ pick(b, opt); });
       optsEl.appendChild(b);
     });
+    quiz.classList.remove('is-anim');
+    void quiz.offsetWidth;
+    quiz.classList.add('is-anim');
     var first = optsEl.querySelector('button');
     if (first) first.focus();
+  }
+  function pick(btn, opt){
+    optsEl.classList.add('is-lock');
+    btn.classList.add('is-sel');
+    window.setTimeout(function(){
+      optsEl.classList.remove('is-lock');
+      answer(opt);
+    }, 220);
   }
   function answer(opt){
     if (opt.age) age = opt.age;
@@ -2581,11 +2670,13 @@ FORMAT_JS = """
     quiz.hidden = true;
     result.hidden = false;
     bar.style.width = '100%';
+    if (pctEl) pctEl.textContent = '100%';
     progress.setAttribute('aria-valuenow', String(qs.length));
     var key = winner();
     var r = rs[key];
     var links = (key === 'group_offline' && age && ageLinks[age]) ? ageLinks[age] : (r.links || []);
-    var html = '<div class="fxb-qz-level">' + r.title + '</div>'
+    var html = '<div class="fxb-qz-done-wrap"><span class="fxb-qz-done">Квиз пройден</span></div>'
+      + '<div class="fxb-qz-level">' + r.title + '</div>'
       + '<p class="fxb-qz-score">Ориентир по цене: ' + r.price + '</p>'
       + '<p class="fxb-qz-text">' + r.text + '</p>'
       + '<div class="fxb-qz-links">'
