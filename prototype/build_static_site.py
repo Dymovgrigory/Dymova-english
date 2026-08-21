@@ -80,12 +80,24 @@ PAGE_ALIASES = {
     "page_razgovornyj_anglijskij.html": "razgovornyj-anglijskij",
     "page_otzyvy.html": "otzyvy",
     "page_about.html": "about",
+    "page_test_uroven.html": "test-uroven",
+    "page_blog.html": "blog",
+    "page_blog_anglijskij_dlya_detej_3_4_goda.html": "blog-anglijskij-dlya-detej-3-4-goda",
+    "page_blog_kak_nauchit_rebenka_chitat_po_anglijski.html": "blog-kak-nauchit-rebenka-chitat-po-anglijski",
+    "page_blog_rebenok_ne_ponimaet_anglijskij_v_shkole.html": "blog-rebenok-ne-ponimaet-anglijskij-v-shkole",
+    "page_blog_vpr_po_anglijskomu_4_klass.html": "blog-vpr-po-anglijskomu-4-klass",
+    "page_blog_razgovornyj_barjer_u_podrostka.html": "blog-razgovornyj-barjer-u-podrostka",
+    "page_blog_struktura_oge_po_anglijskomu.html": "blog-struktura-oge-po-anglijskomu",
+    "page_blog_gotov_li_rebenok_k_shkole.html": "blog-gotov-li-rebenok-k-shkole",
+    "page_blog_onlajn_ili_oflajn_anglijskij.html": "blog-onlajn-ili-oflajn-anglijskij",
+    "page_blog_kitajskij_dlya_detej.html": "blog-kitajskij-dlya-detej",
+    "page_blog_repetitor_ili_gruppa.html": "blog-repetitor-ili-gruppa",
 }
 
 # Статьи уже несут собственную Article+BreadcrumbList JSON-LD внутри себя
 # (article_jsonld() в build_subpages.py) — им из seo_schema/ ничего не
 # добавляем, чтобы не задвоить разметку.
-ARTICLE_ALIASES = {a for a in PAGE_ALIASES.values() if a.startswith("novosti-")}
+ARTICLE_ALIASES = {a for a in PAGE_ALIASES.values() if a.startswith(("novosti-", "blog-"))}
 
 # alias -> список файлов seo_schema/ (кроме sitewide org_localbusiness.html,
 # который идёт на каждую страницу). Взято из seo_schema/DEPLOY_MAP.md.
@@ -519,6 +531,14 @@ def main() -> None:
     favicon_src = os.path.join(DIR, "favicon.png")
     if os.path.exists(favicon_src):
         shutil.copy(favicon_src, os.path.join(out_dir, "favicon.png"))
+
+    # YML-фиды Яндекс.Вебмастера (сессия 59): feed_education.xml зарегистрирован
+    # в Вебмастере по адресу /feed_education.xml — должен переживать деплой
+    # (rsync --delete). Источник правды — seo_schema/ в репозитории.
+    for feed in ("feed_education.xml", "feed_vacancies.xml"):
+        feed_src = os.path.join(DIR, "seo_schema", feed)
+        if os.path.exists(feed_src):
+            shutil.copy(feed_src, os.path.join(out_dir, feed))
 
     print(f"\nСобрано страниц: {len(written)} -> {out_dir}")
     print(f"robots: {'NOINDEX (стейджинг)' if args.noindex else 'индексируемый (прод)'}")
