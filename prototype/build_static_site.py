@@ -82,6 +82,7 @@ PAGE_ALIASES = {
     "page_about.html": "about",
     "page_test_uroven.html": "test-uroven",
     "page_test_gotov_k_shkole.html": "test-gotov-k-shkole",
+    "page_test_format.html": "test-format",
     "page_blog.html": "blog",
     "page_blog_anglijskij_dlya_detej_3_4_goda.html": "blog-anglijskij-dlya-detej-3-4-goda",
     "page_blog_kak_nauchit_rebenka_chitat_po_anglijski.html": "blog-kak-nauchit-rebenka-chitat-po-anglijski",

@@ -2403,6 +2403,292 @@ PAGES["page_test_gotov_k_shkole.html"] = {
     "cta_text": "Педагог проверит внимание, речь, логику, моторику и самостоятельность в игровом формате и даст конкретный план подготовки.",
 }
 
+# ----------------------------------------------------------------
+# Интерактивный инструмент №3: квиз «Какой формат занятий подойдёт».
+# 7 вопросов, скоринг по 4 форматам: group_offline / individual / online / intensive.
+
+FORMAT_QUESTIONS = [
+    ("Для кого подбираем занятия?", [
+        ("Для ребёнка 3–6 лет", {"group_offline": 2, "intensive": 1}, "pre"),
+        ("Для ребёнка 7–10 лет", {"group_offline": 2, "intensive": 1}, "junior"),
+        ("Для подростка 11–16 лет", {"group_offline": 1, "online": 1, "individual": 1}, "teen"),
+        ("Для взрослого", {"online": 2, "individual": 1}, "adult"),
+    ]),
+    ("Какая цель главная?", [
+        ("Заговорить и полюбить язык", {"group_offline": 2, "online": 1}, None),
+        ("Школьные оценки и экзамены", {"individual": 2, "group_offline": 1}, None),
+        ("Быстрый результат к конкретной дате", {"intensive": 2, "individual": 1}, None),
+        ("Занять ребёнка с пользой", {"intensive": 2, "group_offline": 1}, None),
+    ]),
+    ("Как удобнее добираться?", [
+        ("Живём рядом с Долгопрудным — готовы ездить", {"group_offline": 2}, None),
+        ("Дорога до филиала неудобна", {"online": 2}, None),
+        ("Только из дома, без поездок", {"online": 2, "individual": 1}, None),
+    ]),
+    ("Как ученик лучше включается?", [
+        ("В компании сверстников", {"group_offline": 2, "intensive": 1}, None),
+        ("Наедине с педагогом", {"individual": 2}, None),
+        ("Одинаково в любом окружении", {"group_offline": 1, "individual": 1}, None),
+    ]),
+    ("Какой темп нужен?", [
+        ("Спокойный регулярный, вдолгую", {"group_offline": 1, "online": 1}, None),
+        ("Интенсивный и короткий", {"intensive": 2}, None),
+        ("Максимально гибкий график", {"individual": 1, "online": 1}, None),
+    ]),
+    ("Какой бюджет комфортен?", [
+        ("Оптимальный: максимум пользы за разумные деньги", {"group_offline": 2, "online": 1}, None),
+        ("Средний", {"online": 1, "group_offline": 1}, None),
+        ("Готовы инвестировать в скорость", {"individual": 2, "intensive": 1}, None),
+    ]),
+    ("Когда планируете начать?", [
+        ("Сейчас, в учебном году", {"group_offline": 1, "individual": 1, "online": 1}, None),
+        ("На каникулах или летом", {"intensive": 2}, None),
+        ("Ещё выбираю и присматриваюсь", {}, None),
+    ]),
+]
+
+FORMAT_RESULTS = {
+    "group_offline": {
+        "title": "Мини-группа очно в Долгопрудном",
+        "text": "Ваш профиль — классический для очной мини-группы: есть возможность приезжать, ученик раскрывается рядом со сверстниками, а регулярный темп важнее спринта. В группе 6–8 человек каждый говорит на каждом занятии, а мотивация от компании держится годами. Оба филиала — Лихачёвский 76к1 и Ракетостроителей 9к3.",
+        "price": "от 9000 ₽/мес",
+    },
+    "individual": {
+        "title": "Индивидуальные занятия с педагогом",
+        "text": "Ваши ответы указывают на индивидуальный формат: точечная задача, гибкий график или максимальная концентрация на ученике. Каждая минута занятия работает на вашу цель — пробелы, экзамен, нестандартный темп. Очно в Долгопрудном или онлайн.",
+        "price": "2500 ₽/час",
+    },
+    "online": {
+        "title": "Онлайн-занятия",
+        "text": "Вам подойдёт онлайн-формат: та же коммуникативная методика и те же педагоги, но без дороги и с гибким расписанием. Онлайн-группы у нас миниатюрные — разговорной практики хватает каждому. Удобно и для семей не из Долгопрудного.",
+        "price": "от 9000 ₽/мес",
+    },
+    "intensive": {
+        "title": "Интенсив — Летняя Академия",
+        "text": "Ваш сценарий — интенсив: короткий срок, конкретная цель или желание занять ребёнка с пользой на каникулах. Две недели ежедневного погружения дают эффект нескольких месяцев обычных занятий — и заряд мотивации на весь год.",
+        "price": "расписание и цены — на странице Летней Академии",
+    },
+}
+
+# Ссылки на программы по возрасту из ответа на вопрос №1 (для group_offline)
+FORMAT_AGE_LINKS = {
+    "pre": [("/doshkolniki", "Английский для дошкольников"), ("/mladshie-shkolniki", "Младшим школьникам"), ("/tseny", "Цены")],
+    "junior": [("/mladshie-shkolniki", "Младшим школьникам"), ("/podrostki", "Подросткам"), ("/tseny", "Цены")],
+    "teen": [("/podrostki", "Подросткам"), ("/oge-anglijskij", "Подготовка к ОГЭ"), ("/tseny", "Цены")],
+    "adult": [("/anglijskij-dlya-vzroslyh", "Взрослым"), ("/razgovornyj-anglijskij", "Разговорный курс"), ("/tseny", "Цены")],
+}
+
+FORMAT_FORMAT_LINKS = {
+    "group_offline": None,  # подставляются по возрасту
+    "individual": [("/repetitor", "Индивидуальные занятия"), ("/repetitor-nachalnaya-shkola", "Репетитор: начальная школа"), ("/tseny", "Цены")],
+    "online": [("/online-zanyatiya", "Онлайн-занятия"), ("/podderzhivayushchie-online", "Поддерживающие онлайн"), ("/tseny", "Цены")],
+    "intensive": [("/letnyaya-akademiya", "Летняя Академия"), ("/blog-letnij-intensiv-itogi-i-plany", "Зачем нужен интенсив"), ("/tseny", "Цены")],
+}
+
+FORMAT_PRIORITY = ["group_offline", "online", "individual", "intensive"]
+
+FORMAT_JS_DATA = (
+    "window.FXB_FORMAT_QUESTIONS = " + json.dumps(
+        [{"q": q, "options": [{"t": t, "pts": pts, "age": age} for t, pts, age in opts]}
+         for q, opts in FORMAT_QUESTIONS],
+        ensure_ascii=False) + ";"
+    "window.FXB_FORMAT_RESULTS = " + json.dumps(
+        {k: {"title": v["title"], "text": v["text"], "price": v["price"],
+             "links": FORMAT_FORMAT_LINKS[k]}
+         for k, v in FORMAT_RESULTS.items()},
+        ensure_ascii=False) + ";"
+    "window.FXB_FORMAT_AGE_LINKS = " + json.dumps(FORMAT_AGE_LINKS, ensure_ascii=False) + ";"
+    "window.FXB_FORMAT_PRIORITY = " + json.dumps(FORMAT_PRIORITY, ensure_ascii=False) + ";"
+)
+
+FORMAT_SECTION = (
+    '<section class="fxb-section fxb-bg-light" id="fxb-test"><div class="fxb-wrap">'
+    '<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Квиз-подбор</span>'
+    '<h2 class="fxb-h2">7 вопросов — и вы знаете свой формат</h2>'
+    '<p class="fxb-lead">Отвечайте как есть, а не «как правильно». Квиз учитывает возраст, цель, логистику, характер ученика, темп и бюджет — и рекомендует один из четырёх форматов Фоксинбурга.</p></div>'
+    '<div class="fxb-qz" id="fxb-qz">'
+    '<div class="fxb-qz-start" id="fxb-qz-start">'
+    '<p class="fxb-qz-start-text">Мини-группа очно, индивидуально, онлайн или интенсив? Ошибка в выборе формата стоит потерянного года и потухшего интереса. Потратьте 2 минуты — и выбирайте осознанно.</p>'
+    '<button type="button" class="fxb-btn-main fxb-qz-btn" id="fxb-qz-begin">Подобрать формат</button>'
+    '</div>'
+    '<div class="fxb-qz-quiz" id="fxb-qz-quiz" hidden>'
+    '<div class="fxb-qz-progress" role="progressbar" aria-label="Прогресс квиза" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0" id="fxb-qz-progress">'
+    '<div class="fxb-qz-progress-bar" id="fxb-qz-bar"></div></div>'
+    '<p class="fxb-qz-counter" id="fxb-qz-counter" aria-live="polite"></p>'
+    '<p class="fxb-qz-question" id="fxb-qz-question"></p>'
+    '<div class="fxb-qz-options" id="fxb-qz-options"></div>'
+    '</div>'
+    '<div class="fxb-qz-result" id="fxb-qz-result" hidden aria-live="polite"></div>'
+    '<noscript><p>Для прохождения квиза нужен включённый JavaScript. Подобрать формат можно и на бесплатной консультации — оставьте заявку ниже.</p></noscript>'
+    '</div></div></section>'
+)
+
+FORMAT_JS = """
+<script>
+(function(){
+  var qs = window.FXB_FORMAT_QUESTIONS || [];
+  var rs = window.FXB_FORMAT_RESULTS || {};
+  var ageLinks = window.FXB_FORMAT_AGE_LINKS || {};
+  var priority = window.FXB_FORMAT_PRIORITY || [];
+  var start = document.getElementById('fxb-qz-start');
+  var quiz = document.getElementById('fxb-qz-quiz');
+  var result = document.getElementById('fxb-qz-result');
+  var beginBtn = document.getElementById('fxb-qz-begin');
+  var progress = document.getElementById('fxb-qz-progress');
+  var bar = document.getElementById('fxb-qz-bar');
+  var counter = document.getElementById('fxb-qz-counter');
+  var qEl = document.getElementById('fxb-qz-question');
+  var optsEl = document.getElementById('fxb-qz-options');
+  if (!beginBtn || !qs.length) return;
+  var idx = 0, scores = {}, age = null;
+  function reset(){
+    idx = 0; age = null;
+    scores = {group_offline: 0, individual: 0, online: 0, intensive: 0};
+  }
+  reset();
+  function showQuestion(){
+    var item = qs[idx];
+    counter.textContent = 'Вопрос ' + (idx + 1) + ' из ' + qs.length;
+    progress.setAttribute('aria-valuenow', String(idx));
+    bar.style.width = (idx / qs.length * 100) + '%';
+    qEl.textContent = item.q;
+    optsEl.innerHTML = '';
+    item.options.forEach(function(opt){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fxb-qz-opt';
+      b.textContent = opt.t;
+      b.addEventListener('click', function(){ answer(opt); });
+      optsEl.appendChild(b);
+    });
+    var first = optsEl.querySelector('button');
+    if (first) first.focus();
+  }
+  function answer(opt){
+    if (opt.age) age = opt.age;
+    for (var k in opt.pts){ if (opt.pts.hasOwnProperty(k)) scores[k] += opt.pts[k]; }
+    idx++;
+    if (idx < qs.length) showQuestion(); else showResult();
+  }
+  function winner(){
+    var best = priority[0], bestVal = -1;
+    priority.forEach(function(k){
+      if ((scores[k] || 0) > bestVal){ bestVal = scores[k]; best = k; }
+    });
+    return best;
+  }
+  function showResult(){
+    quiz.hidden = true;
+    result.hidden = false;
+    bar.style.width = '100%';
+    progress.setAttribute('aria-valuenow', String(qs.length));
+    var key = winner();
+    var r = rs[key];
+    var links = (key === 'group_offline' && age && ageLinks[age]) ? ageLinks[age] : (r.links || []);
+    var html = '<div class="fxb-qz-level">' + r.title + '</div>'
+      + '<p class="fxb-qz-score">Ориентир по цене: ' + r.price + '</p>'
+      + '<p class="fxb-qz-text">' + r.text + '</p>'
+      + '<div class="fxb-qz-links">'
+      + links.map(function(ln){ return '<a href="' + ln[0] + '">' + ln[1] + '</a>'; }).join('')
+      + '</div>'
+      + '<a role="button" tabindex="0" class="fxb-btn-main fxb-qz-btn" data-fxb-zayavka data-fxb-subject="Подбор формата занятий" data-fxb-window="Результат теста формата">Проверить выбор на бесплатной диагностике</a>'
+      + '<br><button type="button" class="fxb-qz-restart" id="fxb-qz-again">Пройти ещё раз</button>';
+    result.innerHTML = html;
+    var again = document.getElementById('fxb-qz-again');
+    if (again) again.addEventListener('click', function(){
+      reset();
+      result.hidden = true; result.innerHTML = '';
+      quiz.hidden = false;
+      showQuestion();
+    });
+    result.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
+  beginBtn.addEventListener('click', function(){
+    start.hidden = true;
+    quiz.hidden = false;
+    showQuestion();
+  });
+})();
+</script>
+"""
+
+PAGES["page_test_format.html"] = {
+    "page_class": "fxb-blog-page",
+    "article_css": True,
+    "hero_grad": "linear-gradient(135deg,#2b1a12 0%,#6b3a1e 55%,#8f5a2d 100%)",
+    "eyebrow": "Бесплатно · онлайн · 7 вопросов",
+    "h1": 'Какой формат занятий английского <span class="fxb-accent">выбрать</span>',
+    "sub": "Мини-группа, индивидуально, онлайн или интенсив? Ответьте на 7 вопросов — и квиз подберёт формат под возраст, цель, логистику и бюджет вашей семьи.",
+    "cta_label": "Бесплатная диагностика",
+    "feat_kicker": "Как это работает",
+    "feat_title": "Формат решает половину результата",
+    "feat_lead": "Неподходящий формат — главная причина «занимались год и бросили». Квиз помогает выбрать осознанно, а диагностика с педагогом подтверждает выбор.",
+    "features": [
+        ("check", "7 вопросов, 2 минуты", "Возраст, цель, дорога, характер ученика, темп, бюджет и сроки — без регистрации."),
+        ("target", "Рекомендация формата", "Мини-группа очно, индивидуально, онлайн или интенсив — с пояснением, почему именно он."),
+        ("compass", "Ссылки на программы", "К результату приложены программы под ваш возраст и актуальные цены."),
+        ("chat", "Проверка на диагностике", "Финальное решение подтвердит педагог на бесплатной диагностике — формат видно в деле."),
+    ],
+    "facts_title": "Коротко о квизе",
+    "facts": [
+        ("clock", "2 минуты", "Среднее время прохождения"),
+        ("check", "7 вопросов", "4 формата на выбор"),
+        ("star", "Бесплатно", "Без регистрации"),
+        ("cap", "Все возрасты", "От 3 лет до взрослых"),
+    ],
+    "extra_sections": [
+        FORMAT_SECTION + TEST_UROVEN_CSS
+        + '<script>' + FORMAT_JS_DATA + '</script>'
+        + FORMAT_JS,
+        '<section class="fxb-section"><div class="fxb-wrap"><div class="fxb-article-body">'
+        "<h2>Какие форматы есть в Фоксинбурге</h2>"
+        "<p><b>Мини-группы очно (от 9000 ₽/мес).</b> Основной формат школы: 6–8 человек одного уровня, коммуникативная методика, разговорная практика на каждом занятии. Программы по возрастам: <a href=\"/doshkolniki\">дошкольники</a>, <a href=\"/mladshie-shkolniki\">младшие школьники</a>, <a href=\"/podrostki\">подростки</a> и <a href=\"/anglijskij-dlya-vzroslyh\">взрослые</a>. Оба филиала в Долгопрудном.</p>"
+        "<p><b>Индивидуально (2500 ₽/час).</b> <a href=\"/repetitor\">Занятия с педагогом один на один</a> — для точечных задач: закрыть пробелы, разогнаться к экзамену, гибкий график. Часто оптимальна связка «группа как база + индивидуальный блок под задачу» — об этом статья «<a href=\"/blog-repetitor-ili-gruppa\">Репетитор или группа</a>».</p>"
+        "<p><b>Онлайн (от 9000 ₽/мес).</b> Те же педагоги и методика без дороги: <a href=\"/online-zanyatiya\">онлайн-группы</a> и <a href=\"/podderzhivayushchie-online\">поддерживающие занятия</a> для тех, кто не в Долгопрудном или ценит гибкость.</p>"
+        "<p><b>Интенсив.</b> <a href=\"/letnyaya-akademiya\">Летняя Академия</a> и каникулярные программы: две недели ежедневного погружения дают эффект месяцев — подробности в статье «<a href=\"/blog-letnij-intensiv-itogi-i-plany\">Летний интенсив</a>».</p>"
+        "<h2>Как понять, что формат не подошёл</h2>"
+        "<p>Формат — не приговор: у нас его можно сменить бесплатно, программа единая, педагоги передают контекст. Но раньше — лучше. Тревожные признаки за первые 1–2 месяца:</p>"
+        "<ul>"
+        "<li>ребёнок ходит без удовольствия, домашние задания — битва;</li>"
+        "<li>на вопрос «что нового узнал?» ответа нет;</li>"
+        "<li>в группе скучно (сильнее одногруппников) или тревожно (слабее);</li>"
+        "<li>дорога отнимает больше сил, чем даёт занятие — смотрите в сторону онлайн.</li>"
+        "</ul>"
+        "<p>Любой из этих сигналов — повод прийти к администратору и обсудить смену формата или группы: это штатная ситуация, а не жалоба. Актуальные цены на все форматы — на странице <a href=\"/tseny\">цен</a>.</p>"
+        '<div class="fxb-related"><h2>Полезное по теме</h2><div class="fxb-related-list">'
+        '<a href="/tseny">Цены на программы</a>'
+        '<a href="/test-uroven">Тест уровня английского</a>'
+        '<a href="/online-zanyatiya">Онлайн-занятия</a>'
+        '<a href="/repetitor">Индивидуальные занятия</a>'
+        "</div></div>"
+        "</div></div></section>",
+    ],
+    "faq_title": "Частые вопросы про форматы",
+    "faq": [
+        ("Можно ли сменить формат потом?", "Да, бесплатно. Программа единая для всех форматов, педагоги передают контекст друг другу — переход из группы в индивидуальный формат или онлайн (и обратно) проходит безболезненно. Такой переход — штатная ситуация, например перед ОГЭ часть учеников уходит на индивидуальный блок и возвращается."),
+        ("Что эффективнее — группа или индивидуально?", "Зависит от задачи. Для долгосрочного развития языка и разговорной практики эффективнее мини-группа: живая речь со сверстниками и мотивация. Для точечных пробелов и сжатых сроков быстрее индивидуальный формат. Часто оптимум — группа как основа плюс короткий индивидуальный блок."),
+        ("Онлайн хуже офлайна?", "Нет, если группа маленькая и методика коммуникативная: наши онлайн-занятия ведут те же педагоги по той же программе, а размер групп такой же миниатюрный. Онлайн проигрывает только в одном — детям дошкольного возраста важен живой контакт и подвижные игры, им мы рекомендуем офлайн."),
+        ("Сколько стоит каждый формат?", "Мини-группы очно и онлайн — от 9000 ₽ в месяц, индивидуальные занятия — 2500 ₽ в час, пробное занятие — 1125 ₽. Обучение можно оплатить маткапиталом и вернуть 13% налоговым вычетом — школа работает по образовательной лицензии. Актуальные тарифы — на странице цен."),
+    ],
+    "extra_jsonld": [
+        webpage_jsonld(
+            "WebPage",
+            "Какой формат занятий английского выбрать — квиз",
+            "Бесплатный онлайн-квиз Фоксинбурга: 7 вопросов — и вы знаете, какой формат подойдёт: мини-группа очно в Долгопрудном, индивидуальные занятия, онлайн или интенсив. С ценами и ссылками на программы.",
+            SITE + "/test-format",
+        ),
+        breadcrumb_jsonld([
+            ("Главная", SITE + "/"),
+            ("Тест: какой формат выбрать", SITE + "/test-format"),
+        ]),
+    ],
+    "lead_subject": "Подбор формата занятий",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
+    "cta_title": 'Подтвердите выбор на <span class="fxb-accent">бесплатной диагностике</span>',
+    "cta_text": "Педагог определит уровень, посмотрит ученика в деле и честно скажет, какой формат решит вашу задачу — группа, индивидуально, онлайн или интенсив.",
+}
+
 PAGES["page_otzyvy.html"] = {
     "page_class": "fxb-blog-page",
     "article_css": True,
