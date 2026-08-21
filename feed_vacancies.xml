@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<yml_catalog date="2026-08-22 12:00">
+<yml_catalog date="2026-08-22 20:00">
   <shop>
     <name>Языковая школа «Фоксинбург»</name>
     <company>ИП Дымова Вероника Александровна</company>
@@ -28,7 +28,7 @@
         <categoryId>1</categoryId>
         <set-ids>s-vacancies</set-ids>
         <picture>https://dymova-english.ru/assets/brand/fox-head-yellow.webp</picture>
-        <price from="true">45000</price>
+        <price from="true">50000</price>
         <currencyId>RUR</currencyId>
         <param name="Конверсия">10</param>
         <param name="Тип зарплаты">гросс</param>
@@ -37,7 +37,7 @@
         <param name="Регион">Московская область, Долгопрудный</param>
         <param name="Сайт работодателя">https://dymova-english.ru/</param>
         <sales_notes>в месяц</sales_notes>
-        <description>Авторская программа для дошкольников и младших школьников. Официальное трудоустройство, оплачиваемое обучение методике, дружный коллектив и поддержка методиста. Зарплата зависит от нагрузки.</description>
+        <description>Авторская программа для дошкольников и младших школьников. Официальное трудоустройство, оплачиваемое обучение методике, дружный коллектив и поддержка методиста. Зарплата 50 000–120 000 ₽ в месяц, зависит от нагрузки.</description>
       </offer>
       <offer id="vac-admin-school">
         <name>Администратор языковой школы</name>
@@ -46,7 +46,7 @@
         <categoryId>1</categoryId>
         <set-ids>s-vacancies</set-ids>
         <picture>https://dymova-english.ru/assets/og-cover.png</picture>
-        <price from="true">45000</price>
+        <price from="true">55000</price>
         <currencyId>RUR</currencyId>
         <param name="Конверсия">10</param>
         <param name="Тип зарплаты">гросс</param>
@@ -56,7 +56,7 @@
         <param name="Регион">Московская область, Долгопрудный</param>
         <param name="Сайт работодателя">https://dymova-english.ru/</param>
         <sales_notes>в месяц</sales_notes>
-        <description>Филиал на пр. Ракетостроителей 9к3 или Лихачевский 76к1. Встреча клиентов, консультирование по программам, документооборот и расписание, коммуникация с родителями. От 45 000 ₽ + бонусы.</description>
+        <description>Филиал на пр. Ракетостроителей 9к3 или Лихачевский 76к1. Встреча клиентов, консультирование по программам, документооборот и расписание, коммуникация с родителями. Зарплата 55 000–70 000 ₽ в месяц + бонусы.</description>
       </offer>
       <offer id="vac-teacher-french">
         <name>Преподаватель французского языка</name>
@@ -65,7 +65,7 @@
         <categoryId>1</categoryId>
         <set-ids>s-vacancies</set-ids>
         <picture>https://dymova-english.ru/gallery/class-light.webp</picture>
-        <price from="true">45000</price>
+        <price from="true">50000</price>
         <currencyId>RUR</currencyId>
         <param name="Конверсия">10</param>
         <param name="Тип зарплаты">гросс</param>
@@ -74,7 +74,7 @@
         <param name="Регион">Московская область, Долгопрудный</param>
         <param name="Сайт работодателя">https://dymova-english.ru/</param>
         <sales_notes>в месяц</sales_notes>
-        <description>Занятия французским языком для детей и подростков в языковой школе «Фоксинбург». Официальное трудоустройство, дружный коллектив и поддержка методиста. Зарплата зависит от нагрузки.</description>
+        <description>Занятия французским языком для детей и подростков в языковой школе «Фоксинбург». Официальное трудоустройство, дружный коллектив и поддержка методиста. Зарплата 50 000–120 000 ₽ в месяц, зависит от нагрузки.</description>
       </offer>
     </offers>
   </shop>
