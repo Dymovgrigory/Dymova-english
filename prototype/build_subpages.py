@@ -169,6 +169,17 @@ CSS = """
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs ol{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0;padding:0;list-style:none}
+#fxb-page .fxb-breadcrumbs li{display:inline-flex;align-items:center;gap:8px;margin:0}
+#fxb-page .fxb-breadcrumbs li+li::before{content:'→';color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
+#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
+#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
+#fxb-page .fxb-hero .fxb-breadcrumbs{margin:0 auto 20px;color:rgba(255,255,255,.82)}
+#fxb-page .fxb-hero .fxb-breadcrumbs a{color:#fff}
+#fxb-page .fxb-hero .fxb-breadcrumbs a:hover{color:#fcf951}
+#fxb-page .fxb-hero .fxb-breadcrumbs span,#fxb-page .fxb-hero .fxb-breadcrumbs li+li::before{color:rgba(255,255,255,.72)}
 </style>
 """
 
@@ -303,10 +314,6 @@ ARTICLE_CSS = """
 #fxb-page.fxb-blog-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
 #fxb-page.fxb-blog-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
 #fxb-page.fxb-blog-page .fxb-article-body a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
-#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
-#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
 #fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
 #fxb-page .fxb-related h2{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:14px}
 #fxb-page .fxb-related-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -572,6 +579,11 @@ def landing_page(p):
     h.append('<section class="fxb-hero" style="background:' + grad + '">')
     h.append('<div class="fxb-hero-bg"><img class="fxb-hd1" src="' + DECOR_SWIRL + '" alt="" loading="lazy"><img class="fxb-hd2" src="' + DECOR_FOX + '" alt="" loading="lazy"></div>')
     h.append('<div class="fxb-hero-inner">')
+    # Видимые хлебные крошки с микроразметкой (сессия 62) — из того же
+    # BreadcrumbList, что уходит в JSON-LD: единый источник правды.
+    _crumbs = crumbs_from_extra(p.get("extra_jsonld"))
+    if _crumbs:
+        h.append(crumbs_nav(_crumbs))
     h.append('<span class="fxb-eyebrow"><span class="fxb-dot"></span>' + p["eyebrow"] + '</span>')
     h.append('<h1 class="fxb-h1">' + p["h1"] + '</h1>')
     h.append('<p class="fxb-sub">' + p["sub"] + '</p>')
@@ -682,6 +694,43 @@ def faq_jsonld(items):
     }
     return ('<script type="application/ld+json">'
             + json.dumps(faq, ensure_ascii=False) + '</script>')
+
+
+def crumbs_nav(items):
+    """Видимые хлебные крошки с микроразметкой Schema.org (нужна Яндексу
+    для навигационной цепочки в выдаче). items: [(name, url|None), ...]."""
+    lis = []
+    for i, (name, url) in enumerate(items):
+        pos = '<meta itemprop="position" content="' + str(i + 1) + '">'
+        if url:
+            inner = ('<a itemprop="item" href="' + escape(url, quote=True) + '">'
+                     '<span itemprop="name">' + escape(name) + '</span></a>' + pos)
+        else:
+            inner = '<span itemprop="name">' + escape(name) + '</span>' + pos
+        lis.append('<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">' + inner + '</li>')
+    return ('<nav class="fxb-breadcrumbs" aria-label="Хлебные крошки">'
+            '<ol itemscope itemtype="https://schema.org/BreadcrumbList">'
+            + ''.join(lis) + '</ol></nav>')
+
+
+def crumbs_from_extra(extra_jsonld):
+    """Достаёт [(name, url), ...] из BreadcrumbList JSON-LD (сессия 62):
+    видимые крошки строятся из того же источника, что и разметка."""
+    for schema_html in extra_jsonld or []:
+        m = re.search(r'<script type="application/ld\+json">(.*?)</script>', schema_html, re.S)
+        if not m:
+            continue
+        try:
+            d = json.loads(m.group(1))
+        except ValueError:
+            continue
+        if d.get("@type") == "BreadcrumbList":
+            items = [(el.get("name", ""), el.get("item")) for el in d.get("itemListElement", [])]
+            # последний пункт — текущая страница: в видимых крошках без ссылки
+            if items:
+                items[-1] = (items[-1][0], None)
+            return items
+    return None
 
 
 def breadcrumb_jsonld(items):
@@ -796,6 +845,9 @@ def feed_page(p):
     h.append('<section class="fxb-hero" style="background:' + p["hero_grad"] + '">')
     h.append('<div class="fxb-hero-bg"><img class="fxb-hd1" src="' + DECOR_SWIRL + '" alt="" loading="lazy"><img class="fxb-hd2" src="' + DECOR_FOX + '" alt="" loading="lazy"></div>')
     h.append('<div class="fxb-hero-inner">')
+    _crumbs = crumbs_from_extra(p.get("extra_jsonld"))
+    if _crumbs:
+        h.append(crumbs_nav(_crumbs))
     h.append('<span class="fxb-eyebrow"><span class="fxb-dot"></span>' + p["eyebrow"] + '</span>')
     h.append('<h1 class="fxb-h1">' + p["h1"] + '</h1>')
     h.append('<p class="fxb-sub">' + p["sub"] + '</p>')
@@ -833,7 +885,7 @@ def article_page(p):
     h.append('<div class="fxb-article-meta"><span>' + escape(format_date_ru(p["date"])) + '</span><span>' + escape(p["reading_time"]) + '</span></div>')
     h.append('</div></section>')
     h.append('<section class="fxb-section"><div class="fxb-wrap">')
-    h.append('<nav class="fxb-breadcrumbs"><a href="/">Главная</a><span>→</span><a href="/' + escape(p.get("feed_alias", "novosti"), quote=True) + '">' + escape(p.get("feed_label", "Новости")) + '</a><span>→</span><span>' + escape(p["title"]) + '</span></nav>')
+    h.append(crumbs_nav([("Главная", "/"), (p.get("feed_label", "Новости"), "/" + p.get("feed_alias", "novosti")), (p["title"], None)]))
     pre_blocks, prose_html = render_article_body(p["body"])
     for block in pre_blocks:
         h.append(block)

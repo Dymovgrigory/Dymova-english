@@ -175,6 +175,45 @@ def read_schema(fname: str) -> str:
         return f.read()
 
 
+def crumbs_nav_html(items: list) -> str:
+    """Видимые хлебные крошки с микроразметкой Schema.org (сессия 62).
+    items: [(name, url|None), ...] — последний пункт без ссылки."""
+    lis = []
+    for i, (name, url) in enumerate(items):
+        pos = f'<meta itemprop="position" content="{i + 1}">'
+        if url:
+            inner = (f'<a itemprop="item" href="{url}">'
+                     f'<span itemprop="name">{name}</span></a>' + pos)
+        else:
+            inner = f'<span itemprop="name">{name}</span>' + pos
+        lis.append('<li itemprop="itemListElement" itemscope '
+                   'itemtype="https://schema.org/ListItem">' + inner + '</li>')
+    return ('<nav class="fxb-breadcrumbs" aria-label="Хлебные крошки">'
+            '<ol itemscope itemtype="https://schema.org/BreadcrumbList">'
+            + "".join(lis) + '</ol></nav>')
+
+
+def crumbs_from_schema_files(fnames: list) -> list | None:
+    """Достаёт пункты BreadcrumbList из seo_schema/breadcrumb_*.html."""
+    for fname in fnames:
+        if "breadcrumb" not in fname:
+            continue
+        m = re.search(r"<script[^>]*>(.*?)</script>", read_schema(fname), re.S)
+        if not m:
+            continue
+        try:
+            d = json.loads(m.group(1))
+        except ValueError:
+            continue
+        if d.get("@type") == "BreadcrumbList":
+            items = [(el.get("name", ""), el.get("item"))
+                     for el in d.get("itemListElement", [])]
+            if items:
+                items[-1] = (items[-1][0], None)
+            return items
+    return None
+
+
 # Self-hosted Montserrat (сессия 47): вместо блокирующих <link> на
 # fonts.googleapis.com во всех шаблонах — @font-face инлайном в <head>
 # каждой страницы. Файлы — variable font (кириллица 21 КБ, латиница 35 КБ)
@@ -418,6 +457,19 @@ def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, no
         extra_schema = []  # уже есть собственная Article+BreadcrumbList
         og_type = "article"
     head = build_head(alias, title, description, canonical, noindex, extra_schema, og_type)
+    # Видимые хлебные крошки для страниц, чей BreadcrumbList живёт в seo_schema/
+    # (курсы из SCHEMA_MAP). У лендингов из build_subpages крошки уже в контенте.
+    if alias != "index" and '<nav class="fxb-breadcrumbs"' not in content:
+        crumbs = crumbs_from_schema_files(extra_schema)
+        if crumbs and '<div class="fxb-hero-inner">' in content:
+            content = content.replace(
+                '<div class="fxb-hero-inner">',
+                '<div class="fxb-hero-inner">' + crumbs_nav_html(crumbs), 1)
+        elif crumbs and '<span class="fxb-eyebrow">' in content:
+            # кастомные страницы без fxb-hero-inner (например, kontakty)
+            content = content.replace(
+                '<span class="fxb-eyebrow">',
+                crumbs_nav_html(crumbs) + '<span class="fxb-eyebrow">', 1)
     body = content if alias == "index" else (shapka + "\n" + content + "\n" + footer)
     return (
         "<!DOCTYPE html>\n"
