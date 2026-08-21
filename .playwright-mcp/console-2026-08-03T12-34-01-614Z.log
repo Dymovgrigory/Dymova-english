@@ -1,0 +1,2 @@
+[     105ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8123/favicon.ico:0
+[    1725ms] [INFO] [foxi] skeletal-режим v2, клипы: Big_Wave_Hello, Cheer_with_Both_Hands_Up, Happy_jump_f, Running, Shake_It_Off_Dance, Walking @ http://localhost:8123/mascot/mascot.js:328

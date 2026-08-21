@@ -1,0 +1,119 @@
+- generic [active] [ref=f1e1]:
+  - navigation [ref=f1e3]:
+    - navigation [ref=f1e4]:
+      - link [ref=f1e22] [cursor=pointer]:
+        - /url: https://tilda.ru/projects/
+      - generic [ref=f1e28]:
+        - link "Мои сайты" [ref=f1e29] [cursor=pointer]:
+          - /url: https://tilda.ru/projects/
+        - link "CRM" [ref=f1e30] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/gocrm/
+        - link "Тарифы и оплата" [ref=f1e31] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/plan/
+        - link "Профиль" [ref=f1e32] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/
+        - link "Домены" [ref=f1e33] [cursor=pointer]:
+          - /url: https://tilda.ru/domains/
+        - link "Учебники" [ref=f1e34] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/courses/
+      - generic [ref=f1e35]:
+        - link "Справочный центр" [ref=f1e36] [cursor=pointer]:
+          - /url: https://help-ru.tilda.cc
+        - link "Вебинары" [ref=f1e37] [cursor=pointer]:
+          - /url: https://webinars.tilda.cc/ru
+        - link "Уроки и статьи" [ref=f1e38] [cursor=pointer]:
+          - /url: https://tilda.education
+        - link "(Вероник..)" [ref=f1e39] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/
+        - link "Выйти" [ref=f1e40] [cursor=pointer]:
+          - /url: https://tilda.ru/login/exit/
+  - generic [ref=f1e43]:
+    - generic [ref=f1e44]:
+      - link "⚡ CMS Потоки 2.0. Для удобного управления контентом и быстрого создания многостраничных сайтов Смотреть" [ref=f1e45] [cursor=pointer]:
+        - /url: https://tilda.ru/ru/lp/feeds/
+        - generic [ref=f1e46]: ⚡ CMS Потоки 2.0. Для удобного управления контентом и быстрого создания многостраничных сайтов
+        - generic [ref=f1e47]: Смотреть
+      - button [ref=f1e48] [cursor=pointer]
+    - generic [ref=f1e50]:
+      - generic [ref=f1e51]: "Мои проекты:"
+      - generic [ref=f1e52]:
+        - generic [ref=f1e53] [cursor=pointer]: Создать новый сайт
+        - generic [ref=f1e58] [cursor=pointer]: Ещё
+    - generic [ref=f1e63]:
+      - generic [ref=f1e65]:
+        - link "Языковая школа Фоксинбург (Foxy Fox) Языковая школа Фоксинбург в Долгопрудном для детей и взрослых. Групповые и индивидуальные занятия. Оффлайн и онлайн формат. Подготовим детей к школьному английскому, ВПР, ОГЭ и ЕГЭ." [ref=f1e66] [cursor=pointer]:
+          - /url: /projects/?projectid=2053071
+          - generic [ref=f1e67]: Языковая школа Фоксинбург (Foxy Fox)
+          - generic [ref=f1e68]: Языковая школа Фоксинбург в Долгопрудном для детей и взрослых. Групповые и индивидуальные занятия. Оффлайн и онлайн формат. Подготовим детей к школьному английскому, ВПР, ОГЭ и ЕГЭ.
+        - generic [ref=f1e71]:
+          - link "Редактировать сайт" [ref=f1e72] [cursor=pointer]:
+            - /url: /projects/?projectid=2053071
+          - link "https://dymova-english.ru" [ref=f1e79] [cursor=pointer]:
+            - /url: https://dymova-english.ru
+      - generic [ref=f1e86]:
+        - link "Школа Foxy Fox" [ref=f1e87] [cursor=pointer]:
+          - /url: /projects/?projectid=10311715
+        - generic [ref=f1e92]:
+          - link "Редактировать сайт" [ref=f1e93] [cursor=pointer]:
+            - /url: /projects/?projectid=10311715
+          - link "http://фоксифокс.рф" [ref=f1e100] [cursor=pointer]:
+            - /url: http://xn--h1adbncqdre.xn--p1ai
+      - generic [ref=f1e107]:
+        - link "Фоксинбург (Foxy Fox) ONLINE" [ref=f1e108] [cursor=pointer]:
+          - /url: /projects/?projectid=13222197
+        - generic [ref=f1e113]:
+          - link "Редактировать сайт" [ref=f1e114] [cursor=pointer]:
+            - /url: /projects/?projectid=13222197
+          - link "https://foxy-fox-online.ru" [ref=f1e121] [cursor=pointer]:
+            - /url: https://foxy-fox-online.ru
+  - generic [ref=f1e128]:
+    - generic [ref=f1e133]:
+      - link [ref=f1e135] [cursor=pointer]:
+        - /url: https://twitter.com/TildaPublishing
+      - link [ref=f1e141] [cursor=pointer]:
+        - /url: https://vk.com/tildapublishing
+      - link [ref=f1e145] [cursor=pointer]:
+        - /url: https://www.youtube.com/channel/UC6-ppjYyf8AmvNuwr28CS_w
+      - link [ref=f1e149] [cursor=pointer]:
+        - /url: https://t.me/tildanews
+    - list [ref=f1e157]:
+      - listitem [ref=f1e158]:
+        - link "Тильда Паблишинг" [ref=f1e159] [cursor=pointer]:
+          - /url: https://tilda.ru/ru/
+      - listitem [ref=f1e160]:
+        - link "Тарифы" [ref=f1e161] [cursor=pointer]:
+          - /url: https://tilda.ru/ru/pricing/
+      - listitem [ref=f1e162]:
+        - link "Шаблоны" [ref=f1e163] [cursor=pointer]:
+          - /url: https://tilda.ru/ru/tpls/
+      - listitem [ref=f1e164]:
+        - link "#madeontilda" [ref=f1e165] [cursor=pointer]:
+          - /url: https://tilda.ru/ru/madeontilda/
+      - listitem [ref=f1e166]:
+        - link "Блог" [ref=f1e167] [cursor=pointer]:
+          - /url: http://blog.tilda.cc/
+      - listitem [ref=f1e168]:
+        - link "Вакансии" [ref=f1e169] [cursor=pointer]:
+          - /url: https://company.tilda.cc/ru/
+      - listitem [ref=f1e170]:
+        - link "Найти дизайнера" [ref=f1e171] [cursor=pointer]:
+          - /url: https://experts.tilda.cc/ru/
+      - listitem [ref=f1e172]:
+        - link "Обучение" [ref=f1e173] [cursor=pointer]:
+          - /url: http://tilda.education
+      - listitem [ref=f1e174]:
+        - link "Помощь" [ref=f1e175] [cursor=pointer]:
+          - /url: https://help-ru.tilda.cc
+    - generic [ref=f1e177]:
+      - text: "Если у вас есть вопросы, пожалуйста, пишите:"
+      - link "team@tilda.ru" [ref=f1e178] [cursor=pointer]:
+        - /url: mailto:team@tilda.ru
+      - link "Пользовательское соглашение" [ref=f1e179] [cursor=pointer]:
+        - /url: https://tilda.ru/ru/terms/
+      - text: и
+      - link "Политика конфиденциальности" [ref=f1e180] [cursor=pointer]:
+        - /url: https://tilda.ru/ru/privacy/
+  - generic [ref=f1e187]:
+    - paragraph [ref=f1e194] [cursor=pointer]: 🆕 Основы работы с CMS Потоками 2.0
+    - paragraph [ref=f1e196] [cursor=pointer]: 🌐 Как поисковые системы оценивают сайты?
+    - paragraph [ref=f1e198] [cursor=pointer]: ⚡Как создать динамичную анимацию по скроллу в Zero Block?

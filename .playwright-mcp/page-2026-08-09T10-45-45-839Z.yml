@@ -1,0 +1,175 @@
+- generic [ref=f46e1]:
+  - generic [ref=f46e2]:
+    - complementary [ref=f46e155]:
+      - link "Фоксинбург Фоксинбург" [ref=f46e157] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f46e158]
+        - generic [ref=f46e159]: Фоксинбург
+      - navigation "Основная навигация" [ref=f46e160]:
+        - generic [ref=f46e161]:
+          - generic [ref=f46e163]:
+            - link "Главная" [ref=f46e164] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f46e171] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f46e176] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f46e180] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f46e184] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f46e190] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f46e195] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f46e200] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f46e208] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f46e212] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f46e216] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f46e221] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f46e224] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f46e229] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f46e235] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f46e242]:
+            - link "Моя команда" [ref=f46e243] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f46e250] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f46e255] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f46e260]:
+            - paragraph [ref=f46e262]: Студия
+            - generic [ref=f46e263]:
+              - link "Студия" [ref=f46e264] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f46e269] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f46e272] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Медиатека" [ref=f46e278] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f46e285]:
+            - paragraph [ref=f46e287]: Админка
+            - generic [ref=f46e288]:
+              - link "Админка" [ref=f46e289] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f46e294] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Аналитика · графики" [ref=f46e299] [cursor=pointer]:
+                - /url: /analytics
+              - link "Заявки на обучение" [ref=f46e305] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f46e309] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f46e314] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f46e319] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f46e324] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f46e328] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Страницы" [ref=f46e333] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Мероприятия" [ref=f46e338] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f46e342] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f46e347] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f46e352] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f46e357] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f46e363] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f46e370] [cursor=pointer]
+    - banner [ref=f46e3]:
+      - generic [ref=f46e6]:
+        - button "Поиск и команды (Ctrl K)" [ref=f46e7] [cursor=pointer]
+        - button "Уведомления" [ref=f46e9] [cursor=pointer]
+        - combobox "Язык" [ref=f46e12]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [active] [ref=f46e13] [cursor=pointer]
+        - button "Меню пользователя" [ref=f46e14] [cursor=pointer]:
+          - generic [ref=f46e15]: Г
+    - main [ref=f46e17]:
+      - generic [ref=f46e19]:
+        - generic [ref=f46e20]:
+          - generic [ref=f46e21]:
+            - heading "Аналитика" [level=1] [ref=f46e22]
+            - paragraph [ref=f46e23]: Интерактивный обзор по доменам школы. Период применяется ко всем графикам.
+          - generic [ref=f46e24]:
+            - generic [ref=f46e25]:
+              - button "7 дней" [ref=f46e26] [cursor=pointer]
+              - button "30 дней" [ref=f46e27] [cursor=pointer]
+              - button "90 дней" [ref=f46e28] [cursor=pointer]
+              - button "12 мес" [ref=f46e29] [cursor=pointer]
+            - generic [ref=f46e30]:
+              - textbox "Дата с" [ref=f46e31]: 2026-06-01
+              - generic [ref=f46e32]: —
+              - textbox "Дата по" [ref=f46e33]: 2026-08-09
+            - generic [ref=f46e34]: 2026-06-01 — 2026-08-09
+        - navigation "Разделы аналитики" [ref=f46e35]:
+          - link "Обзор" [ref=f46e36] [cursor=pointer]:
+            - /url: /analytics
+          - link "Обучение" [ref=f46e37] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "Люди" [ref=f46e38] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Финансы" [ref=f46e39] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f46e40]:
+          - generic [ref=f46e41]:
+            - generic [ref=f46e118]:
+              - term [ref=f46e119]: Выручка за период
+              - definition [ref=f46e120]: 0 ₽
+            - generic [ref=f46e121]:
+              - term [ref=f46e122]: Оплаченных заказов
+              - definition [ref=f46e123]: "0"
+            - generic [ref=f46e124]:
+              - term [ref=f46e125]: Записей на курсы
+              - definition [ref=f46e126]: "15"
+            - generic [ref=f46e127]:
+              - term [ref=f46e128]: Уникальных учеников
+              - definition [ref=f46e129]: "14"
+            - generic [ref=f46e130]:
+              - term [ref=f46e131]: Средний прогресс
+              - definition [ref=f46e132]: 38,8%
+            - generic [ref=f46e133]:
+              - term [ref=f46e134]: Проходимость тестов
+              - definition [ref=f46e135]: 0%
+          - generic [ref=f46e51]:
+            - generic [ref=f46e52]:
+              - heading "Выручка по месяцам" [level=2] [ref=f46e53]
+              - paragraph [ref=f46e54]: Подтверждённые оплаты, помесячно (значения в рублях)
+              - paragraph [ref=f46e136]: Нет данных за выбранный период
+            - generic [ref=f46e59]:
+              - heading "Активные пользователи" [level=2] [ref=f46e60]
+              - paragraph [ref=f46e61]: Уникальные пользователи с активностью, помесячно
+              - img "Активные пользователи" [ref=f46e137]:
+                - generic [ref=f46e138]: "0"
+                - generic [ref=f46e140]: "5"
+                - generic [ref=f46e142]: "10"
+                - generic [ref=f46e144]: "15"
+                - 'generic "июнь 26 г.: 1" [ref=f46e148]'
+                - 'generic "июль 26 г.: 12" [ref=f46e149]'
+                - 'generic "авг. 26 г.: 6" [ref=f46e150]'
+                - generic [ref=f46e151]: июнь 26 г.
+                - generic [ref=f46e152]: июль 26 г.
+                - generic [ref=f46e153]: авг. 26 г.
+          - generic [ref=f46e66]:
+            - heading "Результаты тестов" [level=2] [ref=f46e67]
+            - paragraph [ref=f46e68]: Доля успешных попыток за период
+            - paragraph [ref=f46e154]: Нет данных за выбранный период
+  - button "Open Next.js Dev Tools" [ref=f46e78] [cursor=pointer]
+  - alert [ref=f46e82]

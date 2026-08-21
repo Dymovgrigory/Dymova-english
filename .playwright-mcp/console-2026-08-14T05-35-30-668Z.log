@@ -1,0 +1,13 @@
+[  839350ms] [LOG] [Telegram.WebView] > postEvent web_app_set_header_color {color_key: bg_color} @ https://telegram.org/js/telegram-web-app.js:134
+[  839351ms] [LOG] [Telegram.WebView] > postEvent web_app_set_bottom_bar_color {color: #ffffff} @ https://telegram.org/js/telegram-web-app.js:134
+[  839351ms] [LOG] [Telegram.WebView] > postEvent web_app_request_theme  @ https://telegram.org/js/telegram-web-app.js:134
+[  839351ms] [LOG] [Telegram.WebView] > postEvent web_app_request_viewport  @ https://telegram.org/js/telegram-web-app.js:134
+[  839351ms] [LOG] [Telegram.WebView] > postEvent web_app_request_safe_area  @ https://telegram.org/js/telegram-web-app.js:134
+[  839351ms] [LOG] [Telegram.WebView] > postEvent web_app_request_content_safe_area  @ https://telegram.org/js/telegram-web-app.js:134
+[  839404ms] [LOG] [Telegram.WebView] > postEvent web_app_ready  @ https://telegram.org/js/telegram-web-app.js:134
+[  839404ms] [LOG] [Telegram.WebView] > postEvent web_app_expand  @ https://telegram.org/js/telegram-web-app.js:134
+[  839404ms] [WARNING] [Telegram.WebApp] Changing swipes behavior is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:607
+[  839404ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[  839405ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[  839416ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:8199/tg/vendor/three/three.module.min.js:0
+[  839416ms] [WARNING] [foxi] 3D не загрузился, остаётся статичный маскот TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8199/tg/vendor/three/three.module.min.js @ http://127.0.0.1:8199/tg/mascot.js:216

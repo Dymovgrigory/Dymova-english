@@ -1,0 +1,21 @@
+- main [ref=f1e2]:
+  - generic [ref=f1e37]:
+    - heading "Подобрать курс" [level=2] [ref=f1e38]
+    - paragraph [ref=f1e39]: Сдвиньте линейку к возрасту ученика — покажу подходящие программы.
+    - generic [ref=f1e40]:
+      - slider "Возраст ученика" [ref=f1e41] [cursor=pointer]: "9"
+      - generic [ref=f1e42]:
+        - generic [ref=f1e43]: "3"
+        - generic [ref=f1e44]: "7"
+        - generic [ref=f1e45]: "11"
+        - generic [ref=f1e46]: "15"
+        - generic [ref=f1e47]: взрослым
+      - status [ref=f1e48]: 9 лет
+    - radiogroup "Формат занятий" [ref=f1e49]:
+      - button "Любой" [ref=f1e50] [cursor=pointer]
+      - button "Офлайн" [ref=f1e51] [cursor=pointer]
+      - button "Онлайн" [ref=f1e52] [cursor=pointer]
+    - article [ref=f1e54]:
+      - generic [ref=f1e55]: 7-10 лет
+      - heading "Для младших школьников" [level=3] [ref=f1e56]
+      - paragraph [ref=f1e57]: "Все аспекты языка: чтение, письмо, аудирование и уверенное говорение."

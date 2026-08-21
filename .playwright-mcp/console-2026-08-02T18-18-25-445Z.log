@@ -1,0 +1,3 @@
+[     826ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://lms.dymova-english.ru/login:0
+[   23875ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://lms.dymova-english.ru/owner_token.json:0
+[  141932ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://lms.dymova-english.ru/login:0

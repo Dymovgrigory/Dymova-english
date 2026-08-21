@@ -1,0 +1,42 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic [ref=e7]: Наши классы
+    - heading "Где проходят занятия" [level=2] [ref=e9]
+    - paragraph [ref=e10]: Светлые классы с интерактивными панелями в двух филиалах — на Лихачевском и Ракетостроителей
+  - generic [ref=e11]:
+    - figure "01 Вход в школу Увеличить" [ref=e14] [cursor=pointer]:
+      - img "Вход в языковую школу Фоксинбург" [ref=e15]
+      - generic:
+        - generic: "01"
+        - generic: Вход в школу
+        - generic: Увеличить
+    - figure "02 Класс для младших школьников Увеличить" [ref=e18] [cursor=pointer]:
+      - img "Класс для младших школьников с интерактивной панелью" [ref=e19]
+      - generic:
+        - generic: "02"
+        - generic: Класс для младших школьников
+        - generic: Увеличить
+    - figure "03 Интерактивные панели Увеличить" [ref=e22] [cursor=pointer]:
+      - img "Учебный класс с интерактивной панелью" [ref=e23]
+      - generic:
+        - generic: "03"
+        - generic: Интерактивные панели
+        - generic: Увеличить
+    - figure "04 Занятия в мини-группах Увеличить" [ref=e26] [cursor=pointer]:
+      - img "Класс для занятий в мини-группах" [ref=e27]
+      - generic:
+        - generic: "04"
+        - generic: Занятия в мини-группах
+        - generic: Увеличить
+    - figure "05 Светлые классы с видом на зелень Увеличить" [ref=e30] [cursor=pointer]:
+      - img "Светлый учебный класс с видом на зелень" [ref=e31]
+      - generic:
+        - generic: "05"
+        - generic: Светлые классы с видом на зелень
+        - generic: Увеличить
+    - figure "06 Учебный класс Увеличить" [ref=e34] [cursor=pointer]:
+      - img "Учебный класс школы Фоксинбург" [ref=e35]
+      - generic:
+        - generic: "06"
+        - generic: Учебный класс
+        - generic: Увеличить

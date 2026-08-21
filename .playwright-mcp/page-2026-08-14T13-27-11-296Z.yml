@@ -1,0 +1,115 @@
+- main [ref=f15e2]:
+  - generic [ref=f15e3]:
+    - generic [ref=f15e4]:
+      - img "Фокси, маскот школы Фоксинбург" [ref=f15e7]
+      - paragraph [ref=f15e8]: Языковая школа · Долгопрудный
+      - heading "Фоксинбург" [level=1] [ref=f15e9]
+      - paragraph [ref=f15e10]: Английский не для школы, а для жизни
+      - generic "Коротко о школе" [ref=f15e11]:
+        - generic [ref=f15e12]:
+          - term [ref=f15e13]: в группе
+          - definition [ref=f15e14]: "0"
+          - paragraph [ref=f15e15]: детей максимум
+        - generic [ref=f15e16]:
+          - term [ref=f15e17]: возраст
+          - definition [ref=f15e18]: 2–0
+          - paragraph [ref=f15e19]: и взрослые
+        - generic [ref=f15e20]:
+          - term [ref=f15e21]: языка
+          - definition [ref=f15e22]: "0"
+          - paragraph [ref=f15e23]: англ · нем · кит
+    - navigation "Разделы" [ref=f15e24]:
+      - button "Подобрать курс По возрасту и формату — за минуту" [ref=f15e25] [cursor=pointer]:
+        - generic [ref=f15e30]:
+          - generic [ref=f15e31]: Подобрать курс
+          - generic [ref=f15e32]: По возрасту и формату — за минуту
+      - button "Записаться Бесплатная диагностика" [ref=f15e36] [cursor=pointer]:
+        - generic [ref=f15e42]:
+          - generic [ref=f15e43]: Записаться
+          - generic [ref=f15e44]: Бесплатная диагностика
+      - button "Помощь с домашкой Фото задания — разбор" [ref=f15e45] [cursor=pointer]:
+        - generic [ref=f15e51]:
+          - generic [ref=f15e52]: Помощь с домашкой
+          - generic [ref=f15e53]: Фото задания — разбор
+      - button "Спросить Фокси Отвечает здесь и в чате" [ref=f15e54] [cursor=pointer]:
+        - generic [ref=f15e59]:
+          - generic [ref=f15e60]: Спросить Фокси
+          - generic [ref=f15e61]: Отвечает здесь и в чате
+      - button "Программы и цены Курсы и форматы" [ref=f15e62] [cursor=pointer]:
+        - generic [ref=f15e67]:
+          - generic [ref=f15e68]: Программы и цены
+          - generic [ref=f15e69]: Курсы и форматы
+      - button "Филиалы Адреса и телефоны" [ref=f15e70] [cursor=pointer]:
+        - generic [ref=f15e75]:
+          - generic [ref=f15e76]: Филиалы
+          - generic [ref=f15e77]: Адреса и телефоны
+    - region [ref=f15e78]:
+      - heading "Почему Фоксинбург" [level=2] [ref=f15e79]
+      - generic [ref=f15e80]:
+        - article [ref=f15e81]:
+          - heading "Образовательная лицензия" [level=3] [ref=f15e82]
+          - paragraph [ref=f15e83]: Работаем официально, на основании государственной образовательной лицензии.
+        - article [ref=f15e84]:
+          - heading "Аккредитованный центр Hippo" [level=3] [ref=f15e85]
+          - paragraph [ref=f15e86]: Официальная площадка (venue) престижной международной олимпиады по английскому Hippo.
+        - article [ref=f15e87]:
+          - heading "Мини-группы до 7 человек" [level=3] [ref=f15e88]
+          - paragraph [ref=f15e89]: Внимание каждому ученику и живая языковая среда без перехода на русский.
+        - article [ref=f15e90]:
+          - heading "Команда профессионалов" [level=3] [ref=f15e91]
+          - paragraph [ref=f15e92]: Педагоги развиваются по нашей методике в темпе «три года за один».
+    - region [ref=f15e93]:
+      - generic [ref=f15e94]:
+        - heading "Программы" [level=2] [ref=f15e95]
+        - button "Все программы" [ref=f15e96] [cursor=pointer]
+      - generic [ref=f15e97]:
+        - article [ref=f15e98]:
+          - generic [ref=f15e99]: 3-6 лет
+          - heading "Для дошкольников" [level=3] [ref=f15e100]
+          - paragraph [ref=f15e101]: "Игровое погружение в язык: говорение, песни, развитие памяти и кругозора."
+        - article [ref=f15e102]:
+          - generic [ref=f15e103]: 7-10 лет
+          - heading "Для младших школьников" [level=3] [ref=f15e104]
+          - paragraph [ref=f15e105]: "Все аспекты языка: чтение, письмо, аудирование и уверенное говорение."
+        - article [ref=f15e106]:
+          - generic [ref=f15e107]: 11-16 лет
+          - heading "Для подростков" [level=3] [ref=f15e108]
+          - paragraph [ref=f15e109]: "Язык для жизни и экзаменов: разговорная практика, грамматика, олимпиады."
+    - region [ref=f15e110]:
+      - heading "Частые вопросы" [level=2] [ref=f15e111]
+      - generic [ref=f15e112]:
+        - generic [ref=f15e113]:
+          - button "До скольки и когда вы работаете? Какой режим работы?" [ref=f15e114] [cursor=pointer]
+          - paragraph: Ежедневно с 9:00 до 21:00, без выходных. Занятия идут утром, днём и вечером — подберём удобное время.
+        - generic [ref=f15e118]:
+          - button "Вы давно работаете?" [ref=f15e119] [cursor=pointer]
+          - paragraph: Работаем с 2020 года — больше 5 лет опыта в обучении детей. Официальная образовательная лицензия, аккредитованный центр международной олимпиады Hippo, рейтинг 5.0 на Яндекс.Картах.
+        - generic [ref=f15e123]:
+          - button "Кто руководит школой? Кто руководители?" [ref=f15e124] [cursor=pointer]
+          - paragraph: Школой руководят Дымова Вероника Александровна и Дымов Григорий Юрьевич. Методист и контроль качества — Коваленко Елизавета. Администраторы — Зверева Ираида и Джанузакова Салтанат.
+        - generic [ref=f15e128]:
+          - button "У вас есть носитель языка?" [ref=f15e129] [cursor=pointer]
+          - paragraph: Да! В офлайн-формат входит разговорный клуб с носителем языка — дети применяют английский в живом общении.
+        - generic [ref=f15e133]:
+          - button "Можно ли платить помесячно, а не за год?" [ref=f15e134] [cursor=pointer]
+          - paragraph: "Да, конечно. Английский в мини-группе: 9 000 ₽/мес при ежемесячной оплате или 8 200 ₽/мес при оплате за учебный год. Малыши 2–3 года: 6 550 ₽/мес или 6 050 ₽/мес за год. Есть рассрочка и оплата маткапиталом."
+    - region [ref=f15e138]:
+      - generic [ref=f15e139]:
+        - heading "Где мы" [level=2] [ref=f15e140]
+        - button "Все филиалы" [ref=f15e141] [cursor=pointer]
+      - generic [ref=f15e142]:
+        - article [ref=f15e143]:
+          - heading "Филиал на Лихачевском" [level=3] [ref=f15e144]
+          - paragraph [ref=f15e145]: г. Долгопрудный, пр-кт Лихачевский, 76к1
+          - paragraph [ref=f15e146]: 9:00 — 21:00
+        - article [ref=f15e147]:
+          - heading "Филиал на Ракетостроителей" [level=3] [ref=f15e148]
+          - paragraph [ref=f15e149]: г. Долгопрудный, пр-кт Ракетостроителей, 9к3
+          - paragraph [ref=f15e150]: 9:00 — 21:00
+    - generic [ref=f15e151]:
+      - paragraph [ref=f15e152]: Начать проще, чем кажется
+      - paragraph [ref=f15e153]: Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.
+      - button "Записаться на диагностику" [ref=f15e154] [cursor=pointer]
+    - button "Мой профиль Заполнить" [ref=f15e155] [cursor=pointer]:
+      - generic [ref=f15e156]: Мой профиль
+      - generic [ref=f15e157]: Заполнить

@@ -1,0 +1,151 @@
+- generic [active] [ref=f91e1]:
+  - generic [ref=f91e3]:
+    - generic [ref=f91e4]:
+      - link "Фоксинбург Фоксинбург" [ref=f91e5] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f91e6]
+        - generic [ref=f91e7]: Фоксинбург
+      - button "Меню" [ref=f91e8] [cursor=pointer]
+    - generic [ref=f91e12]:
+      - generic [ref=f91e13]:
+        - link "Лихачевский, 76к1" [ref=f91e14] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 993 923-23-09" [ref=f91e18] [cursor=pointer]:
+          - /url: tel:+79939232309
+      - generic [ref=f91e19]:
+        - link "Ракетостроителей, 9к3" [ref=f91e20] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 916 732-31-69" [ref=f91e24] [cursor=pointer]:
+          - /url: tel:+79167323169
+      - generic [ref=f91e25]: 9:00 — 21:00
+      - link "Max Bot" [ref=f91e29] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+    - generic [ref=f91e30]: Летние программы ▾
+  - generic [ref=f91e35]:
+    - generic [ref=f91e37]:
+      - generic [ref=f91e38]: Новости школы
+      - 'heading "Запись на новый учебный год: английский, немецкий, китайский" [level=1] [ref=f91e40]'
+      - generic [ref=f91e41]:
+        - generic [ref=f91e42]: 1 августа 2026
+        - generic [ref=f91e43]: • 6 минут чтения
+    - generic [ref=f91e45]:
+      - navigation [ref=f91e46]:
+        - link "Главная" [ref=f91e47] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f91e48]: →
+        - link "Новости" [ref=f91e49] [cursor=pointer]:
+          - /url: /novosti
+        - generic [ref=f91e50]: →
+        - generic [ref=f91e51]: "Запись на новый учебный год: английский, немецкий, китайский"
+      - generic [ref=f91e52]:
+        - heading "Три языка, один принцип" [level=2] [ref=f91e53]
+        - paragraph [ref=f91e54]: "К новому учебному году в Фоксинбурге можно записаться на английский, немецкий или китайский — и по всем трём мы ведём занятия по одной и той же методике: понятная система языка, живое общение с первых занятий и мини-группы, где педагог успевает уделить время каждому. Разница между языками — в содержании, а не в подходе: во сколько бы вы ни начинали, ребёнку или взрослому не приходится заново учиться быть учеником при смене языка."
+        - heading "Какие форматы есть" [level=2] [ref=f91e55]
+        - list [ref=f91e56]:
+          - listitem [ref=f91e57]: Очно в двух филиалах в Долгопрудном — на Лихачевского, 76к1 и на Ракетостроителей, 9к3.
+          - listitem [ref=f91e58]: Онлайн с педагогом — живые уроки для тех, кому удобнее заниматься из дома.
+          - listitem [ref=f91e59]: Мини-группы, подобранные по возрасту и уровню — для дошкольников, школьников, подростков и взрослых отдельно.
+          - listitem [ref=f91e60]: Индивидуальные занятия — персональный темп и график, если групповой формат не подходит по времени или задачам.
+        - paragraph [ref=f91e61]: "Формат не обязательно выбирать раз и навсегда: часто удобно начать с мини-группы, а индивидуальные занятия подключить точечно — например, перед конкретным экзаменом или поездкой."
+        - heading "С чего начинается запись" [level=2] [ref=f91e62]
+        - paragraph [ref=f91e63]: "Для детей на английском — школа начинается с бесплатной диагностики: определяем реальный уровень и подбираем группу по возрасту, без формального теста и стресса. Для немецкого и китайского первый шаг — пробный урок: знакомим с педагогом и методикой, оцениваем уровень (или подтверждаем, что стартуем с нуля — большинство и начинает с нуля) и подбираем группу. Взрослым на английском мы тоже предлагаем начать с бесплатной диагностики — она нужна именно для честной картины «где вы сейчас», а не для оценки."
+        - paragraph [ref=f91e64]: "Дальше — обычная последовательность: заявка на сайте или в MAX, диагностика или пробный урок, подбор группы или индивидуального расписания, и старт занятий. Если сомневаетесь между языками или форматами — на диагностике можно обсудить это вслух, а не гадать заранее."
+        - heading "Как оплатить обучение" [level=2] [ref=f91e65]
+        - paragraph [ref=f91e66]: На немецком, китайском и на английском для взрослых занятия можно оплатить материнским капиталом и вернуть 13% стоимости социальным налоговым вычетом — это не отдельная акция, а постоянно доступный вариант оплаты, о нём можно уточнить на диагностике или пробном уроке.
+        - heading "Если ещё не решили, с какого языка начать" [level=2] [ref=f91e67]
+        - paragraph [ref=f91e68]:
+          - text: Если ребёнок уже учит английский и вы думаете о втором языке — мы недавно разбирали,
+          - link "как выбрать между немецким и китайским" [ref=f91e69] [cursor=pointer]:
+            - /url: /novosti-vtoroj-inostrannyj-yazyk-nemeckij-ili-kitajskij
+          - text: . А если хочется для начала понять, в какой форме ребёнок подошёл к концу лета, — в статье про то,
+          - link "как английский переживает летние каникулы" [ref=f91e70] [cursor=pointer]:
+            - /url: /novosti-anglijskij-letom-kak-ne-poteryat-navyk
+          - text: ", есть простой ориентир, стоит ли переживать."
+      - generic [ref=f91e71]:
+        - heading "Читайте также" [level=2] [ref=f91e72]
+        - generic [ref=f91e73]:
+          - link "Немецкий язык" [ref=f91e74] [cursor=pointer]:
+            - /url: /nemeckij-yazyk
+          - link "Китайский язык" [ref=f91e75] [cursor=pointer]:
+            - /url: /kitajskij-yazyk
+          - link "Английский для взрослых" [ref=f91e76] [cursor=pointer]:
+            - /url: /anglijskij-dlya-vzroslyh
+    - generic [ref=f91e78]:
+      - heading "Читайте также и запишитесь на бесплатную диагностику" [level=2] [ref=f91e79]
+      - paragraph [ref=f91e80]: Если хотите подобрать подходящий курс или задать вопросы по программе, оставьте заявку — мы свяжемся с вами.
+      - generic [ref=f91e81]:
+        - button "Оставить заявку" [ref=f91e82] [cursor=pointer]
+        - link "Написать в Max" [ref=f91e83] [cursor=pointer]:
+          - /url: https://max.ru/id611904726658_bot
+  - generic [ref=f91e87]:
+    - generic [ref=f91e88]:
+      - generic [ref=f91e89]:
+        - link "Фоксинбург Фоксинбург" [ref=f91e90] [cursor=pointer]:
+          - /url: /
+          - img "Фоксинбург" [ref=f91e91]
+          - generic [ref=f91e92]: Фоксинбург
+        - paragraph [ref=f91e93]: Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.
+        - generic [ref=f91e94]:
+          - link "ВКонтакте" [ref=f91e95] [cursor=pointer]:
+            - /url: https://vk.com/foxyfoxclub
+          - link "Max" [ref=f91e98] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_biz
+          - link "Telegram" [ref=f91e101] [cursor=pointer]:
+            - /url: https://t.me/foxinburg
+          - link "WhatsApp" [ref=f91e104] [cursor=pointer]:
+            - /url: https://wa.me/79939232309
+      - generic [ref=f91e107]:
+        - heading "Навигация" [level=4] [ref=f91e108]
+        - link "Главная" [ref=f91e109] [cursor=pointer]:
+          - /url: /
+        - link "Курс по чтению" [ref=f91e110] [cursor=pointer]:
+          - /url: /reading
+        - link "Курс по грамматике" [ref=f91e111] [cursor=pointer]:
+          - /url: /grammar
+        - link "Подготовка к школе" [ref=f91e112] [cursor=pointer]:
+          - /url: /preparation
+        - link "Подготовка к ОГЭ по английскому" [ref=f91e113] [cursor=pointer]:
+          - /url: /oge-anglijskij
+        - link "Подготовка к ЕГЭ по английскому" [ref=f91e114] [cursor=pointer]:
+          - /url: /ege-anglijskij
+        - link "Для дошкольников" [ref=f91e115] [cursor=pointer]:
+          - /url: /doshkolniki
+        - link "Для младших школьников" [ref=f91e116] [cursor=pointer]:
+          - /url: /mladshie-shkolniki
+        - link "Для подростков" [ref=f91e117] [cursor=pointer]:
+          - /url: /podrostki
+        - link "Английский для взрослых" [ref=f91e118] [cursor=pointer]:
+          - /url: /anglijskij-dlya-vzroslyh
+        - link "Немецкий язык" [ref=f91e119] [cursor=pointer]:
+          - /url: /nemeckij-yazyk
+        - link "Китайский язык" [ref=f91e120] [cursor=pointer]:
+          - /url: /kitajskij-yazyk
+      - generic [ref=f91e121]:
+        - heading "О школе" [level=4] [ref=f91e122]
+        - link "Новости" [ref=f91e123] [cursor=pointer]:
+          - /url: /novosti
+        - link "Вакансии" [ref=f91e124] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=f91e125] [cursor=pointer]:
+          - /url: /kontakty
+        - link "Лицензия" [ref=f91e126] [cursor=pointer]:
+          - /url: https://disk.yandex.ru/d/ZDlm_uGmwxH4kw
+        - link "Летняя Академия" [ref=f91e127] [cursor=pointer]:
+          - /url: /letnyaya-akademiya
+        - link "Личный кабинет" [ref=f91e128] [cursor=pointer]:
+          - /url: /members/login
+      - generic [ref=f91e129]:
+        - heading "Контакты" [level=4] [ref=f91e130]
+        - link "8 993 923-23-09" [ref=f91e131] [cursor=pointer]:
+          - /url: tel:+79939232309
+        - link "8 916 732-31-69" [ref=f91e132] [cursor=pointer]:
+          - /url: tel:+79167323169
+        - link "school@foxinburg-edu.ru" [ref=f91e133] [cursor=pointer]:
+          - /url: mailto:school@foxinburg-edu.ru
+        - generic [ref=f91e134]: Ежедневно 9:00 — 21:00
+    - generic [ref=f91e135]:
+      - generic [ref=f91e136]:
+        - generic [ref=f91e137]: ИП Дымова Вероника Александровна
+        - generic [ref=f91e138]: ИНН 611904726658
+      - link "Политика конфиденциальности" [ref=f91e140] [cursor=pointer]:
+        - /url: /policy

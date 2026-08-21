@@ -1,0 +1,334 @@
+[     155ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     768ms] [LOG] [Fast Refresh] done in 714ms @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     838ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     847ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   48153ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/users/me:0
+[   83681ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/auth/refresh:0
+[   83756ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   83853ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3107/login:0
+[   96421ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   96429ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  132182ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/users/me:0
+[  132328ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  132335ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  132456ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/teac...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function TeachersPage} serverProvidedParams={{...}}>
+        <TeachersPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={1} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={undefined} className={undefined}>
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+>                                 data-state={undefined}
+>                                 onClick={undefined}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  149720ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  149727ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  149838ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/stud...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function StudentsPage} serverProvidedParams={{...}}>
+        <StudentsPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={2} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={function} className="cursor-poi...">
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-mut..."
+>                                 data-state={undefined}
+>                                 onClick={function}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  150063ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  150484ms] [LOG] [Fast Refresh] done in 523ms @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  150729ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  201822ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  201881ms] [LOG] [Fast Refresh] done in 38ms @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  226201ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  226235ms] [LOG] [Fast Refresh] done in 25ms @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  237360ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  237369ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  237480ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/stud...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function StudentsPage} serverProvidedParams={{...}}>
+        <StudentsPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={2} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={function} className="cursor-poi...">
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-mut..."
+>                                 data-state={undefined}
+>                                 onClick={function}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  239237ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  258751ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  258758ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  258851ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/api/v1/users/list?role=INSTRUCTOR&sort=name&order=asc&page=1&page_size=20:0
+[  259856ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/api/v1/users/list?role=INSTRUCTOR&sort=name&order=asc&page=1&page_size=20:0
+[  260208ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/teac...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function TeachersPage} serverProvidedParams={{...}}>
+        <TeachersPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={1} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={undefined} className={undefined}>
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+>                                 data-state={undefined}
+>                                 onClick={undefined}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  260371ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  260377ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  287589ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  287597ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  287704ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/teac...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function TeachersPage} serverProvidedParams={{...}}>
+        <TeachersPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={1} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={undefined} className={undefined}>
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+>                                 data-state={undefined}
+>                                 onClick={undefined}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  288523ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  288529ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  289638ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  289644ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  289753ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/teac...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function TeachersPage} serverProvidedParams={{...}}>
+        <TeachersPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={1} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={undefined} className={undefined}>
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+>                                 data-state={undefined}
+>                                 onClick={undefined}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  290547ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  290554ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  317797ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  317804ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  317912ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/teac...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function TeachersPage} serverProvidedParams={{...}}>
+        <TeachersPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={1} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={undefined} className={undefined}>
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+>                                 data-state={undefined}
+>                                 onClick={undefined}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  318954ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  318960ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  357188ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  357196ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  357306ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/teac...">
+      <SegmentTrieNode>
+      <ClientPageRoot Component={function TeachersPage} serverProvidedParams={{...}}>
+        <TeachersPage params={Promise} searchParams={Promise}>
+          <div className="space-y-6">
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={1} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={undefined} className={undefined}>
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+>                                 data-state={undefined}
+>                                 onClick={undefined}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+    ...
+ @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  358379ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  358385ms] [LOG] [HMR] connected @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  393858ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  394861ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  395864ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  396867ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  397870ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  402873ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  407876ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  412882ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  417888ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  422894ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  427899ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  432904ms] [ERROR] WebSocket connection to 'ws://localhost:3107/_next/webpack-hmr?id=2a2DQxrSYKZ-bhRJOu0rt' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3107/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  432995ms] SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document.
+    at <anonymous>:6:5
+    at <anonymous>:7:7

@@ -1,0 +1,239 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e10]:
+    - generic [ref=f4e11]:
+      - link "Фоксинбург Фоксинбург" [ref=f4e12] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f4e13]
+        - generic [ref=f4e14]: Фоксинбург
+      - iframe [ref=f4e16]:
+        - link [ref=f5e2] [cursor=pointer]:
+          - /url: //yandex.ru/maps/org/162408588499/reviews?utm_source=badge&utm_medium=rating&utm_campaign=v1
+      - navigation [ref=f4e17]:
+        - link "Главная" [ref=f4e18] [cursor=pointer]:
+          - /url: /
+        - button "Наши курсы" [ref=f4e20] [cursor=pointer]
+        - button "Направления" [ref=f4e24] [cursor=pointer]
+        - button "Другие языки" [ref=f4e28] [cursor=pointer]
+        - link "Цены" [ref=f4e31] [cursor=pointer]:
+          - /url: /tseny
+        - button "Полезное" [ref=f4e33] [cursor=pointer]
+        - link "Вакансии" [ref=f4e36] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=f4e37] [cursor=pointer]:
+          - /url: /kontakty
+      - link "Вход в ЛК" [ref=f4e39] [cursor=pointer]:
+        - /url: https://lms.dymova-english.ru
+    - generic [ref=f4e40]:
+      - generic [ref=f4e41]:
+        - link "Лихачевский, 76к1" [ref=f4e42] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 993 923-23-09" [ref=f4e46] [cursor=pointer]:
+          - /url: tel:+79939232309
+      - generic [ref=f4e48]:
+        - link "Ракетостроителей, 9к3" [ref=f4e49] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 916 732-31-69" [ref=f4e53] [cursor=pointer]:
+          - /url: tel:+79167323169
+      - generic [ref=f4e55]: 9:00 — 21:00
+      - link "Max Bot" [ref=f4e59] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+    - generic [ref=f4e60]: Летние программы ▾
+  - generic [ref=f4e65]:
+    - generic [ref=f4e67]:
+      - generic [ref=f4e68]: Школа и учёба
+      - 'heading "Хэллоуин и Рождество в Фоксинбурге: как праздники учат английскому" [level=1] [ref=f4e70]'
+      - generic [ref=f4e71]:
+        - generic [ref=f4e72]: 18 августа 2026
+        - generic [ref=f4e73]: • 7 минут чтения
+    - generic [ref=f4e75]:
+      - navigation [ref=f4e76]:
+        - link "Главная" [ref=f4e77] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f4e78]: →
+        - link "Блог" [ref=f4e79] [cursor=pointer]:
+          - /url: /blog
+        - generic [ref=f4e80]: →
+        - generic [ref=f4e81]: "Хэллоуин и Рождество в Фоксинбурге: как праздники учат английскому"
+      - generic [ref=f4e82]:
+        - heading "Праздник как педагогический инструмент" [level=2] [ref=f4e83]
+        - paragraph [ref=f4e84]: "В хорошей языковой школе праздники — не «развлечение вместо занятий», а одна из самых мощных форм обучения. На Хэллоуине ребёнок забывает, что «занимается английским»: он гадает загадки, участвует в квесте, кричит «trick or treat!» — и всё это на языке, который в обычном классе достаётся с усилием. Психологи называют это снижением аффективного фильтра: в состоянии игры и азарта языковой барьер падает, и дети говорят в разы больше, чем на уроке. Вторая функция праздников — культурная: язык существует не в вакууме, и ребёнок, знающий, что такое Рождество в англоязычных странах, понимает тексты и фильмы глубже. Третья — социальная: общие события склеивают группу, а от того, нравится ли ребёнку ходить в школу, зависит половина результата."
+        - 'heading "Хэллоуин: главный «языковой» праздник осени" [level=2] [ref=f4e85]'
+        - paragraph [ref=f4e86]: "Хэллоуин в Фоксинбурге — традиционно самое громкое событие осени. Формат — костюмированный квест на английском: станции с заданиями (загадки, «spell the word», характерные игры вроде «mummy wrap»), костюм-парад с представлением персонажа на английском и традиционный обход «trick or treat». Словарь праздника дети впитывают без усилий: pumpkin, witch, ghost, spooky, costume — эти слова потом годами всплывают в их речи, потому что привязаны к эмоции. Готовимся заранее: за две недели на занятиях разучиваем песни и чант-скороговорки праздника, обсуждаем костюмы. Родителям совет: не шейте костюм «в секрете» — пусть ребёнок сам представит персонажа по-английски, это часть задания."
+        - 'heading "Рождество и Новый год: тёплый английский декабря" [level=2] [ref=f4e87]'
+        - paragraph [ref=f4e88]: "Декабрьская программа строится вокруг рождественских традиций англоязычных стран: дети узнают, почему англичане вешают носки у камина, кто такой Santa и при чём тут олень Rudolph, что поют carols. Практический слой — письма Санте на английском (лучшее письменное задание года: мотивация встроенная), рождественские песни и праздничное чаепитие, где каждая группа готовит короткое выступление: сценку, песню или стихотворение. Для младших это первый опыт публичного выступления на языке — бесценный для уверенности. Родители на финальное выступление приглашаются: увидеть ребёнка, поющего «Jingle Bells» в обнимку с группой, — лучший ответ на вопрос «а есть ли толк от занятий»."
+        - 'heading "Чем праздник отличается от урока: честное сравнение" [level=2] [ref=f4e89]'
+        - list [ref=f4e90]:
+          - listitem [ref=f4e91]: "Объём речи: на квесте ребёнок говорит по-английски 30–40 минут подряд в живом общении — столько не даёт ни один урок."
+          - listitem [ref=f4e92]: "Эмоциональная память: слова и фразы, выученные в игре с азартом, запоминаются в разы прочнее классных."
+          - listitem [ref=f4e93]: "Культура: праздник даёт культурный контекст, без которого тексты и фильмы понимаются «поверхностно»."
+          - listitem [ref=f4e94]: "Мотивация: события, которые ждут, удерживают интерес к языку длинными зимними месяцами лучше любых похвал."
+          - listitem [ref=f4e95]:
+            - text: "Что праздник НЕ заменяет: системную грамматику и регулярную практику — это витамин, а не основная еда. Основа — занятия в группах"
+            - link "дошкольников" [ref=f4e96] [cursor=pointer]:
+              - /url: /doshkolniki
+            - text: ","
+            - link "младших школьников" [ref=f4e97] [cursor=pointer]:
+              - /url: /mladshie-shkolniki
+            - text: и
+            - link "подростков" [ref=f4e98] [cursor=pointer]:
+              - /url: /podrostki
+            - text: .
+        - heading "Как попасть и что нужно знать родителю" [level=2] [ref=f4e99]
+        - paragraph [ref=f4e100]:
+          - text: "Праздники открыты для учеников школы, а часть событий — и для гостей по записи: это хороший способ познакомиться со школой вживую, если вы только присматриваетесь. Анонсы публикуются в разделе"
+          - link "новостей" [ref=f4e101] [cursor=pointer]:
+            - /url: /novosti
+          - text: за две-три недели до события — там же указаны возраст, дресс-код и нужна ли подготовка. Участие обычно входит в абонемент или оплачивается символически отдельно — детали уточняйте у администраторов через
+          - link "контакты" [ref=f4e102] [cursor=pointer]:
+            - /url: /kontakty
+          - text: "или в мессенджере. От родителя требуется немного: помочь с костюмом, привести вовремя и не подсказывать из зала — пусть ребёнок сам справляется со станциями. Если ребёнок стеснительный, предупредите педагога: мы всегда даём таким детям роли «при поддержке» — в паре или с ведущим, а не соло."
+        - heading "Календарь учебного года" [level=2] [ref=f4e103]
+        - paragraph [ref=f4e104]:
+          - text: Помимо Хэллоуина и Рождества, в годовом цикле Фоксинбурга есть осенний старт с праздником знакомства, зимние читательские марафоны, весенний speaking club-фестиваль и летние смены
+          - link "Летней академии" [ref=f4e105] [cursor=pointer]:
+            - /url: /letnyaya-akademiya
+          - text: с тематическими днями. Всё это складывается в среду, где английский — не предмет два раза в неделю, а часть жизни ребёнка. Именно поэтому наши ученики не спрашивают «зачем мне английский» — у них есть ответ из собственного опыта. Следите за анонсами в
+          - link "новостях" [ref=f4e106] [cursor=pointer]:
+            - /url: /novosti
+          - text: "и приходите: ближайшее событие уже в календаре."
+      - generic [ref=f4e107]:
+        - heading "Читайте также" [level=2] [ref=f4e108]
+        - generic [ref=f4e109]:
+          - link "Новости и события школы" [ref=f4e110] [cursor=pointer]:
+            - /url: /novosti
+          - link "Английский для младших школьников" [ref=f4e111] [cursor=pointer]:
+            - /url: /mladshie-shkolniki
+          - link "Все статьи блога" [ref=f4e112] [cursor=pointer]:
+            - /url: /blog
+    - generic [ref=f4e114]:
+      - generic [ref=f4e115]:
+        - generic [ref=f4e116]: Вопросы и ответы
+        - heading "Частые вопросы" [level=2] [ref=f4e118]
+      - generic [ref=f4e119]:
+        - group [ref=f4e120]:
+          - generic "Праздники в школе — это занятия или развлечение? +" [ref=f4e121] [cursor=pointer]
+        - group [ref=f4e122]:
+          - generic "Можно ли прийти на праздник, если ребёнок не учится в школе? +" [ref=f4e123] [cursor=pointer]
+        - group [ref=f4e124]:
+          - generic "Сколько стоит участие в праздниках? +" [ref=f4e125] [cursor=pointer]
+        - group [ref=f4e126]:
+          - generic "Ребёнок стеснительный — ему будет комфортно на квесте? +" [ref=f4e127] [cursor=pointer]
+    - generic [ref=f4e129]:
+      - heading "Читайте также и запишитесь на бесплатную диагностику" [level=2] [ref=f4e130]
+      - paragraph [ref=f4e131]: Если хотите подобрать подходящий курс или задать вопросы по программе, оставьте заявку — мы свяжемся с вами.
+      - generic [ref=f4e132]:
+        - button "Оставить заявку" [ref=f4e133] [cursor=pointer]
+        - link "Написать в Max" [ref=f4e134] [cursor=pointer]:
+          - /url: https://max.ru/id611904726658_bot
+  - generic [ref=f4e138]:
+    - generic [ref=f4e139]:
+      - generic [ref=f4e140]:
+        - link "Фоксинбург Фоксинбург" [ref=f4e141] [cursor=pointer]:
+          - /url: /
+          - img "Фоксинбург" [ref=f4e142]
+          - generic [ref=f4e143]: Фоксинбург
+        - paragraph [ref=f4e144]: Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.
+        - generic [ref=f4e145]:
+          - link "ВКонтакте" [ref=f4e146] [cursor=pointer]:
+            - /url: https://vk.com/foxyfoxclub
+          - link "Max" [ref=f4e149] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_biz
+          - link "Telegram" [ref=f4e152] [cursor=pointer]:
+            - /url: https://t.me/foxinburg
+          - link "WhatsApp" [ref=f4e155] [cursor=pointer]:
+            - /url: https://wa.me/79939232309
+      - generic [ref=f4e158]:
+        - heading "Навигация" [level=4] [ref=f4e159]
+        - link "Главная" [ref=f4e160] [cursor=pointer]:
+          - /url: /
+        - link "Курс по чтению" [ref=f4e161] [cursor=pointer]:
+          - /url: /reading
+        - link "Курс по грамматике" [ref=f4e162] [cursor=pointer]:
+          - /url: /grammar
+        - link "Подготовка к школе" [ref=f4e163] [cursor=pointer]:
+          - /url: /preparation
+        - link "Подготовка к ОГЭ по английскому" [ref=f4e164] [cursor=pointer]:
+          - /url: /oge-anglijskij
+        - link "Подготовка к ЕГЭ по английскому" [ref=f4e165] [cursor=pointer]:
+          - /url: /ege-anglijskij
+        - link "Подготовка к ВПР по английскому" [ref=f4e166] [cursor=pointer]:
+          - /url: /vpr-anglijskij
+        - link "Разговорный английский" [ref=f4e167] [cursor=pointer]:
+          - /url: /razgovornyj-anglijskij
+        - link "Индивидуальные занятия (репетитор)" [ref=f4e168] [cursor=pointer]:
+          - /url: /repetitor
+        - 'link "Репетитор: русский и математика (1–4 класс)" [ref=f4e169] [cursor=pointer]':
+          - /url: /repetitor-nachalnaya-shkola
+        - link "Для дошкольников" [ref=f4e170] [cursor=pointer]:
+          - /url: /doshkolniki
+        - link "Для младших школьников" [ref=f4e171] [cursor=pointer]:
+          - /url: /mladshie-shkolniki
+        - link "Для подростков" [ref=f4e172] [cursor=pointer]:
+          - /url: /podrostki
+        - link "Английский для взрослых" [ref=f4e173] [cursor=pointer]:
+          - /url: /anglijskij-dlya-vzroslyh
+        - link "Немецкий язык" [ref=f4e174] [cursor=pointer]:
+          - /url: /nemeckij-yazyk
+        - link "Китайский язык" [ref=f4e175] [cursor=pointer]:
+          - /url: /kitajskij-yazyk
+        - link "Онлайн-занятия" [ref=f4e176] [cursor=pointer]:
+          - /url: /online-zanyatiya
+        - link "Поддерживающие онлайн" [ref=f4e177] [cursor=pointer]:
+          - /url: /podderzhivayushchie-online
+        - link "Стандартные офлайн" [ref=f4e178] [cursor=pointer]:
+          - /url: /standartnye-offline
+      - generic [ref=f4e179]:
+        - heading "О школе" [level=4] [ref=f4e180]
+        - link "О нас" [ref=f4e181] [cursor=pointer]:
+          - /url: /about
+        - link "Отзывы" [ref=f4e182] [cursor=pointer]:
+          - /url: /otzyvy
+        - link "Цены" [ref=f4e183] [cursor=pointer]:
+          - /url: /tseny
+        - link "Блог" [ref=f4e184] [cursor=pointer]:
+          - /url: /blog
+        - link "Тест уровня английского" [ref=f4e185] [cursor=pointer]:
+          - /url: /test-uroven
+        - 'link "Тест: готовность к школе" [ref=f4e186] [cursor=pointer]':
+          - /url: /test-gotov-k-shkole
+        - 'link "Тест: какой формат выбрать" [ref=f4e187] [cursor=pointer]':
+          - /url: /test-format
+        - link "Словарь по темам" [ref=f4e188] [cursor=pointer]:
+          - /url: /english-words
+        - link "Новости" [ref=f4e189] [cursor=pointer]:
+          - /url: /novosti
+        - link "Вакансии" [ref=f4e190] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=f4e191] [cursor=pointer]:
+          - /url: /kontakty
+        - link "Лицензия" [ref=f4e192] [cursor=pointer]:
+          - /url: https://disk.yandex.ru/d/ZDlm_uGmwxH4kw
+        - link "Летняя Академия" [ref=f4e193] [cursor=pointer]:
+          - /url: /letnyaya-akademiya
+        - link "Личный кабинет" [ref=f4e194] [cursor=pointer]:
+          - /url: https://lms.dymova-english.ru
+      - generic [ref=f4e195]:
+        - heading "Контакты" [level=4] [ref=f4e196]
+        - link "8 993 923-23-09" [ref=f4e197] [cursor=pointer]:
+          - /url: tel:+79939232309
+        - link "8 916 732-31-69" [ref=f4e198] [cursor=pointer]:
+          - /url: tel:+79167323169
+        - link "school@foxinburg-edu.ru" [ref=f4e199] [cursor=pointer]:
+          - /url: mailto:school@foxinburg-edu.ru
+        - generic [ref=f4e200]: Ежедневно 9:00 — 21:00
+    - generic [ref=f4e201]:
+      - generic [ref=f4e202]:
+        - generic [ref=f4e203]: ИП Дымова Вероника Александровна
+        - generic [ref=f4e204]: ИНН 611904726658
+      - link "Политика конфиденциальности" [ref=f4e206] [cursor=pointer]:
+        - /url: /policy
+  - button "Открыть чат" [ref=f4e208] [cursor=pointer]: 🦊
+  - dialog "Согласие на использование cookie" [ref=f4e209]:
+    - paragraph [ref=f4e210]:
+      - text: Мы используем cookie, чтобы сайт работал стабильно, а мы могли понимать, что интересно посетителям, и делать школу лучше. Подробнее — в
+      - link "политике конфиденциальности" [ref=f4e211] [cursor=pointer]:
+        - /url: /policy
+      - text: .
+    - generic [ref=f4e212]:
+      - button "Принять" [ref=f4e213] [cursor=pointer]
+      - button "Отклонить" [ref=f4e214] [cursor=pointer]

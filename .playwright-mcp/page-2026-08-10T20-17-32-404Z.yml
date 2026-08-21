@@ -1,0 +1,34 @@
+- generic [ref=f9e2]:
+  - banner [ref=f9e3]:
+    - generic [ref=f9e4]:
+      - text: 🦊 Фоксинбург
+      - emphasis [ref=f9e5]: админка
+    - generic [ref=f9e6]:
+      - button "Обновить" [ref=f9e7] [cursor=pointer]
+      - button "Выйти" [ref=f9e8] [cursor=pointer]
+  - navigation [ref=f9e9]:
+    - button "Клиенты2" [ref=f9e10] [cursor=pointer]
+    - button "Заявки2" [ref=f9e11] [cursor=pointer]
+    - button "Рассылка" [ref=f9e12] [cursor=pointer]
+    - button "Вопросы" [ref=f9e13] [cursor=pointer]
+  - main [ref=f9e14]:
+    - generic [ref=f9e15]:
+      - searchbox "Поиск по имени, телефону, вопросу" [ref=f9e17]
+      - generic [ref=f9e18]:
+        - generic [ref=f9e19]:
+          - button "Иванова Анна · ребёнок Миша MAX заявка +79991234567 · 6 сообщ. · 2026-08-10 20:15 Спасибо! Заявка отправлена ✅" [ref=f9e20] [cursor=pointer]:
+            - generic [ref=f9e21]:
+              - generic [ref=f9e22]: Иванова Анна · ребёнок Миша
+              - generic [ref=f9e23]: MAX
+              - generic [ref=f9e24]: заявка
+            - generic [ref=f9e25]: +79991234567 · 6 сообщ. · 2026-08-10 20:15
+            - generic [ref=f9e26]: Спасибо! Заявка отправлена ✅
+          - button "Григорий · ребёнок Аделина Telegram не дошёл телефона нет · 2 сообщ. · 2026-08-10 20:15 Да, китайский у нас есть — расскажу подробнее?" [ref=f9e27] [cursor=pointer]:
+            - generic [ref=f9e28]:
+              - generic [ref=f9e29]: Григорий · ребёнок Аделина
+              - generic [ref=f9e30]: Telegram
+              - generic [ref=f9e31]: не дошёл
+            - generic [ref=f9e32]: телефона нет · 2 сообщ. · 2026-08-10 20:15
+            - generic [ref=f9e33]: Да, китайский у нас есть — расскажу подробнее?
+        - complementary [ref=f9e34]:
+          - generic [ref=f9e35]: Выберите клиента, чтобы увидеть переписку

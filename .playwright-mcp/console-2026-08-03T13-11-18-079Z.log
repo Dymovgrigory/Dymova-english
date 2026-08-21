@@ -1,0 +1,2 @@
+[    3269ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://lms.dymova-english.ru/api/v1/site/public/blocks/home.faq:0
+[   12510ms] [INFO] [foxi] skeletal-режим v2, клипы: Big_Wave_Hello, Cheer_with_Both_Hands_Up, Happy_jump_f, Running, Shake_It_Off_Dance, Walking @ https://dymova-english.ru/mascot/mascot.js:336

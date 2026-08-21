@@ -1,0 +1,33 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f1e6] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f1e8]
+        - generic [ref=f1e9]: Фоксинбург
+      - blockquote [ref=f1e11]:
+        - paragraph [ref=f1e12]: Английский, немецкий и китайский для детей и взрослых
+        - paragraph [ref=f1e13]: Прогресс, задания и сертификаты — всё в одном месте
+    - generic [ref=f1e17]:
+      - combobox "Язык" [ref=f1e19]:
+        - option "Русский" [selected]
+        - option "English"
+      - generic [ref=f1e21]:
+        - heading "Вход" [level=1] [ref=f1e22]
+        - paragraph [ref=f1e23]: Используйте учётную запись LMS для входа.
+        - generic [ref=f1e25]:
+          - generic [ref=f1e26]:
+            - text: Слаг организации
+            - textbox "Слаг организации" [ref=f1e27]:
+              - /placeholder: например, foxenburg
+          - generic [ref=f1e28]:
+            - text: Email
+            - textbox "Email" [ref=f1e29]
+          - generic [ref=f1e30]:
+            - text: Пароль
+            - textbox "Пароль" [ref=f1e31]
+          - paragraph [ref=f1e32]: Введите слаг организации, чтобы показать SSO-вход.
+          - button "Войти" [ref=f1e33] [cursor=pointer]
+        - paragraph [ref=f1e35]: Доступ выдаёт школа по приглашению
+  - button "Open Next.js Dev Tools" [ref=f1e41] [cursor=pointer]
+  - alert [ref=f1e45]

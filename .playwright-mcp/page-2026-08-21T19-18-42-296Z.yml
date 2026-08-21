@@ -1,0 +1,263 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]: Языковая школа Фоксинбург
+  - generic [ref=f2e10]:
+    - generic [ref=f2e11]:
+      - link "Фоксинбург Фоксинбург" [ref=f2e12] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f2e13]
+        - generic [ref=f2e14]: Фоксинбург
+      - iframe [ref=f2e16]:
+        - link [ref=f3e2] [cursor=pointer]:
+          - /url: //yandex.ru/maps/org/162408588499/reviews?utm_source=badge&utm_medium=rating&utm_campaign=v1
+      - navigation [ref=f2e17]:
+        - link "Главная" [ref=f2e18] [cursor=pointer]:
+          - /url: /
+        - button "Наши курсы" [ref=f2e20] [cursor=pointer]
+        - button "Направления" [ref=f2e24] [cursor=pointer]
+        - button "Другие языки" [ref=f2e28] [cursor=pointer]
+        - link "Цены" [ref=f2e31] [cursor=pointer]:
+          - /url: /tseny
+        - button "Полезное" [ref=f2e33] [cursor=pointer]
+        - link "Вакансии" [ref=f2e36] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=f2e37] [cursor=pointer]:
+          - /url: /kontakty
+      - link "Вход в ЛК" [ref=f2e39] [cursor=pointer]:
+        - /url: https://lms.dymova-english.ru
+    - generic [ref=f2e40]:
+      - generic [ref=f2e41]:
+        - link "Лихачевский, 76к1" [ref=f2e42] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 993 923-23-09" [ref=f2e46] [cursor=pointer]:
+          - /url: tel:+79939232309
+      - generic [ref=f2e48]:
+        - link "Ракетостроителей, 9к3" [ref=f2e49] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 916 732-31-69" [ref=f2e53] [cursor=pointer]:
+          - /url: tel:+79167323169
+      - generic [ref=f2e55]: 9:00 — 21:00
+      - link "Max Bot" [ref=f2e59] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+    - generic [ref=f2e60]: Летние программы ▾
+  - generic [ref=f2e65]:
+    - generic [ref=f2e67]:
+      - generic [ref=f2e68]: Словарь · бесплатно · для детей и родителей
+      - 'heading "Английские слова по темам: словарь для детей" [level=1] [ref=f2e70]'
+      - paragraph [ref=f2e71]: "Тематические подборки английских слов с транскрипцией, переводом и примерами: животные, еда, школа, семья и цвета. Уровень A1 — идеально для старта."
+      - generic [ref=f2e72]:
+        - button "Бесплатная диагностика" [ref=f2e73] [cursor=pointer]
+        - link "Подробнее о программе" [ref=f2e74] [cursor=pointer]:
+          - /url: "#fxb-program"
+    - generic [ref=f2e76]:
+      - generic [ref=f2e77]:
+        - generic [ref=f2e78]: Как это работает
+        - heading "Учим слова темами, а не списками" [level=2] [ref=f2e80]
+        - paragraph [ref=f2e81]: "Тематический словарь связывает слова в сетку: «животные» легко превращаются в рассказ про питомца, «еда» — в заказ в кафе. Так лексика переходит в активный запас."
+      - generic [ref=f2e82]:
+        - article [ref=f2e83]:
+          - heading "5 тем, 140+ слов" [level=3] [ref=f2e88]
+          - paragraph [ref=f2e89]: Животные, еда, школа, семья, цвета — базовая лексика уровня A1 с переводом.
+        - article [ref=f2e90]:
+          - heading "Транскрипция у каждого слова" [level=3] [ref=f2e94]
+          - paragraph [ref=f2e95]: Родитель без языкового опыта прочитает слово правильно и поможет ребёнку.
+        - article [ref=f2e96]:
+          - heading "Примеры с переводом" [level=3] [ref=f2e100]
+          - paragraph [ref=f2e101]: "Каждое слово — в коротком живом предложении: сразу понятно, как его использовать."
+        - article [ref=f2e102]:
+          - heading "План на неделю" [level=3] [ref=f2e108]
+          - paragraph [ref=f2e109]: По 5–7 слов в день тема осваивается за неделю — с играми и интервальными повторами.
+    - generic [ref=f2e111]:
+      - generic [ref=f2e112]:
+        - generic [ref=f2e113]: Формат
+        - heading "Коротко о словаре" [level=2] [ref=f2e115]
+      - generic [ref=f2e116]:
+        - generic [ref=f2e117]:
+          - generic [ref=f2e122]: 140+ слов
+          - text: 5 базовых тем
+        - generic [ref=f2e123]:
+          - generic [ref=f2e128]: A1
+          - text: Начальный уровень
+        - generic [ref=f2e129]:
+          - generic [ref=f2e134]: 7 дней на тему
+          - text: По 5–7 слов в день
+        - generic [ref=f2e135]:
+          - generic [ref=f2e139]: Бесплатно
+          - text: Без регистрации
+    - generic [ref=f2e142]:
+      - heading "Все темы словаря" [level=2] [ref=f2e143]
+      - paragraph [ref=f2e144]: "Выберите тему — внутри таблица слов с транскрипцией, переводом и примерами, а также план на неделю и игры для закрепления:"
+      - list [ref=f2e145]:
+        - listitem [ref=f2e146]:
+          - link "Животные" [ref=f2e147] [cursor=pointer]:
+            - /url: /english-words/zhivotnye
+          - text: "— 30 слов: от cat и dog до crocodile и hedgehog;"
+        - listitem [ref=f2e148]:
+          - link "Еда" [ref=f2e149] [cursor=pointer]:
+            - /url: /english-words/eda
+          - text: "— 29 слов: от bread и milk до pizza и ice cream;"
+        - listitem [ref=f2e150]:
+          - link "Школа" [ref=f2e151] [cursor=pointer]:
+            - /url: /english-words/shkola
+          - text: "— 29 слов: от pen и book до timetable и homework;"
+        - listitem [ref=f2e152]:
+          - link "Семья" [ref=f2e153] [cursor=pointer]:
+            - /url: /english-words/semya
+          - text: "— 29 слов: от mum и dad до niece и grandson;"
+        - listitem [ref=f2e154]:
+          - link "Цвета" [ref=f2e155] [cursor=pointer]:
+            - /url: /english-words/tsveta
+          - text: "— 25 слов: от red и blue до turquoise и rainbow."
+      - heading "Как учить слова, чтобы они не забывались" [level=2] [ref=f2e156]
+      - paragraph [ref=f2e157]:
+        - text: "Три правила, которые работают у детей и взрослых: мало, но каждый день (5–7 слов вместо списка раз в неделю); слово сразу в предложение про свою жизнь; повтор с нарастающими интервалами. Полный разбор приёмов — в статье «"
+        - 'link "Как быстро учить английские слова: 7 рабочих способов" [ref=f2e158] [cursor=pointer]':
+          - /url: /blog-kak-vyuchit-anglijskie-slova-bystro
+        - text: ».
+      - paragraph [ref=f2e159]:
+        - text: Проверить, какой словарный запас уже есть, можно на
+        - link "бесплатном онлайн-тесте уровня" [ref=f2e160] [cursor=pointer]:
+          - /url: /test-uroven
+        - text: ", а как превратить пассивный запас в речь — покажем на бесплатной диагностике с педагогом Фоксинбурга."
+      - generic [ref=f2e161]:
+        - heading "Полезное рядом" [level=2] [ref=f2e162]
+        - generic [ref=f2e163]:
+          - link "Тест уровня английского" [ref=f2e164] [cursor=pointer]:
+            - /url: /test-uroven
+          - link "Дошкольникам" [ref=f2e165] [cursor=pointer]:
+            - /url: /doshkolniki
+          - link "Младшим школьникам" [ref=f2e166] [cursor=pointer]:
+            - /url: /mladshie-shkolniki
+          - link "Все статьи блога" [ref=f2e167] [cursor=pointer]:
+            - /url: /blog
+    - generic [ref=f2e169]:
+      - generic [ref=f2e170]:
+        - generic [ref=f2e171]: Вопросы и ответы
+        - heading "Частые вопросы про словарь" [level=2] [ref=f2e173]
+      - generic [ref=f2e174]:
+        - group [ref=f2e175]:
+          - generic "С какого возраста можно учить слова по этим темам? +" [ref=f2e176] [cursor=pointer]
+        - group [ref=f2e177]:
+          - generic "Сколько слов в день учить ребёнку? +" [ref=f2e178] [cursor=pointer]
+        - group [ref=f2e179]:
+          - generic "Зачем в словаре транскрипция? +" [ref=f2e180] [cursor=pointer]
+        - group [ref=f2e181]:
+          - generic "Достаточно ли этих слов для школьной программы? +" [ref=f2e182] [cursor=pointer]
+    - generic [ref=f2e184]:
+      - 'heading "От слов — к живой речи: бесплатная диагностика" [level=2] [ref=f2e185]'
+      - paragraph [ref=f2e186]: Педагог определит уровень ребёнка и покажет, как тематический словарь превращается в разговорный английский на занятиях в Фоксинбурге.
+      - generic [ref=f2e187]:
+        - button "Оставить заявку на сайте" [ref=f2e188] [cursor=pointer]
+        - link "Написать в Max" [ref=f2e189] [cursor=pointer]:
+          - /url: https://max.ru/id611904726658_bot
+  - generic [ref=f2e193]:
+    - generic [ref=f2e194]:
+      - generic [ref=f2e195]:
+        - link "Фоксинбург Фоксинбург" [ref=f2e196] [cursor=pointer]:
+          - /url: /
+          - img "Фоксинбург" [ref=f2e197]
+          - generic [ref=f2e198]: Фоксинбург
+        - paragraph [ref=f2e199]: Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.
+        - generic [ref=f2e200]:
+          - link "ВКонтакте" [ref=f2e201] [cursor=pointer]:
+            - /url: https://vk.com/foxyfoxclub
+          - link "Max" [ref=f2e204] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_biz
+          - link "Telegram" [ref=f2e207] [cursor=pointer]:
+            - /url: https://t.me/foxinburg
+          - link "WhatsApp" [ref=f2e210] [cursor=pointer]:
+            - /url: https://wa.me/79939232309
+      - generic [ref=f2e213]:
+        - heading "Навигация" [level=4] [ref=f2e214]
+        - link "Главная" [ref=f2e215] [cursor=pointer]:
+          - /url: /
+        - link "Курс по чтению" [ref=f2e216] [cursor=pointer]:
+          - /url: /reading
+        - link "Курс по грамматике" [ref=f2e217] [cursor=pointer]:
+          - /url: /grammar
+        - link "Подготовка к школе" [ref=f2e218] [cursor=pointer]:
+          - /url: /preparation
+        - link "Подготовка к ОГЭ по английскому" [ref=f2e219] [cursor=pointer]:
+          - /url: /oge-anglijskij
+        - link "Подготовка к ЕГЭ по английскому" [ref=f2e220] [cursor=pointer]:
+          - /url: /ege-anglijskij
+        - link "Подготовка к ВПР по английскому" [ref=f2e221] [cursor=pointer]:
+          - /url: /vpr-anglijskij
+        - link "Разговорный английский" [ref=f2e222] [cursor=pointer]:
+          - /url: /razgovornyj-anglijskij
+        - link "Индивидуальные занятия (репетитор)" [ref=f2e223] [cursor=pointer]:
+          - /url: /repetitor
+        - 'link "Репетитор: русский и математика (1–4 класс)" [ref=f2e224] [cursor=pointer]':
+          - /url: /repetitor-nachalnaya-shkola
+        - link "Для дошкольников" [ref=f2e225] [cursor=pointer]:
+          - /url: /doshkolniki
+        - link "Для младших школьников" [ref=f2e226] [cursor=pointer]:
+          - /url: /mladshie-shkolniki
+        - link "Для подростков" [ref=f2e227] [cursor=pointer]:
+          - /url: /podrostki
+        - link "Английский для взрослых" [ref=f2e228] [cursor=pointer]:
+          - /url: /anglijskij-dlya-vzroslyh
+        - link "Немецкий язык" [ref=f2e229] [cursor=pointer]:
+          - /url: /nemeckij-yazyk
+        - link "Китайский язык" [ref=f2e230] [cursor=pointer]:
+          - /url: /kitajskij-yazyk
+        - link "Онлайн-занятия" [ref=f2e231] [cursor=pointer]:
+          - /url: /online-zanyatiya
+        - link "Поддерживающие онлайн" [ref=f2e232] [cursor=pointer]:
+          - /url: /podderzhivayushchie-online
+        - link "Стандартные офлайн" [ref=f2e233] [cursor=pointer]:
+          - /url: /standartnye-offline
+      - generic [ref=f2e234]:
+        - heading "О школе" [level=4] [ref=f2e235]
+        - link "О нас" [ref=f2e236] [cursor=pointer]:
+          - /url: /about
+        - link "Отзывы" [ref=f2e237] [cursor=pointer]:
+          - /url: /otzyvy
+        - link "Цены" [ref=f2e238] [cursor=pointer]:
+          - /url: /tseny
+        - link "Блог" [ref=f2e239] [cursor=pointer]:
+          - /url: /blog
+        - link "Тест уровня английского" [ref=f2e240] [cursor=pointer]:
+          - /url: /test-uroven
+        - 'link "Тест: готовность к школе" [ref=f2e241] [cursor=pointer]':
+          - /url: /test-gotov-k-shkole
+        - 'link "Тест: какой формат выбрать" [ref=f2e242] [cursor=pointer]':
+          - /url: /test-format
+        - link "Словарь по темам" [ref=f2e243] [cursor=pointer]:
+          - /url: /english-words
+        - link "Новости" [ref=f2e244] [cursor=pointer]:
+          - /url: /novosti
+        - link "Вакансии" [ref=f2e245] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=f2e246] [cursor=pointer]:
+          - /url: /kontakty
+        - link "Лицензия" [ref=f2e247] [cursor=pointer]:
+          - /url: https://disk.yandex.ru/d/ZDlm_uGmwxH4kw
+        - link "Летняя Академия" [ref=f2e248] [cursor=pointer]:
+          - /url: /letnyaya-akademiya
+        - link "Личный кабинет" [ref=f2e249] [cursor=pointer]:
+          - /url: https://lms.dymova-english.ru
+      - generic [ref=f2e250]:
+        - heading "Контакты" [level=4] [ref=f2e251]
+        - link "8 993 923-23-09" [ref=f2e252] [cursor=pointer]:
+          - /url: tel:+79939232309
+        - link "8 916 732-31-69" [ref=f2e253] [cursor=pointer]:
+          - /url: tel:+79167323169
+        - link "school@foxinburg-edu.ru" [ref=f2e254] [cursor=pointer]:
+          - /url: mailto:school@foxinburg-edu.ru
+        - generic [ref=f2e255]: Ежедневно 9:00 — 21:00
+    - generic [ref=f2e256]:
+      - generic [ref=f2e257]:
+        - generic [ref=f2e258]: ИП Дымова Вероника Александровна
+        - generic [ref=f2e259]: ИНН 611904726658
+      - link "Политика конфиденциальности" [ref=f2e261] [cursor=pointer]:
+        - /url: /policy
+  - button "Открыть чат" [ref=f2e263] [cursor=pointer]: 🦊
+  - dialog "Согласие на использование cookie" [ref=f2e264]:
+    - paragraph [ref=f2e265]:
+      - text: Мы используем cookie, чтобы сайт работал стабильно, а мы могли понимать, что интересно посетителям, и делать школу лучше. Подробнее — в
+      - link "политике конфиденциальности" [ref=f2e266] [cursor=pointer]:
+        - /url: /policy
+      - text: .
+    - generic [ref=f2e267]:
+      - button "Принять" [ref=f2e268] [cursor=pointer]
+      - button "Отклонить" [ref=f2e269] [cursor=pointer]

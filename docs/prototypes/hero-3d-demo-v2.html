@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foxinburg — Cinematic Hero Demo v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Official brand palette — brand-assets/brand-guide.pdf */
+    --purple: #3a2953;
+    --purple-dark: #241a30;
+    --yellow: #f5ed75;
+    --near-black: #2a2a2a;
+    --ink: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(160deg, var(--near-black) 0%, var(--purple-dark) 45%, var(--purple) 100%);
+    color: var(--ink);
+    font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  @media (max-width: 768px), (pointer: coarse) {
+    html, body { cursor: auto; }
+  }
+  em.accent {
+    font-family: "Montserrat", sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--yellow);
+  }
+
+  /* ---------- Custom cursor ---------- */
+  #cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 28px; height: 28px;
+    margin: -14px 0 0 -14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--yellow);
+    pointer-events: none;
+    z-index: 999;
+    transition: width 0.12s ease, height 0.12s ease, margin 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    mix-blend-mode: difference;
+  }
+  #cursor.magnetic {
+    width: 64px; height: 64px;
+    margin: -32px 0 0 -32px;
+    background: var(--yellow);
+    border-color: var(--yellow);
+  }
+  @media (max-width: 768px), (pointer: coarse) {
+    #cursor { display: none; }
+  }
+
+  /* ---------- Cinematic pinned section ---------- */
+  #cinema {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #cinema-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  #vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(20, 12, 32, 0.75) 100%);
+    z-index: 2;
+  }
+  #grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    z-index: 3;
+  }
+
+  .stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+    z-index: 4;
+    opacity: 0;
+  }
+  .stage h1, .stage h2 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1.1;
+    margin: 0 0 18px;
+    max-width: 720px;
+  }
+  .stage p {
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    opacity: 0.82;
+    max-width: 520px;
+    margin: 0 0 28px;
+  }
+  .cta {
+    display: inline-block;
+    padding: 15px 36px;
+    border-radius: 999px;
+    background: var(--yellow);
+    color: var(--near-black);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+  .scroll-cue {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    z-index: 4;
+  }
+
+  .spacer {
+    height: 400vh;
+  }
+  .note {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    font-size: 0.75rem;
+    opacity: 0.35;
+    z-index: 5;
+    max-width: 260px;
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<section id="cinema">
+  <canvas id="cinema-canvas"></canvas>
+  <div id="vignette"></div>
+  <svg id="grain" width="100%" height="100%">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noiseFilter)"></rect>
+  </svg>
+
+  <div class="stage" id="stage-0">
+    <h1>Английский, который <em class="accent">держится</em></h1>
+    <p>Демо-текст — не финальный копирайт. Оценивается сценография камеры и свет.</p>
+  </div>
+
+  <div class="stage" id="stage-1">
+    <h2>Курс, который меняет <em class="accent">привычки</em>, а не только оценки</h2>
+  </div>
+
+  <div class="stage" id="stage-2">
+    <h2>Готовы начать?</h2>
+    <a href="#" class="cta" id="cta-btn">Placeholder CTA</a>
+  </div>
+
+  <div class="scroll-cue">↓ scroll ↓</div>
+</section>
+
+<div class="spacer"></div>
+<div class="note">Прокрути вниз — камера идёт по маршруту из 3 точек, синхронизировано со скроллом (GSAP ScrollTrigger + pin).</div>
+
+<script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js" defer integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js" defer integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from "three";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
+const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
+// Official brand palette — brand-assets/brand-guide.pdf
+const BRAND = {
+  purple: new THREE.Color(0x3a2953),
+  yellow: new THREE.Color(0xf5ed75),
+  nearBlack: new THREE.Color(0x2a2a2a),
+};
+
+function initScene() {
+  const canvas = document.getElementById("cinema-canvas");
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.95;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+
+  const ambient = new THREE.AmbientLight(0xffffff, isMobile ? 0.7 : 0.6);
+  scene.add(ambient);
+  const key = new THREE.DirectionalLight(0xffffff, isMobile ? 1.1 : 1.35);
+  key.position.set(4, 5, 6);
+  scene.add(key);
+  if (!isMobile) {
+    const rim = new THREE.DirectionalLight(0xf5ed75, 0.5);
+    rim.position.set(-5, -2, -4);
+    scene.add(rim);
+  }
+
+  // Centerpiece: the brand's signature yellow squiggle, extruded into 3D as a
+  // tube with a purple->yellow vertex-color gradient along its length —
+  // traces the same flowing line used on the business cards / office wall.
+  const squigglePoints = [
+    new THREE.Vector3(-1.6, -1.7, 0.2),
+    new THREE.Vector3(-0.6, -0.8, 0.5),
+    new THREE.Vector3(-1.15, 0.15, -0.3),
+    new THREE.Vector3(-0.05, 0.55, 0.4),
+    new THREE.Vector3(0.55, -0.15, -0.4),
+    new THREE.Vector3(0.15, -0.85, 0.3),
+    new THREE.Vector3(1.05, -1.0, -0.2),
+    new THREE.Vector3(1.75, -0.15, 0.3),
+  ];
+  const squiggleCurve = new THREE.CatmullRomCurve3(squigglePoints, false, "catmullrom", 0.35);
+  const tubularSegments = isMobile ? 140 : 320;
+  const squiggleGeo = new THREE.TubeGeometry(squiggleCurve, tubularSegments, 0.34, isMobile ? 12 : 24, false);
+
+  // Paint a gradient along the tube's length using the built-in UV.y (0 at
+  // the start of the curve, 1 at the end) — purple fading into brand yellow.
+  {
+    const uv = squiggleGeo.attributes.uv;
+    const colors = new Float32Array(uv.count * 3);
+    const c = new THREE.Color();
+    for (let i = 0; i < uv.count; i++) {
+      const t = uv.getY(i);
+      c.copy(BRAND.purple).lerp(BRAND.yellow, t);
+      colors[i * 3] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
+    }
+    squiggleGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  }
+
+  const squiggleMat = new THREE.MeshPhysicalMaterial({
+    vertexColors: true,
+    roughness: 0.25,
+    clearcoat: 1,
+    clearcoatRoughness: 0.15,
+    metalness: 0.1,
+  });
+  const squiggle = new THREE.Mesh(squiggleGeo, squiggleMat);
+  scene.add(squiggle);
+
+  // Secondary accent: a thin ring nodding to the circular logo badge.
+  const ringGeo = new THREE.TorusGeometry(0.42, 0.045, isMobile ? 10 : 20, isMobile ? 24 : 64);
+  const ringMat = new THREE.MeshStandardMaterial({
+    color: 0xf5ed75,
+    emissive: 0xf5ed75,
+    emissiveIntensity: isMobile ? 0.4 : 0.65,
+    roughness: 0.35,
+    metalness: 0.15,
+  });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.position.set(2.1, 1.2, -0.8);
+  ring.rotation.x = Math.PI / 3;
+  scene.add(ring);
+
+  // Camera path — 3 waypoints, smooth curve
+  const waypoints = [
+    new THREE.Vector3(0, 0.3, 5.0),
+    new THREE.Vector3(4.2, 1.8, 2.2),
+    new THREE.Vector3(-3.0, -1.5, 3.8),
+  ];
+  const cameraCurve = new THREE.CatmullRomCurve3(waypoints, false, "catmullrom", 0.2);
+  camera.position.copy(waypoints[0]);
+  camera.lookAt(0, 0, 0);
+
+  // Post-processing: bloom for the emissive accent shapes
+  let composer = null;
+  if (!isMobile) {
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloom = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.32, // strength
+      0.35, // radius
+      0.62  // threshold
+    );
+    composer.addPass(bloom);
+    composer.addPass(new OutputPass());
+  }
+
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (composer) composer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  const clock = new THREE.Clock();
+  let scrollProgress = 0; // 0..1, driven by GSAP ScrollTrigger below
+
+  function setScrollProgress(t) {
+    scrollProgress = t;
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    squiggle.rotation.y = t * 0.09;
+    squiggle.rotation.x = Math.sin(t * 0.15) * 0.08;
+
+    ring.rotation.z = t * 0.35;
+    ring.rotation.y = t * 0.2;
+
+    if (!prefersReducedMotion) {
+      const camPos = cameraCurve.getPointAt(Math.min(scrollProgress, 0.999));
+      camera.position.lerp(camPos, 0.15);
+      camera.lookAt(0, 0, 0);
+    }
+
+    if (composer) {
+      composer.render();
+    } else {
+      renderer.render(scene, camera);
+    }
+  }
+  animate();
+
+  return { setScrollProgress };
+}
+
+try {
+  const { setScrollProgress } = initScene();
+
+  window.addEventListener("load", () => {
+    if (typeof gsap === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const stages = [
+      document.getElementById("stage-0"),
+      document.getElementById("stage-1"),
+      document.getElementById("stage-2"),
+    ];
+
+    // Entrance stagger for stage 0
+    gsap.set(stages[0], { opacity: 1 });
+    gsap.from("#stage-0 h1, #stage-0 p", {
+      opacity: 0,
+      y: 24,
+      duration: 0.9,
+      stagger: 0.15,
+      ease: "power2.out",
+    });
+
+    if (prefersReducedMotion) {
+      // Static fallback: no pin, no scroll-driven camera. Content just sits at stage 0.
+      document.getElementById("cinema").style.height = "100vh";
+      return;
+    }
+
+    ScrollTrigger.create({
+      trigger: "#cinema",
+      start: "top top",
+      end: "+=3000",
+      pin: true,
+      scrub: 1,
+      onUpdate: (self) => {
+        setScrollProgress(self.progress);
+        const t = self.progress;
+        // Cross-fade the three narrative stages across the scroll range
+        gsap.to(stages[0], { opacity: t < 0.15 ? 1 : Math.max(0, 1 - (t - 0.15) / 0.15), overwrite: true, duration: 0.2 });
+        gsap.to(stages[1], { opacity: t > 0.3 && t < 0.7 ? 1 - Math.abs(t - 0.5) / 0.2 : 0, overwrite: true, duration: 0.2 });
+        gsap.to(stages[2], { opacity: t > 0.82 ? (t - 0.82) / 0.18 : 0, overwrite: true, duration: 0.2 });
+      },
+    });
+  });
+} catch (err) {
+  console.error("Cinematic hero init failed:", err);
+  document.getElementById("cinema-canvas").style.display = "none";
+  document.getElementById("cinema").style.background =
+    "radial-gradient(circle at 30% 30%, #fcf951, transparent 60%), radial-gradient(circle at 70% 70%, #ee7349, transparent 60%), radial-gradient(circle at 50% 50%, #662d92, transparent 70%)";
+}
+
+// Custom cursor
+if (!isCoarsePointer && !isMobile) {
+  const cursor = document.getElementById("cursor");
+  let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  let cx = mx, cy = my;
+  window.addEventListener("mousemove", (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+  function tickCursor() {
+    cx += (mx - cx) * 0.45;
+    cy += (my - cy) * 0.45;
+    cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+    requestAnimationFrame(tickCursor);
+  }
+  tickCursor();
+
+  const ctaBtn = document.getElementById("cta-btn");
+  if (ctaBtn) {
+    ctaBtn.addEventListener("mouseenter", () => cursor.classList.add("magnetic"));
+    ctaBtn.addEventListener("mouseleave", () => cursor.classList.remove("magnetic"));
+  }
+}
+</script>
+
+</body>
+</html>

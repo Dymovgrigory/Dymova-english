@@ -1,0 +1,86 @@
+- generic [active] [ref=f5e1]:
+  - navigation [ref=f5e3]:
+    - navigation [ref=f5e4]:
+      - link [ref=f5e22] [cursor=pointer]:
+        - /url: https://tilda.ru/projects/
+      - generic [ref=f5e28]:
+        - link "Мои сайты" [ref=f5e29] [cursor=pointer]:
+          - /url: https://tilda.ru/projects/
+        - link "Тарифы и оплата" [ref=f5e30] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/plan/
+        - link "Профиль" [ref=f5e31] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/
+        - link "Пригласи друга" [ref=f5e32] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/referrals/
+      - generic [ref=f5e33]:
+        - link "Справочный центр" [ref=f5e34] [cursor=pointer]:
+          - /url: https://help-ru.tilda.cc
+        - link "Вебинары" [ref=f5e35] [cursor=pointer]:
+          - /url: https://webinars.tilda.cc/ru
+        - link "Уроки и статьи" [ref=f5e36] [cursor=pointer]:
+          - /url: https://tilda.education
+        - link "Выйти" [ref=f5e37] [cursor=pointer]:
+          - /url: https://tilda.ru/login/exit/
+  - generic [ref=f5e38]:
+    - complementary:
+      - button
+    - generic [ref=f5e2706]:
+      - generic [ref=f5e2708]:
+        - link "Все пользователи 13" [ref=f5e2712] [cursor=pointer]:
+          - /url: "#/"
+          - generic [ref=f5e2713]: Все пользователи
+          - superscript [ref=f5e2714]: "13"
+        - generic [ref=f5e2716]:
+          - generic [ref=f5e2719] [cursor=pointer]:
+            - generic [ref=f5e2720]: Группы
+            - button [ref=f5e2725]
+          - generic [ref=f5e2731]:
+            - link "Администраторы 2" [ref=f5e2733] [cursor=pointer]:
+              - /url: "#/groups/1548905"
+              - generic [ref=f5e2734]: Администраторы
+              - generic [ref=f5e2736]: "2"
+            - link "Ученики" [ref=f5e2738] [cursor=pointer]:
+              - /url: "#/groups/1548909"
+            - link "Педагоги" [ref=f5e2742] [cursor=pointer]:
+              - /url: "#/groups/1548913"
+            - link "Обучение педагогов 10" [ref=f5e2746] [cursor=pointer]:
+              - /url: "#/groups/1550529"
+              - generic [ref=f5e2747]: Обучение педагогов
+              - generic [ref=f5e2749]: "10"
+        - generic [ref=f5e2751]:
+          - generic [ref=f5e2754] [cursor=pointer]:
+            - generic [ref=f5e2755]: Курсы
+            - button [ref=f5e2760]
+          - generic [ref=f5e2766]:
+            - link "Тестовый курс" [ref=f5e2768] [cursor=pointer]:
+              - /url: "#/courses/469457"
+            - link "Входное обучение педагогов" [ref=f5e2772] [cursor=pointer]:
+              - /url: "#/courses/470721"
+            - link "Стажировка администраторов" [ref=f5e2776] [cursor=pointer]:
+              - /url: "#/courses/491389"
+        - link [ref=f5e2780] [cursor=pointer]:
+          - /url: "#/courses/470721/sitesettings"
+          - button "Настройки личного кабинета" [ref=f5e2783]
+      - generic [ref=f5e2788]:
+        - generic [ref=f5e2790]:
+          - link "Мои сайты" [ref=f5e2792] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/
+          - link "Языковая школа Фоксинбург (Foxy Fox)" [ref=f5e2794] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/?projectid=2053071
+          - link "ЛК" [ref=f5e2796] [cursor=pointer]:
+            - /url: https://members.tilda.ru/2053071/#/
+          - generic [ref=f5e2797]: Курсы
+        - generic [ref=f5e2798]:
+          - generic [ref=f5e2799]:
+            - heading "Входное обучение педагогов" [level=2] [ref=f5e2800]
+            - button "Настройки курса" [ref=f5e2802] [cursor=pointer]
+          - generic [ref=f5e2806]:
+            - paragraph [ref=f5e2807]: Здесь вы сможете сформировать собственный курс, распределив лекции по смысловым разделам. Также разделы нужны, чтобы публиковать курс по частям, дорабатывая часть курса в черновике. Каждая лекция в разделе может содержать в себе видео, вебинар или страницу из вашего проекта.
+            - paragraph [ref=f5e2808]: В настройках курса вы можете указать группы пользователей, которые будут иметь к нему доступ.
+            - paragraph [ref=f5e2809]:
+              - text: Подробнее о том, как создавать курсы, читайте в
+              - link "Справочном центре." [ref=f5e2810] [cursor=pointer]:
+                - /url: https://help-ru.tilda.cc/courses
+            - paragraph [ref=f5e2811]: "Ссылка на курс:"
+        - button "Создать раздел" [ref=f5e2814] [cursor=pointer]
+    - complementary [ref=f5e2818]

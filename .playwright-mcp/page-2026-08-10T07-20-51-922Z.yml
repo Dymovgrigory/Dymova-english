@@ -1,0 +1,41 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: 🦊
+      - heading "Фоксинбург" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Английский не для школы, а для жизни
+    - navigation "Разделы" [ref=e8]:
+      - button "Подобрать курс По возрасту и формату" [ref=e9] [cursor=pointer]:
+        - generic [ref=e10]: 🎓
+        - generic [ref=e11]: Подобрать курс
+        - generic [ref=e12]: По возрасту и формату
+      - button "Записаться Бесплатная диагностика" [ref=e13] [cursor=pointer]:
+        - generic [ref=e14]: 📅
+        - generic [ref=e15]: Записаться
+        - generic [ref=e16]: Бесплатная диагностика
+      - button "Помощь с домашкой Фото задания — разбор" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 📸
+        - generic [ref=e19]: Помощь с домашкой
+        - generic [ref=e20]: Фото задания — разбор
+      - button "Спросить Фокси Отвечает в чате и здесь" [ref=e21] [cursor=pointer]:
+        - generic [ref=e22]: 💬
+        - generic [ref=e23]: Спросить Фокси
+        - generic [ref=e24]: Отвечает в чате и здесь
+      - button "Программы и цены Курсы и форматы" [ref=e25] [cursor=pointer]:
+        - generic [ref=e26]: 📖
+        - generic [ref=e27]: Программы и цены
+        - generic [ref=e28]: Курсы и форматы
+      - button "Филиалы Адреса и телефоны" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 🏫
+        - generic [ref=e31]: Филиалы
+        - generic [ref=e32]: Адреса и телефоны
+    - button "Мой профиль Заполнить" [ref=e33] [cursor=pointer]:
+      - generic [ref=e34]: Мой профиль
+      - generic [ref=e35]: Заполнить
+      - generic [ref=e36]: ›
+  - generic [ref=e37]:
+    - heading "Спросить Фокси" [level=2] [ref=e38]
+    - log [ref=e39]
+    - generic [ref=e40]:
+      - textbox "Спросите о курсах, ценах, записи" [ref=e41]
+      - button "Отправить" [ref=e42] [cursor=pointer]: ↑

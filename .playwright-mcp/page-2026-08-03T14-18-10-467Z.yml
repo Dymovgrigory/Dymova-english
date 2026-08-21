@@ -1,0 +1,36 @@
+- generic [active] [ref=f28e1]:
+  - main [ref=f28e2]:
+    - generic [ref=f28e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f28e6] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f28e8]
+        - generic [ref=f28e9]: Фоксинбург
+      - blockquote [ref=f28e11]:
+        - paragraph [ref=f28e12]: Английский, немецкий и китайский для детей и взрослых
+        - paragraph [ref=f28e13]: Прогресс, задания и сертификаты — всё в одном месте
+    - generic [ref=f28e17]:
+      - combobox "Язык" [ref=f28e19]:
+        - option "Русский" [selected]
+        - option "English"
+      - generic [ref=f28e21]:
+        - heading "Вход" [level=1] [ref=f28e22]
+        - paragraph [ref=f28e23]: Используйте учётную запись LMS для входа.
+        - generic [ref=f28e25]:
+          - generic [ref=f28e26]:
+            - text: Слаг организации
+            - textbox "Слаг организации" [ref=f28e27]:
+              - /placeholder: например, foxenburg
+          - generic [ref=f28e28]:
+            - text: Email
+            - textbox "Email" [ref=f28e29]
+          - generic [ref=f28e30]:
+            - text: Пароль
+            - textbox "Пароль" [ref=f28e31]
+          - paragraph [ref=f28e32]: Введите слаг организации, чтобы показать SSO-вход.
+          - button "Войти" [ref=f28e33] [cursor=pointer]
+        - paragraph [ref=f28e35]:
+          - text: Нет аккаунта?
+          - link "Зарегистрироваться" [ref=f28e36] [cursor=pointer]:
+            - /url: /register
+  - button "Open Next.js Dev Tools" [ref=f28e42] [cursor=pointer]
+  - alert [ref=f28e46]

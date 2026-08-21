@@ -1,0 +1,2 @@
+[   18405ms] [ERROR] Access to fetch at 'https://bot.dymova-english.ru/api/lead' from origin 'http://localhost:8901' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:8901/kontakty/?nocache=4:0
+[   18405ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://bot.dymova-english.ru/api/lead:0

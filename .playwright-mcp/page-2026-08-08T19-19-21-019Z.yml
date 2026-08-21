@@ -1,0 +1,104 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f5e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f5e6]
+        - generic [ref=f5e7]: Фоксинбург
+      - navigation "Основная навигация" [ref=f5e8]:
+        - generic [ref=f5e9]:
+          - generic [ref=f5e11]:
+            - link "Главная" [ref=f5e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f5e19] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f5e24] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f5e28] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f5e32] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f5e38] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f5e43] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f5e48] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f5e56] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f5e60] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f5e64] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f5e69] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f5e72] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f5e77] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f5e83] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f5e90]:
+            - link "Моя команда" [ref=f5e91] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f5e98] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f5e103] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f5e108]:
+            - paragraph [ref=f5e110]: Студия
+            - generic [ref=f5e111]:
+              - link "Студия" [ref=f5e112] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f5e117] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f5e120] [cursor=pointer]:
+                - /url: /studio/paths
+          - generic [ref=f5e126]:
+            - paragraph [ref=f5e128]: Админка
+            - generic [ref=f5e129]:
+              - link "Админка" [ref=f5e130] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f5e136] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f5e141] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f5e145] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f5e150] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f5e155] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f5e160] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f5e164] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Страницы" [ref=f5e169] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Мероприятия" [ref=f5e175] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f5e179] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f5e184] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f5e189] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f5e194] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f5e200] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f5e207] [cursor=pointer]
+    - banner [ref=f5e212]:
+      - paragraph [ref=f5e214]: Админка
+      - generic [ref=f5e215]:
+        - button "Поиск и команды (Ctrl K)" [ref=f5e216] [cursor=pointer]
+        - button "Уведомления" [ref=f5e218] [cursor=pointer]
+        - combobox "Язык" [ref=f5e221]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f5e222] [cursor=pointer]
+        - button "Меню пользователя" [ref=f5e223] [cursor=pointer]:
+          - generic [ref=f5e224]: P
+    - main [ref=f5e226]
+  - button "Open Next.js Dev Tools" [ref=f5e236] [cursor=pointer]
+  - alert [ref=f5e240]

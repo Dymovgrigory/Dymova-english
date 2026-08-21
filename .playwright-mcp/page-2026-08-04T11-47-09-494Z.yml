@@ -1,0 +1,20 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - generic [ref=f1e6]:
+      - link "Фоксинбург Фоксинбург" [ref=f1e7] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f1e9]
+        - generic [ref=f1e10]: Фоксинбург
+      - generic [ref=f1e11]:
+        - combobox "Язык" [ref=f1e12]:
+          - option "Русский" [selected]
+          - option "English"
+        - link "Войти" [ref=f1e13] [cursor=pointer]:
+          - /url: /login
+    - generic [ref=f1e14]:
+      - generic [ref=f1e15]: Языковая школа
+      - heading "Личный кабинет Фоксинбурга" [level=1] [ref=f1e18]
+      - paragraph [ref=f1e19]: Курсы английского, немецкого и китайского для детей и взрослых — прогресс, задания и сертификаты в одном месте.
+      - link "Войти" [ref=f1e21] [cursor=pointer]:
+        - /url: /login
+  - alert [ref=f1e23]

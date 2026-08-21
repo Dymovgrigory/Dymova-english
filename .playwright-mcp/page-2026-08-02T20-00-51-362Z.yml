@@ -1,0 +1,265 @@
+- generic [ref=f14e1]:
+  - complementary [ref=f14e2]:
+    - link "Фоксинбург Фоксинбург" [ref=f14e4] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Фоксинбург" [ref=f14e5]
+      - generic [ref=f14e6]: Фоксинбург
+    - navigation [ref=f14e7]:
+      - generic [ref=f14e8]:
+        - link "Главная" [ref=f14e9] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Руководство" [ref=f14e16] [cursor=pointer]:
+          - /url: /help
+        - link "Обучение" [ref=f14e22] [cursor=pointer]:
+          - /url: /learn
+        - link "Каталог" [ref=f14e27] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Траектории" [ref=f14e31] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "База знаний" [ref=f14e34] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Сертификаты" [ref=f14e38] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Лидерборд" [ref=f14e43] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "Мои бейджи" [ref=f14e51] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Календарь" [ref=f14e55] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Онбординг" [ref=f14e59] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Наблюдения" [ref=f14e64] [cursor=pointer]:
+          - /url: /learn/training
+        - link "Мой план развития" [ref=f14e68] [cursor=pointer]:
+          - /url: /learn/development
+        - link "Оценка 360°" [ref=f14e72] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "Новости" [ref=f14e76] [cursor=pointer]:
+          - /url: /news
+      - link "Моя команда" [ref=f14e103] [cursor=pointer]:
+        - /url: /supervisor
+      - paragraph [ref=f14e111]: Студия
+      - generic [ref=f14e112]:
+        - link "Студия" [ref=f14e113] [cursor=pointer]:
+          - /url: /studio
+        - link "Наблюдения в студии" [ref=f14e118] [cursor=pointer]:
+          - /url: /studio/training
+        - link "Траектории" [ref=f14e122] [cursor=pointer]:
+          - /url: /studio/paths
+      - paragraph [ref=f14e126]: Админка
+      - generic [ref=f14e127]:
+        - link "Админка" [ref=f14e128] [cursor=pointer]:
+          - /url: /admin
+        - link "Аналитика" [ref=f14e133] [cursor=pointer]:
+          - /url: /admin/analytics
+        - link "Заявки на обучение" [ref=f14e138] [cursor=pointer]:
+          - /url: /admin/training-requests
+        - link "SSO" [ref=f14e142] [cursor=pointer]:
+          - /url: /admin/sso-connections
+        - link "LRS" [ref=f14e146] [cursor=pointer]:
+          - /url: /admin/lrs
+        - link "Департаменты" [ref=f14e151] [cursor=pointer]:
+          - /url: /admin/departments
+        - link "Бейджи" [ref=f14e156] [cursor=pointer]:
+          - /url: /admin/badges
+        - link "Мероприятия" [ref=f14e160] [cursor=pointer]:
+          - /url: /admin/events
+        - link "Программы онбординга" [ref=f14e164] [cursor=pointer]:
+          - /url: /admin/onboarding
+        - link "Чек-листы наблюдений" [ref=f14e169] [cursor=pointer]:
+          - /url: /admin/observation-checklists
+        - link "Планы развития" [ref=f14e173] [cursor=pointer]:
+          - /url: /admin/development
+        - link "Компетенции" [ref=f14e177] [cursor=pointer]:
+          - /url: /admin/competencies
+        - link "Оценочные сессии" [ref=f14e181] [cursor=pointer]:
+          - /url: /admin/assessments
+    - generic [ref=f14e81]:
+      - generic [ref=f14e185]:
+        - generic [ref=f14e186]: Г
+        - generic [ref=f14e187]:
+          - paragraph [ref=f14e188]: Григорий Дымов
+          - paragraph [ref=f14e189]: dymovgrigory@mail.ru
+      - button "Выйти" [ref=f14e82] [cursor=pointer]
+      - button "Collapse" [ref=f14e87] [cursor=pointer]
+  - generic [ref=f14e190]:
+    - banner [ref=f14e191]:
+      - paragraph [ref=f14e193]: Фоксинбург
+      - generic [ref=f14e194]:
+        - button "Уведомления" [ref=f14e196] [cursor=pointer]
+        - combobox "Язык" [ref=f14e199]:
+          - option "Русский" [selected]
+          - option "English"
+    - main [ref=f14e200]:
+      - generic [ref=f14e201]:
+        - generic [ref=f14e202]:
+          - link "← ← В студию" [ref=f14e203] [cursor=pointer]:
+            - /url: /studio
+          - generic [ref=f14e204]:
+            - generic [ref=f14e205]: Опубликован
+            - button "Снять с публикации" [ref=f14e206] [cursor=pointer]
+            - button "Удалить" [ref=f14e207] [cursor=pointer]
+        - generic [ref=f14e208]:
+          - heading "О курсе" [level=2] [ref=f14e209]
+          - generic [ref=f14e210]:
+            - generic [ref=f14e211]:
+              - text: Название
+              - textbox "Название" [ref=f14e213]: SEQ Тест доступа
+            - generic [ref=f14e214]:
+              - text: Краткое описание
+              - textbox "Краткое описание" [ref=f14e216]
+            - generic [ref=f14e217]:
+              - text: Полное описание
+              - textbox "Полное описание" [ref=f14e219]
+            - generic [ref=f14e220]:
+              - generic [ref=f14e221]:
+                - text: URL обложки
+                - textbox "URL обложки" [ref=f14e223]:
+                  - /placeholder: https://…
+              - generic [ref=f14e224]:
+                - text: Теги (через запятую)
+                - textbox "Теги (через запятую)" [ref=f14e226]:
+                  - /placeholder: onboarding, продажи
+            - generic [ref=f14e227]:
+              - text: Политика самозаписи
+              - combobox "Политика самозаписи" [ref=f14e229]:
+                - option "Открытая запись" [selected]
+                - option "По заявке"
+                - option "Только по назначению"
+            - generic [ref=f14e230]:
+              - paragraph [ref=f14e231]: Витрина и продажи
+              - generic [ref=f14e232]:
+                - generic [ref=f14e233]:
+                  - checkbox "Показывать в публичной витрине" [ref=f14e234]
+                  - text: Показывать в публичной витрине
+                - generic [ref=f14e235]:
+                  - checkbox "Платный курс" [ref=f14e236]
+                  - text: Платный курс
+                - generic [ref=f14e237]:
+                  - text: Цена, ₽
+                  - spinbutton "Цена, ₽" [disabled] [ref=f14e239]: "0"
+              - paragraph [ref=f14e240]: Неоплачиваемые курсы будут показаны как бесплатные.
+            - button "Сохранить" [ref=f14e242] [cursor=pointer]
+        - generic [ref=f14e243]:
+          - heading "Программа курса" [level=2] [ref=f14e245]
+          - generic [ref=f14e247]:
+            - generic [ref=f14e248]:
+              - textbox [ref=f14e249]: Модуль 1
+              - button "↑" [disabled] [ref=f14e250]
+              - button "↓" [disabled] [ref=f14e251]
+              - button "Удалить" [ref=f14e252] [cursor=pointer]
+            - generic [ref=f14e253]:
+              - generic [ref=f14e255]:
+                - button "▸ Урок 1 — всегда открыт" [ref=f14e256] [cursor=pointer]
+                - button "↑" [disabled] [ref=f14e257]
+                - button "↓" [ref=f14e258] [cursor=pointer]
+                - button "Удалить" [ref=f14e259] [cursor=pointer]
+              - generic [ref=f14e260]:
+                - generic [ref=f14e261]:
+                  - button "▾ Урок 2 — после первого" [active] [ref=f14e271] [cursor=pointer]
+                  - button "↑" [ref=f14e263] [cursor=pointer]
+                  - button "↓" [disabled] [ref=f14e264]
+                  - button "Удалить" [ref=f14e265] [cursor=pointer]
+                - generic [ref=f14e272]:
+                  - textbox "Название урока" [ref=f14e273]: Урок 2 — после первого
+                  - textbox "Ссылка на видео (YouTube/Vimeo/URL)" [ref=f14e274]
+                  - generic [ref=f14e275]:
+                    - generic [ref=f14e276]:
+                      - button "B" [ref=f14e277] [cursor=pointer]
+                      - button "I" [ref=f14e278] [cursor=pointer]
+                      - button "H2" [ref=f14e279] [cursor=pointer]
+                      - button "P" [ref=f14e280] [cursor=pointer]
+                      - button "• List" [ref=f14e281] [cursor=pointer]
+                      - button "1. List" [ref=f14e282] [cursor=pointer]
+                      - button "🔗 Link" [ref=f14e283] [cursor=pointer]
+                    - paragraph [ref=f14e285]: Второй урок.
+                  - generic [ref=f14e286]:
+                    - paragraph [ref=f14e287]: Доступ
+                    - generic [ref=f14e288]:
+                      - combobox [ref=f14e289]:
+                        - option "Всегда открыт"
+                        - option "После прохождения урока…" [selected]
+                      - combobox [ref=f14e290]:
+                        - option "Выберите урок"
+                        - option "Урок 1 — всегда открыт" [selected]
+                  - generic [ref=f14e291]:
+                    - paragraph [ref=f14e292]: Материалы
+                    - paragraph [ref=f14e293]: Файлов нет.
+                    - generic [ref=f14e294] [cursor=pointer]: + Загрузить файл
+                  - generic [ref=f14e295]:
+                    - paragraph [ref=f14e296]: SCORM
+                    - paragraph [ref=f14e297]: SCORM пакет ещё не прикреплён
+                    - generic [ref=f14e298] [cursor=pointer]: Загрузить SCORM
+                  - generic [ref=f14e299]:
+                    - generic [ref=f14e301]:
+                      - paragraph [ref=f14e302]: Квиз
+                      - heading "Создание квиза" [level=3] [ref=f14e303]
+                    - generic [ref=f14e304]:
+                      - generic [ref=f14e305]:
+                        - text: Название
+                        - textbox "Название" [ref=f14e306]: Quiz
+                      - generic [ref=f14e307]:
+                        - text: Проходной балл
+                        - spinbutton "Проходной балл" [ref=f14e308]: "70"
+                      - generic [ref=f14e309]:
+                        - generic [ref=f14e310]:
+                          - paragraph [ref=f14e311]: Вопросы
+                          - button "+ Вопрос" [ref=f14e312] [cursor=pointer]
+                        - generic [ref=f14e313]:
+                          - generic [ref=f14e315]:
+                            - generic [ref=f14e316]:
+                              - text: Вопрос 1
+                              - textbox "Вопрос 1" [ref=f14e317]
+                            - generic [ref=f14e318]:
+                              - generic [ref=f14e319]:
+                                - text: Тип
+                                - combobox "Тип" [ref=f14e320]:
+                                  - option "Один ответ" [selected]
+                                  - option "Несколько ответов"
+                                  - option "Открытый ответ"
+                              - generic [ref=f14e321]:
+                                - text: Баллы
+                                - spinbutton "Баллы" [ref=f14e322]: "1"
+                              - button "Удалить вопрос" [disabled] [ref=f14e324]
+                          - generic [ref=f14e325]:
+                            - generic [ref=f14e326]:
+                              - textbox "Вариант 1" [ref=f14e327]
+                              - generic [ref=f14e328]:
+                                - radio "верный" [checked] [ref=f14e329]
+                                - text: верный
+                              - button "Убрать" [disabled] [ref=f14e330]
+                            - generic [ref=f14e331]:
+                              - textbox "Вариант 2" [ref=f14e332]
+                              - generic [ref=f14e333]:
+                                - radio "верный" [ref=f14e334]
+                                - text: верный
+                              - button "Убрать" [disabled] [ref=f14e335]
+                            - button "+ Вариант" [ref=f14e336] [cursor=pointer]
+                      - button "Создать квиз" [ref=f14e338] [cursor=pointer]
+                  - generic [ref=f14e339]:
+                    - generic [ref=f14e341]:
+                      - paragraph [ref=f14e342]: Задание
+                      - heading "Создание задания" [level=3] [ref=f14e343]
+                    - generic [ref=f14e344]:
+                      - generic [ref=f14e345]:
+                        - text: Название
+                        - textbox "Название" [ref=f14e346]: Задание
+                      - generic [ref=f14e347]:
+                        - text: Инструкции
+                        - textbox "Инструкции" [ref=f14e348]:
+                          - /placeholder: Опишите, что нужно сделать…
+                      - generic [ref=f14e349]:
+                        - generic [ref=f14e350]:
+                          - text: Срок сдачи
+                          - textbox "Срок сдачи" [ref=f14e351]
+                        - generic [ref=f14e352]:
+                          - text: Максимальный балл
+                          - spinbutton "Максимальный балл" [ref=f14e353]: "100"
+                      - button "Создать задание" [ref=f14e355] [cursor=pointer]
+                  - button "Сохранить урок" [ref=f14e356] [cursor=pointer]
+              - button "+ Урок" [ref=f14e266] [cursor=pointer]
+          - generic [ref=f14e267]:
+            - textbox "Название новой главы" [ref=f14e268]
+            - button "+ Глава" [disabled] [ref=f14e269]
+  - button "Open Next.js Dev Tools" [ref=f14e97] [cursor=pointer]
+  - alert [ref=f14e270]

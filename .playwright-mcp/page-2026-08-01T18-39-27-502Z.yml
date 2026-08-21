@@ -1,0 +1,16 @@
+- generic [ref=f38e3]:
+  - link [ref=f38e5] [cursor=pointer]:
+    - /url: //support.google.com/docs/
+    - img "Логотип Google" [ref=f38e6]
+  - generic [ref=f38e7]:
+    - paragraph [ref=f38e8]: Файл удален.
+    - paragraph [ref=f38e9]: "Возможные причины ошибки: указан неверный URL, либо файл удален владельцем."
+    - generic [ref=f38e10]:
+      - paragraph [ref=f38e11]:
+        - strong [ref=f38e12]: Работать с Google Диском легко и приятно.
+      - paragraph [ref=f38e13]: Создавайте текстовые документы, таблицы, презентации и многое другое, храните их в Интернете и отправляйте другим пользователям.
+      - paragraph [ref=f38e14]:
+        - text: Подробности на
+        - link "drive.google.com/start/apps" [ref=f38e15] [cursor=pointer]:
+          - /url: https://drive.google.com/start/apps
+        - text: .

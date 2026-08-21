@@ -1,0 +1,59 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - banner [ref=f3e3]:
+      - generic [ref=f3e4]:
+        - button "Open menu" [ref=f3e5] [cursor=pointer]
+        - paragraph [ref=f3e6]: Dashboard
+      - generic [ref=f3e7]:
+        - button "Search and commands (Ctrl K)" [ref=f3e8] [cursor=pointer]
+        - button "Notifications" [ref=f3e9] [cursor=pointer]
+        - combobox "Language" [ref=f3e10]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=f3e11] [cursor=pointer]
+        - button "User menu" [ref=f3e12] [cursor=pointer]:
+          - generic [ref=f3e13]: E
+    - main [ref=f3e15]:
+      - generic [ref=f3e17]:
+        - generic [ref=f3e18]:
+          - generic [ref=f3e19]:
+            - heading "Good afternoon, Empty Owner" [level=1] [ref=f3e20]
+            - paragraph [ref=f3e21]: Your role is OWNER. You belong to the organization "Empty Org".
+          - button "Customize widgets" [ref=f3e22] [cursor=pointer]
+        - navigation "Quick Actions" [ref=f3e26]:
+          - link "Studio" [ref=f3e27] [cursor=pointer]:
+            - /url: /studio
+          - link "Analytics" [ref=f3e28] [cursor=pointer]:
+            - /url: /analytics
+          - link "Training Requests" [ref=f3e29] [cursor=pointer]:
+            - /url: /admin/training-requests
+          - link "Groups" [ref=f3e30] [cursor=pointer]:
+            - /url: /admin/groups
+        - generic [ref=f3e31]:
+          - generic [ref=f3e35]:
+            - generic [ref=f3e36]: Learning
+            - link "Analytics" [ref=f3e43] [cursor=pointer]:
+              - /url: /analytics
+          - generic [ref=f3e52]:
+            - generic [ref=f3e53]: Active students
+            - link "Analytics" [ref=f3e62] [cursor=pointer]:
+              - /url: /analytics
+          - generic [ref=f3e71]:
+            - generic [ref=f3e72]: Revenue
+            - link "Analytics" [ref=f3e79] [cursor=pointer]:
+              - /url: /analytics
+          - generic [ref=f3e88]:
+            - generic [ref=f3e89]: "Courses: enrollment & progress"
+            - link "Analytics" [ref=f3e95] [cursor=pointer]:
+              - /url: /analytics
+          - generic [ref=f3e104]:
+            - generic [ref=f3e105]: Homework
+            - link "Analytics" [ref=f3e113] [cursor=pointer]:
+              - /url: /analytics
+          - generic [ref=f3e122]:
+            - generic [ref=f3e123]: Team activity
+            - link "View all" [ref=f3e131] [cursor=pointer]:
+              - /url: /supervisor
+        - status [ref=f3e137]
+  - button "Open Next.js Dev Tools" [ref=f3e143] [cursor=pointer]
+  - alert [ref=f3e147]

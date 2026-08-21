@@ -1,0 +1,172 @@
+- generic [ref=f40e1]:
+  - generic [ref=f40e2]:
+    - banner [ref=f40e3]:
+      - generic [ref=f40e4]:
+        - button "Открыть меню" [ref=f40e5] [cursor=pointer]
+        - paragraph [ref=f40e6]: Студия
+      - generic [ref=f40e7]:
+        - button "Поиск и команды (Ctrl K)" [ref=f40e8] [cursor=pointer]
+        - button "Уведомления" [ref=f40e10] [cursor=pointer]
+        - combobox "Язык" [ref=f40e13]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f40e14] [cursor=pointer]
+        - button "Меню пользователя" [ref=f40e15] [cursor=pointer]:
+          - generic [ref=f40e16]: O
+    - main [ref=f40e18]:
+      - generic [ref=f40e19]:
+        - generic [ref=f40e20]:
+          - link "← ← В студию" [ref=f40e21] [cursor=pointer]:
+            - /url: /studio
+          - generic [ref=f40e22]:
+            - generic [ref=f40e23]: Черновик
+            - button "Опубликовать" [ref=f40e24] [cursor=pointer]
+            - button "Удалить" [ref=f40e25] [cursor=pointer]
+        - generic [ref=f40e26]:
+          - heading "О курсе" [level=2] [ref=f40e28]
+          - paragraph [ref=f40e29]: Изменения сохраняются автоматически.
+          - generic [ref=f40e30]:
+            - generic [ref=f40e31]:
+              - text: Название
+              - textbox "Название" [ref=f40e33]: Курс Phase 8
+            - generic [ref=f40e34]:
+              - text: Краткое описание
+              - textbox "Краткое описание" [ref=f40e36]: intro
+            - generic [ref=f40e37]:
+              - text: Полное описание
+              - textbox "Полное описание" [ref=f40e39]: desc
+            - generic [ref=f40e40]:
+              - generic [ref=f40e41]:
+                - text: URL обложки
+                - textbox "URL обложки" [ref=f40e43]:
+                  - /placeholder: https://…
+              - generic [ref=f40e44]:
+                - text: Теги (через запятую)
+                - textbox "Теги (через запятую)" [ref=f40e46]:
+                  - /placeholder: onboarding, продажи
+            - generic [ref=f40e47]:
+              - text: Политика самозаписи
+              - combobox "Политика самозаписи" [ref=f40e49]:
+                - option "Открытая запись" [selected]
+                - option "По заявке"
+                - option "Только по назначению"
+            - generic [ref=f40e50]:
+              - paragraph [ref=f40e51]: Витрина и продажи
+              - generic [ref=f40e52]:
+                - generic [ref=f40e53]:
+                  - checkbox "Показывать в публичной витрине" [ref=f40e54]
+                  - text: Показывать в публичной витрине
+                - generic [ref=f40e55]:
+                  - checkbox "Платный курс" [ref=f40e56]
+                  - text: Платный курс
+                - generic [ref=f40e57]:
+                  - text: Цена, ₽
+                  - spinbutton "Цена, ₽" [disabled] [ref=f40e59]: "0"
+              - paragraph [ref=f40e60]: Неоплачиваемые курсы будут показаны как бесплатные.
+        - generic [ref=f40e61]:
+          - heading "Программа курса" [level=2] [ref=f40e63]
+          - generic [ref=f40e66]:
+            - generic [ref=f40e67]:
+              - button "Перетащите, чтобы изменить порядок глав" [ref=f40e68]
+              - textbox [ref=f40e76]: Глава 1
+              - button "Вверх" [disabled] [ref=f40e77]
+              - button "Вниз" [disabled] [ref=f40e80]
+              - button "Удалить" [ref=f40e83] [cursor=pointer]
+            - generic [ref=f40e86]:
+              - generic [ref=f40e88]:
+                - generic [ref=f40e89]:
+                  - button "Перетащите, чтобы изменить порядок уроков" [ref=f40e90]
+                  - button "Урок тестовый" [active] [ref=f40e98] [cursor=pointer]
+                  - button "Вверх" [disabled] [ref=f40e101]
+                  - button "Вниз" [disabled] [ref=f40e104]
+                  - button "Удалить" [ref=f40e107] [cursor=pointer]
+                - generic [ref=f40e110]:
+                  - textbox "Название урока" [ref=f40e111]: Урок тестовый
+                  - textbox "Ссылка на видео (YouTube/Vimeo/URL)" [ref=f40e112]
+                  - generic [ref=f40e113]:
+                    - paragraph [ref=f40e114]: Доступ
+                    - combobox [ref=f40e116]:
+                      - option "Всегда открыт" [selected]
+                      - option "После прохождения урока…"
+                  - generic [ref=f40e117]:
+                    - paragraph [ref=f40e118]: Материалы
+                    - paragraph [ref=f40e119]: Файлов нет.
+                    - generic [ref=f40e120] [cursor=pointer]: + Загрузить файл
+                  - generic [ref=f40e121]:
+                    - paragraph [ref=f40e122]: SCORM
+                    - paragraph [ref=f40e123]: SCORM пакет ещё не прикреплён
+                    - generic [ref=f40e124] [cursor=pointer]: Загрузить SCORM
+                  - generic [ref=f40e125]:
+                    - generic [ref=f40e127]:
+                      - paragraph [ref=f40e128]: Квиз
+                      - heading "Создание квиза" [level=3] [ref=f40e129]
+                    - generic [ref=f40e130]:
+                      - generic [ref=f40e131]:
+                        - text: Название
+                        - textbox "Название" [ref=f40e132]: Quiz
+                      - generic [ref=f40e133]:
+                        - text: Проходной балл
+                        - spinbutton "Проходной балл" [ref=f40e134]: "70"
+                      - generic [ref=f40e135]:
+                        - generic [ref=f40e136]:
+                          - paragraph [ref=f40e137]: Вопросы
+                          - button "+ Вопрос" [ref=f40e138] [cursor=pointer]
+                        - generic [ref=f40e139]:
+                          - generic [ref=f40e141]:
+                            - generic [ref=f40e142]:
+                              - text: Вопрос 1
+                              - textbox "Вопрос 1" [ref=f40e143]
+                            - generic [ref=f40e144]:
+                              - generic [ref=f40e145]:
+                                - text: Тип
+                                - combobox "Тип" [ref=f40e146]:
+                                  - option "Один ответ" [selected]
+                                  - option "Несколько ответов"
+                                  - option "Открытый ответ"
+                              - generic [ref=f40e147]:
+                                - text: Баллы
+                                - spinbutton "Баллы" [ref=f40e148]: "1"
+                              - button "Удалить вопрос" [disabled] [ref=f40e150]
+                          - generic [ref=f40e151]:
+                            - generic [ref=f40e152]:
+                              - textbox "Вариант 1" [ref=f40e153]
+                              - generic [ref=f40e154]:
+                                - radio "верный" [checked] [ref=f40e155]
+                                - text: верный
+                              - button "Убрать" [disabled] [ref=f40e156]
+                            - generic [ref=f40e157]:
+                              - textbox "Вариант 2" [ref=f40e158]
+                              - generic [ref=f40e159]:
+                                - radio "верный" [ref=f40e160]
+                                - text: верный
+                              - button "Убрать" [disabled] [ref=f40e161]
+                            - button "+ Вариант" [ref=f40e162] [cursor=pointer]
+                      - button "Создать квиз" [ref=f40e164] [cursor=pointer]
+                  - generic [ref=f40e165]:
+                    - generic [ref=f40e167]:
+                      - paragraph [ref=f40e168]: Задание
+                      - heading "Создание задания" [level=3] [ref=f40e169]
+                    - generic [ref=f40e170]:
+                      - generic [ref=f40e171]:
+                        - text: Название
+                        - textbox "Название" [ref=f40e172]: Задание
+                      - generic [ref=f40e173]:
+                        - text: Инструкции
+                        - textbox "Инструкции" [ref=f40e174]:
+                          - /placeholder: Опишите, что нужно сделать…
+                      - generic [ref=f40e175]:
+                        - generic [ref=f40e176]:
+                          - text: Срок сдачи
+                          - textbox "Срок сдачи" [ref=f40e177]
+                        - generic [ref=f40e178]:
+                          - text: Максимальный балл
+                          - spinbutton "Максимальный балл" [ref=f40e179]: "100"
+                      - button "Создать задание" [ref=f40e181] [cursor=pointer]
+                  - button "Сохранить урок" [ref=f40e182] [cursor=pointer]
+              - button "+ Урок" [ref=f40e183] [cursor=pointer]
+          - status [ref=f40e184]
+          - generic [ref=f40e185]:
+            - textbox "Название новой главы" [ref=f40e186]
+            - button "+ Глава" [disabled] [ref=f40e187]
+  - button "Open Next.js Dev Tools" [ref=f40e193] [cursor=pointer]
+  - alert [ref=f40e197]

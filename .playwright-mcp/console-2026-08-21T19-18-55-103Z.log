@@ -1,0 +1,1 @@
+[     439ms] [WARNING] [foxi] не запустился: TypeError: Failed to resolve module specifier "three". Relative references must start with either "/", "./", or "../". @ http://localhost:8931/mascot/mascot.js:100

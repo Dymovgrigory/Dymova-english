@@ -1,0 +1,126 @@
+- generic [active] [ref=f44e1]:
+  - generic [ref=f44e13]:
+    - banner [ref=f44e14]:
+      - button "Открыть меню" [ref=f44e16] [cursor=pointer]
+      - generic [ref=f44e17]:
+        - button "Поиск и команды (Ctrl K)" [ref=f44e18] [cursor=pointer]
+        - button "Уведомления" [ref=f44e20] [cursor=pointer]
+        - combobox "Язык" [ref=f44e23]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f44e24] [cursor=pointer]
+        - button "Меню пользователя" [ref=f44e25] [cursor=pointer]:
+          - generic [ref=f44e26]: Г
+    - main [ref=f44e28]:
+      - generic [ref=f44e30]:
+        - generic [ref=f44e31]:
+          - generic [ref=f44e32]:
+            - heading "Аналитика" [level=1] [ref=f44e33]
+            - paragraph [ref=f44e34]: Интерактивный обзор по доменам школы. Период применяется ко всем графикам.
+          - generic [ref=f44e35]:
+            - generic [ref=f44e36]:
+              - button "7 дней" [ref=f44e37] [cursor=pointer]
+              - button "30 дней" [ref=f44e38] [cursor=pointer]
+              - button "90 дней" [ref=f44e39] [cursor=pointer]
+              - button "12 мес" [pressed] [ref=f44e40] [cursor=pointer]
+            - generic [ref=f44e41]:
+              - textbox "Дата с" [ref=f44e42]: 2025-08-10
+              - generic [ref=f44e43]: —
+              - textbox "Дата по" [ref=f44e44]: 2026-08-09
+            - generic [ref=f44e45]: 2025-08-10 — 2026-08-09
+        - navigation "Разделы аналитики" [ref=f44e46]:
+          - link "Обзор" [ref=f44e47] [cursor=pointer]:
+            - /url: /analytics
+          - link "Обучение" [ref=f44e48] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "Люди" [ref=f44e49] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Финансы" [ref=f44e50] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f44e51]:
+          - generic [ref=f44e52]:
+            - generic [ref=f44e53]:
+              - heading "Люди по подразделениям" [level=2] [ref=f44e54]
+              - paragraph [ref=f44e55]: Распределение пользователей
+              - generic [ref=f44e57]:
+                - img "Люди по подразделениям" [ref=f44e58]:
+                  - 'generic "Без подразделения: 14"'
+                - list [ref=f44e59]:
+                  - listitem [ref=f44e60]:
+                    - generic [ref=f44e62]: Без подразделения
+                    - generic [ref=f44e63]: "14"
+                    - generic [ref=f44e64]: 100%
+            - generic [ref=f44e65]:
+              - heading "Прогресс подразделений" [level=2] [ref=f44e66]
+              - paragraph [ref=f44e67]: Средний прогресс по курсам
+              - img "Прогресс подразделений" [ref=f44e69]:
+                - generic [ref=f44e70]:
+                  - generic [ref=f44e71]: Без подразделения
+                  - 'generic "Без подразделения: 38,8%" [ref=f44e73]'
+                  - generic [ref=f44e74]: 38,8%
+          - generic [ref=f44e75]:
+            - heading "Прогресс групп" [level=2] [ref=f44e76]
+            - paragraph [ref=f44e77]: Топ-10 групп по числу участников
+            - img "Прогресс групп" [ref=f44e79]:
+              - generic [ref=f44e80]:
+                - generic [ref=f44e81]: Обучение педагогов
+                - 'generic "Обучение педагогов: 33,2%" [ref=f44e83]'
+                - generic [ref=f44e84]: 33,2%
+              - generic [ref=f44e85]:
+                - generic [ref=f44e86]: Администраторы
+                - 'generic "Администраторы: 81,3%" [ref=f44e88]'
+                - generic [ref=f44e89]: 81,3%
+              - generic [ref=f44e90]:
+                - generic [ref=f44e91]: Педагоги
+                - 'generic "Педагоги: 0%"'
+                - generic [ref=f44e93]: 0%
+              - generic [ref=f44e94]:
+                - generic [ref=f44e95]: Ученики
+                - 'generic "Ученики: 0%"'
+                - generic [ref=f44e97]: 0%
+          - generic [ref=f44e98]:
+            - heading "Лидеры по прогрессу" [level=2] [ref=f44e99]
+            - paragraph [ref=f44e100]: Топ-10 учеников по среднему прогрессу
+            - img "Лидеры по прогрессу" [ref=f44e102]:
+              - generic [ref=f44e103]:
+                - generic [ref=f44e104]: Анастасия
+                - 'generic "Анастасия: 90,6%" [ref=f44e106]'
+                - generic [ref=f44e107]: 90,6%
+              - generic [ref=f44e108]:
+                - generic [ref=f44e109]: Наталья
+                - 'generic "Наталья: 84,4%" [ref=f44e111]'
+                - generic [ref=f44e112]: 84,4%
+              - generic [ref=f44e113]:
+                - generic [ref=f44e114]: Анна
+                - 'generic "Анна: 80,5%" [ref=f44e116]'
+                - generic [ref=f44e117]: 80,5%
+              - generic [ref=f44e118]:
+                - generic [ref=f44e119]: Роман
+                - 'generic "Роман: 50,8%" [ref=f44e121]'
+                - generic [ref=f44e122]: 50,8%
+              - generic [ref=f44e123]:
+                - generic [ref=f44e124]: SEQ Ученик
+                - 'generic "SEQ Ученик: 50%" [ref=f44e126]'
+                - generic [ref=f44e127]: 50%
+              - generic [ref=f44e128]:
+                - generic [ref=f44e129]: Дарья
+                - 'generic "Дарья: 10,2%" [ref=f44e131]'
+                - generic [ref=f44e132]: 10,2%
+              - generic [ref=f44e133]:
+                - generic [ref=f44e134]: Юлия
+                - 'generic "Юлия: 10,2%" [ref=f44e136]'
+                - generic [ref=f44e137]: 10,2%
+              - generic [ref=f44e138]:
+                - generic [ref=f44e139]: Владислав
+                - 'generic "Владислав: 4,7%" [ref=f44e141]'
+                - generic [ref=f44e142]: 4,7%
+              - generic [ref=f44e143]:
+                - generic [ref=f44e144]: Головизнина Ираида
+                - 'generic "Головизнина Ираида: 4,7%" [ref=f44e146]'
+                - generic [ref=f44e147]: 4,7%
+              - generic [ref=f44e148]:
+                - generic [ref=f44e149]: Алина
+                - 'generic "Алина: 0%"'
+                - generic [ref=f44e151]: 0%
+  - button "Open Next.js Dev Tools" [ref=f44e8] [cursor=pointer]
+  - alert [ref=f44e12]

@@ -1,0 +1,5 @@
+[     122ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     133ms] [LOG] [HMR] connected @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  402794ms] [ERROR] Cannot update a component (`%s`) while rendering a different component (`%s`). To locate the bad setState() call inside `%s`, follow the stack trace as described in https://react.dev/link/setstate-in-render LayersPanel De De @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  455249ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  455276ms] [LOG] [Fast Refresh] done in 76ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477

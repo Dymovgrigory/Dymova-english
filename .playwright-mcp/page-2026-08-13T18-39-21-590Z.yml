@@ -1,0 +1,35 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img "Фокси, маскот школы Фоксинбург" [ref=e6]
+      - paragraph [ref=e7]: Языковая школа
+      - heading "Фоксинбург" [level=1] [ref=e8]
+      - paragraph [ref=e9]: Английский не для школы, а для жизни
+    - navigation "Разделы" [ref=e10]:
+      - button "Подобрать курс По возрасту и формату — за минуту" [ref=e11] [cursor=pointer]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: Подобрать курс
+          - generic [ref=e18]: По возрасту и формату — за минуту
+      - button "Записаться Бесплатная диагностика" [ref=e22] [cursor=pointer]:
+        - generic [ref=e28]:
+          - generic [ref=e29]: Записаться
+          - generic [ref=e30]: Бесплатная диагностика
+      - button "Помощь с домашкой Фото задания — разбор" [ref=e31] [cursor=pointer]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: Помощь с домашкой
+          - generic [ref=e39]: Фото задания — разбор
+      - button "Спросить Фокси Отвечает здесь и в чате" [ref=e40] [cursor=pointer]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: Спросить Фокси
+          - generic [ref=e47]: Отвечает здесь и в чате
+      - button "Программы и цены Курсы и форматы" [ref=e48] [cursor=pointer]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Программы и цены
+          - generic [ref=e55]: Курсы и форматы
+      - button "Филиалы Адреса и телефоны" [ref=e56] [cursor=pointer]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: Филиалы
+          - generic [ref=e63]: Адреса и телефоны
+    - button "Мой профиль Заполнить" [ref=e64] [cursor=pointer]:
+      - generic [ref=e65]: Мой профиль
+      - generic [ref=e66]: Заполнить

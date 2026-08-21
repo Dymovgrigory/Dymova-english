@@ -1,0 +1,69 @@
+[     127ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     147ms] [LOG] [HMR] connected @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   66429ms] [ERROR] Cannot update a component (`%s`) while rendering a different component (`%s`). To locate the bad setState() call inside `%s`, follow the stack trace as described in https://react.dev/link/setstate-in-render LayersPanel De De @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[   87040ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   87961ms] [LOG] [Fast Refresh] done in 1024ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  300227ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  360225ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  420224ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  480225ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  495923ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  498014ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7?_rsc=INfDTSe6a-3Am5wM:0
+[  498428ms] [LOG] [Fast Refresh] done in 2524ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  498428ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/users/me:0
+[  498429ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/users/me:0
+[  498430ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/auth/refresh:0
+[  498430ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/auth/refresh:0
+[  498437ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7?_rsc=INfDTSe6a-3Am5wM:0
+[  498550ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7?_rsc=INfDTSe6a-3Am5wM:0
+[  498565ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7?_rsc=INfDTSe6a-3Am5wM:0
+[  498576ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7?_rsc=INfDTSe6a-3Am5wM:0
+[  498587ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7?_rsc=INfDTSe6a-3Am5wM:0
+[  498598ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7:0
+[  498642ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  498652ms] [LOG] [HMR] connected @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  916475ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  918152ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3112/admin/pages/98c22f24-da0f-4979-b5d2-12c8f481bbf7?_rsc=gJvLbHS0Udr_qZza:0
+[  918435ms] [LOG] [Fast Refresh] done in 2000ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  918760ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  918784ms] [LOG] [HMR] connected @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  918881ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  918908ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  918923ms] [LOG] [Fast Refresh] done in 123ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  918981ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3112/login:0
+[ 1961903ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1961948ms] [LOG] [Fast Refresh] done in 147ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1979052ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1979094ms] [LOG] [Fast Refresh] done in 72ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2021010ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2021075ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2072706ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2072746ms] [LOG] [Fast Refresh] done in 71ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2138432ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2138532ms] [LOG] [Fast Refresh] done in 158ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2147653ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2148569ms] [LOG] [Fast Refresh] done in 947ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2148734ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3112/login:0
+[ 2148743ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2148754ms] [LOG] [HMR] connected @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2174301ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2174336ms] [LOG] [Fast Refresh] done in 85ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2174427ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3112/login:0
+[ 2202190ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2202213ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2221755ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2222032ms] [LOG] [Fast Refresh] done in 303ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2249626ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2249692ms] [LOG] [Fast Refresh] done in 77ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2515669ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2516672ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2517674ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2518675ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2519682ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2524692ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2529705ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2534715ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2539732ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2544700ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2549789ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[ 2554937ms] [ERROR] WebSocket connection to 'ws://localhost:3112/_next/webpack-hmr?id=Spy41bkPkVV_kB7PW9r3Y' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422

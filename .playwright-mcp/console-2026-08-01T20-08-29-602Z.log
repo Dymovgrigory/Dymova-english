@@ -1,0 +1,2 @@
+[     367ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8902/api/miniapp/access:0
+[     370ms] [ERROR] SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON @ http://localhost:8902/app.js:235

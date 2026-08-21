@@ -1,0 +1,151 @@
+[     162ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3105/login:0
+[     229ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     290ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     484ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     613ms] [LOG] [Fast Refresh] done in 229ms @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   31704ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   31713ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   56010ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   56016ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  289039ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  289053ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  401224ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  401283ms] [ERROR] %o
+
+%s TypeError: users.filter is not a function
+    at AdminPage (http://localhost:3105/_next/static/chunks/src_07jrij8._.js:772:31)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) The above error occurred in the <AdminPage> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[  401289ms] [ERROR] [app] route error boundary caught: TypeError: users.filter is not a function
+    at AdminPage (http://localhost:3105/_next/static/chunks/src_07jrij8._.js:772:31)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  401289ms] [ERROR] [app] route error boundary caught: TypeError: users.filter is not a function
+    at AdminPage (http://localhost:3105/_next/static/chunks/src_07jrij8._.js:772:31)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  407204ms] [ERROR] %o
+
+%s TypeError: blocks.find is not a function
+    at BlocksTab (http://localhost:3105/_next/static/chunks/src_1hgw3sr._.js:264:28)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) The above error occurred in the <BlocksTab> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[  407205ms] [ERROR] [app] route error boundary caught: TypeError: blocks.find is not a function
+    at BlocksTab (http://localhost:3105/_next/static/chunks/src_1hgw3sr._.js:264:28)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  407206ms] [ERROR] [app] route error boundary caught: TypeError: blocks.find is not a function
+    at BlocksTab (http://localhost:3105/_next/static/chunks/src_1hgw3sr._.js:264:28)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  410902ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  411818ms] [LOG] [Fast Refresh] done in 1017ms @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  412141ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  412278ms] [LOG] [Fast Refresh] done in 237ms @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  412287ms] [ERROR] %o
+
+%s TypeError: certificates.map is not a function
+    at CertificatesPage (http://localhost:3105/_next/static/chunks/src_0nw8ti0._.js:181:44)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) The above error occurred in the <CertificatesPage> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[  412288ms] [ERROR] [app] route error boundary caught: TypeError: certificates.map is not a function
+    at CertificatesPage (http://localhost:3105/_next/static/chunks/src_0nw8ti0._.js:181:44)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  412289ms] [ERROR] [app] route error boundary caught: TypeError: certificates.map is not a function
+    at CertificatesPage (http://localhost:3105/_next/static/chunks/src_0nw8ti0._.js:181:44)
+    at Object.react_stack_bottom_frame (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3105/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 1133289ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1133329ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1177961ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1177974ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1413213ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1413226ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1713007ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1713020ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 1713125ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/api/v1/analytics/revenue:0
+[ 1714136ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/api/v1/analytics/revenue:0
+[ 2198839ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 2198848ms] [LOG] [HMR] connected @ http://localhost:3105/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477

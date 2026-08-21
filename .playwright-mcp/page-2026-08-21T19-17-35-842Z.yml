@@ -1,0 +1,422 @@
+- generic [active] [ref=e1]:
+  - generic: Языковая школа Фоксинбург
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - link "Фоксинбург Фоксинбург" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=e6]
+        - generic [ref=e7]: Фоксинбург
+      - iframe [ref=e9]:
+        - link [ref=f1e2] [cursor=pointer]:
+          - /url: //yandex.ru/maps/org/162408588499/reviews?utm_source=badge&utm_medium=rating&utm_campaign=v1
+      - navigation [ref=e10]:
+        - link "Главная" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - button "Наши курсы" [ref=e13] [cursor=pointer]
+        - button "Направления" [ref=e17] [cursor=pointer]
+        - button "Другие языки" [ref=e21] [cursor=pointer]
+        - link "Цены" [ref=e24] [cursor=pointer]:
+          - /url: /tseny
+        - button "Полезное" [ref=e26] [cursor=pointer]
+        - link "Вакансии" [ref=e29] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=e30] [cursor=pointer]:
+          - /url: /kontakty
+      - link "Вход в ЛК" [ref=e32] [cursor=pointer]:
+        - /url: https://lms.dymova-english.ru
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - link "Лихачевский, 76к1" [ref=e35] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 993 923-23-09" [ref=e39] [cursor=pointer]:
+          - /url: tel:+79939232309
+      - generic [ref=e41]:
+        - link "Ракетостроителей, 9к3" [ref=e42] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 916 732-31-69" [ref=e46] [cursor=pointer]:
+          - /url: tel:+79167323169
+      - generic [ref=e48]: 9:00 — 21:00
+      - link "Max Bot" [ref=e52] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+    - generic [ref=e53]: Летние программы ▾
+  - generic [ref=e58]:
+    - generic [ref=e60]:
+      - generic [ref=e61]: Словарь · транскрипция · примеры
+      - heading "Английские слова на тему «Животные»" [level=1] [ref=e63]
+      - paragraph [ref=e64]: "30 слов по теме «Животные» с транскрипцией, переводом и примерами: базовый словарь уровня A1 для детей и родителей."
+      - generic [ref=e65]:
+        - button "Бесплатная диагностика" [ref=e66] [cursor=pointer]
+        - link "Подробнее о программе" [ref=e67] [cursor=pointer]:
+          - /url: "#fxb-program"
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]: Как пользоваться
+        - heading "Словарь, который реально учит" [level=2] [ref=e73]
+        - paragraph [ref=e74]: "Не просто список слов, а рабочий инструмент: транскрипция для родителя, пример для ребёнка и правило «мало, но каждый день»."
+      - generic [ref=e75]:
+        - article [ref=e76]:
+          - heading "30 слов по теме" [level=3] [ref=e81]
+          - paragraph [ref=e82]: "Самая частотная лексика уровня A1: «животные» — с переводом и транскрипцией."
+        - article [ref=e83]:
+          - heading "Примеры с переводом" [level=3] [ref=e87]
+          - paragraph [ref=e88]: "Каждое слово — в коротком предложении: сразу видно, как оно живёт в речи."
+        - article [ref=e89]:
+          - heading "Транскрипция" [level=3] [ref=e93]
+          - paragraph [ref=e94]: Родитель без языкового опыта сможет прочитать слово правильно и помочь ребёнку.
+        - article [ref=e95]:
+          - heading "План на неделю" [level=3] [ref=e101]
+          - paragraph [ref=e102]: По 5–7 слов в день вся тема осваивается за неделю — с играми и повторами.
+    - generic [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]: Формат
+        - heading "Коротко о подборке" [level=2] [ref=e108]
+      - generic [ref=e109]:
+        - generic [ref=e110]:
+          - generic [ref=e115]: 30 слов
+          - text: Базовый словарь темы
+        - generic [ref=e116]:
+          - generic [ref=e121]: A1
+          - text: Начальный уровень
+        - generic [ref=e122]:
+          - generic [ref=e127]: 7 дней
+          - text: По 5–7 слов в день
+        - generic [ref=e128]:
+          - generic [ref=e132]: Бесплатно
+          - text: Просто сохраните страницу
+    - generic [ref=e135]:
+      - heading "Слова по теме с транскрипцией и примерами" [level=2] [ref=e136]
+      - paragraph [ref=e137]: "Нажмите на слово и проговорите его вслух вместе с ребёнком: транскрипция поможет родителю прочитать правильно. Примеры короткие — их можно сразу использовать как карточки."
+      - table [ref=e138]:
+        - rowgroup [ref=e139]:
+          - row [ref=e140]:
+            - columnheader "Слово" [ref=e141]
+            - columnheader "Транскрипция" [ref=e142]
+            - columnheader "Перевод" [ref=e143]
+            - columnheader "Пример" [ref=e144]
+          - row [ref=e145]:
+            - cell "cat" [ref=e146]
+            - cell "[kæt]" [ref=e147]
+            - cell "кошка" [ref=e148]
+            - cell "The cat sleeps on the sofa. Кошка спит на диване." [ref=e149]: The cat sleeps on the sofa.Кошка спит на диване.
+          - row [ref=e150]:
+            - cell "dog" [ref=e151]
+            - cell "[dɒɡ]" [ref=e152]
+            - cell "собака" [ref=e153]
+            - cell "My dog likes to run. Моя собака любит бегать." [ref=e154]: My dog likes to run.Моя собака любит бегать.
+          - row [ref=e155]:
+            - cell "bird" [ref=e156]
+            - cell "[bɜːd]" [ref=e157]
+            - cell "птица" [ref=e158]
+            - cell "A bird sings in the morning. Птица поёт по утрам." [ref=e159]: A bird sings in the morning.Птица поёт по утрам.
+          - row [ref=e160]:
+            - cell "fish" [ref=e161]
+            - cell "[fɪʃ]" [ref=e162]
+            - cell "рыба" [ref=e163]
+            - cell "The fish swims fast. Рыба плавает быстро." [ref=e164]: The fish swims fast.Рыба плавает быстро.
+          - row [ref=e165]:
+            - cell "horse" [ref=e166]
+            - cell "[hɔːs]" [ref=e167]
+            - cell "лошадь" [ref=e168]
+            - cell "The horse is very strong. Лошадь очень сильная." [ref=e169]: The horse is very strong.Лошадь очень сильная.
+          - row [ref=e170]:
+            - cell "cow" [ref=e171]
+            - cell "[kaʊ]" [ref=e172]
+            - cell "корова" [ref=e173]
+            - cell "The cow gives milk. Корова даёт молоко." [ref=e174]: The cow gives milk.Корова даёт молоко.
+          - row [ref=e175]:
+            - cell "pig" [ref=e176]
+            - cell "[pɪɡ]" [ref=e177]
+            - cell "свинья" [ref=e178]
+            - cell "The pig is pink. Свинья розовая." [ref=e179]: The pig is pink.Свинья розовая.
+          - row [ref=e180]:
+            - cell "sheep" [ref=e181]
+            - cell "[ʃiːp]" [ref=e182]
+            - cell "овца" [ref=e183]
+            - cell "The sheep eats grass. Овца ест траву." [ref=e184]: The sheep eats grass.Овца ест траву.
+          - row [ref=e185]:
+            - cell "rabbit" [ref=e186]
+            - cell "[ˈræbɪt]" [ref=e187]
+            - cell "кролик" [ref=e188]
+            - cell "The rabbit has long ears. У кролика длинные уши." [ref=e189]: The rabbit has long ears.У кролика длинные уши.
+          - row [ref=e190]:
+            - cell "hamster" [ref=e191]
+            - cell "[ˈhæmstə]" [ref=e192]
+            - cell "хомяк" [ref=e193]
+            - cell "Our hamster runs in a wheel. Наш хомяк бегает в колесе." [ref=e194]: Our hamster runs in a wheel.Наш хомяк бегает в колесе.
+          - row [ref=e195]:
+            - cell "fox" [ref=e196]
+            - cell "[fɒks]" [ref=e197]
+            - cell "лиса" [ref=e198]
+            - cell "The fox is clever. Лиса хитрая." [ref=e199]: The fox is clever.Лиса хитрая.
+          - row [ref=e200]:
+            - cell "wolf" [ref=e201]
+            - cell "[wʊlf]" [ref=e202]
+            - cell "волк" [ref=e203]
+            - cell "The wolf lives in the forest. Волк живёт в лесу." [ref=e204]: The wolf lives in the forest.Волк живёт в лесу.
+          - row [ref=e205]:
+            - cell "bear" [ref=e206]
+            - cell "[beə]" [ref=e207]
+            - cell "медведь" [ref=e208]
+            - cell "The bear sleeps in winter. Медведь спит зимой." [ref=e209]: The bear sleeps in winter.Медведь спит зимой.
+          - row [ref=e210]:
+            - cell "tiger" [ref=e211]
+            - cell "[ˈtaɪɡə]" [ref=e212]
+            - cell "тигр" [ref=e213]
+            - cell "The tiger is orange and black. Тигр оранжевый с чёрным." [ref=e214]: The tiger is orange and black.Тигр оранжевый с чёрным.
+          - row [ref=e215]:
+            - cell "lion" [ref=e216]
+            - cell "[ˈlaɪən]" [ref=e217]
+            - cell "лев" [ref=e218]
+            - cell "The lion is the king of animals. Лев — царь зверей." [ref=e219]: The lion is the king of animals.Лев — царь зверей.
+          - row [ref=e220]:
+            - cell "elephant" [ref=e221]
+            - cell "[ˈelɪfənt]" [ref=e222]
+            - cell "слон" [ref=e223]
+            - cell "The elephant has a long trunk. У слона длинный хобот." [ref=e224]: The elephant has a long trunk.У слона длинный хобот.
+          - row [ref=e225]:
+            - cell "monkey" [ref=e226]
+            - cell "[ˈmʌŋki]" [ref=e227]
+            - cell "обезьяна" [ref=e228]
+            - cell "The monkey likes bananas. Обезьяна любит бананы." [ref=e229]: The monkey likes bananas.Обезьяна любит бананы.
+          - row [ref=e230]:
+            - cell "giraffe" [ref=e231]
+            - cell "[dʒɪˈrɑːf]" [ref=e232]
+            - cell "жираф" [ref=e233]
+            - cell "The giraffe has a long neck. У жирафа длинная шея." [ref=e234]: The giraffe has a long neck.У жирафа длинная шея.
+          - row [ref=e235]:
+            - cell "zebra" [ref=e236]
+            - cell "[ˈzebrə]" [ref=e237]
+            - cell "зебра" [ref=e238]
+            - cell "The zebra is black and white. Зебра чёрно-белая." [ref=e239]: The zebra is black and white.Зебра чёрно-белая.
+          - row [ref=e240]:
+            - cell "crocodile" [ref=e241]
+            - cell "[ˈkrɒkədaɪl]" [ref=e242]
+            - cell "крокодил" [ref=e243]
+            - cell "The crocodile has big teeth. У крокодила большие зубы." [ref=e244]: The crocodile has big teeth.У крокодила большие зубы.
+          - row [ref=e245]:
+            - cell "snake" [ref=e246]
+            - cell "[sneɪk]" [ref=e247]
+            - cell "змея" [ref=e248]
+            - cell "The snake is very long. Змея очень длинная." [ref=e249]: The snake is very long.Змея очень длинная.
+          - row [ref=e250]:
+            - cell "frog" [ref=e251]
+            - cell "[frɒɡ]" [ref=e252]
+            - cell "лягушка" [ref=e253]
+            - cell "The frog jumps high. Лягушка прыгает высоко." [ref=e254]: The frog jumps high.Лягушка прыгает высоко.
+          - row [ref=e255]:
+            - cell "duck" [ref=e256]
+            - cell "[dʌk]" [ref=e257]
+            - cell "утка" [ref=e258]
+            - cell "The duck swims in the pond. Утка плавает в пруду." [ref=e259]: The duck swims in the pond.Утка плавает в пруду.
+          - row [ref=e260]:
+            - cell "hen" [ref=e261]
+            - cell "[hen]" [ref=e262]
+            - cell "курица" [ref=e263]
+            - cell "The hen lays eggs. Курица несёт яйца." [ref=e264]: The hen lays eggs.Курица несёт яйца.
+          - row [ref=e265]:
+            - cell "mouse" [ref=e266]
+            - cell "[maʊs]" [ref=e267]
+            - cell "мышь" [ref=e268]
+            - cell "The mouse is small and grey. Мышь маленькая и серая." [ref=e269]: The mouse is small and grey.Мышь маленькая и серая.
+          - row [ref=e270]:
+            - cell "turtle" [ref=e271]
+            - cell "[ˈtɜːtl]" [ref=e272]
+            - cell "черепаха" [ref=e273]
+            - cell "The turtle walks slowly. Черепаха ходит медленно." [ref=e274]: The turtle walks slowly.Черепаха ходит медленно.
+          - row [ref=e275]:
+            - cell "parrot" [ref=e276]
+            - cell "[ˈpærət]" [ref=e277]
+            - cell "попугай" [ref=e278]
+            - cell "The parrot can talk. Попугай умеет говорить." [ref=e279]: The parrot can talk.Попугай умеет говорить.
+          - row [ref=e280]:
+            - cell "hedgehog" [ref=e281]
+            - cell "[ˈhedʒhɒɡ]" [ref=e282]
+            - cell "ёж" [ref=e283]
+            - cell "The hedgehog has needles. У ежа иголки." [ref=e284]: The hedgehog has needles.У ежа иголки.
+          - row [ref=e285]:
+            - cell "squirrel" [ref=e286]
+            - cell "[ˈskwɪrəl]" [ref=e287]
+            - cell "белка" [ref=e288]
+            - cell "The squirrel collects nuts. Белка собирает орехи." [ref=e289]: The squirrel collects nuts.Белка собирает орехи.
+          - row [ref=e290]:
+            - cell "dolphin" [ref=e291]
+            - cell "[ˈdɒlfɪn]" [ref=e292]
+            - cell "дельфин" [ref=e293]
+            - cell "The dolphin jumps in the sea. Дельфин прыгает в море." [ref=e294]: The dolphin jumps in the sea.Дельфин прыгает в море.
+      - heading "Как учить слова по этой теме" [level=2] [ref=e295]
+      - list [ref=e296]:
+        - listitem [ref=e297]: Мало, но каждый день. 5–7 новых слов в день с повтором вчерашних — эффективнее, чем весь список раз в неделю.
+        - listitem [ref=e298]: "Слово + картинка + звук. Называйте слово вслух, показывайте предмет или картинку: три канала памяти работают вместе."
+        - listitem [ref=e299]: Сразу в предложение. Проговаривайте пример из таблицы и придумывайте свой — про свою семью, свою еду, свою школу.
+        - listitem [ref=e300]: Играйте. «Покажи/найди предмет», карточки, «я загадываю — ты угадываешь» — игра запоминает лучше зубрёжки.
+      - paragraph [ref=e301]:
+        - text: Подробный разбор приёмов — в статье «
+        - 'link "Как быстро учить английские слова: 7 рабочих способов" [ref=e302] [cursor=pointer]':
+          - /url: /blog-kak-vyuchit-anglijskie-slova-bystro
+        - text: », а проверить текущий уровень ребёнка можно на
+        - link "бесплатном онлайн-тесте" [ref=e303] [cursor=pointer]:
+          - /url: /test-uroven
+        - text: .
+    - generic [ref=e306]:
+      - heading "Другие темы словаря" [level=2] [ref=e307]
+      - paragraph [ref=e308]:
+        - text: Учите лексику темами — так слова связываются в сетку, а не висят по одному. Все подборки — в разделе
+        - link "«Английские слова по темам»" [ref=e309] [cursor=pointer]:
+          - /url: /english-words
+        - text: .
+      - generic [ref=e310]:
+        - heading "Темы" [level=2] [ref=e311]
+        - generic [ref=e312]:
+          - link "Еда" [ref=e313] [cursor=pointer]:
+            - /url: /english-words/eda
+          - link "Школа" [ref=e314] [cursor=pointer]:
+            - /url: /english-words/shkola
+          - link "Семья" [ref=e315] [cursor=pointer]:
+            - /url: /english-words/semya
+          - link "Цвета" [ref=e316] [cursor=pointer]:
+            - /url: /english-words/tsveta
+      - heading "Куда дальше" [level=2] [ref=e317]
+      - paragraph [ref=e318]: "Слова — это база, но язык складывается из речи. В Фоксинбурге тематический словарь вводится на занятиях через игры, песни и диалоги — так он переходит в активный запас. Подходящие программы:"
+      - generic [ref=e319]:
+        - heading "Программы и полезное" [level=2] [ref=e320]
+        - generic [ref=e321]:
+          - link "Дошкольникам" [ref=e322] [cursor=pointer]:
+            - /url: /doshkolniki
+          - link "Младшим школьникам" [ref=e323] [cursor=pointer]:
+            - /url: /mladshie-shkolniki
+          - link "Тест уровня английского" [ref=e324] [cursor=pointer]:
+            - /url: /test-uroven
+          - link "Все статьи блога" [ref=e325] [cursor=pointer]:
+            - /url: /blog
+    - generic [ref=e327]:
+      - generic [ref=e328]:
+        - generic [ref=e329]: Вопросы и ответы
+        - heading "Частые вопросы" [level=2] [ref=e331]
+      - generic [ref=e332]:
+        - group [ref=e333]:
+          - generic "Сколько слов по теме «Животные» нужно знать ребёнку? +" [ref=e334] [cursor=pointer]
+        - group [ref=e335]:
+          - generic "Как быстро выучить эти слова с ребёнком? +" [ref=e336] [cursor=pointer]
+        - group [ref=e337]:
+          - generic "Зачем транскрипция, если можно просто послушать слово? +" [ref=e338] [cursor=pointer]
+        - group [ref=e339]:
+          - generic "Что делать после того, как тема выучена? +" [ref=e340] [cursor=pointer]
+    - generic [ref=e342]:
+      - heading "Закрепите слова в речи на бесплатной диагностике" [level=2] [ref=e343]
+      - paragraph [ref=e344]: Педагог определит уровень ребёнка, покажет, как тематический словарь превращается в живую речь, и предложит программу под возраст и цели.
+      - generic [ref=e345]:
+        - button "Оставить заявку на сайте" [ref=e346] [cursor=pointer]
+        - link "Написать в Max" [ref=e347] [cursor=pointer]:
+          - /url: https://max.ru/id611904726658_bot
+  - generic [ref=e351]:
+    - generic [ref=e352]:
+      - generic [ref=e353]:
+        - link "Фоксинбург Фоксинбург" [ref=e354] [cursor=pointer]:
+          - /url: /
+          - img "Фоксинбург" [ref=e355]
+          - generic [ref=e356]: Фоксинбург
+        - paragraph [ref=e357]: Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.
+        - generic [ref=e358]:
+          - link "ВКонтакте" [ref=e359] [cursor=pointer]:
+            - /url: https://vk.com/foxyfoxclub
+          - link "Max" [ref=e362] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_biz
+          - link "Telegram" [ref=e365] [cursor=pointer]:
+            - /url: https://t.me/foxinburg
+          - link "WhatsApp" [ref=e368] [cursor=pointer]:
+            - /url: https://wa.me/79939232309
+      - generic [ref=e371]:
+        - heading "Навигация" [level=4] [ref=e372]
+        - link "Главная" [ref=e373] [cursor=pointer]:
+          - /url: /
+        - link "Курс по чтению" [ref=e374] [cursor=pointer]:
+          - /url: /reading
+        - link "Курс по грамматике" [ref=e375] [cursor=pointer]:
+          - /url: /grammar
+        - link "Подготовка к школе" [ref=e376] [cursor=pointer]:
+          - /url: /preparation
+        - link "Подготовка к ОГЭ по английскому" [ref=e377] [cursor=pointer]:
+          - /url: /oge-anglijskij
+        - link "Подготовка к ЕГЭ по английскому" [ref=e378] [cursor=pointer]:
+          - /url: /ege-anglijskij
+        - link "Подготовка к ВПР по английскому" [ref=e379] [cursor=pointer]:
+          - /url: /vpr-anglijskij
+        - link "Разговорный английский" [ref=e380] [cursor=pointer]:
+          - /url: /razgovornyj-anglijskij
+        - link "Индивидуальные занятия (репетитор)" [ref=e381] [cursor=pointer]:
+          - /url: /repetitor
+        - 'link "Репетитор: русский и математика (1–4 класс)" [ref=e382] [cursor=pointer]':
+          - /url: /repetitor-nachalnaya-shkola
+        - link "Для дошкольников" [ref=e383] [cursor=pointer]:
+          - /url: /doshkolniki
+        - link "Для младших школьников" [ref=e384] [cursor=pointer]:
+          - /url: /mladshie-shkolniki
+        - link "Для подростков" [ref=e385] [cursor=pointer]:
+          - /url: /podrostki
+        - link "Английский для взрослых" [ref=e386] [cursor=pointer]:
+          - /url: /anglijskij-dlya-vzroslyh
+        - link "Немецкий язык" [ref=e387] [cursor=pointer]:
+          - /url: /nemeckij-yazyk
+        - link "Китайский язык" [ref=e388] [cursor=pointer]:
+          - /url: /kitajskij-yazyk
+        - link "Онлайн-занятия" [ref=e389] [cursor=pointer]:
+          - /url: /online-zanyatiya
+        - link "Поддерживающие онлайн" [ref=e390] [cursor=pointer]:
+          - /url: /podderzhivayushchie-online
+        - link "Стандартные офлайн" [ref=e391] [cursor=pointer]:
+          - /url: /standartnye-offline
+      - generic [ref=e392]:
+        - heading "О школе" [level=4] [ref=e393]
+        - link "О нас" [ref=e394] [cursor=pointer]:
+          - /url: /about
+        - link "Отзывы" [ref=e395] [cursor=pointer]:
+          - /url: /otzyvy
+        - link "Цены" [ref=e396] [cursor=pointer]:
+          - /url: /tseny
+        - link "Блог" [ref=e397] [cursor=pointer]:
+          - /url: /blog
+        - link "Тест уровня английского" [ref=e398] [cursor=pointer]:
+          - /url: /test-uroven
+        - 'link "Тест: готовность к школе" [ref=e399] [cursor=pointer]':
+          - /url: /test-gotov-k-shkole
+        - 'link "Тест: какой формат выбрать" [ref=e400] [cursor=pointer]':
+          - /url: /test-format
+        - link "Словарь по темам" [ref=e401] [cursor=pointer]:
+          - /url: /english-words
+        - link "Новости" [ref=e402] [cursor=pointer]:
+          - /url: /novosti
+        - link "Вакансии" [ref=e403] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=e404] [cursor=pointer]:
+          - /url: /kontakty
+        - link "Лицензия" [ref=e405] [cursor=pointer]:
+          - /url: https://disk.yandex.ru/d/ZDlm_uGmwxH4kw
+        - link "Летняя Академия" [ref=e406] [cursor=pointer]:
+          - /url: /letnyaya-akademiya
+        - link "Личный кабинет" [ref=e407] [cursor=pointer]:
+          - /url: https://lms.dymova-english.ru
+      - generic [ref=e408]:
+        - heading "Контакты" [level=4] [ref=e409]
+        - link "8 993 923-23-09" [ref=e410] [cursor=pointer]:
+          - /url: tel:+79939232309
+        - link "8 916 732-31-69" [ref=e411] [cursor=pointer]:
+          - /url: tel:+79167323169
+        - link "school@foxinburg-edu.ru" [ref=e412] [cursor=pointer]:
+          - /url: mailto:school@foxinburg-edu.ru
+        - generic [ref=e413]: Ежедневно 9:00 — 21:00
+    - generic [ref=e414]:
+      - generic [ref=e415]:
+        - generic [ref=e416]: ИП Дымова Вероника Александровна
+        - generic [ref=e417]: ИНН 611904726658
+      - link "Политика конфиденциальности" [ref=e419] [cursor=pointer]:
+        - /url: /policy
+  - button "Открыть чат" [ref=e421] [cursor=pointer]: 🦊
+  - dialog "Согласие на использование cookie" [ref=e422]:
+    - paragraph [ref=e423]:
+      - text: Мы используем cookie, чтобы сайт работал стабильно, а мы могли понимать, что интересно посетителям, и делать школу лучше. Подробнее — в
+      - link "политике конфиденциальности" [ref=e424] [cursor=pointer]:
+        - /url: /policy
+      - text: .
+    - generic [ref=e425]:
+      - button "Принять" [ref=e426] [cursor=pointer]
+      - button "Отклонить" [ref=e427] [cursor=pointer]

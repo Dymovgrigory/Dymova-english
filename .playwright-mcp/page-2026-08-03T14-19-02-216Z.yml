@@ -1,0 +1,98 @@
+- generic [active] [ref=f29e1]:
+  - complementary [ref=f29e2]:
+    - link "Фоксинбург Фоксинбург" [ref=f29e4] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Фоксинбург" [ref=f29e5]
+      - generic [ref=f29e6]: Фоксинбург
+    - navigation [ref=f29e7]:
+      - generic [ref=f29e8]:
+        - link "Главная" [ref=f29e9] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Руководство" [ref=f29e16] [cursor=pointer]:
+          - /url: /help
+        - link "Обучение" [ref=f29e22] [cursor=pointer]:
+          - /url: /learn
+        - link "Каталог" [ref=f29e27] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Траектории" [ref=f29e31] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "База знаний" [ref=f29e34] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Сертификаты" [ref=f29e38] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Лидерборд" [ref=f29e43] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "Мои бейджи" [ref=f29e51] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Календарь" [ref=f29e55] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Онбординг" [ref=f29e59] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Наблюдения" [ref=f29e64] [cursor=pointer]:
+          - /url: /learn/training
+        - link "Мой план развития" [ref=f29e68] [cursor=pointer]:
+          - /url: /learn/development
+        - link "Оценка 360°" [ref=f29e72] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "Новости" [ref=f29e76] [cursor=pointer]:
+          - /url: /news
+      - link "Моя команда" [ref=f29e83] [cursor=pointer]:
+        - /url: /supervisor
+      - paragraph [ref=f29e91]: Студия
+      - generic [ref=f29e92]:
+        - link "Студия" [ref=f29e93] [cursor=pointer]:
+          - /url: /studio
+        - link "Наблюдения в студии" [ref=f29e98] [cursor=pointer]:
+          - /url: /studio/training
+        - link "Траектории" [ref=f29e102] [cursor=pointer]:
+          - /url: /studio/paths
+      - paragraph [ref=f29e106]: Админка
+      - generic [ref=f29e107]:
+        - link "Админка" [ref=f29e108] [cursor=pointer]:
+          - /url: /admin
+        - link "Аналитика" [ref=f29e113] [cursor=pointer]:
+          - /url: /admin/analytics
+        - link "Заявки на обучение" [ref=f29e118] [cursor=pointer]:
+          - /url: /admin/training-requests
+        - link "SSO" [ref=f29e122] [cursor=pointer]:
+          - /url: /admin/sso-connections
+        - link "LRS" [ref=f29e126] [cursor=pointer]:
+          - /url: /admin/lrs
+        - link "Департаменты" [ref=f29e131] [cursor=pointer]:
+          - /url: /admin/departments
+        - link "Бейджи" [ref=f29e136] [cursor=pointer]:
+          - /url: /admin/badges
+        - link "Сайт" [ref=f29e140] [cursor=pointer]:
+          - /url: /admin/site
+        - link "Мероприятия" [ref=f29e144] [cursor=pointer]:
+          - /url: /admin/events
+        - link "Программы онбординга" [ref=f29e148] [cursor=pointer]:
+          - /url: /admin/onboarding
+        - link "Чек-листы наблюдений" [ref=f29e153] [cursor=pointer]:
+          - /url: /admin/observation-checklists
+        - link "Планы развития" [ref=f29e157] [cursor=pointer]:
+          - /url: /admin/development
+        - link "Компетенции" [ref=f29e161] [cursor=pointer]:
+          - /url: /admin/competencies
+        - link "Оценочные сессии" [ref=f29e165] [cursor=pointer]:
+          - /url: /admin/assessments
+    - generic [ref=f29e169]:
+      - generic [ref=f29e170]:
+        - generic [ref=f29e171]: B
+        - generic [ref=f29e172]:
+          - paragraph [ref=f29e173]: Brand QA
+          - paragraph [ref=f29e174]: brand-qa@example.com
+      - button "Выйти" [ref=f29e175] [cursor=pointer]
+      - button "Collapse" [ref=f29e180] [cursor=pointer]
+  - generic [ref=f29e184]:
+    - banner [ref=f29e185]:
+      - paragraph [ref=f29e187]: Foxinburg Brand QA
+      - generic [ref=f29e188]:
+        - button "Уведомления" [ref=f29e190] [cursor=pointer]
+        - combobox "Язык" [ref=f29e193]:
+          - option "Русский" [selected]
+          - option "English"
+    - main [ref=f29e194]:
+      - paragraph [ref=f29e197]: Загрузка…
+  - button "Open Next.js Dev Tools" [ref=f29e203] [cursor=pointer]
+  - alert [ref=f29e207]

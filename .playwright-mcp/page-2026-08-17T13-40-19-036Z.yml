@@ -1,0 +1,8 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: F
+  - heading "Фоксинбург CRM" [level=1] [ref=e5]
+  - generic [ref=e6]:
+    - textbox "Логин" [ref=e7]
+    - textbox "Пароль" [ref=e8]
+    - button "Войти" [ref=e9] [cursor=pointer]
+  - button "Вход по токену (старый способ)" [ref=e10] [cursor=pointer]

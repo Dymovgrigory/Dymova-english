@@ -1,0 +1,184 @@
+- generic:
+  - generic:
+    - complementary:
+      - generic:
+        - link:
+          - /url: /dashboard
+      - navigation:
+        - generic:
+          - generic:
+            - generic:
+              - link:
+                - /url: /dashboard
+              - link:
+                - /url: /help
+              - link:
+                - /url: /learn
+              - link:
+                - /url: /learn/catalog
+              - link:
+                - /url: /learn/paths
+              - link:
+                - /url: /knowledge
+              - link:
+                - /url: /learn/certificates
+              - link:
+                - /url: /learn/leaderboard
+              - link:
+                - /url: /learn/badges
+              - link:
+                - /url: /learn/calendar
+              - link:
+                - /url: /learn/onboarding
+              - link:
+                - /url: /learn/training
+              - link:
+                - /url: /learn/development
+              - link:
+                - /url: /learn/assessments
+              - link:
+                - /url: /news
+          - generic:
+            - generic:
+              - link:
+                - /url: /supervisor
+          - generic:
+            - generic:
+              - link:
+                - /url: /studio
+              - link:
+                - /url: /studio/training
+              - link:
+                - /url: /studio/paths
+          - generic:
+            - generic:
+              - link:
+                - /url: /admin
+              - link:
+                - /url: /admin/analytics
+              - link:
+                - /url: /admin/training-requests
+              - link:
+                - /url: /admin/sso-connections
+              - link:
+                - /url: /admin/lrs
+              - link:
+                - /url: /admin/departments
+              - link:
+                - /url: /admin/badges
+              - link:
+                - /url: /admin/site
+              - link:
+                - /url: /admin/events
+              - link:
+                - /url: /admin/onboarding
+              - link:
+                - /url: /admin/observation-checklists
+              - link:
+                - /url: /admin/development
+              - link:
+                - /url: /admin/competencies
+              - link:
+                - /url: /admin/assessments
+      - generic:
+        - button
+    - banner:
+      - generic:
+        - paragraph: Главная
+      - generic:
+        - generic:
+          - button
+        - combobox
+        - button
+        - button [expanded]:
+          - generic: Г
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - heading [level=1]: Добро пожаловать, Григорий Владельцев
+            - paragraph: "Ваша роль: OWNER. Вы принадлежите организации «Фоксинбург»."
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: Курсы
+                - paragraph: "0"
+                - paragraph: Записаны
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: Завершено
+                - paragraph: "0"
+                - paragraph: Пройдено
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: Ваши баллы
+                - paragraph: "0"
+            - link:
+              - /url: /learn/leaderboard
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: Ваш ранг
+                  - paragraph: —
+                  - paragraph: Открыть лидерборд →
+          - generic:
+            - generic:
+              - heading [level=2]: Моя команда
+              - link:
+                - /url: /supervisor
+                - text: Все
+            - generic:
+              - generic:
+                - paragraph: Сотрудников
+                - paragraph: "2"
+              - generic:
+                - paragraph: Средний прогресс
+                - paragraph: 40%
+              - generic:
+                - paragraph: Завершено
+                - paragraph: "2"
+              - generic:
+                - paragraph: Просрочено
+                - paragraph: "1"
+            - generic:
+              - paragraph: Требуют внимания
+              - generic: Иван Сидоров
+          - generic:
+            - generic:
+              - generic:
+                - heading [level=2]: В процессе
+                - link:
+                  - /url: /learn
+                  - text: Все курсы
+              - generic: Нет курсов в процессе
+            - generic:
+              - generic:
+                - heading [level=3]: Быстрые действия
+                - generic:
+                  - link:
+                    - /url: /learn
+                    - text: Перейти к курсам
+                  - link:
+                    - /url: /help
+                    - text: Руководство
+                  - link:
+                    - /url: /knowledge
+                    - text: База знаний
+                  - link:
+                    - /url: /learn/certificates
+                    - text: Сертификаты
+                  - link:
+                    - /url: /admin/analytics
+                    - text: Аналитика
+  - button "Open Next.js Dev Tools" [ref=f9e6] [cursor=pointer]
+  - alert
+  - menu "Меню пользователя" [active] [ref=f9e10]:
+    - generic [ref=f9e11]:
+      - paragraph [ref=f9e12]: Григорий Владельцев
+      - paragraph [ref=f9e13]: owner@foxinburg.ru
+      - paragraph [ref=f9e14]: OWNER · Фоксинбург
+    - separator [ref=f9e15]
+    - menuitem "Выйти" [ref=f9e16]

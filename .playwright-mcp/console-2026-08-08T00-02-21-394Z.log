@@ -1,0 +1,17 @@
+[     147ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     154ms] [LOG] [HMR] connected @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   11904ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   13148ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   13764ms] [LOG] [Fast Refresh] done in 718ms @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   13914ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/guide?locale=ru:0
+[   13915ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/guide?locale=ru:0
+[   16624ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   16791ms] [LOG] [Fast Refresh] done in 269ms @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   16865ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/training-requests:0
+[   16866ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/training-requests:0
+[   33003ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   33014ms] [LOG] [HMR] connected @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   71208ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   71218ms] [LOG] [HMR] connected @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   95741ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3102/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   95840ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3102/login:0

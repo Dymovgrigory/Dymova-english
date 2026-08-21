@@ -1,0 +1,119 @@
+- generic [active] [ref=f41e1]:
+  - generic [ref=f41e36]:
+    - banner [ref=f41e37]:
+      - generic [ref=f41e38]:
+        - button "Открыть меню" [ref=f41e39] [cursor=pointer]
+        - paragraph [ref=f41e40]: Главная
+      - generic [ref=f41e41]:
+        - button "Поиск и команды (Ctrl K)" [ref=f41e42] [cursor=pointer]
+        - button "Уведомления" [ref=f41e44] [cursor=pointer]
+        - combobox "Язык" [ref=f41e47]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f41e48] [cursor=pointer]
+        - button "Меню пользователя" [ref=f41e49] [cursor=pointer]:
+          - generic [ref=f41e50]: Г
+    - main [ref=f41e52]:
+      - generic [ref=f41e54]:
+        - generic [ref=f41e55]:
+          - generic [ref=f41e56]:
+            - heading "Добрый день, Григорий Дымов" [level=1] [ref=f41e57]
+            - paragraph [ref=f41e58]: "Ваша роль: OWNER. Вы принадлежите организации «Фоксинбург»."
+          - button "Настроить виджеты" [ref=f41e59] [cursor=pointer]
+        - navigation "Быстрые действия" [ref=f41e63]:
+          - link "Студия" [ref=f41e64] [cursor=pointer]:
+            - /url: /studio
+          - link "Аналитика" [ref=f41e65] [cursor=pointer]:
+            - /url: /admin/analytics
+          - link "Заявки на обучение" [ref=f41e66] [cursor=pointer]:
+            - /url: /admin/training-requests
+          - link "Группы" [ref=f41e67] [cursor=pointer]:
+            - /url: /admin/groups
+        - generic [ref=f41e68]:
+          - generic [ref=f41e71]:
+            - generic [ref=f41e72]:
+              - generic [ref=f41e73]: Обучение
+              - link "Аналитика" [ref=f41e80] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f41e82]:
+              - generic [ref=f41e83]:
+                - paragraph [ref=f41e84]: Записи
+                - paragraph [ref=f41e85]: "15"
+              - generic [ref=f41e86]:
+                - paragraph [ref=f41e87]: Ученики
+                - paragraph [ref=f41e88]: "14"
+              - generic [ref=f41e89]:
+                - paragraph [ref=f41e90]: Средний прогресс
+                - paragraph [ref=f41e91]: 39%
+              - generic [ref=f41e92]:
+                - paragraph [ref=f41e93]: Сертификаты
+                - paragraph [ref=f41e94]: "0"
+          - generic [ref=f41e97]:
+            - generic [ref=f41e98]:
+              - generic [ref=f41e99]: Активные ученики
+              - link "Аналитика" [ref=f41e108] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f41e110]:
+              - paragraph [ref=f41e111]:
+                - text: "13"
+                - generic [ref=f41e112]: / 14 · 93%
+              - img "Динамика активных учеников по периодам" [ref=f41e113]
+              - paragraph [ref=f41e118]: Активные ученики за период
+          - generic [ref=f41e121]:
+            - generic [ref=f41e122]:
+              - generic [ref=f41e123]: Выручка
+              - link "Аналитика" [ref=f41e130] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f41e132]:
+              - paragraph [ref=f41e133]: 0 ₽
+              - paragraph [ref=f41e134]: Нет данных за период
+          - generic [ref=f41e137]:
+            - generic [ref=f41e138]:
+              - generic [ref=f41e139]: "Курсы: запись и прогресс"
+              - link "Аналитика" [ref=f41e145] [cursor=pointer]:
+                - /url: /admin/analytics
+            - list [ref=f41e147]:
+              - listitem [ref=f41e148]:
+                - paragraph [ref=f41e150]: Входное обучение педагогов
+                - generic [ref=f41e153]: 10 · 0%
+              - listitem [ref=f41e154]:
+                - paragraph [ref=f41e156]: Стажировка администраторов
+                - generic [ref=f41e159]: 4 · 0%
+              - listitem [ref=f41e160]:
+                - paragraph [ref=f41e162]: SEQ Тест доступа
+                - generic [ref=f41e165]: 1 · 0%
+          - generic [ref=f41e168]:
+            - generic [ref=f41e169]:
+              - generic [ref=f41e170]: Домашние задания
+              - link "Аналитика" [ref=f41e178] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f41e180]:
+              - generic [ref=f41e181]:
+                - generic [ref=f41e182]:
+                  - paragraph [ref=f41e183]: На проверке
+                  - paragraph [ref=f41e184]: "0"
+                - generic [ref=f41e185]:
+                  - paragraph [ref=f41e186]: Сдано с опозданием
+                  - paragraph [ref=f41e187]: "0"
+              - paragraph [ref=f41e188]: Все работы проверены
+          - generic [ref=f41e191]:
+            - generic [ref=f41e192]:
+              - generic [ref=f41e193]: Активность команды
+              - link "Все" [ref=f41e201] [cursor=pointer]:
+                - /url: /supervisor
+            - generic [ref=f41e204]:
+              - generic [ref=f41e205]:
+                - paragraph [ref=f41e206]: Сотрудников
+                - paragraph [ref=f41e207]: "0"
+              - generic [ref=f41e208]:
+                - paragraph [ref=f41e209]: Средний прогресс
+                - paragraph [ref=f41e210]: 0%
+              - generic [ref=f41e211]:
+                - paragraph [ref=f41e212]: Завершено
+                - paragraph [ref=f41e213]: "0"
+              - generic [ref=f41e214]:
+                - paragraph [ref=f41e215]: Просрочено
+                - paragraph [ref=f41e216]: "0"
+        - status [ref=f41e217]
+  - button "Open Next.js Dev Tools" [ref=f41e32] [cursor=pointer]
+  - alert [ref=f41e26]

@@ -1,0 +1,18 @@
+{
+  "agents": {
+    "agent-1785109660434-2gn2mh": {
+      "agentId": "agent-1785109660434-2gn2mh",
+      "agentType": "researcher",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "haiku"
+      },
+      "createdAt": "2026-07-26T23:47:40.434Z",
+      "model": "haiku",
+      "modelRoutedBy": "explicit"
+    }
+  },
+  "version": "3.0.0"
+}

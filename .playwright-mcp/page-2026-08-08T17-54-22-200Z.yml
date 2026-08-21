@@ -1,0 +1,135 @@
+- generic [ref=f64e2]:
+  - banner [ref=f64e3]:
+    - link "← Назад на главную" [ref=f64e5] [cursor=pointer]:
+      - /url: /
+  - main [ref=f64e6]:
+    - generic [ref=f64e7]:
+      - generic [ref=f64e9]:
+        - link "← UI-kit" [ref=f64e10] [cursor=pointer]:
+          - /url: /ui-kit
+        - heading "Блоки CMS — Block Engine" [level=1] [ref=f64e11]
+        - paragraph [ref=f64e12]: Витрина стартовых блоков Visual CMS с props по умолчанию. Светлая и тёмная темы.
+      - generic [ref=f64e14]:
+        - heading "Песочница BlocksRenderer" [level=2] [ref=f64e15]
+        - paragraph [ref=f64e16]: "JSON: два валидных блока + один битый (неизвестный тип) + один с невалидными props — битые пропускаются с console.warn, рендер не падает."
+        - generic [ref=f64e17]:
+          - heading "Валидный блок" [level=3] [ref=f64e18]
+          - paragraph [ref=f64e19]: Этот блок отрендерился после битых — renderer не упал.
+      - generic [ref=f64e20]:
+        - heading "Все блоки с defaultProps" [level=2] [ref=f64e21]
+        - generic [ref=f64e22]:
+          - heading "Макет" [level=3] [ref=f64e23]
+          - paragraph [ref=f64e26]: Секция
+        - generic [ref=f64e28]:
+          - heading "Контент" [level=3] [ref=f64e29]
+          - generic [ref=f64e30]:
+            - generic [ref=f64e31]:
+              - paragraph [ref=f64e32]: Заголовок
+              - heading "Заголовок секции" [level=2] [ref=f64e33]
+            - generic [ref=f64e34]:
+              - paragraph [ref=f64e35]: Текст
+              - paragraph [ref=f64e36]: Абзац текста. Замените на свой контент — блок поддерживает многострочный текст.
+            - generic [ref=f64e37]:
+              - paragraph [ref=f64e38]: Кнопка
+              - link "Подробнее" [ref=f64e40] [cursor=pointer]:
+                - /url: /
+            - generic [ref=f64e41]:
+              - paragraph [ref=f64e42]: Карточки
+              - generic [ref=f64e44]:
+                - generic [ref=f64e45]:
+                  - heading "Первая карточка" [level=3] [ref=f64e46]
+                  - paragraph [ref=f64e47]: Краткое описание преимущества или шага.
+                - generic [ref=f64e48]:
+                  - heading "Вторая карточка" [level=3] [ref=f64e49]
+                  - paragraph [ref=f64e50]: Краткое описание преимущества или шага.
+                - generic [ref=f64e51]:
+                  - heading "Третья карточка" [level=3] [ref=f64e52]
+                  - paragraph [ref=f64e53]: Краткое описание преимущества или шага.
+            - generic [ref=f64e54]:
+              - paragraph [ref=f64e55]: FAQ
+              - generic [ref=f64e56]:
+                - heading "Частые вопросы" [level=2] [ref=f64e57]
+                - generic [ref=f64e58]:
+                  - group [ref=f64e59]:
+                    - generic "Как проходит обучение?" [ref=f64e60] [cursor=pointer]:
+                      - text: Как проходит обучение?
+                      - generic [ref=f64e61]: ▾
+                  - group [ref=f64e62]:
+                    - generic "Есть ли пробный урок?" [ref=f64e63] [cursor=pointer]:
+                      - text: Есть ли пробный урок?
+                      - generic [ref=f64e64]: ▾
+        - generic [ref=f64e65]:
+          - heading "Медиа" [level=3] [ref=f64e66]
+          - generic [ref=f64e67]:
+            - generic [ref=f64e68]:
+              - paragraph [ref=f64e69]: Изображение
+              - paragraph [ref=f64e75]: Изображение не выбрано
+            - generic [ref=f64e76]:
+              - paragraph [ref=f64e77]: Галерея
+              - paragraph [ref=f64e85]: В галерее пока нет изображений
+            - generic [ref=f64e86]:
+              - paragraph [ref=f64e87]: Видео
+              - paragraph [ref=f64e92]: Ссылка на видео не задана
+        - generic [ref=f64e93]:
+          - heading "Маркетинг" [level=3] [ref=f64e94]
+          - generic [ref=f64e95]:
+            - generic [ref=f64e96]:
+              - paragraph [ref=f64e97]: Призыв к действию
+              - generic [ref=f64e98]:
+                - heading "Готовы начать?" [level=2] [ref=f64e99]
+                - paragraph [ref=f64e100]: Оставьте заявку — расскажем о программе и подберём группу.
+                - link "Оставить заявку" [ref=f64e101] [cursor=pointer]:
+                  - /url: /
+            - generic [ref=f64e102]:
+              - paragraph [ref=f64e103]: Отзывы
+              - generic [ref=f64e104]:
+                - heading "Отзывы" [level=2] [ref=f64e105]
+                - generic [ref=f64e106]:
+                  - figure "Родитель ученика" [ref=f64e107]:
+                    - blockquote [ref=f64e111]: Ребёнок ждёт каждое занятие — прогресс виден уже через пару месяцев.
+                  - figure "Ученик" [ref=f64e113]:
+                    - blockquote [ref=f64e117]: Удобное расписание и понятная обратная связь от преподавателя.
+            - generic [ref=f64e119]:
+              - paragraph [ref=f64e120]: Тарифы
+              - generic [ref=f64e121]:
+                - heading "Тарифы" [level=2] [ref=f64e122]
+                - generic [ref=f64e123]:
+                  - generic [ref=f64e124]:
+                    - heading "Групповой" [level=3] [ref=f64e125]
+                    - paragraph [ref=f64e126]:
+                      - text: от 6 000 ₽
+                      - generic [ref=f64e127]: в месяц
+                    - list [ref=f64e128]:
+                      - listitem [ref=f64e129]:
+                        - generic [ref=f64e132]: Занятия в мини-группе
+                      - listitem [ref=f64e133]:
+                        - generic [ref=f64e136]: Домашние задания с проверкой
+                    - link "Выбрать" [ref=f64e137] [cursor=pointer]:
+                      - /url: /
+                  - generic [ref=f64e138]:
+                    - heading "Индивидуальный" [level=3] [ref=f64e139]
+                    - paragraph [ref=f64e140]:
+                      - text: от 2 000 ₽
+                      - generic [ref=f64e141]: за урок
+                    - list [ref=f64e142]:
+                      - listitem [ref=f64e143]:
+                        - generic [ref=f64e146]: Личный преподаватель
+                      - listitem [ref=f64e147]:
+                        - generic [ref=f64e150]: Гибкое расписание
+                      - listitem [ref=f64e151]:
+                        - generic [ref=f64e154]: Персональная программа
+                    - link "Выбрать" [ref=f64e155] [cursor=pointer]:
+                      - /url: /
+        - generic [ref=f64e156]:
+          - heading "Бизнес" [level=3] [ref=f64e157]
+          - generic [ref=f64e158]:
+            - generic [ref=f64e159]:
+              - paragraph [ref=f64e160]: Список курсов
+              - generic [ref=f64e161]:
+                - heading "Наши курсы" [level=2] [ref=f64e162]
+                - paragraph [ref=f64e166]: Источник данных курсов будет подключён позже
+            - generic [ref=f64e167]:
+              - paragraph [ref=f64e168]: Преподаватели
+              - generic [ref=f64e169]:
+                - heading "Преподаватели" [level=2] [ref=f64e170]
+                - paragraph [ref=f64e177]: Источник данных преподавателей будет подключён позже

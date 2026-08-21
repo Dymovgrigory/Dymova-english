@@ -1,0 +1,23 @@
+[     616ms] [LOG] [Telegram.WebView] > postEvent web_app_set_header_color {color_key: bg_color} @ https://telegram.org/js/telegram-web-app.js:134
+[     616ms] [LOG] [Telegram.WebView] > postEvent web_app_set_bottom_bar_color {color: #ffffff} @ https://telegram.org/js/telegram-web-app.js:134
+[     616ms] [LOG] [Telegram.WebView] > postEvent web_app_request_theme  @ https://telegram.org/js/telegram-web-app.js:134
+[     616ms] [LOG] [Telegram.WebView] > postEvent web_app_request_viewport  @ https://telegram.org/js/telegram-web-app.js:134
+[     616ms] [LOG] [Telegram.WebView] > postEvent web_app_request_safe_area  @ https://telegram.org/js/telegram-web-app.js:134
+[     616ms] [LOG] [Telegram.WebView] > postEvent web_app_request_content_safe_area  @ https://telegram.org/js/telegram-web-app.js:134
+[     734ms] [LOG] [Telegram.WebView] > postEvent web_app_ready  @ https://telegram.org/js/telegram-web-app.js:134
+[     734ms] [LOG] [Telegram.WebView] > postEvent web_app_expand  @ https://telegram.org/js/telegram-web-app.js:134
+[     734ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[   22233ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[   22233ms] [LOG] [Telegram.WebView] > postEvent web_app_setup_main_button {is_visible: false} @ https://telegram.org/js/telegram-web-app.js:134
+[   22234ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   23235ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   23537ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   23838ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   24139ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   24440ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   24764ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   26242ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[   26644ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   26645ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[   27446ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[   27446ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988

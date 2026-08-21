@@ -1,0 +1,165 @@
+- generic [active] [ref=f32e1]:
+  - generic [ref=f32e2]:
+    - banner [ref=f32e3]:
+      - generic [ref=f32e4]:
+        - button "Открыть меню" [ref=f32e5] [cursor=pointer]
+        - paragraph [ref=f32e6]: Админка
+      - generic [ref=f32e7]:
+        - button "Поиск и команды (Ctrl K)" [ref=f32e8] [cursor=pointer]
+        - button "Уведомления" [ref=f32e10] [cursor=pointer]
+        - combobox "Язык" [ref=f32e13]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f32e14] [cursor=pointer]
+        - button "Меню пользователя" [ref=f32e15] [cursor=pointer]:
+          - generic [ref=f32e16]: P
+    - main [ref=f32e18]:
+      - generic [ref=f32e20]:
+        - generic [ref=f32e21]:
+          - heading "Настройки" [level=1] [ref=f32e22]
+          - paragraph [ref=f32e23]: Конфигурация школы и платформы
+        - navigation "Разделы настроек" [ref=f32e24]:
+          - link "Общие" [ref=f32e25] [cursor=pointer]:
+            - /url: /admin/settings/general
+          - link "Бренд" [ref=f32e26] [cursor=pointer]:
+            - /url: /admin/settings/brand
+          - link "Пользователи" [ref=f32e27] [cursor=pointer]:
+            - /url: /admin/settings/users
+          - link "Роли" [ref=f32e28] [cursor=pointer]:
+            - /url: /admin/settings/roles
+          - link "Уведомления" [ref=f32e29] [cursor=pointer]:
+            - /url: /admin/settings/notifications
+          - link "Email" [ref=f32e30] [cursor=pointer]:
+            - /url: /admin/settings/email
+          - link "Платежи" [ref=f32e31] [cursor=pointer]:
+            - /url: /admin/settings/payments
+          - link "Сайт" [ref=f32e32] [cursor=pointer]:
+            - /url: /admin/settings/website
+          - link "SEO" [ref=f32e33] [cursor=pointer]:
+            - /url: /admin/settings/seo
+          - link "Интеграции" [ref=f32e34] [cursor=pointer]:
+            - /url: /admin/settings/integrations
+          - link "Безопасность" [ref=f32e35] [cursor=pointer]:
+            - /url: /admin/settings/security
+          - link "Аудит" [ref=f32e36] [cursor=pointer]:
+            - /url: /admin/settings/audit
+        - generic [ref=f32e37]:
+          - generic [ref=f32e38]:
+            - heading "Журнал аудита" [level=2] [ref=f32e39]
+            - paragraph [ref=f32e40]: Действия пользователей в административной части
+          - generic [ref=f32e41]:
+            - generic [ref=f32e42]:
+              - text: Тип сущности
+              - textbox "Тип сущности" [ref=f32e43]
+            - generic [ref=f32e44]:
+              - text: Email или ID пользователя
+              - textbox "Email или ID пользователя" [ref=f32e45]
+            - generic [ref=f32e46]:
+              - text: С даты
+              - textbox "С даты" [ref=f32e47]
+            - generic [ref=f32e48]:
+              - text: По дату
+              - textbox "По дату" [ref=f32e49]
+          - generic [ref=f32e50]:
+            - generic [ref=f32e51]:
+              - textbox "Поиск по действию" [ref=f32e56]
+              - button "Колонки" [ref=f32e57] [cursor=pointer]
+            - table [ref=f32e338]:
+              - rowgroup [ref=f32e339]:
+                - row [ref=f32e340]:
+                  - columnheader "Время" [ref=f32e341]
+                  - columnheader "Пользователь" [ref=f32e342]
+                  - columnheader "Действие" [ref=f32e343]
+                  - columnheader "Тип сущности" [ref=f32e344]
+                  - columnheader "ID сущности" [ref=f32e345]
+                  - columnheader "Детали" [ref=f32e346]
+              - rowgroup [ref=f32e347]:
+                - row [ref=f32e348]:
+                  - cell "09.08.2026, 09:59:07" [ref=f32e349]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f32e350]:
+                    - generic [ref=f32e351]:
+                      - generic [ref=f32e352]: Phase Owner
+                      - generic [ref=f32e353]: owner@phase11b.ru
+                  - cell [ref=f32e354]:
+                    - code [ref=f32e355]: rbac.role_permissions.update
+                  - cell "role" [ref=f32e356]
+                  - cell "—" [ref=f32e357]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f32e358]'
+                - row [ref=f32e360]:
+                  - cell "09.08.2026, 09:59:07" [ref=f32e361]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f32e362]:
+                    - generic [ref=f32e363]:
+                      - generic [ref=f32e364]: Phase Owner
+                      - generic [ref=f32e365]: owner@phase11b.ru
+                  - cell [ref=f32e366]:
+                    - code [ref=f32e367]: rbac.role_permissions.update
+                  - cell "role" [ref=f32e368]
+                  - cell "—" [ref=f32e369]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f32e370]'
+                - row [ref=f32e372]:
+                  - cell "09.08.2026, 09:59:07" [ref=f32e373]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f32e374]:
+                    - generic [ref=f32e375]:
+                      - generic [ref=f32e376]: Phase Owner
+                      - generic [ref=f32e377]: owner@phase11b.ru
+                  - cell [ref=f32e378]:
+                    - code [ref=f32e379]: rbac.role_permissions.update
+                  - cell "role" [ref=f32e380]
+                  - cell "—" [ref=f32e381]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f32e382]'
+                - row [ref=f32e384]:
+                  - cell "09.08.2026, 09:59:07" [ref=f32e385]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f32e386]:
+                    - generic [ref=f32e387]:
+                      - generic [ref=f32e388]: Phase Owner
+                      - generic [ref=f32e389]: owner@phase11b.ru
+                  - cell [ref=f32e390]:
+                    - code [ref=f32e391]: rbac.role_permissions.update
+                  - cell "role" [ref=f32e392]
+                  - cell "—" [ref=f32e393]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f32e394]'
+                - row [ref=f32e396]:
+                  - cell "09.08.2026, 09:59:07" [ref=f32e397]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f32e398]:
+                    - generic [ref=f32e399]:
+                      - generic [ref=f32e400]: Phase Owner
+                      - generic [ref=f32e401]: owner@phase11b.ru
+                  - cell [ref=f32e402]:
+                    - code [ref=f32e403]: rbac.role_permissions.update
+                  - cell "role" [ref=f32e404]
+                  - cell "—" [ref=f32e405]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f32e406]'
+                - row [ref=f32e408]:
+                  - cell "09.08.2026, 09:58:03" [ref=f32e409]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f32e410]:
+                    - generic [ref=f32e411]:
+                      - generic [ref=f32e412]: Phase Owner
+                      - generic [ref=f32e413]: owner@phase11b.ru
+                  - cell [ref=f32e414]:
+                    - code [ref=f32e415]: rbac.role_permissions.update
+                  - cell "role" [ref=f32e416]
+                  - cell "—" [ref=f32e417]
+                  - 'cell "{\"role\":\"ADMIN\",\"added\":[],\"removed\":[\"audit.view\"]}" [ref=f32e418]'
+                - row [ref=f32e420]:
+                  - cell "09.08.2026, 09:55:57" [ref=f32e421]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f32e422]:
+                    - generic [ref=f32e423]:
+                      - generic [ref=f32e424]: Phase Owner
+                      - generic [ref=f32e425]: owner@phase11b.ru
+                  - cell [ref=f32e426]:
+                    - code [ref=f32e427]: rbac.role_permissions.update
+                  - cell "role" [ref=f32e428]
+                  - cell "—" [ref=f32e429]
+                  - 'cell "{\"role\":\"LEARNER\",\"added\":[\"analytics.view\"],\"removed\":[]}" [ref=f32e430]'
+            - generic [ref=f32e432]:
+              - generic [ref=f32e433]:
+                - generic [ref=f32e434]: "Всего: 27"
+                - generic [ref=f32e435]: Строк на странице
+                - combobox "Строк на странице" [ref=f32e436] [cursor=pointer]:
+                  - generic: "20"
+              - generic [ref=f32e439]:
+                - button "Назад" [ref=f32e440] [cursor=pointer]
+                - generic [ref=f32e441]: Страница 2 из 2
+                - button "Вперёд" [disabled]
+  - button "Open Next.js Dev Tools" [ref=f32e71] [cursor=pointer]
+  - alert [ref=f32e75]

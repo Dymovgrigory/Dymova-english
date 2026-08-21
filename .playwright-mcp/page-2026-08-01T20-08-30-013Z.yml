@@ -1,0 +1,40 @@
+- generic [active] [ref=f155e1]:
+  - generic [ref=f155e2]:
+    - generic [ref=f155e3]: 🦊
+    - heading "Фоксинбург" [level=1] [ref=f155e4]
+    - paragraph [ref=f155e5]: "Английский не для школы, а для жизни! Выберите, чем помочь:"
+  - generic [ref=f155e6]:
+    - generic [ref=f155e7]:
+      - button "🎓 Подобрать курс 2 вопроса — и подберём программу" [ref=f155e8] [cursor=pointer]:
+        - generic [ref=f155e9]: 🎓
+        - generic [ref=f155e10]: Подобрать курс
+        - generic [ref=f155e11]: 2 вопроса — и подберём программу
+      - button "📅 Записаться Бесплатная диагностика и пробный урок" [ref=f155e12] [cursor=pointer]:
+        - generic [ref=f155e13]: 📅
+        - generic [ref=f155e14]: Записаться
+        - generic [ref=f155e15]: Бесплатная диагностика и пробный урок
+      - button "📸 Помощь с домашкой Фото задания — объясним бесплатно" [ref=f155e16] [cursor=pointer]:
+        - generic [ref=f155e17]: 📸
+        - generic [ref=f155e18]: Помощь с домашкой
+        - generic [ref=f155e19]: Фото задания — объясним бесплатно
+      - button "📖 Программы и цены Курсы, форматы, стоимость" [ref=f155e20] [cursor=pointer]:
+        - generic [ref=f155e21]: 📖
+        - generic [ref=f155e22]: Программы и цены
+        - generic [ref=f155e23]: Курсы, форматы, стоимость
+      - button "🏫 Филиалы Адреса, телефоны, режим работы" [ref=f155e24] [cursor=pointer]:
+        - generic [ref=f155e25]: 🏫
+        - generic [ref=f155e26]: Филиалы
+        - generic [ref=f155e27]: Адреса, телефоны, режим работы
+      - button "👤 Кабинет Расписание, домашка, оплаты" [ref=f155e28] [cursor=pointer]:
+        - generic [ref=f155e29]: 👤
+        - generic [ref=f155e30]: Кабинет
+        - generic [ref=f155e31]: Расписание, домашка, оплаты
+    - generic [ref=f155e32]:
+      - link "💬 Чат с Фокси" [ref=f155e33] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+      - link "ВКонтакте" [ref=f155e34] [cursor=pointer]:
+        - /url: https://vk.ru/foxyfoxclub
+      - link "Telegram" [ref=f155e35] [cursor=pointer]:
+        - /url: https://t.me/foxinburg
+      - link "Мы на картах" [ref=f155e36] [cursor=pointer]:
+        - /url: https://yandex.ru/maps/org/foxinburg/162408588499/

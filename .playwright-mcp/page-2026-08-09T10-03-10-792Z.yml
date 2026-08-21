@@ -1,0 +1,48 @@
+- generic [active] [ref=f35e1]:
+  - generic [ref=f35e2]:
+    - banner [ref=f35e3]:
+      - generic [ref=f35e4]:
+        - button "Открыть меню" [ref=f35e5] [cursor=pointer]
+        - paragraph [ref=f35e6]: Админка
+      - generic [ref=f35e7]:
+        - button "Поиск и команды (Ctrl K)" [ref=f35e8] [cursor=pointer]
+        - button "Уведомления" [ref=f35e10] [cursor=pointer]
+        - combobox "Язык" [ref=f35e13]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f35e14] [cursor=pointer]
+        - button "Меню пользователя" [ref=f35e15] [cursor=pointer]:
+          - generic [ref=f35e16]: P
+    - main [ref=f35e18]:
+      - generic [ref=f35e20]:
+        - generic [ref=f35e21]:
+          - heading "Настройки" [level=1] [ref=f35e22]
+          - paragraph [ref=f35e23]: Конфигурация школы и платформы
+        - navigation "Разделы настроек" [ref=f35e24]:
+          - link "Общие" [ref=f35e25] [cursor=pointer]:
+            - /url: /admin/settings/general
+          - link "Бренд" [ref=f35e26] [cursor=pointer]:
+            - /url: /admin/settings/brand
+          - link "Пользователи" [ref=f35e27] [cursor=pointer]:
+            - /url: /admin/settings/users
+          - link "Роли" [ref=f35e28] [cursor=pointer]:
+            - /url: /admin/settings/roles
+          - link "Уведомления" [ref=f35e29] [cursor=pointer]:
+            - /url: /admin/settings/notifications
+          - link "Email" [ref=f35e30] [cursor=pointer]:
+            - /url: /admin/settings/email
+          - link "Платежи" [ref=f35e31] [cursor=pointer]:
+            - /url: /admin/settings/payments
+          - link "Сайт" [ref=f35e32] [cursor=pointer]:
+            - /url: /admin/settings/website
+          - link "SEO" [ref=f35e33] [cursor=pointer]:
+            - /url: /admin/settings/seo
+          - link "Интеграции" [ref=f35e34] [cursor=pointer]:
+            - /url: /admin/settings/integrations
+          - link "Безопасность" [ref=f35e35] [cursor=pointer]:
+            - /url: /admin/settings/security
+          - link "Аудит" [ref=f35e36] [cursor=pointer]:
+            - /url: /admin/settings/audit
+        - generic "Загрузка…" [ref=f35e38]
+  - button "Open Next.js Dev Tools" [ref=f35e51] [cursor=pointer]
+  - alert [ref=f35e55]

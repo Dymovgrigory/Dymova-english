@@ -1,0 +1,26 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - banner [ref=f3e159]:
+      - generic [ref=f3e160]:
+        - button "Открыть меню" [ref=f3e263] [cursor=pointer]
+        - paragraph [ref=f3e161]: Обучение
+      - generic [ref=f3e162]:
+        - button "Уведомления" [ref=f3e164] [cursor=pointer]
+        - combobox "Язык" [ref=f3e167]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f3e168] [cursor=pointer]
+        - button "Меню пользователя" [ref=f3e169] [cursor=pointer]:
+          - generic [ref=f3e170]: Г
+    - main [ref=f3e172]:
+      - generic [ref=f3e458]:
+        - generic [ref=f3e459]:
+          - heading "Мои курсы" [level=1] [ref=f3e460]
+          - generic [ref=f3e461]:
+            - button "Мои курсы (0)" [ref=f3e462] [cursor=pointer]
+            - button "Каталог (0)" [ref=f3e463] [cursor=pointer]
+        - generic [ref=f3e464]:
+          - paragraph [ref=f3e469]: Вы пока не записаны ни на один курс.
+          - button "Каталог" [ref=f3e470] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f3e256] [cursor=pointer]
+  - alert [ref=f3e260]

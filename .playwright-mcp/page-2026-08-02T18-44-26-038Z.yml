@@ -1,0 +1,343 @@
+- generic [active] [ref=f7e1]:
+  - navigation [ref=f7e3]:
+    - navigation [ref=f7e4]:
+      - link [ref=f7e22] [cursor=pointer]:
+        - /url: https://tilda.ru/projects/
+      - generic [ref=f7e28]:
+        - link "Мои сайты" [ref=f7e29] [cursor=pointer]:
+          - /url: https://tilda.ru/projects/
+        - link "Тарифы и оплата" [ref=f7e30] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/plan/
+        - link "Профиль" [ref=f7e31] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/
+        - link "Пригласи друга" [ref=f7e32] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/referrals/
+      - generic [ref=f7e33]:
+        - link "Справочный центр" [ref=f7e34] [cursor=pointer]:
+          - /url: https://help-ru.tilda.cc
+        - link "Вебинары" [ref=f7e35] [cursor=pointer]:
+          - /url: https://webinars.tilda.cc/ru
+        - link "Уроки и статьи" [ref=f7e36] [cursor=pointer]:
+          - /url: https://tilda.education
+        - link "Выйти" [ref=f7e37] [cursor=pointer]:
+          - /url: https://tilda.ru/login/exit/
+  - generic [ref=f7e38]:
+    - complementary:
+      - button
+    - generic [ref=f7e39]:
+      - generic [ref=f7e41]:
+        - link "Все пользователи 13" [ref=f7e45] [cursor=pointer]:
+          - /url: "#/"
+          - generic [ref=f7e46]: Все пользователи
+          - superscript [ref=f7e47]: "13"
+        - generic [ref=f7e49]:
+          - generic [ref=f7e52] [cursor=pointer]:
+            - generic [ref=f7e53]: Группы
+            - button [ref=f7e58]
+          - generic [ref=f7e64]:
+            - link "Администраторы 2" [ref=f7e66] [cursor=pointer]:
+              - /url: "#/groups/1548905"
+              - generic [ref=f7e67]: Администраторы
+              - generic [ref=f7e69]: "2"
+            - link "Ученики" [ref=f7e71] [cursor=pointer]:
+              - /url: "#/groups/1548909"
+            - link "Педагоги" [ref=f7e75] [cursor=pointer]:
+              - /url: "#/groups/1548913"
+            - link "Обучение педагогов 10" [ref=f7e79] [cursor=pointer]:
+              - /url: "#/groups/1550529"
+              - generic [ref=f7e80]: Обучение педагогов
+              - generic [ref=f7e82]: "10"
+        - generic [ref=f7e84]:
+          - generic [ref=f7e87] [cursor=pointer]:
+            - generic [ref=f7e88]: Курсы
+            - button [ref=f7e93]
+          - generic [ref=f7e99]:
+            - link "Тестовый курс" [ref=f7e101] [cursor=pointer]:
+              - /url: "#/courses/469457"
+            - link "Входное обучение педагогов" [ref=f7e105] [cursor=pointer]:
+              - /url: "#/courses/470721"
+            - link "Стажировка администраторов" [ref=f7e108] [cursor=pointer]:
+              - /url: "#/courses/491389"
+        - link [ref=f7e111] [cursor=pointer]:
+          - /url: "#/user/55192029/sitesettings"
+          - button "Настройки личного кабинета" [ref=f7e114]
+      - generic [ref=f7e118]:
+        - generic [ref=f7e120]:
+          - link "Мои сайты" [ref=f7e122] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/
+          - link "Языковая школа Фоксинбург (Foxy Fox)" [ref=f7e124] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/?projectid=2053071
+        - generic [ref=f7e125]:
+          - heading "Все пользователи" [level=2] [ref=f7e127]
+          - generic [ref=f7e128]:
+            - paragraph [ref=f7e129]:
+              - text: Добавьте пользователей вручную или c помощью формы регистрации. Cоздайте группу, чтобы выбрать определенных пользователей и страницы, которые будут доступны только для них.
+              - link "Подробная инструкция" [ref=f7e130] [cursor=pointer]:
+                - /url: https://help-ru.tilda.cc/membership
+              - text: .
+            - paragraph [ref=f7e131]:
+              - text: "Ссылка на вход:"
+              - link "https://dymova-english.ru/members/login" [ref=f7e132] [cursor=pointer]:
+                - /url: https://dymova-english.ru/members/login
+            - paragraph [ref=f7e133]:
+              - text: "Ссылка на регистрацию:"
+              - link "https://dymova-english.ru/members/signup" [ref=f7e134] [cursor=pointer]:
+                - /url: https://dymova-english.ru/members/signup
+        - generic [ref=f7e135]:
+          - generic [ref=f7e136]:
+            - generic [ref=f7e137]:
+              - button "Добавить пользователя" [ref=f7e138] [cursor=pointer]
+              - generic [ref=f7e142]:
+                - button [ref=f7e143] [cursor=pointer]
+                - list:
+                  - listitem:
+                    - button "Импорт пользователей"
+                  - listitem:
+                    - button "Экспорт пользователей"
+            - generic [ref=f7e146]:
+              - generic:
+                - generic:
+                  - generic [ref=f7e147]: Введите имя, email или телефон
+                  - textbox "Введите имя, email или телефон" [ref=f7e148]
+              - button [ref=f7e149] [cursor=pointer]
+              - generic: по имени А-Я
+              - button [ref=f7e154] [cursor=pointer]
+          - generic [ref=f7e161]:
+            - generic [ref=f7e162]:
+              - checkbox [ref=f7e165]
+              - generic [ref=f7e168]: Имя пользователя
+              - generic [ref=f7e170]: Email
+              - generic [ref=f7e172]: Телефон
+              - generic [ref=f7e174]: Состоит в группах
+              - generic [ref=f7e176]: Регистрация
+              - generic [ref=f7e178]: Авторизация
+            - generic [ref=f7e180]:
+              - checkbox [ref=f7e183]
+              - link "А Алина" [ref=f7e188] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295021"
+                - generic [ref=f7e189]:
+                  - generic "Алина" [ref=f7e191]: А
+                  - generic [ref=f7e193]: Алина
+              - link "alina.salyahova.01@mail.ru" [ref=f7e196] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295021"
+              - link "+79872856249" [ref=f7e201] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295021"
+              - link "Обучение педагогов" [ref=f7e205] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295021"
+              - link "мес. назад" [ref=f7e211] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295021"
+              - link "Еще не входил" [ref=f7e215] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295021"
+            - generic [ref=f7e217]:
+              - checkbox [ref=f7e220]
+              - link "А Анастасия" [ref=f7e225] [cursor=pointer]:
+                - /url: "#/user/55192029user/58688521"
+                - generic [ref=f7e226]:
+                  - generic "Анастасия" [ref=f7e228]: А
+                  - generic [ref=f7e230]: Анастасия
+              - link "nasta-2004@list.ru" [ref=f7e233] [cursor=pointer]:
+                - /url: "#/user/55192029user/58688521"
+              - link "+79104594971" [ref=f7e238] [cursor=pointer]:
+                - /url: "#/user/55192029user/58688521"
+              - link "Обучение педагогов" [ref=f7e242] [cursor=pointer]:
+                - /url: "#/user/55192029user/58688521"
+              - link "17 д. назад" [ref=f7e248] [cursor=pointer]:
+                - /url: "#/user/55192029user/58688521"
+              - link "3 д. назад" [ref=f7e252] [cursor=pointer]:
+                - /url: "#/user/55192029user/58688521"
+            - generic [ref=f7e254]:
+              - checkbox [ref=f7e257]
+              - link "А Анна" [ref=f7e262] [cursor=pointer]:
+                - /url: "#/user/55192029user/58613837"
+                - generic [ref=f7e263]:
+                  - generic "Анна" [ref=f7e265]: А
+                  - generic [ref=f7e267]: Анна
+              - link "vinogradova11_22@mail.ru" [ref=f7e270] [cursor=pointer]:
+                - /url: "#/user/55192029user/58613837"
+              - link "+79824501061" [ref=f7e275] [cursor=pointer]:
+                - /url: "#/user/55192029user/58613837"
+              - link "Обучение педагогов" [ref=f7e279] [cursor=pointer]:
+                - /url: "#/user/55192029user/58613837"
+              - link "18 д. назад" [ref=f7e285] [cursor=pointer]:
+                - /url: "#/user/55192029user/58613837"
+              - link "4 д. назад" [ref=f7e289] [cursor=pointer]:
+                - /url: "#/user/55192029user/58613837"
+            - generic [ref=f7e291]:
+              - checkbox [ref=f7e294]
+              - link "В Владислав" [ref=f7e299] [cursor=pointer]:
+                - /url: "#/user/55192029user/58577681"
+                - generic [ref=f7e300]:
+                  - generic "Владислав" [ref=f7e302]: В
+                  - generic [ref=f7e304]: Владислав
+              - link "davidcopster@yandex.ru" [ref=f7e307] [cursor=pointer]:
+                - /url: "#/user/55192029user/58577681"
+              - link "+79990960136" [ref=f7e312] [cursor=pointer]:
+                - /url: "#/user/55192029user/58577681"
+              - link "Обучение педагогов" [ref=f7e316] [cursor=pointer]:
+                - /url: "#/user/55192029user/58577681"
+              - link "19 д. назад" [ref=f7e322] [cursor=pointer]:
+                - /url: "#/user/55192029user/58577681"
+              - link "15 д. назад" [ref=f7e326] [cursor=pointer]:
+                - /url: "#/user/55192029user/58577681"
+            - generic [ref=f7e328]:
+              - checkbox [ref=f7e331]
+              - link "Г Головизнина Ираида" [ref=f7e336] [cursor=pointer]:
+                - /url: "#/user/55192029user/58696169"
+                - generic [ref=f7e337]:
+                  - generic "Головизнина Ираида" [ref=f7e339]: Г
+                  - generic [ref=f7e341]: Головизнина Ираида
+              - link "iraidagol43@gmail.com" [ref=f7e344] [cursor=pointer]:
+                - /url: "#/user/55192029user/58696169"
+              - link "+79536899002" [ref=f7e349] [cursor=pointer]:
+                - /url: "#/user/55192029user/58696169"
+              - link [ref=f7e353] [cursor=pointer]:
+                - /url: "#/user/55192029user/58696169"
+              - link "17 д. назад" [ref=f7e356] [cursor=pointer]:
+                - /url: "#/user/55192029user/58696169"
+              - link "8 час. назад" [ref=f7e360] [cursor=pointer]:
+                - /url: "#/user/55192029user/58696169"
+            - generic [ref=f7e362]:
+              - checkbox [ref=f7e365]
+              - link "Г Григорий" [ref=f7e370] [cursor=pointer]:
+                - /url: "#/user/55192029user/55192029"
+                - generic [ref=f7e371]:
+                  - generic "Григорий" [ref=f7e373]: Г
+                  - generic [ref=f7e375]: Григорий
+              - link "dymovgrigory@mail.ru" [ref=f7e378] [cursor=pointer]:
+                - /url: "#/user/55192029user/55192029"
+              - link "+79996960441" [ref=f7e383] [cursor=pointer]:
+                - /url: "#/user/55192029user/55192029"
+              - link "Обучение педагогов" [ref=f7e387] [cursor=pointer]:
+                - /url: "#/user/55192029user/55192029"
+              - link "3 мес. назад" [ref=f7e393] [cursor=pointer]:
+                - /url: "#/user/55192029user/55192029"
+              - link "4 час. назад" [ref=f7e397] [cursor=pointer]:
+                - /url: "#/user/55192029user/55192029"
+            - generic [ref=f7e399]:
+              - checkbox [ref=f7e402]
+              - link "Д Дарья" [ref=f7e407] [cursor=pointer]:
+                - /url: "#/user/55192029user/58310081"
+                - generic [ref=f7e408]:
+                  - generic "Дарья" [ref=f7e410]: Д
+                  - generic [ref=f7e412]: Дарья
+              - link "yadashik@gmail.com" [ref=f7e415] [cursor=pointer]:
+                - /url: "#/user/55192029user/58310081"
+              - link "+79636942033" [ref=f7e420] [cursor=pointer]:
+                - /url: "#/user/55192029user/58310081"
+              - link "Обучение педагогов" [ref=f7e424] [cursor=pointer]:
+                - /url: "#/user/55192029user/58310081"
+              - link "25 д. назад" [ref=f7e430] [cursor=pointer]:
+                - /url: "#/user/55192029user/58310081"
+              - link "24 д. назад" [ref=f7e434] [cursor=pointer]:
+                - /url: "#/user/55192029user/58310081"
+            - generic [ref=f7e436]:
+              - checkbox [ref=f7e439]
+              - link "Е Елизавета" [ref=f7e444] [cursor=pointer]:
+                - /url: "#/user/55192029user/58152229"
+                - generic [ref=f7e445]:
+                  - generic "Елизавета" [ref=f7e447]: Е
+                  - generic [ref=f7e449]: Елизавета
+              - link "cjcbcrf2001@gmail.com" [ref=f7e452] [cursor=pointer]:
+                - /url: "#/user/55192029user/58152229"
+              - link "+79647781566" [ref=f7e457] [cursor=pointer]:
+                - /url: "#/user/55192029user/58152229"
+              - link "Обучение педагогов" [ref=f7e461] [cursor=pointer]:
+                - /url: "#/user/55192029user/58152229"
+              - link "мес. назад" [ref=f7e467] [cursor=pointer]:
+                - /url: "#/user/55192029user/58152229"
+              - link "5 д. назад" [ref=f7e471] [cursor=pointer]:
+                - /url: "#/user/55192029user/58152229"
+            - generic [ref=f7e473]:
+              - checkbox [ref=f7e476]
+              - link "Н Наталья" [ref=f7e481] [cursor=pointer]:
+                - /url: "#/user/55192029user/58221805"
+                - generic [ref=f7e482]:
+                  - generic "Наталья" [ref=f7e484]: Н
+                  - generic [ref=f7e486]: Наталья
+              - link "natashabalandina77@mail.ru" [ref=f7e489] [cursor=pointer]:
+                - /url: "#/user/55192029user/58221805"
+              - link "+79607455858" [ref=f7e494] [cursor=pointer]:
+                - /url: "#/user/55192029user/58221805"
+              - link "Обучение педагогов" [ref=f7e498] [cursor=pointer]:
+                - /url: "#/user/55192029user/58221805"
+              - link "мес. назад" [ref=f7e504] [cursor=pointer]:
+                - /url: "#/user/55192029user/58221805"
+              - link "10 час. назад" [ref=f7e508] [cursor=pointer]:
+                - /url: "#/user/55192029user/58221805"
+            - generic [ref=f7e510]:
+              - checkbox [ref=f7e513]
+              - link "О Ольга Мищенко" [ref=f7e518] [cursor=pointer]:
+                - /url: "#/user/55192029user/59178337"
+                - generic [ref=f7e519]:
+                  - generic "Ольга Мищенко" [ref=f7e521]: О
+                  - generic [ref=f7e523]: Ольга Мищенко
+              - link "iolga92650@gmail.com" [ref=f7e526] [cursor=pointer]:
+                - /url: "#/user/55192029user/59178337"
+              - link "+79773007102" [ref=f7e531] [cursor=pointer]:
+                - /url: "#/user/55192029user/59178337"
+              - link "Администраторы" [ref=f7e535] [cursor=pointer]:
+                - /url: "#/user/55192029user/59178337"
+              - link "5 д. назад" [ref=f7e541] [cursor=pointer]:
+                - /url: "#/user/55192029user/59178337"
+              - link "день назад" [ref=f7e545] [cursor=pointer]:
+                - /url: "#/user/55192029user/59178337"
+            - generic [ref=f7e547]:
+              - checkbox [ref=f7e550]
+              - link "Р Роман" [ref=f7e555] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295049"
+                - generic [ref=f7e556]:
+                  - generic "Роман" [ref=f7e558]: Р
+                  - generic [ref=f7e560]: Роман
+              - link "ranokhin5006@gmail.com" [ref=f7e563] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295049"
+              - link "+79161862073" [ref=f7e568] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295049"
+              - link "Обучение педагогов" [ref=f7e572] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295049"
+              - link "мес. назад" [ref=f7e578] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295049"
+              - link "4 час. назад" [ref=f7e582] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295049"
+            - generic [ref=f7e584]:
+              - checkbox [ref=f7e587]
+              - link "С Сушко Светлана" [ref=f7e592] [cursor=pointer]:
+                - /url: "#/user/55192029user/58602033"
+                - generic [ref=f7e593]:
+                  - generic "Сушко Светлана" [ref=f7e595]: С
+                  - generic [ref=f7e597]: Сушко Светлана
+              - link "domosedovas@yandex.ru" [ref=f7e600] [cursor=pointer]:
+                - /url: "#/user/55192029user/58602033"
+              - link "+79164793393" [ref=f7e605] [cursor=pointer]:
+                - /url: "#/user/55192029user/58602033"
+              - link "Администраторы" [ref=f7e609] [cursor=pointer]:
+                - /url: "#/user/55192029user/58602033"
+              - link "18 д. назад" [ref=f7e615] [cursor=pointer]:
+                - /url: "#/user/55192029user/58602033"
+              - link "4 д. назад" [ref=f7e619] [cursor=pointer]:
+                - /url: "#/user/55192029user/58602033"
+            - generic [ref=f7e621]:
+              - checkbox [ref=f7e624]
+              - link "Ю Юлия" [ref=f7e629] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295029"
+                - generic [ref=f7e630]:
+                  - generic "Юлия" [ref=f7e632]: Ю
+                  - generic [ref=f7e634]: Юлия
+              - link "yulia.dmitrochenko@gmail.com" [ref=f7e637] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295029"
+              - link "+79163067232" [ref=f7e642] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295029"
+              - link "Обучение педагогов" [ref=f7e646] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295029"
+              - link "мес. назад" [ref=f7e652] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295029"
+              - link "4 д. назад" [ref=f7e656] [cursor=pointer]:
+                - /url: "#/user/55192029user/58295029"
+    - complementary [ref=f7e659]:
+      - generic [ref=f7e662]:
+        - generic [ref=f7e663]:
+          - heading "Данные пользователя" [level=3] [ref=f7e664]
+          - button [ref=f7e665] [cursor=pointer]
+        - generic [ref=f7e667]:
+          - button "Профиль"
+          - button "Статистика" [ref=f7e668] [cursor=pointer]
+    - complementary [ref=f7e671]

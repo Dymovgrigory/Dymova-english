@@ -1,0 +1,20 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e183]:
+      - generic [ref=e184]:
+        - heading "Кабинет открывается из чата" [level=2] [ref=e185]
+        - paragraph [ref=e186]: Здесь будут ваши дети, их прогресс и расписание. Откройте приложение из чата с ботом — там оно знает, кто вы.
+        - group "Дети"
+      - region "Карточка ребёнка"
+      - region "Ближайшее занятие"
+      - region "Прогресс"
+      - region "Мои заявки"
+      - region "Что дальше" [ref=e187]:
+        - link "Перейти в бота" [ref=e188] [cursor=pointer]:
+          - /url: https://t.me/foxinburg
+  - navigation "Разделы" [ref=e158]:
+    - button "Дом" [ref=e159] [cursor=pointer]
+    - button "Курсы" [ref=e163] [cursor=pointer]
+    - button "Педагоги" [ref=e167] [cursor=pointer]
+    - button "Фокси" [ref=e173] [cursor=pointer]
+    - button "Кабинет" [active] [ref=e177] [cursor=pointer]

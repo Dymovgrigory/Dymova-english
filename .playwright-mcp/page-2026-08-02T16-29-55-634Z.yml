@@ -1,0 +1,28 @@
+- navigation [ref=f3e3]:
+  - navigation [ref=f3e4]:
+    - link [ref=f3e22] [cursor=pointer]:
+      - /url: https://tilda.ru/projects/
+    - generic [ref=f3e28]:
+      - link "Мои сайты" [ref=f3e29] [cursor=pointer]:
+        - /url: https://tilda.ru/projects/
+      - link "CRM" [ref=f3e30] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/gocrm/
+      - link "Тарифы и оплата" [ref=f3e31] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/plan/
+      - link "Профиль" [ref=f3e32] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/
+      - link "Домены" [ref=f3e33] [cursor=pointer]:
+        - /url: https://tilda.ru/domains/
+      - link "Учебники" [ref=f3e34] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/courses/
+    - generic [ref=f3e35]:
+      - link "Справочный центр" [ref=f3e36] [cursor=pointer]:
+        - /url: https://help-ru.tilda.cc
+      - link "Вебинары" [ref=f3e37] [cursor=pointer]:
+        - /url: https://webinars.tilda.cc/ru
+      - link "Уроки и статьи" [ref=f3e38] [cursor=pointer]:
+        - /url: https://tilda.education
+      - link "(Вероник..)" [ref=f3e39] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/
+      - link "Выйти" [ref=f3e40] [cursor=pointer]:
+        - /url: https://tilda.ru/login/exit/

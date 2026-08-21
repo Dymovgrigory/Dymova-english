@@ -1,0 +1,92 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]: F
+    - heading "Фоксинбург CRM" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Введите админ-токен. Он сохранится только в этом браузере.
+    - generic [ref=e7]:
+      - textbox "Админ-токен" [ref=e8]
+      - button "Войти" [ref=e9] [cursor=pointer]
+  - generic [ref=e10]:
+    - complementary [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]: F
+        - text: Фоксинбург
+      - navigation [ref=e14]:
+        - button "Дашборд" [ref=e15] [cursor=pointer]
+        - button "Входящие" [ref=e20] [cursor=pointer]
+        - button "Клиенты" [ref=e23] [cursor=pointer]
+        - button "Рассылки" [ref=e27] [cursor=pointer]
+        - button "Вопросы" [ref=e31] [cursor=pointer]
+        - button "Настройки" [ref=e35] [cursor=pointer]
+      - button "Выйти" [ref=e40] [cursor=pointer]
+    - generic [ref=e43]:
+      - banner [ref=e44]:
+        - 'searchbox "Поиск: клиенты и сообщения (Ctrl+K)" [ref=e46]'
+        - generic "Состояние каналов"
+      - generic [ref=e48]:
+        - heading "Сообщения сегодня по каналам" [level=3] [ref=e50]
+        - heading "Последние обращения" [level=3] [ref=e52]
+      - generic [ref=e53]:
+        - generic [ref=e55]:
+          - searchbox "Имя, телефон, username" [ref=e56]
+          - generic [ref=e57]:
+            - combobox [ref=e58]:
+              - option "Все каналы" [selected]
+              - option "MAX"
+              - option "Telegram"
+              - option "Веб"
+            - combobox [ref=e59]:
+              - 'option "AI: любой" [selected]'
+              - option "AI активен"
+              - option "AI на паузе"
+              - option "Менеджер"
+          - generic [ref=e60]:
+            - combobox [ref=e61]:
+              - option "Любой статус" [selected]
+              - option "Новый"
+              - option "Контакт"
+              - option "Квалифицирован"
+              - option "Пробный"
+              - option "Предложение"
+              - option "Оплата"
+              - option "Клиент"
+              - option "Потерян"
+            - generic [ref=e62]:
+              - checkbox "Непрочитанные" [ref=e63]
+              - text: Непрочитанные
+          - generic [ref=e64]:
+            - textbox "С даты" [ref=e65]
+            - textbox "По дату" [ref=e66]
+        - generic [ref=e68]:
+          - generic [ref=e69]: Выберите диалог слева
+          - generic [ref=e70]:
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - button "AI" [ref=e74] [cursor=pointer]
+                - generic [ref=e75]:
+                  - button "AI активен" [ref=e76] [cursor=pointer]
+                  - button "Пауза 30 минут" [ref=e77] [cursor=pointer]
+                  - button "Пауза 1 час" [ref=e78] [cursor=pointer]
+                  - button "Пауза 3 часа" [ref=e79] [cursor=pointer]
+                  - button "Пауза до конца дня" [ref=e80] [cursor=pointer]
+                  - button "Пауза до ручного включения" [ref=e81] [cursor=pointer]
+                  - button "Режим менеджера" [ref=e82] [cursor=pointer]
+              - button "Карточка" [ref=e83] [cursor=pointer]
+            - generic [ref=e85]:
+              - textbox "Ответить клиенту… (Enter — отправить, Shift+Enter — перенос)" [ref=e86]
+              - button "Отправить" [ref=e87] [cursor=pointer]
+        - generic [ref=e88]: Карточка клиента появится здесь
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - generic [ref=e92]: Текст сообщения
+          - textbox "Текст сообщения" [ref=e93]:
+            - /placeholder: Что отправить клиентам
+        - generic [ref=e95]:
+          - generic [ref=e96]: Кому
+          - combobox "Кому" [ref=e97]:
+            - option "Всем" [selected]
+            - option "Только с заявкой"
+        - generic [ref=e98]:
+          - button "Отправить себе" [ref=e99] [cursor=pointer]
+          - button "Отправить выбранным" [ref=e100] [cursor=pointer]
+        - paragraph [ref=e101]: «Отправить себе» уходит только администраторам из ADMIN_MAX_IDS — проверьте текст на себе, прежде чем отправлять клиентам.

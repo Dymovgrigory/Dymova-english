@@ -1,0 +1,86 @@
+- generic [ref=f42e1]:
+  - generic [ref=f42e2]:
+    - banner [ref=f42e3]:
+      - button "Открыть меню" [ref=f42e5] [cursor=pointer]
+      - generic [ref=f42e6]:
+        - button "Поиск и команды (Ctrl K)" [ref=f42e7] [cursor=pointer]
+        - button "Уведомления" [ref=f42e9] [cursor=pointer]
+        - combobox "Язык" [ref=f42e12]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f42e13] [cursor=pointer]
+        - button "Меню пользователя" [ref=f42e14] [cursor=pointer]:
+          - generic [ref=f42e15]: Г
+    - main [ref=f42e17]:
+      - generic [ref=f42e19]:
+        - generic [ref=f42e20]:
+          - generic [ref=f42e21]:
+            - heading "Аналитика" [level=1] [ref=f42e22]
+            - paragraph [ref=f42e23]: Интерактивный обзор по доменам школы. Период применяется ко всем графикам.
+          - generic [ref=f42e24]:
+            - generic [ref=f42e25]:
+              - button "7 дней" [ref=f42e26] [cursor=pointer]
+              - button "30 дней" [ref=f42e27] [cursor=pointer]
+              - button "90 дней" [ref=f42e28] [cursor=pointer]
+              - button "12 мес" [active] [pressed] [ref=f42e29] [cursor=pointer]
+            - generic [ref=f42e30]:
+              - textbox "Дата с" [ref=f42e31]: 2025-08-10
+              - generic [ref=f42e32]: —
+              - textbox "Дата по" [ref=f42e33]: 2026-08-09
+            - generic [ref=f42e34]: 2025-08-10 — 2026-08-09
+        - navigation "Разделы аналитики" [ref=f42e35]:
+          - link "Обзор" [ref=f42e36] [cursor=pointer]:
+            - /url: /analytics
+          - link "Обучение" [ref=f42e37] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "Люди" [ref=f42e38] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Финансы" [ref=f42e39] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f42e40]:
+          - generic [ref=f42e41]:
+            - generic [ref=f42e118]:
+              - term [ref=f42e119]: Выручка за период
+              - definition [ref=f42e120]: 0 ₽
+            - generic [ref=f42e121]:
+              - term [ref=f42e122]: Оплаченных заказов
+              - definition [ref=f42e123]: "0"
+            - generic [ref=f42e124]:
+              - term [ref=f42e125]: Записей на курсы
+              - definition [ref=f42e126]: "15"
+            - generic [ref=f42e127]:
+              - term [ref=f42e128]: Уникальных учеников
+              - definition [ref=f42e129]: "14"
+            - generic [ref=f42e130]:
+              - term [ref=f42e131]: Средний прогресс
+              - definition [ref=f42e132]: 38,8%
+            - generic [ref=f42e133]:
+              - term [ref=f42e134]: Проходимость тестов
+              - definition [ref=f42e135]: 0%
+          - generic [ref=f42e51]:
+            - generic [ref=f42e52]:
+              - heading "Выручка по месяцам" [level=2] [ref=f42e53]
+              - paragraph [ref=f42e54]: Подтверждённые оплаты, помесячно (значения в рублях)
+              - paragraph [ref=f42e136]: Нет данных за выбранный период
+            - generic [ref=f42e59]:
+              - heading "Активные пользователи" [level=2] [ref=f42e60]
+              - paragraph [ref=f42e61]: Уникальные пользователи с активностью, помесячно
+              - img "Активные пользователи" [ref=f42e137]:
+                - generic [ref=f42e138]: "0"
+                - generic [ref=f42e140]: "5"
+                - generic [ref=f42e142]: "10"
+                - generic [ref=f42e144]: "15"
+                - 'generic "апр. 26 г.: 1" [ref=f42e148]'
+                - 'generic "июнь 26 г.: 1" [ref=f42e149]'
+                - 'generic "июль 26 г.: 12" [ref=f42e150]'
+                - 'generic "авг. 26 г.: 6" [ref=f42e151]'
+                - generic [ref=f42e152]: апр. 26 г.
+                - generic [ref=f42e153]: июнь 26 г.
+                - generic [ref=f42e154]: июль 26 г.
+                - generic [ref=f42e155]: авг. 26 г.
+          - generic [ref=f42e66]:
+            - heading "Результаты тестов" [level=2] [ref=f42e67]
+            - paragraph [ref=f42e68]: Доля успешных попыток за период
+            - paragraph [ref=f42e156]: Нет данных за выбранный период
+  - button "Open Next.js Dev Tools" [ref=f42e78] [cursor=pointer]
+  - alert [ref=f42e82]

@@ -1,0 +1,4 @@
+[     691ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     733ms] [LOG] [HMR] connected @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     851ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/users/me:0
+[     860ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/auth/refresh:0

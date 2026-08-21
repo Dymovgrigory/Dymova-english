@@ -1,0 +1,24 @@
+- generic [active] [ref=f5e1]:
+  - main [ref=f5e2]:
+    - generic [ref=f5e6]:
+      - link "Фоксинбург Фоксинбург" [ref=f5e7] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f5e9]
+        - generic [ref=f5e10]: Фоксинбург
+      - generic [ref=f5e11]:
+        - combobox "Язык" [ref=f5e12]:
+          - option "Русский" [selected]
+          - option "English"
+        - link "Войти" [ref=f5e13] [cursor=pointer]:
+          - /url: /login
+    - generic [ref=f5e14]:
+      - generic [ref=f5e15]: Языковая школа
+      - heading "Личный кабинет Фоксинбурга" [level=1] [ref=f5e18]
+      - paragraph [ref=f5e19]: Курсы английского, немецкого и китайского для детей и взрослых — прогресс, задания и сертификаты в одном месте.
+      - generic [ref=f5e20]:
+        - link "Регистрация" [ref=f5e21] [cursor=pointer]:
+          - /url: /register
+        - link "Войти" [ref=f5e22] [cursor=pointer]:
+          - /url: /login
+  - button "Open Next.js Dev Tools" [ref=f5e29] [cursor=pointer]
+  - alert [ref=f5e33]

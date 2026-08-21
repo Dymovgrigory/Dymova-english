@@ -1,0 +1,59 @@
+[     127ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3113/login:0
+[     155ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     198ms] [LOG] [HMR] connected @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   30001ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   31241ms] [LOG] [Fast Refresh] done in 1341ms @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   31280ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   31290ms] [LOG] [HMR] connected @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  226518ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  226529ms] [LOG] [HMR] connected @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  226708ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3113/api/v1/files/4265b922-1313-4d3e-bafb-e56cdafdcd12/public:0
+[  226710ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3113/api/v1/files/cb700452-9892-4081-bf08-cae4ab5cd576/public:0
+[  281282ms] [ERROR] In HTML, whitespace text nodes cannot be a child of <%s>. Make sure you don't have any extra whitespace between tags on each line of your source code.
+This will cause a hydration error.%s tr 
+
+  ...
+    <SegmentViewNode type="page" pagePath="(app)/medi...">
+      <SegmentTrieNode>
+      <MediaPage>
+        <MediaLibrary>
+          <div className={"space-y-..."} onDragOver={function onDragOver} onDragLeave={function onDragLeave} ...>
+            <div>
+            <div>
+            <DataTable columns={[...]} data={[...]} labels={{...}} pageCount={1} pagination={{pageIndex:0, ...}} ...>
+              <div className="space-y-4">
+                <div>
+                <_c className="overflow-h...">
+                  <div ref={null} className="rounded-xl...">
+                    <_c>
+                      <div className="relative w...">
+                        <table ref={null} className="w-full cap...">
+                          <_c2>
+                          <_c4>
+                            <tbody ref={null} className={"[&_tr:la..."}>
+                              <_c8 data-state={undefined} onClick={function} className="cursor-poi...">
+>                               <tr
+>                                 ref={null}
+>                                 className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-mut..."
+>                                 data-state={undefined}
+>                                 onClick={function}
+>                               >
+>                                 {"                  "}
+                                  ...
+                              ...
+                ...
+            ...
+    ...
+ @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[  281473ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  281565ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3113/api/v1/files/4265b922-1313-4d3e-bafb-e56cdafdcd12/public:0
+[  281575ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3113/api/v1/files/cb700452-9892-4081-bf08-cae4ab5cd576/public:0
+[  281585ms] [LOG] [Fast Refresh] done in 218ms @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  375322ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  376159ms] [LOG] [Fast Refresh] done in 900ms @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  411169ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  411388ms] [LOG] [Fast Refresh] done in 242ms @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  421997ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  421997ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  449404ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  449450ms] [LOG] [Fast Refresh] done in 79ms @ http://localhost:3113/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477

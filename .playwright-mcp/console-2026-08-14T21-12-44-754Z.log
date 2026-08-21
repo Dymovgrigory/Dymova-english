@@ -1,0 +1,13 @@
+[     147ms] [LOG] [Telegram.WebView] > postEvent web_app_set_header_color {color_key: bg_color} @ https://telegram.org/js/telegram-web-app.js:134
+[     151ms] [LOG] [Telegram.WebView] > postEvent web_app_set_bottom_bar_color {color: #ffffff} @ https://telegram.org/js/telegram-web-app.js:134
+[     152ms] [LOG] [Telegram.WebView] > postEvent web_app_request_theme  @ https://telegram.org/js/telegram-web-app.js:134
+[     152ms] [LOG] [Telegram.WebView] > postEvent web_app_request_viewport  @ https://telegram.org/js/telegram-web-app.js:134
+[     152ms] [LOG] [Telegram.WebView] > postEvent web_app_request_safe_area  @ https://telegram.org/js/telegram-web-app.js:134
+[     152ms] [LOG] [Telegram.WebView] > postEvent web_app_request_content_safe_area  @ https://telegram.org/js/telegram-web-app.js:134
+[     259ms] [LOG] [Telegram.WebView] > postEvent web_app_ready  @ https://telegram.org/js/telegram-web-app.js:134
+[     259ms] [LOG] [Telegram.WebView] > postEvent web_app_expand  @ https://telegram.org/js/telegram-web-app.js:134
+[     260ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[    3547ms] [WARNING] The resource http://127.0.0.1:8788/tg/assets/foxi.webp was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://127.0.0.1:8788/tg/:0
+[    7473ms] [WARNING] [Telegram.WebApp] HapticFeedback is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:1477
+[    7473ms] [WARNING] [Telegram.WebApp] BackButton is not supported in version 6.0 @ https://telegram.org/js/telegram-web-app.js:988
+[    7474ms] [LOG] [Telegram.WebView] > postEvent web_app_setup_main_button {is_visible: false} @ https://telegram.org/js/telegram-web-app.js:134

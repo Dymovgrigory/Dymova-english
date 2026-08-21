@@ -1,0 +1,43 @@
+- generic [active] [ref=f33e1]:
+  - main [ref=f33e2]:
+    - generic [ref=f33e3]:
+      - generic [ref=f33e7]:
+        - paragraph [ref=f33e8]: Языковая школа · Долгопрудный
+        - heading "Фоксинбург" [level=1] [ref=f33e9]
+        - paragraph [ref=f33e10]:
+          - generic [ref=f33e11]: Английский
+          - generic [ref=f33e12]: не
+          - generic [ref=f33e13]: для
+          - generic [ref=f33e14]: школы,
+          - generic [ref=f33e15]: а
+          - generic [ref=f33e16]: для
+          - generic [ref=f33e17]: жизни
+      - 'button "Ваш уровень: A2–B1 Подобрать программу под него" [ref=f33e18] [cursor=pointer]':
+        - generic [ref=f33e20]:
+          - generic [ref=f33e21]: "Ваш уровень: A2–B1"
+          - generic [ref=f33e22]: Подобрать программу под него
+      - navigation "Быстрые действия" [ref=f33e26]:
+        - button "Подобрать курс Три вопроса — и готово" [ref=f33e27] [cursor=pointer]:
+          - generic [ref=f33e32]: Подобрать курс
+          - generic [ref=f33e33]: Три вопроса — и готово
+        - button "Записаться" [ref=f33e34] [cursor=pointer]
+        - button "Домашка" [ref=f33e41] [cursor=pointer]
+      - region [ref=f33e48]:
+        - heading "Почему Фоксинбург" [level=2] [ref=f33e49]
+      - region [ref=f33e53]:
+        - heading "Как начать" [level=2] [ref=f33e54]
+        - list
+      - region [ref=f33e55]:
+        - heading "Частые вопросы" [level=2] [ref=f33e56]
+      - region [ref=f33e57]:
+        - heading "Где мы" [level=2] [ref=f33e58]
+      - generic [ref=f33e59]:
+        - paragraph [ref=f33e60]: Начать проще, чем кажется
+        - paragraph [ref=f33e61]: Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.
+        - button "Записаться на диагностику" [ref=f33e62] [cursor=pointer]
+  - navigation "Разделы" [ref=f33e63]:
+    - button "Дом" [ref=f33e64] [cursor=pointer]
+    - button "Курсы" [ref=f33e68] [cursor=pointer]
+    - button "Педагоги" [ref=f33e72] [cursor=pointer]
+    - button "Фокси" [ref=f33e78] [cursor=pointer]
+    - button "Кабинет" [ref=f33e82] [cursor=pointer]

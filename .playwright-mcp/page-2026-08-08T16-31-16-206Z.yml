@@ -1,0 +1,178 @@
+- generic [ref=f58e1]:
+  - generic [ref=f58e2]:
+    - complementary [ref=f58e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f58e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f58e6]
+        - generic [ref=f58e7]: Фоксинбург
+      - navigation "Основная навигация" [ref=f58e8]:
+        - generic [ref=f58e9]:
+          - generic [ref=f58e11]:
+            - link "Главная" [ref=f58e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f58e19] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f58e24] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f58e28] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f58e32] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f58e38] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f58e44] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f58e49] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f58e57] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f58e61] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f58e65] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f58e70] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f58e73] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f58e78] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f58e84] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f58e91]:
+            - link "Моя команда" [ref=f58e92] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f58e99] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f58e104] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f58e109]:
+            - paragraph [ref=f58e111]: Студия
+            - generic [ref=f58e112]:
+              - link "Студия" [ref=f58e113] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f58e118] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f58e121] [cursor=pointer]:
+                - /url: /studio/paths
+          - generic [ref=f58e127]:
+            - paragraph [ref=f58e129]: Админка
+            - generic [ref=f58e130]:
+              - link "Админка" [ref=f58e131] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f58e136] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f58e141] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f58e145] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f58e150] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f58e155] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f58e160] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f58e164] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Мероприятия" [ref=f58e169] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f58e173] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f58e178] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f58e183] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f58e188] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f58e194] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f58e201] [cursor=pointer]
+    - banner [ref=f58e206]:
+      - paragraph [ref=f58e208]: База знаний
+      - generic [ref=f58e209]:
+        - button "Поиск и команды (Ctrl K)" [ref=f58e210] [cursor=pointer]
+        - button "Уведомления" [ref=f58e212] [cursor=pointer]
+        - combobox "Язык" [ref=f58e215]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f58e216] [cursor=pointer]
+        - button "Меню пользователя" [ref=f58e217] [cursor=pointer]:
+          - generic [ref=f58e218]: O
+    - main [ref=f58e220]:
+      - generic [ref=f58e222]:
+        - generic [ref=f58e223]:
+          - generic [ref=f58e224]:
+            - link "← ← К пространству" [ref=f58e225] [cursor=pointer]:
+              - /url: /knowledge/s1
+            - heading "Статья" [level=1] [ref=f58e226]
+            - generic [ref=f58e227]:
+              - generic [ref=f58e228]: Черновик
+              - generic [ref=f58e229]: Пространство
+              - generic [ref=f58e230]: ·
+              - generic [ref=f58e231]: 1 янв. 2026 г., 03:00
+          - generic [ref=f58e232]:
+            - button "Просмотр" [active] [ref=f58e257] [cursor=pointer]
+            - button "Удалить статью" [ref=f58e234] [cursor=pointer]
+        - generic [ref=f58e258]:
+          - heading "Редактирование" [level=2] [ref=f58e259]
+          - generic [ref=f58e260]:
+            - generic [ref=f58e261]:
+              - text: Название
+              - textbox "Название" [ref=f58e262]: Статья
+            - generic [ref=f58e263]:
+              - text: Содержание
+              - generic [ref=f58e265]:
+                - generic [ref=f58e266]:
+                  - generic [ref=f58e267]:
+                    - button "Отменить" [disabled] [ref=f58e268]
+                    - button "Повторить" [disabled] [ref=f58e272]
+                    - button "Стиль текста" [ref=f58e278] [cursor=pointer]:
+                      - generic [ref=f58e279]: Обычный текст
+                    - button "Шрифт" [ref=f58e283] [cursor=pointer]
+                    - button "Размер" [ref=f58e288] [cursor=pointer]
+                    - button "Цвет текста" [ref=f58e294] [cursor=pointer]:
+                      - generic [ref=f58e295]: A
+                    - button "Цвет выделения" [ref=f58e298] [cursor=pointer]
+                    - button "На весь экран" [ref=f58e305] [cursor=pointer]
+                  - generic [ref=f58e311]:
+                    - button "Жирный" [ref=f58e312] [cursor=pointer]
+                    - button "Курсив" [ref=f58e316] [cursor=pointer]
+                    - button "Подчёркнутый" [ref=f58e319] [cursor=pointer]
+                    - button "Зачёркнутый" [ref=f58e322] [cursor=pointer]
+                    - button "Подстрочный индекс" [ref=f58e326] [cursor=pointer]
+                    - button "Надстрочный индекс" [ref=f58e331] [cursor=pointer]
+                    - button "По левому краю" [ref=f58e337] [cursor=pointer]
+                    - button "По центру" [ref=f58e339] [cursor=pointer]
+                    - button "По правому краю" [ref=f58e341] [cursor=pointer]
+                    - button "По ширине" [ref=f58e343] [cursor=pointer]
+                    - button "Маркированный список" [ref=f58e346] [cursor=pointer]
+                    - button "Нумерованный список" [ref=f58e348] [cursor=pointer]
+                    - button "Список задач" [ref=f58e352] [cursor=pointer]
+                    - button "Цитата" [ref=f58e356] [cursor=pointer]
+                    - button "Вставить ссылку" [ref=f58e360] [cursor=pointer]
+                    - button "Убрать ссылку" [disabled] [ref=f58e364]
+                    - button "Загрузить изображение" [ref=f58e368] [cursor=pointer]
+                    - button "Вставить изображение по URL" [ref=f58e373] [cursor=pointer]
+                    - button "Горизонтальная линия" [ref=f58e378] [cursor=pointer]
+                    - button "Таблица" [ref=f58e381] [cursor=pointer]
+                    - button "Очистить форматирование" [ref=f58e387] [cursor=pointer]
+                - paragraph [ref=f58e393]: Текст статьи базы знаний.
+            - generic [ref=f58e394]:
+              - button "Сохранить" [ref=f58e395] [cursor=pointer]
+              - button "Опубликовать" [ref=f58e396] [cursor=pointer]
+        - generic [ref=f58e235]:
+          - article [ref=f58e236]:
+            - heading "Просмотр" [level=2] [ref=f58e237]
+            - paragraph [ref=f58e397]: Текст статьи базы знаний.
+          - complementary [ref=f58e241]:
+            - generic [ref=f58e242]:
+              - generic [ref=f58e243]:
+                - heading "Вложения" [level=3] [ref=f58e244]
+                - generic [ref=f58e245]: "0"
+              - paragraph [ref=f58e246]: Вложений нет.
+            - generic [ref=f58e398]:
+              - heading "Файлы" [level=3] [ref=f58e399]
+              - generic [ref=f58e400]:
+                - button "Choose File" [ref=f58e401]
+                - button "Загрузить и прикрепить" [disabled] [ref=f58e402]
+  - button "Open Next.js Dev Tools" [ref=f58e252] [cursor=pointer]
+  - alert [ref=f58e256]

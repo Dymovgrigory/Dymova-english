@@ -1,0 +1,91 @@
+- generic [active] [ref=f33e1]:
+  - complementary [ref=f33e2]:
+    - link [ref=f33e4] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Фоксинбург" [ref=f33e5]
+    - navigation [ref=f33e6]:
+      - generic [ref=f33e7]:
+        - link "Главная" [ref=f33e8] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Руководство" [ref=f33e14] [cursor=pointer]:
+          - /url: /help
+        - link "Обучение" [ref=f33e19] [cursor=pointer]:
+          - /url: /learn
+        - link "Каталог" [ref=f33e23] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Траектории" [ref=f33e26] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "База знаний" [ref=f33e28] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Сертификаты" [ref=f33e31] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Лидерборд" [ref=f33e35] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "Мои бейджи" [ref=f33e42] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Календарь" [ref=f33e45] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Онбординг" [ref=f33e48] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Наблюдения" [ref=f33e52] [cursor=pointer]:
+          - /url: /learn/training
+        - link "Мой план развития" [ref=f33e55] [cursor=pointer]:
+          - /url: /learn/development
+        - link "Оценка 360°" [ref=f33e58] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "Новости" [ref=f33e61] [cursor=pointer]:
+          - /url: /news
+      - link "Моя команда" [ref=f33e67] [cursor=pointer]:
+        - /url: /supervisor
+      - generic [ref=f33e74]:
+        - link "Студия" [ref=f33e75] [cursor=pointer]:
+          - /url: /studio
+        - link "Наблюдения в студии" [ref=f33e79] [cursor=pointer]:
+          - /url: /studio/training
+        - link "Траектории" [ref=f33e82] [cursor=pointer]:
+          - /url: /studio/paths
+      - generic [ref=f33e85]:
+        - link "Админка" [ref=f33e86] [cursor=pointer]:
+          - /url: /admin
+        - link "Аналитика" [ref=f33e90] [cursor=pointer]:
+          - /url: /admin/analytics
+        - link "Заявки на обучение" [ref=f33e94] [cursor=pointer]:
+          - /url: /admin/training-requests
+        - link "SSO" [ref=f33e97] [cursor=pointer]:
+          - /url: /admin/sso-connections
+        - link "LRS" [ref=f33e100] [cursor=pointer]:
+          - /url: /admin/lrs
+        - link "Департаменты" [ref=f33e104] [cursor=pointer]:
+          - /url: /admin/departments
+        - link "Бейджи" [ref=f33e108] [cursor=pointer]:
+          - /url: /admin/badges
+        - link "Сайт" [ref=f33e111] [cursor=pointer]:
+          - /url: /admin/site
+        - link "Мероприятия" [ref=f33e114] [cursor=pointer]:
+          - /url: /admin/events
+        - link "Программы онбординга" [ref=f33e117] [cursor=pointer]:
+          - /url: /admin/onboarding
+        - link "Чек-листы наблюдений" [ref=f33e121] [cursor=pointer]:
+          - /url: /admin/observation-checklists
+        - link "Планы развития" [ref=f33e124] [cursor=pointer]:
+          - /url: /admin/development
+        - link "Компетенции" [ref=f33e127] [cursor=pointer]:
+          - /url: /admin/competencies
+        - link "Оценочные сессии" [ref=f33e130] [cursor=pointer]:
+          - /url: /admin/assessments
+    - generic [ref=f33e133]:
+      - generic [ref=f33e134]: B
+      - button "Выйти" [ref=f33e136] [cursor=pointer]
+      - button "Expand" [ref=f33e140] [cursor=pointer]
+  - generic [ref=f33e145]:
+    - banner [ref=f33e146]:
+      - paragraph [ref=f33e148]: Foxinburg Brand QA
+      - generic [ref=f33e149]:
+        - button "Уведомления" [ref=f33e151] [cursor=pointer]
+        - combobox "Язык" [ref=f33e154]:
+          - option "Русский" [selected]
+          - option "English"
+    - main [ref=f33e155]:
+      - paragraph [ref=f33e157]: Загрузка курса…
+  - button "Open Next.js Dev Tools" [ref=f33e163] [cursor=pointer]
+  - alert [ref=f33e167]

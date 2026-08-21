@@ -1,0 +1,3 @@
+[     334ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://cdn.jsdelivr.net/npm/three@0.180.0/examples/models/gltf/Xbot.glb:0
+[     337ms] [ERROR] HttpError: fetch for "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/models/gltf/Xbot.glb" responded with 404: 
+    at https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.core.js:44123:12 @ https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/GLTFLoader.js:288

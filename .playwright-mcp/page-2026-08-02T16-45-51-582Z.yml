@@ -1,0 +1,1443 @@
+- generic [active] [ref=f8e1]:
+  - navigation [ref=f8e3]:
+    - navigation [ref=f8e4]:
+      - link [ref=f8e22] [cursor=pointer]:
+        - /url: https://tilda.ru/projects/
+      - generic [ref=f8e28]:
+        - link "Мои сайты" [ref=f8e29] [cursor=pointer]:
+          - /url: https://tilda.ru/projects/
+        - link "Тарифы и оплата" [ref=f8e30] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/plan/
+        - link "Профиль" [ref=f8e31] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/
+        - link "Пригласи друга" [ref=f8e32] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/referrals/
+      - generic [ref=f8e33]:
+        - link "Справочный центр" [ref=f8e34] [cursor=pointer]:
+          - /url: https://help-ru.tilda.cc
+        - link "Вебинары" [ref=f8e35] [cursor=pointer]:
+          - /url: https://webinars.tilda.cc/ru
+        - link "Уроки и статьи" [ref=f8e36] [cursor=pointer]:
+          - /url: https://tilda.education
+        - link "Выйти" [ref=f8e37] [cursor=pointer]:
+          - /url: https://tilda.ru/login/exit/
+  - generic [ref=f8e38]:
+    - complementary:
+      - button
+    - generic [ref=f8e39]:
+      - generic [ref=f8e41]:
+        - link "Все пользователи 13" [ref=f8e45] [cursor=pointer]:
+          - /url: "#/"
+          - generic [ref=f8e46]: Все пользователи
+          - superscript [ref=f8e47]: "13"
+        - generic [ref=f8e49]:
+          - generic [ref=f8e52] [cursor=pointer]:
+            - generic [ref=f8e53]: Группы
+            - button [ref=f8e58]
+          - generic [ref=f8e64]:
+            - link "Администраторы 2" [ref=f8e66] [cursor=pointer]:
+              - /url: "#/groups/1548905"
+              - generic [ref=f8e67]: Администраторы
+              - generic [ref=f8e69]: "2"
+            - link "Ученики" [ref=f8e71] [cursor=pointer]:
+              - /url: "#/groups/1548909"
+            - link "Педагоги" [ref=f8e75] [cursor=pointer]:
+              - /url: "#/groups/1548913"
+            - link "Обучение педагогов 10" [ref=f8e79] [cursor=pointer]:
+              - /url: "#/groups/1550529"
+              - generic [ref=f8e80]: Обучение педагогов
+              - generic [ref=f8e82]: "10"
+        - generic [ref=f8e84]:
+          - generic [ref=f8e87] [cursor=pointer]:
+            - generic [ref=f8e88]: Курсы
+            - button [ref=f8e93]
+          - generic [ref=f8e99]:
+            - link "Тестовый курс" [ref=f8e101] [cursor=pointer]:
+              - /url: "#/courses/469457"
+            - link "Входное обучение педагогов" [ref=f8e105] [cursor=pointer]:
+              - /url: "#/courses/470721"
+            - link "Стажировка администраторов" [ref=f8e108] [cursor=pointer]:
+              - /url: "#/courses/491389"
+        - link [ref=f8e111] [cursor=pointer]:
+          - /url: "#/courses/470721/lecture/7521173/sitesettings"
+          - button "Настройки личного кабинета" [ref=f8e114]
+      - generic [ref=f8e119]:
+        - generic [ref=f8e121]:
+          - link "Мои сайты" [ref=f8e123] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/
+          - link "Языковая школа Фоксинбург (Foxy Fox)" [ref=f8e125] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/?projectid=2053071
+          - link "ЛК" [ref=f8e127] [cursor=pointer]:
+            - /url: https://members.tilda.ru/2053071/#/
+          - generic [ref=f8e128]: Курсы
+        - generic [ref=f8e129]:
+          - generic [ref=f8e130]:
+            - heading "Входное обучение педагогов" [level=2] [ref=f8e131]
+            - button "Настройки курса" [ref=f8e133] [cursor=pointer]
+          - generic [ref=f8e137]:
+            - paragraph [ref=f8e138]: Здесь вы сможете сформировать собственный курс, распределив лекции по смысловым разделам. Также разделы нужны, чтобы публиковать курс по частям, дорабатывая часть курса в черновике. Каждая лекция в разделе может содержать в себе видео, вебинар или страницу из вашего проекта.
+            - paragraph [ref=f8e139]: В настройках курса вы можете указать группы пользователей, которые будут иметь к нему доступ.
+            - paragraph [ref=f8e140]:
+              - text: Подробнее о том, как создавать курсы, читайте в
+              - link "Справочном центре." [ref=f8e141] [cursor=pointer]:
+                - /url: https://help-ru.tilda.cc/courses
+            - paragraph [ref=f8e142]:
+              - text: "Ссылка на курс:"
+              - link "https://dymova-english.ru/members/courses/course458787658515" [ref=f8e143] [cursor=pointer]:
+                - /url: https://dymova-english.ru/members/courses/course458787658515
+            - generic [ref=f8e144]:
+              - heading [level=3] [ref=f8e145]:
+                - link "Статистика курса" [ref=f8e146] [cursor=pointer]:
+                  - /url: "#/courses/470721/statistics"
+              - list [ref=f8e147]:
+                - listitem [ref=f8e148]:
+                  - text: "Группы:"
+                  - generic [ref=f8e149]: Обучение педагогов
+                - listitem [ref=f8e150]: "Количество студентов: 10"
+                - listitem [ref=f8e151]:
+                  - text: "Преподаватели:"
+                  - generic [ref=f8e152]: Григорий,
+                  - generic [ref=f8e153]: Елизавета
+        - generic [ref=f8e154]:
+          - button "Создать раздел" [ref=f8e156] [cursor=pointer]
+          - generic [ref=f8e161]:
+            - generic [ref=f8e162]:
+              - generic [ref=f8e163]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Знакомство со школой" [level=2] [ref=f8e168] [cursor=pointer]
+              - generic [ref=f8e170]:
+                - generic [ref=f8e171]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7521173"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Миссии и ценности Фоксинбург" [ref=f8e175] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7521173"
+                    - heading "Миссии и ценности Фоксинбург" [level=4] [ref=f8e177]
+                - generic [ref=f8e178]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526037"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Правила школы" [ref=f8e182] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526037"
+                    - heading "Правила школы" [level=4] [ref=f8e184]
+                - generic [ref=f8e185]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749913"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Внешний вид педагога" [ref=f8e189] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749913"
+                    - heading "Внешний вид педагога" [level=4] [ref=f8e191]
+                - generic [ref=f8e192]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749925"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание внешний вид педагога" [ref=f8e196] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749925"
+                    - heading "Домашнее задание внешний вид педагога" [level=4] [ref=f8e198]
+                - generic [ref=f8e199]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526537"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание правила школы" [ref=f8e203] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526537"
+                    - heading "Домашнее задание правила школы" [level=4] [ref=f8e205]
+                - generic [ref=f8e206]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749929"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание ценности школы" [ref=f8e210] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749929"
+                    - heading "Домашнее задание ценности школы" [level=4] [ref=f8e212]
+              - generic [ref=f8e214]:
+                - button "Добавить лекцию" [ref=f8e215] [cursor=pointer]
+                - button [ref=f8e219] [cursor=pointer]
+            - generic [ref=f8e222]:
+              - generic [ref=f8e223]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Подготовка к уроку" [level=2] [ref=f8e228] [cursor=pointer]
+              - generic [ref=f8e230]:
+                - generic [ref=f8e231]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7180661"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Организация урока" [ref=f8e235] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7180661"
+                    - heading "Организация урока" [level=4] [ref=f8e237]
+                - generic [ref=f8e238]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749949"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание организация урока" [ref=f8e242] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749949"
+                    - heading "Домашнее задание организация урока" [level=4] [ref=f8e244]
+                - generic [ref=f8e245]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749945"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание организация урока" [ref=f8e249] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749945"
+                    - heading "Тестовое задание организация урока" [level=4] [ref=f8e251]
+                - generic [ref=f8e252]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749933"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Цели" [ref=f8e256] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749933"
+                    - heading "Цели" [level=4] [ref=f8e258]
+                - generic [ref=f8e259]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749937"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание цели" [ref=f8e263] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749937"
+                    - heading "Домашнее задание цели" [level=4] [ref=f8e265]
+                - generic [ref=f8e266]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7770097"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист подготовки к уроку" [ref=f8e270] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7770097"
+                    - heading "Чек-лист подготовки к уроку" [level=4] [ref=f8e272]
+              - generic [ref=f8e274]:
+                - button "Добавить лекцию" [ref=f8e275] [cursor=pointer]
+                - button [ref=f8e279] [cursor=pointer]
+            - generic [ref=f8e282]:
+              - generic [ref=f8e283]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Взаимодействие с детьми" [level=2] [ref=f8e288] [cursor=pointer]
+              - generic [ref=f8e290]:
+                - generic [ref=f8e291]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749953"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Конкурс лучший ученик" [ref=f8e295] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749953"
+                    - heading "Конкурс лучший ученик" [level=4] [ref=f8e297]
+                - generic [ref=f8e298]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749985"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание лучший ученик" [ref=f8e302] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749985"
+                    - heading "Тестовое задание лучший ученик" [level=4] [ref=f8e304]
+                - generic [ref=f8e305]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750017"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание конкурс лучший ученик" [ref=f8e309] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750017"
+                    - heading "Домашнее задание конкурс лучший ученик" [level=4] [ref=f8e311]
+                - generic [ref=f8e312]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749957"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Оценивание и исправление" [ref=f8e316] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749957"
+                    - heading "Оценивание и исправление" [level=4] [ref=f8e318]
+                - generic [ref=f8e319]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750037"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание Оценивание и исправление" [ref=f8e323] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750037"
+                    - heading "Тестовое задание Оценивание и исправление" [level=4] [ref=f8e325]
+                - generic [ref=f8e326]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750049"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание оценивание и исправление" [ref=f8e330] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750049"
+                    - heading "Домашнее задание оценивание и исправление" [level=4] [ref=f8e332]
+                - generic [ref=f8e333]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749961"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Поддержка учеников" [ref=f8e337] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749961"
+                    - heading "Поддержка учеников" [level=4] [ref=f8e339]
+                - generic [ref=f8e340]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750061"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание поддержка учеников" [ref=f8e344] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750061"
+                    - heading "Тестовое задание поддержка учеников" [level=4] [ref=f8e346]
+                - generic [ref=f8e347]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750177"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание поддержка учеников" [ref=f8e351] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750177"
+                    - heading "Домашнее задание поддержка учеников" [level=4] [ref=f8e353]
+                - generic [ref=f8e354]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7749965"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Система мотивации школы" [ref=f8e358] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7749965"
+                    - heading "Система мотивации школы" [level=4] [ref=f8e360]
+                - generic [ref=f8e361]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750185"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание система мотивации школы" [ref=f8e365] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750185"
+                    - heading "Домашнее задание система мотивации школы" [level=4] [ref=f8e367]
+              - generic [ref=f8e369]:
+                - button "Добавить лекцию" [ref=f8e370] [cursor=pointer]
+                - button [ref=f8e374] [cursor=pointer]
+            - generic [ref=f8e377]:
+              - generic [ref=f8e378]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - generic [ref=f8e382] [cursor=pointer]:
+                  - heading "Classroom management" [level=2] [ref=f8e383]
+                  - generic [ref=f8e384]: (Черновик)
+              - generic [ref=f8e386]:
+                - generic [ref=f8e387]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211857"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Bus Tickets" [ref=f8e391] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211857"
+                    - heading "Bus Tickets" [level=4] [ref=f8e393]
+                - generic [ref=f8e394]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211869"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Horse and Bridge" [ref=f8e398] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211869"
+                    - heading "Horse and Bridge" [level=4] [ref=f8e400]
+                - generic [ref=f8e401]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211881"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Magic Keys" [ref=f8e405] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211881"
+                    - heading "Magic Keys" [level=4] [ref=f8e407]
+                - generic [ref=f8e408]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211893"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Strawberry Jam" [ref=f8e412] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211893"
+                    - heading "Strawberry Jam" [level=4] [ref=f8e414]
+                - generic [ref=f8e415]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211897"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Sun and Cloud" [ref=f8e419] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211897"
+                    - heading "Sun and Cloud" [level=4] [ref=f8e421]
+                - generic [ref=f8e422]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7212173"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Superhero" [ref=f8e426] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7212173"
+                    - heading "Superhero" [level=4] [ref=f8e428]
+                - generic [ref=f8e429]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7212177"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Volcano" [ref=f8e433] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7212177"
+                    - heading "Volcano" [level=4] [ref=f8e435]
+                - generic [ref=f8e436]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7212277"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "ВИДЕО добавить" [ref=f8e440] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7212277"
+                    - heading "ВИДЕО добавить" [level=4] [ref=f8e442]
+              - generic [ref=f8e444]:
+                - button "Добавить лекцию" [ref=f8e445] [cursor=pointer]
+                - button [ref=f8e449] [cursor=pointer]
+            - generic [ref=f8e452]:
+              - generic [ref=f8e453]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Принципы проведения" [level=2] [ref=f8e458] [cursor=pointer]
+              - generic [ref=f8e460]:
+                - generic [ref=f8e461]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750209"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент Warm-up и Lead-in" [ref=f8e465] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750209"
+                    - heading "Регламент Warm-up и Lead-in" [level=4] [ref=f8e467]
+                - generic [ref=f8e468]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750369"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Warm-up activities" [ref=f8e472] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750369"
+                    - heading "Warm-up activities" [level=4] [ref=f8e474]
+                - generic [ref=f8e475]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750345"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Lead in stratagies" [ref=f8e479] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750345"
+                    - heading "Lead in stratagies" [level=4] [ref=f8e481]
+                - generic [ref=f8e482]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750213"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание Warm-up и Lead in" [ref=f8e486] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750213"
+                    - heading "Домашнее задание Warm-up и Lead in" [level=4] [ref=f8e488]
+                - generic [ref=f8e489]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750217"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тайминг" [ref=f8e493] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750217"
+                    - heading "Тайминг" [level=4] [ref=f8e495]
+                - generic [ref=f8e496]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750261"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание тайминг" [ref=f8e500] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750261"
+                    - heading "Тестовое задание тайминг" [level=4] [ref=f8e502]
+                - generic [ref=f8e503]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750265"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание тайминг" [ref=f8e507] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750265"
+                    - heading "Домашнее задание тайминг" [level=4] [ref=f8e509]
+                - generic [ref=f8e510]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750377"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Frameworks" [ref=f8e514] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750377"
+                    - heading "Frameworks" [level=4] [ref=f8e516]
+                - generic [ref=f8e517]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750413"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание Frameworks" [ref=f8e521] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750413"
+                    - heading "Тестовое задание Frameworks" [level=4] [ref=f8e523]
+                - generic [ref=f8e524]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750417"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание Frameworks" [ref=f8e528] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750417"
+                    - heading "Домашнее задание Frameworks" [level=4] [ref=f8e530]
+              - generic [ref=f8e532]:
+                - button "Добавить лекцию" [ref=f8e533] [cursor=pointer]
+                - button [ref=f8e537] [cursor=pointer]
+            - generic [ref=f8e540]:
+              - generic [ref=f8e541]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Эффективный урок" [level=2] [ref=f8e546] [cursor=pointer]
+              - generic [ref=f8e548]:
+                - generic [ref=f8e549]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750433"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Инструкции" [ref=f8e553] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750433"
+                    - heading "Инструкции" [level=4] [ref=f8e555]
+                - generic [ref=f8e556]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750469"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание инструкции" [ref=f8e560] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750469"
+                    - heading "Тестовое задание инструкции" [level=4] [ref=f8e562]
+                - generic [ref=f8e563]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750473"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание инструкции" [ref=f8e567] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750473"
+                    - heading "Домашнее задание инструкции" [level=4] [ref=f8e569]
+                - generic [ref=f8e570]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750477"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Организация парной и групповой работы" [ref=f8e574] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750477"
+                    - heading "Организация парной и групповой работы" [level=4] [ref=f8e576]
+                - generic [ref=f8e577]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750485"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание организация парной и групповой работы" [ref=f8e581] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750485"
+                    - heading "Тестовое задание организация парной и групповой работы" [level=4] [ref=f8e583]
+                - generic [ref=f8e584]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750489"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание организация парной и групповой работы" [ref=f8e588] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750489"
+                    - heading "Домашнее задание организация парной и групповой работы" [level=4] [ref=f8e590]
+                - generic [ref=f8e591]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750493"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Teacher talking time" [ref=f8e595] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750493"
+                    - heading "Teacher talking time" [level=4] [ref=f8e597]
+                - generic [ref=f8e598]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750509"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание Teacher talking time" [ref=f8e602] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750509"
+                    - heading "Тестовое задание Teacher talking time" [level=4] [ref=f8e604]
+                - generic [ref=f8e605]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750513"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание teacher talking time" [ref=f8e609] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750513"
+                    - heading "Домашнее задание teacher talking time" [level=4] [ref=f8e611]
+              - generic [ref=f8e613]:
+                - button "Добавить лекцию" [ref=f8e614] [cursor=pointer]
+                - button [ref=f8e618] [cursor=pointer]
+            - generic [ref=f8e621]:
+              - generic [ref=f8e622]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Лексический урок" [level=2] [ref=f8e627] [cursor=pointer]
+              - generic [ref=f8e629]:
+                - generic [ref=f8e630]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205041"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент лексического урока" [ref=f8e634] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205041"
+                    - heading "Регламент лексического урока" [level=4] [ref=f8e636]
+                - generic [ref=f8e637]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7204985"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Инструментарий лексика" [ref=f8e641] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7204985"
+                    - heading "Инструментарий лексика" [level=4] [ref=f8e643]
+                - generic [ref=f8e644]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205021"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "План лексического урока" [ref=f8e648] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205021"
+                    - heading "План лексического урока" [level=4] [ref=f8e650]
+                - generic [ref=f8e651]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205265"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Лексический урок младшие НУЖНО добавить видео в вк или рутюб в закрытые каналы (Черновик)" [ref=f8e655] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205265"
+                    - heading "Лексический урок младшие НУЖНО добавить видео в вк или рутюб в закрытые каналы" [level=4] [ref=f8e657]
+                    - generic [ref=f8e658]: (Черновик)
+                - generic [ref=f8e659]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205269"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Лексический урок старшие (Черновик)" [ref=f8e663] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205269"
+                    - heading "Лексический урок старшие" [level=4] [ref=f8e665]
+                    - generic [ref=f8e666]: (Черновик)
+                - generic [ref=f8e667]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750517"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист лексического урока" [ref=f8e671] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750517"
+                    - heading "Чек-лист лексического урока" [level=4] [ref=f8e673]
+                - generic [ref=f8e674]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205241"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание лексический урок" [ref=f8e678] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205241"
+                    - heading "Тестовое задание лексический урок" [level=4] [ref=f8e680]
+                - generic [ref=f8e681]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750597"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание лексический урок" [ref=f8e685] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750597"
+                    - heading "Домашнее задание лексический урок" [level=4] [ref=f8e687]
+              - generic [ref=f8e689]:
+                - button "Добавить лекцию" [ref=f8e690] [cursor=pointer]
+                - button [ref=f8e694] [cursor=pointer]
+            - generic [ref=f8e697]:
+              - generic [ref=f8e698]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Обратная связь родителям" [level=2] [ref=f8e703] [cursor=pointer]
+              - generic [ref=f8e705]:
+                - generic [ref=f8e706]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526057"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент аудиосообщения после первого урока" [ref=f8e710] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526057"
+                    - heading "Регламент аудиосообщения после первого урока" [level=4] [ref=f8e712]
+                - generic [ref=f8e713]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526069"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент общения с родителями после урока" [ref=f8e717] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526069"
+                    - heading "Регламент общения с родителями после урока" [level=4] [ref=f8e719]
+                - generic [ref=f8e720]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526077"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент видео-отчеты" [ref=f8e724] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526077"
+                    - heading "Регламент видео-отчеты" [level=4] [ref=f8e726]
+                - generic [ref=f8e727]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526081"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент обратной связи родителям (письменные отчеты)" [ref=f8e731] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526081"
+                    - heading "Регламент обратной связи родителям (письменные отчеты)" [level=4] [ref=f8e733]
+                - generic [ref=f8e734]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526085"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент обратной связи родителям (звонки)" [ref=f8e738] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526085"
+                    - heading "Регламент обратной связи родителям (звонки)" [level=4] [ref=f8e740]
+                - generic [ref=f8e741]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526109"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент открытого урока" [ref=f8e745] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526109"
+                    - heading "Регламент открытого урока" [level=4] [ref=f8e747]
+                - generic [ref=f8e748]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7526181"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Самые частые вопросы от родителей — с ответами педагога" [ref=f8e752] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7526181"
+                    - heading "Самые частые вопросы от родителей — с ответами педагога" [level=4] [ref=f8e754]
+                - generic [ref=f8e755]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750637"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание обратная связь родителям" [ref=f8e759] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750637"
+                    - heading "Тестовое задание обратная связь родителям" [level=4] [ref=f8e761]
+                - generic [ref=f8e762]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750645"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание обратная связь родителям" [ref=f8e766] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750645"
+                    - heading "Домашнее задание обратная связь родителям" [level=4] [ref=f8e768]
+              - generic [ref=f8e770]:
+                - button "Добавить лекцию" [ref=f8e771] [cursor=pointer]
+                - button [ref=f8e775] [cursor=pointer]
+            - generic [ref=f8e778]:
+              - generic [ref=f8e779]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Мобильное приложение" [level=2] [ref=f8e784] [cursor=pointer]
+              - generic [ref=f8e786]:
+                - generic [ref=f8e787]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7212201"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент заполнения приложения" [ref=f8e791] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7212201"
+                    - heading "Регламент заполнения приложения" [level=4] [ref=f8e793]
+                - generic [ref=f8e794]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750665"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент домашних заданий" [ref=f8e798] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750665"
+                    - heading "Регламент домашних заданий" [level=4] [ref=f8e800]
+                - generic [ref=f8e801]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7212209"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Загрузить видео для педагогов по СРМ и приложению (Черновик)" [ref=f8e805] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7212209"
+                    - heading "Загрузить видео для педагогов по СРМ и приложению" [level=4] [ref=f8e807]
+                    - generic [ref=f8e808]: (Черновик)
+              - generic [ref=f8e810]:
+                - button "Добавить лекцию" [ref=f8e811] [cursor=pointer]
+                - button [ref=f8e815] [cursor=pointer]
+            - generic [ref=f8e818]:
+              - generic [ref=f8e819]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Грамматический урок" [level=2] [ref=f8e824] [cursor=pointer]
+              - generic [ref=f8e826]:
+                - generic [ref=f8e827]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205301"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент грамматического урока" [ref=f8e831] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205301"
+                    - heading "Регламент грамматического урока" [level=4] [ref=f8e833]
+                - generic [ref=f8e834]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205297"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Инструментарий Грамматика" [ref=f8e838] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205297"
+                    - heading "Инструментарий Грамматика" [level=4] [ref=f8e840]
+                - generic [ref=f8e841]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205325"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "План грамматического урока" [ref=f8e845] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205325"
+                    - heading "План грамматического урока" [level=4] [ref=f8e847]
+                - generic [ref=f8e848]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205449"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "НУЖНО добавить видео (Черновик)" [ref=f8e852] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205449"
+                    - heading "НУЖНО добавить видео" [level=4] [ref=f8e854]
+                    - generic [ref=f8e855]: (Черновик)
+                - generic [ref=f8e856]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750689"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист грамматического урока" [ref=f8e860] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750689"
+                    - heading "Чек-лист грамматического урока" [level=4] [ref=f8e862]
+                - generic [ref=f8e863]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750737"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание грамматический урок" [ref=f8e867] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750737"
+                    - heading "Тестовое задание грамматический урок" [level=4] [ref=f8e869]
+                - generic [ref=f8e870]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205445"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание грамматический урок" [ref=f8e874] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205445"
+                    - heading "Домашнее задание грамматический урок" [level=4] [ref=f8e876]
+              - generic [ref=f8e878]:
+                - button "Добавить лекцию" [ref=f8e879] [cursor=pointer]
+                - button [ref=f8e883] [cursor=pointer]
+            - generic [ref=f8e886]:
+              - generic [ref=f8e887]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Receptive skills. Listening lesson" [level=2] [ref=f8e892] [cursor=pointer]
+              - generic [ref=f8e894]:
+                - generic [ref=f8e895]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205785"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент урока по listening" [ref=f8e899] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205785"
+                    - heading "Регламент урока по listening" [level=4] [ref=f8e901]
+                - generic [ref=f8e902]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205793"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Структура урока по listening" [ref=f8e906] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205793"
+                    - heading "Структура урока по listening" [level=4] [ref=f8e908]
+                - generic [ref=f8e909]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205489"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Listening ideas" [ref=f8e913] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205489"
+                    - heading "Listening ideas" [level=4] [ref=f8e915]
+                - generic [ref=f8e916]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205493"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Procedure" [ref=f8e920] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205493"
+                    - heading "Procedure" [level=4] [ref=f8e922]
+                - generic [ref=f8e923]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205781"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Примеры заданий" [ref=f8e927] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205781"
+                    - heading "Примеры заданий" [level=4] [ref=f8e929]
+                - generic [ref=f8e930]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205789"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Советы" [ref=f8e934] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205789"
+                    - heading "Советы" [level=4] [ref=f8e936]
+                - generic [ref=f8e937]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205777"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "План receptive skills. listening" [ref=f8e941] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205777"
+                    - heading "План receptive skills. listening" [level=4] [ref=f8e943]
+                - generic [ref=f8e944]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750753"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист урока listening" [ref=f8e948] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750753"
+                    - heading "Чек-лист урока listening" [level=4] [ref=f8e950]
+                - generic [ref=f8e951]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7205797"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание listening lesson" [ref=f8e955] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7205797"
+                    - heading "Тестовое задание listening lesson" [level=4] [ref=f8e957]
+                - generic [ref=f8e958]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750777"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание урок Listening" [ref=f8e962] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750777"
+                    - heading "Домашнее задание урок Listening" [level=4] [ref=f8e964]
+              - generic [ref=f8e966]:
+                - button "Добавить лекцию" [ref=f8e967] [cursor=pointer]
+                - button [ref=f8e971] [cursor=pointer]
+            - generic [ref=f8e974]:
+              - generic [ref=f8e975]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Receptive skills. Reading lesson" [level=2] [ref=f8e980] [cursor=pointer]
+              - generic [ref=f8e982]:
+                - generic [ref=f8e983]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211545"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент урока Reading" [ref=f8e987] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211545"
+                    - heading "Регламент урока Reading" [level=4] [ref=f8e989]
+                - generic [ref=f8e990]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211549"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Структура урока" [ref=f8e994] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211549"
+                    - heading "Структура урока" [level=4] [ref=f8e996]
+                - generic [ref=f8e997]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211525"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Extensive reading activities" [ref=f8e1001] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211525"
+                    - heading "Extensive reading activities" [level=4] [ref=f8e1003]
+                - generic [ref=f8e1004]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211537"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Варианты заданий по механическому чтению" [ref=f8e1008] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211537"
+                    - heading "Варианты заданий по механическому чтению" [level=4] [ref=f8e1010]
+                - generic [ref=f8e1011]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211541"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Примеры заданий" [ref=f8e1015] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211541"
+                    - heading "Примеры заданий" [level=4] [ref=f8e1017]
+                - generic [ref=f8e1018]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211529"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "План урока reading" [ref=f8e1022] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211529"
+                    - heading "План урока reading" [level=4] [ref=f8e1024]
+                - generic [ref=f8e1025]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750785"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист урока reading" [ref=f8e1029] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750785"
+                    - heading "Чек-лист урока reading" [level=4] [ref=f8e1031]
+                - generic [ref=f8e1032]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211561"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание урока reading" [ref=f8e1036] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211561"
+                    - heading "Тестовое задание урока reading" [level=4] [ref=f8e1038]
+                - generic [ref=f8e1039]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750793"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание урока reading" [ref=f8e1043] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750793"
+                    - heading "Домашнее задание урока reading" [level=4] [ref=f8e1045]
+              - generic [ref=f8e1047]:
+                - button "Добавить лекцию" [ref=f8e1048] [cursor=pointer]
+                - button [ref=f8e1052] [cursor=pointer]
+            - generic [ref=f8e1055]:
+              - generic [ref=f8e1056]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Productive skills. Speaking lesson" [level=2] [ref=f8e1061] [cursor=pointer]
+              - generic [ref=f8e1063]:
+                - generic [ref=f8e1064]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211737"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент урока Speaking" [ref=f8e1068] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211737"
+                    - heading "Регламент урока Speaking" [level=4] [ref=f8e1070]
+                - generic [ref=f8e1071]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211717"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Structure" [ref=f8e1075] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211717"
+                    - heading "Structure" [level=4] [ref=f8e1077]
+                - generic [ref=f8e1078]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211617"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Before the lesson familiarise yourself with the" [ref=f8e1082] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211617"
+                    - heading "Before the lesson familiarise yourself with the" [level=4] [ref=f8e1084]
+                - generic [ref=f8e1085]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211621"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Communicative activities" [ref=f8e1089] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211621"
+                    - heading "Communicative activities" [level=4] [ref=f8e1091]
+                - generic [ref=f8e1092]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211625"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "How to organise learners in speaking tasks" [ref=f8e1096] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211625"
+                    - heading "How to organise learners in speaking tasks" [level=4] [ref=f8e1098]
+                - generic [ref=f8e1099]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211637"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Ideas for correction work after a fluency activity" [ref=f8e1103] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211637"
+                    - heading "Ideas for correction work after a fluency activity" [level=4] [ref=f8e1105]
+                - generic [ref=f8e1106]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211701"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Role play, real play and simulation" [ref=f8e1110] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211701"
+                    - heading "Role play, real play and simulation" [level=4] [ref=f8e1112]
+                - generic [ref=f8e1113]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211713"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Some common communicative activities" [ref=f8e1117] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211713"
+                    - heading "Some common communicative activities" [level=4] [ref=f8e1119]
+                - generic [ref=f8e1120]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211725"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Ways to start a lively discussion" [ref=f8e1124] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211725"
+                    - heading "Ways to start a lively discussion" [level=4] [ref=f8e1126]
+                - generic [ref=f8e1127]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211693"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "План урока speaking" [ref=f8e1131] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211693"
+                    - heading "План урока speaking" [level=4] [ref=f8e1133]
+                - generic [ref=f8e1134]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750801"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист урока speaking" [ref=f8e1138] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750801"
+                    - heading "Чек-лист урока speaking" [level=4] [ref=f8e1140]
+                - generic [ref=f8e1141]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211741"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание урока speaking" [ref=f8e1145] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211741"
+                    - heading "Тестовое задание урока speaking" [level=4] [ref=f8e1147]
+                - generic [ref=f8e1148]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750841"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание speaking" [ref=f8e1152] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750841"
+                    - heading "Домашнее задание speaking" [level=4] [ref=f8e1154]
+              - generic [ref=f8e1156]:
+                - button "Добавить лекцию" [ref=f8e1157] [cursor=pointer]
+                - button [ref=f8e1161] [cursor=pointer]
+            - generic [ref=f8e1164]:
+              - generic [ref=f8e1165]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Productive skills. Writing lesson" [level=2] [ref=f8e1170] [cursor=pointer]
+              - generic [ref=f8e1172]:
+                - generic [ref=f8e1173]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211765"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент урока Writing" [ref=f8e1177] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211765"
+                    - heading "Регламент урока Writing" [level=4] [ref=f8e1179]
+                - generic [ref=f8e1180]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211749"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Ideas for helping writing" [ref=f8e1184] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211749"
+                    - heading "Ideas for helping writing" [level=4] [ref=f8e1186]
+                - generic [ref=f8e1187]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211757"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Variations on traditional teacher marking" [ref=f8e1191] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211757"
+                    - heading "Variations on traditional teacher marking" [level=4] [ref=f8e1193]
+                - generic [ref=f8e1194]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211753"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "План урока writing" [ref=f8e1198] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211753"
+                    - heading "План урока writing" [level=4] [ref=f8e1200]
+                - generic [ref=f8e1201]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750861"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист урока writing" [ref=f8e1205] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750861"
+                    - heading "Чек-лист урока writing" [level=4] [ref=f8e1207]
+                - generic [ref=f8e1208]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7211769"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание speaking" [ref=f8e1212] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7211769"
+                    - heading "Тестовое задание speaking" [level=4] [ref=f8e1214]
+                - generic [ref=f8e1215]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7750853"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание writing" [ref=f8e1219] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7750853"
+                    - heading "Домашнее задание writing" [level=4] [ref=f8e1221]
+              - generic [ref=f8e1223]:
+                - button "Добавить лекцию" [ref=f8e1224] [cursor=pointer]
+                - button [ref=f8e1228] [cursor=pointer]
+            - generic [ref=f8e1231]:
+              - generic [ref=f8e1232]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Онлайн-занятия" [level=2] [ref=f8e1237] [cursor=pointer]
+              - generic [ref=f8e1239]:
+                - generic [ref=f8e1240]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7784141"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент проведения онлайн и гибридных занятий" [ref=f8e1244] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7784141"
+                    - heading "Регламент проведения онлайн и гибридных занятий" [level=4] [ref=f8e1246]
+                - generic [ref=f8e1247]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7784161"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Чек-лист проведения онлайн и гибридных занятий" [ref=f8e1251] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7784161"
+                    - heading "Чек-лист проведения онлайн и гибридных занятий" [level=4] [ref=f8e1253]
+                - generic [ref=f8e1254]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7784153"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Тестовое задание проведение онлайн и гибридных занятий" [ref=f8e1258] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7784153"
+                    - heading "Тестовое задание проведение онлайн и гибридных занятий" [level=4] [ref=f8e1260]
+                - generic [ref=f8e1261]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7784157"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание проведение онлайн и гибридных занятий" [ref=f8e1265] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7784157"
+                    - heading "Домашнее задание проведение онлайн и гибридных занятий" [level=4] [ref=f8e1267]
+              - generic [ref=f8e1269]:
+                - button "Добавить лекцию" [ref=f8e1270] [cursor=pointer]
+                - button [ref=f8e1274] [cursor=pointer]
+            - generic [ref=f8e1277]:
+              - generic [ref=f8e1278]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Правила поведения в ЧС" [level=2] [ref=f8e1283] [cursor=pointer]
+              - generic [ref=f8e1286]:
+                - generic:
+                  - link "Редактировать":
+                    - /url: "#/courses/470721/lecture/7212273"
+                  - button "Ссылка"
+                  - button "Удалить"
+                - link "Правила поведения в ЧС" [ref=f8e1290] [cursor=pointer]:
+                  - /url: "#/courses/470721/lecture/7212273"
+                  - heading "Правила поведения в ЧС" [level=4] [ref=f8e1292]
+              - generic [ref=f8e1294]:
+                - button "Добавить лекцию" [ref=f8e1295] [cursor=pointer]
+                - button [ref=f8e1299] [cursor=pointer]
+            - generic [ref=f8e1302]:
+              - generic [ref=f8e1303]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - heading "Проведение диагностик" [level=2] [ref=f8e1308] [cursor=pointer]
+              - generic [ref=f8e1310]:
+                - generic [ref=f8e1311]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7924813"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Регламент проведения диагностики" [ref=f8e1315] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7924813"
+                    - heading "Регламент проведения диагностики" [level=4] [ref=f8e1317]
+                - generic [ref=f8e1318]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7924793"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Инструкция по проведению диагностики" [ref=f8e1322] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7924793"
+                    - heading "Инструкция по проведению диагностики" [level=4] [ref=f8e1324]
+                - generic [ref=f8e1325]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7924961"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Устный тест для малышей 1-4 класс (картинки)" [ref=f8e1329] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7924961"
+                    - heading "Устный тест для малышей 1-4 класс (картинки)" [level=4] [ref=f8e1331]
+                - generic [ref=f8e1332]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7925305"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Устный тест для малышей (вопросы)" [ref=f8e1336] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7925305"
+                    - heading "Устный тест для малышей (вопросы)" [level=4] [ref=f8e1338]
+                - generic [ref=f8e1339]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7925841"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Устный тест для подростков (вопросы)" [ref=f8e1343] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7925841"
+                    - heading "Устный тест для подростков (вопросы)" [level=4] [ref=f8e1345]
+                - generic [ref=f8e1346]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7926345"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Письменный тест для подростков" [ref=f8e1350] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7926345"
+                    - heading "Письменный тест для подростков" [level=4] [ref=f8e1352]
+                - generic [ref=f8e1353]:
+                  - generic:
+                    - link "Редактировать":
+                      - /url: "#/courses/470721/lecture/7926581"
+                    - button "Ссылка"
+                    - button "Удалить"
+                  - link "Домашнее задание проведение диагностик" [ref=f8e1357] [cursor=pointer]:
+                    - /url: "#/courses/470721/lecture/7926581"
+                    - heading "Домашнее задание проведение диагностик" [level=4] [ref=f8e1359]
+              - generic [ref=f8e1361]:
+                - button "Добавить лекцию" [ref=f8e1362] [cursor=pointer]
+                - button [ref=f8e1366] [cursor=pointer]
+            - generic [ref=f8e1369]:
+              - generic [ref=f8e1370]:
+                - generic:
+                  - button "Редактировать"
+                  - button "Удалить"
+                - generic [ref=f8e1374] [cursor=pointer]:
+                  - heading "Итоговое тестирование" [level=2] [ref=f8e1375]
+                  - generic [ref=f8e1376]: (Черновик)
+              - paragraph [ref=f8e1378]: Не создано ни одной лекции.
+              - generic [ref=f8e1380]:
+                - button "Добавить лекцию" [ref=f8e1381] [cursor=pointer]
+                - button [ref=f8e1385] [cursor=pointer]
+    - complementary [ref=f8e1388]

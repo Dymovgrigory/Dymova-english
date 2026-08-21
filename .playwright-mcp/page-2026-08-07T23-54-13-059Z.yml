@@ -1,0 +1,139 @@
+- generic [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - complementary [ref=f2e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f2e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f2e6]
+        - generic [ref=f2e7]: Фоксинбург
+      - navigation "Основная навигация" [ref=f2e8]:
+        - generic [ref=f2e9]:
+          - generic [ref=f2e11]:
+            - link "Главная" [ref=f2e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f2e20] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f2e25] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f2e29] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f2e33] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f2e39] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f2e44] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f2e49] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f2e57] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f2e61] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f2e65] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f2e70] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f2e73] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f2e78] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f2e84] [cursor=pointer]:
+              - /url: /news
+          - link "Моя команда" [ref=f2e92] [cursor=pointer]:
+            - /url: /supervisor
+          - generic [ref=f2e99]:
+            - paragraph [ref=f2e101]: Студия
+            - generic [ref=f2e102]:
+              - link "Студия" [ref=f2e103] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f2e108] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f2e111] [cursor=pointer]:
+                - /url: /studio/paths
+          - generic [ref=f2e117]:
+            - paragraph [ref=f2e119]: Админка
+            - generic [ref=f2e120]:
+              - link "Админка" [ref=f2e121] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f2e126] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f2e131] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f2e135] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f2e140] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f2e145] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f2e150] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f2e154] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Мероприятия" [ref=f2e159] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f2e163] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f2e168] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f2e173] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f2e178] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f2e184] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f2e191] [cursor=pointer]
+    - banner [ref=f2e196]:
+      - paragraph [ref=f2e198]: Главная
+      - generic [ref=f2e199]:
+        - button "Уведомления" [ref=f2e201] [cursor=pointer]
+        - combobox "Язык" [ref=f2e204]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [active] [ref=f2e205] [cursor=pointer]
+        - button "Меню пользователя" [ref=f2e206] [cursor=pointer]:
+          - generic [ref=f2e207]: Г
+    - main [ref=f2e209]:
+      - generic [ref=f2e211]:
+        - generic [ref=f2e212]:
+          - heading "Добро пожаловать, Григорий Владельцев" [level=1] [ref=f2e213]
+          - paragraph [ref=f2e214]: "Ваша роль: OWNER. Вы принадлежите организации «Фоксинбург»."
+        - generic [ref=f2e215]:
+          - generic [ref=f2e218]:
+            - paragraph [ref=f2e220]: Курсы
+            - paragraph [ref=f2e225]: "0"
+            - paragraph [ref=f2e226]: Записаны
+          - generic [ref=f2e229]:
+            - paragraph [ref=f2e231]: Завершено
+            - paragraph [ref=f2e236]: "0"
+            - paragraph [ref=f2e237]: Пройдено
+          - generic [ref=f2e240]:
+            - paragraph [ref=f2e242]: Ваши баллы
+            - paragraph [ref=f2e246]: "0"
+            - paragraph
+          - link [ref=f2e247] [cursor=pointer]:
+            - /url: /learn/leaderboard
+            - generic [ref=f2e250]:
+              - paragraph [ref=f2e252]: Ваш ранг
+              - paragraph [ref=f2e258]: —
+              - paragraph [ref=f2e259]: Открыть лидерборд →
+        - generic [ref=f2e260]:
+          - generic [ref=f2e261]:
+            - generic [ref=f2e262]:
+              - heading "В процессе" [level=2] [ref=f2e263]
+              - link "Все курсы" [ref=f2e264] [cursor=pointer]:
+                - /url: /learn
+            - generic [ref=f2e265]: Нет курсов в процессе
+          - generic [ref=f2e270]:
+            - heading "Быстрые действия" [level=3] [ref=f2e271]
+            - generic [ref=f2e272]:
+              - link "Перейти к курсам" [ref=f2e273] [cursor=pointer]:
+                - /url: /learn
+              - link "Руководство" [ref=f2e276] [cursor=pointer]:
+                - /url: /help
+              - link "База знаний" [ref=f2e279] [cursor=pointer]:
+                - /url: /knowledge
+              - link "Сертификаты" [ref=f2e282] [cursor=pointer]:
+                - /url: /learn/certificates
+              - link "Аналитика" [ref=f2e285] [cursor=pointer]:
+                - /url: /admin/analytics
+  - button "Open Next.js Dev Tools" [ref=f2e293] [cursor=pointer]
+  - alert [ref=f2e297]

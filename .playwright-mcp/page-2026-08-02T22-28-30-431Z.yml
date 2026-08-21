@@ -1,0 +1,9 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - heading "Тест скелетной анимации" [level=1] [ref=f4e3]
+    - paragraph [ref=f4e4]: Временная ригнутая модель Xbot (из примеров three.js) вместо Фокси — проверяем AnimationMixer, crossfade, one-shot действия и слежение головой за мышью.
+  - generic [ref=f4e5]:
+    - button "Wave (agree)" [ref=f4e6] [cursor=pointer]
+    - button "Clap (sad_pose)" [ref=f4e7] [cursor=pointer]
+    - button "Walk" [ref=f4e8] [cursor=pointer]
+    - button "Look" [ref=f4e9] [cursor=pointer]

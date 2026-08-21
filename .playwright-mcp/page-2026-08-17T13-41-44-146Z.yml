@@ -1,0 +1,47 @@
+- generic [ref=e11]:
+  - complementary [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]: F
+      - text: Фоксинбург
+    - navigation [ref=e15]:
+      - button "Дашборд" [ref=e16] [cursor=pointer]
+      - button "Входящие" [ref=e21] [cursor=pointer]
+      - button "Заявки 1" [ref=e134] [cursor=pointer]:
+        - text: Заявки
+        - generic [ref=e135]: "1"
+      - button "Клиенты" [ref=e27] [cursor=pointer]
+      - button "Воронка" [ref=e31] [cursor=pointer]
+      - button "Рассылки" [ref=e34] [cursor=pointer]
+      - button "Вопросы" [ref=e38] [cursor=pointer]
+      - button "Аналитика" [ref=e42] [cursor=pointer]
+      - button "База знаний" [ref=e45] [cursor=pointer]
+      - button "AI" [ref=e49] [cursor=pointer]
+      - button "Ошибки" [ref=e53] [cursor=pointer]
+      - button "Пользователи" [ref=e56] [cursor=pointer]
+      - button "Настройки" [ref=e61] [cursor=pointer]
+    - button "Выйти" [ref=e66] [cursor=pointer]
+  - generic [ref=e69]:
+    - banner [ref=e70]:
+      - 'searchbox "Поиск: клиенты и сообщения (Ctrl+K)" [ref=e72]'
+      - generic "Состояние каналов" [ref=e73]:
+        - generic [ref=e231]: БД
+        - generic [ref=e233]: MAX
+        - generic [ref=e235]: TG
+      - generic [ref=e80]: admin · super_admin
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - button "Новые 1" [ref=e237] [cursor=pointer]
+        - button "В работе 1" [ref=e238] [cursor=pointer]
+        - button "Ожидают 0" [ref=e239] [cursor=pointer]
+        - button "Завершённые 0" [ref=e240] [cursor=pointer]
+        - button "Все 2" [ref=e241] [cursor=pointer]
+      - 'button "К# #2 Клиент #— new Веб Заявка с сайта Английский 4-6, Лихачёвский, Раздел: Языки; Опыт: Никогда 16:38 Новая" [ref=e242] [cursor=pointer]':
+        - generic [ref=e243]: К#
+        - generic [ref=e244]:
+          - generic [ref=e245]: "#2 Клиент #— new"
+          - generic [ref=e246]:
+            - generic [ref=e247]: Веб
+            - generic [ref=e248]: Заявка с сайта
+            - text: "Английский 4-6, Лихачёвский, Раздел: Языки; Опыт: Никогда"
+          - text: 16:38
+        - generic [ref=e249]: Новая

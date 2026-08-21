@@ -1,0 +1,96 @@
+- generic [active] [ref=f15e1]:
+  - complementary [ref=f15e2]:
+    - link "Foxinburg Foxinburg" [ref=f15e101] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Foxinburg" [ref=f15e102]
+      - generic [ref=f15e6]: Foxinburg
+    - navigation [ref=f15e7]:
+      - generic [ref=f15e8]:
+        - link "Dashboard" [ref=f15e103] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Guide" [ref=f15e104] [cursor=pointer]:
+          - /url: /help
+        - link "Learn" [ref=f15e105] [cursor=pointer]:
+          - /url: /learn
+        - link "Catalog" [ref=f15e106] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Paths" [ref=f15e107] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "Knowledge" [ref=f15e108] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Certificates" [ref=f15e109] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Leaderboard" [ref=f15e110] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "My Badges" [ref=f15e111] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Calendar" [ref=f15e112] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Onboarding" [ref=f15e113] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Observations" [ref=f15e114] [cursor=pointer]:
+          - /url: /learn/training
+        - link "My Development Plan" [ref=f15e115] [cursor=pointer]:
+          - /url: /learn/development
+        - link "360° Assessment" [ref=f15e116] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "News" [ref=f15e117] [cursor=pointer]:
+          - /url: /news
+      - link "My Team" [ref=f15e120] [cursor=pointer]:
+        - /url: /supervisor
+      - paragraph [ref=f15e128]: Studio
+      - generic [ref=f15e129]:
+        - link "Studio" [ref=f15e130] [cursor=pointer]:
+          - /url: /studio
+        - link "Studio Observations" [ref=f15e135] [cursor=pointer]:
+          - /url: /studio/training
+        - link "Paths" [ref=f15e139] [cursor=pointer]:
+          - /url: /studio/paths
+      - paragraph [ref=f15e143]: Admin
+      - generic [ref=f15e144]:
+        - link "Admin" [ref=f15e145] [cursor=pointer]:
+          - /url: /admin
+        - link "Analytics" [ref=f15e150] [cursor=pointer]:
+          - /url: /admin/analytics
+        - link "Training Requests" [ref=f15e155] [cursor=pointer]:
+          - /url: /admin/training-requests
+        - link "SSO" [ref=f15e159] [cursor=pointer]:
+          - /url: /admin/sso-connections
+        - link "LRS" [ref=f15e163] [cursor=pointer]:
+          - /url: /admin/lrs
+        - link "Departments" [ref=f15e168] [cursor=pointer]:
+          - /url: /admin/departments
+        - link "Badges" [ref=f15e173] [cursor=pointer]:
+          - /url: /admin/badges
+        - link "Events" [ref=f15e177] [cursor=pointer]:
+          - /url: /admin/events
+        - link "Onboarding Programs" [ref=f15e181] [cursor=pointer]:
+          - /url: /admin/onboarding
+        - link "Observation Checklists" [ref=f15e186] [cursor=pointer]:
+          - /url: /admin/observation-checklists
+        - link "Development Plans" [ref=f15e190] [cursor=pointer]:
+          - /url: /admin/development
+        - link "Competencies" [ref=f15e194] [cursor=pointer]:
+          - /url: /admin/competencies
+        - link "Assessment Sessions" [ref=f15e198] [cursor=pointer]:
+          - /url: /admin/assessments
+    - generic [ref=f15e81]:
+      - generic [ref=f15e202]:
+        - generic [ref=f15e203]: Г
+        - generic [ref=f15e204]:
+          - paragraph [ref=f15e205]: Григорий Дымов
+          - paragraph [ref=f15e206]: admin@foxinburg.ru
+      - button "Logout" [ref=f15e207] [cursor=pointer]
+      - button "Collapse" [ref=f15e87] [cursor=pointer]
+  - generic [ref=f15e208]:
+    - banner [ref=f15e209]:
+      - paragraph [ref=f15e211]: Фоксинбург
+      - generic [ref=f15e212]:
+        - button "Notifications" [ref=f15e214] [cursor=pointer]
+        - combobox "Language" [ref=f15e217]:
+          - option "Русский"
+          - option "English" [selected]
+    - main [ref=f15e218]:
+      - generic "Loading…" [ref=f15e220]
+  - button "Open Next.js Dev Tools" [ref=f15e97] [cursor=pointer]
+  - alert [ref=f15e229]

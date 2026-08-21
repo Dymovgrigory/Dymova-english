@@ -1,0 +1,30 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e155]:
+    - generic [ref=f2e156]:
+      - generic [ref=f2e157]:
+        - link "Foxinburg Foxinburg" [ref=f2e158] [cursor=pointer]:
+          - /url: /
+          - img "Foxinburg" [ref=f2e160]
+          - generic [ref=f2e161]: Foxinburg
+        - combobox "Language" [ref=f2e162]:
+          - option "Русский"
+          - option "English" [selected]
+      - generic [ref=f2e164]:
+        - heading "Log in" [level=1] [ref=f2e165]
+        - paragraph [ref=f2e166]: Use your LMS account to continue.
+        - generic [ref=f2e168]:
+          - generic [ref=f2e169]:
+            - text: Organization slug
+            - textbox "Organization slug" [ref=f2e170]:
+              - /placeholder: e.g. foxenburg
+          - generic [ref=f2e171]:
+            - text: Email
+            - textbox "Email" [ref=f2e172]
+          - generic [ref=f2e173]:
+            - text: Password
+            - textbox "Password" [ref=f2e174]
+          - paragraph [ref=f2e175]: Enter an organization slug to show SSO sign-in options.
+          - button "Log in" [ref=f2e176] [cursor=pointer]
+        - paragraph [ref=f2e178]: Access is granted by the school via invitation
+  - button "Open Next.js Dev Tools" [ref=f2e31] [cursor=pointer]
+  - alert [ref=f2e35]

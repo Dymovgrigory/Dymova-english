@@ -1,0 +1,145 @@
+- generic [active] [ref=f7e1]:
+  - main [ref=f7e2]:
+    - heading "RichTextEditor v2 preview" [level=1] [ref=f7e3]
+    - generic [ref=f7e4]:
+      - generic [ref=f7e5]:
+        - generic [ref=f7e6]:
+          - button "Отменить" [ref=f7e7] [cursor=pointer]
+          - button "Повторить" [disabled] [ref=f7e11]
+          - button "Стиль текста" [ref=f7e17] [cursor=pointer]:
+            - generic [ref=f7e18]: Цитата
+          - button "Шрифт" [ref=f7e22] [cursor=pointer]
+          - button "Размер" [ref=f7e27] [cursor=pointer]
+          - button "Цвет текста" [ref=f7e33] [cursor=pointer]:
+            - generic [ref=f7e34]: A
+          - button "Цвет выделения" [ref=f7e37] [cursor=pointer]
+          - button "На весь экран" [ref=f7e44] [cursor=pointer]
+        - generic [ref=f7e50]:
+          - button "Жирный" [ref=f7e51] [cursor=pointer]
+          - button "Курсив" [ref=f7e55] [cursor=pointer]
+          - button "Подчёркнутый" [ref=f7e58] [cursor=pointer]
+          - button "Зачёркнутый" [ref=f7e61] [cursor=pointer]
+          - button "Подстрочный индекс" [ref=f7e65] [cursor=pointer]
+          - button "Надстрочный индекс" [ref=f7e70] [cursor=pointer]
+          - button "По левому краю" [ref=f7e76] [cursor=pointer]
+          - button "По центру" [ref=f7e78] [cursor=pointer]
+          - button "По правому краю" [ref=f7e80] [cursor=pointer]
+          - button "По ширине" [ref=f7e82] [cursor=pointer]
+          - button "Маркированный список" [ref=f7e85] [cursor=pointer]
+          - button "Нумерованный список" [ref=f7e87] [cursor=pointer]
+          - button "Список задач" [ref=f7e91] [cursor=pointer]
+          - button "Цитата" [pressed] [ref=f7e95] [cursor=pointer]
+          - button "Вставить ссылку" [ref=f7e99] [cursor=pointer]
+          - button "Убрать ссылку" [disabled] [ref=f7e103]
+          - button "Загрузить изображение" [ref=f7e107] [cursor=pointer]
+          - button "Вставить изображение по URL" [ref=f7e112] [cursor=pointer]
+          - button "Горизонтальная линия" [ref=f7e117] [cursor=pointer]
+          - button "Таблица" [ref=f7e120] [cursor=pointer]
+          - button "Очистить форматирование" [ref=f7e126] [cursor=pointer]
+      - generic [ref=f7e131]:
+        - heading "Заголовок курса" [level=1] [ref=f7e132]
+        - paragraph [ref=f7e133]:
+          - text: Центрированный фиолетовый текст,
+          - mark [ref=f7e134]: маркер
+          - text: ", подчёркивание, H"
+          - subscript [ref=f7e135]: "2"
+          - text: O и E=mc
+          - superscript [ref=f7e136]: "2"
+          - text: .
+        - list [ref=f7e137]:
+          - listitem [ref=f7e138]:
+            - checkbox "Task item checkbox for Сделано" [checked] [ref=f7e140]
+            - paragraph [ref=f7e142]: Сделано
+          - listitem [ref=f7e143]:
+            - checkbox "Task item checkbox for Не сделано" [ref=f7e145]
+            - paragraph [ref=f7e147]: Не сделано
+        - separator [ref=f7e148]
+        - table [ref=f7e150]:
+          - rowgroup [ref=f7e154]:
+            - row [ref=f7e155]:
+              - columnheader [ref=f7e156]:
+                - paragraph [ref=f7e157]: Колонка 1
+              - columnheader [ref=f7e158]:
+                - paragraph [ref=f7e159]: Колонка 2
+            - row [ref=f7e160]:
+              - cell [ref=f7e161]:
+                - paragraph [ref=f7e162]: A
+              - cell [ref=f7e163]:
+                - paragraph [ref=f7e164]: B
+        - code [ref=f7e166]: const answer = 42;
+        - blockquote [ref=f7e167]:
+          - paragraph [ref=f7e168]: Цитата с брендовой рамкой.
+        - paragraph [ref=f7e169]
+    - generic [ref=f7e170]:
+      - generic [ref=f7e171]:
+        - generic [ref=f7e172]:
+          - button "Отменить" [ref=f7e173] [cursor=pointer]
+          - button "Повторить" [disabled] [ref=f7e177]
+          - button "Стиль текста" [ref=f7e183] [cursor=pointer]:
+            - generic [ref=f7e184]: Обычный текст
+          - button "Шрифт" [ref=f7e188] [cursor=pointer]
+          - button "Размер" [ref=f7e193] [cursor=pointer]
+          - button "Цвет текста" [ref=f7e199] [cursor=pointer]:
+            - generic [ref=f7e200]: A
+          - button "Цвет выделения" [ref=f7e203] [cursor=pointer]
+          - button "На весь экран" [ref=f7e210] [cursor=pointer]
+        - generic [ref=f7e216]:
+          - button "Жирный" [ref=f7e217] [cursor=pointer]
+          - button "Курсив" [ref=f7e221] [cursor=pointer]
+          - button "Подчёркнутый" [ref=f7e224] [cursor=pointer]
+          - button "Зачёркнутый" [ref=f7e227] [cursor=pointer]
+          - button "Подстрочный индекс" [ref=f7e231] [cursor=pointer]
+          - button "Надстрочный индекс" [ref=f7e236] [cursor=pointer]
+          - button "По левому краю" [ref=f7e242] [cursor=pointer]
+          - button "По центру" [ref=f7e244] [cursor=pointer]
+          - button "По правому краю" [ref=f7e246] [cursor=pointer]
+          - button "По ширине" [ref=f7e248] [cursor=pointer]
+          - button "Маркированный список" [ref=f7e251] [cursor=pointer]
+          - button "Нумерованный список" [ref=f7e253] [cursor=pointer]
+          - button "Список задач" [ref=f7e257] [cursor=pointer]
+          - button "Цитата" [ref=f7e261] [cursor=pointer]
+          - button "Вставить ссылку" [ref=f7e265] [cursor=pointer]
+          - button "Убрать ссылку" [disabled] [ref=f7e269]
+          - button "Загрузить изображение" [ref=f7e273] [cursor=pointer]
+          - button "Вставить изображение по URL" [ref=f7e278] [cursor=pointer]
+          - button "Горизонтальная линия" [ref=f7e283] [cursor=pointer]
+          - button "Таблица" [ref=f7e286] [cursor=pointer]
+          - button "Очистить форматирование" [ref=f7e292] [cursor=pointer]
+      - paragraph [ref=f7e298]: Текст…
+    - paragraph [ref=f7e299]: "DOMPurify removed tags: 0"
+    - generic [ref=f7e300]:
+      - paragraph [ref=f7e301]: Rendered output (.prose-editor, sanitized)
+      - generic [ref=f7e302]:
+        - heading "Заголовок курса" [level=1] [ref=f7e303]
+        - paragraph [ref=f7e304]:
+          - text: Центрированный фиолетовый текст,
+          - mark [ref=f7e305]: маркер
+          - text: ", подчёркивание, H"
+          - subscript [ref=f7e306]: "2"
+          - text: O и E=mc
+          - superscript [ref=f7e307]: "2"
+          - text: .
+        - list [ref=f7e308]:
+          - listitem [ref=f7e309]:
+            - paragraph [ref=f7e310]: Сделано
+          - listitem [ref=f7e311]:
+            - paragraph [ref=f7e312]: Не сделано
+        - separator [ref=f7e313]
+        - table [ref=f7e314]:
+          - rowgroup [ref=f7e315]:
+            - row [ref=f7e316]:
+              - columnheader [ref=f7e317]:
+                - paragraph [ref=f7e318]: Колонка 1
+              - columnheader [ref=f7e319]:
+                - paragraph [ref=f7e320]: Колонка 2
+            - row [ref=f7e321]:
+              - cell [ref=f7e322]:
+                - paragraph [ref=f7e323]: A
+              - cell [ref=f7e324]:
+                - paragraph [ref=f7e325]: B
+        - code [ref=f7e327]: const answer = 42;
+        - blockquote [ref=f7e328]:
+          - paragraph [ref=f7e329]: Цитата с брендовой рамкой.
+    - generic [ref=f7e330]: "<h1>Заголовок курса</h1><p style=\"text-align: center\">Центрированный <span style=\"color: #662d92\">фиолетовый</span> текст, <mark style=\"background-color: #fcf951\">маркер</mark>, <u>подчёркивание</u>, H<sub>2</sub>O и E=mc<sup>2</sup>.</p><ul data-type=\"taskList\"><li data-type=\"taskItem\" data-checked=\"true\"><p>Сделано</p></li><li data-type=\"taskItem\" data-checked=\"false\"><p>Не сделано</p></li></ul><hr><table><tbody><tr><th><p>Колонка 1</p></th><th><p>Колонка 2</p></th></tr><tr><td><p>A</p></td><td><p>B</p></td></tr></tbody></table><pre><code>const answer = 42;</code></pre><blockquote><p>Цитата с брендовой рамкой.</p></blockquote>"
+  - button "Open Next.js Dev Tools" [ref=f7e336] [cursor=pointer]
+  - alert [ref=f7e340]

@@ -1,0 +1,109 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e179]:
+    - banner [ref=f2e180]:
+      - generic [ref=f2e181]:
+        - button "Open menu" [ref=f2e182] [cursor=pointer]
+        - paragraph [ref=f2e183]: Dashboard
+      - generic [ref=f2e184]:
+        - button "Search and commands (Ctrl K)" [ref=f2e185] [cursor=pointer]
+        - button "Notifications" [ref=f2e186] [cursor=pointer]
+        - combobox "Language" [ref=f2e187]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=f2e188] [cursor=pointer]
+        - button "User menu" [ref=f2e189] [cursor=pointer]:
+          - generic [ref=f2e190]: E
+    - main [ref=f2e192]:
+      - generic [ref=f2e194]:
+        - generic [ref=f2e195]:
+          - generic [ref=f2e196]:
+            - heading "Good afternoon, Empty Owner" [level=1] [ref=f2e197]
+            - paragraph [ref=f2e198]: Your role is OWNER. You belong to the organization "Empty Org".
+          - button "Customize widgets" [ref=f2e199] [cursor=pointer]
+        - navigation "Quick Actions" [ref=f2e203]:
+          - link "Studio" [ref=f2e204] [cursor=pointer]:
+            - /url: /studio
+          - link "Analytics" [ref=f2e205] [cursor=pointer]:
+            - /url: /analytics
+          - link "Training Requests" [ref=f2e206] [cursor=pointer]:
+            - /url: /admin/training-requests
+          - link "Groups" [ref=f2e207] [cursor=pointer]:
+            - /url: /admin/groups
+        - generic [ref=f2e208]:
+          - generic [ref=f2e211]:
+            - generic [ref=f2e212]:
+              - generic [ref=f2e213]: Learning
+              - link "Analytics" [ref=f2e220] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f2e222]:
+              - generic [ref=f2e223]:
+                - paragraph [ref=f2e224]: Enrollments
+                - paragraph [ref=f2e225]: "0"
+              - generic [ref=f2e226]:
+                - paragraph [ref=f2e227]: Learners
+                - paragraph [ref=f2e228]: "0"
+              - generic [ref=f2e229]:
+                - paragraph [ref=f2e230]: Average progress
+                - paragraph [ref=f2e231]: 0%
+              - generic [ref=f2e232]:
+                - paragraph [ref=f2e233]: Certificates
+                - paragraph [ref=f2e234]: "0"
+          - generic [ref=f2e237]:
+            - generic [ref=f2e238]:
+              - generic [ref=f2e239]: Active students
+              - link "Analytics" [ref=f2e248] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f2e250]:
+              - paragraph [ref=f2e251]:
+                - text: "0"
+                - generic [ref=f2e252]: / 1 · 0%
+              - paragraph [ref=f2e253]: Active students in the period
+          - generic [ref=f2e256]:
+            - generic [ref=f2e257]:
+              - generic [ref=f2e258]: Revenue
+              - link "Analytics" [ref=f2e265] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f2e267]:
+              - paragraph [ref=f2e268]: 0 ₽
+              - paragraph [ref=f2e269]: No data for the period
+          - generic [ref=f2e272]:
+            - generic [ref=f2e273]:
+              - generic [ref=f2e274]: "Courses: enrollment & progress"
+              - link "Analytics" [ref=f2e280] [cursor=pointer]:
+                - /url: /analytics
+            - paragraph [ref=f2e282]: No courses yet
+          - generic [ref=f2e285]:
+            - generic [ref=f2e286]:
+              - generic [ref=f2e287]: Homework
+              - link "Analytics" [ref=f2e295] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f2e297]:
+              - generic [ref=f2e298]:
+                - generic [ref=f2e299]:
+                  - paragraph [ref=f2e300]: Pending grading
+                  - paragraph [ref=f2e301]: "0"
+                - generic [ref=f2e302]:
+                  - paragraph [ref=f2e303]: Late submissions
+                  - paragraph [ref=f2e304]: "0"
+              - paragraph [ref=f2e305]: All submissions graded
+          - generic [ref=f2e308]:
+            - generic [ref=f2e309]:
+              - generic [ref=f2e310]: Team activity
+              - link "View all" [ref=f2e318] [cursor=pointer]:
+                - /url: /supervisor
+            - generic [ref=f2e321]:
+              - generic [ref=f2e322]:
+                - paragraph [ref=f2e323]: Members
+                - paragraph [ref=f2e324]: "0"
+              - generic [ref=f2e325]:
+                - paragraph [ref=f2e326]: Avg Progress
+                - paragraph [ref=f2e327]: 0%
+              - generic [ref=f2e328]:
+                - paragraph [ref=f2e329]: Completions
+                - paragraph [ref=f2e330]: "0"
+              - generic [ref=f2e331]:
+                - paragraph [ref=f2e332]: Overdue
+                - paragraph [ref=f2e333]: "0"
+        - status [ref=f2e334]
+  - button "Open Next.js Dev Tools" [ref=f2e31] [cursor=pointer]
+  - alert [ref=f2e35]

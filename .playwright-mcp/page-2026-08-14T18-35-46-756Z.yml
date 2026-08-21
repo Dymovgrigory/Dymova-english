@@ -1,0 +1,32 @@
+- generic [active] [ref=f27e1]:
+  - main [ref=f27e2]:
+    - generic [ref=f27e3]:
+      - generic [ref=f27e4]:
+        - img "Фокси, маскот школы Фоксинбург" [ref=f27e7]
+        - paragraph [ref=f27e8]: Языковая школа · Долгопрудный
+        - heading "Фоксинбург" [level=1] [ref=f27e9]
+        - paragraph [ref=f27e10]: Английский не для школы, а для жизни
+      - button "Узнать уровень за минуту Пять заданий — и сразу видно, с чего начинать" [ref=f27e11]
+      - navigation "Быстрые действия" [ref=f27e16]:
+        - button "Подобрать курс Три вопроса — и готово" [ref=f27e17]
+        - button "Записаться" [ref=f27e22]
+        - button "Домашка" [ref=f27e28]
+      - region [ref=f27e34]:
+        - heading "Почему Фоксинбург" [level=2] [ref=f27e35]
+      - region [ref=f27e39]:
+        - heading "Как начать" [level=2] [ref=f27e40]
+        - list
+      - region [ref=f27e41]:
+        - heading "Частые вопросы" [level=2] [ref=f27e42]
+      - region [ref=f27e43]:
+        - heading "Где мы" [level=2] [ref=f27e44]
+      - generic [ref=f27e45]:
+        - paragraph [ref=f27e46]: Начать проще, чем кажется
+        - paragraph [ref=f27e47]: Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.
+        - button "Записаться на диагностику" [ref=f27e48] [cursor=pointer]
+  - navigation "Разделы" [ref=f27e49]:
+    - button "Дом" [ref=f27e50]
+    - button "Курсы" [ref=f27e53]
+    - button "Педагоги" [ref=f27e56]
+    - button "Фокси" [ref=f27e61]
+    - button "Кабинет" [ref=f27e64]

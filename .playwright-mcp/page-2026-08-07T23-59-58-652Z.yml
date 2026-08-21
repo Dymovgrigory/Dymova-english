@@ -1,0 +1,149 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e3]:
+      - link [ref=f4e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f4e6]
+      - navigation "Основная навигация" [ref=f4e7]:
+        - generic [ref=f4e8]:
+          - generic [ref=f4e10]:
+            - link "Главная" [ref=f4e11] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f4e17] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f4e21] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f4e24] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f4e27] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f4e32] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f4e36] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f4e40] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f4e47] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f4e50] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f4e53] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f4e57] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f4e59] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f4e63] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f4e68] [cursor=pointer]:
+              - /url: /news
+          - link "Моя команда" [ref=f4e75] [cursor=pointer]:
+            - /url: /supervisor
+          - generic [ref=f4e84]:
+            - link "Студия" [ref=f4e85] [cursor=pointer]:
+              - /url: /studio
+            - link "Наблюдения в студии" [ref=f4e89] [cursor=pointer]:
+              - /url: /studio/training
+            - link "Траектории" [ref=f4e91] [cursor=pointer]:
+              - /url: /studio/paths
+          - generic [ref=f4e98]:
+            - link "Админка" [ref=f4e99] [cursor=pointer]:
+              - /url: /admin
+            - link "Аналитика" [ref=f4e103] [cursor=pointer]:
+              - /url: /admin/analytics
+            - link "Заявки на обучение" [ref=f4e107] [cursor=pointer]:
+              - /url: /admin/training-requests
+            - link "SSO" [ref=f4e110] [cursor=pointer]:
+              - /url: /admin/sso-connections
+            - link "LRS" [ref=f4e114] [cursor=pointer]:
+              - /url: /admin/lrs
+            - link "Департаменты" [ref=f4e118] [cursor=pointer]:
+              - /url: /admin/departments
+            - link "Бейджи" [ref=f4e122] [cursor=pointer]:
+              - /url: /admin/badges
+            - link "Сайт" [ref=f4e125] [cursor=pointer]:
+              - /url: /admin/site
+            - link "Мероприятия" [ref=f4e129] [cursor=pointer]:
+              - /url: /admin/events
+            - link "Программы онбординга" [ref=f4e132] [cursor=pointer]:
+              - /url: /admin/onboarding
+            - link "Чек-листы наблюдений" [ref=f4e136] [cursor=pointer]:
+              - /url: /admin/observation-checklists
+            - link "Планы развития" [ref=f4e140] [cursor=pointer]:
+              - /url: /admin/development
+            - link "Компетенции" [ref=f4e144] [cursor=pointer]:
+              - /url: /admin/competencies
+            - link "Оценочные сессии" [ref=f4e149] [cursor=pointer]:
+              - /url: /admin/assessments
+      - button "Развернуть меню" [ref=f4e155] [cursor=pointer]
+    - banner [ref=f4e159]:
+      - paragraph [ref=f4e161]: Моя команда
+      - generic [ref=f4e162]:
+        - button "Уведомления" [ref=f4e164] [cursor=pointer]
+        - combobox "Язык" [ref=f4e167]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f4e168] [cursor=pointer]
+        - button "Меню пользователя" [ref=f4e169] [cursor=pointer]:
+          - generic [ref=f4e170]: Г
+    - main [ref=f4e172]:
+      - generic [ref=f4e174]:
+        - heading "Моя команда" [level=1] [ref=f4e175]
+        - generic [ref=f4e176]:
+          - generic [ref=f4e177]:
+            - paragraph [ref=f4e178]: Сотрудников
+            - paragraph [ref=f4e179]: "2"
+          - generic [ref=f4e180]:
+            - paragraph [ref=f4e181]: Средний прогресс
+            - paragraph [ref=f4e182]: 40%
+          - generic [ref=f4e183]:
+            - paragraph [ref=f4e184]: Завершено
+            - paragraph [ref=f4e185]: "2"
+          - generic [ref=f4e186]:
+            - paragraph [ref=f4e187]: Просрочено
+            - paragraph [ref=f4e188]: "1"
+        - generic [ref=f4e189]:
+          - generic [ref=f4e190]: Требуют внимания
+          - generic [ref=f4e193]:
+            - generic [ref=f4e194]:
+              - paragraph [ref=f4e195]: Иван Сидоров
+              - paragraph [ref=f4e196]: —
+            - generic [ref=f4e197]: "%"
+        - table [ref=f4e201]:
+          - rowgroup [ref=f4e202]:
+            - row [ref=f4e203]:
+              - columnheader "Сотрудник" [ref=f4e204]
+              - columnheader "Департамент" [ref=f4e205]
+              - columnheader "Прогресс" [ref=f4e206]
+              - columnheader "Курсы" [ref=f4e207]
+              - columnheader "Завершено" [ref=f4e208]
+              - columnheader "Просрочено" [ref=f4e209]
+              - columnheader "Серт." [ref=f4e210]
+              - columnheader "Активность" [ref=f4e211]
+          - rowgroup [ref=f4e212]:
+            - row [ref=f4e213]:
+              - cell [ref=f4e214]:
+                - generic [ref=f4e215]:
+                  - paragraph [ref=f4e216]: Анна Петрова
+                  - paragraph [ref=f4e217]: anna@foxinburg.ru
+              - cell "—" [ref=f4e218]
+              - cell "66%" [ref=f4e219]
+              - cell [ref=f4e224]
+              - cell [ref=f4e225]
+              - cell "0" [ref=f4e226]
+              - cell [ref=f4e227]
+              - cell "—" [ref=f4e228]
+            - row [ref=f4e229]:
+              - cell [ref=f4e230]:
+                - generic [ref=f4e231]:
+                  - paragraph [ref=f4e232]: Иван Сидоров
+                  - paragraph [ref=f4e233]: ivan@foxinburg.ru
+              - cell "—" [ref=f4e234]
+              - cell "15%" [ref=f4e235]
+              - cell [ref=f4e240]
+              - cell [ref=f4e241]
+              - cell "0" [ref=f4e242]
+              - cell [ref=f4e243]
+              - cell "—" [ref=f4e244]
+  - button "Open Next.js Dev Tools" [ref=f4e250] [cursor=pointer]
+  - alert [ref=f4e254]

@@ -1,0 +1,171 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f4e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f4e6]
+        - generic [ref=f4e7]: Фоксинбург
+      - navigation "Основная навигация" [ref=f4e8]:
+        - generic [ref=f4e9]:
+          - generic [ref=f4e11]:
+            - link "Главная" [ref=f4e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f4e19] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f4e24] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f4e28] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f4e32] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f4e38] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f4e43] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f4e48] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f4e56] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f4e60] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f4e64] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f4e69] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f4e72] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f4e77] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f4e83] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f4e90]:
+            - link "Моя команда" [ref=f4e91] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f4e98] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f4e103] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f4e108]:
+            - paragraph [ref=f4e110]: Студия
+            - generic [ref=f4e111]:
+              - link "Студия" [ref=f4e112] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f4e117] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f4e120] [cursor=pointer]:
+                - /url: /studio/paths
+          - generic [ref=f4e126]:
+            - paragraph [ref=f4e128]: Админка
+            - generic [ref=f4e129]:
+              - link "Админка" [ref=f4e130] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f4e136] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f4e141] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f4e145] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f4e150] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f4e155] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f4e160] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f4e164] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Страницы" [ref=f4e169] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Мероприятия" [ref=f4e175] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f4e179] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f4e184] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f4e189] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f4e194] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f4e200] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f4e207] [cursor=pointer]
+    - banner [ref=f4e212]:
+      - paragraph [ref=f4e214]: Админка
+      - generic [ref=f4e215]:
+        - button "Поиск и команды (Ctrl K)" [ref=f4e216] [cursor=pointer]
+        - button "Уведомления" [ref=f4e218] [cursor=pointer]
+        - combobox "Язык" [ref=f4e221]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f4e222] [cursor=pointer]
+        - button "Меню пользователя" [ref=f4e223] [cursor=pointer]:
+          - generic [ref=f4e224]: P
+    - main [ref=f4e226]:
+      - generic [ref=f4e228]:
+        - generic [ref=f4e229]:
+          - generic "Лендинг" [ref=f4e230]
+          - generic [ref=f4e231]: Опубликована
+          - button "Отменить" [ref=f4e387] [cursor=pointer]
+          - button "Вернуть" [disabled]
+          - group "Ширина холста" [ref=f4e232]:
+            - button "Десктоп" [pressed] [ref=f4e233] [cursor=pointer]
+            - button "Планшет" [ref=f4e234] [cursor=pointer]
+            - button "Мобильный" [ref=f4e235] [cursor=pointer]
+          - generic [ref=f4e236]: Черновик сохранён
+          - button "Предпросмотр" [ref=f4e237] [cursor=pointer]
+          - button "Версии" [ref=f4e238] [cursor=pointer]
+          - button "Опубликовать" [ref=f4e239] [cursor=pointer]
+        - generic [ref=f4e240]:
+          - generic [ref=f4e241]:
+            - generic [ref=f4e242]: Слои
+            - generic [ref=f4e243]:
+              - button "Секция" [ref=f4e246] [cursor=pointer]
+              - button "Заголовок" [ref=f4e249] [cursor=pointer]
+              - button "Текст" [ref=f4e252] [cursor=pointer]
+          - generic [ref=f4e253]:
+            - generic [ref=f4e254]: Библиотека
+            - generic [ref=f4e255]:
+              - generic [ref=f4e256]:
+                - paragraph [ref=f4e257]: Макет
+                - button "Секция" [ref=f4e259]
+              - generic [ref=f4e265]:
+                - paragraph [ref=f4e266]: Контент
+                - generic [ref=f4e267]:
+                  - button "Заголовок" [ref=f4e268]
+                  - button "Текст" [ref=f4e272]
+                  - button "Кнопка" [ref=f4e276]
+                  - button "Карточки" [ref=f4e284]
+                  - button "FAQ" [ref=f4e291]
+              - generic [ref=f4e296]:
+                - paragraph [ref=f4e297]: Медиа
+                - generic [ref=f4e298]:
+                  - button "Изображение" [ref=f4e299]
+                  - button "Галерея" [ref=f4e305]
+                  - button "Видео" [ref=f4e312]
+              - generic [ref=f4e317]:
+                - paragraph [ref=f4e318]: Маркетинг
+                - generic [ref=f4e319]:
+                  - button "Призыв к действию" [ref=f4e320]
+                  - button "Отзывы" [ref=f4e325]
+                  - button "Тарифы" [ref=f4e330]
+              - generic [ref=f4e336]:
+                - paragraph [ref=f4e337]: Бизнес
+                - generic [ref=f4e338]:
+                  - button "Список курсов" [ref=f4e339]
+                  - button "Преподаватели" [ref=f4e343]
+          - generic [ref=f4e498]:
+            - heading "Новый заголовок" [level=2] [ref=f4e502]
+            - paragraph [ref=f4e504]: Обновлённый текст абзаца
+          - generic [ref=f4e359]:
+            - generic [ref=f4e360]: Инспектор
+            - generic [ref=f4e361]: Выберите блок на холсте или в слоях.
+  - button "Версия восстановлена" [ref=f4e505] [cursor=pointer]
+  - generic [ref=f4e366] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f4e367]
+    - generic [ref=f4e506]:
+      - button "Open issues overlay" [ref=f4e507]:
+        - generic [ref=f4e508]:
+          - generic [ref=f4e509]: "0"
+          - generic [ref=f4e510]: "1"
+        - generic [ref=f4e511]: Issue
+      - button "Collapse issues badge" [ref=f4e512]
+  - alert [ref=f4e371]

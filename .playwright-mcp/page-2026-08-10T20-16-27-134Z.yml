@@ -1,0 +1,7 @@
+- generic [ref=f8e3]:
+  - generic [ref=f8e4]: 🦊
+  - heading "Админка бота" [level=1] [ref=f8e5]
+  - paragraph [ref=f8e6]: Введите админ-токен. Он сохранится только в этом браузере.
+  - generic [ref=f8e7]:
+    - textbox "Админ-токен" [ref=f8e8]
+    - button "Войти" [ref=f8e9] [cursor=pointer]

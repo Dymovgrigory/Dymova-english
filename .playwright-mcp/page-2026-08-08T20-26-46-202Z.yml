@@ -1,0 +1,179 @@
+- generic:
+  - generic:
+    - complementary:
+      - generic:
+        - link:
+          - /url: /dashboard
+          - generic: Фоксинбург
+      - navigation:
+        - generic:
+          - generic:
+            - generic:
+              - link:
+                - /url: /dashboard
+                - generic: Главная
+              - link:
+                - /url: /help
+                - generic: Руководство
+              - link:
+                - /url: /learn
+                - generic: Обучение
+              - link:
+                - /url: /learn/catalog
+                - generic: Каталог
+              - link:
+                - /url: /learn/paths
+                - generic: Траектории
+              - link:
+                - /url: /knowledge
+                - generic: База знаний
+              - link:
+                - /url: /learn/certificates
+                - generic: Сертификаты
+              - link:
+                - /url: /learn/leaderboard
+                - generic: Лидерборд
+              - link:
+                - /url: /learn/badges
+                - generic: Мои бейджи
+              - link:
+                - /url: /learn/calendar
+                - generic: Календарь
+              - link:
+                - /url: /learn/onboarding
+                - generic: Онбординг
+              - link:
+                - /url: /learn/training
+                - generic: Наблюдения
+              - link:
+                - /url: /learn/development
+                - generic: Мой план развития
+              - link:
+                - /url: /learn/assessments
+                - generic: Оценка 360°
+              - link:
+                - /url: /news
+                - generic: Новости
+          - generic:
+            - generic:
+              - link:
+                - /url: /supervisor
+                - generic: Моя команда
+              - link:
+                - /url: /students
+                - generic: Ученики
+              - link:
+                - /url: /teachers
+                - generic: Преподаватели
+          - generic:
+            - paragraph: Студия
+            - generic:
+              - link:
+                - /url: /studio
+                - generic: Студия
+              - link:
+                - /url: /studio/training
+                - generic: Наблюдения в студии
+              - link:
+                - /url: /studio/paths
+                - generic: Траектории
+              - link:
+                - /url: /media
+                - generic: Медиатека
+          - generic:
+            - paragraph: Админка
+            - generic:
+              - link:
+                - /url: /admin
+                - generic: Админка
+              - link:
+                - /url: /admin/analytics
+                - generic: Аналитика
+              - link:
+                - /url: /admin/training-requests
+                - generic: Заявки на обучение
+              - link:
+                - /url: /admin/sso-connections
+                - generic: SSO
+              - link:
+                - /url: /admin/lrs
+                - generic: LRS
+              - link:
+                - /url: /admin/departments
+                - generic: Департаменты
+              - link:
+                - /url: /admin/badges
+                - generic: Бейджи
+              - link:
+                - /url: /admin/site
+                - generic: Сайт
+              - link:
+                - /url: /admin/pages
+                - generic: Страницы
+              - link:
+                - /url: /admin/events
+                - generic: Мероприятия
+              - link:
+                - /url: /admin/onboarding
+                - generic: Программы онбординга
+              - link:
+                - /url: /admin/observation-checklists
+                - generic: Чек-листы наблюдений
+              - link:
+                - /url: /admin/development
+                - generic: Планы развития
+              - link:
+                - /url: /admin/competencies
+                - generic: Компетенции
+              - link:
+                - /url: /admin/assessments
+                - generic: Оценочные сессии
+      - generic:
+        - button:
+          - generic: Свернуть меню
+    - banner:
+      - generic:
+        - paragraph: Админка
+      - generic:
+        - button
+        - generic:
+          - button
+        - combobox
+        - button
+        - button:
+          - generic: O
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Страницы сайта
+              - paragraph: "Визуальный редактор CMS-страниц: черновики, публикация, версии."
+            - button: Новая страница
+          - generic:
+            - generic:
+              - generic:
+                - textbox:
+                  - /placeholder: Поиск по названию или slug…
+              - button: Колонки
+            - generic:
+              - generic:
+                - paragraph: Страниц пока нет
+  - button "Open Next.js Dev Tools" [ref=f17e262] [cursor=pointer]
+  - alert
+  - dialog [ref=f17e270]:
+    - generic [ref=f17e271]:
+      - heading "Новая страница" [level=2] [ref=f17e272]
+      - paragraph [ref=f17e273]: "Slug уникален в рамках школы: латиница, цифры, дефис и слеш."
+    - generic [ref=f17e274]:
+      - generic [ref=f17e275]:
+        - text: Slug
+        - textbox "Slug" [active] [ref=f17e276]:
+          - /placeholder: about
+      - generic [ref=f17e277]:
+        - text: Название
+        - textbox "Название" [ref=f17e278]
+      - generic [ref=f17e279]:
+        - button "Отмена" [ref=f17e280] [cursor=pointer]
+        - button "Новая страница" [ref=f17e281] [cursor=pointer]
+    - button "Close" [ref=f17e282] [cursor=pointer]

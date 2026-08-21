@@ -1,0 +1,98 @@
+- generic [active] [ref=f22e1]:
+  - main [ref=f22e2]:
+    - generic [ref=f22e3]:
+      - generic [ref=f22e4]:
+        - img "Фокси, маскот школы Фоксинбург" [ref=f22e7]
+        - paragraph [ref=f22e8]: Языковая школа · Долгопрудный
+        - heading "Фоксинбург" [level=1] [ref=f22e9]
+        - paragraph [ref=f22e10]: Английский не для школы, а для жизни
+      - 'button "Ваш уровень: A2–B1 Подобрать программу под него" [ref=f22e11] [cursor=pointer]':
+        - generic [ref=f22e13]:
+          - generic [ref=f22e14]: "Ваш уровень: A2–B1"
+          - generic [ref=f22e15]: Подобрать программу под него
+      - navigation "Быстрые действия" [ref=f22e19]:
+        - button "Подобрать курс Три вопроса — и готово" [ref=f22e20] [cursor=pointer]:
+          - generic [ref=f22e25]: Подобрать курс
+          - generic [ref=f22e26]: Три вопроса — и готово
+        - button "Записаться" [ref=f22e27] [cursor=pointer]
+        - button "Домашка" [ref=f22e34] [cursor=pointer]
+      - generic [ref=f22e42]:
+        - generic [ref=f22e43]: Сейчас в школе
+        - paragraph [ref=f22e44]: Бесплатная диагностика знаний до начала обучения.
+      - region [ref=f22e45]:
+        - heading "Почему Фоксинбург" [level=2] [ref=f22e46]
+        - generic [ref=f22e47]:
+          - article [ref=f22e48]:
+            - heading "Образовательная лицензия" [level=3] [ref=f22e49]
+            - paragraph [ref=f22e50]: Работаем официально, на основании государственной образовательной лицензии.
+          - article [ref=f22e51]:
+            - heading "Аккредитованный центр Hippo" [level=3] [ref=f22e52]
+            - paragraph [ref=f22e53]: Официальная площадка (venue) престижной международной олимпиады по английскому Hippo.
+          - article [ref=f22e54]:
+            - heading "Мини-группы до 7 человек" [level=3] [ref=f22e55]
+            - paragraph [ref=f22e56]: Внимание каждому ученику и живая языковая среда без перехода на русский.
+          - article [ref=f22e57]:
+            - heading "Команда профессионалов" [level=3] [ref=f22e58]
+            - paragraph [ref=f22e59]: Педагоги развиваются по нашей методике в темпе «три года за один».
+      - region [ref=f22e60]:
+        - heading "Как начать" [level=2] [ref=f22e61]
+        - list [ref=f22e62]:
+          - listitem [ref=f22e63]:
+            - generic [ref=f22e64]: "1"
+            - generic [ref=f22e65]:
+              - heading "Бесплатная диагностика знаний" [level=3] [ref=f22e66]
+              - paragraph [ref=f22e67]: Методист проверит текущий уровень и составит индивидуальный план обучения.
+          - listitem [ref=f22e68]:
+            - generic [ref=f22e69]: "2"
+            - generic [ref=f22e70]:
+              - heading "Подбор группы" [level=3] [ref=f22e71]
+              - paragraph [ref=f22e72]: Вместе с администратором подберём подходящую группу по возрасту и уровню.
+          - listitem [ref=f22e73]:
+            - generic [ref=f22e74]: "3"
+            - generic [ref=f22e75]:
+              - heading "Пробный урок" [level=3] [ref=f22e76]
+              - paragraph [ref=f22e77]: Необязательный шаг — ребёнок знакомится с педагогом и форматом занятий.
+          - listitem [ref=f22e78]:
+            - generic [ref=f22e79]: "4"
+            - generic [ref=f22e80]:
+              - heading "Старт занятий" [level=3] [ref=f22e81]
+              - paragraph [ref=f22e82]: Регулярные занятия, отчёты родителям и видимый прогресс.
+      - region [ref=f22e83]:
+        - heading "Частые вопросы" [level=2] [ref=f22e84]
+        - generic [ref=f22e85]:
+          - generic [ref=f22e86]:
+            - button "До скольки и когда вы работаете? Какой режим работы?" [ref=f22e87] [cursor=pointer]
+            - paragraph: Ежедневно с 9:00 до 21:00, без выходных. Занятия идут утром, днём и вечером — подберём удобное время.
+          - generic [ref=f22e91]:
+            - button "Вы давно работаете?" [ref=f22e92] [cursor=pointer]
+            - paragraph: Работаем с 2020 года — больше 5 лет опыта в обучении детей. Официальная образовательная лицензия, аккредитованный центр международной олимпиады Hippo, рейтинг 5.0 на Яндекс.Картах.
+          - generic [ref=f22e96]:
+            - button "Кто руководит школой? Кто руководители?" [ref=f22e97] [cursor=pointer]
+            - paragraph: Школой руководят Дымова Вероника Александровна и Дымов Григорий Юрьевич. Методист и контроль качества — Коваленко Елизавета. Администраторы — Зверева Ираида и Джанузакова Салтанат.
+          - generic [ref=f22e101]:
+            - button "У вас есть носитель языка?" [ref=f22e102] [cursor=pointer]
+            - paragraph: Да! В офлайн-формат входит разговорный клуб с носителем языка — дети применяют английский в живом общении.
+          - generic [ref=f22e106]:
+            - button "Можно ли платить помесячно, а не за год?" [ref=f22e107] [cursor=pointer]
+            - paragraph: "Да, конечно. Английский в мини-группе: 9 000 ₽/мес при ежемесячной оплате или 8 200 ₽/мес при оплате за учебный год. Малыши 2–3 года: 6 550 ₽/мес или 6 050 ₽/мес за год. Есть рассрочка и оплата маткапиталом."
+      - region [ref=f22e111]:
+        - heading "Где мы" [level=2] [ref=f22e112]
+        - generic [ref=f22e113]:
+          - article [ref=f22e114]:
+            - heading "Филиал на Лихачевском" [level=3] [ref=f22e115]
+            - paragraph [ref=f22e116]: г. Долгопрудный, пр-кт Лихачевский, 76к1
+            - paragraph [ref=f22e117]: 9:00 — 21:00
+          - article [ref=f22e118]:
+            - heading "Филиал на Ракетостроителей" [level=3] [ref=f22e119]
+            - paragraph [ref=f22e120]: г. Долгопрудный, пр-кт Ракетостроителей, 9к3
+            - paragraph [ref=f22e121]: 9:00 — 21:00
+      - generic [ref=f22e122]:
+        - paragraph [ref=f22e123]: Начать проще, чем кажется
+        - paragraph [ref=f22e124]: Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.
+        - button "Записаться на диагностику" [ref=f22e125] [cursor=pointer]
+  - navigation "Разделы" [ref=f22e126]:
+    - button "Дом" [ref=f22e127] [cursor=pointer]
+    - button "Курсы" [ref=f22e131] [cursor=pointer]
+    - button "Педагоги" [ref=f22e135] [cursor=pointer]
+    - button "Фокси" [ref=f22e141] [cursor=pointer]
+    - button "Кабинет" [ref=f22e145] [cursor=pointer]

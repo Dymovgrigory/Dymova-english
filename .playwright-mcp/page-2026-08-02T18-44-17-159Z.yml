@@ -1,0 +1,22 @@
+- navigation [ref=f7e3]:
+  - navigation [ref=f7e4]:
+    - link [ref=f7e22] [cursor=pointer]:
+      - /url: https://tilda.ru/projects/
+    - generic [ref=f7e28]:
+      - link "Мои сайты" [ref=f7e29] [cursor=pointer]:
+        - /url: https://tilda.ru/projects/
+      - link "Тарифы и оплата" [ref=f7e30] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/plan/
+      - link "Профиль" [ref=f7e31] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/
+      - link "Пригласи друга" [ref=f7e32] [cursor=pointer]:
+        - /url: https://tilda.ru/identity/referrals/
+    - generic [ref=f7e33]:
+      - link "Справочный центр" [ref=f7e34] [cursor=pointer]:
+        - /url: https://help-ru.tilda.cc
+      - link "Вебинары" [ref=f7e35] [cursor=pointer]:
+        - /url: https://webinars.tilda.cc/ru
+      - link "Уроки и статьи" [ref=f7e36] [cursor=pointer]:
+        - /url: https://tilda.education
+      - link "Выйти" [ref=f7e37] [cursor=pointer]:
+        - /url: https://tilda.ru/login/exit/

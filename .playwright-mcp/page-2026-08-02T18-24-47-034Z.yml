@@ -1,0 +1,823 @@
+- generic [ref=f3e1]:
+  - complementary [ref=f3e2]:
+    - link "Фоксинбург Фоксинбург" [ref=f3e4] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Фоксинбург" [ref=f3e5]
+      - generic [ref=f3e6]: Фоксинбург
+    - navigation [ref=f3e7]:
+      - generic [ref=f3e8]:
+        - link "Главная" [ref=f3e9] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Руководство" [ref=f3e16] [cursor=pointer]:
+          - /url: /help
+        - link "Обучение" [ref=f3e22] [cursor=pointer]:
+          - /url: /learn
+        - link "Каталог" [ref=f3e27] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Траектории" [ref=f3e31] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "База знаний" [ref=f3e34] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Сертификаты" [ref=f3e38] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Лидерборд" [ref=f3e43] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "Мои бейджи" [ref=f3e51] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Календарь" [ref=f3e55] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Онбординг" [ref=f3e59] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Наблюдения" [ref=f3e64] [cursor=pointer]:
+          - /url: /learn/training
+        - link "Мой план развития" [ref=f3e68] [cursor=pointer]:
+          - /url: /learn/development
+        - link "Оценка 360°" [ref=f3e72] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "Новости" [ref=f3e76] [cursor=pointer]:
+          - /url: /news
+      - link "Моя команда" [ref=f3e95] [cursor=pointer]:
+        - /url: /supervisor
+      - paragraph [ref=f3e103]: Студия
+      - generic [ref=f3e104]:
+        - link "Студия" [ref=f3e105] [cursor=pointer]:
+          - /url: /studio
+        - link "Наблюдения в студии" [ref=f3e110] [cursor=pointer]:
+          - /url: /studio/training
+        - link "Траектории" [ref=f3e114] [cursor=pointer]:
+          - /url: /studio/paths
+      - paragraph [ref=f3e118]: Админка
+      - generic [ref=f3e119]:
+        - link "Админка" [ref=f3e120] [cursor=pointer]:
+          - /url: /admin
+        - link "Аналитика" [ref=f3e125] [cursor=pointer]:
+          - /url: /admin/analytics
+        - link "Заявки на обучение" [ref=f3e130] [cursor=pointer]:
+          - /url: /admin/training-requests
+        - link "SSO" [ref=f3e134] [cursor=pointer]:
+          - /url: /admin/sso-connections
+        - link "LRS" [ref=f3e138] [cursor=pointer]:
+          - /url: /admin/lrs
+        - link "Департаменты" [ref=f3e143] [cursor=pointer]:
+          - /url: /admin/departments
+        - link "Бейджи" [ref=f3e148] [cursor=pointer]:
+          - /url: /admin/badges
+        - link "Мероприятия" [ref=f3e152] [cursor=pointer]:
+          - /url: /admin/events
+        - link "Программы онбординга" [ref=f3e156] [cursor=pointer]:
+          - /url: /admin/onboarding
+        - link "Чек-листы наблюдений" [ref=f3e161] [cursor=pointer]:
+          - /url: /admin/observation-checklists
+        - link "Планы развития" [ref=f3e165] [cursor=pointer]:
+          - /url: /admin/development
+        - link "Компетенции" [ref=f3e169] [cursor=pointer]:
+          - /url: /admin/competencies
+        - link "Оценочные сессии" [ref=f3e173] [cursor=pointer]:
+          - /url: /admin/assessments
+    - generic [ref=f3e81]:
+      - generic [ref=f3e177]:
+        - generic [ref=f3e178]: Д
+        - generic [ref=f3e179]:
+          - paragraph [ref=f3e180]: Дымов Григорий Юрьевич
+          - paragraph [ref=f3e181]: dymovgrigory@mail.ru
+      - button "Выйти" [ref=f3e82] [cursor=pointer]
+      - button "Collapse" [ref=f3e87] [cursor=pointer]
+  - generic [ref=f3e182]:
+    - banner [ref=f3e183]:
+      - paragraph [ref=f3e185]: LMS Foxinburg
+      - generic [ref=f3e186]:
+        - button "Уведомления" [ref=f3e188] [cursor=pointer]
+        - combobox "Язык" [ref=f3e191]:
+          - option "Русский" [selected]
+          - option "English"
+    - main [ref=f3e192]:
+      - generic [ref=f3e193]:
+        - generic [ref=f3e194]:
+          - generic [ref=f3e195]:
+            - link "← К каталогу" [ref=f3e196] [cursor=pointer]:
+              - /url: /learn
+            - heading "Входное обучение педагогов" [level=1] [ref=f3e197]
+            - generic [ref=f3e198]:
+              - img "Средняя оценка" [ref=f3e199]:
+                - generic [ref=f3e200]: ★
+                - generic [ref=f3e201]: ★
+                - generic [ref=f3e202]: ★
+                - generic [ref=f3e203]: ★
+                - generic [ref=f3e204]: ★
+              - generic [ref=f3e205]: "5.0"
+              - generic [ref=f3e206]: · 1 отзыв(ов)
+            - paragraph [ref=f3e207]: курс для педагогов Фоксинбург
+          - link "Редактировать" [ref=f3e209] [cursor=pointer]:
+            - /url: /studio/courses/b9ef055f-07f6-45f8-bff7-d40f8a28df2e
+        - generic [ref=f3e211]:
+          - generic [ref=f3e212]: Прогресс по курсу
+          - generic [ref=f3e213]: 0%
+        - generic [ref=f3e215]:
+          - complementary [ref=f3e216]:
+            - generic [ref=f3e217]:
+              - paragraph [ref=f3e218]: Знакомство со школой
+              - list [ref=f3e219]:
+                - listitem [ref=f3e220]:
+                  - button "● Миссии и ценности Фоксинбург" [ref=f3e221] [cursor=pointer]:
+                    - generic [ref=f3e222]: ●
+                    - text: Миссии и ценности Фоксинбург
+                - listitem [ref=f3e223]:
+                  - button "● Правила школы" [ref=f3e224] [cursor=pointer]:
+                    - generic [ref=f3e225]: ●
+                    - text: Правила школы
+                - listitem [ref=f3e226]:
+                  - button "● Внешний вид педагога" [ref=f3e227] [cursor=pointer]:
+                    - generic [ref=f3e228]: ●
+                    - text: Внешний вид педагога
+                - listitem [ref=f3e229]:
+                  - button "● Домашнее задание внешний вид педагога" [ref=f3e230] [cursor=pointer]:
+                    - generic [ref=f3e231]: ●
+                    - text: Домашнее задание внешний вид педагога
+                - listitem [ref=f3e232]:
+                  - button "● Домашнее задание правила школы" [ref=f3e233] [cursor=pointer]:
+                    - generic [ref=f3e234]: ●
+                    - text: Домашнее задание правила школы
+                - listitem [ref=f3e235]:
+                  - button "● Домашнее задание ценности школы" [ref=f3e236] [cursor=pointer]:
+                    - generic [ref=f3e237]: ●
+                    - text: Домашнее задание ценности школы
+            - generic [ref=f3e238]:
+              - paragraph [ref=f3e239]: Подготовка к уроку
+              - list [ref=f3e240]:
+                - listitem [ref=f3e241]:
+                  - button "● Организация урока" [ref=f3e242] [cursor=pointer]:
+                    - generic [ref=f3e243]: ●
+                    - text: Организация урока
+                - listitem [ref=f3e244]:
+                  - button "● Домашнее задание организация урока" [ref=f3e245] [cursor=pointer]:
+                    - generic [ref=f3e246]: ●
+                    - text: Домашнее задание организация урока
+                - listitem [ref=f3e247]:
+                  - button "● Тестовое задание организация урока" [active] [ref=f3e248] [cursor=pointer]:
+                    - generic [ref=f3e249]: ●
+                    - text: Тестовое задание организация урока
+                - listitem [ref=f3e250]:
+                  - button "● Цели" [ref=f3e251] [cursor=pointer]:
+                    - generic [ref=f3e252]: ●
+                    - text: Цели
+                - listitem [ref=f3e253]:
+                  - button "● Домашнее задание цели" [ref=f3e254] [cursor=pointer]:
+                    - generic [ref=f3e255]: ●
+                    - text: Домашнее задание цели
+                - listitem [ref=f3e256]:
+                  - button "● Чек-лист подготовки к уроку" [ref=f3e257] [cursor=pointer]:
+                    - generic [ref=f3e258]: ●
+                    - text: Чек-лист подготовки к уроку
+            - generic [ref=f3e259]:
+              - paragraph [ref=f3e260]: Взаимодействие с детьми
+              - list [ref=f3e261]:
+                - listitem [ref=f3e262]:
+                  - button "● Конкурс лучший ученик" [ref=f3e263] [cursor=pointer]:
+                    - generic [ref=f3e264]: ●
+                    - text: Конкурс лучший ученик
+                - listitem [ref=f3e265]:
+                  - button "● Тестовое задание лучший ученик" [ref=f3e266] [cursor=pointer]:
+                    - generic [ref=f3e267]: ●
+                    - text: Тестовое задание лучший ученик
+                - listitem [ref=f3e268]:
+                  - button "● Домашнее задание конкурс лучший ученик" [ref=f3e269] [cursor=pointer]:
+                    - generic [ref=f3e270]: ●
+                    - text: Домашнее задание конкурс лучший ученик
+                - listitem [ref=f3e271]:
+                  - button "● Оценивание и исправление" [ref=f3e272] [cursor=pointer]:
+                    - generic [ref=f3e273]: ●
+                    - text: Оценивание и исправление
+                - listitem [ref=f3e274]:
+                  - button "● Тестовое задание Оценивание и исправление" [ref=f3e275] [cursor=pointer]:
+                    - generic [ref=f3e276]: ●
+                    - text: Тестовое задание Оценивание и исправление
+                - listitem [ref=f3e277]:
+                  - button "● Домашнее задание оценивание и исправление" [ref=f3e278] [cursor=pointer]:
+                    - generic [ref=f3e279]: ●
+                    - text: Домашнее задание оценивание и исправление
+                - listitem [ref=f3e280]:
+                  - button "● Поддержка учеников" [ref=f3e281] [cursor=pointer]:
+                    - generic [ref=f3e282]: ●
+                    - text: Поддержка учеников
+                - listitem [ref=f3e283]:
+                  - button "● Тестовое задание поддержка учеников" [ref=f3e284] [cursor=pointer]:
+                    - generic [ref=f3e285]: ●
+                    - text: Тестовое задание поддержка учеников
+                - listitem [ref=f3e286]:
+                  - button "● Домашнее задание поддержка учеников" [ref=f3e287] [cursor=pointer]:
+                    - generic [ref=f3e288]: ●
+                    - text: Домашнее задание поддержка учеников
+                - listitem [ref=f3e289]:
+                  - button "● Система мотивации школы" [ref=f3e290] [cursor=pointer]:
+                    - generic [ref=f3e291]: ●
+                    - text: Система мотивации школы
+                - listitem [ref=f3e292]:
+                  - button "● Домашнее задание система мотивации школы" [ref=f3e293] [cursor=pointer]:
+                    - generic [ref=f3e294]: ●
+                    - text: Домашнее задание система мотивации школы
+            - generic [ref=f3e295]:
+              - paragraph [ref=f3e296]: Classroom management
+              - list [ref=f3e297]:
+                - listitem [ref=f3e298]:
+                  - button "● Bus Tickets" [ref=f3e299] [cursor=pointer]:
+                    - generic [ref=f3e300]: ●
+                    - text: Bus Tickets
+                - listitem [ref=f3e301]:
+                  - button "● Horse and Bridge" [ref=f3e302] [cursor=pointer]:
+                    - generic [ref=f3e303]: ●
+                    - text: Horse and Bridge
+                - listitem [ref=f3e304]:
+                  - button "● Magic Keys" [ref=f3e305] [cursor=pointer]:
+                    - generic [ref=f3e306]: ●
+                    - text: Magic Keys
+                - listitem [ref=f3e307]:
+                  - button "● Strawberry Jam" [ref=f3e308] [cursor=pointer]:
+                    - generic [ref=f3e309]: ●
+                    - text: Strawberry Jam
+                - listitem [ref=f3e310]:
+                  - button "● Sun and Cloud" [ref=f3e311] [cursor=pointer]:
+                    - generic [ref=f3e312]: ●
+                    - text: Sun and Cloud
+                - listitem [ref=f3e313]:
+                  - button "● Superhero" [ref=f3e314] [cursor=pointer]:
+                    - generic [ref=f3e315]: ●
+                    - text: Superhero
+                - listitem [ref=f3e316]:
+                  - button "● Volcano" [ref=f3e317] [cursor=pointer]:
+                    - generic [ref=f3e318]: ●
+                    - text: Volcano
+                - listitem [ref=f3e319]:
+                  - button "● ВИДЕО добавить" [ref=f3e320] [cursor=pointer]:
+                    - generic [ref=f3e321]: ●
+                    - text: ВИДЕО добавить
+            - generic [ref=f3e322]:
+              - paragraph [ref=f3e323]: Принципы проведения
+              - list [ref=f3e324]:
+                - listitem [ref=f3e325]:
+                  - button "● Регламент Warm-up и Lead-in" [ref=f3e326] [cursor=pointer]:
+                    - generic [ref=f3e327]: ●
+                    - text: Регламент Warm-up и Lead-in
+                - listitem [ref=f3e328]:
+                  - button "● Warm-up activities" [ref=f3e329] [cursor=pointer]:
+                    - generic [ref=f3e330]: ●
+                    - text: Warm-up activities
+                - listitem [ref=f3e331]:
+                  - button "● Lead in stratagies" [ref=f3e332] [cursor=pointer]:
+                    - generic [ref=f3e333]: ●
+                    - text: Lead in stratagies
+                - listitem [ref=f3e334]:
+                  - button "● Домашнее задание Warm-up и Lead in" [ref=f3e335] [cursor=pointer]:
+                    - generic [ref=f3e336]: ●
+                    - text: Домашнее задание Warm-up и Lead in
+                - listitem [ref=f3e337]:
+                  - button "● Тайминг" [ref=f3e338] [cursor=pointer]:
+                    - generic [ref=f3e339]: ●
+                    - text: Тайминг
+                - listitem [ref=f3e340]:
+                  - button "● Тестовое задание тайминг" [ref=f3e341] [cursor=pointer]:
+                    - generic [ref=f3e342]: ●
+                    - text: Тестовое задание тайминг
+                - listitem [ref=f3e343]:
+                  - button "● Домашнее задание тайминг" [ref=f3e344] [cursor=pointer]:
+                    - generic [ref=f3e345]: ●
+                    - text: Домашнее задание тайминг
+                - listitem [ref=f3e346]:
+                  - button "● Frameworks" [ref=f3e347] [cursor=pointer]:
+                    - generic [ref=f3e348]: ●
+                    - text: Frameworks
+                - listitem [ref=f3e349]:
+                  - button "● Тестовое задание Frameworks" [ref=f3e350] [cursor=pointer]:
+                    - generic [ref=f3e351]: ●
+                    - text: Тестовое задание Frameworks
+                - listitem [ref=f3e352]:
+                  - button "● Домашнее задание Frameworks" [ref=f3e353] [cursor=pointer]:
+                    - generic [ref=f3e354]: ●
+                    - text: Домашнее задание Frameworks
+            - generic [ref=f3e355]:
+              - paragraph [ref=f3e356]: Эффективный урок
+              - list [ref=f3e357]:
+                - listitem [ref=f3e358]:
+                  - button "● Инструкции" [ref=f3e359] [cursor=pointer]:
+                    - generic [ref=f3e360]: ●
+                    - text: Инструкции
+                - listitem [ref=f3e361]:
+                  - button "● Тестовое задание инструкции" [ref=f3e362] [cursor=pointer]:
+                    - generic [ref=f3e363]: ●
+                    - text: Тестовое задание инструкции
+                - listitem [ref=f3e364]:
+                  - button "● Домашнее задание инструкции" [ref=f3e365] [cursor=pointer]:
+                    - generic [ref=f3e366]: ●
+                    - text: Домашнее задание инструкции
+                - listitem [ref=f3e367]:
+                  - button "● Организация парной и групповой работы" [ref=f3e368] [cursor=pointer]:
+                    - generic [ref=f3e369]: ●
+                    - text: Организация парной и групповой работы
+                - listitem [ref=f3e370]:
+                  - button "● Тестовое задание организация парной и групповой работы" [ref=f3e371] [cursor=pointer]:
+                    - generic [ref=f3e372]: ●
+                    - text: Тестовое задание организация парной и групповой работы
+                - listitem [ref=f3e373]:
+                  - button "● Домашнее задание организация парной и групповой работы" [ref=f3e374] [cursor=pointer]:
+                    - generic [ref=f3e375]: ●
+                    - text: Домашнее задание организация парной и групповой работы
+                - listitem [ref=f3e376]:
+                  - button "● Teacher talking time" [ref=f3e377] [cursor=pointer]:
+                    - generic [ref=f3e378]: ●
+                    - text: Teacher talking time
+                - listitem [ref=f3e379]:
+                  - button "● Тестовое задание Teacher talking time" [ref=f3e380] [cursor=pointer]:
+                    - generic [ref=f3e381]: ●
+                    - text: Тестовое задание Teacher talking time
+                - listitem [ref=f3e382]:
+                  - button "● Домашнее задание teacher talking time" [ref=f3e383] [cursor=pointer]:
+                    - generic [ref=f3e384]: ●
+                    - text: Домашнее задание teacher talking time
+            - generic [ref=f3e385]:
+              - paragraph [ref=f3e386]: Лексический урок
+              - list [ref=f3e387]:
+                - listitem [ref=f3e388]:
+                  - button "● Регламент лексического урока" [ref=f3e389] [cursor=pointer]:
+                    - generic [ref=f3e390]: ●
+                    - text: Регламент лексического урока
+                - listitem [ref=f3e391]:
+                  - button "● Инструментарий лексика" [ref=f3e392] [cursor=pointer]:
+                    - generic [ref=f3e393]: ●
+                    - text: Инструментарий лексика
+                - listitem [ref=f3e394]:
+                  - button "● План лексического урока" [ref=f3e395] [cursor=pointer]:
+                    - generic [ref=f3e396]: ●
+                    - text: План лексического урока
+                - listitem [ref=f3e397]:
+                  - button "● Лексический урок младшие НУЖНО добавить видео в вк или рутюб в закрытые каналы" [ref=f3e398] [cursor=pointer]:
+                    - generic [ref=f3e399]: ●
+                    - text: Лексический урок младшие НУЖНО добавить видео в вк или рутюб в закрытые каналы
+                - listitem [ref=f3e400]:
+                  - button "● Лексический урок старшие" [ref=f3e401] [cursor=pointer]:
+                    - generic [ref=f3e402]: ●
+                    - text: Лексический урок старшие
+                - listitem [ref=f3e403]:
+                  - button "● Чек-лист лексического урока" [ref=f3e404] [cursor=pointer]:
+                    - generic [ref=f3e405]: ●
+                    - text: Чек-лист лексического урока
+                - listitem [ref=f3e406]:
+                  - button "● Тестовое задание лексический урок" [ref=f3e407] [cursor=pointer]:
+                    - generic [ref=f3e408]: ●
+                    - text: Тестовое задание лексический урок
+                - listitem [ref=f3e409]:
+                  - button "● Домашнее задание лексический урок" [ref=f3e410] [cursor=pointer]:
+                    - generic [ref=f3e411]: ●
+                    - text: Домашнее задание лексический урок
+            - generic [ref=f3e412]:
+              - paragraph [ref=f3e413]: Обратная связь родителям
+              - list [ref=f3e414]:
+                - listitem [ref=f3e415]:
+                  - button "● Регламент аудиосообщения после первого урока" [ref=f3e416] [cursor=pointer]:
+                    - generic [ref=f3e417]: ●
+                    - text: Регламент аудиосообщения после первого урока
+                - listitem [ref=f3e418]:
+                  - button "● Регламент общения с родителями после урока" [ref=f3e419] [cursor=pointer]:
+                    - generic [ref=f3e420]: ●
+                    - text: Регламент общения с родителями после урока
+                - listitem [ref=f3e421]:
+                  - button "● Регламент видео-отчеты" [ref=f3e422] [cursor=pointer]:
+                    - generic [ref=f3e423]: ●
+                    - text: Регламент видео-отчеты
+                - listitem [ref=f3e424]:
+                  - button "● Регламент обратной связи родителям (письменные отчеты)" [ref=f3e425] [cursor=pointer]:
+                    - generic [ref=f3e426]: ●
+                    - text: Регламент обратной связи родителям (письменные отчеты)
+                - listitem [ref=f3e427]:
+                  - button "● Регламент обратной связи родителям (звонки)" [ref=f3e428] [cursor=pointer]:
+                    - generic [ref=f3e429]: ●
+                    - text: Регламент обратной связи родителям (звонки)
+                - listitem [ref=f3e430]:
+                  - button "● Регламент открытого урока" [ref=f3e431] [cursor=pointer]:
+                    - generic [ref=f3e432]: ●
+                    - text: Регламент открытого урока
+                - listitem [ref=f3e433]:
+                  - button "● Самые частые вопросы от родителей — с ответами педагога" [ref=f3e434] [cursor=pointer]:
+                    - generic [ref=f3e435]: ●
+                    - text: Самые частые вопросы от родителей — с ответами педагога
+                - listitem [ref=f3e436]:
+                  - button "● Тестовое задание обратная связь родителям" [ref=f3e437] [cursor=pointer]:
+                    - generic [ref=f3e438]: ●
+                    - text: Тестовое задание обратная связь родителям
+                - listitem [ref=f3e439]:
+                  - button "● Домашнее задание обратная связь родителям" [ref=f3e440] [cursor=pointer]:
+                    - generic [ref=f3e441]: ●
+                    - text: Домашнее задание обратная связь родителям
+            - generic [ref=f3e442]:
+              - paragraph [ref=f3e443]: Мобильное приложение
+              - list [ref=f3e444]:
+                - listitem [ref=f3e445]:
+                  - button "● Регламент заполнения приложения" [ref=f3e446] [cursor=pointer]:
+                    - generic [ref=f3e447]: ●
+                    - text: Регламент заполнения приложения
+                - listitem [ref=f3e448]:
+                  - button "● Регламент домашних заданий" [ref=f3e449] [cursor=pointer]:
+                    - generic [ref=f3e450]: ●
+                    - text: Регламент домашних заданий
+                - listitem [ref=f3e451]:
+                  - button "● Загрузить видео для педагогов по СРМ и приложению" [ref=f3e452] [cursor=pointer]:
+                    - generic [ref=f3e453]: ●
+                    - text: Загрузить видео для педагогов по СРМ и приложению
+            - generic [ref=f3e454]:
+              - paragraph [ref=f3e455]: Грамматический урок
+              - list [ref=f3e456]:
+                - listitem [ref=f3e457]:
+                  - button "● Регламент грамматического урока" [ref=f3e458] [cursor=pointer]:
+                    - generic [ref=f3e459]: ●
+                    - text: Регламент грамматического урока
+                - listitem [ref=f3e460]:
+                  - button "● Инструментарий Грамматика" [ref=f3e461] [cursor=pointer]:
+                    - generic [ref=f3e462]: ●
+                    - text: Инструментарий Грамматика
+                - listitem [ref=f3e463]:
+                  - button "● План грамматического урока" [ref=f3e464] [cursor=pointer]:
+                    - generic [ref=f3e465]: ●
+                    - text: План грамматического урока
+                - listitem [ref=f3e466]:
+                  - button "● НУЖНО добавить видео" [ref=f3e467] [cursor=pointer]:
+                    - generic [ref=f3e468]: ●
+                    - text: НУЖНО добавить видео
+                - listitem [ref=f3e469]:
+                  - button "● Чек-лист грамматического урока" [ref=f3e470] [cursor=pointer]:
+                    - generic [ref=f3e471]: ●
+                    - text: Чек-лист грамматического урока
+                - listitem [ref=f3e472]:
+                  - button "● Тестовое задание грамматический урок" [ref=f3e473] [cursor=pointer]:
+                    - generic [ref=f3e474]: ●
+                    - text: Тестовое задание грамматический урок
+                - listitem [ref=f3e475]:
+                  - button "● Домашнее задание грамматический урок" [ref=f3e476] [cursor=pointer]:
+                    - generic [ref=f3e477]: ●
+                    - text: Домашнее задание грамматический урок
+            - generic [ref=f3e478]:
+              - paragraph [ref=f3e479]: Receptive skills. Listening lesson
+              - list [ref=f3e480]:
+                - listitem [ref=f3e481]:
+                  - button "● Регламент урока по listening" [ref=f3e482] [cursor=pointer]:
+                    - generic [ref=f3e483]: ●
+                    - text: Регламент урока по listening
+                - listitem [ref=f3e484]:
+                  - button "● Структура урока по listening" [ref=f3e485] [cursor=pointer]:
+                    - generic [ref=f3e486]: ●
+                    - text: Структура урока по listening
+                - listitem [ref=f3e487]:
+                  - button "● Listening ideas" [ref=f3e488] [cursor=pointer]:
+                    - generic [ref=f3e489]: ●
+                    - text: Listening ideas
+                - listitem [ref=f3e490]:
+                  - button "● Procedure" [ref=f3e491] [cursor=pointer]:
+                    - generic [ref=f3e492]: ●
+                    - text: Procedure
+                - listitem [ref=f3e493]:
+                  - button "● Примеры заданий" [ref=f3e494] [cursor=pointer]:
+                    - generic [ref=f3e495]: ●
+                    - text: Примеры заданий
+                - listitem [ref=f3e496]:
+                  - button "● Советы" [ref=f3e497] [cursor=pointer]:
+                    - generic [ref=f3e498]: ●
+                    - text: Советы
+                - listitem [ref=f3e499]:
+                  - button "● План receptive skills. listening" [ref=f3e500] [cursor=pointer]:
+                    - generic [ref=f3e501]: ●
+                    - text: План receptive skills. listening
+                - listitem [ref=f3e502]:
+                  - button "● Чек-лист урока listening" [ref=f3e503] [cursor=pointer]:
+                    - generic [ref=f3e504]: ●
+                    - text: Чек-лист урока listening
+                - listitem [ref=f3e505]:
+                  - button "● Тестовое задание listening lesson" [ref=f3e506] [cursor=pointer]:
+                    - generic [ref=f3e507]: ●
+                    - text: Тестовое задание listening lesson
+                - listitem [ref=f3e508]:
+                  - button "● Домашнее задание урок Listening" [ref=f3e509] [cursor=pointer]:
+                    - generic [ref=f3e510]: ●
+                    - text: Домашнее задание урок Listening
+            - generic [ref=f3e511]:
+              - paragraph [ref=f3e512]: Receptive skills. Reading lesson
+              - list [ref=f3e513]:
+                - listitem [ref=f3e514]:
+                  - button "● Регламент урока Reading" [ref=f3e515] [cursor=pointer]:
+                    - generic [ref=f3e516]: ●
+                    - text: Регламент урока Reading
+                - listitem [ref=f3e517]:
+                  - button "● Структура урока" [ref=f3e518] [cursor=pointer]:
+                    - generic [ref=f3e519]: ●
+                    - text: Структура урока
+                - listitem [ref=f3e520]:
+                  - button "● Extensive reading activities" [ref=f3e521] [cursor=pointer]:
+                    - generic [ref=f3e522]: ●
+                    - text: Extensive reading activities
+                - listitem [ref=f3e523]:
+                  - button "● Варианты заданий по механическому чтению" [ref=f3e524] [cursor=pointer]:
+                    - generic [ref=f3e525]: ●
+                    - text: Варианты заданий по механическому чтению
+                - listitem [ref=f3e526]:
+                  - button "● Примеры заданий" [ref=f3e527] [cursor=pointer]:
+                    - generic [ref=f3e528]: ●
+                    - text: Примеры заданий
+                - listitem [ref=f3e529]:
+                  - button "● План урока reading" [ref=f3e530] [cursor=pointer]:
+                    - generic [ref=f3e531]: ●
+                    - text: План урока reading
+                - listitem [ref=f3e532]:
+                  - button "● Чек-лист урока reading" [ref=f3e533] [cursor=pointer]:
+                    - generic [ref=f3e534]: ●
+                    - text: Чек-лист урока reading
+                - listitem [ref=f3e535]:
+                  - button "● Тестовое задание урока reading" [ref=f3e536] [cursor=pointer]:
+                    - generic [ref=f3e537]: ●
+                    - text: Тестовое задание урока reading
+                - listitem [ref=f3e538]:
+                  - button "● Домашнее задание урока reading" [ref=f3e539] [cursor=pointer]:
+                    - generic [ref=f3e540]: ●
+                    - text: Домашнее задание урока reading
+            - generic [ref=f3e541]:
+              - paragraph [ref=f3e542]: Productive skills. Speaking lesson
+              - list [ref=f3e543]:
+                - listitem [ref=f3e544]:
+                  - button "● Регламент урока Speaking" [ref=f3e545] [cursor=pointer]:
+                    - generic [ref=f3e546]: ●
+                    - text: Регламент урока Speaking
+                - listitem [ref=f3e547]:
+                  - button "● Structure" [ref=f3e548] [cursor=pointer]:
+                    - generic [ref=f3e549]: ●
+                    - text: Structure
+                - listitem [ref=f3e550]:
+                  - button "● Before the lesson familiarise yourself with the" [ref=f3e551] [cursor=pointer]:
+                    - generic [ref=f3e552]: ●
+                    - text: Before the lesson familiarise yourself with the
+                - listitem [ref=f3e553]:
+                  - button "● Communicative activities" [ref=f3e554] [cursor=pointer]:
+                    - generic [ref=f3e555]: ●
+                    - text: Communicative activities
+                - listitem [ref=f3e556]:
+                  - button "● How to organise learners in speaking tasks" [ref=f3e557] [cursor=pointer]:
+                    - generic [ref=f3e558]: ●
+                    - text: How to organise learners in speaking tasks
+                - listitem [ref=f3e559]:
+                  - button "● Ideas for correction work after a fluency activity" [ref=f3e560] [cursor=pointer]:
+                    - generic [ref=f3e561]: ●
+                    - text: Ideas for correction work after a fluency activity
+                - listitem [ref=f3e562]:
+                  - button "● Role play, real play and simulation" [ref=f3e563] [cursor=pointer]:
+                    - generic [ref=f3e564]: ●
+                    - text: Role play, real play and simulation
+                - listitem [ref=f3e565]:
+                  - button "● Some common communicative activities" [ref=f3e566] [cursor=pointer]:
+                    - generic [ref=f3e567]: ●
+                    - text: Some common communicative activities
+                - listitem [ref=f3e568]:
+                  - button "● Ways to start a lively discussion" [ref=f3e569] [cursor=pointer]:
+                    - generic [ref=f3e570]: ●
+                    - text: Ways to start a lively discussion
+                - listitem [ref=f3e571]:
+                  - button "● План урока speaking" [ref=f3e572] [cursor=pointer]:
+                    - generic [ref=f3e573]: ●
+                    - text: План урока speaking
+                - listitem [ref=f3e574]:
+                  - button "● Чек-лист урока speaking" [ref=f3e575] [cursor=pointer]:
+                    - generic [ref=f3e576]: ●
+                    - text: Чек-лист урока speaking
+                - listitem [ref=f3e577]:
+                  - button "● Тестовое задание урока speaking" [ref=f3e578] [cursor=pointer]:
+                    - generic [ref=f3e579]: ●
+                    - text: Тестовое задание урока speaking
+                - listitem [ref=f3e580]:
+                  - button "● Домашнее задание speaking" [ref=f3e581] [cursor=pointer]:
+                    - generic [ref=f3e582]: ●
+                    - text: Домашнее задание speaking
+            - generic [ref=f3e583]:
+              - paragraph [ref=f3e584]: Productive skills. Writing lesson
+              - list [ref=f3e585]:
+                - listitem [ref=f3e586]:
+                  - button "● Регламент урока Writing" [ref=f3e587] [cursor=pointer]:
+                    - generic [ref=f3e588]: ●
+                    - text: Регламент урока Writing
+                - listitem [ref=f3e589]:
+                  - button "● Ideas for helping writing" [ref=f3e590] [cursor=pointer]:
+                    - generic [ref=f3e591]: ●
+                    - text: Ideas for helping writing
+                - listitem [ref=f3e592]:
+                  - button "● Variations on traditional teacher marking" [ref=f3e593] [cursor=pointer]:
+                    - generic [ref=f3e594]: ●
+                    - text: Variations on traditional teacher marking
+                - listitem [ref=f3e595]:
+                  - button "● План урока writing" [ref=f3e596] [cursor=pointer]:
+                    - generic [ref=f3e597]: ●
+                    - text: План урока writing
+                - listitem [ref=f3e598]:
+                  - button "● Чек-лист урока writing" [ref=f3e599] [cursor=pointer]:
+                    - generic [ref=f3e600]: ●
+                    - text: Чек-лист урока writing
+                - listitem [ref=f3e601]:
+                  - button "● Тестовое задание speaking" [ref=f3e602] [cursor=pointer]:
+                    - generic [ref=f3e603]: ●
+                    - text: Тестовое задание speaking
+                - listitem [ref=f3e604]:
+                  - button "● Домашнее задание writing" [ref=f3e605] [cursor=pointer]:
+                    - generic [ref=f3e606]: ●
+                    - text: Домашнее задание writing
+            - generic [ref=f3e607]:
+              - paragraph [ref=f3e608]: Онлайн-занятия
+              - list [ref=f3e609]:
+                - listitem [ref=f3e610]:
+                  - button "● Регламент проведения онлайн и гибридных занятий" [ref=f3e611] [cursor=pointer]:
+                    - generic [ref=f3e612]: ●
+                    - text: Регламент проведения онлайн и гибридных занятий
+                - listitem [ref=f3e613]:
+                  - button "● Чек-лист проведения онлайн и гибридных занятий" [ref=f3e614] [cursor=pointer]:
+                    - generic [ref=f3e615]: ●
+                    - text: Чек-лист проведения онлайн и гибридных занятий
+                - listitem [ref=f3e616]:
+                  - button "● Тестовое задание проведение онлайн и гибридных занятий" [ref=f3e617] [cursor=pointer]:
+                    - generic [ref=f3e618]: ●
+                    - text: Тестовое задание проведение онлайн и гибридных занятий
+                - listitem [ref=f3e619]:
+                  - button "● Домашнее задание проведение онлайн и гибридных занятий" [ref=f3e620] [cursor=pointer]:
+                    - generic [ref=f3e621]: ●
+                    - text: Домашнее задание проведение онлайн и гибридных занятий
+            - generic [ref=f3e622]:
+              - paragraph [ref=f3e623]: Правила поведения в ЧС
+              - list [ref=f3e624]:
+                - listitem [ref=f3e625]:
+                  - button "● Правила поведения в ЧС" [ref=f3e626] [cursor=pointer]:
+                    - generic [ref=f3e627]: ●
+                    - text: Правила поведения в ЧС
+            - generic [ref=f3e628]:
+              - paragraph [ref=f3e629]: Проведение диагностик
+              - list [ref=f3e630]:
+                - listitem [ref=f3e631]:
+                  - button "● Регламент проведения диагностики" [ref=f3e632] [cursor=pointer]:
+                    - generic [ref=f3e633]: ●
+                    - text: Регламент проведения диагностики
+                - listitem [ref=f3e634]:
+                  - button "● Инструкция по проведению диагностики" [ref=f3e635] [cursor=pointer]:
+                    - generic [ref=f3e636]: ●
+                    - text: Инструкция по проведению диагностики
+                - listitem [ref=f3e637]:
+                  - button "● Устный тест для малышей 1-4 класс (картинки)" [ref=f3e638] [cursor=pointer]:
+                    - generic [ref=f3e639]: ●
+                    - text: Устный тест для малышей 1-4 класс (картинки)
+                - listitem [ref=f3e640]:
+                  - button "● Устный тест для малышей (вопросы)" [ref=f3e641] [cursor=pointer]:
+                    - generic [ref=f3e642]: ●
+                    - text: Устный тест для малышей (вопросы)
+                - listitem [ref=f3e643]:
+                  - button "● Устный тест для подростков (вопросы)" [ref=f3e644] [cursor=pointer]:
+                    - generic [ref=f3e645]: ●
+                    - text: Устный тест для подростков (вопросы)
+                - listitem [ref=f3e646]:
+                  - button "● Письменный тест для подростков" [ref=f3e647] [cursor=pointer]:
+                    - generic [ref=f3e648]: ●
+                    - text: Письменный тест для подростков
+                - listitem [ref=f3e649]:
+                  - button "● Домашнее задание проведение диагностик" [ref=f3e650] [cursor=pointer]:
+                    - generic [ref=f3e651]: ●
+                    - text: Домашнее задание проведение диагностик
+            - generic [ref=f3e652]:
+              - paragraph [ref=f3e653]: Итоговое тестирование
+              - list
+          - generic [ref=f3e654]:
+            - article [ref=f3e655]:
+              - heading "Тестовое задание организация урока" [level=2] [ref=f3e724]
+              - paragraph [ref=f3e725]: Тест
+              - generic [ref=f3e726]:
+                - generic [ref=f3e728]:
+                  - paragraph [ref=f3e729]: Квиз
+                  - heading "Тестовое задание организация урока" [level=3] [ref=f3e730]
+                  - paragraph [ref=f3e731]: Для прохождения нужно 70%.
+                - generic [ref=f3e732]:
+                  - generic [ref=f3e733]:
+                    - generic [ref=f3e734]:
+                      - generic [ref=f3e735]:
+                        - paragraph [ref=f3e736]: Что означает соблюдение КТП?
+                        - paragraph [ref=f3e737]: 1 балл(ов)
+                      - generic [ref=f3e738]: Один ответ
+                    - generic [ref=f3e739]:
+                      - generic [ref=f3e740] [cursor=pointer]:
+                        - radio "а) Педагог может пропускать части плана, если дети устали" [ref=f3e741]
+                        - generic [ref=f3e742]: а) Педагог может пропускать части плана, если дети устали
+                      - generic [ref=f3e743] [cursor=pointer]:
+                        - radio "б) Педагог следует календарно-тематическому планированию, не отстает, не спешит и не игнорирует компоненты плана" [ref=f3e744]
+                        - generic [ref=f3e745]: б) Педагог следует календарно-тематическому планированию, не отстает, не спешит и не игнорирует компоненты плана
+                      - generic [ref=f3e746] [cursor=pointer]:
+                        - radio "в) КТП нужно только для отчетности, на уроке им можно не пользоваться" [ref=f3e747]
+                        - generic [ref=f3e748]: в) КТП нужно только для отчетности, на уроке им можно не пользоваться
+                  - generic [ref=f3e749]:
+                    - generic [ref=f3e750]:
+                      - generic [ref=f3e751]:
+                        - paragraph [ref=f3e752]: Как правильно использовать ТСО на уроке?
+                        - paragraph [ref=f3e753]: 1 балл(ов)
+                      - generic [ref=f3e754]: Один ответ
+                    - generic [ref=f3e755]:
+                      - generic [ref=f3e756] [cursor=pointer]:
+                        - radio "а) Ставить экран перед собой, чтобы было удобнее управлять уроком" [ref=f3e757]
+                        - generic [ref=f3e758]: а) Ставить экран перед собой, чтобы было удобнее управлять уроком
+                      - generic [ref=f3e759] [cursor=pointer]:
+                        - radio "б) Использовать ТСО только тогда, когда это действительно нужно, не создавать барьер между собой и детьми" [ref=f3e760]
+                        - generic [ref=f3e761]: б) Использовать ТСО только тогда, когда это действительно нужно, не создавать барьер между собой и детьми
+                      - generic [ref=f3e762] [cursor=pointer]:
+                        - radio "в) Просить детей подходить к экрану каждый раз при выполнении задания" [ref=f3e763]
+                        - generic [ref=f3e764]: в) Просить детей подходить к экрану каждый раз при выполнении задания
+                  - generic [ref=f3e765]:
+                    - generic [ref=f3e766]:
+                      - generic [ref=f3e767]:
+                        - paragraph [ref=f3e768]: Что из перечисленного относится к требованиям безопасности на уроке?
+                        - paragraph [ref=f3e769]: 1 балл(ов)
+                      - generic [ref=f3e770]: Один ответ
+                    - generic [ref=f3e771]:
+                      - generic [ref=f3e772] [cursor=pointer]:
+                        - radio "а) Только отсутствие травмоопасных предметов" [ref=f3e773]
+                        - generic [ref=f3e774]: а) Только отсутствие травмоопасных предметов
+                      - generic [ref=f3e775] [cursor=pointer]:
+                        - radio "б) Только наличие сменной обуви" [ref=f3e776]
+                        - generic [ref=f3e777]: б) Только наличие сменной обуви
+                      - generic [ref=f3e778] [cursor=pointer]:
+                        - radio "в) И физическая, и эмоциональная безопасность детей на уроке" [ref=f3e779]
+                        - generic [ref=f3e780]: в) И физическая, и эмоциональная безопасность детей на уроке
+                  - generic [ref=f3e781]:
+                    - generic [ref=f3e782]:
+                      - generic [ref=f3e783]:
+                        - paragraph [ref=f3e784]: Что важно в структуре урока независимо от методики (PPP, TTT, GD, CLIL)?
+                        - paragraph [ref=f3e785]: 1 балл(ов)
+                      - generic [ref=f3e786]: Один ответ
+                    - generic [ref=f3e787]:
+                      - generic [ref=f3e788] [cursor=pointer]:
+                        - radio "а) Чтобы было много активностей" [ref=f3e789]
+                        - generic [ref=f3e790]: а) Чтобы было много активностей
+                      - generic [ref=f3e791] [cursor=pointer]:
+                        - radio "б) Чтобы урок был ярким, даже если задания не связаны между собой" [ref=f3e792]
+                        - generic [ref=f3e793]: б) Чтобы урок был ярким, даже если задания не связаны между собой
+                      - generic [ref=f3e794] [cursor=pointer]:
+                        - radio "в) Чтобы была понятна цель урока, логика, последовательность и связь между заданиями" [ref=f3e795]
+                        - generic [ref=f3e796]: в) Чтобы была понятна цель урока, логика, последовательность и связь между заданиями
+                  - generic [ref=f3e797]:
+                    - generic [ref=f3e798]:
+                      - generic [ref=f3e799]:
+                        - paragraph [ref=f3e800]: Что должен сделать педагог после урока?
+                        - paragraph [ref=f3e801]: 1 балл(ов)
+                      - generic [ref=f3e802]: Один ответ
+                    - generic [ref=f3e803]:
+                      - generic [ref=f3e804] [cursor=pointer]:
+                        - radio "а) Сразу уйти, если следующий урок не у него" [ref=f3e805]
+                        - generic [ref=f3e806]: а) Сразу уйти, если следующий урок не у него
+                      - generic [ref=f3e807] [cursor=pointer]:
+                        - radio "б) Проводить детей в зону ожидания и привести кабинет в порядок между занятиями" [ref=f3e808]
+                        - generic [ref=f3e809]: б) Проводить детей в зону ожидания и привести кабинет в порядок между занятиями
+                      - generic [ref=f3e810] [cursor=pointer]:
+                        - radio "в) Оставить материалы на партах для следующей группы" [ref=f3e811]
+                        - generic [ref=f3e812]: в) Оставить материалы на партах для следующей группы
+                - button "Пройти тест" [ref=f3e814] [cursor=pointer]
+              - button "Отметить пройденным" [ref=f3e673] [cursor=pointer]
+            - generic [ref=f3e674]:
+              - generic [ref=f3e676]:
+                - heading "Отзывы" [level=3] [ref=f3e677]
+                - generic [ref=f3e678]:
+                  - img "Средняя оценка" [ref=f3e679]:
+                    - generic [ref=f3e680]: ★
+                    - generic [ref=f3e681]: ★
+                    - generic [ref=f3e682]: ★
+                    - generic [ref=f3e683]: ★
+                    - generic [ref=f3e684]: ★
+                  - generic [ref=f3e685]: "5.0"
+                  - generic [ref=f3e686]: · 1 отзыв(ов)
+              - article [ref=f3e688]:
+                - generic [ref=f3e689]:
+                  - generic [ref=f3e690]:
+                    - paragraph [ref=f3e691]: Саляхова Алина
+                    - paragraph [ref=f3e692]: 2 июля 2026 г.
+                  - img "Оценка" [ref=f3e693]:
+                    - generic [ref=f3e694]: ★
+                    - generic [ref=f3e695]: ★
+                    - generic [ref=f3e696]: ★
+                    - generic [ref=f3e697]: ★
+                    - generic [ref=f3e698]: ★
+              - generic [ref=f3e699]:
+                - generic [ref=f3e700]:
+                  - paragraph [ref=f3e701]: Ваш отзыв
+                  - radiogroup "Оценка" [ref=f3e703]:
+                    - button "Оценка 1" [pressed] [ref=f3e704] [cursor=pointer]: ★
+                    - button "Оценка 2" [pressed] [ref=f3e705] [cursor=pointer]: ★
+                    - button "Оценка 3" [pressed] [ref=f3e706] [cursor=pointer]: ★
+                    - button "Оценка 4" [pressed] [ref=f3e707] [cursor=pointer]: ★
+                    - button "Оценка 5" [pressed] [ref=f3e708] [cursor=pointer]: ★
+                - generic [ref=f3e709]:
+                  - text: Комментарий
+                  - textbox "Комментарий" [ref=f3e710]:
+                    - /placeholder: Поделитесь впечатлениями о курсе…
+                - button "Сохранить отзыв" [ref=f3e712] [cursor=pointer]
+              - generic [ref=f3e713]:
+                - generic [ref=f3e715]:
+                  - heading "Обсуждение" [level=3] [ref=f3e716]
+                  - paragraph [ref=f3e717]: Задавайте вопросы по уроку и отвечайте друг другу.
+                - paragraph [ref=f3e718]: Пока нет обсуждений.
+                - generic [ref=f3e719]:
+                  - generic [ref=f3e720]:
+                    - text: Сообщение
+                    - textbox "Сообщение" [ref=f3e721]:
+                      - /placeholder: Напишите сообщение…
+                  - button "Отправить" [ref=f3e723] [cursor=pointer]
+  - alert [ref=f3e92]

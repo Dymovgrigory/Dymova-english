@@ -1,0 +1,85 @@
+- generic [ref=e11]:
+  - complementary [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]: F
+      - text: Фоксинбург
+    - navigation [ref=e15]:
+      - button "Дашборд" [ref=e16] [cursor=pointer]
+      - button "Входящие" [ref=e21] [cursor=pointer]
+      - button "Заявки" [ref=e24] [cursor=pointer]
+      - button "Клиенты" [ref=e27] [cursor=pointer]
+      - button "Воронка" [ref=e31] [cursor=pointer]
+      - button "Рассылки" [ref=e34] [cursor=pointer]
+      - button "Вопросы" [ref=e38] [cursor=pointer]
+      - button "Аналитика" [ref=e42] [cursor=pointer]
+      - button "База знаний" [ref=e45] [cursor=pointer]
+      - button "AI" [ref=e49] [cursor=pointer]
+      - button "Ошибки" [ref=e53] [cursor=pointer]
+      - button "Пользователи" [ref=e56] [cursor=pointer]
+      - button "Настройки" [ref=e61] [cursor=pointer]
+    - button "Выйти" [ref=e66] [cursor=pointer]
+  - generic [ref=e69]:
+    - banner [ref=e70]:
+      - 'searchbox "Поиск: клиенты и сообщения (Ctrl+K)" [ref=e72]'
+      - generic "Состояние каналов" [ref=e73]:
+        - generic [ref=e74]: БД
+        - generic [ref=e76]: MAX
+        - generic [ref=e78]: TG
+      - generic [ref=e80]: admin · super_admin
+    - generic [ref=e81]:
+      - generic [ref=e82]:
+        - generic [ref=e83]:
+          - generic [ref=e84]: "2"
+          - generic [ref=e85]: "Новые клиенты сегодня (7д: 2, 30д: 2)"
+        - generic [ref=e86]:
+          - generic [ref=e87]: "2"
+          - generic [ref=e88]: Активные диалоги
+        - generic [ref=e89]:
+          - generic [ref=e90]: "2"
+          - generic [ref=e91]: Непрочитанные
+        - generic [ref=e92]:
+          - generic [ref=e93]: 5 / 4
+          - generic [ref=e94]: Сообщения in/out сегодня
+        - generic [ref=e95]:
+          - generic [ref=e96]: "1"
+          - generic [ref=e97]: Передано менеджеру сегодня
+        - generic [ref=e98]:
+          - generic [ref=e99]: "0"
+          - generic [ref=e100]: Без ответа сегодня
+      - generic [ref=e101]:
+        - generic [ref=e102]:
+          - heading "Сообщения сегодня по каналам" [level=3] [ref=e103]
+          - generic [ref=e104]:
+            - paragraph [ref=e105]:
+              - generic [ref=e106]: Telegram
+              - text: 6 сообщений
+            - paragraph [ref=e107]:
+              - generic [ref=e108]: Веб
+              - text: 3 сообщений
+        - generic [ref=e109]:
+          - heading "Последние обращения" [level=3] [ref=e110]
+          - generic [ref=e111]:
+            - button "ВК Веб Клиент 16:40 Тест идемпотентности Веб Менеджер Новый 1" [ref=e112] [cursor=pointer]:
+              - generic [ref=e113]: ВК
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: Веб Клиент
+                  - generic [ref=e117]: 16:40
+                - text: Тест идемпотентности
+                - generic [ref=e118]:
+                  - generic [ref=e119]: Веб
+                  - generic [ref=e120]: Менеджер
+                  - generic [ref=e121]: Новый
+                  - generic [ref=e122]: "1"
+            - button "TE 89618282094 16:38 Здравствуйте! Я администратор. Telegram Менеджер Новый 4" [ref=e123] [cursor=pointer]:
+              - generic [ref=e124]: TE
+              - generic [ref=e125]:
+                - generic [ref=e126]:
+                  - generic [ref=e127]: "89618282094"
+                  - generic [ref=e128]: 16:38
+                - text: Здравствуйте! Я администратор.
+                - generic [ref=e129]:
+                  - generic [ref=e130]: Telegram
+                  - generic [ref=e131]: Менеджер
+                  - generic [ref=e132]: Новый
+                  - generic [ref=e133]: "4"

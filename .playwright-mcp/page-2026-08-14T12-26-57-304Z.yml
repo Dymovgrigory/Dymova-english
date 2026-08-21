@@ -1,0 +1,40 @@
+- generic [active] [ref=f13e1]:
+  - banner [ref=f13e2]:
+    - generic [ref=f13e3]:
+      - heading "Фоксинбург" [level=1] [ref=f13e4]
+      - paragraph [ref=f13e5]: Английский не для школы, а для жизни
+  - generic [ref=f13e6]:
+    - generic [ref=f13e7]:
+      - button "Подобрать курс Два вопроса — и подберём программу" [ref=f13e8] [cursor=pointer]:
+        - generic [ref=f13e13]:
+          - generic [ref=f13e14]: Подобрать курс
+          - generic [ref=f13e15]: Два вопроса — и подберём программу
+      - button "Записаться Бесплатная диагностика и пробный урок" [ref=f13e16] [cursor=pointer]:
+        - generic [ref=f13e21]:
+          - generic [ref=f13e22]: Записаться
+          - generic [ref=f13e23]: Бесплатная диагностика и пробный урок
+      - button "Помощь с домашкой Фото задания — объясним бесплатно" [ref=f13e24] [cursor=pointer]:
+        - generic [ref=f13e30]:
+          - generic [ref=f13e31]: Помощь с домашкой
+          - generic [ref=f13e32]: Фото задания — объясним бесплатно
+      - button "Программы и цены Курсы, форматы, стоимость" [ref=f13e33] [cursor=pointer]:
+        - generic [ref=f13e38]:
+          - generic [ref=f13e39]: Программы и цены
+          - generic [ref=f13e40]: Курсы, форматы, стоимость
+      - button "Филиалы Адреса, телефоны, режим работы" [ref=f13e41] [cursor=pointer]:
+        - generic [ref=f13e46]:
+          - generic [ref=f13e47]: Филиалы
+          - generic [ref=f13e48]: Адреса, телефоны, режим работы
+      - button "Кабинет Расписание, домашка, оплаты" [ref=f13e49] [cursor=pointer]:
+        - generic [ref=f13e54]:
+          - generic [ref=f13e55]: Кабинет
+          - generic [ref=f13e56]: Расписание, домашка, оплаты
+    - navigation [ref=f13e57]:
+      - link "Чат с Фокси" [ref=f13e58] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+      - link "ВКонтакте" [ref=f13e59] [cursor=pointer]:
+        - /url: https://vk.ru/foxyfoxclub
+      - link "Telegram" [ref=f13e60] [cursor=pointer]:
+        - /url: https://t.me/foxinburg
+      - link "Мы на картах" [ref=f13e61] [cursor=pointer]:
+        - /url: https://yandex.ru/maps/org/foxinburg/162408588499/

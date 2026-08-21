@@ -1,0 +1,3 @@
+[    1058ms] [WARNING] [WebApp] Событие не отправлено - транспорт недоступен: WebAppReady @ https://st.max.ru/js/max-web-app.js:419
+[    1058ms] [LOG] WebApp готово к работе @ https://st.max.ru/js/max-web-app.js:571
+[    4222ms] [WARNING] The resource https://bot.dymova-english.ru/tg/assets/foxi.webp was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://bot.dymova-english.ru/app/?final=1:0

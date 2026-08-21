@@ -1,0 +1,207 @@
+- generic [active] [ref=f49e1]:
+  - generic [ref=f49e46]:
+    - complementary [ref=f49e47]:
+      - link "Foxinburg Foxinburg" [ref=f49e49] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Foxinburg" [ref=f49e50]
+        - generic [ref=f49e51]: Foxinburg
+      - navigation "Primary navigation" [ref=f49e52]:
+        - generic [ref=f49e53]:
+          - generic [ref=f49e55]:
+            - link "Dashboard" [ref=f49e56] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Guide" [ref=f49e64] [cursor=pointer]:
+              - /url: /help
+            - link "Learn" [ref=f49e69] [cursor=pointer]:
+              - /url: /learn
+            - link "Catalog" [ref=f49e73] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Paths" [ref=f49e77] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "Knowledge" [ref=f49e83] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Certificates" [ref=f49e88] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Leaderboard" [ref=f49e93] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "My Badges" [ref=f49e101] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Calendar" [ref=f49e105] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Onboarding" [ref=f49e109] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Observations" [ref=f49e114] [cursor=pointer]:
+              - /url: /learn/training
+            - link "My Development Plan" [ref=f49e117] [cursor=pointer]:
+              - /url: /learn/development
+            - link "360° Assessment" [ref=f49e122] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "News" [ref=f49e128] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f49e135]:
+            - link "My Team" [ref=f49e136] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Students" [ref=f49e143] [cursor=pointer]:
+              - /url: /students
+            - link "Teachers" [ref=f49e148] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f49e153]:
+            - paragraph [ref=f49e155]: Studio
+            - generic [ref=f49e156]:
+              - link "Studio" [ref=f49e157] [cursor=pointer]:
+                - /url: /studio
+              - link "Studio Observations" [ref=f49e162] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Paths" [ref=f49e165] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Media Library" [ref=f49e171] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f49e178]:
+            - paragraph [ref=f49e180]: Admin
+            - generic [ref=f49e181]:
+              - link "Admin" [ref=f49e182] [cursor=pointer]:
+                - /url: /admin
+              - link "Analytics" [ref=f49e187] [cursor=pointer]:
+                - /url: /analytics
+              - link "Analytics · charts" [ref=f49e192] [cursor=pointer]:
+                - /url: /analytics
+              - link "Training Requests" [ref=f49e197] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f49e201] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f49e206] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Departments" [ref=f49e211] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Badges" [ref=f49e216] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Site" [ref=f49e220] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Pages" [ref=f49e225] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Events" [ref=f49e230] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Onboarding Programs" [ref=f49e234] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Observation Checklists" [ref=f49e239] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Development Plans" [ref=f49e244] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Competencies" [ref=f49e249] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Assessment Sessions" [ref=f49e255] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Collapse sidebar" [ref=f49e262] [cursor=pointer]
+    - banner [ref=f49e267]:
+      - paragraph [ref=f49e269]: Dashboard
+      - generic [ref=f49e270]:
+        - button "Search and commands (Ctrl K)" [ref=f49e271] [cursor=pointer]
+        - button "Notifications" [ref=f49e273] [cursor=pointer]
+        - combobox "Language" [ref=f49e276]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=f49e277] [cursor=pointer]
+        - button "User menu" [ref=f49e278] [cursor=pointer]:
+          - generic [ref=f49e279]: P
+    - main [ref=f49e281]:
+      - generic [ref=f49e283]:
+        - generic [ref=f49e284]:
+          - generic [ref=f49e285]:
+            - heading "Good afternoon, Phase12b Owner" [level=1] [ref=f49e286]
+            - paragraph [ref=f49e287]: Your role is OWNER. You belong to the organization "Phase12b Org".
+          - button "Customize widgets" [ref=f49e288] [cursor=pointer]
+        - navigation "Quick Actions" [ref=f49e292]:
+          - link "Studio" [ref=f49e293] [cursor=pointer]:
+            - /url: /studio
+          - link "Analytics" [ref=f49e294] [cursor=pointer]:
+            - /url: /analytics
+          - link "Training Requests" [ref=f49e295] [cursor=pointer]:
+            - /url: /admin/training-requests
+          - link "Groups" [ref=f49e296] [cursor=pointer]:
+            - /url: /admin/groups
+        - generic [ref=f49e297]:
+          - generic [ref=f49e300]:
+            - generic [ref=f49e301]:
+              - generic [ref=f49e302]: Learning
+              - link "Analytics" [ref=f49e309] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f49e311]:
+              - generic [ref=f49e312]:
+                - paragraph [ref=f49e313]: Enrollments
+                - paragraph [ref=f49e314]: "0"
+              - generic [ref=f49e315]:
+                - paragraph [ref=f49e316]: Learners
+                - paragraph [ref=f49e317]: "0"
+              - generic [ref=f49e318]:
+                - paragraph [ref=f49e319]: Average progress
+                - paragraph [ref=f49e320]: 0%
+              - generic [ref=f49e321]:
+                - paragraph [ref=f49e322]: Certificates
+                - paragraph [ref=f49e323]: "0"
+          - generic [ref=f49e326]:
+            - generic [ref=f49e327]:
+              - generic [ref=f49e328]: Active students
+              - link "Analytics" [ref=f49e337] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f49e339]:
+              - paragraph [ref=f49e340]:
+                - text: "0"
+                - generic [ref=f49e341]: / 1 · 0%
+              - paragraph [ref=f49e342]: Active students in the period
+          - generic [ref=f49e345]:
+            - generic [ref=f49e346]:
+              - generic [ref=f49e347]: Revenue
+              - link "Analytics" [ref=f49e354] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f49e356]:
+              - paragraph [ref=f49e357]: 0 ₽
+              - paragraph [ref=f49e358]: No data for the period
+          - generic [ref=f49e361]:
+            - generic [ref=f49e362]:
+              - generic [ref=f49e363]: "Courses: enrollment & progress"
+              - link "Analytics" [ref=f49e369] [cursor=pointer]:
+                - /url: /analytics
+            - paragraph [ref=f49e371]: No courses yet
+          - generic [ref=f49e374]:
+            - generic [ref=f49e375]:
+              - generic [ref=f49e376]: Homework
+              - link "Analytics" [ref=f49e384] [cursor=pointer]:
+                - /url: /analytics
+            - generic [ref=f49e386]:
+              - generic [ref=f49e387]:
+                - generic [ref=f49e388]:
+                  - paragraph [ref=f49e389]: Pending grading
+                  - paragraph [ref=f49e390]: "0"
+                - generic [ref=f49e391]:
+                  - paragraph [ref=f49e392]: Late submissions
+                  - paragraph [ref=f49e393]: "0"
+              - paragraph [ref=f49e394]: All submissions graded
+          - generic [ref=f49e397]:
+            - generic [ref=f49e398]:
+              - generic [ref=f49e399]: Team activity
+              - link "View all" [ref=f49e407] [cursor=pointer]:
+                - /url: /supervisor
+            - generic [ref=f49e410]:
+              - generic [ref=f49e411]:
+                - paragraph [ref=f49e412]: Members
+                - paragraph [ref=f49e413]: "0"
+              - generic [ref=f49e414]:
+                - paragraph [ref=f49e415]: Avg Progress
+                - paragraph [ref=f49e416]: 0%
+              - generic [ref=f49e417]:
+                - paragraph [ref=f49e418]: Completions
+                - paragraph [ref=f49e419]: "0"
+              - generic [ref=f49e420]:
+                - paragraph [ref=f49e421]: Overdue
+                - paragraph [ref=f49e422]: "0"
+        - status [ref=f49e423]
+  - generic [ref=f49e41] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f49e42]
+    - generic [ref=f49e424]:
+      - button "Open issues overlay" [ref=f49e425]:
+        - generic [ref=f49e426]:
+          - generic [ref=f49e427]: "0"
+          - generic [ref=f49e428]: "1"
+        - generic [ref=f49e429]: Issue
+      - button "Collapse issues badge" [ref=f49e430]
+  - alert [ref=f49e36]

@@ -1,0 +1,215 @@
+- generic [active]:
+  - generic:
+    - complementary:
+      - generic:
+        - link:
+          - /url: /dashboard
+          - generic: Фоксинбург
+      - navigation:
+        - generic:
+          - generic:
+            - generic:
+              - link:
+                - /url: /dashboard
+                - generic: Главная
+              - link:
+                - /url: /help
+                - generic: Руководство
+              - link:
+                - /url: /learn
+                - generic: Обучение
+              - link:
+                - /url: /learn/catalog
+                - generic: Каталог
+              - link:
+                - /url: /learn/paths
+                - generic: Траектории
+              - link:
+                - /url: /knowledge
+                - generic: База знаний
+              - link:
+                - /url: /learn/certificates
+                - generic: Сертификаты
+              - link:
+                - /url: /learn/leaderboard
+                - generic: Лидерборд
+              - link:
+                - /url: /learn/badges
+                - generic: Мои бейджи
+              - link:
+                - /url: /learn/calendar
+                - generic: Календарь
+              - link:
+                - /url: /learn/onboarding
+                - generic: Онбординг
+              - link:
+                - /url: /learn/training
+                - generic: Наблюдения
+              - link:
+                - /url: /learn/development
+                - generic: Мой план развития
+              - link:
+                - /url: /learn/assessments
+                - generic: Оценка 360°
+              - link:
+                - /url: /news
+                - generic: Новости
+          - generic:
+            - generic:
+              - link:
+                - /url: /supervisor
+                - generic: Моя команда
+              - link:
+                - /url: /students
+                - generic: Ученики
+              - link:
+                - /url: /teachers
+                - generic: Преподаватели
+          - generic:
+            - paragraph: Студия
+            - generic:
+              - link:
+                - /url: /studio
+                - generic: Студия
+              - link:
+                - /url: /studio/training
+                - generic: Наблюдения в студии
+              - link:
+                - /url: /studio/paths
+                - generic: Траектории
+              - link:
+                - /url: /media
+                - generic: Медиатека
+          - generic:
+            - paragraph: Админка
+            - generic:
+              - link:
+                - /url: /admin
+                - generic: Админка
+              - link:
+                - /url: /admin/analytics
+                - generic: Аналитика
+              - link:
+                - /url: /admin/training-requests
+                - generic: Заявки на обучение
+              - link:
+                - /url: /admin/sso-connections
+                - generic: SSO
+              - link:
+                - /url: /admin/lrs
+                - generic: LRS
+              - link:
+                - /url: /admin/departments
+                - generic: Департаменты
+              - link:
+                - /url: /admin/badges
+                - generic: Бейджи
+              - link:
+                - /url: /admin/site
+                - generic: Сайт
+              - link:
+                - /url: /admin/pages
+                - generic: Страницы
+              - link:
+                - /url: /admin/events
+                - generic: Мероприятия
+              - link:
+                - /url: /admin/onboarding
+                - generic: Программы онбординга
+              - link:
+                - /url: /admin/observation-checklists
+                - generic: Чек-листы наблюдений
+              - link:
+                - /url: /admin/development
+                - generic: Планы развития
+              - link:
+                - /url: /admin/competencies
+                - generic: Компетенции
+              - link:
+                - /url: /admin/assessments
+                - generic: Оценочные сессии
+      - generic:
+        - button:
+          - generic: Свернуть меню
+    - banner:
+      - generic:
+        - button
+        - generic:
+          - button
+        - combobox
+        - button
+        - button:
+          - generic: O
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Медиатека
+              - paragraph: "Файлы организации: загрузка, папки, теги, использование"
+            - generic:
+              - generic:
+                - button
+                - button
+              - button: Загрузить
+          - generic:
+            - combobox:
+              - generic: Все типы
+            - combobox:
+              - generic: Все папки
+          - generic:
+            - generic:
+              - textbox:
+                - /placeholder: Поиск по имени файла…
+            - generic:
+              - button:
+                - paragraph: guide.txt
+                - paragraph: 10 Б
+              - button:
+                - paragraph: blue.png
+                - paragraph: 74 Б
+              - button:
+                - paragraph: red-hero.png
+                - paragraph: 74 Б
+            - generic:
+              - generic: "Всего: 3"
+              - generic:
+                - button [disabled]: Назад
+                - generic: Стр. 1 из 1
+                - button [disabled]: Вперёд
+  - generic:
+    - button: Сохранено
+  - button "Open Next.js Dev Tools" [ref=f13e270] [cursor=pointer]
+  - alert
+  - dialog [ref=f13e298]:
+    - generic [ref=f13e299]:
+      - heading "red.png" [level=2] [ref=f13e300]
+      - paragraph [ref=f13e301]: image/png · 74 Б · 08.08.2026, 20:02:46
+    - img "Красный баннер" [ref=f13e303]
+    - generic [ref=f13e305]:
+      - paragraph [ref=f13e306]: "Используется в 2 местах:"
+      - paragraph [ref=f13e307]: "Вложение урока: Lesson with img"
+      - paragraph [ref=f13e308]: "В контенте урока: Lesson with img"
+    - generic [ref=f13e309]:
+      - generic [ref=f13e310]:
+        - text: Имя файла
+        - textbox "Имя файла" [ref=f13e311]: red-hero.png
+      - generic [ref=f13e312]:
+        - text: Папка
+        - textbox "Папка" [ref=f13e313]: banners
+      - generic [ref=f13e314]:
+        - text: Теги
+        - textbox "Теги" [ref=f13e315]:
+          - /placeholder: через запятую
+          - text: hero, promo
+      - generic [ref=f13e316]:
+        - text: Alt-текст
+        - textbox "Alt-текст" [ref=f13e317]: Красный баннер
+      - generic [ref=f13e318]:
+        - button "Сохранить" [ref=f13e319] [cursor=pointer]
+        - button "Копировать URL" [ref=f13e320] [cursor=pointer]
+        - button "Удалить" [ref=f13e321] [cursor=pointer]
+        - generic [ref=f13e322]:
+          - generic [ref=f13e323]: hero
+          - generic [ref=f13e324]: promo
+    - button "Close" [ref=f13e325] [cursor=pointer]

@@ -1,0 +1,124 @@
+- generic [active] [ref=f36e1]:
+  - main [ref=f36e2]:
+    - generic [ref=f36e3]:
+      - generic [ref=f36e7]:
+        - paragraph [ref=f36e8]: Языковая школа · Долгопрудный
+        - heading "Фоксинбург" [level=1] [ref=f36e9]
+        - paragraph [ref=f36e10]:
+          - generic [ref=f36e11]: Английский
+          - generic [ref=f36e12]: не
+          - generic [ref=f36e13]: для
+          - generic [ref=f36e14]: школы,
+          - generic [ref=f36e15]: а
+          - generic [ref=f36e16]: для
+          - generic [ref=f36e17]: жизни
+      - button "Узнать уровень за минуту Пять заданий — и сразу видно, с чего начинать" [ref=f36e18] [cursor=pointer]:
+        - generic [ref=f36e20]:
+          - generic [ref=f36e21]: Узнать уровень за минуту
+          - generic [ref=f36e22]: Пять заданий — и сразу видно, с чего начинать
+      - navigation "Быстрые действия" [ref=f36e26]:
+        - button "Подобрать курс Три вопроса — и готово" [ref=f36e27] [cursor=pointer]:
+          - generic [ref=f36e32]: Подобрать курс
+          - generic [ref=f36e33]: Три вопроса — и готово
+        - button "Записаться" [ref=f36e34] [cursor=pointer]
+        - button "Домашка бесплатно Разбор школьного задания по фото" [ref=f36e41] [cursor=pointer]:
+          - generic [ref=f36e47]: Домашка бесплатно
+          - generic [ref=f36e48]: Разбор школьного задания по фото
+      - generic [ref=f36e50]:
+        - generic [ref=f36e51]: Сейчас в школе
+        - paragraph [ref=f36e52]: Бесплатная диагностика знаний до начала обучения.
+      - region [ref=f36e53]:
+        - heading "Почему Фоксинбург" [level=2] [ref=f36e54]
+        - generic [ref=f36e55]:
+          - article [ref=f36e56]:
+            - heading "Образовательная лицензия" [level=3] [ref=f36e57]
+            - paragraph [ref=f36e58]: Работаем официально, на основании государственной образовательной лицензии.
+          - article [ref=f36e59]:
+            - heading "Аккредитованный центр Hippo" [level=3] [ref=f36e60]
+            - paragraph [ref=f36e61]: Официальная площадка (venue) престижной международной олимпиады по английскому Hippo.
+          - article [ref=f36e62]:
+            - heading "Мини-группы до 7 человек" [level=3] [ref=f36e63]
+            - paragraph [ref=f36e64]: Внимание каждому ученику и живая языковая среда без перехода на русский.
+          - article [ref=f36e65]:
+            - heading "Команда профессионалов" [level=3] [ref=f36e66]
+            - paragraph [ref=f36e67]: Педагоги развиваются по нашей методике в темпе «три года за один».
+      - region [ref=f36e68]:
+        - heading "Как начать" [level=2] [ref=f36e69]
+        - list [ref=f36e70]:
+          - listitem [ref=f36e71]:
+            - generic [ref=f36e72]: "1"
+            - generic [ref=f36e73]:
+              - heading "Бесплатная диагностика знаний" [level=3] [ref=f36e74]
+              - paragraph [ref=f36e75]: Методист проверит текущий уровень и составит индивидуальный план обучения.
+          - listitem [ref=f36e76]:
+            - generic [ref=f36e77]: "2"
+            - generic [ref=f36e78]:
+              - heading "Подбор группы" [level=3] [ref=f36e79]
+              - paragraph [ref=f36e80]: Вместе с администратором подберём подходящую группу по возрасту и уровню.
+          - listitem [ref=f36e81]:
+            - generic [ref=f36e82]: "3"
+            - generic [ref=f36e83]:
+              - heading "Пробный урок" [level=3] [ref=f36e84]
+              - paragraph [ref=f36e85]: Необязательный шаг — ребёнок знакомится с педагогом и форматом занятий.
+          - listitem [ref=f36e86]:
+            - generic [ref=f36e87]: "4"
+            - generic [ref=f36e88]:
+              - heading "Старт занятий" [level=3] [ref=f36e89]
+              - paragraph [ref=f36e90]: Регулярные занятия, отчёты родителям и видимый прогресс.
+      - region [ref=f36e91]:
+        - heading "Частые вопросы" [level=2] [ref=f36e92]
+        - generic [ref=f36e93]:
+          - generic [ref=f36e94]:
+            - button "До скольки и когда вы работаете? Какой режим работы?" [ref=f36e95] [cursor=pointer]
+            - paragraph: Ежедневно с 9:00 до 21:00, без выходных. Занятия идут утром, днём и вечером — подберём удобное время.
+          - generic [ref=f36e99]:
+            - button "Вы давно работаете?" [ref=f36e100] [cursor=pointer]
+            - paragraph: Работаем с 2020 года — больше 5 лет опыта в обучении детей. Официальная образовательная лицензия, аккредитованный центр международной олимпиады Hippo, рейтинг 5.0 на Яндекс.Картах.
+          - generic [ref=f36e104]:
+            - button "Кто руководит школой? Кто руководители?" [ref=f36e105] [cursor=pointer]
+            - paragraph: Школой руководят Дымова Вероника Александровна и Дымов Григорий Юрьевич. Методист и контроль качества — Коваленко Елизавета. Администраторы — Зверева Ираида и Джанузакова Салтанат.
+          - generic [ref=f36e109]:
+            - button "У вас есть носитель языка?" [ref=f36e110] [cursor=pointer]
+            - paragraph: Да! В офлайн-формат входит разговорный клуб с носителем языка — дети применяют английский в живом общении.
+          - generic [ref=f36e114]:
+            - button "Можно ли платить помесячно, а не за год?" [ref=f36e115] [cursor=pointer]
+            - paragraph: "Да, конечно. Английский в мини-группе: 9 000 ₽/мес при ежемесячной оплате или 8 200 ₽/мес при оплате за учебный год. Малыши 2–3 года: 6 550 ₽/мес или 6 050 ₽/мес за год. Есть рассрочка и оплата маткапиталом."
+      - region [ref=f36e119]:
+        - heading "Где мы" [level=2] [ref=f36e120]
+        - generic [ref=f36e121]:
+          - article [ref=f36e122]:
+            - heading "Филиал на Лихачевском" [level=3] [ref=f36e123]
+            - link "г. Долгопрудный, пр-кт Лихачевский, 76к1 Построить маршрут" [ref=f36e124] [cursor=pointer]:
+              - /url: https://yandex.ru/maps/?text=Долгопрудный%2C%20проспект%20Лихачевский%2C%2076к1&rtt=auto
+              - generic [ref=f36e129]:
+                - text: г. Долгопрудный, пр-кт Лихачевский, 76к1
+                - generic [ref=f36e130]: Построить маршрут
+            - link "8 993 923-23-09 Позвонить" [ref=f36e131] [cursor=pointer]:
+              - /url: tel:+79939232309
+              - generic [ref=f36e135]:
+                - text: 8 993 923-23-09
+                - generic [ref=f36e136]: Позвонить
+            - paragraph [ref=f36e137]: 9:00 — 21:00
+          - article [ref=f36e138]:
+            - heading "Филиал на Ракетостроителей" [level=3] [ref=f36e139]
+            - link "г. Долгопрудный, пр-кт Ракетостроителей, 9к3 Построить маршрут" [ref=f36e140] [cursor=pointer]:
+              - /url: https://yandex.ru/maps/?text=Долгопрудный%2C%20проспект%20Ракетостроителей%2C%209к3&rtt=auto
+              - generic [ref=f36e145]:
+                - text: г. Долгопрудный, пр-кт Ракетостроителей, 9к3
+                - generic [ref=f36e146]: Построить маршрут
+            - link "8 916 732-31-69 Позвонить" [ref=f36e147] [cursor=pointer]:
+              - /url: tel:+79167323169
+              - generic [ref=f36e151]:
+                - text: 8 916 732-31-69
+                - generic [ref=f36e152]: Позвонить
+            - paragraph [ref=f36e153]: 9:00 — 21:00
+      - generic [ref=f36e154]:
+        - paragraph [ref=f36e155]: Начать проще, чем кажется
+        - paragraph [ref=f36e156]: Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.
+        - button "Записаться на диагностику" [ref=f36e157] [cursor=pointer]
+  - navigation "Разделы" [ref=f36e158]:
+    - button "Дом" [ref=f36e159] [cursor=pointer]
+    - button "Курсы" [ref=f36e163] [cursor=pointer]
+    - button "Педагоги" [ref=f36e167] [cursor=pointer]
+    - button "Фокси" [ref=f36e173] [cursor=pointer]
+    - button "Кабинет" [ref=f36e177] [cursor=pointer]

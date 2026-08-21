@@ -1,0 +1,23 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e6]:
+      - link "F Фоксинбург" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: F
+        - generic [ref=e9]: Фоксинбург
+      - generic [ref=e10]:
+        - combobox "Язык" [ref=e11]:
+          - option "Русский" [selected]
+          - option "English"
+        - link "Войти" [ref=e12] [cursor=pointer]:
+          - /url: /login
+    - generic [ref=e13]:
+      - generic [ref=e14]: Платформа LMS
+      - heading "Корпоративная LMS платформа" [level=1] [ref=e17]
+      - paragraph [ref=e18]: Авторизуйтесь, войдите в панель управления и переключайтесь между зонами для учеников, преподавателей и администраторов.
+      - generic [ref=e19]:
+        - link "Регистрация" [ref=e20] [cursor=pointer]:
+          - /url: /register
+        - link "Войти" [ref=e21] [cursor=pointer]:
+          - /url: /login
+  - alert [ref=e23]

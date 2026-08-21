@@ -1,0 +1,139 @@
+- generic [ref=f19e1]:
+  - complementary [ref=f19e2]:
+    - link "Фоксинбург Фоксинбург" [ref=f19e4] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Фоксинбург" [ref=f19e5]
+      - generic [ref=f19e6]: Фоксинбург
+    - navigation [ref=f19e7]:
+      - generic [ref=f19e8]:
+        - link "Главная" [ref=f19e9] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Руководство" [ref=f19e16] [cursor=pointer]:
+          - /url: /help
+        - link "Обучение" [ref=f19e22] [cursor=pointer]:
+          - /url: /learn
+        - link "Каталог" [ref=f19e27] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Траектории" [ref=f19e31] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "База знаний" [ref=f19e34] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Сертификаты" [ref=f19e38] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Лидерборд" [ref=f19e43] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "Мои бейджи" [ref=f19e51] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Календарь" [ref=f19e55] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Онбординг" [ref=f19e59] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Наблюдения" [ref=f19e64] [cursor=pointer]:
+          - /url: /learn/training
+        - link "Мой план развития" [ref=f19e68] [cursor=pointer]:
+          - /url: /learn/development
+        - link "Оценка 360°" [ref=f19e72] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "Новости" [ref=f19e76] [cursor=pointer]:
+          - /url: /news
+      - link "Моя команда" [ref=f19e83] [cursor=pointer]:
+        - /url: /supervisor
+      - paragraph [ref=f19e91]: Студия
+      - generic [ref=f19e92]:
+        - link "Студия" [ref=f19e93] [cursor=pointer]:
+          - /url: /studio
+        - link "Наблюдения в студии" [ref=f19e98] [cursor=pointer]:
+          - /url: /studio/training
+        - link "Траектории" [ref=f19e102] [cursor=pointer]:
+          - /url: /studio/paths
+      - paragraph [ref=f19e106]: Админка
+      - generic [ref=f19e107]:
+        - link "Админка" [ref=f19e108] [cursor=pointer]:
+          - /url: /admin
+        - link "Аналитика" [ref=f19e113] [cursor=pointer]:
+          - /url: /admin/analytics
+        - link "Заявки на обучение" [ref=f19e118] [cursor=pointer]:
+          - /url: /admin/training-requests
+        - link "SSO" [ref=f19e122] [cursor=pointer]:
+          - /url: /admin/sso-connections
+        - link "LRS" [ref=f19e126] [cursor=pointer]:
+          - /url: /admin/lrs
+        - link "Департаменты" [ref=f19e131] [cursor=pointer]:
+          - /url: /admin/departments
+        - link "Бейджи" [ref=f19e136] [cursor=pointer]:
+          - /url: /admin/badges
+        - link "Сайт" [ref=f19e140] [cursor=pointer]:
+          - /url: /admin/site
+        - link "Мероприятия" [ref=f19e144] [cursor=pointer]:
+          - /url: /admin/events
+        - link "Программы онбординга" [ref=f19e148] [cursor=pointer]:
+          - /url: /admin/onboarding
+        - link "Чек-листы наблюдений" [ref=f19e153] [cursor=pointer]:
+          - /url: /admin/observation-checklists
+        - link "Планы развития" [ref=f19e157] [cursor=pointer]:
+          - /url: /admin/development
+        - link "Компетенции" [ref=f19e161] [cursor=pointer]:
+          - /url: /admin/competencies
+        - link "Оценочные сессии" [ref=f19e165] [cursor=pointer]:
+          - /url: /admin/assessments
+    - generic [ref=f19e169]:
+      - generic [ref=f19e170]:
+        - generic [ref=f19e171]: Г
+        - generic [ref=f19e172]:
+          - paragraph [ref=f19e173]: Григорий Дымов
+          - paragraph [ref=f19e174]: dymovgrigory@mail.ru
+      - button "Выйти" [ref=f19e175] [cursor=pointer]
+      - button "Collapse" [ref=f19e180] [cursor=pointer]
+  - generic [ref=f19e184]:
+    - banner [ref=f19e185]:
+      - paragraph [ref=f19e187]: Фоксинбург
+      - generic [ref=f19e188]:
+        - button "Уведомления" [ref=f19e190] [cursor=pointer]
+        - combobox "Язык" [ref=f19e193]:
+          - option "Русский" [selected]
+          - option "English"
+    - main [ref=f19e194]:
+      - generic [ref=f19e195]:
+        - generic [ref=f19e196]:
+          - heading "Сайт" [level=1] [ref=f19e197]
+          - paragraph [ref=f19e198]: "Контент публичного сайта dymova-english.ru: блоки и фотографии."
+        - generic [ref=f19e199]:
+          - button "Блоки" [ref=f19e200] [cursor=pointer]
+          - button "Фотографии" [ref=f19e201] [cursor=pointer]
+        - generic [ref=f19e215]:
+          - generic [ref=f19e216]:
+            - generic [ref=f19e217]:
+              - generic [ref=f19e218]:
+                - generic [ref=f19e219]:
+                  - paragraph [ref=f19e220]: FAQ на главной
+                  - paragraph [ref=f19e221]: home.faq
+                - button "Редактировать" [ref=f19e222] [cursor=pointer]
+              - paragraph [ref=f19e223]: "Изменено: 02.08.2026, 21:14:43"
+            - generic [ref=f19e224]:
+              - generic [ref=f19e225]:
+                - generic [ref=f19e226]:
+                  - paragraph [ref=f19e227]: Слоган на главной
+                  - paragraph [ref=f19e228]: home.hero.slogan
+                - button "Редактировать" [active] [ref=f19e229] [cursor=pointer]
+              - paragraph [ref=f19e230]: "Изменено: 02.08.2026, 21:14:43"
+          - generic [ref=f19e231]:
+            - paragraph [ref=f19e232]: Создать блок
+            - generic [ref=f19e233]:
+              - textbox "home.hero.slogan" [ref=f19e234]
+              - textbox "Название" [ref=f19e235]
+              - button "Сохранить" [disabled] [ref=f19e236]
+          - generic [ref=f19e237]:
+            - paragraph [ref=f19e238]: Слоган на главной home.hero.slogan
+            - generic [ref=f19e240]:
+              - generic [ref=f19e241]:
+                - text: Строка 1
+                - textbox "Строка 1" [ref=f19e242]: Английский, немецкий и китайский
+              - generic [ref=f19e243]:
+                - text: Строка 2
+                - textbox "Строка 2" [ref=f19e244]: для детей и взрослых
+              - generic [ref=f19e245]:
+                - text: Выделенный фрагмент
+                - textbox "Выделенный фрагмент" [ref=f19e246]: в Долгопрудном
+              - button "Сохранить" [ref=f19e247] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f19e210] [cursor=pointer]
+  - alert [ref=f19e214]

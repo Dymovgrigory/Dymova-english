@@ -1,0 +1,396 @@
+- generic [ref=f37e1]:
+  - generic [ref=f37e13]:
+    - complementary [ref=f37e14]:
+      - link "Фоксинбург Фоксинбург" [ref=f37e16] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f37e17]
+        - generic [ref=f37e18]: Фоксинбург
+      - navigation "Основная навигация" [ref=f37e19]:
+        - generic [ref=f37e20]:
+          - generic [ref=f37e22]:
+            - link "Главная" [ref=f37e23] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f37e30] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f37e35] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f37e39] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f37e43] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f37e49] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f37e54] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f37e59] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f37e67] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f37e71] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f37e75] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f37e80] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f37e83] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f37e88] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f37e94] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f37e101]:
+            - link "Моя команда" [ref=f37e102] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f37e109] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f37e114] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f37e119]:
+            - paragraph [ref=f37e121]: Студия
+            - generic [ref=f37e122]:
+              - link "Студия" [ref=f37e123] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f37e128] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f37e131] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Медиатека" [ref=f37e137] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f37e144]:
+            - paragraph [ref=f37e146]: Админка
+            - generic [ref=f37e147]:
+              - link "Админка" [ref=f37e148] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f37e154] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f37e159] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f37e163] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f37e168] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f37e173] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f37e178] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f37e182] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Страницы" [ref=f37e187] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Мероприятия" [ref=f37e192] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f37e196] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f37e201] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f37e206] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f37e211] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f37e217] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f37e224] [cursor=pointer]
+    - banner [ref=f37e229]:
+      - paragraph [ref=f37e231]: Админка
+      - generic [ref=f37e232]:
+        - button "Поиск и команды (Ctrl K)" [ref=f37e233] [cursor=pointer]
+        - button "Уведомления" [ref=f37e235] [cursor=pointer]
+        - combobox "Язык" [ref=f37e238]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [active] [ref=f37e239] [cursor=pointer]
+        - button "Меню пользователя" [ref=f37e240] [cursor=pointer]:
+          - generic [ref=f37e241]: P
+    - main [ref=f37e243]:
+      - generic [ref=f37e245]:
+        - generic [ref=f37e246]:
+          - heading "Настройки" [level=1] [ref=f37e247]
+          - paragraph [ref=f37e248]: Конфигурация школы и платформы
+        - navigation "Разделы настроек" [ref=f37e249]:
+          - link "Общие" [ref=f37e250] [cursor=pointer]:
+            - /url: /admin/settings/general
+          - link "Бренд" [ref=f37e251] [cursor=pointer]:
+            - /url: /admin/settings/brand
+          - link "Пользователи" [ref=f37e252] [cursor=pointer]:
+            - /url: /admin/settings/users
+          - link "Роли" [ref=f37e253] [cursor=pointer]:
+            - /url: /admin/settings/roles
+          - link "Уведомления" [ref=f37e254] [cursor=pointer]:
+            - /url: /admin/settings/notifications
+          - link "Email" [ref=f37e255] [cursor=pointer]:
+            - /url: /admin/settings/email
+          - link "Платежи" [ref=f37e256] [cursor=pointer]:
+            - /url: /admin/settings/payments
+          - link "Сайт" [ref=f37e257] [cursor=pointer]:
+            - /url: /admin/settings/website
+          - link "SEO" [ref=f37e258] [cursor=pointer]:
+            - /url: /admin/settings/seo
+          - link "Интеграции" [ref=f37e259] [cursor=pointer]:
+            - /url: /admin/settings/integrations
+          - link "Безопасность" [ref=f37e260] [cursor=pointer]:
+            - /url: /admin/settings/security
+          - link "Аудит" [ref=f37e261] [cursor=pointer]:
+            - /url: /admin/settings/audit
+        - generic [ref=f37e262]:
+          - generic [ref=f37e263]:
+            - heading "Журнал аудита" [level=2] [ref=f37e264]
+            - paragraph [ref=f37e265]: Действия пользователей в административной части
+          - generic [ref=f37e266]:
+            - generic [ref=f37e267]:
+              - text: Тип сущности
+              - textbox "Тип сущности" [ref=f37e268]
+            - generic [ref=f37e269]:
+              - text: Email или ID пользователя
+              - textbox "Email или ID пользователя" [ref=f37e270]
+            - generic [ref=f37e271]:
+              - text: С даты
+              - textbox "С даты" [ref=f37e272]
+            - generic [ref=f37e273]:
+              - text: По дату
+              - textbox "По дату" [ref=f37e274]
+          - generic [ref=f37e275]:
+            - generic [ref=f37e276]:
+              - textbox "Поиск по действию" [ref=f37e281]
+              - button "Колонки" [ref=f37e282] [cursor=pointer]
+            - table [ref=f37e285]:
+              - rowgroup [ref=f37e286]:
+                - row [ref=f37e287]:
+                  - columnheader "Время" [ref=f37e288]
+                  - columnheader "Пользователь" [ref=f37e289]
+                  - columnheader "Действие" [ref=f37e290]
+                  - columnheader "Тип сущности" [ref=f37e291]
+                  - columnheader "ID сущности" [ref=f37e292]
+                  - columnheader "Детали" [ref=f37e293]
+              - rowgroup [ref=f37e294]:
+                - row [ref=f37e295]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e296]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e297]:
+                    - generic [ref=f37e298]:
+                      - generic [ref=f37e299]: Phase Owner
+                      - generic [ref=f37e300]: owner@phase11b.ru
+                  - cell [ref=f37e301]:
+                    - code [ref=f37e302]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e303]
+                  - cell "—" [ref=f37e304]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e305]'
+                - row [ref=f37e307]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e308]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e309]:
+                    - generic [ref=f37e310]:
+                      - generic [ref=f37e311]: Phase Owner
+                      - generic [ref=f37e312]: owner@phase11b.ru
+                  - cell [ref=f37e313]:
+                    - code [ref=f37e314]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e315]
+                  - cell "—" [ref=f37e316]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e317]'
+                - row [ref=f37e319]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e320]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e321]:
+                    - generic [ref=f37e322]:
+                      - generic [ref=f37e323]: Phase Owner
+                      - generic [ref=f37e324]: owner@phase11b.ru
+                  - cell [ref=f37e325]:
+                    - code [ref=f37e326]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e327]
+                  - cell "—" [ref=f37e328]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e329]'
+                - row [ref=f37e331]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e332]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e333]:
+                    - generic [ref=f37e334]:
+                      - generic [ref=f37e335]: Phase Owner
+                      - generic [ref=f37e336]: owner@phase11b.ru
+                  - cell [ref=f37e337]:
+                    - code [ref=f37e338]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e339]
+                  - cell "—" [ref=f37e340]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e341]'
+                - row [ref=f37e343]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e344]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e345]:
+                    - generic [ref=f37e346]:
+                      - generic [ref=f37e347]: Phase Owner
+                      - generic [ref=f37e348]: owner@phase11b.ru
+                  - cell [ref=f37e349]:
+                    - code [ref=f37e350]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e351]
+                  - cell "—" [ref=f37e352]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e353]'
+                - row [ref=f37e355]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e356]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e357]:
+                    - generic [ref=f37e358]:
+                      - generic [ref=f37e359]: Phase Owner
+                      - generic [ref=f37e360]: owner@phase11b.ru
+                  - cell [ref=f37e361]:
+                    - code [ref=f37e362]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e363]
+                  - cell "—" [ref=f37e364]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e365]'
+                - row [ref=f37e367]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e368]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e369]:
+                    - generic [ref=f37e370]:
+                      - generic [ref=f37e371]: Phase Owner
+                      - generic [ref=f37e372]: owner@phase11b.ru
+                  - cell [ref=f37e373]:
+                    - code [ref=f37e374]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e375]
+                  - cell "—" [ref=f37e376]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e377]'
+                - row [ref=f37e379]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e380]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e381]:
+                    - generic [ref=f37e382]:
+                      - generic [ref=f37e383]: Phase Owner
+                      - generic [ref=f37e384]: owner@phase11b.ru
+                  - cell [ref=f37e385]:
+                    - code [ref=f37e386]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e387]
+                  - cell "—" [ref=f37e388]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e389]'
+                - row [ref=f37e391]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e392]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e393]:
+                    - generic [ref=f37e394]:
+                      - generic [ref=f37e395]: Phase Owner
+                      - generic [ref=f37e396]: owner@phase11b.ru
+                  - cell [ref=f37e397]:
+                    - code [ref=f37e398]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e399]
+                  - cell "—" [ref=f37e400]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e401]'
+                - row [ref=f37e403]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e404]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e405]:
+                    - generic [ref=f37e406]:
+                      - generic [ref=f37e407]: Phase Owner
+                      - generic [ref=f37e408]: owner@phase11b.ru
+                  - cell [ref=f37e409]:
+                    - code [ref=f37e410]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e411]
+                  - cell "—" [ref=f37e412]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e413]'
+                - row [ref=f37e415]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e416]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e417]:
+                    - generic [ref=f37e418]:
+                      - generic [ref=f37e419]: Phase Owner
+                      - generic [ref=f37e420]: owner@phase11b.ru
+                  - cell [ref=f37e421]:
+                    - code [ref=f37e422]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e423]
+                  - cell "—" [ref=f37e424]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e425]'
+                - row [ref=f37e427]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e428]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e429]:
+                    - generic [ref=f37e430]:
+                      - generic [ref=f37e431]: Phase Owner
+                      - generic [ref=f37e432]: owner@phase11b.ru
+                  - cell [ref=f37e433]:
+                    - code [ref=f37e434]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e435]
+                  - cell "—" [ref=f37e436]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e437]'
+                - row [ref=f37e439]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e440]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e441]:
+                    - generic [ref=f37e442]:
+                      - generic [ref=f37e443]: Phase Owner
+                      - generic [ref=f37e444]: owner@phase11b.ru
+                  - cell [ref=f37e445]:
+                    - code [ref=f37e446]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e447]
+                  - cell "—" [ref=f37e448]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e449]'
+                - row [ref=f37e451]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e452]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e453]:
+                    - generic [ref=f37e454]:
+                      - generic [ref=f37e455]: Phase Owner
+                      - generic [ref=f37e456]: owner@phase11b.ru
+                  - cell [ref=f37e457]:
+                    - code [ref=f37e458]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e459]
+                  - cell "—" [ref=f37e460]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e461]'
+                - row [ref=f37e463]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e464]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e465]:
+                    - generic [ref=f37e466]:
+                      - generic [ref=f37e467]: Phase Owner
+                      - generic [ref=f37e468]: owner@phase11b.ru
+                  - cell [ref=f37e469]:
+                    - code [ref=f37e470]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e471]
+                  - cell "—" [ref=f37e472]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e473]'
+                - row [ref=f37e475]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e476]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e477]:
+                    - generic [ref=f37e478]:
+                      - generic [ref=f37e479]: Phase Owner
+                      - generic [ref=f37e480]: owner@phase11b.ru
+                  - cell [ref=f37e481]:
+                    - code [ref=f37e482]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e483]
+                  - cell "—" [ref=f37e484]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e485]'
+                - row [ref=f37e487]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e488]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e489]:
+                    - generic [ref=f37e490]:
+                      - generic [ref=f37e491]: Phase Owner
+                      - generic [ref=f37e492]: owner@phase11b.ru
+                  - cell [ref=f37e493]:
+                    - code [ref=f37e494]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e495]
+                  - cell "—" [ref=f37e496]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e497]'
+                - row [ref=f37e499]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e500]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e501]:
+                    - generic [ref=f37e502]:
+                      - generic [ref=f37e503]: Phase Owner
+                      - generic [ref=f37e504]: owner@phase11b.ru
+                  - cell [ref=f37e505]:
+                    - code [ref=f37e506]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e507]
+                  - cell "—" [ref=f37e508]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e509]'
+                - row [ref=f37e511]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e512]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e513]:
+                    - generic [ref=f37e514]:
+                      - generic [ref=f37e515]: Phase Owner
+                      - generic [ref=f37e516]: owner@phase11b.ru
+                  - cell [ref=f37e517]:
+                    - code [ref=f37e518]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e519]
+                  - cell "—" [ref=f37e520]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e521]'
+                - row [ref=f37e523]:
+                  - cell "09.08.2026, 09:59:07" [ref=f37e524]
+                  - cell "Phase Owner owner@phase11b.ru" [ref=f37e525]:
+                    - generic [ref=f37e526]:
+                      - generic [ref=f37e527]: Phase Owner
+                      - generic [ref=f37e528]: owner@phase11b.ru
+                  - cell [ref=f37e529]:
+                    - code [ref=f37e530]: rbac.role_permissions.update
+                  - cell "role" [ref=f37e531]
+                  - cell "—" [ref=f37e532]
+                  - 'cell "{\"role\":\"INSTRUCTOR\",\"added\":[],\"removed\":[]}" [ref=f37e533]'
+            - generic [ref=f37e535]:
+              - generic [ref=f37e536]:
+                - generic [ref=f37e537]: "Всего: 27"
+                - generic [ref=f37e538]: Строк на странице
+                - combobox "Строк на странице" [ref=f37e539] [cursor=pointer]:
+                  - generic: "20"
+              - generic [ref=f37e542]:
+                - button "Назад" [disabled]
+                - generic [ref=f37e543]: Страница 1 из 2
+                - button "Вперёд" [ref=f37e544] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f37e8] [cursor=pointer]
+  - alert [ref=f37e12]

@@ -1,0 +1,6 @@
+[      91ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[      98ms] [LOG] [HMR] connected @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     202ms] [ERROR] Access to fetch at 'http://localhost:8000/api/v1/pages' from origin 'http://localhost:3112' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:3112/admin/pages:0
+[     202ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:8000/api/v1/pages:0
+[    1210ms] [ERROR] Access to fetch at 'http://localhost:8000/api/v1/pages' from origin 'http://localhost:3112' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:3112/admin/pages:0
+[    1210ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:8000/api/v1/pages:0

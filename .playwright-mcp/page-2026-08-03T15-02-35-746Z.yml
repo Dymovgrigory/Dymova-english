@@ -1,0 +1,140 @@
+- generic [ref=f74e1]:
+  - complementary [ref=f74e2]:
+    - link "Фоксинбург Фоксинбург" [ref=f74e4] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Фоксинбург" [ref=f74e5]
+      - generic [ref=f74e6]: Фоксинбург
+    - navigation [ref=f74e7]:
+      - generic [ref=f74e8]:
+        - link "Главная" [ref=f74e9] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Руководство" [ref=f74e16] [cursor=pointer]:
+          - /url: /help
+        - link "Обучение" [ref=f74e22] [cursor=pointer]:
+          - /url: /learn
+        - link "Каталог" [ref=f74e27] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Траектории" [ref=f74e31] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "База знаний" [ref=f74e34] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Сертификаты" [ref=f74e38] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Лидерборд" [ref=f74e43] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "Мои бейджи" [ref=f74e51] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Календарь" [ref=f74e55] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Онбординг" [ref=f74e59] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Наблюдения" [ref=f74e64] [cursor=pointer]:
+          - /url: /learn/training
+        - link "Мой план развития" [ref=f74e68] [cursor=pointer]:
+          - /url: /learn/development
+        - link "Оценка 360°" [ref=f74e72] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "Новости" [ref=f74e76] [cursor=pointer]:
+          - /url: /news
+      - link "Моя команда" [ref=f74e103] [cursor=pointer]:
+        - /url: /supervisor
+      - paragraph [ref=f74e111]: Студия
+      - generic [ref=f74e112]:
+        - link "Студия" [ref=f74e113] [cursor=pointer]:
+          - /url: /studio
+        - link "Наблюдения в студии" [ref=f74e118] [cursor=pointer]:
+          - /url: /studio/training
+        - link "Траектории" [ref=f74e122] [cursor=pointer]:
+          - /url: /studio/paths
+      - paragraph [ref=f74e126]: Админка
+      - generic [ref=f74e127]:
+        - link "Админка" [ref=f74e128] [cursor=pointer]:
+          - /url: /admin
+        - link "Аналитика" [ref=f74e133] [cursor=pointer]:
+          - /url: /admin/analytics
+        - link "Заявки на обучение" [ref=f74e138] [cursor=pointer]:
+          - /url: /admin/training-requests
+        - link "SSO" [ref=f74e142] [cursor=pointer]:
+          - /url: /admin/sso-connections
+        - link "LRS" [ref=f74e146] [cursor=pointer]:
+          - /url: /admin/lrs
+        - link "Департаменты" [ref=f74e151] [cursor=pointer]:
+          - /url: /admin/departments
+        - link "Бейджи" [ref=f74e156] [cursor=pointer]:
+          - /url: /admin/badges
+        - link "Сайт" [ref=f74e160] [cursor=pointer]:
+          - /url: /admin/site
+        - link "Мероприятия" [ref=f74e164] [cursor=pointer]:
+          - /url: /admin/events
+        - link "Программы онбординга" [ref=f74e168] [cursor=pointer]:
+          - /url: /admin/onboarding
+        - link "Чек-листы наблюдений" [ref=f74e173] [cursor=pointer]:
+          - /url: /admin/observation-checklists
+        - link "Планы развития" [ref=f74e177] [cursor=pointer]:
+          - /url: /admin/development
+        - link "Компетенции" [ref=f74e181] [cursor=pointer]:
+          - /url: /admin/competencies
+        - link "Оценочные сессии" [ref=f74e185] [cursor=pointer]:
+          - /url: /admin/assessments
+    - generic [ref=f74e81]:
+      - generic [ref=f74e189]:
+        - generic [ref=f74e190]: O
+        - generic [ref=f74e191]:
+          - paragraph [ref=f74e192]: Owner
+          - paragraph [ref=f74e193]: owner@site.dev
+      - button "Выйти" [ref=f74e82] [cursor=pointer]
+      - button "Collapse" [ref=f74e87] [cursor=pointer]
+  - generic [ref=f74e194]:
+    - banner [ref=f74e195]:
+      - paragraph [ref=f74e197]: lms-foxinburg
+      - generic [ref=f74e198]:
+        - button "Уведомления" [ref=f74e200] [cursor=pointer]
+        - combobox "Язык" [ref=f74e203]:
+          - option "Русский" [selected]
+          - option "English"
+    - main [ref=f74e204]:
+      - generic [ref=f74e205]:
+        - generic [ref=f74e206]:
+          - heading "Сайт" [level=1] [ref=f74e207]
+          - paragraph [ref=f74e208]: "Контент публичного сайта dymova-english.ru: блоки и фотографии."
+        - generic [ref=f74e209]:
+          - button "Блоки" [ref=f74e210] [cursor=pointer]
+          - button "Фотографии" [active] [ref=f74e211] [cursor=pointer]
+        - generic [ref=f74e249]:
+          - button "+ Загрузить фото" [ref=f74e251] [cursor=pointer]
+          - generic [ref=f74e252]:
+            - generic [ref=f74e253]:
+              - generic [ref=f74e254]:
+                - img "тестовое фото 1" [ref=f74e255]
+                - generic "Перетащите, чтобы изменить порядок" [ref=f74e256]: ⠿
+              - generic [ref=f74e257]:
+                - textbox "Подпись (alt)" [ref=f74e258]: тестовое фото 1
+                - generic [ref=f74e259]:
+                  - generic [ref=f74e260]:
+                    - button "←" [disabled] [ref=f74e261]
+                    - button "→" [ref=f74e262] [cursor=pointer]
+                  - button "✕" [ref=f74e263] [cursor=pointer]
+            - generic [ref=f74e264]:
+              - generic [ref=f74e265]:
+                - img "тестовое фото 2" [ref=f74e266]
+                - generic "Перетащите, чтобы изменить порядок" [ref=f74e267]: ⠿
+              - generic [ref=f74e268]:
+                - textbox "Подпись (alt)" [ref=f74e269]: тестовое фото 2
+                - generic [ref=f74e270]:
+                  - generic [ref=f74e271]:
+                    - button "←" [ref=f74e272] [cursor=pointer]
+                    - button "→" [ref=f74e273] [cursor=pointer]
+                  - button "✕" [ref=f74e274] [cursor=pointer]
+            - generic [ref=f74e275]:
+              - generic [ref=f74e276]:
+                - img "тестовое фото 3" [ref=f74e277]
+                - generic "Перетащите, чтобы изменить порядок" [ref=f74e278]: ⠿
+              - generic [ref=f74e279]:
+                - textbox "Подпись (alt)" [ref=f74e280]: тестовое фото 3
+                - generic [ref=f74e281]:
+                  - generic [ref=f74e282]:
+                    - button "←" [ref=f74e283] [cursor=pointer]
+                    - button "→" [disabled] [ref=f74e284]
+                  - button "✕" [ref=f74e285] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f74e97] [cursor=pointer]
+  - alert [ref=f74e248]

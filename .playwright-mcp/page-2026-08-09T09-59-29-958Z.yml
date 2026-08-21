@@ -1,0 +1,69 @@
+- generic [active] [ref=f32e1]:
+  - generic [ref=f32e2]:
+    - banner [ref=f32e3]:
+      - generic [ref=f32e4]:
+        - button "Открыть меню" [ref=f32e5] [cursor=pointer]
+        - paragraph [ref=f32e6]: Админка
+      - generic [ref=f32e7]:
+        - button "Поиск и команды (Ctrl K)" [ref=f32e8] [cursor=pointer]
+        - button "Уведомления" [ref=f32e10] [cursor=pointer]
+        - combobox "Язык" [ref=f32e13]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f32e14] [cursor=pointer]
+        - button "Меню пользователя" [ref=f32e15] [cursor=pointer]:
+          - generic [ref=f32e16]: P
+    - main [ref=f32e18]:
+      - generic [ref=f32e20]:
+        - generic [ref=f32e21]:
+          - heading "Настройки" [level=1] [ref=f32e22]
+          - paragraph [ref=f32e23]: Конфигурация школы и платформы
+        - navigation "Разделы настроек" [ref=f32e24]:
+          - link "Общие" [ref=f32e25] [cursor=pointer]:
+            - /url: /admin/settings/general
+          - link "Бренд" [ref=f32e26] [cursor=pointer]:
+            - /url: /admin/settings/brand
+          - link "Пользователи" [ref=f32e27] [cursor=pointer]:
+            - /url: /admin/settings/users
+          - link "Роли" [ref=f32e28] [cursor=pointer]:
+            - /url: /admin/settings/roles
+          - link "Уведомления" [ref=f32e29] [cursor=pointer]:
+            - /url: /admin/settings/notifications
+          - link "Email" [ref=f32e30] [cursor=pointer]:
+            - /url: /admin/settings/email
+          - link "Платежи" [ref=f32e31] [cursor=pointer]:
+            - /url: /admin/settings/payments
+          - link "Сайт" [ref=f32e32] [cursor=pointer]:
+            - /url: /admin/settings/website
+          - link "SEO" [ref=f32e33] [cursor=pointer]:
+            - /url: /admin/settings/seo
+          - link "Интеграции" [ref=f32e34] [cursor=pointer]:
+            - /url: /admin/settings/integrations
+          - link "Безопасность" [ref=f32e35] [cursor=pointer]:
+            - /url: /admin/settings/security
+          - link "Аудит" [ref=f32e36] [cursor=pointer]:
+            - /url: /admin/settings/audit
+        - generic [ref=f32e37]:
+          - generic [ref=f32e38]:
+            - heading "Журнал аудита" [level=2] [ref=f32e39]
+            - paragraph [ref=f32e40]: Действия пользователей в административной части
+          - generic [ref=f32e41]:
+            - generic [ref=f32e42]:
+              - text: Тип сущности
+              - textbox "Тип сущности" [ref=f32e43]
+            - generic [ref=f32e44]:
+              - text: Email или ID пользователя
+              - textbox "Email или ID пользователя" [ref=f32e45]
+            - generic [ref=f32e46]:
+              - text: С даты
+              - textbox "С даты" [ref=f32e47]
+            - generic [ref=f32e48]:
+              - text: По дату
+              - textbox "По дату" [ref=f32e49]
+          - generic [ref=f32e50]:
+            - generic [ref=f32e51]:
+              - textbox "Поиск по действию" [ref=f32e56]
+              - button "Колонки" [ref=f32e57] [cursor=pointer]
+            - generic "Загрузка…" [ref=f32e59]
+  - button "Open Next.js Dev Tools" [ref=f32e71] [cursor=pointer]
+  - alert [ref=f32e75]

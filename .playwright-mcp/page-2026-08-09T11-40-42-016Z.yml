@@ -1,0 +1,229 @@
+- generic:
+  - generic:
+    - complementary:
+      - generic:
+        - link:
+          - /url: /dashboard
+          - generic: Foxinburg
+      - navigation:
+        - generic:
+          - generic:
+            - generic:
+              - link:
+                - /url: /dashboard
+                - generic: Dashboard
+              - link:
+                - /url: /help
+                - generic: Guide
+              - link:
+                - /url: /learn
+                - generic: Learn
+              - link:
+                - /url: /learn/catalog
+                - generic: Catalog
+              - link:
+                - /url: /learn/paths
+                - generic: Paths
+              - link:
+                - /url: /knowledge
+                - generic: Knowledge
+              - link:
+                - /url: /learn/certificates
+                - generic: Certificates
+              - link:
+                - /url: /learn/leaderboard
+                - generic: Leaderboard
+              - link:
+                - /url: /learn/badges
+                - generic: My Badges
+              - link:
+                - /url: /learn/calendar
+                - generic: Calendar
+              - link:
+                - /url: /learn/onboarding
+                - generic: Onboarding
+              - link:
+                - /url: /learn/training
+                - generic: Observations
+              - link:
+                - /url: /learn/development
+                - generic: My Development Plan
+              - link:
+                - /url: /learn/assessments
+                - generic: 360° Assessment
+              - link:
+                - /url: /news
+                - generic: News
+          - generic:
+            - generic:
+              - link:
+                - /url: /supervisor
+                - generic: My Team
+              - link:
+                - /url: /students
+                - generic: Students
+              - link:
+                - /url: /teachers
+                - generic: Teachers
+          - generic:
+            - paragraph: Studio
+            - generic:
+              - link:
+                - /url: /studio
+                - generic: Studio
+              - link:
+                - /url: /studio/training
+                - generic: Studio Observations
+              - link:
+                - /url: /studio/paths
+                - generic: Paths
+              - link:
+                - /url: /media
+                - generic: Media Library
+          - generic:
+            - paragraph: Admin
+            - generic:
+              - link:
+                - /url: /admin
+                - generic: Admin
+              - link:
+                - /url: /analytics
+                - generic: Analytics · charts
+              - link:
+                - /url: /admin/training-requests
+                - generic: Training Requests
+              - link:
+                - /url: /admin/sso-connections
+                - generic: SSO
+              - link:
+                - /url: /admin/lrs
+                - generic: LRS
+              - link:
+                - /url: /admin/departments
+                - generic: Departments
+              - link:
+                - /url: /admin/badges
+                - generic: Badges
+              - link:
+                - /url: /admin/site
+                - generic: Site
+              - link:
+                - /url: /admin/pages
+                - generic: Pages
+              - link:
+                - /url: /admin/events
+                - generic: Events
+              - link:
+                - /url: /admin/onboarding
+                - generic: Onboarding Programs
+              - link:
+                - /url: /admin/observation-checklists
+                - generic: Observation Checklists
+              - link:
+                - /url: /admin/development
+                - generic: Development Plans
+              - link:
+                - /url: /admin/competencies
+                - generic: Competencies
+              - link:
+                - /url: /admin/assessments
+                - generic: Assessment Sessions
+      - generic:
+        - button:
+          - generic: Collapse sidebar
+    - banner:
+      - generic:
+        - button
+        - generic:
+          - button
+        - combobox
+        - button
+        - button:
+          - generic: P
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Analytics
+              - paragraph: Interactive overview across school domains. The period applies to all charts.
+            - generic:
+              - generic:
+                - button: Views
+              - generic:
+                - generic:
+                  - button: 7 days
+                  - button [pressed]: 30 days
+                  - button: 90 days
+                  - button: 12 mo
+                - generic:
+                  - textbox: 2026-07-11
+                  - generic: —
+                  - textbox: 2026-08-09
+                - generic: 2026-07-11 — 2026-08-09
+          - navigation:
+            - link:
+              - /url: /analytics
+              - text: Overview
+            - link:
+              - /url: /analytics/learning
+              - text: Learning
+            - link:
+              - /url: /analytics/people
+              - text: People
+            - link:
+              - /url: /analytics/finance
+              - text: Finance
+          - generic:
+            - generic:
+              - generic:
+                - button: Download PDF
+                - button: Send to email
+            - generic:
+              - generic:
+                - term: Revenue for period
+                - definition: RUB 0
+              - generic:
+                - term: Paid orders
+                - definition: "0"
+              - generic:
+                - term: Enrollments
+                - definition: "0"
+              - generic:
+                - term: Unique learners
+                - definition: "0"
+              - generic:
+                - term: Average progress
+                - definition: 0%
+              - generic:
+                - term: Quiz pass rate
+                - definition: 0%
+            - generic:
+              - generic:
+                - heading [level=2]: Revenue by month
+                - paragraph: Confirmed payments, monthly (values in rubles)
+                - generic:
+                  - paragraph: No data for the selected period
+              - generic:
+                - heading [level=2]: Active users
+                - paragraph: Unique users with activity, monthly
+                - generic:
+                  - paragraph: No data for the selected period
+            - generic:
+              - heading [level=2]: Quiz results
+              - paragraph: Share of passed attempts in the period
+              - generic:
+                - paragraph: No data for the selected period
+  - button "Open Next.js Dev Tools" [ref=f55e8] [cursor=pointer]
+  - alert
+  - dialog [ref=f55e308]:
+    - generic [ref=f55e309]:
+      - heading "Send report to email" [level=2] [ref=f55e310]
+      - paragraph [ref=f55e311]: The summary report for the selected period will be sent to the address.
+    - generic [ref=f55e312]:
+      - textbox "email@example.com" [active] [ref=f55e313]
+      - paragraph [ref=f55e322]: Report sent
+      - generic [ref=f55e314]:
+        - button "Cancel" [ref=f55e315] [cursor=pointer]
+        - button "Send" [disabled] [ref=f55e316]
+    - button "Close" [ref=f55e317] [cursor=pointer]

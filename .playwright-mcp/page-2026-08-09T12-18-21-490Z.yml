@@ -1,0 +1,94 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - link "Foxinburg Foxinburg" [ref=f1e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Foxinburg" [ref=f1e6]
+        - generic [ref=f1e7]: Foxinburg
+      - navigation "Primary navigation" [ref=f1e8]:
+        - generic [ref=f1e11]:
+          - link "Dashboard" [ref=f1e12] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Guide" [ref=f1e20] [cursor=pointer]:
+            - /url: /help
+          - link "Learn" [ref=f1e25] [cursor=pointer]:
+            - /url: /learn
+          - link "Catalog" [ref=f1e29] [cursor=pointer]:
+            - /url: /learn/catalog
+          - link "Paths" [ref=f1e33] [cursor=pointer]:
+            - /url: /learn/paths
+          - link "Knowledge" [ref=f1e39] [cursor=pointer]:
+            - /url: /knowledge
+          - link "Certificates" [ref=f1e44] [cursor=pointer]:
+            - /url: /learn/certificates
+          - link "Leaderboard" [ref=f1e49] [cursor=pointer]:
+            - /url: /learn/leaderboard
+          - link "My Badges" [ref=f1e57] [cursor=pointer]:
+            - /url: /learn/badges
+          - link "Calendar" [ref=f1e61] [cursor=pointer]:
+            - /url: /learn/calendar
+          - link "Onboarding" [ref=f1e65] [cursor=pointer]:
+            - /url: /learn/onboarding
+          - link "Observations" [ref=f1e70] [cursor=pointer]:
+            - /url: /learn/training
+          - link "My Development Plan" [ref=f1e73] [cursor=pointer]:
+            - /url: /learn/development
+          - link "360° Assessment" [ref=f1e78] [cursor=pointer]:
+            - /url: /learn/assessments
+          - link "News" [ref=f1e84] [cursor=pointer]:
+            - /url: /news
+      - button "Collapse sidebar" [ref=f1e90] [cursor=pointer]
+    - banner [ref=f1e95]:
+      - paragraph [ref=f1e97]: Dashboard
+      - generic [ref=f1e98]:
+        - button "Search and commands (Ctrl K)" [ref=f1e99] [cursor=pointer]
+        - button "Notifications" [ref=f1e100] [cursor=pointer]:
+          - generic [ref=f1e101]: "1"
+        - combobox "Language" [ref=f1e102]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=f1e103] [cursor=pointer]
+        - button "User menu" [ref=f1e104] [cursor=pointer]:
+          - generic [ref=f1e105]: L
+    - main [ref=f1e107]:
+      - generic [ref=f1e109]:
+        - generic [ref=f1e110]:
+          - generic [ref=f1e111]:
+            - heading "Good afternoon, Learner Thirteen" [level=1] [ref=f1e112]
+            - paragraph [ref=f1e113]: Your role is LEARNER. You belong to the organization "Notify Org".
+          - button "Customize widgets" [ref=f1e114] [cursor=pointer]
+        - navigation "Quick Actions" [ref=f1e118]:
+          - link "Go to courses" [ref=f1e119] [cursor=pointer]:
+            - /url: /learn
+          - link "Leaderboard" [ref=f1e120] [cursor=pointer]:
+            - /url: /learn/leaderboard
+          - link "My Badges" [ref=f1e121] [cursor=pointer]:
+            - /url: /learn/badges
+          - link "Certificates" [ref=f1e122] [cursor=pointer]:
+            - /url: /learn/certificates
+        - generic [ref=f1e123]:
+          - generic [ref=f1e127]:
+            - generic [ref=f1e128]: My progress
+            - link "All courses" [ref=f1e135] [cursor=pointer]:
+              - /url: /learn
+          - generic [ref=f1e144]:
+            - generic [ref=f1e145]: In Progress
+            - link "All courses" [ref=f1e151] [cursor=pointer]:
+              - /url: /learn
+          - generic [ref=f1e159]:
+            - generic [ref=f1e160]:
+              - generic [ref=f1e161]: My level
+              - link "Open leaderboard →" [ref=f1e168] [cursor=pointer]:
+                - /url: /learn/leaderboard
+            - generic [ref=f1e171]:
+              - generic [ref=f1e172]: 🌱
+              - generic [ref=f1e173]:
+                - paragraph [ref=f1e174]: Level 1 — Новичок
+                - paragraph [ref=f1e175]: 0 / 50 your points
+          - generic [ref=f1e180]:
+            - generic [ref=f1e181]: Recent badges
+            - link "All badges" [ref=f1e188] [cursor=pointer]:
+              - /url: /learn/badges
+        - status [ref=f1e194]
+  - button "Open Next.js Dev Tools" [ref=f1e200] [cursor=pointer]
+  - alert [ref=f1e204]

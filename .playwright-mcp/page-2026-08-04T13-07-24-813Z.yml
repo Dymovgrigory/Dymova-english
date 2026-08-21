@@ -1,0 +1,157 @@
+- generic [ref=f4e1]:
+  - main [ref=f4e2]:
+    - heading "RichTextEditor v2 preview" [level=1] [ref=f4e3]
+    - generic [ref=f4e36]:
+      - generic [ref=f4e37]:
+        - generic [ref=f4e38]:
+          - button "Отменить" [ref=f4e39] [cursor=pointer]
+          - button "Повторить" [disabled] [ref=f4e43]
+          - button "Стиль текста" [ref=f4e49] [cursor=pointer]:
+            - generic [ref=f4e50]: Цитата
+          - button "Шрифт" [ref=f4e54] [cursor=pointer]
+          - button "Размер" [ref=f4e59] [cursor=pointer]
+          - button "Цвет текста" [ref=f4e65] [cursor=pointer]:
+            - generic [ref=f4e66]: A
+          - button "Цвет выделения" [ref=f4e69] [cursor=pointer]
+          - button "На весь экран" [ref=f4e76] [cursor=pointer]
+        - generic [ref=f4e82]:
+          - button "Жирный" [ref=f4e83] [cursor=pointer]
+          - button "Курсив" [ref=f4e87] [cursor=pointer]
+          - button "Подчёркнутый" [ref=f4e90] [cursor=pointer]
+          - button "Зачёркнутый" [ref=f4e93] [cursor=pointer]
+          - button "Подстрочный индекс" [ref=f4e97] [cursor=pointer]
+          - button "Надстрочный индекс" [ref=f4e102] [cursor=pointer]
+          - button "По левому краю" [ref=f4e108] [cursor=pointer]
+          - button "По центру" [ref=f4e110] [cursor=pointer]
+          - button "По правому краю" [ref=f4e112] [cursor=pointer]
+          - button "По ширине" [ref=f4e114] [cursor=pointer]
+          - button "Маркированный список" [ref=f4e117] [cursor=pointer]
+          - button "Нумерованный список" [ref=f4e119] [cursor=pointer]
+          - button "Список задач" [pressed] [ref=f4e123] [cursor=pointer]
+          - button "Цитата" [pressed] [ref=f4e127] [cursor=pointer]
+          - button "Вставить ссылку" [ref=f4e131] [cursor=pointer]
+          - button "Убрать ссылку" [disabled] [ref=f4e135]
+          - button "Загрузить изображение" [ref=f4e139] [cursor=pointer]
+          - button "Вставить изображение по URL" [ref=f4e144] [cursor=pointer]
+          - button "Горизонтальная линия" [ref=f4e149] [cursor=pointer]
+          - button "Таблица" [ref=f4e152] [cursor=pointer]
+          - button "Очистить форматирование" [ref=f4e158] [cursor=pointer]
+      - generic [active] [ref=f4e163]:
+        - heading "Заголовок курса" [level=1] [ref=f4e164]
+        - paragraph [ref=f4e165]:
+          - text: Центрированный фиолетовый текст,
+          - mark [ref=f4e166]: маркер
+          - text: ", подчёркивание, H"
+          - subscript [ref=f4e167]: "2"
+          - text: O и E=mc
+          - superscript [ref=f4e168]: "2"
+          - text: .
+        - list [ref=f4e169]:
+          - listitem [ref=f4e368]:
+            - checkbox "Task item checkbox for Сделано" [checked] [ref=f4e370]
+            - paragraph [ref=f4e372]: Сделано
+          - listitem [ref=f4e373]:
+            - checkbox "Task item checkbox for Не сделано" [ref=f4e375]
+            - paragraph [ref=f4e377]: Не сделано
+        - separator [ref=f4e180]
+        - table [ref=f4e182]:
+          - rowgroup [ref=f4e186]:
+            - row [ref=f4e187]:
+              - columnheader [ref=f4e188]:
+                - paragraph [ref=f4e189]: Колонка 1
+              - columnheader [ref=f4e190]:
+                - paragraph [ref=f4e191]: Колонка 2
+            - row [ref=f4e192]:
+              - cell [ref=f4e193]:
+                - paragraph [ref=f4e194]: A
+              - cell [ref=f4e195]:
+                - paragraph [ref=f4e196]: B
+        - code [ref=f4e198]: const answer = 42;
+        - blockquote [ref=f4e199]:
+          - paragraph [ref=f4e200]: Цитата с брендовой рамкой.
+          - list [ref=f4e415]:
+            - listitem [ref=f4e416]:
+              - checkbox "Task item checkbox for empty task item" [ref=f4e418]
+              - paragraph [ref=f4e420]
+        - paragraph [ref=f4e201]
+    - generic [ref=f4e202]:
+      - generic [ref=f4e203]:
+        - generic [ref=f4e204]:
+          - button "Отменить" [ref=f4e205] [cursor=pointer]
+          - button "Повторить" [disabled] [ref=f4e209]
+          - button "Стиль текста" [ref=f4e215] [cursor=pointer]:
+            - generic [ref=f4e216]: Обычный текст
+          - button "Шрифт" [ref=f4e220] [cursor=pointer]
+          - button "Размер" [ref=f4e225] [cursor=pointer]
+          - button "Цвет текста" [ref=f4e231] [cursor=pointer]:
+            - generic [ref=f4e232]: A
+          - button "Цвет выделения" [ref=f4e235] [cursor=pointer]
+          - button "На весь экран" [ref=f4e242] [cursor=pointer]
+        - generic [ref=f4e248]:
+          - button "Жирный" [ref=f4e249] [cursor=pointer]
+          - button "Курсив" [ref=f4e253] [cursor=pointer]
+          - button "Подчёркнутый" [ref=f4e256] [cursor=pointer]
+          - button "Зачёркнутый" [ref=f4e259] [cursor=pointer]
+          - button "Подстрочный индекс" [ref=f4e263] [cursor=pointer]
+          - button "Надстрочный индекс" [ref=f4e268] [cursor=pointer]
+          - button "По левому краю" [ref=f4e274] [cursor=pointer]
+          - button "По центру" [ref=f4e276] [cursor=pointer]
+          - button "По правому краю" [ref=f4e278] [cursor=pointer]
+          - button "По ширине" [ref=f4e280] [cursor=pointer]
+          - button "Маркированный список" [ref=f4e283] [cursor=pointer]
+          - button "Нумерованный список" [ref=f4e285] [cursor=pointer]
+          - button "Список задач" [ref=f4e289] [cursor=pointer]
+          - button "Цитата" [ref=f4e293] [cursor=pointer]
+          - button "Вставить ссылку" [ref=f4e297] [cursor=pointer]
+          - button "Убрать ссылку" [disabled] [ref=f4e301]
+          - button "Загрузить изображение" [ref=f4e305] [cursor=pointer]
+          - button "Вставить изображение по URL" [ref=f4e310] [cursor=pointer]
+          - button "Горизонтальная линия" [ref=f4e315] [cursor=pointer]
+          - button "Таблица" [ref=f4e318] [cursor=pointer]
+          - button "Очистить форматирование" [ref=f4e324] [cursor=pointer]
+      - paragraph [ref=f4e330]: Текст…
+    - paragraph [ref=f4e4]: "DOMPurify removed tags: 0"
+    - generic [ref=f4e5]:
+      - paragraph [ref=f4e6]: Rendered output (.prose-editor, sanitized)
+      - generic [ref=f4e7]:
+        - heading "Заголовок курса" [level=1] [ref=f4e421]
+        - paragraph [ref=f4e422]:
+          - text: Центрированный фиолетовый текст,
+          - mark [ref=f4e423]: маркер
+          - text: ", подчёркивание, H"
+          - subscript [ref=f4e424]: "2"
+          - text: O и E=mc
+          - superscript [ref=f4e425]: "2"
+          - text: .
+        - list [ref=f4e426]:
+          - listitem [ref=f4e427]:
+            - checkbox [checked] [ref=f4e429]
+            - paragraph [ref=f4e431]: Сделано
+          - listitem [ref=f4e432]:
+            - checkbox [ref=f4e434]
+            - paragraph [ref=f4e436]: Не сделано
+        - separator [ref=f4e437]
+        - table [ref=f4e438]:
+          - rowgroup [ref=f4e442]:
+            - row [ref=f4e443]:
+              - columnheader [ref=f4e444]:
+                - paragraph [ref=f4e445]: Колонка 1
+              - columnheader [ref=f4e446]:
+                - paragraph [ref=f4e447]: Колонка 2
+            - row [ref=f4e448]:
+              - cell [ref=f4e449]:
+                - paragraph [ref=f4e450]: A
+              - cell [ref=f4e451]:
+                - paragraph [ref=f4e452]: B
+        - code [ref=f4e454]: const answer = 42;
+        - blockquote [ref=f4e455]:
+          - paragraph [ref=f4e456]: Цитата с брендовой рамкой.
+          - list [ref=f4e457]:
+            - listitem [ref=f4e458]:
+              - checkbox [ref=f4e460]
+              - generic [ref=f4e461]:
+                - paragraph
+        - paragraph
+    - generic [ref=f4e35]: "<h1>Заголовок курса</h1><p style=\"text-align: center;\">Центрированный <span style=\"color: rgb(102, 45, 146);\">фиолетовый</span> текст, <mark data-color=\"#fcf951\" style=\"background-color: rgb(252, 249, 81); color: inherit;\">маркер</mark>, <u>подчёркивание</u>, H<sub>2</sub>O и E=mc<sup>2</sup>.</p><ul data-type=\"taskList\"><li data-checked=\"true\" data-type=\"taskItem\"><label><input type=\"checkbox\" checked=\"checked\"><span></span></label><div><p>Сделано</p></div></li><li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>Не сделано</p></div></li></ul><hr><table style=\"min-width: 50px;\"><colgroup><col style=\"min-width: 25px;\"><col style=\"min-width: 25px;\"></colgroup><tbody><tr><th colspan=\"1\" rowspan=\"1\"><p>Колонка 1</p></th><th colspan=\"1\" rowspan=\"1\"><p>Колонка 2</p></th></tr><tr><td colspan=\"1\" rowspan=\"1\"><p>A</p></td><td colspan=\"1\" rowspan=\"1\"><p>B</p></td></tr></tbody></table><pre><code>const answer = 42;</code></pre><blockquote><p>Цитата с брендовой рамкой.</p><ul data-type=\"taskList\"><li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p></p></div></li></ul></blockquote><p></p>"
+  - button "Open Next.js Dev Tools" [ref=f4e363] [cursor=pointer]
+  - alert [ref=f4e367]

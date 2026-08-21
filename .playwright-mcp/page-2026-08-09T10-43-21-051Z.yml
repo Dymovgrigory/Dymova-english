@@ -1,0 +1,48 @@
+- generic [active] [ref=f45e1]:
+  - generic [ref=f45e2]:
+    - banner [ref=f45e3]:
+      - button "Открыть меню" [ref=f45e5] [cursor=pointer]
+      - generic [ref=f45e6]:
+        - button "Поиск и команды (Ctrl K)" [ref=f45e7] [cursor=pointer]
+        - button "Уведомления" [ref=f45e9] [cursor=pointer]
+        - combobox "Язык" [ref=f45e12]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f45e13] [cursor=pointer]
+        - button "Меню пользователя" [ref=f45e14] [cursor=pointer]:
+          - generic [ref=f45e15]: Г
+    - main [ref=f45e17]:
+      - generic [ref=f45e19]:
+        - generic [ref=f45e20]:
+          - generic [ref=f45e21]:
+            - heading "Аналитика" [level=1] [ref=f45e22]
+            - paragraph [ref=f45e23]: Интерактивный обзор по доменам школы. Период применяется ко всем графикам.
+          - generic [ref=f45e24]:
+            - generic [ref=f45e25]:
+              - button "7 дней" [ref=f45e26] [cursor=pointer]
+              - button "30 дней" [ref=f45e27] [cursor=pointer]
+              - button "90 дней" [ref=f45e28] [cursor=pointer]
+              - button "12 мес" [pressed] [ref=f45e29] [cursor=pointer]
+            - generic [ref=f45e30]:
+              - textbox "Дата с" [ref=f45e31]: 2025-08-10
+              - generic [ref=f45e32]: —
+              - textbox "Дата по" [ref=f45e33]: 2026-08-09
+            - generic [ref=f45e34]: 2025-08-10 — 2026-08-09
+        - navigation "Разделы аналитики" [ref=f45e35]:
+          - link "Обзор" [ref=f45e36] [cursor=pointer]:
+            - /url: /analytics
+          - link "Обучение" [ref=f45e37] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "Люди" [ref=f45e38] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Финансы" [ref=f45e39] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f45e40]:
+          - generic [ref=f45e51]:
+            - heading "Выручка по месяцам" [level=2] [ref=f45e52]
+            - paragraph [ref=f45e53]: Подтверждённые оплаты, помесячно (значения в рублях)
+          - generic [ref=f45e58]:
+            - heading "Заказы по месяцам" [level=2] [ref=f45e59]
+            - paragraph [ref=f45e60]: Количество подтверждённых оплат
+  - button "Open Next.js Dev Tools" [ref=f45e70] [cursor=pointer]
+  - alert [ref=f45e74]

@@ -1,0 +1,513 @@
+[     132ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3109/login:0
+[     209ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     249ms] [LOG] [HMR] connected @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     375ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     377ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     461ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     538ms] [ERROR] %o
+
+%s TypeError: Cannot read properties of undefined (reading 'slice')
+    at EngagementWidget (http://localhost:3109/_next/static/chunks/src_0s_v274._.js:440:39)
+    at Object.react_stack_bottom_frame (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performSyncWorkOnRoot (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 The above error occurred in the <EngagementWidget> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[     540ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'slice')
+    at EngagementWidget (http://localhost:3109/_next/static/chunks/src_0s_v274._.js:440:39)
+    at Object.react_stack_bottom_frame (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performSyncWorkOnRoot (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[     540ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'slice')
+    at EngagementWidget (http://localhost:3109/_next/static/chunks/src_0s_v274._.js:440:39)
+    at Object.react_stack_bottom_frame (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performSyncWorkOnRoot (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3109/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[   60684ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   60693ms] [LOG] [HMR] connected @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   96611ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   96619ms] [LOG] [HMR] connected @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  210903ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/api/v1/courses/c1:0
+[  347986ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  348721ms] [LOG] [Fast Refresh] done in 839ms @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  349031ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  349043ms] [LOG] [HMR] connected @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  376308ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  376328ms] [LOG] [HMR] connected @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  392637ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  392645ms] [LOG] [HMR] connected @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  445851ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  446855ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  447857ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  448865ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  449871ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  454877ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  459883ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  464889ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  469895ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  474902ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  479909ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  484916ms] [ERROR] WebSocket connection to 'ws://localhost:3109/_next/webpack-hmr?id=gXjMQj6J4CTB_cEmNjzWS' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3109/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[  484995ms] SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document.
+    at <anonymous>:6:5
+    at <anonymous>:7:7
+[ 3778851ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3110/login:0
+[ 3778891ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 3778933ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 3779210ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 3779283ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/assignments:0
+[ 3779307ms] [ERROR] %o
+
+%s TypeError: Cannot read properties of undefined (reading 'slice')
+    at EngagementWidget (http://localhost:3110/_next/static/chunks/src_0s_v274._.js:440:39)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performSyncWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 The above error occurred in the <EngagementWidget> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[ 3779308ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'slice')
+    at EngagementWidget (http://localhost:3110/_next/static/chunks/src_0s_v274._.js:440:39)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performSyncWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 3779309ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'slice')
+    at EngagementWidget (http://localhost:3110/_next/static/chunks/src_0s_v274._.js:440:39)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performSyncWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 3779630ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 3779637ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 3798279ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 3798280ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 3798280ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 3798280ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4047301ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4047309ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4048068ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4048068ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4048069ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4048070ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4106864ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4106868ms] [LOG] [rte-debug] null render {editor: true, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4106868ms] [LOG] [rte-debug] null render {editor: true, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4106893ms] [LOG] [Fast Refresh] done in 83ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4113360ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4113371ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4114080ms] [LOG] [rte-debug] null render {editor: false, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4114080ms] [LOG] [rte-debug] null render {editor: false, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4114090ms] [LOG] [rte-debug] null render {editor: true, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4114091ms] [LOG] [rte-debug] null render {editor: true, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4114100ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4114117ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4114119ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4114119ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4245593ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4245595ms] [LOG] [rte-debug] null render {editor: true, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4245595ms] [LOG] [rte-debug] null render {editor: true, editorState: false} @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4245621ms] [LOG] [Fast Refresh] done in 46ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4260295ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4260645ms] [LOG] [Fast Refresh] done in 394ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4260696ms] [ERROR] %o
+
+%s TypeError: Cannot read properties of null (reading 'style')
+    at EditorToolbar (http://localhost:3110/_next/static/chunks/src_1lhpgmf._.js:3914:48)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 The above error occurred in the <EditorToolbar> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[ 4260698ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of null (reading 'style')
+    at EditorToolbar (http://localhost:3110/_next/static/chunks/src_1lhpgmf._.js:3914:48)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 4260698ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of null (reading 'style')
+    at EditorToolbar (http://localhost:3110/_next/static/chunks/src_1lhpgmf._.js:3914:48)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158 @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 4283639ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4283668ms] [LOG] [Fast Refresh] done in 44ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4316559ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4316611ms] [LOG] [Fast Refresh] done in 153ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4316682ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4316691ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4317418ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4317418ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4317418ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4317418ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4767860ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4767883ms] [LOG] [Fast Refresh] done in 82ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4837236ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4837265ms] [LOG] [Fast Refresh] done in 38ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4883501ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4883515ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4884263ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4884263ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4884263ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4884266ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4968400ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4968430ms] [LOG] [Fast Refresh] done in 45ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4998273ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4998281ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 4999016ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4999016ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 4999017ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 4999023ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 5171987ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5171993ms] [LOG] [Fast Refresh] done in 108ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5172326ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5172339ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5172458ms] [ERROR] %o
+
+%s TypeError: trainingRequests.find is not a function
+    at CoursePlayerPage (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:3258:47)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) The above error occurred in the <CoursePlayerPage> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[ 5172463ms] [ERROR] [app] route error boundary caught: TypeError: trainingRequests.find is not a function
+    at CoursePlayerPage (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:3258:47)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5172463ms] [ERROR] [app] route error boundary caught: TypeError: trainingRequests.find is not a function
+    at CoursePlayerPage (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:3258:47)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5242097ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5242105ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5242212ms] [ERROR] %o
+
+%s TypeError: Cannot read properties of undefined (reading 'length')
+    at CoursePlayerPage (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:4032:70)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) The above error occurred in the <CoursePlayerPage> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[ 5242216ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'length')
+    at CoursePlayerPage (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:4032:70)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5242217ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'length')
+    at CoursePlayerPage (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:4032:70)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5277763ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5277772ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5277975ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 5277976ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 5277976ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 5277987ms] [ERROR] %o
+
+%s TypeError: Cannot read properties of undefined (reading 'length')
+    at LessonDiscussion (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:1342:33)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) The above error occurred in the <LessonDiscussion> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[ 5277987ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 5277990ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'length')
+    at LessonDiscussion (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:1342:33)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5277991ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'length')
+    at LessonDiscussion (http://localhost:3110/_next/static/chunks/src_02fkmx7._.js:1342:33)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5314874ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5314885ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5315095ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 5315096ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 5315097ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 5315097ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 5356043ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5356763ms] [LOG] [Fast Refresh] done in 821ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5357049ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5357058ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5463062ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5463071ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5601118ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5601126ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5601268ms] [ERROR] %o
+
+%s TypeError: Cannot read properties of undefined (reading 'join')
+    at courseMetaValuesFromCourse (http://localhost:3110/_next/static/chunks/src_1ib0-f5._.js:7083:27)
+    at CourseMetaForm (http://localhost:3110/_next/static/chunks/src_1ib0-f5._.js:7176:233)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) The above error occurred in the <CourseMetaForm> component. It was handled by the <ErrorBoundaryHandler> error boundary. @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:1998
+[ 5601274ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'join')
+    at courseMetaValuesFromCourse (http://localhost:3110/_next/static/chunks/src_1ib0-f5._.js:7083:27)
+    at CourseMetaForm (http://localhost:3110/_next/static/chunks/src_1ib0-f5._.js:7176:233)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5601274ms] [ERROR] [app] route error boundary caught: TypeError: Cannot read properties of undefined (reading 'join')
+    at courseMetaValuesFromCourse (http://localhost:3110/_next/static/chunks/src_1ib0-f5._.js:7083:27)
+    at CourseMetaForm (http://localhost:3110/_next/static/chunks/src_1ib0-f5._.js:7176:233)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 5675713ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5675721ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5677974ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 5677974ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 5677975ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/quiz:0
+[ 5677975ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/lessons/l1/assignment:0
+[ 6127619ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 6128807ms] [LOG] [Fast Refresh] done in 1285ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 6165389ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 6166133ms] [LOG] [Fast Refresh] done in 779ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 6166253ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 6166277ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 6168078ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 6169018ms] [LOG] [Fast Refresh] done in 966ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 7010186ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 7011259ms] [LOG] [Fast Refresh] done in 1173ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 8508975ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 8510040ms] [LOG] [Fast Refresh] done in 1162ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 8510140ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 8510152ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 8510271ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 8510294ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9370727ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9371875ms] [LOG] [Fast Refresh] done in 1197ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9371982ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9372022ms] [LOG] [Fast Refresh] done in 141ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9537250ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9537252ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9548008ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9548331ms] [LOG] [Fast Refresh] done in 412ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9548801ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9548884ms] [LOG] [Fast Refresh] done in 184ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9548929ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3110/studio/courses/c1:0
+[ 9548986ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9549002ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9549014ms] [ERROR] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[ 9549063ms] ReferenceError: messages is not defined
+    at I18nProvider.useCallback[t] (http://localhost:3110/_next/static/chunks/src_0z459gd._.js:384:24)
+    at AppShellInner (http://localhost:3110/_next/static/chunks/src_1zqdoa9._.js:3420:23)
+    at Object.react_stack_bottom_frame (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3110/_next/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64)
+[ 9555103ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9555209ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9555236ms] [LOG] [Fast Refresh] done in 232ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9555620ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9555627ms] [LOG] [HMR] connected @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9585736ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9585772ms] [LOG] [Fast Refresh] done in 54ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9624189ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9624222ms] [LOG] [Fast Refresh] done in 58ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9649599ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9649631ms] [LOG] [Fast Refresh] done in 54ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9695901ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9695937ms] [LOG] [Fast Refresh] done in 54ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9721929ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9721965ms] [LOG] [Fast Refresh] done in 51ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9923194ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9923257ms] [LOG] [Fast Refresh] done in 42ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 9999435ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[10000219ms] [LOG] [Fast Refresh] done in 525ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[10000565ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[10000628ms] [LOG] [Fast Refresh] done in 164ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[10000805ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[10001540ms] [LOG] [Fast Refresh] done in 836ms @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[10366685ms] [ERROR] WebSocket connection to 'ws://localhost:3110/_next/webpack-hmr?id=VV4QoU8COwyhaH0xwL7NH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[10367688ms] [ERROR] WebSocket connection to 'ws://localhost:3110/_next/webpack-hmr?id=VV4QoU8COwyhaH0xwL7NH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[10368691ms] [ERROR] WebSocket connection to 'ws://localhost:3110/_next/webpack-hmr?id=VV4QoU8COwyhaH0xwL7NH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[10369695ms] [ERROR] WebSocket connection to 'ws://localhost:3110/_next/webpack-hmr?id=VV4QoU8COwyhaH0xwL7NH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[10370698ms] [ERROR] WebSocket connection to 'ws://localhost:3110/_next/webpack-hmr?id=VV4QoU8COwyhaH0xwL7NH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[10375706ms] [ERROR] WebSocket connection to 'ws://localhost:3110/_next/webpack-hmr?id=VV4QoU8COwyhaH0xwL7NH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[10380716ms] [ERROR] WebSocket connection to 'ws://localhost:3110/_next/webpack-hmr?id=VV4QoU8COwyhaH0xwL7NH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3110/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422

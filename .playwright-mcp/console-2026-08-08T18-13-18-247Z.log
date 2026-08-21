@@ -1,0 +1,7 @@
+[     235ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     302ms] [LOG] [HMR] connected @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     349ms] [ERROR] Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release. @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:3318
+[     431ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     462ms] [LOG] [Fast Refresh] done in 133ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   53481ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   53509ms] [LOG] [Fast Refresh] done in 60ms @ http://localhost:3112/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477

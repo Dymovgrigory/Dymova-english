@@ -1,0 +1,707 @@
+- generic [active] [ref=f63e1]:
+  - generic [ref=f63e3]:
+    - generic [ref=f63e4]:
+      - link "Фоксинбург Фоксинбург" [ref=f63e5] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=f63e6]
+        - generic [ref=f63e7]: Фоксинбург
+      - button "Меню" [ref=f63e8] [cursor=pointer]
+    - generic [ref=f63e12]:
+      - generic [ref=f63e13]:
+        - link "Лихачевский, 76к1" [ref=f63e14] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 993 923-23-09" [ref=f63e18] [cursor=pointer]:
+          - /url: tel:+79939232309
+      - generic [ref=f63e19]:
+        - link "Ракетостроителей, 9к3" [ref=f63e20] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 916 732-31-69" [ref=f63e24] [cursor=pointer]:
+          - /url: tel:+79167323169
+      - generic [ref=f63e25]: 9:00 — 21:00
+      - link "Max Bot" [ref=f63e29] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+    - generic [ref=f63e30]:
+      - generic [ref=f63e31]: Летние программы
+      - generic [ref=f63e35]:
+        - link "Летняя Академия" [ref=f63e36] [cursor=pointer]:
+          - /url: /letnyaya-akademiya
+        - link "Чтение" [ref=f63e37] [cursor=pointer]:
+          - /url: /reading
+        - link "Грамматика" [ref=f63e38] [cursor=pointer]:
+          - /url: /grammar
+        - link "Онлайн" [ref=f63e39] [cursor=pointer]:
+          - /url: /online-zanyatiya
+        - link "Поддерживающие" [ref=f63e40] [cursor=pointer]:
+          - /url: /podderzhivayushchie-online
+        - link "Оффлайн" [ref=f63e41] [cursor=pointer]:
+          - /url: /standartnye-offline
+    - generic [ref=f63e42]:
+      - heading "Английский не для школы, а для жизни!" [level=1] [ref=f63e43]:
+        - text: Английский не для школы,а для
+        - generic [ref=f63e44]: жизни!
+      - paragraph [ref=f63e45]: Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых
+  - generic [ref=f63e48]:
+    - generic [ref=f63e49]:
+      - generic [ref=f63e50]: Набор открыт
+      - heading "Запись на новый учебный год 2026/27" [level=2] [ref=f63e51]: Запись на новыйучебный год 2026/27
+      - paragraph [ref=f63e52]: Успейте забронировать место в группе с удобным расписанием! Мини-группы до 7 человек — места ограничены.
+      - generic [ref=f63e53]:
+        - generic [ref=f63e57]:
+          - strong [ref=f63e58]: Занятия 2 раза в неделю по 60 мин
+          - text: Утренние, дневные и вечерние группы
+        - generic [ref=f63e64]:
+          - strong [ref=f63e65]: Мини-группы до 7 человек
+          - text: Индивидуальный подход к каждому
+        - generic [ref=f63e69]:
+          - strong [ref=f63e70]: Старт занятий — сентябрь
+          - text: Бесплатная диагностика до начала
+    - generic [ref=f63e72]:
+      - heading "Оставьте заявку" [level=3] [ref=f63e73]
+      - paragraph [ref=f63e74]: Мы свяжемся и подберём удобное расписание
+      - generic [ref=f63e75]:
+        - textbox "Имя родителя" [ref=f63e76]
+        - textbox "Имя и возраст ребёнка" [ref=f63e77]
+        - textbox "Телефон" [ref=f63e78]
+        - combobox [ref=f63e79]:
+          - option "Формат занятий" [disabled] [selected]
+          - option "Офлайн — Лихачевский"
+          - option "Офлайн — Ракетостроителей"
+          - option "Онлайн"
+        - button "Забронировать место" [ref=f63e80] [cursor=pointer]
+      - paragraph [ref=f63e81]:
+        - text: Нажимая кнопку, вы соглашаетесь с
+        - link "политикой конфиденциальности" [ref=f63e82] [cursor=pointer]:
+          - /url: /policy
+  - generic [ref=f63e84]:
+    - generic [ref=f63e85]:
+      - generic [ref=f63e86]: Почему нас выбирают
+      - heading "Наши преимущества" [level=2] [ref=f63e88]
+      - paragraph [ref=f63e89]: Официальная школа с лицензией, сильной методикой и заботой о каждом ученике.
+    - generic [ref=f63e90]:
+      - article [ref=f63e91]:
+        - heading "Образовательная лицензия" [level=3] [ref=f63e96]
+        - paragraph [ref=f63e97]: Работаем официально, на основании государственной образовательной лицензии.
+      - article [ref=f63e98]:
+        - heading "Аккредитованный центр Hippo" [level=3] [ref=f63e103]
+        - paragraph [ref=f63e104]: Официальная площадка (venue) престижной международной олимпиады по английскому Hippo.
+      - article [ref=f63e105]:
+        - heading "Мини-группы до 7 человек" [level=3] [ref=f63e112]
+        - paragraph [ref=f63e113]: Внимание каждому ученику и живая языковая среда без перехода на русский. Посмотрите, как проходит занятие.
+        - button "Посмотреть видео" [ref=f63e114] [cursor=pointer]
+      - article [ref=f63e117]:
+        - heading "Команда профессионалов" [level=3] [ref=f63e123]
+        - paragraph [ref=f63e124]: Опытные педагоги, увлечённые делом, которые постоянно развиваются, имеют высокий уровень языка и фундаментальные знания о методике преподавания.
+        - button "Познакомиться с командой" [ref=f63e125] [cursor=pointer]
+      - article [ref=f63e128]:
+        - heading "Качественная обратная связь" [level=3] [ref=f63e132]
+        - paragraph [ref=f63e133]: Видео-отчёты, индивидуальная обратная связь каждый месяц, открытые уроки и тестирования для контроля знаний.
+        - button "Посмотреть пример" [ref=f63e134] [cursor=pointer]
+      - article [ref=f63e138]:
+        - heading "Мобильное приложение" [level=3] [ref=f63e142]
+        - paragraph [ref=f63e143]: Чат с педагогом, домашние задания всегда под рукой, игровое запоминание слов, мотивационные стикеры и монетки за активность с магазином подарков.
+        - button "Посмотреть видеообзор" [ref=f63e144] [cursor=pointer]
+      - article [ref=f63e147]:
+        - heading "Носитель языка" [level=3] [ref=f63e152]
+        - paragraph [ref=f63e153]: В стоимость абонемента входит разговорный клуб с носителем.
+        - button "Познакомиться с носителем" [ref=f63e154] [cursor=pointer]
+      - article [ref=f63e155]:
+        - heading "Помощь с домашним заданием" [level=3] [ref=f63e160]
+        - paragraph [ref=f63e161]: В стоимость абонемента входят консультации с педагогом по вопросам школьного домашнего задания.
+  - generic [ref=f63e163]:
+    - generic [ref=f63e164]:
+      - generic [ref=f63e165]: Наши направления
+      - heading "Программы под каждый возраст" [level=2] [ref=f63e167]
+      - paragraph [ref=f63e168]: Подбираем формат, пособия, темп под возраст и уровень ребёнка, а также цели обучения (улучшить оценку в школе, сделать английский привычкой, подготовиться к экзаменам и переезду за границу).
+    - generic [ref=f63e169]:
+      - link "2-6 лет Для дошкольников Английский в игре через творчество, песни, кулинарные мастер-классы и развитие памяти. Узнать подробнее" [ref=f63e170] [cursor=pointer]:
+        - /url: /doshkolniki
+        - generic [ref=f63e171]: 2-6 лет
+        - generic [ref=f63e173]:
+          - heading "Для дошкольников" [level=3] [ref=f63e174]
+          - paragraph [ref=f63e175]: Английский в игре через творчество, песни, кулинарные мастер-классы и развитие памяти.
+          - generic [ref=f63e176]: Узнать подробнее
+      - 'link "7-11 лет Для младших школьников Все аспекты языка: чтение, письмо, аудирование и уверенное говорение. Узнать подробнее" [ref=f63e179] [cursor=pointer]':
+        - /url: /mladshie-shkolniki
+        - generic [ref=f63e180]: 7-11 лет
+        - generic [ref=f63e182]:
+          - heading "Для младших школьников" [level=3] [ref=f63e183]
+          - paragraph [ref=f63e184]: "Все аспекты языка: чтение, письмо, аудирование и уверенное говорение."
+          - generic [ref=f63e185]: Узнать подробнее
+      - 'link "12-17 лет Для подростков Язык для жизни и экзаменов: разговорная практика, грамматика, олимпиады. Узнать подробнее" [ref=f63e188] [cursor=pointer]':
+        - /url: /podrostki
+        - generic [ref=f63e189]: 12-17 лет
+        - generic [ref=f63e191]:
+          - heading "Для подростков" [level=3] [ref=f63e192]
+          - paragraph [ref=f63e193]: "Язык для жизни и экзаменов: разговорная практика, грамматика, олимпиады."
+          - generic [ref=f63e194]: Узнать подробнее
+  - generic [ref=f63e198]:
+    - generic [ref=f63e199]:
+      - generic [ref=f63e200]: Все просто и без стресса
+      - heading "Как начинается обучение в Фоксинбург" [level=2] [ref=f63e202]
+      - paragraph [ref=f63e203]: Четыре простых шага — от знакомства до первого занятия. Помогаем подобрать формат и группу под вашего ребенка.
+    - generic [ref=f63e204]:
+      - article [ref=f63e205]:
+        - generic [ref=f63e206]: "1"
+        - heading "Бесплатная диагностика знаний" [level=3] [ref=f63e211]
+        - paragraph [ref=f63e212]: Методист проверит текущий уровень и составит индивидуальный план обучения.
+        - generic [ref=f63e213]: Бесплатно
+      - article [ref=f63e214]:
+        - generic [ref=f63e215]: "2"
+        - heading "Подбор группы" [level=3] [ref=f63e222]
+        - paragraph [ref=f63e223]: Вместе с администратором школы подберем подходящую группу по возрасту и уровню.
+        - generic [ref=f63e224]: Удобный график
+      - article [ref=f63e225]:
+        - generic [ref=f63e226]: "3"
+        - heading "Пробный урок" [level=3] [ref=f63e230]
+        - paragraph [ref=f63e231]: Необязательный шаг — ребенок знакомится с педагогом и форматом занятий.
+        - generic [ref=f63e232]: По желанию
+      - article [ref=f63e233]:
+        - generic [ref=f63e234]: "4"
+        - heading "Старт занятий" [level=3] [ref=f63e239]
+        - paragraph [ref=f63e240]: Начинаем учиться! Регулярные занятия, отчеты родителям и видимый прогресс.
+        - generic [ref=f63e241]: Поехали
+    - button "Записаться на диагностику" [ref=f63e243] [cursor=pointer]
+  - generic [ref=f63e248]:
+    - generic [ref=f63e249]:
+      - generic [ref=f63e250]: Команда
+      - heading "Люди, которым вы доверяете детей" [level=2] [ref=f63e252]
+      - paragraph [ref=f63e253]: Педагоги, методисты, администраторы и руководители Фоксинбург. Знакомьтесь — смотрите видеовизитки наших специалистов.
+    - generic [ref=f63e254]:
+      - article [ref=f63e255]:
+        - generic [ref=f63e257]:
+          - generic [ref=f63e258]: Педагог
+          - heading "Саляхова Алина" [level=3] [ref=f63e259]
+          - paragraph [ref=f63e260]: Педагог английского и немецкого языков
+          - generic [ref=f63e261]:
+            - button "Видеовизитка" [ref=f63e262] [cursor=pointer]
+            - button "Фрагмент урока" [ref=f63e265] [cursor=pointer]
+      - article [ref=f63e268]:
+        - generic [ref=f63e270]:
+          - generic [ref=f63e271]: Педагог
+          - heading "Дмитроченко Юлия" [level=3] [ref=f63e272]
+          - paragraph [ref=f63e273]: Педагог английского языка
+          - generic [ref=f63e274]:
+            - button "Видеовизитка" [ref=f63e275] [cursor=pointer]
+            - button "Фрагмент урока" [ref=f63e278] [cursor=pointer]
+      - article [ref=f63e281]:
+        - generic [ref=f63e283]:
+          - generic [ref=f63e284]: Педагог
+          - heading "Птицын Владислав" [level=3] [ref=f63e285]
+          - paragraph [ref=f63e286]: Педагог английского языка
+          - generic [ref=f63e287]:
+            - button "Видеовизитка" [ref=f63e288] [cursor=pointer]
+            - button "Фрагмент урока" [ref=f63e291] [cursor=pointer]
+      - article [ref=f63e294]:
+        - generic [ref=f63e296]:
+          - generic [ref=f63e297]: Педагог
+          - heading "Анохин Роман" [level=3] [ref=f63e298]
+          - paragraph [ref=f63e299]: Педагог английского языка
+          - generic [ref=f63e300]:
+            - button "Видеовизитка" [ref=f63e301] [cursor=pointer]
+            - button "Фрагмент урока" [ref=f63e304] [cursor=pointer]
+      - article [ref=f63e307]:
+        - generic [ref=f63e309]:
+          - generic [ref=f63e310]: Педагог
+          - heading "Шевченко Дарья" [level=3] [ref=f63e311]
+          - paragraph [ref=f63e312]: Педагог китайского языка
+          - generic [ref=f63e313]:
+            - button "Видеовизитка" [ref=f63e314] [cursor=pointer]
+            - button "Фрагмент урока" [ref=f63e317] [cursor=pointer]
+      - article [ref=f63e320]:
+        - generic [ref=f63e322]:
+          - generic [ref=f63e323]: Методист
+          - heading "Коваленко Елизавета" [level=3] [ref=f63e324]
+          - paragraph [ref=f63e325]: Контроль качества и программы обучения
+          - button "Видеовизитка" [ref=f63e327] [cursor=pointer]
+      - article [ref=f63e330]:
+        - generic [ref=f63e332]:
+          - generic [ref=f63e333]: Администратор
+          - heading "Головизнина Ираида" [level=3] [ref=f63e334]
+          - paragraph [ref=f63e335]: Поможет с расписанием и записью
+      - article [ref=f63e336]:
+        - generic [ref=f63e338]:
+          - generic [ref=f63e339]: Администратор
+          - heading "Джанузакова Салтанат" [level=3] [ref=f63e340]
+          - paragraph [ref=f63e341]: Поможет с расписанием и записью
+      - article [ref=f63e342]:
+        - generic [ref=f63e344]:
+          - generic [ref=f63e345]: Руководитель школы
+          - heading "Дымова Вероника Александровна" [level=3] [ref=f63e346]
+          - paragraph [ref=f63e347]: Руководитель школы
+      - article [ref=f63e348]:
+        - generic [ref=f63e350]:
+          - generic [ref=f63e351]: Руководитель школы
+          - heading "Дымов Григорий Юрьевич" [level=3] [ref=f63e352]
+          - paragraph [ref=f63e353]: Руководитель школы
+  - generic [ref=f63e355]:
+    - generic [ref=f63e356]:
+      - generic [ref=f63e357]: Другие языки
+      - heading "Изучайте новые языки в Фоксинбург" [level=2] [ref=f63e359]
+      - paragraph [ref=f63e360]: Помимо английского, мы обучаем немецкому и китайскому — по той же проверенной методике, в мини-группах.
+    - generic [ref=f63e361]:
+      - article [ref=f63e362]:
+        - generic [ref=f63e363]:
+          - generic [ref=f63e364]: DE
+          - generic [ref=f63e365]: Немецкий язык
+        - generic [ref=f63e366]:
+          - generic [ref=f63e369]:
+            - heading "Саляхова Алина" [level=3] [ref=f63e370]
+            - text: Педагог немецкого языка
+          - generic [ref=f63e371]:
+            - generic [ref=f63e372]:
+              - generic [ref=f63e373]: Формат
+              - generic [ref=f63e374]: 2 раза в неделю по 60 мин
+            - generic [ref=f63e375]:
+              - generic [ref=f63e376]: Группа
+              - generic [ref=f63e377]: 9 000 ₽/мес
+            - generic [ref=f63e378]:
+              - generic [ref=f63e379]: Индивидуально
+              - generic [ref=f63e380]: 2 500 ₽/час
+            - generic [ref=f63e381]: Есть утренние группы (для 2-й смены)
+          - generic [ref=f63e386]:
+            - button "Записаться на курс" [ref=f63e387] [cursor=pointer]
+            - button "Пробный урок — 1 125 ₽" [ref=f63e388] [cursor=pointer]
+      - article [ref=f63e389]:
+        - generic [ref=f63e390]:
+          - generic [ref=f63e391]: CN
+          - generic [ref=f63e392]: Китайский язык
+        - generic [ref=f63e393]:
+          - generic [ref=f63e396]:
+            - heading "Шевченко Дарья" [level=3] [ref=f63e397]
+            - text: Педагог китайского языка
+          - generic [ref=f63e398]:
+            - generic [ref=f63e399]:
+              - generic [ref=f63e400]: Формат
+              - generic [ref=f63e401]: 2 раза в неделю по 60 мин
+            - generic [ref=f63e402]:
+              - generic [ref=f63e403]: Группа
+              - generic [ref=f63e404]: 9 000 ₽/мес
+            - generic [ref=f63e405]:
+              - generic [ref=f63e406]: Индивидуально
+              - generic [ref=f63e407]: 2 500 ₽/час
+            - generic [ref=f63e408]: Есть утренние группы (для 2-й смены)
+          - generic [ref=f63e413]:
+            - button "Записаться на курс" [ref=f63e414] [cursor=pointer]
+            - button "Пробный урок — 1 125 ₽" [ref=f63e415] [cursor=pointer]
+  - generic [ref=f63e418]:
+    - generic [ref=f63e419] [cursor=pointer]: Добавьте фото
+    - generic [ref=f63e426] [cursor=pointer]: Добавьте фото
+    - generic [ref=f63e433] [cursor=pointer]: Добавьте фото
+    - generic [ref=f63e440] [cursor=pointer]: Добавьте фото
+    - generic [ref=f63e447] [cursor=pointer]: Добавьте фото
+    - generic [ref=f63e454] [cursor=pointer]: Добавьте фото
+  - generic [ref=f63e462]:
+    - generic [ref=f63e463]: Запись открыта
+    - heading "Запись на новый учебный год" [level=2] [ref=f63e464]
+    - paragraph [ref=f63e465]: Выберите формат занятий, который подходит вашему ребёнку
+    - generic [ref=f63e466]:
+      - generic [ref=f63e467]:
+        - generic [ref=f63e468]: Популярное
+        - generic [ref=f63e469]:
+          - heading "Онлайн занятия" [level=3] [ref=f63e470]
+          - text: Из любой точки мира
+        - generic [ref=f63e471]:
+          - list [ref=f63e472]:
+            - listitem [ref=f63e473]: Индивидуально или мини-группа
+            - listitem [ref=f63e474]: 2 занятия в неделю по 60 мин
+            - listitem [ref=f63e475]: Гибкое расписание
+            - listitem [ref=f63e476]: Интерактивное мобильное приложение
+            - listitem [ref=f63e477]: Домашние задания в приложении
+          - generic [ref=f63e478]:
+            - text: 8 200 ₽/мес
+            - generic [ref=f63e479]: при оплате за год
+          - generic [ref=f63e480]:
+            - text: 9 000 ₽/мес
+            - generic [ref=f63e481]: при ежемесячной оплате
+          - link "Записаться" [ref=f63e482] [cursor=pointer]:
+            - /url: "#fxb-enrollment"
+      - generic [ref=f63e483]:
+        - generic [ref=f63e484]:
+          - heading "Офлайн мини-группы" [level=3] [ref=f63e485]
+          - text: Лихачевский / Ракетостроителей
+        - generic [ref=f63e486]:
+          - list [ref=f63e487]:
+            - listitem [ref=f63e488]: До 7 человек в группе
+            - listitem [ref=f63e489]: 2 занятия в неделю по 60 мин
+            - listitem [ref=f63e490]: Утренние, дневные и вечерние группы
+            - listitem [ref=f63e491]: "Возраст: от 2 до 18 лет и взрослые"
+            - listitem [ref=f63e492]: Интерактивное мобильное приложение
+            - listitem [ref=f63e493]: Разговорный клуб с носителем
+            - listitem [ref=f63e494]: Помощь со школьным домашним заданием
+          - generic [ref=f63e495]:
+            - text: 8 200 ₽/мес
+            - generic [ref=f63e496]: при оплате за год
+          - generic [ref=f63e497]:
+            - text: 9 000 ₽/мес
+            - generic [ref=f63e498]: при ежемесячной оплате
+          - link "Записаться" [ref=f63e499] [cursor=pointer]:
+            - /url: "#fxb-enrollment"
+      - generic [ref=f63e500]:
+        - generic [ref=f63e501]:
+          - heading "Пробное занятие" [level=3] [ref=f63e502]
+          - text: Знакомство с методикой
+        - generic [ref=f63e503]:
+          - list [ref=f63e504]:
+            - listitem [ref=f63e505]: Знакомство с педагогом
+            - listitem [ref=f63e506]: Подбор группы и расписания
+            - listitem [ref=f63e507]: Рекомендации по обучению
+            - listitem [ref=f63e508]: Длительность — 60 мин
+          - generic [ref=f63e509]:
+            - text: 1 125 ₽
+            - generic [ref=f63e510]: 60 минут
+          - link "Записаться" [ref=f63e511] [cursor=pointer]:
+            - /url: "#fxb-enrollment"
+      - generic [ref=f63e512]:
+        - generic [ref=f63e513]:
+          - heading "Диагностика знаний" [level=3] [ref=f63e514]
+          - text: Первый шаг к обучению
+        - generic [ref=f63e515]:
+          - list [ref=f63e516]:
+            - listitem [ref=f63e517]: Диагностика с методистом
+            - listitem [ref=f63e518]: Консультация для родителя
+            - listitem [ref=f63e519]: Индивидуальный трекер обучения
+            - listitem [ref=f63e520]: Подбор группы
+          - generic [ref=f63e521]:
+            - text: 0 ₽
+            - generic [ref=f63e522]: бесплатно
+          - link "Записаться" [ref=f63e523] [cursor=pointer]:
+            - /url: "#fxb-enrollment"
+      - generic [ref=f63e524]:
+        - generic [ref=f63e525]:
+          - heading "Занятия для малышей 2–3 года" [level=3] [ref=f63e526]
+          - text: Раннее развитие
+        - generic [ref=f63e527]:
+          - list [ref=f63e528]:
+            - listitem [ref=f63e529]: До 7 детей в группе
+            - listitem [ref=f63e530]: 2 раза в неделю по 45 минут
+            - listitem [ref=f63e531]: Игровая форма
+          - generic [ref=f63e532]:
+            - text: 6 050 ₽/мес
+            - generic [ref=f63e533]: при оплате за год
+          - generic [ref=f63e534]:
+            - text: 6 550 ₽/мес
+            - generic [ref=f63e535]: при ежемесячной оплате
+          - link "Записаться" [ref=f63e536] [cursor=pointer]:
+            - /url: "#fxb-enrollment"
+      - generic [ref=f63e537]:
+        - generic [ref=f63e538]:
+          - heading "Индивидуальные занятия" [level=3] [ref=f63e539]
+          - text: Персональная программа
+        - generic [ref=f63e540]:
+          - list [ref=f63e541]:
+            - listitem [ref=f63e542]: Удобное количество занятий в неделю
+            - listitem [ref=f63e543]: Длительность — 60 минут
+            - listitem [ref=f63e544]: Индивидуальный подбор программы
+            - listitem [ref=f63e545]: Доступ в мобильное приложение
+          - generic [ref=f63e546]:
+            - text: 2 500 ₽
+            - generic [ref=f63e547]: за 60 минут
+          - link "Записаться" [ref=f63e548] [cursor=pointer]:
+            - /url: "#fxb-enrollment"
+  - generic [ref=f63e550]:
+    - generic [ref=f63e551]:
+      - generic [ref=f63e552]: Отзывы
+      - heading "Что говорят родители" [level=2] [ref=f63e554]
+      - paragraph [ref=f63e555]: Реальные истории семей, которые выбрали Фоксинбург. Письменные и видеоотзывы — без фильтров и постановки.
+    - tablist [ref=f63e556]:
+      - tab "Письменные" [ref=f63e557] [cursor=pointer]
+      - tab "Видеоотзывы" [ref=f63e558] [cursor=pointer]
+    - generic [ref=f63e560]:
+      - article [ref=f63e561]:
+        - generic "5 из 5" [ref=f63e562]
+        - paragraph [ref=f63e573]: Дочка ходит с удовольствием и сама напоминает про занятия. За полгода заговорила фразами, перестала бояться ошибок. Отдельное спасибо педагогу за тёплое отношение к детям!
+        - generic [ref=f63e574]:
+          - generic [ref=f63e575]: А
+          - generic [ref=f63e576]:
+            - strong [ref=f63e577]: Анна
+            - text: мама Софии, 6 лет
+      - article [ref=f63e578]:
+        - generic "5 из 5" [ref=f63e579]
+        - paragraph [ref=f63e590]: Искали школу рядом с домом в Долгопрудном и не прогадали. Маленькие группы, живые уроки, регулярные отчёты о прогрессе. Сын подтянул английский в школе и теперь среди лучших в классе.
+        - generic [ref=f63e591]:
+          - generic [ref=f63e592]: Е
+          - generic [ref=f63e593]:
+            - strong [ref=f63e594]: Екатерина
+            - text: мама Миши, 9 лет
+      - article [ref=f63e595]:
+        - generic "5 из 5" [ref=f63e596]
+        - paragraph [ref=f63e607]: Подросток сначала сопротивлялся, а теперь сам делает домашку в приложении. Преподаватели нашли подход, занятия не похожи на скучные школьные уроки. Готовимся к ОГЭ спокойно и уверенно.
+        - generic [ref=f63e608]:
+          - generic [ref=f63e609]: О
+          - generic [ref=f63e610]:
+            - strong [ref=f63e611]: Ольга
+            - text: мама Артёма, 14 лет
+      - article [ref=f63e612]:
+        - generic "5 из 5" [ref=f63e613]
+        - paragraph [ref=f63e624]: Очень удобно, что есть утренние группы для второй смены. Ребёнок не устаёт, всё успевает. Администратор всегда на связи, помогает с расписанием. Рекомендую всем знакомым!
+        - generic [ref=f63e625]:
+          - generic [ref=f63e626]: М
+          - generic [ref=f63e627]:
+            - strong [ref=f63e628]: Марина
+            - text: мама Вари, 8 лет
+      - article [ref=f63e629]:
+        - generic "5 из 5" [ref=f63e630]
+        - paragraph [ref=f63e641]: Начинали с нуля в 4 года через игры и песни. Сейчас сын понимает мультики на английском без перевода. Атмосфера в школе тёплая, видно, что детей здесь действительно любят.
+        - generic [ref=f63e642]:
+          - generic [ref=f63e643]: Н
+          - generic [ref=f63e644]:
+            - strong [ref=f63e645]: Наталья
+            - text: мама Лёвы, 5 лет
+      - article [ref=f63e646]:
+        - generic "5 из 5" [ref=f63e647]
+        - paragraph [ref=f63e658]: Дочь занимается ещё и немецким с Алиной — педагог потрясающий. Видно системный подход и заботу о результате. Прозрачная оплата, удобное приложение, всё по-современному.
+        - generic [ref=f63e659]:
+          - generic [ref=f63e660]: И
+          - generic [ref=f63e661]:
+            - strong [ref=f63e662]: Ирина
+            - text: мама Полины, 11 лет
+    - link "Хотите так же? Записаться" [ref=f63e664] [cursor=pointer]:
+      - /url: "#fxb-enrollment"
+  - generic [ref=f63e666]:
+    - heading "Часто задаваемые вопросы" [level=2] [ref=f63e667]
+    - paragraph [ref=f63e668]: Ответы на самые популярные вопросы от родителей
+    - generic [ref=f63e669]:
+      - generic [ref=f63e670]:
+        - button "Я не уверена, понравится ли моему ребенку?" [ref=f63e671] [cursor=pointer]
+        - paragraph [ref=f63e675]: Мы приглашаем на бесплатную пробную диагностику, где ребёнок познакомится с педагогом и атмосферой занятий. Более 90% детей после пробного урока хотят продолжить обучение!
+      - generic [ref=f63e676]:
+        - button "Мой даже букв не знает. Как он будет заниматься, если все только на английском?" [ref=f63e677] [cursor=pointer]
+        - paragraph [ref=f63e681]: Мы работаем с детьми с нулевого уровня. Педагоги используют игровую методику, TPR (полное физическое реагирование) и визуальные материалы. Ребёнок начинает понимать и говорить естественно, как осваивал родной язык.
+      - generic [ref=f63e682]:
+        - button "А ваша программа совпадает со школьной? Ребенок не запутается?" [ref=f63e683] [cursor=pointer]
+        - paragraph [ref=f63e687]: "Наша программа дополняет школьную и идёт глубже. Мы не просто учим грамматику — мы развиваем все четыре навыка: говорение, аудирование, чтение и письмо. Благодаря этому дети чувствуют себя увереннее и в школе."
+      - generic [ref=f63e688]:
+        - button "Как проходят занятия?" [ref=f63e689] [cursor=pointer]
+        - paragraph [ref=f63e693]: Занятия проходят в мини-группах до 7 человек. Каждый урок включает разговорную практику, игровые активности, работу с учебными материалами и закрепление через интерактивное приложение. Длительность — 45–60 минут в зависимости от возраста.
+      - generic [ref=f63e694]:
+        - button "Сколько раз в неделю проходят занятия?" [ref=f63e695] [cursor=pointer]
+        - paragraph [ref=f63e699]: Занятия проходят 2 раза в неделю по 60 минут. Мы предлагаем утренние, дневные и вечерние группы, чтобы подобрать удобное расписание для вашей семьи.
+      - generic [ref=f63e700]:
+        - button "Как оплачиваются занятия?" [ref=f63e701] [cursor=pointer]
+        - paragraph [ref=f63e705]: Оплата производится помесячно или за семестр (со скидкой). Принимаем банковские карты, переводы, а также маткапитал. Подробную информацию о ценах можно узнать у администратора.
+      - generic [ref=f63e706]:
+        - button "Задаете ли вы домашние задания? Я не смогу помогать, так как не знаю языка." [ref=f63e707] [cursor=pointer]
+        - paragraph [ref=f63e711]: Да, домашние задания выполняются через наше мобильное приложение. Они разработаны так, чтобы ребёнок мог делать их самостоятельно — в игровом формате с подсказками. Помощь родителей не требуется!
+      - generic [ref=f63e712]:
+        - button "Как я пойму, что у ребенка появился результат?" [ref=f63e713] [cursor=pointer]
+        - paragraph [ref=f63e717]: "Мы предоставляем: еженедельные видео-отчёты, отчёты о том, что было на уроке, открытые уроки, регулярные тестирования с обратной связью. Вы всегда будете в курсе прогресса ребёнка."
+      - generic [ref=f63e718]:
+        - button "Как вы обучаете чтению?" [ref=f63e719] [cursor=pointer]
+        - paragraph [ref=f63e723]: Мы используем метод фониксов (Phonics) — ребёнок учится читать через звуки, а не через зубрёжку букв. Это естественный и эффективный подход, который позволяет детям начать читать уже через несколько месяцев.
+  - generic [ref=f63e725]:
+    - button [ref=f63e726] [cursor=pointer]
+    - generic [ref=f63e733]:
+      - generic [ref=f63e734]:
+        - strong [ref=f63e735]: "Полное наименование:"
+        - generic [ref=f63e736]: ИП Дымова Вероника Юрьевна
+      - generic [ref=f63e737]:
+        - strong [ref=f63e738]: "Образовательная лицензия:"
+        - generic [ref=f63e739]: Лицензия на осуществление образовательной деятельности (указать номер и дату)
+      - generic [ref=f63e740]:
+        - strong [ref=f63e741]: "Адрес осуществления деятельности:"
+        - generic [ref=f63e742]: г. Долгопрудный, пр-кт Лихачевский, 76к1; пр-кт Ракетостроителей, 9к3
+      - generic [ref=f63e743]:
+        - strong [ref=f63e744]: "Режим работы:"
+        - generic [ref=f63e745]: Ежедневно с 9:00 до 21:00
+      - generic [ref=f63e746]:
+        - strong [ref=f63e747]: "Контактный телефон:"
+        - generic [ref=f63e748]:
+          - link "8 993 923-23-09" [ref=f63e749] [cursor=pointer]:
+            - /url: tel:+79939232309
+          - text: ","
+          - link "8 916 732-31-69" [ref=f63e750] [cursor=pointer]:
+            - /url: tel:+79167323169
+      - generic [ref=f63e751]:
+        - strong [ref=f63e752]: "Электронная почта:"
+        - link "school@foxinburg-edu.ru" [ref=f63e754] [cursor=pointer]:
+          - /url: mailto:school@foxinburg-edu.ru
+      - generic [ref=f63e755]:
+        - strong [ref=f63e756]: "Основные сведения:"
+        - generic [ref=f63e757]: ИП ДЫМОВА ВЕРОНИКА АЛЕКСАНДРОВНА, ИНН 611904726658
+      - generic [ref=f63e758]:
+        - strong [ref=f63e759]: "Структура и органы управления:"
+        - generic [ref=f63e760]: Единоличный руководитель — Дымова Вероника Александровна
+      - generic [ref=f63e761]:
+        - strong [ref=f63e762]: "Документы:"
+        - link "Лицензия" [ref=f63e764] [cursor=pointer]:
+          - /url: https://disk.yandex.ru/d/ZDlm_uGmwxH4kw
+      - generic [ref=f63e765]:
+        - strong [ref=f63e766]: "Образование:"
+        - generic [ref=f63e767]: Дополнительное образование для детей и взрослых
+      - generic [ref=f63e768]:
+        - strong [ref=f63e769]: "Руководство:"
+        - generic [ref=f63e770]: Дымова Вероника Александровна — руководитель
+      - generic [ref=f63e771]:
+        - strong [ref=f63e772]: "Педагогический состав:"
+        - generic [ref=f63e773]: Информация о педагогическом составе доступна по запросу у администратора
+      - generic [ref=f63e774]:
+        - strong [ref=f63e775]: "Материально-техническое обеспечение:"
+        - generic [ref=f63e776]: Просторные оборудованные кабинеты, интерактивные доски, учебные материалы. Помещение более 200 кв. м с 2 с/у для комфортного пребывания
+      - generic [ref=f63e777]:
+        - strong [ref=f63e778]: "Платные образовательные услуги:"
+        - generic [ref=f63e779]: Информация о стоимости доступна на странице Цены и у администратора
+      - generic [ref=f63e780]:
+        - strong [ref=f63e781]: "Финансово-хозяйственная деятельность:"
+        - generic [ref=f63e782]: Информация предоставляется по запросу
+      - generic [ref=f63e783]:
+        - strong [ref=f63e784]: "Вакантные места:"
+        - generic [ref=f63e785]:
+          - text: Информация о наличии свободных мест в группах доступна у администратора по телефону
+          - link "8 993 923-23-09" [ref=f63e786] [cursor=pointer]:
+            - /url: tel:+79939232309
+      - generic [ref=f63e787]:
+        - strong [ref=f63e788]: "Стипендии и меры поддержки:"
+        - generic [ref=f63e789]: Принимается оплата материнским капиталом
+      - generic [ref=f63e790]:
+        - strong [ref=f63e791]: "Международное сотрудничество:"
+        - generic [ref=f63e792]: Информация отсутствует
+      - generic [ref=f63e793]:
+        - strong [ref=f63e794]: "Организация питания:"
+        - generic [ref=f63e795]: Питание организовано в рамках Летней Академии через специализированную организацию
+      - paragraph [ref=f63e796]: Полный перечень документов и сведений доступен по запросу у администратора школы.
+  - generic [ref=f63e798]:
+    - heading "Контакты" [level=2] [ref=f63e799]
+    - paragraph [ref=f63e800]: Два филиала в Долгопрудном — выберите ближайший
+    - generic [ref=f63e801]:
+      - iframe [ref=f63e803]:
+        - generic [ref=f65e2]:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic [ref=f65e7]:
+                      - generic [ref=f65e8]:
+                        - button [ref=f65e11] [cursor=pointer]
+                        - button [ref=f65e13] [cursor=pointer]
+                      - iframe [ref=f65e16]:
+                        
+                    - generic [ref=f65e17]:
+                      - generic [ref=f65e20]:
+                        - button "Приблизить" [ref=f65e22] [cursor=pointer]
+                        - button "Отдалить" [ref=f65e24] [cursor=pointer]
+                      - iframe [ref=f65e25]:
+                        
+                    - generic [ref=f65e26]:
+                      - button "Моё местоположение" [ref=f65e29] [cursor=pointer]
+                      - iframe [ref=f65e30]:
+                        
+                    - generic:
+                      - generic:
+                        - generic:
+                          - button "Открыть в Яндекс Картах"
+                      - iframe [ref=f65e31]:
+                        
+                    - generic:
+                      - generic:
+                        - generic:
+                          - button "Открыть в Картах"
+                      - iframe [ref=f65e32]:
+                        
+                    - generic [ref=f65e33]:
+                      - button [ref=f65e36] [cursor=pointer]
+                      - iframe [ref=f65e37]:
+                        
+                  - generic:
+                    - generic:
+                      - contentinfo:
+                        - generic [ref=f65e39]:
+                          - link "Условия использования" [ref=f65e40] [cursor=pointer]:
+                            - /url: https://yandex.ru/legal/maps_termsofuse/?lang=ru
+                          - link "Конфиденциальность" [ref=f65e41] [cursor=pointer]:
+                            - /url: https://yandex.ru/legal/confidential/?lang=ru
+                    - generic: 200 м
+                  - iframe [ref=f65e42]:
+                    
+              - iframe [ref=f65e43]:
+                
+      - generic [ref=f63e804]:
+        - generic [ref=f63e805]:
+          - heading "Филиал Лихачевский" [level=3] [ref=f63e806]
+          - link "г. Долгопрудный, Лихачевский пр-кт, 76к1" [ref=f63e807] [cursor=pointer]:
+            - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+          - link "8 993 923-23-09" [ref=f63e811] [cursor=pointer]:
+            - /url: tel:+79939232309
+        - generic [ref=f63e814]:
+          - heading "Филиал Ракетостроителей" [level=3] [ref=f63e815]
+          - link "г. Долгопрудный, Ракетостроителей пр-кт, 9к3" [ref=f63e816] [cursor=pointer]:
+            - /url: https://yandex.ru/maps/org/foxinburg/1234567890/
+          - link "8 916 732-31-69" [ref=f63e820] [cursor=pointer]:
+            - /url: tel:+79167323169
+        - generic [ref=f63e823]:
+          - generic [ref=f63e824]: Ежедневно с 9:00 до 21:00
+          - link "school@foxinburg-edu.ru" [ref=f63e833] [cursor=pointer]:
+            - /url: mailto:school@foxinburg-edu.ru
+        - generic [ref=f63e834]:
+          - generic [ref=f63e835]: "Мы в соцсетях:"
+          - generic [ref=f63e836]:
+            - link "ВКонтакте" [ref=f63e837] [cursor=pointer]:
+              - /url: https://vk.com/foxyfoxclub
+            - link "Max канал" [ref=f63e840] [cursor=pointer]:
+              - /url: https://max.ru/id611904726658_biz
+            - link "Telegram" [ref=f63e843] [cursor=pointer]:
+              - /url: https://t.me/foxinburg
+            - link "WhatsApp" [ref=f63e846] [cursor=pointer]:
+              - /url: https://wa.me/79939232309
+  - generic [ref=f63e850]:
+    - generic [ref=f63e851]:
+      - generic [ref=f63e852]:
+        - link "Фоксинбург Фоксинбург" [ref=f63e853] [cursor=pointer]:
+          - /url: /
+          - img "Фоксинбург" [ref=f63e854]
+          - generic [ref=f63e855]: Фоксинбург
+        - paragraph [ref=f63e856]: Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.
+        - generic [ref=f63e857]:
+          - link "ВКонтакте" [ref=f63e858] [cursor=pointer]:
+            - /url: https://vk.com/foxyfoxclub
+          - link "Max" [ref=f63e861] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_biz
+          - link "Telegram" [ref=f63e864] [cursor=pointer]:
+            - /url: https://t.me/foxinburg
+          - link "WhatsApp" [ref=f63e867] [cursor=pointer]:
+            - /url: https://wa.me/79939232309
+      - generic [ref=f63e870]:
+        - heading "Навигация" [level=4] [ref=f63e871]
+        - link "Главная" [ref=f63e872] [cursor=pointer]:
+          - /url: /
+        - link "Курс по чтению" [ref=f63e873] [cursor=pointer]:
+          - /url: /reading
+        - link "Курс по грамматике" [ref=f63e874] [cursor=pointer]:
+          - /url: /grammar
+        - link "Подготовка к школе" [ref=f63e875] [cursor=pointer]:
+          - /url: /preparation
+        - link "Для дошкольников" [ref=f63e876] [cursor=pointer]:
+          - /url: /doshkolniki
+        - link "Для младших школьников" [ref=f63e877] [cursor=pointer]:
+          - /url: /mladshie-shkolniki
+        - link "Для подростков" [ref=f63e878] [cursor=pointer]:
+          - /url: /podrostki
+      - generic [ref=f63e879]:
+        - heading "О школе" [level=4] [ref=f63e880]
+        - link "Новости" [ref=f63e881] [cursor=pointer]:
+          - /url: /novosti
+        - link "Вакансии" [ref=f63e882] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=f63e883] [cursor=pointer]:
+          - /url: /kontakty
+        - link "Лицензия" [ref=f63e884] [cursor=pointer]:
+          - /url: https://disk.yandex.ru/d/ZDlm_uGmwxH4kw
+        - link "Летняя Академия" [ref=f63e885] [cursor=pointer]:
+          - /url: /letnyaya-akademiya
+        - link "Личный кабинет" [ref=f63e886] [cursor=pointer]:
+          - /url: /members/login
+      - generic [ref=f63e887]:
+        - heading "Контакты" [level=4] [ref=f63e888]
+        - link "8 993 923-23-09" [ref=f63e889] [cursor=pointer]:
+          - /url: tel:+79939232309
+        - link "8 916 732-31-69" [ref=f63e890] [cursor=pointer]:
+          - /url: tel:+79167323169
+        - link "school@foxinburg-edu.ru" [ref=f63e891] [cursor=pointer]:
+          - /url: mailto:school@foxinburg-edu.ru
+        - generic [ref=f63e892]: Ежедневно 9:00 — 21:00
+    - generic [ref=f63e893]:
+      - generic [ref=f63e894]:
+        - generic [ref=f63e895]: ИП Дымова Вероника Александровна
+        - generic [ref=f63e896]: ИНН 611904726658
+      - link "Политика конфиденциальности" [ref=f63e898] [cursor=pointer]:
+        - /url: /policy

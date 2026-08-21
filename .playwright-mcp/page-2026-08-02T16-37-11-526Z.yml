@@ -1,0 +1,72 @@
+- generic [active] [ref=f5e1]:
+  - navigation [ref=f5e3]:
+    - navigation [ref=f5e4]:
+      - link [ref=f5e22] [cursor=pointer]:
+        - /url: https://tilda.ru/projects/
+      - generic [ref=f5e28]:
+        - link "Мои сайты" [ref=f5e29] [cursor=pointer]:
+          - /url: https://tilda.ru/projects/
+        - link "Тарифы и оплата" [ref=f5e30] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/plan/
+        - link "Профиль" [ref=f5e31] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/
+        - link "Пригласи друга" [ref=f5e32] [cursor=pointer]:
+          - /url: https://tilda.ru/identity/referrals/
+      - generic [ref=f5e33]:
+        - link "Справочный центр" [ref=f5e34] [cursor=pointer]:
+          - /url: https://help-ru.tilda.cc
+        - link "Вебинары" [ref=f5e35] [cursor=pointer]:
+          - /url: https://webinars.tilda.cc/ru
+        - link "Уроки и статьи" [ref=f5e36] [cursor=pointer]:
+          - /url: https://tilda.education
+        - link "Выйти" [ref=f5e37] [cursor=pointer]:
+          - /url: https://tilda.ru/login/exit/
+  - generic [ref=f5e38]:
+    - complementary:
+      - button
+    - generic [ref=f5e2064]:
+      - generic [ref=f5e2066]:
+        - link "Все пользователи 13" [ref=f5e2070] [cursor=pointer]:
+          - /url: "#/"
+          - generic [ref=f5e2071]: Все пользователи
+          - superscript [ref=f5e2072]: "13"
+        - generic [ref=f5e2075]:
+          - generic [ref=f5e2076]: Группы
+          - button [ref=f5e2081] [cursor=pointer]
+        - generic [ref=f5e2086]:
+          - generic [ref=f5e2087]: Курсы
+          - button [ref=f5e2092] [cursor=pointer]
+        - link [ref=f5e2096] [cursor=pointer]:
+          - /url: "#/sitesettings"
+          - button "Настройки личного кабинета" [ref=f5e2099]
+      - generic [ref=f5e2103]:
+        - generic [ref=f5e2105]:
+          - link "Мои сайты" [ref=f5e2107] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/
+          - link "Языковая школа Фоксинбург (Foxy Fox)" [ref=f5e2109] [cursor=pointer]:
+            - /url: https://tilda.ru/projects/?projectid=2053071
+          - generic [ref=f5e2110]: ЛК
+        - generic [ref=f5e2111]:
+          - heading "Все пользователи" [level=2] [ref=f5e2113]
+          - paragraph [ref=f5e2115]:
+            - text: Добавьте пользователей вручную или c помощью формы регистрации. Cоздайте группу, чтобы выбрать определенных пользователей и страницы, которые будут доступны только для них.
+            - link "Подробная инструкция" [ref=f5e2116] [cursor=pointer]:
+              - /url: https://help-ru.tilda.cc/membership
+            - text: .
+        - generic [ref=f5e2118]:
+          - generic [ref=f5e2119]:
+            - button "Добавить пользователя" [ref=f5e2120] [cursor=pointer]
+            - generic [ref=f5e2124]:
+              - button [ref=f5e2125] [cursor=pointer]
+              - list:
+                - listitem:
+                  - button "Импорт пользователей"
+                - listitem:
+                  - button "Экспорт пользователей"
+          - generic [ref=f5e2128]:
+            - generic:
+              - generic:
+                - generic [ref=f5e2129]: Введите имя, email или телефон
+                - textbox "Введите имя, email или телефон" [disabled] [ref=f5e2130]
+            - generic: по имени А-Я
+    - complementary [ref=f5e2131]

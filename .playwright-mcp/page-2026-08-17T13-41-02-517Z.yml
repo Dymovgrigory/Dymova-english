@@ -1,0 +1,132 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e11]:
+    - complementary [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: F
+        - text: Фоксинбург
+      - navigation [ref=e15]:
+        - button "Дашборд" [ref=e16] [cursor=pointer]
+        - button "Входящие" [ref=e21] [cursor=pointer]
+        - button "Заявки 1" [ref=e134] [cursor=pointer]:
+          - text: Заявки
+          - generic [ref=e135]: "1"
+        - button "Клиенты" [ref=e27] [cursor=pointer]
+        - button "Воронка" [ref=e31] [cursor=pointer]
+        - button "Рассылки" [ref=e34] [cursor=pointer]
+        - button "Вопросы" [ref=e38] [cursor=pointer]
+        - button "Аналитика" [ref=e42] [cursor=pointer]
+        - button "База знаний" [ref=e45] [cursor=pointer]
+        - button "AI" [ref=e49] [cursor=pointer]
+        - button "Ошибки" [ref=e53] [cursor=pointer]
+        - button "Пользователи" [ref=e56] [cursor=pointer]
+        - button "Настройки" [ref=e61] [cursor=pointer]
+      - button "Выйти" [ref=e66] [cursor=pointer]
+    - generic [ref=e69]:
+      - banner [ref=e70]:
+        - 'searchbox "Поиск: клиенты и сообщения (Ctrl+K)" [ref=e72]'
+        - generic "Состояние каналов" [ref=e73]:
+          - generic [ref=e136]: БД
+          - generic [ref=e138]: MAX
+          - generic [ref=e140]: TG
+        - generic [ref=e80]: admin · super_admin
+      - generic [ref=e142]:
+        - generic [ref=e143]:
+          - button "Новые 1" [ref=e144] [cursor=pointer]
+          - button "В работе 1" [ref=e145] [cursor=pointer]
+          - button "Ожидают 0" [ref=e146] [cursor=pointer]
+          - button "Завершённые 0" [ref=e147] [cursor=pointer]
+          - button "Все 2" [ref=e148] [cursor=pointer]
+        - 'button "К# #2 Клиент #— new Веб Заявка с сайта Английский 4-6, Лихачёвский, Раздел: Языки; Опыт: Никогда 16:38 Новая" [ref=e150] [cursor=pointer]':
+          - generic [ref=e151]: К#
+          - generic [ref=e152]:
+            - generic [ref=e153]: "#2 Клиент #— new"
+            - generic [ref=e154]:
+              - generic [ref=e155]: Веб
+              - generic [ref=e156]: Заявка с сайта
+              - text: "Английский 4-6, Лихачёвский, Раздел: Языки; Опыт: Никогда"
+            - text: 16:38
+          - generic [ref=e157]: Новая
+  - generic [ref=e160]:
+    - generic [ref=e161]:
+      - generic [ref=e162]: "Заявка #1"
+      - button "Закрыть" [ref=e163] [cursor=pointer]
+    - generic [ref=e165]:
+      - generic [ref=e166]:
+        - generic [ref=e167]:
+          - text: "Заявка #1"
+          - generic [ref=e168]: В работе
+        - generic [ref=e169]: создана 16:38 · обновлена 16:40
+      - generic [ref=e170]:
+        - heading "Клиент" [level=4] [ref=e171]
+        - generic [ref=e172]:
+          - term [ref=e173]: Имя
+          - definition [ref=e174]: Без имени
+          - term [ref=e175]: Телефон
+          - definition [ref=e176]:
+            - link "89618282094" [ref=e177] [cursor=pointer]:
+              - /url: tel:89618282094
+            - link "Позвонить" [ref=e178] [cursor=pointer]:
+              - /url: tel:89618282094
+            - button "Скопировать" [ref=e179] [cursor=pointer]
+          - term [ref=e180]: Telegram
+          - definition [ref=e181]: "@arvtest"
+          - term [ref=e182]: Канал
+          - definition [ref=e183]:
+            - generic [ref=e184]: Telegram
+            - text: Администратор
+          - term [ref=e185]: ID канала
+          - definition [ref=e186]: tg:1400546113
+      - generic [ref=e187]:
+        - heading "Обращение" [level=4] [ref=e188]
+        - generic [ref=e189]:
+          - term [ref=e190]: Причина
+          - definition [ref=e191]: запрос оператора
+          - term [ref=e192]: Источник
+          - definition [ref=e193]: telegram
+          - term [ref=e194]: Последнее сообщение
+          - definition [ref=e195]: Соедините меня с администратором
+      - generic [ref=e196]:
+        - heading "Статус и ответственный" [level=4] [ref=e197]
+        - generic [ref=e198]:
+          - term [ref=e199]: Статус
+          - definition [ref=e200]:
+            - combobox [ref=e201]:
+              - option "Новая"
+              - option "В работе" [selected]
+              - option "Связались"
+              - option "Ожидает"
+              - option "Решена"
+              - option "Отменена"
+          - term [ref=e202]: Менеджер
+          - definition [ref=e203]: Григорий
+      - generic [ref=e204]:
+        - button "Открыть чат" [ref=e205] [cursor=pointer]
+        - button "Открыть клиента" [ref=e206] [cursor=pointer]
+        - button "Взять в работу" [ref=e207] [cursor=pointer]
+        - button "Назначить менеджера…" [ref=e208] [cursor=pointer]
+        - button "Завершить" [ref=e209] [cursor=pointer]
+      - generic [ref=e210]:
+        - heading "Комментарий менеджера" [level=4] [ref=e211]
+        - textbox "Заметки по заявке" [ref=e212]
+        - button "Сохранить комментарий" [ref=e214] [cursor=pointer]
+      - generic [ref=e215]:
+        - heading "История разговора" [level=4] [ref=e216]
+        - generic [ref=e217]:
+          - generic [ref=e218]: 16:38 · Клиент
+          - text: /start
+        - generic [ref=e219]:
+          - generic [ref=e220]: 16:38 · Клиент
+          - text: Сколько стоит обучение?
+        - generic [ref=e221]:
+          - generic [ref=e222]: 16:38 · Клиент
+          - text: Где находятся ваши филиалы?
+        - generic [ref=e223]:
+          - generic [ref=e224]: 16:38 · Клиент
+          - text: Соедините меня с администратором
+        - generic [ref=e225]:
+          - generic [ref=e226]: 16:38 · AI
+          - text: Конечно, подключаю администратора.
+        - generic [ref=e227]:
+          - generic [ref=e228]: 16:38 · Менеджер
+          - text: Здравствуйте! Я администратор.
+        - button "Открыть полный диалог" [ref=e230] [cursor=pointer]

@@ -1,0 +1,22 @@
+[     157ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     182ms] [LOG] [HMR] connected @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  175166ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  175211ms] [LOG] [HMR] connected @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  188870ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/files/mock-file-1/public:0
+[  188931ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/files/mock-file-1/public:0
+[  234693ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/files/mock-file-1/public:0
+[  234725ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/files/mock-file-1/public:0
+[  371976ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/files/mock-file-1/public:0
+[  372006ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/files/mock-file-1/public:0
+[  481154ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  482500ms] [LOG] [Fast Refresh] done in 1448ms @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  511930ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  512240ms] [LOG] [Fast Refresh] done in 364ms @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  546469ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  546582ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  620630ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  620733ms] [LOG] [Fast Refresh] done in 154ms @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  665958ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  665990ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  691965ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  692001ms] [LOG] [Fast Refresh] done in 76ms @ http://localhost:3123/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477

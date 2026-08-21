@@ -1,0 +1,112 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e37]:
+    - complementary [ref=e38]:
+      - link "Foxinburg Foxinburg" [ref=e40] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Foxinburg" [ref=e41]
+        - generic [ref=e42]: Foxinburg
+      - navigation "Primary navigation" [ref=e43]:
+        - generic [ref=e46]:
+          - link "Dashboard" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Guide" [ref=e55] [cursor=pointer]:
+            - /url: /help
+          - link "Learn" [ref=e60] [cursor=pointer]:
+            - /url: /learn
+          - link "Catalog" [ref=e64] [cursor=pointer]:
+            - /url: /learn/catalog
+          - link "Paths" [ref=e68] [cursor=pointer]:
+            - /url: /learn/paths
+          - link "Knowledge" [ref=e74] [cursor=pointer]:
+            - /url: /knowledge
+          - link "Certificates" [ref=e79] [cursor=pointer]:
+            - /url: /learn/certificates
+          - link "Leaderboard" [ref=e84] [cursor=pointer]:
+            - /url: /learn/leaderboard
+          - link "My Badges" [ref=e92] [cursor=pointer]:
+            - /url: /learn/badges
+          - link "Calendar" [ref=e96] [cursor=pointer]:
+            - /url: /learn/calendar
+          - link "Onboarding" [ref=e100] [cursor=pointer]:
+            - /url: /learn/onboarding
+          - link "Observations" [ref=e105] [cursor=pointer]:
+            - /url: /learn/training
+          - link "My Development Plan" [ref=e108] [cursor=pointer]:
+            - /url: /learn/development
+          - link "360° Assessment" [ref=e113] [cursor=pointer]:
+            - /url: /learn/assessments
+          - link "News" [ref=e119] [cursor=pointer]:
+            - /url: /news
+      - button "Collapse sidebar" [ref=e125] [cursor=pointer]
+    - banner [ref=e130]:
+      - paragraph [ref=e132]: Dashboard
+      - generic [ref=e133]:
+        - button "Search and commands (Ctrl K)" [ref=e134] [cursor=pointer]
+        - button "Notifications" [ref=e135] [cursor=pointer]:
+          - generic [ref=e136]: "1"
+        - combobox "Language" [ref=e137]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=e138] [cursor=pointer]
+        - button "User menu" [ref=e139] [cursor=pointer]:
+          - generic [ref=e140]: L
+    - main [ref=e142]:
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - heading "Good afternoon, Learner Thirteen" [level=1] [ref=e147]
+            - paragraph [ref=e148]: Your role is LEARNER. You belong to the organization "Notify Org".
+          - button "Customize widgets" [ref=e149] [cursor=pointer]
+        - navigation "Quick Actions" [ref=e153]:
+          - link "Go to courses" [ref=e154] [cursor=pointer]:
+            - /url: /learn
+          - link "Leaderboard" [ref=e155] [cursor=pointer]:
+            - /url: /learn/leaderboard
+          - link "My Badges" [ref=e156] [cursor=pointer]:
+            - /url: /learn/badges
+          - link "Certificates" [ref=e157] [cursor=pointer]:
+            - /url: /learn/certificates
+        - generic [ref=e158]:
+          - generic [ref=e161]:
+            - generic [ref=e162]:
+              - generic [ref=e163]: My progress
+              - link "All courses" [ref=e170] [cursor=pointer]:
+                - /url: /learn
+            - generic [ref=e172]:
+              - generic [ref=e173]:
+                - paragraph [ref=e174]: Courses
+                - paragraph [ref=e175]: "1"
+              - generic [ref=e176]:
+                - paragraph [ref=e177]: Completed
+                - paragraph [ref=e178]: "0"
+              - generic [ref=e179]:
+                - paragraph [ref=e180]: Your points
+                - paragraph [ref=e181]: "0"
+              - generic [ref=e182]:
+                - paragraph [ref=e183]: Your rank
+                - paragraph [ref=e184]: "#1"
+          - generic [ref=e187]:
+            - generic [ref=e188]:
+              - generic [ref=e189]: In Progress
+              - link "All courses" [ref=e195] [cursor=pointer]:
+                - /url: /learn
+            - paragraph [ref=e197]: No courses in progress
+          - generic [ref=e200]:
+            - generic [ref=e201]:
+              - generic [ref=e202]: My level
+              - link "Open leaderboard →" [ref=e209] [cursor=pointer]:
+                - /url: /learn/leaderboard
+            - generic [ref=e212]:
+              - generic [ref=e213]: 🌱
+              - generic [ref=e214]:
+                - paragraph [ref=e215]: Level 1 — Новичок
+                - paragraph [ref=e216]: 0 / 50 your points
+          - generic [ref=e220]:
+            - generic [ref=e221]:
+              - generic [ref=e222]: Recent badges
+              - link "All badges" [ref=e229] [cursor=pointer]:
+                - /url: /learn/badges
+            - paragraph [ref=e231]: No badges yet
+        - status [ref=e232]
+  - button "Open Next.js Dev Tools" [ref=e238] [cursor=pointer]
+  - alert [ref=e36]

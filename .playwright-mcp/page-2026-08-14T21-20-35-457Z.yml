@@ -1,0 +1,117 @@
+- generic [ref=f1e10]:
+  - banner [ref=f1e11]:
+    - generic [ref=f1e12]:
+      - text: 🦊 Фоксинбург
+      - emphasis [ref=f1e13]: админка
+    - generic [ref=f1e14]:
+      - button "Обновить" [ref=f1e15] [cursor=pointer]
+      - button "Выйти" [ref=f1e16] [cursor=pointer]
+  - navigation [ref=f1e17]:
+    - button "Клиенты1" [ref=f1e18] [cursor=pointer]
+    - button "Заявки1" [ref=f1e19] [cursor=pointer]
+    - button "Рассылка" [ref=f1e20] [cursor=pointer]
+    - button "Вопросы" [ref=f1e21] [cursor=pointer]
+    - button "Расписание" [ref=f1e22] [cursor=pointer]
+  - main [ref=f1e23]:
+    - generic [ref=f1e24]:
+      - generic [ref=f1e25]: "Последняя загрузка: 2026-08-14 21:20 (0 дн. назад) Строк: 3, сопоставлено: 1, не сопоставлено: 2"
+      - generic [ref=f1e27]:
+        - generic [ref=f1e28]: Файл выгрузки (CSV или XLSX)
+        - button "Файл выгрузки (CSV или XLSX)" [ref=f1e29]
+      - generic [ref=f1e30]:
+        - heading "Колонки файла (3 строк)" [level=3] [ref=f1e31]
+        - generic [ref=f1e32]:
+          - generic [ref=f1e33]: Имя ученика *
+          - combobox "Имя ученика *" [ref=f1e34]:
+            - option "— нет в файле —"
+            - option "Ученик" [selected]
+            - option "Телефон"
+            - option "День"
+            - option "Время"
+            - option "Программа"
+            - option "Педагог"
+            - option "Филиал"
+        - generic [ref=f1e35]:
+          - generic [ref=f1e36]: Телефон родителя
+          - combobox "Телефон родителя" [ref=f1e37]:
+            - option "— нет в файле —"
+            - option "Ученик"
+            - option "Телефон" [selected]
+            - option "День"
+            - option "Время"
+            - option "Программа"
+            - option "Педагог"
+            - option "Филиал"
+        - generic [ref=f1e38]:
+          - generic [ref=f1e39]: День недели
+          - combobox "День недели" [ref=f1e40]:
+            - option "— нет в файле —"
+            - option "Ученик"
+            - option "Телефон"
+            - option "День" [selected]
+            - option "Время"
+            - option "Программа"
+            - option "Педагог"
+            - option "Филиал"
+        - generic [ref=f1e41]:
+          - generic [ref=f1e42]: Время
+          - combobox "Время" [ref=f1e43]:
+            - option "— нет в файле —"
+            - option "Ученик"
+            - option "Телефон"
+            - option "День"
+            - option "Время" [selected]
+            - option "Программа"
+            - option "Педагог"
+            - option "Филиал"
+        - generic [ref=f1e44]:
+          - generic [ref=f1e45]: Программа
+          - combobox "Программа" [ref=f1e46]:
+            - option "— нет в файле —"
+            - option "Ученик"
+            - option "Телефон"
+            - option "День"
+            - option "Время"
+            - option "Программа" [selected]
+            - option "Педагог"
+            - option "Филиал"
+        - generic [ref=f1e47]:
+          - generic [ref=f1e48]: Педагог
+          - combobox "Педагог" [ref=f1e49]:
+            - option "— нет в файле —"
+            - option "Ученик"
+            - option "Телефон"
+            - option "День"
+            - option "Время"
+            - option "Программа"
+            - option "Педагог" [selected]
+            - option "Филиал"
+        - generic [ref=f1e50]:
+          - generic [ref=f1e51]: Филиал
+          - combobox "Филиал" [ref=f1e52]:
+            - option "— нет в файле —"
+            - option "Ученик"
+            - option "Телефон"
+            - option "День"
+            - option "Время"
+            - option "Программа"
+            - option "Педагог"
+            - option "Филиал" [selected]
+        - group [ref=f1e53]:
+          - generic "Первые строки файла" [ref=f1e54]
+      - button "Загрузить расписание" [ref=f1e56] [cursor=pointer]
+      - generic [ref=f1e57]: "Отчёт об импорте Строк в файле: 3 Сопоставлено с клиентами: 1 Не сопоставлено: 2 Расписание изменилось у клиентов: 1"
+      - generic [ref=f1e58]:
+        - 'heading "Не сопоставлено: 2" [level=3] [ref=f1e59]'
+        - paragraph [ref=f1e60]: Этих учеников бот не нашёл по телефону и имени. Выберите клиента — расписание появится у него в кабинете.
+        - generic [ref=f1e61]:
+          - generic [ref=f1e62]: Петя — ср 18:00 Teens
+          - combobox [ref=f1e63]:
+            - option "Выбрать клиента…" [selected]
+            - option "Маша"
+        - generic [ref=f1e64]:
+          - generic [ref=f1e65]: Чужой Ребёнок — вт 10:00 Kids
+          - combobox [ref=f1e66]:
+            - option "Выбрать клиента…" [selected]
+            - option "Маша"
+      - paragraph [ref=f1e67]: "Выгрузка заменяет расписание целиком: повторная загрузка того же файла не удвоит занятия. Несопоставленные строки не теряются — их можно привязать к клиенту вручную ниже."

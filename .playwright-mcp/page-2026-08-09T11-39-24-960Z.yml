@@ -1,0 +1,158 @@
+- generic [active] [ref=f54e1]:
+  - generic [ref=f54e2]:
+    - complementary [ref=f54e3]:
+      - link "Foxinburg Foxinburg" [ref=f54e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Foxinburg" [ref=f54e6]
+        - generic [ref=f54e7]: Foxinburg
+      - navigation "Primary navigation" [ref=f54e8]:
+        - generic [ref=f54e9]:
+          - generic [ref=f54e11]:
+            - link "Dashboard" [ref=f54e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Guide" [ref=f54e19] [cursor=pointer]:
+              - /url: /help
+            - link "Learn" [ref=f54e24] [cursor=pointer]:
+              - /url: /learn
+            - link "Catalog" [ref=f54e28] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Paths" [ref=f54e32] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "Knowledge" [ref=f54e38] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Certificates" [ref=f54e43] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Leaderboard" [ref=f54e48] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "My Badges" [ref=f54e56] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Calendar" [ref=f54e60] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Onboarding" [ref=f54e64] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Observations" [ref=f54e69] [cursor=pointer]:
+              - /url: /learn/training
+            - link "My Development Plan" [ref=f54e72] [cursor=pointer]:
+              - /url: /learn/development
+            - link "360° Assessment" [ref=f54e77] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "News" [ref=f54e83] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f54e90]:
+            - link "My Team" [ref=f54e91] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Students" [ref=f54e98] [cursor=pointer]:
+              - /url: /students
+            - link "Teachers" [ref=f54e103] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f54e108]:
+            - paragraph [ref=f54e110]: Studio
+            - generic [ref=f54e111]:
+              - link "Studio" [ref=f54e112] [cursor=pointer]:
+                - /url: /studio
+              - link "Studio Observations" [ref=f54e117] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Paths" [ref=f54e120] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Media Library" [ref=f54e126] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f54e133]:
+            - paragraph [ref=f54e135]: Admin
+            - generic [ref=f54e136]:
+              - link "Admin" [ref=f54e137] [cursor=pointer]:
+                - /url: /admin
+              - link "Analytics · charts" [ref=f54e142] [cursor=pointer]:
+                - /url: /analytics
+              - link "Training Requests" [ref=f54e148] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f54e152] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f54e157] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Departments" [ref=f54e162] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Badges" [ref=f54e167] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Site" [ref=f54e171] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Pages" [ref=f54e176] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Events" [ref=f54e181] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Onboarding Programs" [ref=f54e185] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Observation Checklists" [ref=f54e190] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Development Plans" [ref=f54e195] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Competencies" [ref=f54e200] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Assessment Sessions" [ref=f54e206] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Collapse sidebar" [ref=f54e213] [cursor=pointer]
+    - banner [ref=f54e218]:
+      - generic [ref=f54e219]:
+        - button "Search and commands (Ctrl K)" [ref=f54e220] [cursor=pointer]
+        - button "Notifications" [ref=f54e222] [cursor=pointer]
+        - combobox "Language" [ref=f54e225]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=f54e226] [cursor=pointer]
+        - button "User menu" [ref=f54e227] [cursor=pointer]:
+          - generic [ref=f54e228]: P
+    - main [ref=f54e230]:
+      - generic [ref=f54e232]:
+        - generic [ref=f54e233]:
+          - generic [ref=f54e234]:
+            - heading "Analytics" [level=1] [ref=f54e235]
+            - paragraph [ref=f54e236]: Interactive overview across school domains. The period applies to all charts.
+          - generic [ref=f54e237]:
+            - button "Views" [expanded] [ref=f54e239] [cursor=pointer]
+            - generic [ref=f54e240]:
+              - generic [ref=f54e241]:
+                - button "7 days" [ref=f54e242] [cursor=pointer]
+                - button "30 days" [pressed] [ref=f54e243] [cursor=pointer]
+                - button "90 days" [ref=f54e244] [cursor=pointer]
+                - button "12 mo" [ref=f54e245] [cursor=pointer]
+              - generic [ref=f54e246]:
+                - textbox "From" [ref=f54e247]: 2026-07-11
+                - generic [ref=f54e248]: —
+                - textbox "To" [ref=f54e249]: 2026-08-09
+              - generic [ref=f54e250]: 2026-07-11 — 2026-08-09
+        - navigation "Analytics sections" [ref=f54e251]:
+          - link "Overview" [ref=f54e252] [cursor=pointer]:
+            - /url: /analytics
+          - link "Learning" [ref=f54e253] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "People" [ref=f54e254] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Finance" [ref=f54e255] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f54e256]:
+          - generic [ref=f54e258]:
+            - button "Download CSV · courses" [ref=f54e314] [cursor=pointer]
+            - button "Download CSV · paths" [ref=f54e315] [cursor=pointer]
+            - button "Download CSV · assignments" [ref=f54e316] [cursor=pointer]
+          - generic [ref=f54e262]:
+            - generic [ref=f54e263]:
+              - heading "Course completion" [level=2] [ref=f54e264]
+              - paragraph [ref=f54e265]: Top 10 courses by enrollments
+              - paragraph [ref=f54e317]: No data for the selected period
+            - generic [ref=f54e270]:
+              - heading "Enrollments by course" [level=2] [ref=f54e271]
+              - paragraph [ref=f54e272]: Enrollment distribution in the period
+              - paragraph [ref=f54e318]: No data for the selected period
+          - generic [ref=f54e277]:
+            - heading "Path completion" [level=2] [ref=f54e278]
+            - paragraph [ref=f54e279]: Top 10 paths by learners
+            - paragraph [ref=f54e319]: No data for the selected period
+          - generic [ref=f54e284]:
+            - heading "Assignment submissions" [level=2] [ref=f54e285]
+            - paragraph [ref=f54e286]: Top 10 assignments by submissions
+            - paragraph [ref=f54e320]: No data for the selected period
+  - button "Open Next.js Dev Tools" [ref=f54e296] [cursor=pointer]
+  - alert [ref=f54e300]
+  - dialog [ref=f54e345]:
+    - list [ref=f54e346]:
+      - listitem [ref=f54e353]: No saved views
+    - button "+ Save current view" [ref=f54e352] [cursor=pointer]

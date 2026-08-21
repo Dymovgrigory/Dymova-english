@@ -1,0 +1,55 @@
+[     284ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     294ms] [LOG] [HMR] connected @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     464ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[     464ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[   15790ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   15846ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/site/blocks:0
+[   15849ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/site/blocks:0
+[   17515ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/badges:0
+[   17517ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/badges:0
+[   17962ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/site/blocks:0
+[   17962ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/site/blocks:0
+[   19532ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   19791ms] [LOG] [Fast Refresh] done in 360ms @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   19850ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/summary:0
+[   19856ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/courses:0
+[   19856ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/learners:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/groups:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/departments:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/paths:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/assignments:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/engagement:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/revenue:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/summary:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/courses:0
+[   19858ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/learners:0
+[   19859ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/groups:0
+[   19859ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/departments:0
+[   19859ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/paths:0
+[   19863ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/assignments:0
+[   19863ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/engagement:0
+[   19863ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/analytics/revenue:0
+[   20283ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/users:0
+[   20285ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/users/invitations:0
+[   20285ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/groups:0
+[   20286ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/org:0
+[   20286ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/users:0
+[   20286ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/users/invitations:0
+[   20286ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/groups:0
+[   20286ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/org:0
+[   60449ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[  120453ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[  128149ms] [LOG] [HMR] connected @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[ 5275089ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[12906097ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[17582555ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[24118845ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[25262599ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[25322550ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[25382552ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[25442550ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[25502550ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[25562569ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0
+[25583864ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[25584721ms] [LOG] [Fast Refresh] done in 973ms @ http://localhost:3103/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[25622554ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/api/v1/notifications:0

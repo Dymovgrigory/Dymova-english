@@ -1,0 +1,94 @@
+- generic [ref=e1]:
+  - generic [ref=e37]:
+    - complementary [ref=e38]:
+      - link "Foxinburg Foxinburg" [ref=e40] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Foxinburg" [ref=e41]
+        - generic [ref=e42]: Foxinburg
+      - navigation "Primary navigation" [ref=e43]:
+        - generic [ref=e46]:
+          - link "Dashboard" [ref=e47] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Guide" [ref=e55] [cursor=pointer]:
+            - /url: /help
+          - link "Learn" [ref=e60] [cursor=pointer]:
+            - /url: /learn
+          - link "Catalog" [ref=e64] [cursor=pointer]:
+            - /url: /learn/catalog
+          - link "Paths" [ref=e68] [cursor=pointer]:
+            - /url: /learn/paths
+          - link "Knowledge" [ref=e74] [cursor=pointer]:
+            - /url: /knowledge
+          - link "Certificates" [ref=e79] [cursor=pointer]:
+            - /url: /learn/certificates
+          - link "Leaderboard" [ref=e84] [cursor=pointer]:
+            - /url: /learn/leaderboard
+          - link "My Badges" [ref=e92] [cursor=pointer]:
+            - /url: /learn/badges
+          - link "Calendar" [ref=e96] [cursor=pointer]:
+            - /url: /learn/calendar
+          - link "Onboarding" [ref=e100] [cursor=pointer]:
+            - /url: /learn/onboarding
+          - link "Observations" [ref=e105] [cursor=pointer]:
+            - /url: /learn/training
+          - link "My Development Plan" [ref=e108] [cursor=pointer]:
+            - /url: /learn/development
+          - link "360° Assessment" [ref=e113] [cursor=pointer]:
+            - /url: /learn/assessments
+          - link "News" [ref=e119] [cursor=pointer]:
+            - /url: /news
+      - button "Collapse sidebar" [ref=e125] [cursor=pointer]
+    - banner [ref=e130]:
+      - paragraph [ref=e132]: Learn
+      - generic [ref=e133]:
+        - button "Search and commands (Ctrl K)" [ref=e134] [cursor=pointer]
+        - button "Notifications" [active] [ref=e135] [cursor=pointer]
+        - combobox "Language" [ref=e137]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=e138] [cursor=pointer]
+        - button "User menu" [ref=e139] [cursor=pointer]:
+          - generic [ref=e140]: L
+    - main [ref=e142]:
+      - generic [ref=e143]:
+        - generic [ref=e255]:
+          - link "← Back to catalog" [ref=e256] [cursor=pointer]:
+            - /url: /learn
+          - heading "Notify Course" [level=1] [ref=e257]
+          - paragraph [ref=e258]: intro
+        - generic [ref=e260]:
+          - generic [ref=e261]: Course progress
+          - generic [ref=e262]: 0%
+        - generic [ref=e265]:
+          - complementary [ref=e266]:
+            - paragraph [ref=e267]: No lessons in this course yet.
+          - generic [ref=e268]:
+            - paragraph [ref=e269]: Select a lesson from the sidebar.
+            - generic [ref=e270]:
+              - generic [ref=e272]:
+                - heading "Reviews" [level=3] [ref=e273]
+                - generic [ref=e274]:
+                  - img "Average rating" [ref=e275]:
+                    - generic [ref=e276]: ★
+                    - generic [ref=e277]: ★
+                    - generic [ref=e278]: ★
+                    - generic [ref=e279]: ★
+                    - generic [ref=e280]: ★
+                  - generic [ref=e281]: No reviews yet.
+              - paragraph [ref=e282]: No reviews yet.
+              - generic [ref=e283]:
+                - generic [ref=e284]:
+                  - paragraph [ref=e285]: Your review
+                  - radiogroup "Rating" [ref=e287]:
+                    - button "Rating 1" [pressed] [ref=e288] [cursor=pointer]: ★
+                    - button "Rating 2" [pressed] [ref=e289] [cursor=pointer]: ★
+                    - button "Rating 3" [pressed] [ref=e290] [cursor=pointer]: ★
+                    - button "Rating 4" [pressed] [ref=e291] [cursor=pointer]: ★
+                    - button "Rating 5" [pressed] [ref=e292] [cursor=pointer]: ★
+                - generic [ref=e293]:
+                  - text: Comment
+                  - textbox "Comment" [ref=e294]:
+                    - /placeholder: Share your thoughts about the course…
+                - button "Save review" [ref=e296] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e238] [cursor=pointer]
+  - alert [ref=e36]

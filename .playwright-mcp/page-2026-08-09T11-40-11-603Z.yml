@@ -1,0 +1,168 @@
+- generic [active] [ref=f55e1]:
+  - generic [ref=f55e13]:
+    - complementary [ref=f55e14]:
+      - link "Foxinburg Foxinburg" [ref=f55e16] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Foxinburg" [ref=f55e17]
+        - generic [ref=f55e18]: Foxinburg
+      - navigation "Primary navigation" [ref=f55e19]:
+        - generic [ref=f55e20]:
+          - generic [ref=f55e22]:
+            - link "Dashboard" [ref=f55e23] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Guide" [ref=f55e30] [cursor=pointer]:
+              - /url: /help
+            - link "Learn" [ref=f55e35] [cursor=pointer]:
+              - /url: /learn
+            - link "Catalog" [ref=f55e39] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Paths" [ref=f55e43] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "Knowledge" [ref=f55e49] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Certificates" [ref=f55e54] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Leaderboard" [ref=f55e59] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "My Badges" [ref=f55e67] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Calendar" [ref=f55e71] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Onboarding" [ref=f55e75] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Observations" [ref=f55e80] [cursor=pointer]:
+              - /url: /learn/training
+            - link "My Development Plan" [ref=f55e83] [cursor=pointer]:
+              - /url: /learn/development
+            - link "360° Assessment" [ref=f55e88] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "News" [ref=f55e94] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f55e101]:
+            - link "My Team" [ref=f55e102] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Students" [ref=f55e109] [cursor=pointer]:
+              - /url: /students
+            - link "Teachers" [ref=f55e114] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f55e119]:
+            - paragraph [ref=f55e121]: Studio
+            - generic [ref=f55e122]:
+              - link "Studio" [ref=f55e123] [cursor=pointer]:
+                - /url: /studio
+              - link "Studio Observations" [ref=f55e128] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Paths" [ref=f55e131] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Media Library" [ref=f55e137] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f55e144]:
+            - paragraph [ref=f55e146]: Admin
+            - generic [ref=f55e147]:
+              - link "Admin" [ref=f55e148] [cursor=pointer]:
+                - /url: /admin
+              - link "Analytics · charts" [ref=f55e153] [cursor=pointer]:
+                - /url: /analytics
+              - link "Training Requests" [ref=f55e159] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f55e163] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f55e168] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Departments" [ref=f55e173] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Badges" [ref=f55e178] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Site" [ref=f55e182] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Pages" [ref=f55e187] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Events" [ref=f55e192] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Onboarding Programs" [ref=f55e196] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Observation Checklists" [ref=f55e201] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Development Plans" [ref=f55e206] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Competencies" [ref=f55e211] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Assessment Sessions" [ref=f55e217] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Collapse sidebar" [ref=f55e224] [cursor=pointer]
+    - banner [ref=f55e229]:
+      - generic [ref=f55e230]:
+        - button "Search and commands (Ctrl K)" [ref=f55e231] [cursor=pointer]
+        - button "Notifications" [ref=f55e233] [cursor=pointer]
+        - combobox "Language" [ref=f55e236]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=f55e237] [cursor=pointer]
+        - button "User menu" [ref=f55e238] [cursor=pointer]:
+          - generic [ref=f55e239]: P
+    - main [ref=f55e241]:
+      - generic [ref=f55e243]:
+        - generic [ref=f55e244]:
+          - generic [ref=f55e245]:
+            - heading "Analytics" [level=1] [ref=f55e246]
+            - paragraph [ref=f55e247]: Interactive overview across school domains. The period applies to all charts.
+          - generic [ref=f55e248]:
+            - button "Views" [ref=f55e250] [cursor=pointer]
+            - generic [ref=f55e251]:
+              - generic [ref=f55e252]:
+                - button "7 days" [ref=f55e253] [cursor=pointer]
+                - button "30 days" [pressed] [ref=f55e254] [cursor=pointer]
+                - button "90 days" [ref=f55e255] [cursor=pointer]
+                - button "12 mo" [ref=f55e256] [cursor=pointer]
+              - generic [ref=f55e257]:
+                - textbox "From" [ref=f55e258]: 2026-07-11
+                - generic [ref=f55e259]: —
+                - textbox "To" [ref=f55e260]: 2026-08-09
+              - generic [ref=f55e261]: 2026-07-11 — 2026-08-09
+        - navigation "Analytics sections" [ref=f55e262]:
+          - link "Overview" [ref=f55e263] [cursor=pointer]:
+            - /url: /analytics
+          - link "Learning" [ref=f55e264] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "People" [ref=f55e265] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Finance" [ref=f55e266] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f55e267]:
+          - generic [ref=f55e269]:
+            - button "Download PDF" [ref=f55e270] [cursor=pointer]
+            - button "Send to email" [ref=f55e271] [cursor=pointer]
+          - generic [ref=f55e272]:
+            - generic [ref=f55e273]:
+              - term [ref=f55e274]: Revenue for period
+              - definition [ref=f55e275]: RUB 0
+            - generic [ref=f55e276]:
+              - term [ref=f55e277]: Paid orders
+              - definition [ref=f55e278]: "0"
+            - generic [ref=f55e279]:
+              - term [ref=f55e280]: Enrollments
+              - definition [ref=f55e281]: "0"
+            - generic [ref=f55e282]:
+              - term [ref=f55e283]: Unique learners
+              - definition [ref=f55e284]: "0"
+            - generic [ref=f55e285]:
+              - term [ref=f55e286]: Average progress
+              - definition [ref=f55e287]: 0%
+            - generic [ref=f55e288]:
+              - term [ref=f55e289]: Quiz pass rate
+              - definition [ref=f55e290]: 0%
+          - generic [ref=f55e291]:
+            - generic [ref=f55e292]:
+              - heading "Revenue by month" [level=2] [ref=f55e293]
+              - paragraph [ref=f55e294]: Confirmed payments, monthly (values in rubles)
+              - paragraph [ref=f55e296]: No data for the selected period
+            - generic [ref=f55e297]:
+              - heading "Active users" [level=2] [ref=f55e298]
+              - paragraph [ref=f55e299]: Unique users with activity, monthly
+              - paragraph [ref=f55e301]: No data for the selected period
+          - generic [ref=f55e302]:
+            - heading "Quiz results" [level=2] [ref=f55e303]
+            - paragraph [ref=f55e304]: Share of passed attempts in the period
+            - paragraph [ref=f55e306]: No data for the selected period
+  - button "Open Next.js Dev Tools" [ref=f55e8] [cursor=pointer]
+  - alert [ref=f55e12]

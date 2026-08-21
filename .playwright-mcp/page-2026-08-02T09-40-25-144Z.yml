@@ -1,0 +1,441 @@
+- generic [ref=f327e1]:
+  - generic [ref=f327e3]:
+    - navigation [ref=f327e6]:
+      - link [ref=f327e8] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f327e12]:
+        - button [ref=f327e13] [cursor=pointer]
+        - button "Join" [ref=f327e17] [cursor=pointer]
+        - button [ref=f327e20] [cursor=pointer]
+    - main [ref=f327e25]:
+      - generic [ref=f327e26]:
+        - generic [ref=f327e30]:
+          - paragraph [ref=f327e32] [cursor=pointer]: Any
+          - paragraph [ref=f327e37] [cursor=pointer]: Horizontal
+          - paragraph [ref=f327e42] [cursor=pointer]: Vertical
+          - paragraph [ref=f327e47] [cursor=pointer]: Square
+        - generic [ref=f327e51]:
+          - paragraph [ref=f327e53] [cursor=pointer]: Any
+          - paragraph [ref=f327e55] [cursor=pointer]: "0"
+          - paragraph [ref=f327e60] [cursor=pointer]: "1"
+          - paragraph [ref=f327e65] [cursor=pointer]: "2"
+          - paragraph [ref=f327e70] [cursor=pointer]: 3+
+        - generic [ref=f327e74]:
+          - paragraph [ref=f327e76] [cursor=pointer]: Any
+          - paragraph [ref=f327e81] [cursor=pointer]: Baby
+          - paragraph [ref=f327e86] [cursor=pointer]: Child
+          - paragraph [ref=f327e91] [cursor=pointer]: Teenager
+          - paragraph [ref=f327e96] [cursor=pointer]: Adult
+          - paragraph [ref=f327e101] [cursor=pointer]: Senior adult
+        - generic [ref=f327e104]:
+          - generic [ref=f327e105]:
+            - slider [ref=f327e108] [cursor=pointer]
+            - slider [ref=f327e109] [cursor=pointer]
+          - generic [ref=f327e110]:
+            - generic [ref=f327e111]:
+              - paragraph [ref=f327e112]: Minimum
+              - paragraph [ref=f327e113]: 5s
+            - generic [ref=f327e114]:
+              - paragraph [ref=f327e115]: Maximum
+              - paragraph [ref=f327e116]: 2m+
+        - generic [ref=f327e120]:
+          - paragraph [ref=f327e122] [cursor=pointer]: Any
+          - paragraph [ref=f327e127] [cursor=pointer]: "24"
+          - paragraph [ref=f327e132] [cursor=pointer]: "25"
+          - paragraph [ref=f327e137] [cursor=pointer]: "30"
+          - paragraph [ref=f327e142] [cursor=pointer]: "50"
+          - paragraph [ref=f327e147] [cursor=pointer]: 60+
+        - generic [ref=f327e151]:
+          - paragraph [ref=f327e153] [cursor=pointer]: Any
+          - paragraph [ref=f327e158] [cursor=pointer]: 1080p
+          - paragraph [ref=f327e163] [cursor=pointer]: 4K
+          - paragraph [ref=f327e168] [cursor=pointer]: 8K
+        - generic [ref=f327e172]:
+          - paragraph [ref=f327e174] [cursor=pointer]: Any
+          - paragraph [ref=f327e179] [cursor=pointer]: Last 24 hours
+          - paragraph [ref=f327e184] [cursor=pointer]: Last week
+          - paragraph [ref=f327e189] [cursor=pointer]: Last month
+          - paragraph [ref=f327e194] [cursor=pointer]: Last year
+        - main "main-content" [ref=f327e195]:
+          - generic [ref=f327e196]:
+            - generic [ref=f327e197]:
+              - heading "Choose your language:" [level=5] [ref=f327e198]
+              - generic [ref=f327e200]:
+                - link "English English" [ref=f327e202] [cursor=pointer]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/
+                  - generic [ref=f327e203]:
+                    - img "English" [ref=f327e204]
+                    - generic [ref=f327e205]: English
+                - link "Русский Русский" [ref=f327e206] [cursor=pointer]:
+                  - /url: /ru-ru/search/videos/falling%20maple%20leaves%20autumn/
+                  - generic [ref=f327e207]:
+                    - img "Русский" [ref=f327e208]
+                    - generic [ref=f327e209]: Русский
+                - button [ref=f327e210] [cursor=pointer]
+            - heading "Free Falling Maple Leaves Autumn Videos" [level=1] [ref=f327e217]
+            - generic [ref=f327e220]:
+              - link "Photos 10K" [ref=f327e224] [cursor=pointer]:
+                - /url: /search/falling%20maple%20leaves%20autumn/
+                - text: Photos
+                - generic [ref=f327e225]: 10K
+              - link "Videos 10K" [ref=f327e226] [cursor=pointer]:
+                - /url: /search/videos/falling%20maple%20leaves%20autumn/
+                - text: Videos
+                - generic [ref=f327e227]: 10K
+              - link "Users 2.3K" [ref=f327e228] [cursor=pointer]:
+                - /url: /search/users/falling%20maple%20leaves%20autumn/
+                - text: Users
+                - generic [ref=f327e229]: 2.3K
+            - button "Filters" [ref=f327e234] [cursor=pointer]
+            - generic [ref=f327e241]:
+              - generic [ref=f327e244]:
+                - article [ref=f327e247]:
+                  - link [ref=f327e248] [cursor=pointer]:
+                    - /url: /video/dry-leaves-on-ground-855734/
+                  - generic:
+                    - button "Add Text" [ref=f327e258] [cursor=pointer]
+                    - link "Download" [ref=f327e266] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/855734/
+                - article [ref=f327e272]:
+                  - link [ref=f327e273] [cursor=pointer]:
+                    - /url: /video/a-tree-with-yellow-leaves-against-a-blue-sky-19456241/
+                  - generic:
+                    - button "Add Text" [ref=f327e283] [cursor=pointer]
+                    - link "Download" [ref=f327e291] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19456241/
+                - generic [ref=f327e296]:
+                  - generic [ref=f327e298]:
+                    - link "Create your own falling maple leaves autumn content with Canva" [ref=f327e299] [cursor=pointer]:
+                      - /url: https://www.canva.com/features/ai-video-generator/?utm_source=pexels&utm_campaign=aigc_pexelscampaign&utm_medium=partner
+                    - link "Create your own falling maple leaves autumn content with Canva" [ref=f327e301] [cursor=pointer]:
+                      - /url: https://www.canva.com/features/ai-video-generator/?utm_source=pexels&utm_campaign=aigc_pexelscampaign&utm_medium=partner
+                    - link "Create your own falling maple leaves autumn content with Canva" [ref=f327e303] [cursor=pointer]:
+                      - /url: https://www.canva.com/features/ai-video-generator/?utm_source=pexels&utm_campaign=aigc_pexelscampaign&utm_medium=partner
+                    - link "Create your own falling maple leaves autumn content with Canva" [ref=f327e305] [cursor=pointer]:
+                      - /url: https://www.canva.com/features/ai-video-generator/?utm_source=pexels&utm_campaign=aigc_pexelscampaign&utm_medium=partner
+                  - link [ref=f327e307] [cursor=pointer]:
+                    - /url: https://www.canva.com/features/ai-video-generator/?utm_source=pexels&utm_campaign=aigc_pexelscampaign&utm_medium=partner
+                    - paragraph [ref=f327e310]: Bring your ideas to life with Canva AI
+                  - link "Get started for free" [ref=f327e311] [cursor=pointer]:
+                    - /url: https://www.canva.com/features/ai-video-generator/?utm_source=pexels&utm_campaign=aigc_pexelscampaign&utm_medium=partner
+                - article [ref=f327e316]:
+                  - link [ref=f327e317] [cursor=pointer]:
+                    - /url: /video/autumn-leaves-against-golden-sky-29061307/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e327] [cursor=pointer]
+                    - link "Download" [ref=f327e335] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/29061307/
+                - article [ref=f327e341]:
+                  - link [ref=f327e342] [cursor=pointer]:
+                    - /url: /video/vibrant-autumn-leaves-in-a-breezy-forest-34996415/
+                  - generic:
+                    - button "Add Text" [ref=f327e352] [cursor=pointer]
+                    - link "Download" [ref=f327e360] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/34996415/
+                - article [ref=f327e366]:
+                  - link [ref=f327e367] [cursor=pointer]:
+                    - /url: /video/a-fall-foliage-5652678/
+                  - generic:
+                    - button "Edit" [ref=f327e377] [cursor=pointer]
+                    - link "Download" [ref=f327e385] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/5652678/
+                - article [ref=f327e391]:
+                  - link [ref=f327e392] [cursor=pointer]:
+                    - /url: /video/vibrant-autumn-foliage-in-lush-forest-38430902/
+                  - generic:
+                    - button "Add Text" [ref=f327e402] [cursor=pointer]
+                    - link "Download" [ref=f327e410] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/38430902/
+                - article [ref=f327e416]:
+                  - link [ref=f327e417] [cursor=pointer]:
+                    - /url: /video/autumn-leaves-on-the-tree-19456173/
+                  - generic:
+                    - button "Edit" [ref=f327e427] [cursor=pointer]
+                    - link "Download" [ref=f327e435] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19456173/
+                - article [ref=f327e441]:
+                  - link [ref=f327e442] [cursor=pointer]:
+                    - /url: /video/yellow-leaves-blowing-in-the-wind-19828295/
+                  - generic:
+                    - button "Add Text" [ref=f327e452] [cursor=pointer]
+                    - link "Download" [ref=f327e460] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19828295/
+                - article [ref=f327e466]:
+                  - link [ref=f327e467] [cursor=pointer]:
+                    - /url: /video/sunlit-autumn-leaves-in-a-golden-forest-33950793/
+                  - generic:
+                    - button "Edit" [ref=f327e477] [cursor=pointer]
+                    - link "Download" [ref=f327e485] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/33950793/
+                - generic [ref=f327e490]:
+                  - generic [ref=f327e491]:
+                    - heading "S‌p‌o‌n‌s‌o‌r‌e‌d‌ ‌V‌i‌d‌e‌o‌s" [level=4] [ref=f327e492]
+                    - link [ref=f327e493] [cursor=pointer]:
+                      - /url: https://www.pexels.com/r/eyJkZXN0IjoiaHR0cHM6Ly93d3cuaXN0b2NrcGhvdG8uY29tL3ZpZGVvcy9mYWxsaW5nJTIwbWFwbGUlMjBsZWF2ZXMlMjBhdXR1bW4_dXRtX3NvdXJjZT1wZXhlbHMmdXRtX21lZGl1bT1hZmZpbGlhdGUmdXRtX2NhbXBhaWduPXNwb25zb3JlZF92aWRlbyZ1dG1fY29udGVudD1zcnBfaW5saW5lX2xvZ28mdXRtX3Rlcm09ZmFsbGluZyUyMG1hcGxlJTIwbGVhdmVzJTIwYXV0dW1uIiwiZGF0YSI6eyJleHBlcmltZW50cyI6e30sInBhZ2VfbG9jYWxlIjoiZW4tVVMiLCJwYWdlIjoic2VhcmNoX3Jlc3VsdHMiLCJwYWdlX3ZhcmlhbnQiOiJwaG90b3MiLCJsb2NhdGlvbiI6ImdyaWQiLCJhZF9wYXJ0bmVyIjoiZ2V0dHkiLCJhZF9mb3JtYXQiOiJpbmxpbmUiLCJhZF9wbGFjZW1lbnQiOiIxMCIsImFkX2NyZWF0aXZlIjoidmlkZW9fc2VhcmNoXzQiLCJhZF9hY3Rpb24iOiJjbGljayIsImFkX2ltcHJlc3Npb25faWQiOiI3NjhlNGQyNC1lNzhjLTRjM2YtYTk1OC0yYzRlODNjZDhmNzgiLCJtZWRpYV90eXBlIjoidmlkZW8iLCJxdWVyeSI6ImZhbGxpbmcgbWFwbGUgbGVhdmVzIGF1dHVtbiJ9fQ/
+                  - generic [ref=f327e497]:
+                    - link [ref=f327e498] [cursor=pointer]:
+                      - /url: https://www.pexels.com/r/eyJkZXN0IjoiaHR0cHM6Ly93d3cuaXN0b2NrcGhvdG8uY29tL3ZpZGVvL2ZhbGxpbmctc3ljYW1vcmUtbWFwbGUtbGVhdmVzLWZyb20tYWJvdmUtZ20yMTA3MDAzMjAwLTU2Njc2ODUwOT91dG1fc291cmNlPXBleGVscyZ1dG1fbWVkaXVtPWFmZmlsaWF0ZSZ1dG1fY2FtcGFpZ249c3BvbnNvcmVkX3ZpZGVvJnV0bV9jb250ZW50PXNycF9pbmxpbmVfbWVkaWEmdXRtX3Rlcm09ZmFsbGluZyUyMG1hcGxlJTIwbGVhdmVzJTIwYXV0dW1uIiwiZGF0YSI6eyJleHBlcmltZW50cyI6e30sInBhZ2VfbG9jYWxlIjoiZW4tVVMiLCJwYWdlIjoic2VhcmNoX3Jlc3VsdHMiLCJwYWdlX3ZhcmlhbnQiOiJwaG90b3MiLCJsb2NhdGlvbiI6ImdyaWQiLCJhZF9wYXJ0bmVyIjoiZ2V0dHkiLCJhZF9mb3JtYXQiOiJpbmxpbmUiLCJhZF9wbGFjZW1lbnQiOiIxMCIsImFkX2NyZWF0aXZlIjoidmlkZW9fc2VhcmNoXzQiLCJhZF9hY3Rpb24iOiJjbGljayIsImFkX2ltcHJlc3Npb25faWQiOiI3NjhlNGQyNC1lNzhjLTRjM2YtYTk1OC0yYzRlODNjZDhmNzgiLCJtZWRpYV90eXBlIjoidmlkZW8iLCJxdWVyeSI6ImZhbGxpbmcgbWFwbGUgbGVhdmVzIGF1dHVtbiJ9fQ/
+                    - link [ref=f327e501] [cursor=pointer]:
+                      - /url: https://www.pexels.com/r/eyJkZXN0IjoiaHR0cHM6Ly93d3cuaXN0b2NrcGhvdG8uY29tL3ZpZGVvL3JlZC1hbmQtb3JhbmdlLWRlYWQtbGVhdmVzLWZsdXR0ZXJpbmctZG93bi1nbTIxNzk1NTI0MTEtNTk4NzEyNTQ0P3V0bV9zb3VyY2U9cGV4ZWxzJnV0bV9tZWRpdW09YWZmaWxpYXRlJnV0bV9jYW1wYWlnbj1zcG9uc29yZWRfdmlkZW8mdXRtX2NvbnRlbnQ9c3JwX2lubGluZV9tZWRpYSZ1dG1fdGVybT1mYWxsaW5nJTIwbWFwbGUlMjBsZWF2ZXMlMjBhdXR1bW4iLCJkYXRhIjp7ImV4cGVyaW1lbnRzIjp7fSwicGFnZV9sb2NhbGUiOiJlbi1VUyIsInBhZ2UiOiJzZWFyY2hfcmVzdWx0cyIsInBhZ2VfdmFyaWFudCI6InBob3RvcyIsImxvY2F0aW9uIjoiZ3JpZCIsImFkX3BhcnRuZXIiOiJnZXR0eSIsImFkX2Zvcm1hdCI6ImlubGluZSIsImFkX3BsYWNlbWVudCI6IjEwIiwiYWRfY3JlYXRpdmUiOiJ2aWRlb19zZWFyY2hfNCIsImFkX2FjdGlvbiI6ImNsaWNrIiwiYWRfaW1wcmVzc2lvbl9pZCI6Ijc2OGU0ZDI0LWU3OGMtNGMzZi1hOTU4LTJjNGU4M2NkOGY3OCIsIm1lZGlhX3R5cGUiOiJ2aWRlbyIsInF1ZXJ5IjoiZmFsbGluZyBtYXBsZSBsZWF2ZXMgYXV0dW1uIn19/
+                    - link [ref=f327e504] [cursor=pointer]:
+                      - /url: https://www.pexels.com/r/eyJkZXN0IjoiaHR0cHM6Ly93d3cuaXN0b2NrcGhvdG8uY29tL3ZpZGVvL2F1dHVtbi1sZWF2ZXMtZmFsbGluZy1mcm9tLXRyZWVzLWR1cmluZy1zdW5zZXQtd2l0aC1jYW1lcmEtc3Bpbm5pbmctYXJvdW5kLWdtMjI2NDcwMzM3NS02NzczOTI1ODM_dXRtX3NvdXJjZT1wZXhlbHMmdXRtX21lZGl1bT1hZmZpbGlhdGUmdXRtX2NhbXBhaWduPXNwb25zb3JlZF92aWRlbyZ1dG1fY29udGVudD1zcnBfaW5saW5lX21lZGlhJnV0bV90ZXJtPWZhbGxpbmclMjBtYXBsZSUyMGxlYXZlcyUyMGF1dHVtbiIsImRhdGEiOnsiZXhwZXJpbWVudHMiOnt9LCJwYWdlX2xvY2FsZSI6ImVuLVVTIiwicGFnZSI6InNlYXJjaF9yZXN1bHRzIiwicGFnZV92YXJpYW50IjoicGhvdG9zIiwibG9jYXRpb24iOiJncmlkIiwiYWRfcGFydG5lciI6ImdldHR5IiwiYWRfZm9ybWF0IjoiaW5saW5lIiwiYWRfcGxhY2VtZW50IjoiMTAiLCJhZF9jcmVhdGl2ZSI6InZpZGVvX3NlYXJjaF80IiwiYWRfYWN0aW9uIjoiY2xpY2siLCJhZF9pbXByZXNzaW9uX2lkIjoiNzY4ZTRkMjQtZTc4Yy00YzNmLWE5NTgtMmM0ZTgzY2Q4Zjc4IiwibWVkaWFfdHlwZSI6InZpZGVvIiwicXVlcnkiOiJmYWxsaW5nIG1hcGxlIGxlYXZlcyBhdXR1bW4ifX0/
+                    - link [ref=f327e507] [cursor=pointer]:
+                      - /url: https://www.pexels.com/r/eyJkZXN0IjoiaHR0cHM6Ly93d3cuaXN0b2NrcGhvdG8uY29tL3ZpZGVvL2F1dHVtbi1sZWF2ZXMtZ20xNTYzOTc0OTc2LTUyNzM5MjMwMT91dG1fc291cmNlPXBleGVscyZ1dG1fbWVkaXVtPWFmZmlsaWF0ZSZ1dG1fY2FtcGFpZ249c3BvbnNvcmVkX3ZpZGVvJnV0bV9jb250ZW50PXNycF9pbmxpbmVfbWVkaWEmdXRtX3Rlcm09ZmFsbGluZyUyMG1hcGxlJTIwbGVhdmVzJTIwYXV0dW1uIiwiZGF0YSI6eyJleHBlcmltZW50cyI6e30sInBhZ2VfbG9jYWxlIjoiZW4tVVMiLCJwYWdlIjoic2VhcmNoX3Jlc3VsdHMiLCJwYWdlX3ZhcmlhbnQiOiJwaG90b3MiLCJsb2NhdGlvbiI6ImdyaWQiLCJhZF9wYXJ0bmVyIjoiZ2V0dHkiLCJhZF9mb3JtYXQiOiJpbmxpbmUiLCJhZF9wbGFjZW1lbnQiOiIxMCIsImFkX2NyZWF0aXZlIjoidmlkZW9fc2VhcmNoXzQiLCJhZF9hY3Rpb24iOiJjbGljayIsImFkX2ltcHJlc3Npb25faWQiOiI3NjhlNGQyNC1lNzhjLTRjM2YtYTk1OC0yYzRlODNjZDhmNzgiLCJtZWRpYV90eXBlIjoidmlkZW8iLCJxdWVyeSI6ImZhbGxpbmcgbWFwbGUgbGVhdmVzIGF1dHVtbiJ9fQ/
+                  - link [ref=f327e510] [cursor=pointer]:
+                    - /url: https://www.pexels.com/r/eyJkZXN0IjoiaHR0cHM6Ly93d3cuaXN0b2NrcGhvdG8uY29tL3ZpZGVvcy9mYWxsaW5nJTIwbWFwbGUlMjBsZWF2ZXMlMjBhdXR1bW4_dXRtX3NvdXJjZT1wZXhlbHMmdXRtX21lZGl1bT1hZmZpbGlhdGUmdXRtX2NhbXBhaWduPXNwb25zb3JlZF92aWRlbyZ1dG1fY29udGVudD1zcnBfaW5saW5lX2NvdXBvbmNvZGUmdXRtX3Rlcm09ZmFsbGluZyUyMG1hcGxlJTIwbGVhdmVzJTIwYXV0dW1uIiwiZGF0YSI6eyJleHBlcmltZW50cyI6e30sInBhZ2VfbG9jYWxlIjoiZW4tVVMiLCJwYWdlIjoic2VhcmNoX3Jlc3VsdHMiLCJwYWdlX3ZhcmlhbnQiOiJwaG90b3MiLCJsb2NhdGlvbiI6ImdyaWQiLCJhZF9wYXJ0bmVyIjoiZ2V0dHkiLCJhZF9mb3JtYXQiOiJpbmxpbmUiLCJhZF9wbGFjZW1lbnQiOiIxMCIsImFkX2NyZWF0aXZlIjoidmlkZW9fc2VhcmNoXzQiLCJhZF9hY3Rpb24iOiJjbGljayIsImFkX2ltcHJlc3Npb25faWQiOiI3NjhlNGQyNC1lNzhjLTRjM2YtYTk1OC0yYzRlODNjZDhmNzgiLCJtZWRpYV90eXBlIjoidmlkZW8iLCJxdWVyeSI6ImZhbGxpbmcgbWFwbGUgbGVhdmVzIGF1dHVtbiJ9fQ/
+                    - img [ref=f327e513]:
+                      - generic [ref=f327e514]: Get 20% off with code PEXELS20 »
+                - article [ref=f327e517]:
+                  - link [ref=f327e518] [cursor=pointer]:
+                    - /url: /video/vibrant-autumn-leaves-in-tranquil-forest-setting-34684726/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e528] [cursor=pointer]
+                    - link "Download" [ref=f327e536] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/34684726/
+                - article [ref=f327e542]:
+                  - link [ref=f327e543] [cursor=pointer]:
+                    - /url: /video/the-leaves-of-a-tree-are-yellow-and-blue-19456240/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e553] [cursor=pointer]
+                    - link "Download" [ref=f327e561] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19456240/
+                - article [ref=f327e567]:
+                  - link [ref=f327e568] [cursor=pointer]:
+                    - /url: /video/a-leaf-is-flying-through-the-air-in-the-woods-19201288/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e578] [cursor=pointer]
+                    - link "Download" [ref=f327e586] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19201288/
+                - article [ref=f327e592]:
+                  - link [ref=f327e593] [cursor=pointer]:
+                    - /url: /video/close-up-of-autumn-leaves-on-water-10158948/
+                  - generic:
+                    - button "Edit" [ref=f327e603] [cursor=pointer]
+                    - link "Download" [ref=f327e611] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/10158948/
+                - article [ref=f327e617]:
+                  - link [ref=f327e618] [cursor=pointer]:
+                    - /url: /video/a-tree-with-orange-leaves-and-a-blue-sky-19082233/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e628] [cursor=pointer]
+                    - link "Download" [ref=f327e636] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19082233/
+                - article [ref=f327e642]:
+                  - link [ref=f327e643] [cursor=pointer]:
+                    - /url: /video/18770928/
+                  - generic:
+                    - button "Edit" [ref=f327e653] [cursor=pointer]
+                    - link "Download" [ref=f327e661] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/18770928/
+                - article [ref=f327e667]:
+                  - link [ref=f327e668] [cursor=pointer]:
+                    - /url: /video/yellow-leaves-on-a-tree-against-a-blue-sky-19828293/
+                  - generic:
+                    - button "Edit" [ref=f327e678] [cursor=pointer]
+                    - link "Download" [ref=f327e686] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19828293/
+                - article [ref=f327e692]:
+                  - link [ref=f327e693] [cursor=pointer]:
+                    - /url: /video/a-yellow-leaf-blowing-in-the-wind-against-a-blue-sky-19828294/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e703] [cursor=pointer]
+                    - link "Download" [ref=f327e711] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/19828294/
+                - article [ref=f327e717]:
+                  - link [ref=f327e718] [cursor=pointer]:
+                    - /url: /video/vibrant-autumn-leaves-swaying-in-the-breeze-34234636/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e728] [cursor=pointer]
+                    - link "Download" [ref=f327e736] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/34234636/
+                - article [ref=f327e742]:
+                  - link [ref=f327e743] [cursor=pointer]:
+                    - /url: /video/golden-autumn-leaves-against-blue-sky-37710300/
+                  - generic:
+                    - button "Edit" [ref=f327e753] [cursor=pointer]
+                    - link "Download" [ref=f327e761] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/37710300/
+                - article [ref=f327e767]:
+                  - link [ref=f327e768] [cursor=pointer]:
+                    - /url: /video/autumn-colored-leaves-on-water-10158940/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e778] [cursor=pointer]
+                    - link "Download" [ref=f327e786] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/10158940/
+                - article [ref=f327e792]:
+                  - link [ref=f327e793] [cursor=pointer]:
+                    - /url: /video/vibrant-autumn-leaves-swaying-in-breeze-34633238/
+                  - generic:
+                    - button "Add Text" [ref=f327e803] [cursor=pointer]
+                    - link "Download" [ref=f327e811] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/34633238/
+                - article [ref=f327e817]:
+                  - link [ref=f327e818] [cursor=pointer]:
+                    - /url: /video/close-up-of-autumn-leaves-swirling-gently-34425249/
+                  - generic:
+                    - button "Edit" [ref=f327e828] [cursor=pointer]
+                    - link "Download" [ref=f327e836] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/34425249/
+                - article [ref=f327e842]:
+                  - link [ref=f327e843] [cursor=pointer]:
+                    - /url: /video/foliage-in-autumn-13852455/
+                  - generic:
+                    - button "Edit" [ref=f327e853] [cursor=pointer]
+                    - link "Download" [ref=f327e861] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/13852455/
+                - article [ref=f327e867]:
+                  - link [ref=f327e868] [cursor=pointer]:
+                    - /url: /video/a-person-holding-a-leaf-in-their-hand-18785485/
+                  - generic:
+                    - button "Convert to GIF" [ref=f327e878] [cursor=pointer]
+                    - link "Download" [ref=f327e886] [cursor=pointer]:
+                      - /url: https://www.pexels.com/download/video/18785485/
+              - button "Load More" [ref=f327e891] [cursor=pointer]
+            - navigation [ref=f327e894]:
+              - generic [ref=f327e896]:
+                - link "1" [ref=f327e898]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/
+                - link "2" [ref=f327e901] [cursor=pointer]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/?page=2
+                - link "3" [ref=f327e904] [cursor=pointer]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/?page=3
+                - link "4" [ref=f327e907] [cursor=pointer]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/?page=4
+                - link "5" [ref=f327e910] [cursor=pointer]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/?page=5
+                - link "6" [ref=f327e913] [cursor=pointer]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/?page=6
+                - link "Next" [ref=f327e916] [cursor=pointer]:
+                  - /url: /search/videos/falling%20maple%20leaves%20autumn/?page=2
+    - contentinfo [ref=f327e920]:
+      - separator [ref=f327e921]
+      - generic [ref=f327e922]:
+        - generic [ref=f327e923]:
+          - heading "Where stories come together." [level=2] [ref=f327e924]
+          - generic [ref=f327e925]:
+            - link "iOS" [ref=f327e926] [cursor=pointer]:
+              - /url: https://itunes.apple.com/us/app/pexels/id1434330413/
+            - link "Android" [ref=f327e929] [cursor=pointer]:
+              - /url: https://play.google.com/store/apps/details?id=com.pexels.app
+          - list [ref=f327e932]:
+            - listitem [ref=f327e933]:
+              - link "Instagram" [ref=f327e934] [cursor=pointer]:
+                - /url: https://www.instagram.com/pexels/
+            - listitem [ref=f327e937]:
+              - link "Threads" [ref=f327e938] [cursor=pointer]:
+                - /url: https://www.threads.net/@pexels/
+            - listitem [ref=f327e941]:
+              - link "YouTube" [ref=f327e942] [cursor=pointer]:
+                - /url: https://www.youtube.com/pexelsphotos/
+            - listitem [ref=f327e945]:
+              - link "TikTok" [ref=f327e946] [cursor=pointer]:
+                - /url: https://www.tiktok.com/@pexels/
+            - listitem [ref=f327e949]:
+              - link "LinkedIn" [ref=f327e950] [cursor=pointer]:
+                - /url: https://www.linkedin.com/company/pexels/
+            - listitem [ref=f327e953]:
+              - link "X" [ref=f327e954] [cursor=pointer]:
+                - /url: https://x.com/pexels/
+        - generic [ref=f327e957]:
+          - list [ref=f327e958]:
+            - heading "Pexels" [level=3] [ref=f327e959]
+            - listitem [ref=f327e960]:
+              - link "Free Stock Photos" [ref=f327e961] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=f327e962]:
+              - link "Free Videos" [ref=f327e963] [cursor=pointer]:
+                - /url: /videos/
+            - listitem [ref=f327e964]:
+              - link "Popular searches" [ref=f327e965] [cursor=pointer]:
+                - /url: /popular-searches/
+            - listitem [ref=f327e966]:
+              - link "Collections" [ref=f327e967] [cursor=pointer]:
+                - /url: /discover/
+            - listitem [ref=f327e968]:
+              - link "Challenges" [ref=f327e969] [cursor=pointer]:
+                - /url: /challenges/
+            - listitem [ref=f327e970]:
+              - link "Leaderboard" [ref=f327e971] [cursor=pointer]:
+                - /url: /leaderboard/
+            - listitem [ref=f327e972]:
+              - link "Other plugins & apps" [ref=f327e973] [cursor=pointer]:
+                - /url: /pro/
+          - list [ref=f327e974]:
+            - heading "Company" [level=3] [ref=f327e975]
+            - listitem [ref=f327e976]:
+              - link "About" [ref=f327e977] [cursor=pointer]:
+                - /url: /about/
+            - listitem [ref=f327e978]:
+              - link "Blog" [ref=f327e979] [cursor=pointer]:
+                - /url: /blog/
+            - listitem [ref=f327e980]:
+              - link "Help Center" [ref=f327e981] [cursor=pointer]:
+                - /url: https://help.pexels.com/hc/en-us
+            - listitem [ref=f327e982]:
+              - link "Report content" [ref=f327e983] [cursor=pointer]:
+                - /url: /report/
+            - listitem [ref=f327e984]:
+              - link "Become a Hero" [ref=f327e985] [cursor=pointer]:
+                - /url: /hero/
+            - listitem [ref=f327e986]:
+              - link "Partner with Pexels" [ref=f327e987] [cursor=pointer]:
+                - /url: /become-a-partner/
+            - listitem [ref=f327e988]:
+              - link "Image & Video API" [ref=f327e989] [cursor=pointer]:
+                - /url: /api/
+            - listitem [ref=f327e990]: Sign Up
+        - list [ref=f327e991]:
+          - listitem [ref=f327e992]:
+            - heading "Free Stock Photos" [level=3] [ref=f327e993]
+          - listitem [ref=f327e994]:
+            - generic [ref=f327e996]:
+              - link "Black and white photography" [ref=f327e998] [cursor=pointer]:
+                - /url: /search/black%20and%20white/
+              - link "Happy birthday images" [ref=f327e999] [cursor=pointer]:
+                - /url: /search/happy%20birthday/
+              - link "Free business videos" [ref=f327e1000] [cursor=pointer]:
+                - /url: /search/videos/business/
+              - link "Happy new year images" [ref=f327e1001] [cursor=pointer]:
+                - /url: /search/happy%20new%20year/
+              - link "Cool wallpapers" [ref=f327e1002] [cursor=pointer]:
+                - /url: /search/cool%20wallpaper/
+              - link "Best HD wallpapers" [ref=f327e1003] [cursor=pointer]:
+                - /url: /search/hd%20wallpaper/
+              - link "Galaxy wallpaper" [ref=f327e1004] [cursor=pointer]:
+                - /url: /search/galaxy%20wallpaper/
+              - link "Lock screen wallpaper" [ref=f327e1005] [cursor=pointer]:
+                - /url: /search/lock%20screen%20wallpaper/
+              - link "iPhone wallpaper" [ref=f327e1006] [cursor=pointer]:
+                - /url: /search/iphone%20wallpaper/
+              - link "4K wallpaper" [ref=f327e1007] [cursor=pointer]:
+                - /url: /search/4k%20wallpaper/
+              - link "Samsung wallpaper" [ref=f327e1008] [cursor=pointer]:
+                - /url: /search/samsung%20wallpaper/
+              - link "Love wallpaper" [ref=f327e1009] [cursor=pointer]:
+                - /url: /search/love%20wallpaper/
+              - link "Mobile wallpaper" [ref=f327e1010] [cursor=pointer]:
+                - /url: /search/mobile%20wallpaper/
+      - generic [ref=f327e1012]:
+        - generic [ref=f327e1013]: © 2026 Pexels
+        - generic [ref=f327e1015]:
+          - link "Terms of Use" [ref=f327e1017] [cursor=pointer]:
+            - /url: /terms-of-service/
+          - link "Privacy Policy" [ref=f327e1018] [cursor=pointer]:
+            - /url: /privacy-policy/
+          - link "License" [ref=f327e1019] [cursor=pointer]:
+            - /url: /license/
+          - link "Imprint" [ref=f327e1020] [cursor=pointer]:
+            - /url: /imprint/
+          - link "Cookies Policy" [ref=f327e1021] [cursor=pointer]:
+            - /url: /cookies/
+        - button "English" [ref=f327e1026] [cursor=pointer]
+      - separator [ref=f327e1031]
+  - alert [ref=f327e1032]
+  - region "Cookie banner" [ref=f327e1033]:
+    - alertdialog "Конфиденциальность" [ref=f327e1034]:
+      - generic [ref=f327e1036]:
+        - paragraph [ref=f327e1039]: Мы используем файлы cookie, чтобы обеспечивать правильную работу нашего веб-сайта, персонализировать рекламные объявления и другие материалы, обеспечивать работу функций социальных сетей и анализировать сетевой трафик. Мы также предоставляем информацию об использовании вами нашего веб-сайта своим партнерам по социальным сетям, рекламе и аналитическим системам.
+        - generic [ref=f327e1041]:
+          - button "Настройки файлов cookie" [active] [ref=f327e1042] [cursor=pointer]
+          - button "Отклонить все" [ref=f327e1043] [cursor=pointer]
+          - button "Согласиться с использованием всех файлов cookie" [ref=f327e1044] [cursor=pointer]

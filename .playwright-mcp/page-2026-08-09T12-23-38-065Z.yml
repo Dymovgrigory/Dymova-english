@@ -1,0 +1,108 @@
+- generic:
+  - generic:
+    - banner:
+      - generic:
+        - button
+        - paragraph: Dashboard
+      - generic:
+        - button
+        - button
+        - combobox
+        - button
+        - button [expanded]:
+          - generic: L
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Good afternoon, Learner Thirteen
+              - paragraph: Your role is LEARNER. You belong to the organization "Notify Org".
+            - button: Customize widgets
+          - navigation:
+            - link:
+              - /url: /learn
+              - text: Go to courses
+            - link:
+              - /url: /learn/leaderboard
+              - text: Leaderboard
+            - link:
+              - /url: /learn/badges
+              - text: My Badges
+            - link:
+              - /url: /learn/certificates
+              - text: Certificates
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: My progress
+                    - generic:
+                      - link:
+                        - /url: /learn
+                        - text: All courses
+                  - generic:
+                    - generic:
+                      - generic:
+                        - paragraph: Courses
+                        - paragraph: "2"
+                      - generic:
+                        - paragraph: Completed
+                        - paragraph: "0"
+                      - generic:
+                        - paragraph: Your points
+                        - paragraph: "0"
+                      - generic:
+                        - paragraph: Your rank
+                        - paragraph: "#1"
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: In Progress
+                    - generic:
+                      - link:
+                        - /url: /learn
+                        - text: All courses
+                  - generic:
+                    - paragraph: No courses in progress
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: My level
+                    - generic:
+                      - link:
+                        - /url: /learn/leaderboard
+                        - text: Open leaderboard →
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: 🌱
+                        - generic:
+                          - paragraph: Level 1 — Новичок
+                          - paragraph: 0 / 50 your points
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: Recent badges
+                    - generic:
+                      - link:
+                        - /url: /learn/badges
+                        - text: All badges
+                  - generic:
+                    - paragraph: No badges yet
+          - status
+  - button "Open Next.js Dev Tools" [ref=f2e31] [cursor=pointer]
+  - alert
+  - menu "User menu" [active] [ref=f2e140]:
+    - generic [ref=f2e141]:
+      - paragraph [ref=f2e142]: Learner Thirteen
+      - paragraph [ref=f2e143]: learner13@n.org
+      - paragraph [ref=f2e144]: LEARNER · Notify Org
+    - separator [ref=f2e145]
+    - menuitem "Profile" [ref=f2e146]
+    - separator [ref=f2e150]
+    - menuitem "Logout" [ref=f2e151]

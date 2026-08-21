@@ -1,0 +1,156 @@
+- generic [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f5e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f5e6]
+        - generic [ref=f5e7]: Фоксинбург
+      - navigation "Основная навигация" [ref=f5e8]:
+        - generic [ref=f5e9]:
+          - generic [ref=f5e11]:
+            - link "Главная" [ref=f5e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f5e19] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f5e24] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f5e28] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f5e32] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f5e38] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f5e43] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f5e48] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f5e56] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f5e60] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f5e64] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f5e69] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f5e72] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f5e77] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f5e83] [cursor=pointer]:
+              - /url: /news
+          - link "Моя команда" [active] [ref=f5e91] [cursor=pointer]:
+            - /url: /supervisor
+          - generic [ref=f5e99]:
+            - paragraph [ref=f5e101]: Студия
+            - generic [ref=f5e102]:
+              - link "Студия" [ref=f5e103] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f5e108] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f5e111] [cursor=pointer]:
+                - /url: /studio/paths
+          - generic [ref=f5e117]:
+            - paragraph [ref=f5e119]: Админка
+            - generic [ref=f5e120]:
+              - link "Админка" [ref=f5e121] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f5e126] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f5e131] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f5e135] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f5e140] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f5e145] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f5e150] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f5e154] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Мероприятия" [ref=f5e159] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f5e163] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f5e168] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f5e173] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f5e178] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f5e184] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f5e191] [cursor=pointer]
+    - banner [ref=f5e196]:
+      - paragraph [ref=f5e198]: Моя команда
+      - generic [ref=f5e199]:
+        - button "Уведомления" [ref=f5e201] [cursor=pointer]
+        - combobox "Язык" [ref=f5e204]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f5e205] [cursor=pointer]
+        - button "Меню пользователя" [ref=f5e206] [cursor=pointer]:
+          - generic [ref=f5e207]: Т
+    - main [ref=f5e209]:
+      - generic [ref=f5e211]:
+        - heading "Моя команда" [level=1] [ref=f5e212]
+        - generic [ref=f5e230]:
+          - generic [ref=f5e231]:
+            - paragraph [ref=f5e232]: Сотрудников
+            - paragraph [ref=f5e233]: "2"
+          - generic [ref=f5e234]:
+            - paragraph [ref=f5e235]: Средний прогресс
+            - paragraph [ref=f5e236]: 81%
+          - generic [ref=f5e237]:
+            - paragraph [ref=f5e238]: Завершено
+            - paragraph [ref=f5e239]: "5"
+          - generic [ref=f5e240]:
+            - paragraph [ref=f5e241]: Просрочено
+            - paragraph [ref=f5e242]: "1"
+        - generic [ref=f5e243]:
+          - generic [ref=f5e244]: Требуют внимания
+          - generic [ref=f5e247]:
+            - generic [ref=f5e248]:
+              - paragraph [ref=f5e249]: Иван Петров
+              - paragraph [ref=f5e250]: Продажи
+            - generic [ref=f5e251]:
+              - generic [ref=f5e252]: 1 просрочено
+              - generic [ref=f5e253]: 62%
+        - table [ref=f5e256]:
+          - rowgroup [ref=f5e257]:
+            - row [ref=f5e258]:
+              - columnheader "Сотрудник" [ref=f5e259]
+              - columnheader "Департамент" [ref=f5e260]
+              - columnheader "Прогресс" [ref=f5e261]
+              - columnheader "Курсы" [ref=f5e262]
+              - columnheader "Завершено" [ref=f5e263]
+              - columnheader "Просрочено" [ref=f5e264]
+              - columnheader "Серт." [ref=f5e265]
+              - columnheader "Активность" [ref=f5e266]
+          - rowgroup [ref=f5e267]:
+            - row [ref=f5e268]:
+              - cell [ref=f5e269]:
+                - generic [ref=f5e270]:
+                  - paragraph [ref=f5e271]: Иван Петров
+                  - paragraph [ref=f5e272]: ivan@fox.ru
+              - cell "Продажи" [ref=f5e273]
+              - cell "62%" [ref=f5e274]
+              - cell "4" [ref=f5e279]
+              - cell "2" [ref=f5e280]
+              - cell "1" [ref=f5e281]
+              - cell "2" [ref=f5e283]
+              - cell "5 авг. 2026 г." [ref=f5e284]
+            - row [ref=f5e285]:
+              - cell [ref=f5e286]:
+                - generic [ref=f5e287]:
+                  - paragraph [ref=f5e288]: Мария Сидорова
+                  - paragraph [ref=f5e289]: maria@fox.ru
+              - cell "—" [ref=f5e290]
+              - cell "100%" [ref=f5e291]
+              - cell "3" [ref=f5e296]
+              - cell "3" [ref=f5e297]
+              - cell "0" [ref=f5e298]
+              - cell "3" [ref=f5e299]
+              - cell "7 авг. 2026 г." [ref=f5e300]
+  - button "Open Next.js Dev Tools" [ref=f5e225] [cursor=pointer]
+  - alert [ref=f5e229]

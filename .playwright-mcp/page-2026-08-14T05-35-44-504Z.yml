@@ -1,0 +1,27 @@
+- generic [active] [ref=f6e1]:
+  - banner [ref=f6e2]:
+    - generic [ref=f6e3]:
+      - heading "Фоксинбург" [level=1] [ref=f6e4]
+      - paragraph [ref=f6e5]: Английский не для школы, а для жизни
+  - generic [ref=f6e62]:
+    - button "← В меню" [ref=f6e63] [cursor=pointer]
+    - generic [ref=f6e64]:
+      - heading "Наши филиалы" [level=2] [ref=f6e65]
+      - generic [ref=f6e66]:
+        - heading "Филиал на Лихачевском" [level=2] [ref=f6e67]
+        - paragraph [ref=f6e68]:
+          - link "г. Долгопрудный, пр-кт Лихачевский, 76к1" [ref=f6e72] [cursor=pointer]:
+            - /url: https://yandex.ru/maps/?text=Долгопрудный%2C%20проспект%20Лихачевский%2C%2076к1&rtt=auto
+        - paragraph [ref=f6e73]:
+          - link "8 993 923-23-09" [ref=f6e76] [cursor=pointer]:
+            - /url: tel:+79939232309
+        - paragraph [ref=f6e77]: 9:00 — 21:00
+      - generic [ref=f6e81]:
+        - heading "Филиал на Ракетостроителей" [level=2] [ref=f6e82]
+        - paragraph [ref=f6e83]:
+          - link "г. Долгопрудный, пр-кт Ракетостроителей, 9к3" [ref=f6e87] [cursor=pointer]:
+            - /url: https://yandex.ru/maps/?text=Долгопрудный%2C%20проспект%20Ракетостроителей%2C%209к3&rtt=auto
+        - paragraph [ref=f6e88]:
+          - link "8 916 732-31-69" [ref=f6e91] [cursor=pointer]:
+            - /url: tel:+79167323169
+        - paragraph [ref=f6e92]: 9:00 — 21:00

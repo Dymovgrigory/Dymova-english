@@ -1,0 +1,67 @@
+- main [ref=f28e2]:
+  - generic [ref=f28e3]:
+    - generic [ref=f28e4]:
+      - img "Фокси, маскот школы Фоксинбург" [ref=f28e7]
+      - paragraph [ref=f28e8]: Языковая школа · Долгопрудный
+      - heading "Фоксинбург" [level=1] [ref=f28e9]
+      - paragraph [ref=f28e10]: Английский не для школы, а для жизни
+      - generic "Коротко о школе" [ref=f28e11]:
+        - generic [ref=f28e12]:
+          - term [ref=f28e13]: в группе
+          - definition [ref=f28e14]: "7"
+          - paragraph [ref=f28e15]: детей максимум
+        - generic [ref=f28e16]:
+          - term [ref=f28e17]: возраст
+          - definition [ref=f28e18]: 2–18
+          - paragraph [ref=f28e19]: и взрослые
+        - generic [ref=f28e20]:
+          - term [ref=f28e21]: языка
+          - definition [ref=f28e22]: "3"
+          - paragraph [ref=f28e23]: англ · нем · кит
+    - navigation "Разделы" [ref=f28e24]:
+      - button "Подобрать курс По возрасту и формату — за минуту" [ref=f28e25] [cursor=pointer]:
+        - generic [ref=f28e30]:
+          - generic [ref=f28e31]: Подобрать курс
+          - generic [ref=f28e32]: По возрасту и формату — за минуту
+      - button "Записаться Бесплатная диагностика" [ref=f28e36] [cursor=pointer]:
+        - generic [ref=f28e42]:
+          - generic [ref=f28e43]: Записаться
+          - generic [ref=f28e44]: Бесплатная диагностика
+      - button "Помощь с домашкой Фото задания — разбор" [ref=f28e45] [cursor=pointer]:
+        - generic [ref=f28e51]:
+          - generic [ref=f28e52]: Помощь с домашкой
+          - generic [ref=f28e53]: Фото задания — разбор
+      - button "Спросить Фокси Отвечает здесь и в чате" [ref=f28e54] [cursor=pointer]:
+        - generic [ref=f28e59]:
+          - generic [ref=f28e60]: Спросить Фокси
+          - generic [ref=f28e61]: Отвечает здесь и в чате
+      - button "Программы и цены Курсы и форматы" [ref=f28e62] [cursor=pointer]:
+        - generic [ref=f28e67]:
+          - generic [ref=f28e68]: Программы и цены
+          - generic [ref=f28e69]: Курсы и форматы
+      - button "Филиалы Адреса и телефоны" [ref=f28e70] [cursor=pointer]:
+        - generic [ref=f28e75]:
+          - generic [ref=f28e76]: Филиалы
+          - generic [ref=f28e77]: Адреса и телефоны
+    - region [ref=f28e78]:
+      - heading "Почему Фоксинбург" [level=2] [ref=f28e79]
+    - region [ref=f28e83]:
+      - generic [ref=f28e84]:
+        - heading "Программы" [level=2] [ref=f28e85]
+        - button "Все программы" [ref=f28e86] [cursor=pointer]
+      - generic [ref=f28e87]:
+        - article [ref=f28e88]
+        - article [ref=f28e89]
+    - region [ref=f28e90]:
+      - heading "Частые вопросы" [level=2] [ref=f28e91]
+    - region [ref=f28e92]:
+      - generic [ref=f28e93]:
+        - heading "Где мы" [level=2] [ref=f28e94]
+        - button "Все филиалы" [ref=f28e95] [cursor=pointer]
+    - generic [ref=f28e96]:
+      - paragraph [ref=f28e97]: Начать проще, чем кажется
+      - paragraph [ref=f28e98]: Бесплатная диагностика покажет уровень и подходящий формат. Это ни к чему не обязывает.
+      - button "Записаться на диагностику" [ref=f28e99] [cursor=pointer]
+    - button "Мой профиль —" [ref=f28e100] [cursor=pointer]:
+      - generic [ref=f28e101]: Мой профиль
+      - generic [ref=f28e102]: —

@@ -1,0 +1,83 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - heading "RichTextEditor preview" [level=1] [ref=e3]
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - button "Жирный" [ref=e6] [cursor=pointer]
+        - button "Курсив" [ref=e10] [cursor=pointer]
+        - button "Зачёркнутый" [ref=e13] [cursor=pointer]
+        - button "Заголовок 2" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: H2
+        - button "Заголовок 3" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: H3
+        - button "Абзац" [pressed] [ref=e22] [cursor=pointer]:
+          - generic [ref=e23]: ¶
+        - button "Маркированный список" [ref=e25] [cursor=pointer]
+        - button "Нумерованный список" [ref=e27] [cursor=pointer]
+        - button "Цитата" [ref=e31] [cursor=pointer]
+        - button "Вставить ссылку" [ref=e34] [cursor=pointer]
+        - button "Убрать ссылку" [disabled] [ref=e38]
+        - button "Вставить изображение" [ref=e43] [cursor=pointer]
+        - button "Очистить форматирование" [ref=e49] [cursor=pointer]
+        - generic [ref=e144]:
+          - textbox "https://…" [active] [ref=e145]
+          - button "Применить" [ref=e147] [cursor=pointer]
+      - generic [ref=e54]:
+        - heading "Заголовок урока" [level=2] [ref=e55]
+        - paragraph [ref=e56]:
+          - text: Обычный
+          - strong [ref=e57]: жирный
+          - text: и
+          - emphasis [ref=e58]: курсивный
+          - text: текст, зачёркнутый.
+        - list [ref=e59]:
+          - listitem [ref=e60]:
+            - paragraph [ref=e61]: Пункт один
+          - listitem [ref=e62]:
+            - paragraph [ref=e63]: Пункт два
+        - blockquote [ref=e64]:
+          - paragraph [ref=e65]: Цитата с брендовой рамкой.
+        - paragraph [ref=e66]:
+          - link "Ссылка" [ref=e67]:
+            - /url: https://example.com
+          - text: внутри абзаца.
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - button "Жирный" [ref=e70] [cursor=pointer]
+        - button "Курсив" [ref=e74] [cursor=pointer]
+        - button "Зачёркнутый" [ref=e77] [cursor=pointer]
+        - button "Заголовок 2" [ref=e82] [cursor=pointer]:
+          - generic [ref=e83]: H2
+        - button "Заголовок 3" [ref=e84] [cursor=pointer]:
+          - generic [ref=e85]: H3
+        - button "Абзац" [pressed] [ref=e86] [cursor=pointer]:
+          - generic [ref=e87]: ¶
+        - button "Маркированный список" [ref=e89] [cursor=pointer]
+        - button "Нумерованный список" [ref=e91] [cursor=pointer]
+        - button "Цитата" [ref=e95] [cursor=pointer]
+        - button "Вставить ссылку" [ref=e98] [cursor=pointer]
+        - button "Убрать ссылку" [disabled] [ref=e102]
+        - button "Вставить изображение" [ref=e107] [cursor=pointer]
+        - button "Очистить форматирование" [ref=e113] [cursor=pointer]
+      - paragraph [ref=e119]: Текст…
+    - generic [ref=e120]:
+      - paragraph [ref=e121]: Rendered output (.prose-editor)
+      - generic [ref=e122]:
+        - heading "Заголовок урока" [level=2] [ref=e123]
+        - paragraph [ref=e124]:
+          - text: Обычный
+          - strong [ref=e125]: жирный
+          - text: и
+          - emphasis [ref=e126]: курсивный
+          - text: текст, зачёркнутый.
+        - list [ref=e127]:
+          - listitem [ref=e128]: Пункт один
+          - listitem [ref=e129]: Пункт два
+        - blockquote [ref=e130]:
+          - paragraph [ref=e131]: Цитата с брендовой рамкой.
+        - paragraph [ref=e132]:
+          - link "Ссылка" [ref=e133] [cursor=pointer]:
+            - /url: https://example.com
+          - text: внутри абзаца.
+  - button "Open Next.js Dev Tools" [ref=e140] [cursor=pointer]
+  - alert [ref=e134]

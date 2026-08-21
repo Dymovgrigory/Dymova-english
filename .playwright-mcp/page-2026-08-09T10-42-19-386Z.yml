@@ -1,0 +1,55 @@
+- generic [active] [ref=f43e1]:
+  - generic [ref=f43e2]:
+    - banner [ref=f43e3]:
+      - button "Открыть меню" [ref=f43e5] [cursor=pointer]
+      - generic [ref=f43e6]:
+        - button "Поиск и команды (Ctrl K)" [ref=f43e7] [cursor=pointer]
+        - button "Уведомления" [ref=f43e9] [cursor=pointer]
+        - combobox "Язык" [ref=f43e12]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f43e13] [cursor=pointer]
+        - button "Меню пользователя" [ref=f43e14] [cursor=pointer]:
+          - generic [ref=f43e15]: Г
+    - main [ref=f43e17]:
+      - generic [ref=f43e19]:
+        - generic [ref=f43e20]:
+          - generic [ref=f43e21]:
+            - heading "Аналитика" [level=1] [ref=f43e22]
+            - paragraph [ref=f43e23]: Интерактивный обзор по доменам школы. Период применяется ко всем графикам.
+          - generic [ref=f43e24]:
+            - generic [ref=f43e25]:
+              - button "7 дней" [ref=f43e26] [cursor=pointer]
+              - button "30 дней" [ref=f43e27] [cursor=pointer]
+              - button "90 дней" [ref=f43e28] [cursor=pointer]
+              - button "12 мес" [pressed] [ref=f43e29] [cursor=pointer]
+            - generic [ref=f43e30]:
+              - textbox "Дата с" [ref=f43e31]: 2025-08-10
+              - generic [ref=f43e32]: —
+              - textbox "Дата по" [ref=f43e33]: 2026-08-09
+            - generic [ref=f43e34]: 2025-08-10 — 2026-08-09
+        - navigation "Разделы аналитики" [ref=f43e35]:
+          - link "Обзор" [ref=f43e36] [cursor=pointer]:
+            - /url: /analytics
+          - link "Обучение" [ref=f43e37] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "Люди" [ref=f43e38] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Финансы" [ref=f43e39] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f43e40]:
+          - generic [ref=f43e41]:
+            - generic [ref=f43e42]:
+              - heading "Завершаемость курсов" [level=2] [ref=f43e43]
+              - paragraph [ref=f43e44]: Топ-10 курсов по числу записей
+            - generic [ref=f43e49]:
+              - heading "Записи по курсам" [level=2] [ref=f43e50]
+              - paragraph [ref=f43e51]: Распределение записей за период
+          - generic [ref=f43e56]:
+            - heading "Завершаемость траекторий" [level=2] [ref=f43e57]
+            - paragraph [ref=f43e58]: Топ-10 траекторий по числу учеников
+          - generic [ref=f43e63]:
+            - heading "Сдачи заданий" [level=2] [ref=f43e64]
+            - paragraph [ref=f43e65]: Топ-10 заданий по числу сдач
+  - button "Open Next.js Dev Tools" [ref=f43e75] [cursor=pointer]
+  - alert [ref=f43e79]

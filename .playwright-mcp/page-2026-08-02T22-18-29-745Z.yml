@@ -1,0 +1,13 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - heading [level=1] [ref=e3]:
+      - text: "Демо:"
+      - mark [ref=e4]: Фокси
+      - text: ходит по странице
+    - paragraph [ref=e5]: "Маскот живёт поверх контента: гуляет по нижней кромке экрана, машет лапой, «хлопает» и посматривает на курсор. Кликните рядом с ним — он ответит."
+    - paragraph [ref=e6]: Прокрутите страницу вниз — маскот останется на месте (canvas фиксирован).
+    - paragraph [ref=e7]: Низ страницы. Фокси всё ещё с вами.
+  - generic [ref=e8]:
+    - button "Помахать" [ref=e9] [cursor=pointer]
+    - button "Похлопать" [ref=e10] [cursor=pointer]
+    - button "Погулять" [active] [ref=e11] [cursor=pointer]

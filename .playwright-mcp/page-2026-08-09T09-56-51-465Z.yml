@@ -1,0 +1,109 @@
+- generic [active] [ref=f29e1]:
+  - generic [ref=f29e36]:
+    - banner [ref=f29e37]:
+      - generic [ref=f29e38]:
+        - button "Открыть меню" [ref=f29e39] [cursor=pointer]
+        - paragraph [ref=f29e40]: Главная
+      - generic [ref=f29e41]:
+        - button "Поиск и команды (Ctrl K)" [ref=f29e42] [cursor=pointer]
+        - button "Уведомления" [ref=f29e44] [cursor=pointer]
+        - combobox "Язык" [ref=f29e47]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f29e48] [cursor=pointer]
+        - button "Меню пользователя" [ref=f29e49] [cursor=pointer]:
+          - generic [ref=f29e50]: P
+    - main [ref=f29e52]:
+      - generic [ref=f29e54]:
+        - generic [ref=f29e55]:
+          - generic [ref=f29e56]:
+            - heading "Добрый день, Phase Owner" [level=1] [ref=f29e57]
+            - paragraph [ref=f29e58]: "Ваша роль: OWNER. Вы принадлежите организации «Phase11b School»."
+          - button "Настроить виджеты" [ref=f29e59] [cursor=pointer]
+        - navigation "Быстрые действия" [ref=f29e63]:
+          - link "Студия" [ref=f29e64] [cursor=pointer]:
+            - /url: /studio
+          - link "Аналитика" [ref=f29e65] [cursor=pointer]:
+            - /url: /admin/analytics
+          - link "Заявки на обучение" [ref=f29e66] [cursor=pointer]:
+            - /url: /admin/training-requests
+          - link "Группы" [ref=f29e67] [cursor=pointer]:
+            - /url: /admin/groups
+        - generic [ref=f29e68]:
+          - generic [ref=f29e71]:
+            - generic [ref=f29e72]:
+              - generic [ref=f29e73]: Обучение
+              - link "Аналитика" [ref=f29e80] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f29e82]:
+              - generic [ref=f29e83]:
+                - paragraph [ref=f29e84]: Записи
+                - paragraph [ref=f29e85]: "0"
+              - generic [ref=f29e86]:
+                - paragraph [ref=f29e87]: Ученики
+                - paragraph [ref=f29e88]: "0"
+              - generic [ref=f29e89]:
+                - paragraph [ref=f29e90]: Средний прогресс
+                - paragraph [ref=f29e91]: 0%
+              - generic [ref=f29e92]:
+                - paragraph [ref=f29e93]: Сертификаты
+                - paragraph [ref=f29e94]: "0"
+          - generic [ref=f29e97]:
+            - generic [ref=f29e98]:
+              - generic [ref=f29e99]: Активные ученики
+              - link "Аналитика" [ref=f29e108] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f29e110]:
+              - paragraph [ref=f29e111]:
+                - text: "0"
+                - generic [ref=f29e112]: / 1 · 0%
+              - paragraph [ref=f29e113]: Активные ученики за период
+          - generic [ref=f29e116]:
+            - generic [ref=f29e117]:
+              - generic [ref=f29e118]: Выручка
+              - link "Аналитика" [ref=f29e125] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f29e127]:
+              - paragraph [ref=f29e128]: 0 ₽
+              - paragraph [ref=f29e129]: Нет данных за период
+          - generic [ref=f29e132]:
+            - generic [ref=f29e133]:
+              - generic [ref=f29e134]: "Курсы: запись и прогресс"
+              - link "Аналитика" [ref=f29e140] [cursor=pointer]:
+                - /url: /admin/analytics
+            - paragraph [ref=f29e142]: Пока нет курсов
+          - generic [ref=f29e145]:
+            - generic [ref=f29e146]:
+              - generic [ref=f29e147]: Домашние задания
+              - link "Аналитика" [ref=f29e155] [cursor=pointer]:
+                - /url: /admin/analytics
+            - generic [ref=f29e157]:
+              - generic [ref=f29e158]:
+                - generic [ref=f29e159]:
+                  - paragraph [ref=f29e160]: На проверке
+                  - paragraph [ref=f29e161]: "0"
+                - generic [ref=f29e162]:
+                  - paragraph [ref=f29e163]: Сдано с опозданием
+                  - paragraph [ref=f29e164]: "0"
+              - paragraph [ref=f29e165]: Все работы проверены
+          - generic [ref=f29e168]:
+            - generic [ref=f29e169]:
+              - generic [ref=f29e170]: Активность команды
+              - link "Все" [ref=f29e178] [cursor=pointer]:
+                - /url: /supervisor
+            - generic [ref=f29e181]:
+              - generic [ref=f29e182]:
+                - paragraph [ref=f29e183]: Сотрудников
+                - paragraph [ref=f29e184]: "0"
+              - generic [ref=f29e185]:
+                - paragraph [ref=f29e186]: Средний прогресс
+                - paragraph [ref=f29e187]: 0%
+              - generic [ref=f29e188]:
+                - paragraph [ref=f29e189]: Завершено
+                - paragraph [ref=f29e190]: "0"
+              - generic [ref=f29e191]:
+                - paragraph [ref=f29e192]: Просрочено
+                - paragraph [ref=f29e193]: "0"
+        - status [ref=f29e194]
+  - button "Open Next.js Dev Tools" [ref=f29e32] [cursor=pointer]
+  - alert [ref=f29e26]

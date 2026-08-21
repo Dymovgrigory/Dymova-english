@@ -1,0 +1,65 @@
+- generic [ref=f5e2]:
+  - complementary [ref=f5e3]:
+    - generic [ref=f5e4]:
+      - generic [ref=f5e5]: F
+      - text: Фоксинбург
+    - navigation [ref=f5e6]:
+      - button "Дашборд" [ref=f5e7] [cursor=pointer]
+      - button "Входящие" [ref=f5e12] [cursor=pointer]
+      - button "Клиенты" [ref=f5e15] [cursor=pointer]
+      - button "Воронка" [ref=f5e19] [cursor=pointer]
+      - button "Рассылки" [ref=f5e22] [cursor=pointer]
+      - button "Вопросы" [ref=f5e26] [cursor=pointer]
+      - button "Аналитика" [ref=f5e30] [cursor=pointer]
+      - button "База знаний" [ref=f5e33] [cursor=pointer]
+      - button "AI" [ref=f5e37] [cursor=pointer]
+      - button "Ошибки" [ref=f5e41] [cursor=pointer]
+      - button "Настройки" [ref=f5e44] [cursor=pointer]
+    - button "Выйти" [ref=f5e49] [cursor=pointer]
+  - generic [ref=f5e52]:
+    - banner [ref=f5e53]:
+      - 'searchbox "Поиск: клиенты и сообщения (Ctrl+K)" [ref=f5e55]'
+      - generic "Состояние каналов" [ref=f5e56]:
+        - generic [ref=f5e57]: БД
+        - generic [ref=f5e59]: MAX
+        - generic [ref=f5e61]: TG
+    - generic [ref=f5e63]:
+      - generic [ref=f5e64]:
+        - generic [ref=f5e65]:
+          - generic [ref=f5e66]: "1"
+          - generic [ref=f5e67]: "Новые клиенты сегодня (7д: 1, 30д: 1)"
+        - generic [ref=f5e68]:
+          - generic [ref=f5e69]: "1"
+          - generic [ref=f5e70]: Активные диалоги
+        - generic [ref=f5e71]:
+          - generic [ref=f5e72]: "1"
+          - generic [ref=f5e73]: Непрочитанные
+        - generic [ref=f5e74]:
+          - generic [ref=f5e75]: 1 / 1
+          - generic [ref=f5e76]: Сообщения in/out сегодня
+        - generic [ref=f5e77]:
+          - generic [ref=f5e78]: "0"
+          - generic [ref=f5e79]: Передано менеджеру сегодня
+        - generic [ref=f5e80]:
+          - generic [ref=f5e81]: "0"
+          - generic [ref=f5e82]: Без ответа сегодня
+      - generic [ref=f5e83]:
+        - generic [ref=f5e84]:
+          - heading "Сообщения сегодня по каналам" [level=3] [ref=f5e85]
+          - paragraph [ref=f5e87]:
+            - generic [ref=f5e88]: Веб
+            - text: 2 сообщений
+        - generic [ref=f5e89]:
+          - heading "Последние обращения" [level=3] [ref=f5e90]
+          - button "ВЕ web:a1 01:23 Конечно, подскажу. Чтобы не отправлять вам общий прайс, уточню одну вещь. А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского? Веб AI Новый 1" [ref=f5e92] [cursor=pointer]:
+            - generic [ref=f5e93]: ВЕ
+            - generic [ref=f5e94]:
+              - generic [ref=f5e95]:
+                - generic [ref=f5e96]: web:a1
+                - generic [ref=f5e97]: 01:23
+              - text: Конечно, подскажу. Чтобы не отправлять вам общий прайс, уточню одну вещь. А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского?
+              - generic [ref=f5e98]:
+                - generic [ref=f5e99]: Веб
+                - generic [ref=f5e100]: AI
+                - generic [ref=f5e101]: Новый
+                - generic [ref=f5e102]: "1"

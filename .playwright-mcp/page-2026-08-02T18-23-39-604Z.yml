@@ -1,0 +1,43 @@
+- generic [active] [ref=f3e1]:
+  - complementary [ref=f3e2]:
+    - link "Фоксинбург Фоксинбург" [ref=f3e4] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Фоксинбург" [ref=f3e5]
+      - generic [ref=f3e6]: Фоксинбург
+    - navigation [ref=f3e7]:
+      - generic [ref=f3e8]:
+        - link "Главная" [ref=f3e9] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Руководство" [ref=f3e16] [cursor=pointer]:
+          - /url: /help
+        - link "Обучение" [ref=f3e22] [cursor=pointer]:
+          - /url: /learn
+        - link "Каталог" [ref=f3e27] [cursor=pointer]:
+          - /url: /learn/catalog
+        - link "Траектории" [ref=f3e31] [cursor=pointer]:
+          - /url: /learn/paths
+        - link "База знаний" [ref=f3e34] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Сертификаты" [ref=f3e38] [cursor=pointer]:
+          - /url: /learn/certificates
+        - link "Лидерборд" [ref=f3e43] [cursor=pointer]:
+          - /url: /learn/leaderboard
+        - link "Мои бейджи" [ref=f3e51] [cursor=pointer]:
+          - /url: /learn/badges
+        - link "Календарь" [ref=f3e55] [cursor=pointer]:
+          - /url: /learn/calendar
+        - link "Онбординг" [ref=f3e59] [cursor=pointer]:
+          - /url: /learn/onboarding
+        - link "Наблюдения" [ref=f3e64] [cursor=pointer]:
+          - /url: /learn/training
+        - link "Мой план развития" [ref=f3e68] [cursor=pointer]:
+          - /url: /learn/development
+        - link "Оценка 360°" [ref=f3e72] [cursor=pointer]:
+          - /url: /learn/assessments
+        - link "Новости" [ref=f3e76] [cursor=pointer]:
+          - /url: /news
+    - generic [ref=f3e81]:
+      - button "Выйти" [ref=f3e82] [cursor=pointer]
+      - button "Collapse" [ref=f3e87] [cursor=pointer]
+  - main [ref=f3e91]: Загрузка…
+  - alert [ref=f3e92]

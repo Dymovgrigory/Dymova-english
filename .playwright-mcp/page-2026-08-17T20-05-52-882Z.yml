@@ -1,0 +1,39 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - paragraph [ref=f1e4]: Цены и абонементы
+    - heading "Английский, который остаётся навсегда" [level=1] [ref=f1e5]:
+      - generic [ref=f1e6]:
+        - generic [ref=f1e7]: Английский,
+        - generic [ref=f1e9]: который
+        - generic [ref=f1e11]: остаётся
+        - generic [ref=f1e13]: навсегда
+    - paragraph [ref=f1e15]: Прозрачные цены, маленькие группы и замок знаний на берегу Оби. Выберите свой путь — мы проведём.
+    - link "Оставить заявку" [ref=f1e16] [cursor=pointer]:
+      - /url: "#"
+  - generic [ref=f1e17]:
+    - heading "Школа в цифрах" [level=2] [ref=f1e18]:
+      - generic [ref=f1e19]:
+        - generic [ref=f1e20]: Школа
+        - generic [ref=f1e22]: в
+        - generic [ref=f1e24]: цифрах
+    - generic [ref=f1e26]:
+      - generic [ref=f1e27]:
+        - generic [ref=f1e28]: "0"
+        - paragraph [ref=f1e29]: выпускников за 10 лет
+      - generic [ref=f1e30]:
+        - generic [ref=f1e31]: "0"
+        - paragraph [ref=f1e32]: преподавателей с CELTA/DELTA
+      - generic [ref=f1e33]:
+        - generic [ref=f1e34]: "0"
+        - paragraph [ref=f1e35]: "% сдают ЕГЭ на 80+ баллов"
+  - generic [ref=f1e36]:
+    - heading "Атмосфера занятий" [level=2] [ref=f1e37]:
+      - generic [ref=f1e38]:
+        - generic [ref=f1e39]: Атмосфера
+        - generic [ref=f1e41]: занятий
+    - img "Светлый класс школы Фоксинбург" [ref=f1e45]
+    - paragraph [ref=f1e46]:
+      - text: "Каждый класс — как гостиная старого английского колледжа: дерево, свет и книги."
+      - link "Внутренняя ссылка" [ref=f1e47] [cursor=pointer]:
+        - /url: ./demo.html
+      - text: для проверки transition-veil.

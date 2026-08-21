@@ -1,0 +1,37 @@
+- main [ref=f4e2]:
+  - heading "RichTextEditor v2 preview" [level=1] [ref=f4e3]
+  - paragraph [ref=f4e4]: "DOMPurify removed tags: 0"
+  - generic [ref=f4e5]:
+    - paragraph [ref=f4e6]: Rendered output (.prose-editor, sanitized)
+    - generic [ref=f4e7]:
+      - heading "Заголовок курса" [level=1] [ref=f4e8]
+      - paragraph [ref=f4e9]:
+        - text: Центрированный фиолетовый текст,
+        - mark [ref=f4e10]: маркер
+        - text: ", подчёркивание, H"
+        - subscript [ref=f4e11]: "2"
+        - text: O и E=mc
+        - superscript [ref=f4e12]: "2"
+        - text: .
+      - list [ref=f4e13]:
+        - listitem [ref=f4e14]:
+          - paragraph [ref=f4e15]: Сделано
+        - listitem [ref=f4e16]:
+          - paragraph [ref=f4e17]: Не сделано
+      - separator [ref=f4e18]
+      - table [ref=f4e19]:
+        - rowgroup [ref=f4e20]:
+          - row [ref=f4e21]:
+            - columnheader [ref=f4e22]:
+              - paragraph [ref=f4e23]: Колонка 1
+            - columnheader [ref=f4e24]:
+              - paragraph [ref=f4e25]: Колонка 2
+          - row [ref=f4e26]:
+            - cell [ref=f4e27]:
+              - paragraph [ref=f4e28]: A
+            - cell [ref=f4e29]:
+              - paragraph [ref=f4e30]: B
+      - code [ref=f4e32]: const answer = 42;
+      - blockquote [ref=f4e33]:
+        - paragraph [ref=f4e34]: Цитата с брендовой рамкой.
+  - generic [ref=f4e35]: "<h1>Заголовок курса</h1><p style=\"text-align: center\">Центрированный <span style=\"color: #662d92\">фиолетовый</span> текст, <mark style=\"background-color: #fcf951\">маркер</mark>, <u>подчёркивание</u>, H<sub>2</sub>O и E=mc<sup>2</sup>.</p><ul data-type=\"taskList\"><li data-type=\"taskItem\" data-checked=\"true\"><p>Сделано</p></li><li data-type=\"taskItem\" data-checked=\"false\"><p>Не сделано</p></li></ul><hr><table><tbody><tr><th><p>Колонка 1</p></th><th><p>Колонка 2</p></th></tr><tr><td><p>A</p></td><td><p>B</p></td></tr></tbody></table><pre><code>const answer = 42;</code></pre><blockquote><p>Цитата с брендовой рамкой.</p></blockquote>"

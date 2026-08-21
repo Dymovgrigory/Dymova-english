@@ -1,0 +1,32 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - link "Foxinburg Foxinburg" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "Foxinburg" [ref=e8]
+        - generic [ref=e9]: Foxinburg
+      - blockquote [ref=e11]:
+        - paragraph [ref=e12]: English, German and Chinese for kids and adults
+        - paragraph [ref=e13]: Progress, assignments and certificates — all in one place
+    - generic [ref=e17]:
+      - combobox "Language" [ref=e19]:
+        - option "Русский"
+        - option "English" [selected]
+      - generic [ref=e21]:
+        - heading "Log in" [level=1] [ref=e22]
+        - paragraph [ref=e23]: Use your LMS account to continue.
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - text: Organization slug
+            - textbox "Organization slug" [ref=e27]:
+              - /placeholder: e.g. foxenburg
+          - generic [ref=e28]:
+            - text: Email
+            - textbox "Email" [ref=e29]
+          - generic [ref=e30]:
+            - text: Password
+            - textbox "Password" [ref=e31]
+          - paragraph [ref=e32]: Enter an organization slug to show SSO sign-in options.
+          - button "Log in" [ref=e33] [cursor=pointer]
+        - paragraph [ref=e35]: Access is granted by the school via invitation
+  - alert [ref=e36]

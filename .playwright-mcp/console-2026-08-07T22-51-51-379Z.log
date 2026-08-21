@@ -1,0 +1,88 @@
+[     646ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     694ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     812ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[     908ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3101/login:0
+[   42416ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3101/login:0
+[   42445ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   42459ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   42476ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/users/me:0
+[   42482ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/auth/refresh:0
+[   42660ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   42672ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   42770ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[   42867ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3101/login:0
+[  119970ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  119983ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  120085ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  120184ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3101/login:0
+[  164956ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3101/login:0
+[  165022ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  165033ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  165221ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  165231ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  165316ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  165316ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  225314ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  285314ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  345313ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  366926ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  366943ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  367031ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  367032ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/api/v1/supervisor/team:0
+[  367041ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/api/v1/supervisor/summary:0
+[  367041ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  427033ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  435989ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  436002ms] [LOG] [HMR] connected @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  436087ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  436098ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  496076ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  542179ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  542658ms] [LOG] [Fast Refresh] done in 580ms @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  542719ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  542780ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  542780ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  542780ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/guide?locale=ru:0
+[  542780ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/guide?locale=ru:0
+[  545926ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  546055ms] [LOG] [Fast Refresh] done in 229ms @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  546095ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  546096ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/gamification/me:0
+[  546097ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/badges/my:0
+[  546097ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/badges/my:0
+[  546097ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses/my:0
+[  546104ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  546105ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/gamification/me:0
+[  546105ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses/my:0
+[  547642ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  547765ms] [LOG] [Fast Refresh] done in 224ms @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  547791ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  547791ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses:0
+[  547791ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses/my:0
+[  547792ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  547792ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses:0
+[  547797ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/training-requests:0
+[  547797ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses/my:0
+[  547797ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/training-requests:0
+[  549251ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  549380ms] [LOG] [Fast Refresh] done in 230ms @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  549429ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  549430ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses/my:0
+[  549430ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses:0
+[  549430ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  549430ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses/my:0
+[  549430ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/courses:0
+[  550434ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  550557ms] [LOG] [Fast Refresh] done in 223ms @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  550579ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  550579ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  550579ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/learning-paths:0
+[  550579ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/learning-paths:0
+[  551268ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  551406ms] [LOG] [Fast Refresh] done in 239ms @ http://localhost:3101/_next/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477
+[  551433ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  551433ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/knowledge/spaces:0
+[  551433ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/knowledge/articles:0
+[  551433ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/notifications:0
+[  551434ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/knowledge/spaces:0
+[  551434ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8000/api/v1/knowledge/articles:0

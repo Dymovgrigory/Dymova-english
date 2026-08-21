@@ -1,0 +1,142 @@
+- generic [active] [ref=f24e1]:
+  - generic [ref=f24e2]:
+    - complementary [ref=f24e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f24e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f24e6]
+        - generic [ref=f24e7]: Фоксинбург
+      - navigation "Основная навигация" [ref=f24e8]:
+        - generic [ref=f24e9]:
+          - generic [ref=f24e11]:
+            - link "Главная" [ref=f24e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f24e19] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f24e24] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f24e28] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f24e32] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f24e38] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f24e43] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f24e48] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f24e56] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f24e60] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f24e64] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f24e69] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f24e72] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f24e77] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f24e83] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f24e90]:
+            - link "Моя команда" [ref=f24e91] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f24e98] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f24e103] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f24e108]:
+            - paragraph [ref=f24e110]: Студия
+            - generic [ref=f24e111]:
+              - link "Студия" [ref=f24e112] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f24e117] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f24e120] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Медиатека" [ref=f24e126] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f24e133]:
+            - paragraph [ref=f24e135]: Админка
+            - generic [ref=f24e136]:
+              - link "Админка" [ref=f24e137] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f24e142] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f24e147] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f24e151] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f24e156] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f24e161] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f24e166] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f24e170] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Страницы" [ref=f24e175] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Мероприятия" [ref=f24e180] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f24e184] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f24e189] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f24e194] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f24e199] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f24e205] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f24e212] [cursor=pointer]
+    - banner [ref=f24e217]:
+      - generic [ref=f24e218]:
+        - button "Поиск и команды (Ctrl K)" [ref=f24e219] [cursor=pointer]
+        - button "Уведомления" [ref=f24e221] [cursor=pointer]
+        - combobox "Язык" [ref=f24e224]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f24e225] [cursor=pointer]
+        - button "Меню пользователя" [ref=f24e226] [cursor=pointer]:
+          - generic [ref=f24e227]: P
+    - main [ref=f24e229]:
+      - generic [ref=f24e231]:
+        - generic [ref=f24e232]:
+          - heading "Профиль" [level=1] [ref=f24e233]
+          - paragraph [ref=f24e234]: Личные данные и безопасность аккаунта
+        - generic [ref=f24e236]:
+          - generic [ref=f24e237]: PO
+          - generic [ref=f24e239]:
+            - heading "Аватар" [level=2] [ref=f24e240]
+            - paragraph [ref=f24e241]: Загрузка аватара появится позже.
+        - generic [ref=f24e243]:
+          - heading "Личные данные" [level=2] [ref=f24e244]
+          - generic [ref=f24e245]:
+            - generic [ref=f24e246]:
+              - text: Имя
+              - textbox "Имя" [ref=f24e247]: Phase Owner Renamed
+            - generic [ref=f24e248]:
+              - text: Email
+              - textbox "Email" [disabled] [ref=f24e249]: owner@phase11.dev
+            - generic [ref=f24e250]:
+              - generic [ref=f24e251]: "Роль: OWNER"
+              - generic [ref=f24e252]: "Организация: Phase11 Org"
+            - button "Сохранить" [ref=f24e253] [cursor=pointer]
+        - generic [ref=f24e255]:
+          - heading "Смена пароля" [level=2] [ref=f24e256]
+          - paragraph [ref=f24e257]: Минимум 8 символов.
+          - generic [ref=f24e258]:
+            - generic [ref=f24e259]:
+              - text: Текущий пароль
+              - textbox "Текущий пароль" [ref=f24e260]
+            - generic [ref=f24e261]:
+              - text: Новый пароль
+              - textbox "Новый пароль" [ref=f24e262]
+            - generic [ref=f24e263]:
+              - text: Повторите новый пароль
+              - textbox "Повторите новый пароль" [ref=f24e264]
+            - button "Сменить пароль" [disabled]
+  - button "Имя обновлено" [ref=f24e276] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f24e270] [cursor=pointer]
+  - alert [ref=f24e274]

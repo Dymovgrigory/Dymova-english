@@ -1,0 +1,22 @@
+- generic [active] [ref=f6e1]:
+  - generic [ref=f6e2]:
+    - heading "Тест маскота Фокси v2" [level=1] [ref=f6e3]
+    - paragraph [ref=f6e4]: "Ригнутая модель Meshy (6 клипов). Проверяем: текстуры не слетают, скиннинг корректный (конечности не тянут лишнее), движение по сцене в глубину (ближе/дальше), развороты в сторону движения."
+    - paragraph [ref=f6e5]:
+      - link "Оставить заявку (CTA)" [ref=f6e6] [cursor=pointer]:
+        - /url: "#zayavka"
+  - generic [ref=f6e7]: "mode: idle clip: Shake_It_Off_Dance x: -3.97 z: 1.55 yaw: 0.00"
+  - generic [ref=f6e8]:
+    - generic [ref=f6e9]:
+      - button "Walking" [ref=f6e10] [cursor=pointer]
+      - button "Running" [ref=f6e11] [cursor=pointer]
+    - generic [ref=f6e12]:
+      - button "Wave" [ref=f6e13] [cursor=pointer]
+      - button "Cheer" [ref=f6e14] [cursor=pointer]
+    - generic [ref=f6e15]:
+      - button "Jump" [ref=f6e16] [cursor=pointer]
+      - button "Dance" [ref=f6e17] [cursor=pointer]
+    - generic [ref=f6e18]:
+      - button "Idle" [ref=f6e19] [cursor=pointer]
+      - button "Stroll 3D" [ref=f6e20] [cursor=pointer]
+      - button "Visit" [ref=f6e21] [cursor=pointer]

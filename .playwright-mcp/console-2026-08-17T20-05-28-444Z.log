@@ -1,0 +1,6 @@
+[     606ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8931/favicon.ico:0
+[     657ms] [WARNING] [cine-hero] WebGL недоступен, CSS-fallback неба: Error: THREE.WebGLRenderer: WebGL 1 is not supported since r163.
+    at new ca (http://localhost:8931/mascot/vendor/three/build/three.module.min.js:6:303635)
+    at initSky (http://localhost:8931/cinematic/cine-hero.js:228:18)
+    at createCineHero (http://localhost:8931/cinematic/cine-hero.js:217:31)
+    at boot (http://localhost:8931/cinematic/cine-boot.js:30:7) @ http://localhost:8931/cinematic/cine-hero.js:251

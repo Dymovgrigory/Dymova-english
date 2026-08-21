@@ -1,0 +1,181 @@
+- generic [ref=f12e45]:
+  - generic [ref=f12e46]:
+    - complementary [ref=f12e47]:
+      - link "Фоксинбург Фоксинбург" [ref=f12e49] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f12e50]
+        - generic [ref=f12e51]: Фоксинбург
+      - navigation "Основная навигация" [ref=f12e52]:
+        - generic [ref=f12e53]:
+          - generic [ref=f12e55]:
+            - link "Главная" [ref=f12e56] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f12e63] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f12e68] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f12e72] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f12e76] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f12e82] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f12e87] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f12e92] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f12e100] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f12e104] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f12e108] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f12e113] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f12e116] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f12e121] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f12e127] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f12e134]:
+            - link "Моя команда" [ref=f12e135] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f12e142] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f12e147] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f12e152]:
+            - paragraph [ref=f12e154]: Студия
+            - generic [ref=f12e155]:
+              - link "Студия" [ref=f12e156] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f12e161] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f12e164] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Медиатека" [ref=f12e170] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f12e178]:
+            - paragraph [ref=f12e180]: Админка
+            - generic [ref=f12e181]:
+              - link "Админка" [ref=f12e182] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f12e187] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f12e192] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f12e196] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f12e201] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f12e206] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f12e211] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f12e215] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Страницы" [ref=f12e220] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Мероприятия" [ref=f12e225] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f12e229] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f12e234] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f12e239] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f12e244] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f12e250] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f12e257] [cursor=pointer]
+    - banner [ref=f12e262]:
+      - generic [ref=f12e263]:
+        - button "Поиск и команды (Ctrl K)" [ref=f12e264] [cursor=pointer]
+        - button "Уведомления" [ref=f12e266] [cursor=pointer]
+        - combobox "Язык" [ref=f12e269]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f12e270] [cursor=pointer]
+        - button "Меню пользователя" [ref=f12e271] [cursor=pointer]:
+          - generic [ref=f12e272]: O
+    - main [ref=f12e1]:
+      - generic [ref=f12e3]:
+        - generic [ref=f12e4]:
+          - generic [ref=f12e5]:
+            - heading "Медиатека" [level=1] [ref=f12e6]
+            - paragraph [ref=f12e7]: "Файлы организации: загрузка, папки, теги, использование"
+          - generic [ref=f12e8]:
+            - generic [ref=f12e9]:
+              - button "Сетка" [ref=f12e10] [cursor=pointer]
+              - button "Список" [active] [ref=f12e11] [cursor=pointer]
+            - button "Загрузить" [ref=f12e12] [cursor=pointer]
+        - generic [ref=f12e13]:
+          - combobox [ref=f12e14] [cursor=pointer]:
+            - generic: Все типы
+          - combobox [ref=f12e17] [cursor=pointer]:
+            - generic: Все папки
+        - generic [ref=f12e274]:
+          - generic [ref=f12e275]:
+            - textbox "Поиск по имени файла…" [ref=f12e280]
+            - button "Колонки" [ref=f12e281] [cursor=pointer]
+          - table [ref=f12e284]:
+            - rowgroup [ref=f12e285]:
+              - row [ref=f12e286]:
+                - columnheader [ref=f12e287]
+                - columnheader "Имя файла" [ref=f12e288]
+                - columnheader "Тип" [ref=f12e289]
+                - columnheader "Размер" [ref=f12e290]
+                - columnheader "Папка" [ref=f12e291]
+                - columnheader "Теги" [ref=f12e292]
+                - columnheader "Загружен" [ref=f12e293]
+            - rowgroup [ref=f12e294]:
+              - row [ref=f12e295] [cursor=pointer]:
+                - cell [ref=f12e296]
+                - cell "guide.txt" [ref=f12e301]
+                - cell "text/plain" [ref=f12e303]
+                - cell "10 Б" [ref=f12e304]
+                - cell "—" [ref=f12e305]
+                - cell [ref=f12e306]
+                - cell "08.08.2026, 20:02:46" [ref=f12e307]
+              - row [ref=f12e308] [cursor=pointer]:
+                - cell [ref=f12e309]:
+                  - img "blue.png" [ref=f12e311]
+                - cell "blue.png" [ref=f12e312]
+                - cell "image/png" [ref=f12e314]
+                - cell "74 Б" [ref=f12e315]
+                - cell "—" [ref=f12e316]
+                - cell [ref=f12e317]
+                - cell "08.08.2026, 20:02:46" [ref=f12e318]
+              - row [ref=f12e319] [cursor=pointer]:
+                - cell [ref=f12e320]:
+                  - img "Красный баннер" [ref=f12e322]
+                - cell "red.png" [ref=f12e323]
+                - cell "image/png" [ref=f12e325]
+                - cell "74 Б" [ref=f12e326]
+                - cell "banners" [ref=f12e327]
+                - cell "hero promo" [ref=f12e329]:
+                  - generic [ref=f12e330]:
+                    - generic [ref=f12e331]: hero
+                    - generic [ref=f12e332]: promo
+                - cell "08.08.2026, 20:02:46" [ref=f12e333]
+          - generic [ref=f12e334]:
+            - generic [ref=f12e335]:
+              - generic [ref=f12e336]: "Всего: 3"
+              - generic [ref=f12e337]: Строк на странице
+              - combobox "Строк на странице" [ref=f12e338] [cursor=pointer]
+            - generic [ref=f12e341]:
+              - button "Назад" [disabled]
+              - generic [ref=f12e342]: Стр. 1 из 1
+              - button "Вперёд" [disabled]
+  - generic [ref=f12e347] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f12e348]
+    - generic [ref=f12e352]:
+      - button "Open issues overlay" [ref=f12e353]:
+        - generic [ref=f12e354]:
+          - generic [ref=f12e355]: "0"
+          - generic [ref=f12e356]: "1"
+        - generic [ref=f12e357]: Issue
+      - button "Collapse issues badge" [ref=f12e358]
+  - alert [ref=f12e361]

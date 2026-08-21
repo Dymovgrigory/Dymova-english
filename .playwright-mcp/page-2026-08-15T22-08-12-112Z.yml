@@ -1,0 +1,86 @@
+- generic [ref=f3e2]:
+  - complementary [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - generic [ref=f3e5]: F
+      - text: Фоксинбург
+    - navigation [ref=f3e6]:
+      - button "Дашборд" [ref=f3e7] [cursor=pointer]
+      - button "Входящие" [ref=f3e12] [cursor=pointer]
+      - button "Клиенты" [ref=f3e15] [cursor=pointer]
+      - button "Воронка" [ref=f3e19] [cursor=pointer]
+      - button "Рассылки" [ref=f3e22] [cursor=pointer]
+      - button "Вопросы" [ref=f3e26] [cursor=pointer]
+      - button "Настройки" [ref=f3e30] [cursor=pointer]
+    - button "Выйти" [ref=f3e35] [cursor=pointer]
+  - generic [ref=f3e38]:
+    - banner [ref=f3e39]:
+      - 'searchbox "Поиск: клиенты и сообщения (Ctrl+K)" [ref=f3e41]'
+      - generic "Состояние каналов" [ref=f3e42]:
+        - generic [ref=f3e43]: БД
+        - generic [ref=f3e45]: MAX
+        - generic [ref=f3e47]: TG
+    - generic [ref=f3e49]:
+      - generic [ref=f3e50]:
+        - generic [ref=f3e51]:
+          - generic [ref=f3e52]: "3"
+          - generic [ref=f3e53]: "Новые клиенты сегодня (7д: 3, 30д: 3)"
+        - generic [ref=f3e54]:
+          - generic [ref=f3e55]: "3"
+          - generic [ref=f3e56]: Активные диалоги
+        - generic [ref=f3e57]:
+          - generic [ref=f3e58]: "3"
+          - generic [ref=f3e59]: Непрочитанные
+        - generic [ref=f3e60]:
+          - generic [ref=f3e61]: 3 / 3
+          - generic [ref=f3e62]: Сообщения in/out сегодня
+        - generic [ref=f3e63]:
+          - generic [ref=f3e64]: "0"
+          - generic [ref=f3e65]: Передано менеджеру сегодня
+        - generic [ref=f3e66]:
+          - generic [ref=f3e67]: "0"
+          - generic [ref=f3e68]: Без ответа сегодня
+      - generic [ref=f3e69]:
+        - generic [ref=f3e70]:
+          - heading "Сообщения сегодня по каналам" [level=3] [ref=f3e71]
+          - paragraph [ref=f3e73]:
+            - generic [ref=f3e74]: Веб
+            - text: 6 сообщений
+        - generic [ref=f3e75]:
+          - heading "Последние обращения" [level=3] [ref=f3e76]
+          - generic [ref=f3e77]:
+            - button "ВЕ web:s3 01:08 Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург». А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского? Веб AI Новый 1" [ref=f3e78] [cursor=pointer]:
+              - generic [ref=f3e79]: ВЕ
+              - generic [ref=f3e80]:
+                - generic [ref=f3e81]:
+                  - generic [ref=f3e82]: web:s3
+                  - generic [ref=f3e83]: 01:08
+                - text: Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург». А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского?
+                - generic [ref=f3e84]:
+                  - generic [ref=f3e85]: Веб
+                  - generic [ref=f3e86]: AI
+                  - generic [ref=f3e87]: Новый
+                  - generic [ref=f3e88]: "1"
+            - button "ВЕ web:s2 01:08 Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург». А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского? Веб AI Новый 1" [ref=f3e89] [cursor=pointer]:
+              - generic [ref=f3e90]: ВЕ
+              - generic [ref=f3e91]:
+                - generic [ref=f3e92]:
+                  - generic [ref=f3e93]: web:s2
+                  - generic [ref=f3e94]: 01:08
+                - text: Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург». А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского?
+                - generic [ref=f3e95]:
+                  - generic [ref=f3e96]: Веб
+                  - generic [ref=f3e97]: AI
+                  - generic [ref=f3e98]: Новый
+                  - generic [ref=f3e99]: "1"
+            - button "ВЕ web:s1 01:08 Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург». А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского? Веб AI Новый 1" [ref=f3e100] [cursor=pointer]:
+              - generic [ref=f3e101]: ВЕ
+              - generic [ref=f3e102]:
+                - generic [ref=f3e103]:
+                  - generic [ref=f3e104]: web:s1
+                  - generic [ref=f3e105]: 01:08
+                - text: Здравствуйте! Меня зовут Фокси, я консультант школы «Фоксинбург». А сколько лет ребёнку? И если знаете, примерно какой сейчас уровень английского?
+                - generic [ref=f3e106]:
+                  - generic [ref=f3e107]: Веб
+                  - generic [ref=f3e108]: AI
+                  - generic [ref=f3e109]: Новый
+                  - generic [ref=f3e110]: "1"

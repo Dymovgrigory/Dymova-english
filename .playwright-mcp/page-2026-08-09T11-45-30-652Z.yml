@@ -1,0 +1,57 @@
+- generic [active] [ref=f60e1]:
+  - generic [ref=f60e2]:
+    - banner [ref=f60e3]:
+      - button "Open menu" [ref=f60e5] [cursor=pointer]
+      - generic [ref=f60e6]:
+        - button "Search and commands (Ctrl K)" [ref=f60e7] [cursor=pointer]
+        - button "Notifications" [ref=f60e9] [cursor=pointer]
+        - combobox "Language" [ref=f60e12]:
+          - option "Русский"
+          - option "English" [selected]
+        - button "Toggle theme" [ref=f60e13] [cursor=pointer]
+        - button "User menu" [ref=f60e14] [cursor=pointer]:
+          - generic [ref=f60e15]: P
+    - main [ref=f60e17]:
+      - generic [ref=f60e19]:
+        - generic [ref=f60e20]:
+          - generic [ref=f60e21]:
+            - heading "Analytics" [level=1] [ref=f60e22]
+            - paragraph [ref=f60e23]: Interactive overview across school domains. The period applies to all charts.
+          - generic [ref=f60e24]:
+            - button "Views" [ref=f60e26] [cursor=pointer]
+            - generic [ref=f60e27]:
+              - generic [ref=f60e28]:
+                - button "7 days" [ref=f60e29] [cursor=pointer]
+                - button "30 days" [pressed] [ref=f60e30] [cursor=pointer]
+                - button "90 days" [ref=f60e31] [cursor=pointer]
+                - button "12 mo" [ref=f60e32] [cursor=pointer]
+              - generic [ref=f60e33]:
+                - textbox "From" [ref=f60e34]: 2026-07-11
+                - generic [ref=f60e35]: —
+                - textbox "To" [ref=f60e36]: 2026-08-09
+              - generic [ref=f60e37]: 2026-07-11 — 2026-08-09
+        - navigation "Analytics sections" [ref=f60e38]:
+          - link "Overview" [ref=f60e39] [cursor=pointer]:
+            - /url: /analytics
+          - link "Learning" [ref=f60e40] [cursor=pointer]:
+            - /url: /analytics/learning
+          - link "People" [ref=f60e41] [cursor=pointer]:
+            - /url: /analytics/people
+          - link "Finance" [ref=f60e42] [cursor=pointer]:
+            - /url: /analytics/finance
+        - generic [ref=f60e43]:
+          - generic [ref=f60e45]:
+            - button "Download PDF" [ref=f60e46] [cursor=pointer]
+            - button "Send to email" [ref=f60e47] [cursor=pointer]
+          - generic [ref=f60e58]:
+            - generic [ref=f60e59]:
+              - heading "Revenue by month" [level=2] [ref=f60e60]
+              - paragraph [ref=f60e61]: Confirmed payments, monthly (values in rubles)
+            - generic [ref=f60e66]:
+              - heading "Active users" [level=2] [ref=f60e67]
+              - paragraph [ref=f60e68]: Unique users with activity, monthly
+          - generic [ref=f60e73]:
+            - heading "Quiz results" [level=2] [ref=f60e74]
+            - paragraph [ref=f60e75]: Share of passed attempts in the period
+  - button "Open Next.js Dev Tools" [ref=f60e85] [cursor=pointer]
+  - alert [ref=f60e89]

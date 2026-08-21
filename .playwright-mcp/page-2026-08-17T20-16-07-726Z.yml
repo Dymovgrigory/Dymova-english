@@ -1,0 +1,257 @@
+- generic [active] [ref=e1]:
+  - generic: Языковая школа Фоксинбург
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - link "Фоксинбург Фоксинбург" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Фоксинбург" [ref=e6]
+        - generic [ref=e7]: Фоксинбург
+      - iframe [ref=e9]:
+        - link [ref=f1e2] [cursor=pointer]:
+          - /url: //yandex.ru/maps/org/162408588499/reviews?utm_source=badge&utm_medium=rating&utm_campaign=v1
+      - navigation [ref=e10]:
+        - link "Главная" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - button "Наши курсы" [ref=e13] [cursor=pointer]
+        - button "Направления" [ref=e17] [cursor=pointer]
+        - button "Другие языки" [ref=e21] [cursor=pointer]
+        - link "Новости" [ref=e24] [cursor=pointer]:
+          - /url: /novosti
+        - link "Вакансии" [ref=e25] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=e26] [cursor=pointer]:
+          - /url: /kontakty
+      - link "Вход в ЛК" [ref=e28] [cursor=pointer]:
+        - /url: https://lms.dymova-english.ru
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - link "Лихачевский, 76к1" [ref=e31] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 993 923-23-09" [ref=e35] [cursor=pointer]:
+          - /url: tel:+79939232309
+      - generic [ref=e37]:
+        - link "Ракетостроителей, 9к3" [ref=e38] [cursor=pointer]:
+          - /url: https://yandex.ru/maps/org/foxinburg/162408588499/
+        - link "8 916 732-31-69" [ref=e42] [cursor=pointer]:
+          - /url: tel:+79167323169
+      - generic [ref=e44]: 9:00 — 21:00
+      - link "Max Bot" [ref=e48] [cursor=pointer]:
+        - /url: https://max.ru/id611904726658_bot
+    - generic [ref=e49]: Летние программы ▾
+  - generic [ref=e54]:
+    - generic [ref=e56]:
+      - paragraph [ref=e57]: Контакты · Долгопрудный
+      - heading "Контакты языковой школы Фоксинбург в Долгопрудном" [level=1] [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]: Контакты
+          - generic [ref=e62]: языковой
+          - generic [ref=e64]: школы
+          - generic [ref=e66]: Фоксинбург
+          - generic [ref=e68]: в
+          - generic [ref=e70]: Долгопрудном
+      - paragraph [ref=e72]: Приходите, звоните или пишите — мы всегда рады помочь!
+      - link "Как нас найти" [ref=e73]:
+        - /url: "#fxb-contacts"
+    - generic [ref=e74]:
+      - generic [ref=e75]:
+        - generic [ref=e76]: Контакты
+        - heading "Как с нами связаться" [level=2] [ref=e78]:
+          - generic [ref=e79]:
+            - generic [ref=e80]: Как
+            - generic [ref=e82]: с
+            - generic [ref=e84]: нами
+            - generic [ref=e86]: связаться
+      - generic [ref=e88]:
+        - generic [ref=e89]:
+          - generic [ref=e90]:
+            - generic [ref=e91]: "1"
+            - heading "Филиал на Лихачевском" [level=3] [ref=e92]
+          - generic [ref=e93]:
+            - link "Долгопрудный, пр-кт Лихачевский, 76к1 Построить маршрут" [ref=e98] [cursor=pointer]:
+              - /url: https://yandex.ru/maps/?text=%D0%94%D0%BE%D0%BB%D0%B3%D0%BE%D0%BF%D1%80%D1%83%D0%B4%D0%BD%D1%8B%D0%B9%2C%20%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82%20%D0%9B%D0%B8%D1%85%D0%B0%D1%87%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%2C%2076%D0%BA1&rtt=auto
+              - text: Долгопрудный, пр-кт Лихачевский, 76к1
+              - generic [ref=e99]: Построить маршрут
+            - generic [ref=e103]:
+              - link "8 993 923-23-09" [ref=e104] [cursor=pointer]:
+                - /url: tel:+79939232309
+              - link "Написать в Max" [ref=e105] [cursor=pointer]:
+                - /url: https://max.ru/id611904726658_biz
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e108]: "2"
+            - heading "Филиал на Ракетостроителей" [level=3] [ref=e109]
+          - generic [ref=e110]:
+            - link "Долгопрудный, пр-кт Ракетостроителей, 9к3 Построить маршрут" [ref=e115] [cursor=pointer]:
+              - /url: https://yandex.ru/maps/?text=%D0%94%D0%BE%D0%BB%D0%B3%D0%BE%D0%BF%D1%80%D1%83%D0%B4%D0%BD%D1%8B%D0%B9%2C%20%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82%20%D0%A0%D0%B0%D0%BA%D0%B5%D1%82%D0%BE%D1%81%D1%82%D1%80%D0%BE%D0%B8%D1%82%D0%B5%D0%BB%D0%B5%D0%B9%2C%209%D0%BA3&rtt=auto
+              - text: Долгопрудный, пр-кт Ракетостроителей, 9к3
+              - generic [ref=e116]: Построить маршрут
+            - generic [ref=e120]:
+              - link "8 916 732-31-69" [ref=e121] [cursor=pointer]:
+                - /url: tel:+79167323169
+              - link "Написать в Max" [ref=e122] [cursor=pointer]:
+                - /url: https://max.ru/id611904726658_biz
+      - generic [ref=e123]:
+        - generic [ref=e128]:
+          - strong [ref=e129]: Время работы
+          - text: Ежедневно с 9:00 до 21:00
+        - generic [ref=e133]:
+          - strong [ref=e134]: Max Bot
+          - link "@id611904726658_bot" [ref=e135] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_bot
+        - generic [ref=e139]:
+          - strong [ref=e140]: Max-канал
+          - link "Бизнес-канал" [ref=e141] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_biz
+        - generic [ref=e145]:
+          - strong [ref=e146]: ВКонтакте
+          - link "foxyfoxclub" [ref=e147] [cursor=pointer]:
+            - /url: https://vk.ru/foxyfoxclub
+      - generic [ref=e148]:
+        - heading "Наши филиалы на карте" [level=3] [ref=e149]:
+          - generic [ref=e150]:
+            - generic [ref=e151]: Наши
+            - generic [ref=e153]: филиалы
+            - generic [ref=e155]: на
+            - generic [ref=e157]: карте
+        - iframe [ref=e160]:
+          - generic [ref=f2e2]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic [ref=f2e7]:
+                        - generic [ref=f2e8]:
+                          - button [ref=f2e11] [cursor=pointer]
+                          - button "Пробки" [ref=f2e13] [cursor=pointer]
+                        - iframe [ref=f2e17]:
+                          
+                      - generic [ref=f2e18]:
+                        - generic [ref=f2e21]:
+                          - button "Приблизить" [ref=f2e23] [cursor=pointer]
+                          - button "Отдалить" [ref=f2e25] [cursor=pointer]
+                        - iframe [ref=f2e26]:
+                          
+                      - generic [ref=f2e27]:
+                        - button "Моё местоположение" [ref=f2e30] [cursor=pointer]
+                        - iframe [ref=f2e31]:
+                          
+                      - generic [ref=f2e32]:
+                        - button "Открыть в Яндекс Картах" [ref=f2e35] [cursor=pointer]
+                        - iframe [ref=f2e37]:
+                          
+                      - generic:
+                        - generic:
+                          - generic:
+                            - button "Открыть в Картах"
+                        - iframe [ref=f2e38]:
+                          
+                      - generic:
+                        - generic:
+                          - generic:
+                            - button
+                        - iframe [ref=f2e39]:
+                          
+                    - generic:
+                      - generic:
+                        - contentinfo:
+                          - generic [ref=f2e41]:
+                            - generic [ref=f2e42]: © Яндекс
+                            - link "Условия использования" [ref=f2e43] [cursor=pointer]:
+                              - /url: https://yandex.ru/legal/maps_termsofuse/?lang=ru
+                            - link "Конфиденциальность" [ref=f2e44] [cursor=pointer]:
+                              - /url: https://yandex.ru/legal/confidential/?lang=ru
+                      - generic: 200 м
+                    - iframe [ref=f2e45]:
+                      
+                - iframe [ref=f2e46]:
+                  
+      - button "Оставить заявку — перезвоним" [ref=e162] [cursor=pointer]
+  - generic [ref=e164]:
+    - generic [ref=e165]:
+      - generic [ref=e166]:
+        - link "Фоксинбург Фоксинбург" [ref=e167] [cursor=pointer]:
+          - /url: /
+          - img "Фоксинбург" [ref=e168]
+          - generic [ref=e169]: Фоксинбург
+        - paragraph [ref=e170]: Языковая школа в Долгопрудном для детей от 2 до 18 лет и взрослых. Английский, немецкий, китайский языки.
+        - generic [ref=e171]:
+          - link "ВКонтакте" [ref=e172] [cursor=pointer]:
+            - /url: https://vk.com/foxyfoxclub
+          - link "Max" [ref=e175] [cursor=pointer]:
+            - /url: https://max.ru/id611904726658_biz
+          - link "Telegram" [ref=e178] [cursor=pointer]:
+            - /url: https://t.me/foxinburg
+          - link "WhatsApp" [ref=e181] [cursor=pointer]:
+            - /url: https://wa.me/79939232309
+      - generic [ref=e184]:
+        - heading "Навигация" [level=4] [ref=e185]
+        - link "Главная" [ref=e186] [cursor=pointer]:
+          - /url: /
+        - link "Курс по чтению" [ref=e187] [cursor=pointer]:
+          - /url: /reading
+        - link "Курс по грамматике" [ref=e188] [cursor=pointer]:
+          - /url: /grammar
+        - link "Подготовка к школе" [ref=e189] [cursor=pointer]:
+          - /url: /preparation
+        - link "Подготовка к ОГЭ по английскому" [ref=e190] [cursor=pointer]:
+          - /url: /oge-anglijskij
+        - link "Подготовка к ЕГЭ по английскому" [ref=e191] [cursor=pointer]:
+          - /url: /ege-anglijskij
+        - link "Индивидуальные занятия (репетитор)" [ref=e192] [cursor=pointer]:
+          - /url: /repetitor
+        - 'link "Репетитор: русский и математика (1–4 класс)" [ref=e193] [cursor=pointer]':
+          - /url: /repetitor-nachalnaya-shkola
+        - link "Для дошкольников" [ref=e194] [cursor=pointer]:
+          - /url: /doshkolniki
+        - link "Для младших школьников" [ref=e195] [cursor=pointer]:
+          - /url: /mladshie-shkolniki
+        - link "Для подростков" [ref=e196] [cursor=pointer]:
+          - /url: /podrostki
+        - link "Английский для взрослых" [ref=e197] [cursor=pointer]:
+          - /url: /anglijskij-dlya-vzroslyh
+        - link "Немецкий язык" [ref=e198] [cursor=pointer]:
+          - /url: /nemeckij-yazyk
+        - link "Китайский язык" [ref=e199] [cursor=pointer]:
+          - /url: /kitajskij-yazyk
+      - generic [ref=e200]:
+        - heading "О школе" [level=4] [ref=e201]
+        - link "Цены" [ref=e202] [cursor=pointer]:
+          - /url: /tseny
+        - link "Новости" [ref=e203] [cursor=pointer]:
+          - /url: /novosti
+        - link "Вакансии" [ref=e204] [cursor=pointer]:
+          - /url: /vakansii
+        - link "Контакты" [ref=e205] [cursor=pointer]:
+          - /url: /kontakty
+        - link "Лицензия" [ref=e206] [cursor=pointer]:
+          - /url: https://disk.yandex.ru/d/ZDlm_uGmwxH4kw
+        - link "Летняя Академия" [ref=e207] [cursor=pointer]:
+          - /url: /letnyaya-akademiya
+        - link "Личный кабинет" [ref=e208] [cursor=pointer]:
+          - /url: https://lms.dymova-english.ru
+      - generic [ref=e209]:
+        - heading "Контакты" [level=4] [ref=e210]
+        - link "8 993 923-23-09" [ref=e211] [cursor=pointer]:
+          - /url: tel:+79939232309
+        - link "8 916 732-31-69" [ref=e212] [cursor=pointer]:
+          - /url: tel:+79167323169
+        - link "school@foxinburg-edu.ru" [ref=e213] [cursor=pointer]:
+          - /url: mailto:school@foxinburg-edu.ru
+        - generic [ref=e214]: Ежедневно 9:00 — 21:00
+    - generic [ref=e215]:
+      - generic [ref=e216]:
+        - generic [ref=e217]: ИП Дымова Вероника Александровна
+        - generic [ref=e218]: ИНН 611904726658
+      - link "Политика конфиденциальности" [ref=e220] [cursor=pointer]:
+        - /url: /policy
+  - button "Открыть чат" [ref=e222] [cursor=pointer]: 🦊
+  - dialog "Согласие на использование cookie" [ref=e223]:
+    - paragraph [ref=e224]:
+      - text: Мы используем cookie, чтобы сайт работал стабильно, а мы могли понимать, что интересно посетителям, и делать школу лучше. Подробнее — в
+      - link "политике конфиденциальности" [ref=e225] [cursor=pointer]:
+        - /url: /policy
+      - text: .
+    - generic [ref=e226]:
+      - button "Принять" [ref=e227] [cursor=pointer]
+      - button "Отклонить" [ref=e228] [cursor=pointer]

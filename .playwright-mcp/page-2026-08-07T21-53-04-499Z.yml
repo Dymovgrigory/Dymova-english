@@ -1,0 +1,109 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - link "← Назад на главную" [ref=e5] [cursor=pointer]:
+      - /url: /
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e9]:
+        - heading "UI-kit — дизайн-система Фоксинбурга" [level=1] [ref=e10]
+        - paragraph [ref=e11]: Витрина базовых компонентов на семантических токенах. Светлая и тёмная темы.
+      - generic [ref=e13]:
+        - heading "Кнопки" [level=2] [ref=e14]
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - button "Основная" [ref=e18] [cursor=pointer]
+            - button "Вторичная" [ref=e19] [cursor=pointer]
+            - button "Деструктивная" [ref=e20] [cursor=pointer]
+            - button "Контурная" [ref=e21] [cursor=pointer]
+            - button "Призрачная" [ref=e22] [cursor=pointer]
+            - button "Ссылка" [ref=e23] [cursor=pointer]
+          - generic [ref=e24]:
+            - button "Маленькая" [ref=e25] [cursor=pointer]
+            - button "Большая" [ref=e26] [cursor=pointer]
+            - button "Иконка" [ref=e27] [cursor=pointer]
+            - button "Отключена" [disabled]
+      - generic [ref=e28]:
+        - heading "Поля формы" [level=2] [ref=e29]
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e33]: Имя ученика
+            - textbox "Имя ученика" [ref=e34]:
+              - /placeholder: Введите текст…
+          - generic [ref=e35]:
+            - generic [ref=e36]: Отключена
+            - textbox "Отключена" [disabled] [ref=e37]:
+              - /placeholder: Введите текст…
+          - generic [ref=e38]:
+            - generic [ref=e39]: Поле с ошибкой
+            - textbox "Поле с ошибкой" [invalid] [ref=e40]
+            - paragraph [ref=e41]: Заполните обязательное поле
+          - generic [ref=e42]:
+            - generic [ref=e43]: Textarea
+            - textbox "Textarea" [ref=e44]:
+              - /placeholder: Многострочный текст…
+          - generic [ref=e45]:
+            - generic [ref=e46]: Select
+            - combobox [ref=e47] [cursor=pointer]:
+              - generic: Выберите вариант
+            - combobox [ref=e50]
+      - generic [ref=e51]:
+        - heading "Переключатели" [level=2] [ref=e52]
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - checkbox "Согласен с правилами" [checked] [ref=e56] [cursor=pointer]
+            - checkbox [checked]
+            - generic [ref=e57]: Согласен с правилами
+          - generic [ref=e58]:
+            - checkbox "Отключена" [disabled] [ref=e59]
+            - checkbox [disabled]
+            - generic [ref=e60]: Отключена
+          - generic [ref=e61]:
+            - switch "Уведомления" [ref=e62] [cursor=pointer]
+            - checkbox
+            - generic [ref=e63]: Уведомления
+          - generic [ref=e64]:
+            - switch "Отключена" [disabled] [ref=e65]
+            - checkbox [disabled]
+            - generic [ref=e66]: Отключена
+      - generic [ref=e67]:
+        - heading "Оверлеи" [level=2] [ref=e68]
+        - generic [ref=e70]:
+          - button "Открыть диалог" [ref=e71] [cursor=pointer]
+          - button "Открыть панель" [ref=e72] [cursor=pointer]
+          - button "Открыть поповер" [ref=e73] [cursor=pointer]
+          - button "Меню действий" [ref=e74] [cursor=pointer]
+          - button "Наведите курсор" [ref=e75] [cursor=pointer]
+      - generic [ref=e76]:
+        - heading "Навигация" [level=2] [ref=e77]
+        - generic [ref=e79]:
+          - tablist [ref=e80]:
+            - tab "Обзор" [selected] [ref=e81] [cursor=pointer]
+            - tab "Детали" [ref=e82] [cursor=pointer]
+            - tab "Настройки" [ref=e83] [cursor=pointer]
+          - tabpanel "Обзор" [ref=e84]: Содержимое вкладки «Обзор».
+      - generic [ref=e85]:
+        - heading "Индикация" [level=2] [ref=e86]
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: Основная
+            - generic [ref=e91]: Вторичная
+            - generic [ref=e92]: Успех
+            - generic [ref=e93]: Внимание
+            - generic [ref=e94]: Деструктивная
+            - generic [ref=e95]: Контурная
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - generic [ref=e99]: Карточка
+              - generic [ref=e100]: Описание карточки с контентом и футером.
+            - generic [ref=e101]: Контент карточки. Поверхность из токена --card, текст — --card-foreground.
+            - generic [ref=e102]:
+              - generic [ref=e103]: ФУ
+              - button "Основная" [ref=e105] [cursor=pointer]
+      - generic [ref=e114]:
+        - heading "Доменные статусы LMS" [level=2] [ref=e115]
+        - generic [ref=e117]:
+          - generic [ref=e118]: Черновик
+          - generic [ref=e119]: Опубликовано
+          - generic [ref=e120]: Записан
+          - generic [ref=e121]: Просрочено
+          - generic [ref=e122]: Оплачено

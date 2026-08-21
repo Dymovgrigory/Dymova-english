@@ -1,0 +1,159 @@
+- generic [ref=f17e1]:
+  - generic [ref=f17e2]:
+    - complementary [ref=f17e3]:
+      - link "Фоксинбург Фоксинбург" [ref=f17e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Фоксинбург" [ref=f17e6]
+        - generic [ref=f17e7]: Фоксинбург
+      - navigation "Основная навигация" [ref=f17e8]:
+        - generic [ref=f17e9]:
+          - generic [ref=f17e11]:
+            - link "Главная" [ref=f17e12] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Руководство" [ref=f17e19] [cursor=pointer]:
+              - /url: /help
+            - link "Обучение" [ref=f17e24] [cursor=pointer]:
+              - /url: /learn
+            - link "Каталог" [ref=f17e28] [cursor=pointer]:
+              - /url: /learn/catalog
+            - link "Траектории" [ref=f17e32] [cursor=pointer]:
+              - /url: /learn/paths
+            - link "База знаний" [ref=f17e38] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Сертификаты" [ref=f17e43] [cursor=pointer]:
+              - /url: /learn/certificates
+            - link "Лидерборд" [ref=f17e48] [cursor=pointer]:
+              - /url: /learn/leaderboard
+            - link "Мои бейджи" [ref=f17e56] [cursor=pointer]:
+              - /url: /learn/badges
+            - link "Календарь" [ref=f17e60] [cursor=pointer]:
+              - /url: /learn/calendar
+            - link "Онбординг" [ref=f17e64] [cursor=pointer]:
+              - /url: /learn/onboarding
+            - link "Наблюдения" [ref=f17e69] [cursor=pointer]:
+              - /url: /learn/training
+            - link "Мой план развития" [ref=f17e72] [cursor=pointer]:
+              - /url: /learn/development
+            - link "Оценка 360°" [ref=f17e77] [cursor=pointer]:
+              - /url: /learn/assessments
+            - link "Новости" [ref=f17e83] [cursor=pointer]:
+              - /url: /news
+          - generic [ref=f17e90]:
+            - link "Моя команда" [ref=f17e91] [cursor=pointer]:
+              - /url: /supervisor
+            - link "Ученики" [ref=f17e98] [cursor=pointer]:
+              - /url: /students
+            - link "Преподаватели" [ref=f17e103] [cursor=pointer]:
+              - /url: /teachers
+          - generic [ref=f17e108]:
+            - paragraph [ref=f17e110]: Студия
+            - generic [ref=f17e111]:
+              - link "Студия" [ref=f17e112] [cursor=pointer]:
+                - /url: /studio
+              - link "Наблюдения в студии" [ref=f17e117] [cursor=pointer]:
+                - /url: /studio/training
+              - link "Траектории" [ref=f17e120] [cursor=pointer]:
+                - /url: /studio/paths
+              - link "Медиатека" [ref=f17e126] [cursor=pointer]:
+                - /url: /media
+          - generic [ref=f17e133]:
+            - paragraph [ref=f17e135]: Админка
+            - generic [ref=f17e136]:
+              - link "Админка" [ref=f17e137] [cursor=pointer]:
+                - /url: /admin
+              - link "Аналитика" [ref=f17e143] [cursor=pointer]:
+                - /url: /admin/analytics
+              - link "Заявки на обучение" [ref=f17e148] [cursor=pointer]:
+                - /url: /admin/training-requests
+              - link "SSO" [ref=f17e152] [cursor=pointer]:
+                - /url: /admin/sso-connections
+              - link "LRS" [ref=f17e157] [cursor=pointer]:
+                - /url: /admin/lrs
+              - link "Департаменты" [ref=f17e162] [cursor=pointer]:
+                - /url: /admin/departments
+              - link "Бейджи" [ref=f17e167] [cursor=pointer]:
+                - /url: /admin/badges
+              - link "Сайт" [ref=f17e171] [cursor=pointer]:
+                - /url: /admin/site
+              - link "Страницы" [ref=f17e176] [cursor=pointer]:
+                - /url: /admin/pages
+              - link "Мероприятия" [ref=f17e182] [cursor=pointer]:
+                - /url: /admin/events
+              - link "Программы онбординга" [ref=f17e186] [cursor=pointer]:
+                - /url: /admin/onboarding
+              - link "Чек-листы наблюдений" [ref=f17e191] [cursor=pointer]:
+                - /url: /admin/observation-checklists
+              - link "Планы развития" [ref=f17e196] [cursor=pointer]:
+                - /url: /admin/development
+              - link "Компетенции" [ref=f17e201] [cursor=pointer]:
+                - /url: /admin/competencies
+              - link "Оценочные сессии" [ref=f17e207] [cursor=pointer]:
+                - /url: /admin/assessments
+      - button "Свернуть меню" [ref=f17e214] [cursor=pointer]
+    - banner [ref=f17e219]:
+      - paragraph [ref=f17e221]: Админка
+      - generic [ref=f17e222]:
+        - button "Поиск и команды (Ctrl K)" [ref=f17e223] [cursor=pointer]
+        - button "Уведомления" [ref=f17e225] [cursor=pointer]
+        - combobox "Язык" [ref=f17e228]:
+          - option "Русский" [selected]
+          - option "English"
+        - button "Переключить тему" [ref=f17e229] [cursor=pointer]
+        - button "Меню пользователя" [ref=f17e230] [cursor=pointer]:
+          - generic [ref=f17e231]: O
+    - main [ref=f17e233]:
+      - generic [ref=f17e287]:
+        - generic [ref=f17e288]:
+          - generic "Media Test" [ref=f17e289]
+          - generic [ref=f17e290]: Черновик
+          - button "Отменить" [ref=f17e407] [cursor=pointer]
+          - button "Вернуть" [disabled]
+          - group "Ширина холста" [ref=f17e291]:
+            - button "Десктоп" [pressed] [ref=f17e292] [cursor=pointer]
+            - button "Планшет" [ref=f17e293] [cursor=pointer]
+            - button "Мобильный" [ref=f17e294] [cursor=pointer]
+          - generic [ref=f17e295]: Есть несохранённые изменения…
+          - button "Предпросмотр" [ref=f17e296] [cursor=pointer]
+          - button "Версии" [ref=f17e297] [cursor=pointer]
+          - button "Опубликовать" [ref=f17e298] [cursor=pointer]
+        - generic [ref=f17e299]:
+          - generic [ref=f17e300]:
+            - generic [ref=f17e301]: Слои
+            - button "Изображение" [ref=f17e410] [cursor=pointer]
+          - generic [ref=f17e304]:
+            - generic [ref=f17e305]: Библиотека
+            - generic [ref=f17e306]:
+              - generic [ref=f17e307]:
+                - paragraph [ref=f17e308]: Макет
+                - button "Секция" [ref=f17e310]
+              - generic [ref=f17e316]:
+                - paragraph [ref=f17e317]: Контент
+                - generic [ref=f17e318]:
+                  - button "Заголовок" [ref=f17e319]
+                  - button "Текст" [ref=f17e323]
+                  - button "Кнопка" [ref=f17e327]
+                  - button "Карточки" [ref=f17e335]
+                  - button "FAQ" [ref=f17e342]
+              - generic [ref=f17e347]:
+                - paragraph [ref=f17e348]: Медиа
+                - generic [ref=f17e349]:
+                  - button "Изображение" [active] [ref=f17e350]
+                  - button "Галерея" [ref=f17e356]
+                  - button "Видео" [ref=f17e363]
+              - generic [ref=f17e368]:
+                - paragraph [ref=f17e369]: Маркетинг
+                - generic [ref=f17e370]:
+                  - button "Призыв к действию" [ref=f17e371]
+                  - button "Отзывы" [ref=f17e376]
+                  - button "Тарифы" [ref=f17e381]
+              - generic [ref=f17e387]:
+                - paragraph [ref=f17e388]: Бизнес
+                - generic [ref=f17e389]:
+                  - button "Список курсов" [ref=f17e390]
+                  - button "Преподаватели" [ref=f17e394]
+          - paragraph [ref=f17e417]: Изображение не выбрано
+          - generic [ref=f17e404]:
+            - generic [ref=f17e405]: Инспектор
+            - generic [ref=f17e406]: Выберите блок на холсте или в слоях.
+  - button "Open Next.js Dev Tools" [ref=f17e262] [cursor=pointer]
+  - alert [ref=f17e266]
