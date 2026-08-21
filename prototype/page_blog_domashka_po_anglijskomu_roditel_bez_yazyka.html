@@ -7,7 +7,7 @@
 <div class="fxb-article-meta"><span>3 августа 2026</span><span>8 минут чтения</span></div>
 </div></section>
 <section class="fxb-section"><div class="fxb-wrap">
-<nav class="fxb-breadcrumbs"><a href="/">Главная</a><span>→</span><a href="/blog">Блог</a><span>→</span><span>Как помогать с домашкой по английскому, если вы не знаете языка</span></nav>
+<nav class="fxb-breadcrumbs" aria-label="Хлебные крошки"><ol itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/"><span itemprop="name">Главная</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/blog"><span itemprop="name">Блог</span></a><meta itemprop="position" content="2"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><span itemprop="name">Как помогать с домашкой по английскому, если вы не знаете языка</span><meta itemprop="position" content="3"></li></ol></nav>
 <div class="fxb-article-body"><h2>Главное: вы не обязаны знать английский</h2>
 <p>Самый частый родительский страх — «я не могу помочь с английским, я сам его не знаю». Ответ методистов однозначен: и не нужно. Роль родителя в домашней работе — не роль второго учителя, а роль организатора и поддержки. Исследования показывают, что на успехи ребёнка влияет не уровень языка у родителя, а три вещи: стабильное время и место для домашки, спокойная эмоциональная атмосфера и интерес («ну-ка, расскажи, что сегодня было»). Всё это доступно родителю с любым языковым багажом. А проверку предметной правильности нужно честно делегировать: учителю, ключам в конце учебника и технологиям. Ниже — конкретные инструменты для каждой задачи.</p>
 <h2>Задача №1: организация, а не контроль знаний</h2>
@@ -281,6 +281,17 @@
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs ol{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0;padding:0;list-style:none}
+#fxb-page .fxb-breadcrumbs li{display:inline-flex;align-items:center;gap:8px;margin:0}
+#fxb-page .fxb-breadcrumbs li+li::before{content:'→';color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
+#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
+#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
+#fxb-page .fxb-hero .fxb-breadcrumbs{margin:0 auto 20px;color:rgba(255,255,255,.82)}
+#fxb-page .fxb-hero .fxb-breadcrumbs a{color:#fff}
+#fxb-page .fxb-hero .fxb-breadcrumbs a:hover{color:#fcf951}
+#fxb-page .fxb-hero .fxb-breadcrumbs span,#fxb-page .fxb-hero .fxb-breadcrumbs li+li::before{color:rgba(255,255,255,.72)}
 </style>
 
 
@@ -301,10 +312,6 @@
 #fxb-page.fxb-blog-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
 #fxb-page.fxb-blog-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
 #fxb-page.fxb-blog-page .fxb-article-body a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
-#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
-#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
 #fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
 #fxb-page .fxb-related h2{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:14px}
 #fxb-page .fxb-related-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}

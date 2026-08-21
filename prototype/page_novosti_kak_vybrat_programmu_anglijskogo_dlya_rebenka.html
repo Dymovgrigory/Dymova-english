@@ -7,7 +7,7 @@
 <div class="fxb-article-meta"><span>14 августа 2026</span><span>8 минут чтения</span></div>
 </div></section>
 <section class="fxb-section"><div class="fxb-wrap">
-<nav class="fxb-breadcrumbs"><a href="/">Главная</a><span>→</span><a href="/novosti">Новости</a><span>→</span><span>Как выбрать программу английского для ребёнка: спокойный гид для родителей</span></nav>
+<nav class="fxb-breadcrumbs" aria-label="Хлебные крошки"><ol itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/"><span itemprop="name">Главная</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/novosti"><span itemprop="name">Новости</span></a><meta itemprop="position" content="2"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><span itemprop="name">Как выбрать программу английского для ребёнка: спокойный гид для родителей</span><meta itemprop="position" content="3"></li></ol></nav>
 <div class="fxb-article-body"><p>Перед учебным годом родители заваливают себя одним и тем же вопросом: какую программу выбрать, чтобы и результат был, и ребёнок не возненавидел английский к октябрю. Хорошая новость: выбор проще, чем кажется, если идти не от рекламных обещаний, а от четырёх понятных вещей — возраста, уровня, цели и формата. Разберём каждый.</p>
 <h2>Шаг 1. Возраст определяет подачу, а не «сложность»</h2>
 <p>Главная ошибка — думать, что программы отличаются только объёмом материала. На самом деле возраст определяет, как ребёнок вообще способен учить язык. Малышам 2–3 лет нужен только живой контакт: песни, движение, игра — никаких правил и букв. Дошкольникам 4–6 лет уже доступна фоника и первые фразы, но всё ещё через игру. Младшие школьники 7–11 лет способны на систему: чтение, письмо, грамматика в мягкой подаче. Подросткам 12–16 лет важны смысл и уважение: дискуссии, проекты, реальные темы, а не «детские» картинки. Программа, которая идеальна для десятилетнего, физически не подойдёт пятилетке — и наоборот.</p>
@@ -282,6 +282,17 @@
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs ol{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0;padding:0;list-style:none}
+#fxb-page .fxb-breadcrumbs li{display:inline-flex;align-items:center;gap:8px;margin:0}
+#fxb-page .fxb-breadcrumbs li+li::before{content:'→';color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
+#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
+#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
+#fxb-page .fxb-hero .fxb-breadcrumbs{margin:0 auto 20px;color:rgba(255,255,255,.82)}
+#fxb-page .fxb-hero .fxb-breadcrumbs a{color:#fff}
+#fxb-page .fxb-hero .fxb-breadcrumbs a:hover{color:#fcf951}
+#fxb-page .fxb-hero .fxb-breadcrumbs span,#fxb-page .fxb-hero .fxb-breadcrumbs li+li::before{color:rgba(255,255,255,.72)}
 </style>
 
 
@@ -302,10 +313,6 @@
 #fxb-page.fxb-blog-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
 #fxb-page.fxb-blog-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
 #fxb-page.fxb-blog-page .fxb-article-body a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
-#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
-#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
 #fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
 #fxb-page .fxb-related h2{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:14px}
 #fxb-page .fxb-related-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}

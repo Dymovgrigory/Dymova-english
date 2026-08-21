@@ -7,7 +7,7 @@
 <div class="fxb-article-meta"><span>28 июля 2026</span><span>8 минут чтения</span></div>
 </div></section>
 <section class="fxb-section"><div class="fxb-wrap">
-<nav class="fxb-breadcrumbs"><a href="/">Главная</a><span>→</span><a href="/blog">Блог</a><span>→</span><span>Летний интенсив: зачем нужен и как выжать максимум за 2 недели</span></nav>
+<nav class="fxb-breadcrumbs" aria-label="Хлебные крошки"><ol itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/"><span itemprop="name">Главная</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="/blog"><span itemprop="name">Блог</span></a><meta itemprop="position" content="2"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><span itemprop="name">Летний интенсив: зачем нужен и как выжать максимум за 2 недели</span><meta itemprop="position" content="3"></li></ol></nav>
 <div class="fxb-article-body"><h2>Почему лето — золотое время для английского</h2>
 <p>В учебном году английский конкурирует за внимание ребёнка с десятью предметами, кружками и домашними заданиями. Летом конкурентов нет — и это главная причина, почему две недели летнего интенсива по эффекту часто равны двум-трём месяцам занятий в сезоне. Вторая причина — плотность: ежедневный контакт с языком запускает механизм «погружения», который при занятиях дважды в неделю просто не успевает включиться. Ребёнок начинает думать на английском уже на третий-четвёртый день — это отмечают и педагоги, и родители. Третья причина профилактическая: за лето без практики дети теряют заметную часть наработанного за год — так называемый summer slide; интенсив не просто удерживает уровень, а уводит вперёд.</p>
 <h2>Что такое интенсив и чем он отличается от лагеря</h2>
@@ -287,6 +287,17 @@
 @media(max-width:860px){#fxb-page .fxb-facts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page .fxb-grid,#fxb-page .fxb-books{grid-template-columns:1fr}#fxb-page .fxb-hero{padding:62px 18px 56px}#fxb-page .fxb-section{padding:58px 18px}}
 @media(max-width:440px){#fxb-page .fxb-facts{grid-template-columns:1fr}}
+#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs ol{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0;padding:0;list-style:none}
+#fxb-page .fxb-breadcrumbs li{display:inline-flex;align-items:center;gap:8px;margin:0}
+#fxb-page .fxb-breadcrumbs li+li::before{content:'→';color:rgba(57,40,82,.72)}
+#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
+#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
+#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
+#fxb-page .fxb-hero .fxb-breadcrumbs{margin:0 auto 20px;color:rgba(255,255,255,.82)}
+#fxb-page .fxb-hero .fxb-breadcrumbs a{color:#fff}
+#fxb-page .fxb-hero .fxb-breadcrumbs a:hover{color:#fcf951}
+#fxb-page .fxb-hero .fxb-breadcrumbs span,#fxb-page .fxb-hero .fxb-breadcrumbs li+li::before{color:rgba(255,255,255,.72)}
 </style>
 
 
@@ -307,10 +318,6 @@
 #fxb-page.fxb-blog-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
 #fxb-page.fxb-blog-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
 #fxb-page.fxb-blog-page .fxb-article-body a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:0 auto 28px;font-size:13px;font-weight:700;color:rgba(57,40,82,.72)}
-#fxb-page .fxb-breadcrumbs a{color:var(--purple-2)}
-#fxb-page .fxb-breadcrumbs a:hover{color:var(--orange)}
-#fxb-page .fxb-breadcrumbs span{color:rgba(57,40,82,.72)}
 #fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
 #fxb-page .fxb-related h2{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:14px}
 #fxb-page .fxb-related-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
