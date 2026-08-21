@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<yml_catalog date="2026-08-22 22:00">
+<yml_catalog date="2026-08-22 23:00">
   <shop>
     <name>Языковая школа «Фоксинбург»</name>
     <company>ИП Дымова Вероника Александровна</company>
@@ -26,6 +26,30 @@
       <set id="s-summer">
         <name>Летняя Академия</name>
         <url>https://dymova-english.ru/letnyaya-akademiya</url>
+      </set>
+      <set id="s-doshkolniki">
+        <name>Английский для дошкольников</name>
+        <url>https://dymova-english.ru/doshkolniki</url>
+      </set>
+      <set id="s-mladshie">
+        <name>Английский для младших школьников</name>
+        <url>https://dymova-english.ru/mladshie-shkolniki</url>
+      </set>
+      <set id="s-podrostki">
+        <name>Английский для подростков</name>
+        <url>https://dymova-english.ru/podrostki</url>
+      </set>
+      <set id="s-vzroslye">
+        <name>Английский для взрослых</name>
+        <url>https://dymova-english.ru/anglijskij-dlya-vzroslyh</url>
+      </set>
+      <set id="s-nemeckij">
+        <name>Немецкий язык</name>
+        <url>https://dymova-english.ru/nemeckij-yazyk</url>
+      </set>
+      <set id="s-kitajskij">
+        <name>Китайский язык</name>
+        <url>https://dymova-english.ru/kitajskij-yazyk</url>
       </set>
     </sets>
     <offers>
@@ -90,6 +114,102 @@
         <param name="План" order="1" unit="Тематические недели" hours="8"><![CDATA[Смена — 10 рабочих дней тематических занятий с языковой практикой.]]></param>
         <param name="План" order="2" unit="Проекты и спектакли" hours="8"><![CDATA[Делаем поделки, готовим спектакли и работаем на английском.]]></param>
         <param name="План" order="3" unit="Полный день и мини-группы" hours="8"><![CDATA[Формат полного дня 10:00–18:00 в мини-группах до 7 человек.]]></param>
+      </offer>
+      <offer id="course-doshkolniki">
+        <name>Английский для дошкольников</name>
+        <url>https://dymova-english.ru/doshkolniki</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-doshkolniki</set-ids>
+        <price>9000</price>
+        <currencyId>RUR</currencyId>
+        <description>Английский для детей 2–6 лет в Долгопрудном: игровой формат, мини-группы до 7 детей, вечерние группы после сада. Авторская программа Дымовой В.А.</description>
+        <param name="Формат обучения">В группе c наставником</param>
+        <param name="Ближайшая дата">2026-09-01</param>
+        <param name="Продолжительность" unit="месяц">9</param>
+        <param name="Длительность занятия" unit="минута">60</param>
+        <param name="План" order="1" unit="Игровое погружение" hours="24"><![CDATA[Знакомимся с языком через игры, песни и подвижные активности.]]></param>
+        <param name="План" order="2" unit="Первые слова и фразы" hours="24"><![CDATA[Осваиваем базовую лексику и простые бытовые фразы.]]></param>
+        <param name="План" order="3" unit="Говорение и подготовка к школе" hours="24"><![CDATA[Формируем произношение и готовим к школьному английскому.]]></param>
+      </offer>
+      <offer id="course-mladshie">
+        <name>Английский для младших школьников</name>
+        <url>https://dymova-english.ru/mladshie-shkolniki</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-mladshie</set-ids>
+        <price>9000</price>
+        <currencyId>RUR</currencyId>
+        <description>Английский для учеников 1–4 классов в Долгопрудном: чтение, грамматика, разговор. Мини-группы по уровню, подтянем школьную программу.</description>
+        <param name="Формат обучения">В группе c наставником</param>
+        <param name="Ближайшая дата">2026-09-01</param>
+        <param name="Продолжительность" unit="месяц">9</param>
+        <param name="Длительность занятия" unit="минута">60</param>
+        <param name="План" order="1" unit="Чтение и фоника" hours="24"><![CDATA[Учимся читать слова и короткие тексты, отрабатываем звуки.]]></param>
+        <param name="План" order="2" unit="Школьная грамматика" hours="24"><![CDATA[Закрываем темы школьной программы простым и понятным языком.]]></param>
+        <param name="План" order="3" unit="Разговорная практика" hours="24"><![CDATA[Учимся строить фразы и говорить о знакомых темах.]]></param>
+      </offer>
+      <offer id="course-podrostki">
+        <name>Английский для подростков</name>
+        <url>https://dymova-english.ru/podrostki</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-podrostki</set-ids>
+        <price>9000</price>
+        <currencyId>RUR</currencyId>
+        <description>Английский для подростков 11–16 лет в Долгопрудном: разговорная практика и подготовка к ВПР, ОГЭ и ЕГЭ. Мини-группы по уровню и целям.</description>
+        <param name="Формат обучения">В группе c наставником</param>
+        <param name="Ближайшая дата">2026-09-01</param>
+        <param name="Продолжительность" unit="месяц">9</param>
+        <param name="Длительность занятия" unit="минута">60</param>
+        <param name="План" order="1" unit="Разговорный английский" hours="24"><![CDATA[Обсуждаем интересные подросткам темы и снимаем языковой барьер.]]></param>
+        <param name="План" order="2" unit="Грамматика и лексика" hours="24"><![CDATA[Систематизируем школьную программу и расширяем словарный запас.]]></param>
+        <param name="План" order="3" unit="Подготовка к экзаменам" hours="24"><![CDATA[Готовим к ВПР, ОГЭ и ЕГЭ по формату заданий.]]></param>
+      </offer>
+      <offer id="course-vzroslye">
+        <name>Английский для взрослых</name>
+        <url>https://dymova-english.ru/anglijskij-dlya-vzroslyh</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-vzroslye</set-ids>
+        <price>9000</price>
+        <currencyId>RUR</currencyId>
+        <description>Английский для взрослых в Долгопрудном: с нуля и для продолжающих. Разговорная практика, утренние и вечерние группы, онлайн-формат.</description>
+        <param name="Формат обучения">В группе c наставником</param>
+        <param name="Ближайшая дата">2026-09-01</param>
+        <param name="Продолжительность" unit="месяц">9</param>
+        <param name="Длительность занятия" unit="минута">60</param>
+        <param name="План" order="1" unit="База с нуля или повторение" hours="24"><![CDATA[Определяем уровень на бесплатной диагностике и выстраиваем маршрут.]]></param>
+        <param name="План" order="2" unit="Разговорная практика" hours="24"><![CDATA[Учимся говорить на бытовые, рабочие и туристические темы.]]></param>
+        <param name="План" order="3" unit="Уверенное владение" hours="24"><![CDATA[Доводим грамматику и восприятие на слух до уверенного уровня.]]></param>
+      </offer>
+      <offer id="course-nemeckij">
+        <name>Немецкий язык</name>
+        <url>https://dymova-english.ru/nemeckij-yazyk</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-nemeckij</set-ids>
+        <price>9000</price>
+        <currencyId>RUR</currencyId>
+        <description>Немецкий язык в Долгопрудном для детей, школьников и взрослых: мини-группы, живое общение, обучение с нуля. Оффлайн и онлайн.</description>
+        <param name="Формат обучения">В группе c наставником</param>
+        <param name="Ближайшая дата">2026-09-01</param>
+        <param name="Продолжительность" unit="месяц">9</param>
+        <param name="Длительность занятия" unit="минута">60</param>
+        <param name="План" order="1" unit="База с нуля" hours="24"><![CDATA[Алфавит, произношение и первые фразы на немецком.]]></param>
+        <param name="План" order="2" unit="Грамматика и чтение" hours="24"><![CDATA[Осваиваем грамматику и читаем адаптированные тексты.]]></param>
+        <param name="План" order="3" unit="Живое общение" hours="24"><![CDATA[Разговорная практика в мини-группах, оффлайн и онлайн.]]></param>
+      </offer>
+      <offer id="course-kitajskij">
+        <name>Китайский язык</name>
+        <url>https://dymova-english.ru/kitajskij-yazyk</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-kitajskij</set-ids>
+        <price>9000</price>
+        <currencyId>RUR</currencyId>
+        <description>Курсы китайского языка в Долгопрудном для детей и взрослых: группы до 7 человек, иероглифика, тоны, разговорная практика. Обучение с нуля.</description>
+        <param name="Формат обучения">В группе c наставником</param>
+        <param name="Ближайшая дата">2026-09-01</param>
+        <param name="Продолжительность" unit="месяц">9</param>
+        <param name="Длительность занятия" unit="минута">60</param>
+        <param name="План" order="1" unit="Тоны и пиньинь" hours="24"><![CDATA[Ставим произношение, учим тоны и систему пиньинь.]]></param>
+        <param name="План" order="2" unit="Иероглифика" hours="24"><![CDATA[Учим ключи иероглифов и пишем первые слова.]]></param>
+        <param name="План" order="3" unit="Разговорная практика" hours="24"><![CDATA[Строим диалоги на бытовые темы в группах до 7 человек.]]></param>
       </offer>
     </offers>
   </shop>
