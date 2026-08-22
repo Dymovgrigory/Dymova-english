@@ -1,6 +1,9 @@
 PYTHON ?= python3
 
-.PHONY: help build minify all status
+.PHONY: help build minify all status media
+
+media:
+	@$(PYTHON) prototype/build_media.py
 
 help:
 	@$(PYTHON) prototype/devflow.py help
