@@ -1,0 +1,5228 @@
+{
+ "series": {
+  "2025-05-28-other": {
+   "key": "2025-05-28 · other",
+   "date": "2025-05-28",
+   "count": 1,
+   "event": "Летняя Академия 2025",
+   "alt": "Летняя Академия Фоксинбурга 2025: распределение по группам",
+   "tags": [
+    "summer-academy",
+    "video",
+    "archive"
+   ]
+  },
+  "2025-05-30-other": {
+   "key": "2025-05-30 · other",
+   "date": "2025-05-30",
+   "count": 1,
+   "event": "Выпускной 2025",
+   "alt": "Выпускной школы Фоксинбург 2025",
+   "tags": [
+    "graduation",
+    "video",
+    "archive"
+   ]
+  },
+  "2025-06-04-other": {
+   "key": "2025-06-04 · other",
+   "date": "2025-06-04",
+   "count": 1,
+   "event": "Выпускной 2025",
+   "alt": "Выпускной школы Фоксинбург 2025: праздник и награждение",
+   "tags": [
+    "graduation",
+    "video",
+    "archive"
+   ]
+  },
+  "2025-06-17-other": {
+   "key": "2025-06-17 · other",
+   "date": "2025-06-17",
+   "count": 1,
+   "event": "Видео-отзывы родителей",
+   "alt": "Родитель ученика Фоксинбурга делится отзывом о школе",
+   "tags": [
+    "reviews",
+    "video",
+    "parents"
+   ]
+  },
+  "2025-08-14-other": {
+   "key": "2025-08-14 · other",
+   "date": "2025-08-14",
+   "count": 1,
+   "event": "Reels школы",
+   "alt": "Юмористический ролик школы Фоксинбург",
+   "tags": [
+    "video",
+    "social"
+   ]
+  },
+  "2025-10-27-other": {
+   "key": "2025-10-27 · other",
+   "date": "2025-10-27",
+   "count": 2,
+   "event": "Хеллоуин 2025",
+   "alt": "Хеллоуин в Фоксинбурге: костюмы и игры на английском",
+   "tags": [
+    "halloween",
+    "holiday",
+    "video",
+    "archive"
+   ]
+  },
+  "2025-12-17-other": {
+   "key": "2025-12-17 · other",
+   "date": "2025-12-17",
+   "count": 1,
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ]
+  },
+  "2025-12-20-other": {
+   "key": "2025-12-20 · other",
+   "date": "2025-12-20",
+   "count": 2,
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге: дети и Дед Мороз",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ]
+  },
+  "2025-12-25-other": {
+   "key": "2025-12-25 · other",
+   "date": "2025-12-25",
+   "count": 2,
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге: игры и подарки",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ]
+  },
+  "2026-04-07-canon": {
+   "key": "2026-04-07 · canon",
+   "date": "2026-04-07",
+   "count": 6,
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: занятия и игры",
+   "tags": [
+    "spring-academy",
+    "classes"
+   ]
+  },
+  "2026-04-09-canon": {
+   "key": "2026-04-09 · canon",
+   "date": "2026-04-09",
+   "count": 4,
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: творческое занятие",
+   "tags": [
+    "spring-academy",
+    "classes",
+    "masterclass"
+   ]
+  },
+  "2026-05-16-nikon": {
+   "key": "2026-05-16 · nikon",
+   "date": "2026-05-16",
+   "count": 80,
+   "event": "Выпускной 2026",
+   "title": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ]
+  },
+  "2026-06-01-iphone": {
+   "key": "2026-06-01 · iphone",
+   "date": "2026-06-01",
+   "count": 1,
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси на городском мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ]
+  },
+  "2026-06--canon": {
+   "key": "2026-06-?? · canon",
+   "date": "2026-06-??",
+   "count": 39,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "title": "Экскурсии: Ю-Клиника и Пожарная станция",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ]
+  },
+  "2026-07-01-canon": {
+   "key": "2026-07-01 · canon",
+   "date": "2026-07-01",
+   "count": 3,
+   "event": "Фото команды",
+   "alt": "Команда школы Фоксинбург",
+   "tags": [
+    "team",
+    "teachers"
+   ]
+  },
+  "2026-07-09-other": {
+   "key": "2026-07-09 · other",
+   "date": "2026-07-09",
+   "count": 1,
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026",
+   "tags": [
+    "spring-academy",
+    "video"
+   ]
+  },
+  "2026-08-15-canon": {
+   "key": "2026-08-15 · canon",
+   "date": "2026-08-15",
+   "count": 22,
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ]
+  },
+  "2026-08-22-canon": {
+   "key": "2026-08-22 · canon",
+   "date": "2026-08-22",
+   "count": 12,
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ]
+  },
+  "no-date-iphone": {
+   "key": "без даты · iphone",
+   "date": "без даты",
+   "count": 33,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ]
+  },
+  "no-date-other": {
+   "key": "без даты · other",
+   "date": "без даты",
+   "count": 7,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ]
+  }
+ },
+ "items": [
+  {
+   "id": "2025-05-28-other/8686004881408589323",
+   "type": "video",
+   "series": "2025-05-28-other",
+   "date": "2025-05-28",
+   "event": "Летняя Академия 2025",
+   "alt": "Летняя Академия Фоксинбурга 2025: распределение по группам",
+   "tags": [
+    "summer-academy",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1264,
+   "orientation": "portrait",
+   "src": "life/2025-05-28-other/8686004881408589323.mp4",
+   "poster": "life/2025-05-28-other/8686004881408589323.poster.webp"
+  },
+  {
+   "id": "2025-05-30-other/-3667809791914063915",
+   "type": "video",
+   "series": "2025-05-30-other",
+   "date": "2025-05-30",
+   "event": "Выпускной 2025",
+   "alt": "Выпускной школы Фоксинбург 2025",
+   "tags": [
+    "graduation",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 495,
+   "h": 900,
+   "orientation": "portrait",
+   "src": "life/2025-05-30-other/-3667809791914063915.mp4",
+   "poster": "life/2025-05-30-other/-3667809791914063915.poster.webp"
+  },
+  {
+   "id": "2025-06-04-other/-9155890181977189046",
+   "type": "video",
+   "series": "2025-06-04-other",
+   "date": "2025-06-04",
+   "event": "Выпускной 2025",
+   "alt": "Выпускной школы Фоксинбург 2025: праздник и награждение",
+   "tags": [
+    "graduation",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1598,
+   "orientation": "portrait",
+   "src": "life/2025-06-04-other/-9155890181977189046.mp4",
+   "poster": "life/2025-06-04-other/-9155890181977189046.poster.webp"
+  },
+  {
+   "id": "2025-06-17-other/1063546621160035869",
+   "type": "video",
+   "series": "2025-06-17-other",
+   "date": "2025-06-17",
+   "event": "Видео-отзывы родителей",
+   "alt": "Родитель ученика Фоксинбурга делится отзывом о школе",
+   "tags": [
+    "reviews",
+    "video",
+    "parents"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1598,
+   "orientation": "portrait",
+   "src": "life/2025-06-17-other/1063546621160035869.mp4",
+   "poster": "life/2025-06-17-other/1063546621160035869.poster.webp"
+  },
+  {
+   "id": "2025-08-14-other/-8391618677121079480",
+   "type": "video",
+   "series": "2025-08-14-other",
+   "date": "2025-08-14",
+   "event": "Reels школы",
+   "alt": "Юмористический ролик школы Фоксинбург",
+   "tags": [
+    "video",
+    "social"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 492,
+   "h": 900,
+   "orientation": "portrait",
+   "src": "life/2025-08-14-other/-8391618677121079480.mp4",
+   "poster": "life/2025-08-14-other/-8391618677121079480.poster.webp"
+  },
+  {
+   "id": "2025-10-27-other/3836574427212237692",
+   "type": "video",
+   "series": "2025-10-27-other",
+   "date": "2025-10-27",
+   "event": "Хеллоуин 2025",
+   "alt": "Хеллоуин в Фоксинбурге: костюмы и игры на английском",
+   "tags": [
+    "halloween",
+    "holiday",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 506,
+   "h": 900,
+   "orientation": "portrait",
+   "src": "life/2025-10-27-other/3836574427212237692.mp4",
+   "poster": "life/2025-10-27-other/3836574427212237692.poster.webp"
+  },
+  {
+   "id": "2025-10-27-other/570690408558754058",
+   "type": "video",
+   "series": "2025-10-27-other",
+   "date": "2025-10-27",
+   "event": "Хеллоуин 2025",
+   "alt": "Хеллоуин в Фоксинбурге: костюмы и игры на английском",
+   "tags": [
+    "halloween",
+    "holiday",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1600,
+   "orientation": "portrait",
+   "src": "life/2025-10-27-other/570690408558754058.mp4",
+   "poster": "life/2025-10-27-other/570690408558754058.poster.webp"
+  },
+  {
+   "id": "2025-12-17-other/3614670975323174660",
+   "type": "video",
+   "series": "2025-12-17-other",
+   "date": "2025-12-17",
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1600,
+   "orientation": "portrait",
+   "src": "life/2025-12-17-other/3614670975323174660.mp4",
+   "poster": "life/2025-12-17-other/3614670975323174660.poster.webp"
+  },
+  {
+   "id": "2025-12-20-other/8598129996493797092",
+   "type": "video",
+   "series": "2025-12-20-other",
+   "date": "2025-12-20",
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге: дети и Дед Мороз",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1600,
+   "orientation": "portrait",
+   "src": "life/2025-12-20-other/8598129996493797092.mp4",
+   "poster": "life/2025-12-20-other/8598129996493797092.poster.webp"
+  },
+  {
+   "id": "2025-12-20-other/9197161958741947074",
+   "type": "video",
+   "series": "2025-12-20-other",
+   "date": "2025-12-20",
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге: дети и Дед Мороз",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1674,
+   "orientation": "portrait",
+   "src": "life/2025-12-20-other/9197161958741947074.mp4",
+   "poster": "life/2025-12-20-other/9197161958741947074.poster.webp"
+  },
+  {
+   "id": "2025-12-25-other/-5520490101000998473",
+   "type": "video",
+   "series": "2025-12-25-other",
+   "date": "2025-12-25",
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге: игры и подарки",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1600,
+   "orientation": "portrait",
+   "src": "life/2025-12-25-other/-5520490101000998473.mp4",
+   "poster": "life/2025-12-25-other/-5520490101000998473.poster.webp"
+  },
+  {
+   "id": "2025-12-25-other/-5654764278319677560",
+   "type": "video",
+   "series": "2025-12-25-other",
+   "date": "2025-12-25",
+   "event": "Новый год 2026",
+   "alt": "Новогодний праздник в Фоксинбурге: игры и подарки",
+   "tags": [
+    "new-year",
+    "holiday",
+    "video",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1600,
+   "orientation": "portrait",
+   "src": "life/2025-12-25-other/-5654764278319677560.mp4",
+   "poster": "life/2025-12-25-other/-5654764278319677560.poster.webp"
+  },
+  {
+   "id": "2026-04-07-canon/9G6A0041",
+   "type": "image",
+   "series": "2026-04-07-canon",
+   "date": "2026-04-07",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: занятия и игры",
+   "tags": [
+    "spring-academy",
+    "classes"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 6000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-04-07-canon/9G6A0041.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-07-canon/9G6A0041.900.webp",
+    "1600": "life/2026-04-07-canon/9G6A0041.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-07-canon/9G6A0044",
+   "type": "image",
+   "series": "2026-04-07-canon",
+   "date": "2026-04-07",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: занятия и игры",
+   "tags": [
+    "spring-academy",
+    "classes"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 6000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-04-07-canon/9G6A0044.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-07-canon/9G6A0044.900.webp",
+    "1600": "life/2026-04-07-canon/9G6A0044.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-07-canon/9G6A0047",
+   "type": "image",
+   "series": "2026-04-07-canon",
+   "date": "2026-04-07",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: занятия и игры",
+   "tags": [
+    "spring-academy",
+    "classes"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 6000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-04-07-canon/9G6A0047.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-07-canon/9G6A0047.900.webp",
+    "1600": "life/2026-04-07-canon/9G6A0047.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-07-canon/9G6A0050",
+   "type": "image",
+   "series": "2026-04-07-canon",
+   "date": "2026-04-07",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: занятия и игры",
+   "tags": [
+    "spring-academy",
+    "classes"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 6000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-04-07-canon/9G6A0050.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-07-canon/9G6A0050.900.webp",
+    "1600": "life/2026-04-07-canon/9G6A0050.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-07-canon/9G6A0086",
+   "type": "image",
+   "series": "2026-04-07-canon",
+   "date": "2026-04-07",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: занятия и игры",
+   "tags": [
+    "spring-academy",
+    "classes"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 6000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-04-07-canon/9G6A0086.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-07-canon/9G6A0086.900.webp",
+    "1600": "life/2026-04-07-canon/9G6A0086.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-07-canon/9G6A0088",
+   "type": "image",
+   "series": "2026-04-07-canon",
+   "date": "2026-04-07",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: занятия и игры",
+   "tags": [
+    "spring-academy",
+    "classes"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 6000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-04-07-canon/9G6A0088.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-07-canon/9G6A0088.900.webp",
+    "1600": "life/2026-04-07-canon/9G6A0088.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-09-canon/9G6A0332",
+   "type": "image",
+   "series": "2026-04-09-canon",
+   "date": "2026-04-09",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: творческое занятие",
+   "tags": [
+    "spring-academy",
+    "classes",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-04-09-canon/9G6A0332.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-09-canon/9G6A0332.900.webp",
+    "1600": "life/2026-04-09-canon/9G6A0332.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-09-canon/9G6A0333",
+   "type": "image",
+   "series": "2026-04-09-canon",
+   "date": "2026-04-09",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: творческое занятие",
+   "tags": [
+    "spring-academy",
+    "classes",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-04-09-canon/9G6A0333.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-09-canon/9G6A0333.900.webp",
+    "1600": "life/2026-04-09-canon/9G6A0333.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-09-canon/9G6A0339",
+   "type": "image",
+   "series": "2026-04-09-canon",
+   "date": "2026-04-09",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: творческое занятие",
+   "tags": [
+    "spring-academy",
+    "classes",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-04-09-canon/9G6A0339.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-09-canon/9G6A0339.900.webp",
+    "1600": "life/2026-04-09-canon/9G6A0339.1600.webp"
+   }
+  },
+  {
+   "id": "2026-04-09-canon/9G6A0348",
+   "type": "image",
+   "series": "2026-04-09-canon",
+   "date": "2026-04-09",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026: творческое занятие",
+   "tags": [
+    "spring-academy",
+    "classes",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-04-09-canon/9G6A0348.1600.webp",
+   "srcset": {
+    "900": "life/2026-04-09-canon/9G6A0348.900.webp",
+    "1600": "life/2026-04-09-canon/9G6A0348.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_0432",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2605,
+   "h": 3908,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_0432.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_0432.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_0432.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_0700",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4608,
+   "h": 3072,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_0700.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_0700.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_0700.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_0705",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4608,
+   "h": 3072,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_0705.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_0705.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_0705.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4440",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2405,
+   "h": 3610,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4440.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4440.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4440.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4446",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3128,
+   "h": 4696,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4446.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4446.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4446.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4465",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4465.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4465.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4465.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4468",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2441,
+   "h": 3664,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4468.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4468.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4468.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4480",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2639,
+   "h": 3961,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4480.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4480.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4480.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4512",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3249,
+   "h": 2164,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4512.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4512.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4512.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4540",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3753,
+   "h": 2500,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4540.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4540.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4540.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4603",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2473,
+   "h": 3712,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4603.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4603.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4603.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4650",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3660,
+   "h": 2438,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4650.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4650.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4650.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4667",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4305,
+   "h": 2868,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4667.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4667.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4667.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4718",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2208,
+   "h": 3314,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4718.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4718.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4718.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4802",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5008,
+   "h": 3336,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4802.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4802.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4802.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4803",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5008,
+   "h": 3336,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4803.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4803.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4803.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4813",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1626,
+   "h": 2441,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4813.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4813.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4813.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4821",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4122,
+   "h": 2746,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4821.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4821.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4821.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4861",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3201,
+   "h": 2132,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_4861.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4861.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4861.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4900",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1890,
+   "h": 2837,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4900.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4900.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4900.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4910",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1699,
+   "h": 2551,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4910.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4910.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4910.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4957",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2561,
+   "h": 3844,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4957.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4957.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4957.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4964",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2515,
+   "h": 3776,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4964.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4964.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4964.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_4996",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2317,
+   "h": 3478,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_4996.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_4996.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_4996.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5010",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5010.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5010.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5010.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5011",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5011.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5011.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5011.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5030",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2062,
+   "h": 3095,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5030.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5030.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5030.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5036",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1906,
+   "h": 2861,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5036.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5036.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5036.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5054",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3238,
+   "h": 4861,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5054.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5054.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5054.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5110",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5110.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5110.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5110.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5117",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4020,
+   "h": 2678,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5117.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5117.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5117.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5118",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2528,
+   "h": 1684,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5118.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5118.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5118.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5132",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5008,
+   "h": 3336,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5132.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5132.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5132.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5145",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1950,
+   "h": 2927,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5145.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5145.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5145.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5160",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5008,
+   "h": 3336,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5160.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5160.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5160.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5183",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5183.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5183.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5183.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5206",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1952,
+   "h": 2930,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5206.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5206.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5206.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5213",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2381,
+   "h": 3574,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5213.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5213.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5213.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5214",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 2222,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5214.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5214.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5214.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5225",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1853,
+   "h": 2781,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5225.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5225.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5225.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5235",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3002,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5235.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5235.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5235.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5254",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1627,
+   "h": 2442,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5254.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5254.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5254.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5257",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2016,
+   "h": 3026,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5257.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5257.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5257.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5272",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2148,
+   "h": 3225,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5272.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5272.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5272.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5308",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2524,
+   "h": 3789,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5308.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5308.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5308.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5324",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4029,
+   "h": 2684,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5324.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5324.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5324.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5332",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3023,
+   "h": 2014,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5332.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5332.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5332.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5345",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2716,
+   "h": 4077,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5345.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5345.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5345.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5370",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2664,
+   "h": 3999,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5370.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5370.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5370.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5376",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2377,
+   "h": 3568,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5376.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5376.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5376.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5380",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2390,
+   "h": 3588,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5380.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5380.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5380.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5387",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2547,
+   "h": 3824,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5387.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5387.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5387.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5402",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3240,
+   "h": 4864,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5402.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5402.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5402.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5412",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2681,
+   "h": 4024,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5412.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5412.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5412.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5416",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2865,
+   "h": 4301,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5416.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5416.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5416.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5418",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2294,
+   "h": 3443,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5418.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5418.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5418.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5429",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2495,
+   "h": 3745,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5429.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5429.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5429.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5437",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2207,
+   "h": 3313,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5437.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5437.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5437.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5452",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5452.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5452.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5452.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5459",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2358,
+   "h": 3540,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5459.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5459.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5459.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5463",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2575,
+   "h": 3865,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5463.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5463.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5463.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5467",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4196,
+   "h": 2795,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5467.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5467.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5467.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5474",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3637,
+   "h": 2423,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5474.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5474.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5474.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5478",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4565,
+   "h": 3041,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5478.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5478.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5478.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5479",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4717,
+   "h": 3142,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5479.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5479.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5479.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5485",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5008,
+   "h": 3336,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5485.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5485.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5485.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5495",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5495.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5495.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5495.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5500",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5500.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5500.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5500.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5513",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4149,
+   "h": 2764,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5513.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5513.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5513.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5515",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5008,
+   "h": 3336,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5515.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5515.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5515.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5539",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5008,
+   "h": 3336,
+   "orientation": "landscape",
+   "src": "life/2026-05-16-nikon/DSC_5539.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5539.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5539.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5546",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2450,
+   "h": 3678,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5546.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5546.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5546.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5549",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5549.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5549.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5549.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5558",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2838,
+   "h": 4260,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5558.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5558.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5558.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5562",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2727,
+   "h": 4094,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5562.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5562.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5562.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5567",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2865,
+   "h": 4301,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5567.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5567.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5567.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5570",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2719,
+   "h": 4082,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5570.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5570.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5570.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5572",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3108,
+   "h": 4665,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5572.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5572.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5572.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5573",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2884,
+   "h": 4329,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5573.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5573.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5573.1600.webp"
+   }
+  },
+  {
+   "id": "2026-05-16-nikon/DSC_5577",
+   "type": "image",
+   "series": "2026-05-16-nikon",
+   "date": "2026-05-16",
+   "event": "Выпускной 2026",
+   "alt": "Выпускной школы Фоксинбург 2026: сцена, награждение, Лиса",
+   "tags": [
+    "graduation",
+    "event",
+    "community"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3336,
+   "h": 5008,
+   "orientation": "portrait",
+   "src": "life/2026-05-16-nikon/DSC_5577.1600.webp",
+   "srcset": {
+    "900": "life/2026-05-16-nikon/DSC_5577.900.webp",
+    "1600": "life/2026-05-16-nikon/DSC_5577.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06-01-iphone/IMG_1258_tilda53560986",
+   "type": "image",
+   "series": "2026-06-01-iphone",
+   "date": "2026-06-01",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси на городском мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3024,
+   "h": 4032,
+   "orientation": "portrait",
+   "src": "life/2026-06-01-iphone/IMG_1258_tilda53560986.1600.webp",
+   "srcset": {
+    "900": "life/2026-06-01-iphone/IMG_1258_tilda53560986.900.webp",
+    "1600": "life/2026-06-01-iphone/IMG_1258_tilda53560986.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3556",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3000,
+   "h": 2000,
+   "orientation": "landscape",
+   "src": "life/2026-06--canon/9G6A3556.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3556.900.webp",
+    "1600": "life/2026-06--canon/9G6A3556.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3598",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3598.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3598.900.webp",
+    "1600": "life/2026-06--canon/9G6A3598.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3621",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3621.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3621.900.webp",
+    "1600": "life/2026-06--canon/9G6A3621.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3660",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3660.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3660.900.webp",
+    "1600": "life/2026-06--canon/9G6A3660.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3689",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3689.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3689.900.webp",
+    "1600": "life/2026-06--canon/9G6A3689.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3708",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3708.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3708.900.webp",
+    "1600": "life/2026-06--canon/9G6A3708.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3786",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3786.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3786.900.webp",
+    "1600": "life/2026-06--canon/9G6A3786.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3804",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3804.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3804.900.webp",
+    "1600": "life/2026-06--canon/9G6A3804.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3833",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3833.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3833.900.webp",
+    "1600": "life/2026-06--canon/9G6A3833.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3861",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3861.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3861.900.webp",
+    "1600": "life/2026-06--canon/9G6A3861.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3898",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3898.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3898.900.webp",
+    "1600": "life/2026-06--canon/9G6A3898.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A3999",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A3999.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A3999.900.webp",
+    "1600": "life/2026-06--canon/9G6A3999.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4025",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4025.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4025.900.webp",
+    "1600": "life/2026-06--canon/9G6A4025.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4055",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4055.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4055.900.webp",
+    "1600": "life/2026-06--canon/9G6A4055.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4106",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4106.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4106.900.webp",
+    "1600": "life/2026-06--canon/9G6A4106.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4108",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4108.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4108.900.webp",
+    "1600": "life/2026-06--canon/9G6A4108.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4147",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4147.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4147.900.webp",
+    "1600": "life/2026-06--canon/9G6A4147.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4186",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4186.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4186.900.webp",
+    "1600": "life/2026-06--canon/9G6A4186.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4187",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4187.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4187.900.webp",
+    "1600": "life/2026-06--canon/9G6A4187.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4200",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4200.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4200.900.webp",
+    "1600": "life/2026-06--canon/9G6A4200.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4201",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4201.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4201.900.webp",
+    "1600": "life/2026-06--canon/9G6A4201.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4207",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4207.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4207.900.webp",
+    "1600": "life/2026-06--canon/9G6A4207.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4211",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4211.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4211.900.webp",
+    "1600": "life/2026-06--canon/9G6A4211.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4220",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4220.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4220.900.webp",
+    "1600": "life/2026-06--canon/9G6A4220.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4238",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4238.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4238.900.webp",
+    "1600": "life/2026-06--canon/9G6A4238.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4269",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3000,
+   "h": 2000,
+   "orientation": "landscape",
+   "src": "life/2026-06--canon/9G6A4269.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4269.900.webp",
+    "1600": "life/2026-06--canon/9G6A4269.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4274",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4274.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4274.900.webp",
+    "1600": "life/2026-06--canon/9G6A4274.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4283",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4283.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4283.900.webp",
+    "1600": "life/2026-06--canon/9G6A4283.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4287",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4287.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4287.900.webp",
+    "1600": "life/2026-06--canon/9G6A4287.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4289",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4289.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4289.900.webp",
+    "1600": "life/2026-06--canon/9G6A4289.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4291",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4291.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4291.900.webp",
+    "1600": "life/2026-06--canon/9G6A4291.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4296",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4296.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4296.900.webp",
+    "1600": "life/2026-06--canon/9G6A4296.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4307",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4307.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4307.900.webp",
+    "1600": "life/2026-06--canon/9G6A4307.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4309",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4309.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4309.900.webp",
+    "1600": "life/2026-06--canon/9G6A4309.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4320",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4320.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4320.900.webp",
+    "1600": "life/2026-06--canon/9G6A4320.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4328",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4328.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4328.900.webp",
+    "1600": "life/2026-06--canon/9G6A4328.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4329",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4329.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4329.900.webp",
+    "1600": "life/2026-06--canon/9G6A4329.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4332",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 3000,
+   "h": 2000,
+   "orientation": "landscape",
+   "src": "life/2026-06--canon/9G6A4332.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4332.900.webp",
+    "1600": "life/2026-06--canon/9G6A4332.1600.webp"
+   }
+  },
+  {
+   "id": "2026-06--canon/9G6A4336",
+   "type": "image",
+   "series": "2026-06--canon",
+   "date": null,
+   "event": "Экскурсии в Ю-Клинику и на Пожарную станцию",
+   "alt": "Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция",
+   "tags": [
+    "excursion",
+    "summer-academy",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 2000,
+   "h": 3000,
+   "orientation": "portrait",
+   "src": "life/2026-06--canon/9G6A4336.1600.webp",
+   "srcset": {
+    "900": "life/2026-06--canon/9G6A4336.900.webp",
+    "1600": "life/2026-06--canon/9G6A4336.1600.webp"
+   }
+  },
+  {
+   "id": "2026-07-01-canon/9G6A4758",
+   "type": "image",
+   "series": "2026-07-01-canon",
+   "date": "2026-07-01",
+   "event": "Фото команды",
+   "alt": "Команда школы Фоксинбург",
+   "tags": [
+    "team",
+    "teachers"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-07-01-canon/9G6A4758.1600.webp",
+   "srcset": {
+    "900": "life/2026-07-01-canon/9G6A4758.900.webp",
+    "1600": "life/2026-07-01-canon/9G6A4758.1600.webp"
+   }
+  },
+  {
+   "id": "2026-07-01-canon/9G6A4766",
+   "type": "image",
+   "series": "2026-07-01-canon",
+   "date": "2026-07-01",
+   "event": "Фото команды",
+   "alt": "Команда школы Фоксинбург",
+   "tags": [
+    "team",
+    "teachers"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-07-01-canon/9G6A4766.1600.webp",
+   "srcset": {
+    "900": "life/2026-07-01-canon/9G6A4766.900.webp",
+    "1600": "life/2026-07-01-canon/9G6A4766.1600.webp"
+   }
+  },
+  {
+   "id": "2026-07-01-canon/9G6A4780",
+   "type": "image",
+   "series": "2026-07-01-canon",
+   "date": "2026-07-01",
+   "event": "Фото команды",
+   "alt": "Команда школы Фоксинбург",
+   "tags": [
+    "team",
+    "teachers"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-07-01-canon/9G6A4780.1600.webp",
+   "srcset": {
+    "900": "life/2026-07-01-canon/9G6A4780.900.webp",
+    "1600": "life/2026-07-01-canon/9G6A4780.1600.webp"
+   }
+  },
+  {
+   "id": "2026-07-09-other/-4292209495913586662",
+   "type": "video",
+   "series": "2026-07-09-other",
+   "date": "2026-07-09",
+   "event": "Весенняя Академия 2026",
+   "alt": "Весенняя Академия Фоксинбурга 2026",
+   "tags": [
+    "spring-academy",
+    "video"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 1600,
+   "orientation": "portrait",
+   "src": "life/2026-07-09-other/-4292209495913586662.mp4",
+   "poster": "life/2026-07-09-other/-4292209495913586662.poster.webp"
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4858",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4858.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4858.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4858.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4869",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 6000,
+   "h": 4000,
+   "orientation": "landscape",
+   "src": "life/2026-08-15-canon/9G6A4869.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4869.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4869.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4872",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4872.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4872.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4872.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4873",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4873.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4873.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4873.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4879",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4879.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4879.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4879.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4898",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4898.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4898.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4898.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4905",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4905.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4905.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4905.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4917",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4917.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4917.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4917.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4928",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4928.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4928.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4928.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4938",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4938.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4938.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4938.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4947",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4947.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4947.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4947.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4948",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4948.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4948.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4948.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4950",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4950.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4950.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4950.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4954",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4954.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4954.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4954.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4957",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4957.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4957.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4957.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4958",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4958.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4958.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4958.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4964",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4964.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4964.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4964.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4980",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4980.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4980.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4980.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4983",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4983.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4983.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4983.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A4996",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A4996.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A4996.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A4996.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A5000",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A5000.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A5000.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A5000.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-15-canon/9G6A5006",
+   "type": "image",
+   "series": "2026-08-15-canon",
+   "date": "2026-08-15",
+   "event": "Мероприятие в парке",
+   "alt": "Мероприятие Фоксинбурга в парке: мастер-классы и Лиса Фокси",
+   "tags": [
+    "park",
+    "fox",
+    "event",
+    "masterclass"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-15-canon/9G6A5006.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-15-canon/9G6A5006.900.webp",
+    "1600": "life/2026-08-15-canon/9G6A5006.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5008",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5008.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5008.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5008.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5011",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5011.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5011.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5011.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5015",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5015.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5015.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5015.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5019",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5019.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5019.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5019.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5024",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5024.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5024.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5024.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5025",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5025.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5025.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5025.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5027",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5027.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5027.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5027.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5029",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5029.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5029.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5029.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5031",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5031.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5031.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5031.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5034",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5034.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5034.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5034.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5039",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5039.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5039.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5039.1600.webp"
+   }
+  },
+  {
+   "id": "2026-08-22-canon/9G6A5040",
+   "type": "image",
+   "series": "2026-08-22-canon",
+   "date": "2026-08-22",
+   "event": "Мероприятие в парке",
+   "alt": "Лиса Фокси с детьми на мероприятии в парке",
+   "tags": [
+    "park",
+    "fox",
+    "event"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-08-22-canon/9G6A5040.1600.webp",
+   "srcset": {
+    "900": "life/2026-08-22-canon/9G6A5040.900.webp",
+    "1600": "life/2026-08-22-canon/9G6A5040.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2538",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 982,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2538.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2538.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2539",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2539.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2539.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2544",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2544.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2544.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2545",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2545.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2545.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2546",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2546.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2546.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2547",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2547.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2547.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2548",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2548.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2548.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2549",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2549.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2549.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2550",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2550.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2550.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2551",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2551.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2551.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2553",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2553.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2553.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2554",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 759,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2554.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2554.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2557",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2557.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2557.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2558",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2558.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2558.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2559",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 686,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2559.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2559.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2560",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2560.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2560.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2561",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1280,
+   "h": 960,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_2561.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2561.900.webp",
+    "1600": "life/no-date-iphone/IMG_2561.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2562",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 658,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2562.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2562.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2563",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 960,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2563.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2563.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2564",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1920,
+   "h": 2560,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2564.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2564.900.webp",
+    "1600": "life/no-date-iphone/IMG_2564.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2565",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1920,
+   "h": 2560,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2565.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2565.900.webp",
+    "1600": "life/no-date-iphone/IMG_2565.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2566",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1920,
+   "h": 2560,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2566.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2566.900.webp",
+    "1600": "life/no-date-iphone/IMG_2566.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2569",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1280,
+   "h": 1212,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_2569.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2569.900.webp",
+    "1600": "life/no-date-iphone/IMG_2569.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2570",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1280,
+   "h": 1118,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_2570.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2570.900.webp",
+    "1600": "life/no-date-iphone/IMG_2570.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2571",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 879,
+   "h": 1280,
+   "orientation": "portrait",
+   "src": "life/no-date-iphone/IMG_2571.900.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2571.900.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2572",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1280,
+   "h": 1178,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_2572.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2572.900.webp",
+    "1600": "life/no-date-iphone/IMG_2572.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2573",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1280,
+   "h": 1125,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_2573.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2573.900.webp",
+    "1600": "life/no-date-iphone/IMG_2573.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2574",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1280,
+   "h": 946,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_2574.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2574.900.webp",
+    "1600": "life/no-date-iphone/IMG_2574.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_2575",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 1280,
+   "h": 848,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_2575.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_2575.900.webp",
+    "1600": "life/no-date-iphone/IMG_2575.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_7044",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5712,
+   "h": 3213,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_7044.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_7044.900.webp",
+    "1600": "life/no-date-iphone/IMG_7044.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_7045",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5712,
+   "h": 3213,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_7045.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_7045.900.webp",
+    "1600": "life/no-date-iphone/IMG_7045.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_7046",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5712,
+   "h": 3213,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_7046.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_7046.900.webp",
+    "1600": "life/no-date-iphone/IMG_7046.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-iphone/IMG_7099",
+   "type": "image",
+   "series": "no-date-iphone",
+   "date": null,
+   "event": "Праздники и мастер-классы школы",
+   "alt": "Жизнь школы Фоксинбург: праздники и мастер-классы",
+   "tags": [
+    "holiday",
+    "masterclass",
+    "archive"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 5712,
+   "h": 3213,
+   "orientation": "landscape",
+   "src": "life/no-date-iphone/IMG_7099.1600.webp",
+   "srcset": {
+    "900": "life/no-date-iphone/IMG_7099.900.webp",
+    "1600": "life/no-date-iphone/IMG_7099.1600.webp"
+   }
+  },
+  {
+   "id": "no-date-other/Ask and answer in pairs",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 506,
+   "orientation": "landscape",
+   "src": "life/no-date-other/Ask and answer in pairs.mp4",
+   "poster": "life/no-date-other/Ask and answer in pairs.poster.webp"
+  },
+  {
+   "id": "no-date-other/Describe and guess an animal ",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 506,
+   "orientation": "landscape",
+   "src": "life/no-date-other/Describe and guess an animal .mp4",
+   "poster": "life/no-date-other/Describe and guess an animal .poster.webp"
+  },
+  {
+   "id": "no-date-other/Flashlight ",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 506,
+   "orientation": "landscape",
+   "src": "life/no-date-other/Flashlight .mp4",
+   "poster": "life/no-date-other/Flashlight .poster.webp"
+  },
+  {
+   "id": "no-date-other/Spell and guess",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 506,
+   "orientation": "landscape",
+   "src": "life/no-date-other/Spell and guess.mp4",
+   "poster": "life/no-date-other/Spell and guess.poster.webp"
+  },
+  {
+   "id": "no-date-other/педагог",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 506,
+   "orientation": "landscape",
+   "src": "life/no-date-other/педагог.mp4",
+   "poster": "life/no-date-other/педагог.poster.webp"
+  },
+  {
+   "id": "no-date-other/фразы",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 506,
+   "orientation": "landscape",
+   "src": "life/no-date-other/фразы.mp4",
+   "poster": "life/no-date-other/фразы.poster.webp"
+  }
+ ]
+}

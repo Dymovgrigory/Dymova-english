@@ -10,3 +10,9 @@ secrets/
 !.env.example
 !.env.sample
 !.env.template
+
+# медиа-архив источников (2+ ГБ) и рабочие артефакты — не в git
+фото и видео/
+_media_review/
+prototype/media/wow-src/
+.playwright-mcp/

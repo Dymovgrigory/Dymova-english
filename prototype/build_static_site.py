@@ -79,6 +79,10 @@ PAGE_ALIASES = {
     "page_vpr_anglijskij.html": "vpr-anglijskij",
     "page_razgovornyj_anglijskij.html": "razgovornyj-anglijskij",
     "page_meropriyatiya.html": "meropriyatiya",
+    "page_zhizn_shkoly.html": "zhizn-shkoly",
+    "page_vypusknoj_2026.html": "vypusknoj-2026",
+    "page_ekskursii.html": "ekskursii",
+    "page_prazdniki.html": "prazdniki",
     "page_nositel_yazyka.html": "nositel-yazyka",
     "page_otzyvy.html": "otzyvy",
     "page_about.html": "about",
@@ -613,7 +617,7 @@ def main() -> None:
         src = os.path.join(DIR, media_dir)
         if os.path.isdir(src):
             shutil.copytree(src, os.path.join(out_dir, media_dir), dirs_exist_ok=True,
-                            ignore=shutil.ignore_patterns("*.jpg", "*.jpeg", "*.png", "*.opt.mp4"))
+                            ignore=shutil.ignore_patterns("*.jpg", "*.jpeg", "*.png", "*.opt.mp4", "*-src.mp4", "wow-src"))
 
     # favicon → корень сайта
     favicon_src = os.path.join(DIR, "favicon.png")
