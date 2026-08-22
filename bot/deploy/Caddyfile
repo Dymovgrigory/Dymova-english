@@ -79,6 +79,9 @@ dymova-english.ru {
     # падать в 404 — переносим их вес на актуальные страницы (301).
     redir /news /novosti 301
     redir /news/* /novosti 301
+    # Черновик /reading-new (сессия 65): дублировал title/description /reading
+    # в выдаче Яндекса — переносим на каноническую страницу.
+    redir /reading-new /reading 301
     # Старые адреса эпохи Tilda (pageXXXXX.html): главная известна точно,
     # остальные — на главную, чтобы не терять переходы из выдачи.
     redir /page32889798.html / 301
