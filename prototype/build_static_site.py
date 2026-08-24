@@ -83,6 +83,7 @@ PAGE_ALIASES = {
     "page_vypusknoj_2026.html": "vypusknoj-2026",
     "page_ekskursii.html": "ekskursii",
     "page_prazdniki.html": "prazdniki",
+    "page_vesennyaya_akademiya_2026.html": "vesennyaya-akademiya-2026",
     "page_nositel_yazyka.html": "nositel-yazyka",
     "page_otzyvy.html": "otzyvy",
     "page_about.html": "about",
