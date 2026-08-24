@@ -4408,3 +4408,17 @@ WebP-анимация на Mac Safari всё равно тормозила (CPU-
 **Как проверено:** py_compile OK; сборка 89 страниц (было 88); стейджинг: новая страница 200, в sitemap; все media-пути существуют; Playwright: hero с glass-карточкой рендерится (скриншот), mobile 390px — hscroll нет, видео-источник корректный; «битый» img с src="" — пре-существующий элемент (есть и на /vypusknoj-2026), не регрессия.
 **Деплой:** ДА. dist_prod пересобран (89 стр.), rsync -az --delete → прод. Сверено curl: /vesennyaya-akademiya-2026 — 200 и в sitemap, фото команды 200, главная ссылается на 9G6A4780.
 **Осталось / следующий шаг:** белофонный исходник «карточек» → alpha-версия wow-сцены; при желании — видео-отзывы родителей (2025-06-17) на /otzyvy и Reels (2025-08-14) на хаб.
+
+### Сессия 71 (Kimi Code) — VideoObject JSON-LD на все страницы с видео
+
+**Дата:** 2026-08-24
+**Запрос владельца:** «фиды прошли проверку, что дальше для присутствия в поисковиках» → выбран пункт 1: видео-разметка.
+
+**Что сделано:**
+1. `media_library.video_story()` теперь автоматически добавляет VideoObject JSON-LD (`video_jsonld()`): name/description/contentUrl/thumbnailUrl/uploadDate из манифеста (реальные даты съёмки), inLanguage=ru, isFamilyFriendly. Если даты нет — uploadDate опускается.
+2. `build_subpages.video_section()` (стандартный ключ "video" на курсовых страницах) — тоже VideoObject (без uploadDate, даты не подтверждены).
+
+**Охват:** /zhizn-shkoly (3 видео), /prazdniki (4), /vesennyaya-akademiya-2026 (1), /letnyaya-akademiya (2), /podrostki, /mladshie-shkolniki и др. — все страницы с <video> получили разметку автоматически.
+**Как проверено:** py_compile OK; сборка 89 стр.; VideoObject присутствует на всех проверенных страницах; JSON-LD распарсен и валиден (пример /vesennyaya-akademiya-2026).
+**Деплой:** ДА, rsync -az --delete; прод сверен curl: /prazdniki — 4 VideoObject, /zhizn-shkoly — 3.
+**Осталось / следующий шаг:** статьи из событий в блог (пункт 2 SEO-плана), посты в Яндекс Бизнес из фото событий, переобход новых URL в Вебмастере.

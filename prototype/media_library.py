@@ -365,4 +365,31 @@ def video_story(item_id: str, title: str, lead: str | None = None,
     h.append(f'<video controls playsinline preload="metadata"{poster}>')
     h.append(f'<source src="/media/{escape(it["src"].lstrip("/"), quote=True)}" type="video/mp4">')
     h.append("</video></div></div></div></section>")
+    h.append(video_jsonld(it, title))
     return "\n".join(h)
+
+
+SITE = "https://dymova-english.ru"
+
+
+def video_jsonld(it: dict, title: str) -> str:
+    """VideoObject из реальных данных манифеста (дата/событие/постер) —
+    видео попадают в видео-поиск Яндекса/Google. Ничего не выдумываем."""
+    import re
+    name = re.sub(r"<[^>]+>", "", title)
+    data = {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        "name": name,
+        "description": it.get("alt") or name,
+        "contentUrl": f"{SITE}/media/{it['src'].lstrip('/')}",
+        "uploadDate": it.get("date", ""),
+        "inLanguage": "ru",
+        "isFamilyFriendly": True,
+    }
+    if it.get("poster"):
+        data["thumbnailUrl"] = f"{SITE}/media/{it['poster'].lstrip('/')}"
+    if not data["uploadDate"]:
+        del data["uploadDate"]
+    payload = json.dumps(data, ensure_ascii=False)
+    return f'<script type="application/ld+json">{payload}</script>'

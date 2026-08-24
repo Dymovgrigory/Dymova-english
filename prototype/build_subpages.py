@@ -532,6 +532,16 @@ def video_section(kicker, title, lead, src, poster, light=False):
     h.append('<video controls playsinline preload="metadata" poster="' + escape(poster, quote=True) + '">')
     h.append('<source src="' + escape(src, quote=True) + '" type="video/mp4">')
     h.append('</video></div></div></div></section>')
+    # VideoObject — видео-страницы попадают в видео-поиск; дата неизвестна → без uploadDate
+    payload = json.dumps({
+        "@context": "https://schema.org", "@type": "VideoObject",
+        "name": re.sub(r"<[^>]+>", "", title),
+        "description": lead or re.sub(r"<[^>]+>", "", title),
+        "contentUrl": SITE + src,
+        "thumbnailUrl": SITE + poster,
+        "inLanguage": "ru", "isFamilyFriendly": True,
+    }, ensure_ascii=False)
+    h.append('<script type="application/ld+json">' + payload + '</script>')
     return "\n".join(h)
 
 
