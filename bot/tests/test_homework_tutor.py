@@ -156,3 +156,10 @@ async def test_intent_refiner_never_overrides_homework(monkeypatch):
     conv = Conversation(user_id="test:refine")
     intent = await ai_core._detect_intent(conv, "помоги с домашкой: вставь am/is/are — I __ nine")
     assert intent == I.HOMEWORK
+
+
+def test_prompts_include_format_template():
+    # Образец формата (эмодзи-заголовки) — без него gpt-4o-mini писала сплошняком.
+    assert "📘" in _homework_text_user_prompt("x")
+    assert "✏️" in _homework_user_prompt("")
+    assert "СТРОГО по этому образцу" in _homework_text_user_prompt("x")
