@@ -57,7 +57,16 @@ _LEAK_RE = re.compile(
     re.IGNORECASE,
 )
 
-_EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF☀-➿]")
+_EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF☀-➿]\uFE0F?")
+
+# Структурные эмодзи-заголовки тьютора по домашке (📘/✏️/✅/💡/❓) — это не
+# украшение, а навигация по разбору; за сочетание из 3+ таких маркеров ответ
+# не штрафуем, иначе критик срезал структуру (прод-скрин, сессия 78).
+_TUTOR_MARKERS = ("📘", "✏", "✅", "💡", "❓")
+
+
+def _has_tutor_structure(text: str) -> bool:
+    return sum(marker in text for marker in _TUTOR_MARKERS) >= 3
 
 # Три и больше вопросительных знака — это уже анкета, а не реплика.
 MAX_QUESTIONS = 2
@@ -93,7 +102,7 @@ def inspect(reply: str, conv, sales_allowed: bool) -> list[str]:
     if reply_no_urls.count("?") > MAX_QUESTIONS:
         issues.append("too_many_questions")
 
-    if len(_EMOJI_RE.findall(reply)) > MAX_EMOJI:
+    if len(_EMOJI_RE.findall(reply)) > MAX_EMOJI and not _has_tutor_structure(reply):
         issues.append("too_many_emoji")
 
     if _LEAK_RE.search(reply):

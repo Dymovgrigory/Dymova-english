@@ -163,3 +163,24 @@ def test_prompts_include_format_template():
     assert "📘" in _homework_text_user_prompt("x")
     assert "✏️" in _homework_user_prompt("")
     assert "СТРОГО по этому образцу" in _homework_text_user_prompt("x")
+
+
+def test_critic_keeps_tutor_structural_emoji():
+    from app import critic
+    from app.memory import Conversation
+
+    reply = (
+        "📘 Правило\nТекст правила.\n\n✏️ Похожий пример\n1) шаг\n2) шаг\n\n"
+        "✅ План для твоего задания\n1) шаг\n2) шаг\n\n💡 Подсказка\nПодсказка.\n\n"
+        "❓ Что получилось?"
+    )
+    conv = Conversation(user_id="test:critic")
+    assert "too_many_emoji" not in critic.inspect(reply, conv, True)
+
+
+def test_trim_emoji_removes_variation_selector():
+    from app import critic
+
+    # Раньше базовый символ срезался, а U+FE0F оставался сиротой («️ текст»).
+    trimmed = critic._trim_emoji("привет 👋 как ✅ дела ❓ норм", 1)
+    assert "\uFE0F" not in trimmed or trimmed.count("\uFE0F") <= trimmed.count("👋")
