@@ -1150,6 +1150,28 @@ PAGES["page_letnyaya_akademiya.html"] = {
         "src": "/media/summer-academy.mp4",
         "poster": "/media/summer-academy-poster.webp",
     },
+    "extra_sections": [
+        media_library.life_bundle(
+            media_library.video_story(
+                "2025-05-28-other/8686004881408589323",
+                "Как это было: Летняя Академия 2025",
+                "Тематический клуб «Harry Potter» вживую: распределение по группам и погружение в атмосферу — архивное видео прошлой смены.",
+                kicker="Из архива · 2025",
+                light=False,
+            ),
+        ),
+        (
+            '<section class="fxb-section"><div class="fxb-wrap">'
+            '<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Истории</span>'
+            '<h2 class="fxb-h2">Академии и экскурсии в деталях</h2>'
+            '<p class="fxb-lead">Настоящие фото и видео наших смен и выездов — без постановки.</p></div>'
+            '<p style="display:flex;gap:12px;flex-wrap:wrap">'
+            '<a class="fxb-btn-main" href="/vesennyaya-akademiya-2026">Весенняя Академия 2026</a>'
+            '<a class="fxb-btn-main" href="/ekskursii">Экскурсии: Ю-Клиника и пожарная станция</a>'
+            '</p></div></section>'
+        ),
+    ],
+    "has_video_story": True,
     "lead_subject": "Летняя Академия",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
@@ -2185,6 +2207,7 @@ PAGES["page_zhizn_shkoly.html"] = {
             '<a class="fxb-btn-main" href="/vypusknoj-2026">Выпускной 2026</a>'
             '<a class="fxb-btn-main" href="/ekskursii">Экскурсии: Ю-Клиника и пожарная станция</a>'
             '<a class="fxb-btn-main" href="/prazdniki">Праздники школы</a>'
+            '<a class="fxb-btn-main" href="/vesennyaya-akademiya-2026">Весенняя Академия 2026</a>'
             '</p></div></section>'
         ),
         media_library.life_bundle(
@@ -2202,12 +2225,28 @@ PAGES["page_zhizn_shkoly.html"] = {
                 kicker="Видео",
             ),
         ),
-        media_library.video_story(
-            "no-date-other/фразы",
-            "Взгляд снизу",
-            "Спросили учеников — отвечают сами, без сценария. Рубрика «Взгляд снизу».",
-            kicker="Дети говорят",
-            light=False,
+        media_library.life_bundle(
+            media_library.real_moment(
+                "2026-07-01-canon/9G6A4758",
+                "За каждым праздником и каждым уроком — настоящая команда, которая любит своё дело.",
+                kicker="Команда",
+                caption="Команда Фоксинбурга, июль 2026",
+                light=True,
+            ),
+            media_library.video_story(
+                "no-date-other/фразы",
+                "Взгляд снизу",
+                "Спросили учеников — отвечают сами, без сценария. Рубрика «Взгляд снизу».",
+                kicker="Дети говорят",
+                light=False,
+            ),
+            media_library.video_story(
+                "no-date-other/педагог",
+                "Взгляд снизу: про педагогов",
+                "Кого дети называют любимым педагогом и почему — слушаем сами.",
+                kicker="Дети говорят",
+                light=True,
+            ),
         ),
     ],
     "has_video_story": True,
@@ -2423,6 +2462,13 @@ PAGES["page_prazdniki.html"] = {
                 kicker="Видео из архива",
                 light=True,
             ),
+            media_library.video_story(
+                "2025-12-17-other/3614670975323174660",
+                "Новый год 2026: праздник продолжается",
+                "Игры, подарки и новогоднее настроение — ещё один фрагмент праздника.",
+                kicker="Видео из архива",
+                light=True,
+            ),
             media_library.real_moment(
                 "no-date-iphone/IMG_2538",
                 "Снеговик, ёлочные игрушки ручной работы и полная комната детей — так выглядит наш Новый год.",
@@ -2468,6 +2514,101 @@ PAGES["page_prazdniki.html"] = {
     "lead_final_window": "Финальный блок",
     "cta_title": 'Хотите, чтобы ваш ребёнок был на <span class="fxb-accent">следующем празднике</span>?',
     "cta_text": "Запишитесь на бесплатную диагностику — расскажем о программах и ближайших событиях школы.",
+}
+
+PAGES["page_vesennyaya_akademiya_2026.html"] = {
+    # Story-страница события: Весенняя Академия 2026 (апрель 2026,
+    # подтверждено владельцем 22.08.2026).
+    "hero_grad": "linear-gradient(135deg,#1d4a2e 0%,#2bb673 55%,#f7971e 100%)",
+    "story_hero": {
+        "item_id": "2026-04-07-canon/9G6A0086",
+        "h1": 'Весенняя <span class="fxb-accent">Академия 2026</span>',
+        "sub": "На весенних каникулах обучение не ставится на паузу — оно становится приключением: занятия, игры и творческие мастер-классы на английском. Настоящие фото смены.",
+        "kicker": "История события · апрель 2026",
+    },
+    "eyebrow": "Академии Фоксинбурга",
+    "h1": 'Весенняя <span class="fxb-accent">Академия 2026</span>',
+    "sub": "Каникулы с пользой: занятия, игры и мастер-классы на английском — настоящие фото смены.",
+    "cta_label": "Записаться в Академию",
+    "feat_kicker": "Как это было",
+    "feat_title": "Каникулы, после которых английский становится своим",
+    "feat_lead": "Весенняя Академия — это языковая среда на каникулах: без скучных уроков, но с настоящим погружением.",
+    "features": [
+        ("book", "Занятия в игровом формате", "Материал подаётся через игры и активности — дети говорят по-английски, не замечая «урока»."),
+        ("palette", "Творческие мастер-классы", "Рисование, ручная работа и творчество на английском — язык в деле, а не в зубрёжке."),
+        ("group", "Мини-группы", "Формирование по возрасту и уровню — каждый ребёнок вовлечён и получает внимание педагога."),
+        ("sun", "Каникулы с пользой", "Ребёнок занят делом, родители спокойны — а английский растёт на живом общении."),
+    ],
+    "facts_title": "Эта смена в фактах",
+    "facts": [
+        ("calendar", "Апрель 2026", "Весенние каникулы"),
+        ("check", "Реальные фото", "Никакой постановки и стоков"),
+        ("palette", "Занятия + творчество", "Язык через живую деятельность"),
+        ("compass", "Долгопрудный", "Кампус школы Фоксинбург"),
+    ],
+    "extra_sections": [
+        media_library.life_bundle(
+            media_library.real_moment(
+                "2026-04-09-canon/9G6A0339",
+                "Иногда самый эффективный урок выглядит как игра — и это намеренно.",
+                kicker="Реальный момент",
+                caption="Весенняя Академия 2026: творческое занятие",
+                light=True,
+            ),
+            media_library.media_wall(
+                series="2026-04-07-canon", limit=6,
+                title="Занятия и игры", kicker="Весенняя Академия · апрель 2026",
+            ),
+            media_library.media_wall(
+                series="2026-04-09-canon", limit=4,
+                title="Творческие мастер-классы", kicker="Весенняя Академия · апрель 2026",
+                light=True,
+            ),
+        ),
+        media_library.video_story(
+            "2026-07-09-other/-4292209495913586662",
+            "Весенняя Академия — вживую",
+            "Короткое видео со смены: атмосфера, занятия и дети — как есть.",
+            kicker="Видео",
+            light=False,
+        ),
+        (
+            '<section class="fxb-section"><div class="fxb-wrap">'
+            '<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Что дальше</span>'
+            '<h2 class="fxb-h2">Похожие истории</h2>'
+            '<p class="fxb-lead">Академии и выезды школы — в фотографиях и видео.</p></div>'
+            '<p style="display:flex;gap:12px;flex-wrap:wrap">'
+            '<a class="fxb-btn-main" href="/letnyaya-akademiya">Летняя Академия</a>'
+            '<a class="fxb-btn-main" href="/ekskursii">Экскурсии: Ю-Клиника и пожарная станция</a>'
+            '<a class="fxb-btn-main" href="/zhizn-shkoly">Жизнь школы</a>'
+            '</p></div></section>'
+        ),
+    ],
+    "has_video_story": True,
+    "faq_title": "Вопросы об Академиях",
+    "faq": [
+        ("Когда проходят Академии?", "Академии работают на школьных каникулах: весной — Весенняя Академия, летом — Летняя. Эта смена прошла в апреле 2026 года."),
+        ("Что входит в программу?", "Занятия английским в игровом формате, творческие мастер-классы и командные активности — всё в языковой среде."),
+        ("Как записаться на следующую смену?", "Оставьте заявку на сайте или напишите нам в Max — расскажем о ближайшей смене и свободных местах."),
+    ],
+    "extra_jsonld": [
+        webpage_jsonld(
+            "Article",
+            "Весенняя Академия 2026 в школе Фоксинбург",
+            "Весенняя Академия Фоксинбурга 2026: занятия, игры и творческие мастер-классы на английском на весенних каникулах. Реальные фотографии смены.",
+            SITE + "/vesennyaya-akademiya-2026",
+        ),
+        breadcrumb_jsonld([
+            ("Главная", SITE + "/"),
+            ("Жизнь школы", SITE + "/zhizn-shkoly"),
+            ("Весенняя Академия 2026", SITE + "/vesennyaya-akademiya-2026"),
+        ]),
+    ],
+    "lead_subject": "Весенняя Академия",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
+    "cta_title": 'Хотите, чтобы каникулы вашего ребёнка прошли <span class="fxb-accent">так</span>?',
+    "cta_text": "Оставьте заявку — расскажем о ближайшей Академии и забронируем место в группе.",
 }
 
 PAGES["page_nositel_yazyka.html"] = {
