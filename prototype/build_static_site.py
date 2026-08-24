@@ -114,6 +114,8 @@ PAGE_ALIASES = {
     "page_blog_chtenie_na_anglijskom_s_chego_nachat.html": "blog-chtenie-na-anglijskom-s-chego-nachat",
     "page_blog_kak_vybrat_posobie_po_anglijskomu.html": "blog-kak-vybrat-posobie-po-anglijskomu",
     "page_blog_letnij_intensiv_itogi_i_plany.html": "blog-letnij-intensiv-itogi-i-plany",
+    "page_blog_vesennyaya_akademiya_2026_kak_eto_bylo.html": "blog-vesennyaya-akademiya-2026-kak-eto-bylo",
+    "page_blog_ekskursii_yu_klinika_pozharnaya_stanciya.html": "blog-ekskursii-yu-klinika-pozharnaya-stanciya",
     "page_blog_oshibki_v_anglijskom_top_15.html": "blog-oshibki-v-anglijskom-top-15",
     "page_blog_audirovanie_kak_nauchitsya_ponimat.html": "blog-audirovanie-kak-nauchitsya-ponimat",
     "page_blog_anglijskij_pered_1_sentyabrya.html": "blog-anglijskij-pered-1-sentyabrya",
