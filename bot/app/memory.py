@@ -103,6 +103,10 @@ class Conversation:
     # воронке: без него датой заявки пришлось бы называть updated_at, который
     # меняется с каждым сообщением.
     lead_submitted_at: str = ""
+    # Бот только что пригласил прислать задание (фото или текст) — следующее
+    # текстовое сообщение без слов-триггеров считаем самим заданием и сразу
+    # разбираем в режиме тьютора, а не общей консультацией.
+    awaiting_homework: bool = False
 
     def add(self, role: str, content: str) -> None:
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -375,6 +379,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         recommended_program=d.get("recommended_program", ""),
         reg_nudges=d.get("reg_nudges", 0),
         lead_submitted_at=d.get("lead_submitted_at", ""),
+        awaiting_homework=d.get("awaiting_homework", False),
     )
 
 

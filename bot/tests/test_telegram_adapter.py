@@ -166,9 +166,36 @@ async def test_telegram_start_and_homework_routes(monkeypatch):
     homework_reply = telegram.sent[1]
     # Проверяем маршрутизацию /start, а не конкретную формулировку приветствия.
     assert "Фокси" in start_reply["text"]
-    assert homework_reply["text"].startswith("Помощь с домашкой у нас бесплатная")
+    assert homework_reply["text"] == main_module.HOMEWORK_INVITE
     assert homework_reply["buttons"]
     assert homework_reply["buttons"][0][0]["url"].endswith("#homework")
+
+
+@pytest.mark.asyncio
+async def test_telegram_homework_task_after_invite_goes_to_tutor(monkeypatch):
+    """После приглашения «пришлите задание» текст без слов «домашка» —
+    это само задание: его разбирает тьютор, а не общая консультация."""
+    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+
+    async def fake_tutor(task_text):
+        fake_tutor.seen = task_text
+        return "Правило: глагол to be..."
+
+    monkeypatch.setattr(main_module, "explain_homework_text", fake_tutor)
+    telegram = FakeTelegramClient()
+
+    await main_module._process_telegram_update(
+        {"update_id": 2001, "message": {"chat": {"id": 88}, "text": "помоги с домашкой"}},
+        telegram,
+    )
+    await main_module._process_telegram_update(
+        {"update_id": 2002, "message": {"chat": {"id": 88}, "text": "Вставь am/is/are: I __ nine."}},
+        telegram,
+    )
+
+    assert telegram.sent[0]["text"] == main_module.HOMEWORK_INVITE
+    assert telegram.sent[1]["text"].startswith("Правило")
+    assert "am/is/are" in fake_tutor.seen
 
 
 @pytest.mark.asyncio
