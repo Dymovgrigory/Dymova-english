@@ -111,6 +111,35 @@ def _strip_markdown(text: str) -> str:
     return cleaned.strip()
 
 
+# Маркеры разделов тьютора. Модель часто пишет «📘 Правило Текст…» в одну
+# строку без пустых строк между разделами — расставляем их детерминированно.
+_TUTOR_SECTION_RE = re.compile(r"\s*(📘|✏️|✏|✅|💡|❓)\s*")
+
+
+def _format_tutor_reply(text: str) -> str:
+    """Перенос строки перед каждым маркером раздела и после заголовка-маркера.
+
+    «📘 Правило В английском… ✏️ Похожий пример Давай…» →
+    «📘 Правило\nВ английском…\n\n✏️ Похожий пример\nДавай…».
+    """
+    out = _TUTOR_SECTION_RE.sub(r"\n\n\1 ", text)
+    # Убираем склейку заголовка с телом: «📘 Правило В английском» → перенос
+    # после известных слов-заголовков.
+    out = re.sub(
+        r"(📘 Правило|✏️ Похожий пример|✏ Похожий пример|✅ План для твоего задания|💡 Подсказка)\s+",
+        r"\1\n",
+        out,
+    )
+    out = re.sub(r"\n{3,}", "\n\n", out)
+    return out.strip()
+
+
+def _finalize_tutor_reply(reply: str | None) -> str | None:
+    if not reply:
+        return None
+    return _format_tutor_reply(_strip_markdown(reply))
+
+
 async def explain_homework_text(task_text: str) -> str | None:
     """Разбор задания, присланного текстом. None — модель не смогла помочь.
 
@@ -124,7 +153,7 @@ async def explain_homework_text(task_text: str) -> str | None:
     reply = await get_gateway().complete(
         ROLE_REASONING, messages, temperature=0.3, max_tokens=1200
     )
-    return _strip_markdown(reply) if reply else None
+    return _finalize_tutor_reply(reply)
 
 
 async def explain_homework_image(
@@ -155,7 +184,7 @@ async def explain_homework_image(
         },
     ]
     reply = await get_gateway().vision(messages, temperature=0.2, max_tokens=1200)
-    return _strip_markdown(reply) if reply else None
+    return _finalize_tutor_reply(reply)
 
 
 # Фразы-«обёртки», после удаления которых остаётся собственно текст задания.

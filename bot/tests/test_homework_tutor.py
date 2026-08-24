@@ -184,3 +184,15 @@ def test_trim_emoji_removes_variation_selector():
     # Раньше базовый символ срезался, а U+FE0F оставался сиротой («️ текст»).
     trimmed = critic._trim_emoji("привет 👋 как ✅ дела ❓ норм", 1)
     assert "\uFE0F" not in trimmed or trimmed.count("\uFE0F") <= trimmed.count("👋")
+
+
+def test_format_tutor_reply_splits_sections():
+    from app.homework import _format_tutor_reply
+
+    raw = "📘 Правило Текст правила. ✏️ Похожий пример Давай рассмотрим. ✅ План для твоего задания 1) шаг 💡 Подсказка Обрати внимание. ❓ Что получилось?"
+    out = _format_tutor_reply(raw)
+    assert "\n\n✏️" in out
+    assert "\n\n✅" in out
+    assert "\n\n💡" in out
+    assert "📘 Правило\nТекст правила." in out
+    assert "💡 Подсказка\nОбрати внимание." in out
