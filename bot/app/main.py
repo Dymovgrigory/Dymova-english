@@ -14,7 +14,6 @@ import hashlib
 import hmac
 import json
 import logging
-import re
 import time
 import uuid
 from urllib.parse import urlsplit
@@ -38,6 +37,7 @@ from app.course_selector import recommend
 from app.email_notify import send_lead_email
 from app import intent as I
 from app import group_chat
+from app import homework
 from app import insights
 from app import leveltest
 from app import nudge
@@ -46,6 +46,15 @@ from app import registration
 from app import runtime
 from app import scheduler
 from app import watchdog
+from app.homework import (
+    HOMEWORK_INVITE,
+    HOMEWORK_TEXT_FALLBACK,
+    _homework_task_text,
+    _homework_text_user_prompt,
+    _strip_markdown,
+    explain_homework_image,
+    explain_homework_text,
+)
 from app.knowledge.kb import get_kb
 from app.observability import init_sentry
 from app.llm import get_llm
@@ -164,164 +173,11 @@ _BRANCH_CONTACTS = {
 
 
 def _homework_system_prompt() -> str:
-    return (
-        "Ты — Фокси, педагог-наставник, который профессионально помогает "
-        "школьнику с домашним заданием (английский язык и другие школьные "
-        "предметы). Главное правило: не давай готовых ответов и не решай "
-        "задание за него — учи выполнять его самостоятельно.\n"
-        "Структура каждого ответа:\n"
-        "1) Назови тему и правило, которое проверяет задание, и объясни его "
-        "простыми словами.\n"
-        "2) Придумай ПОХОЖЕЕ задание (другие слова и числа, НЕ из задания "
-        "ученика) и реши его пошагово, комментируя, почему делается именно "
-        "так. Этот пример — главный обучающий приём.\n"
-        "3) Дай план из 2–4 шагов, как ученику решить СВОЁ задание, и "
-        "подсказки, на что обратить внимание.\n"
-        "4) Заверши вопросом: предложи ученику попробовать и написать, что "
-        "получилось.\n"
-        "Тон: добрый и поддерживающий, на «ты», язык понятный ребёнку "
-        "7–15 лет. Отвечай по-русски.\n"
-        "Оформление ответа (важно — читает ребёнок в мессенджере):\n"
-        "- разбивай ответ на короткие абзацы по 1–3 предложения, между "
-        "частями — пустая строка;\n"
-        "- каждую часть начинай с эмодзи-заголовка: 📘 правило, ✏️ пример "
-        "с решением, ✅ план для твоего задания, 💡 подсказка, ❓ вопрос "
-        "в конце;\n"
-        "- шаги нумеруй просто: 1) 2) 3), списки — через дефис;\n"
-        "- НИКАКОГО markdown: без **, ##, _, `, без заголовков #, без "
-        "таблиц. Только чистый текст, абзацы и эмодзи."
-    )
+    return homework._homework_system_prompt()
 
 
 def _homework_user_prompt(note: str) -> str:
-    extra = f" Дополнительная заметка: {note}." if note else ""
-    return (
-        "Разбери задание с фото. Не давай готовые ответы и не решай за "
-        "ребёнка: сначала объясни правило, затем придумай похожий пример и "
-        "реши его по шагам, потом дай план, как выполнить своё задание "
-        "самостоятельно."
-        f"{extra}"
-    )
-
-
-def _homework_text_user_prompt(task_text: str) -> str:
-    return (
-        "Вот задание ученика текстом:\n«" + task_text + "»\n"
-        "Не давай готовые ответы и не решай за ребёнка: сначала объясни "
-        "правило, затем придумай похожий пример (другие слова и числа) и "
-        "реши его по шагам, потом дай план, как выполнить своё задание "
-        "самостоятельно."
-    )
-
-
-async def explain_homework_text(task_text: str) -> str | None:
-    """Разбор задания, присланного текстом. None — модель не смогла помочь.
-
-    Та же педагогика, что и у фото-разбора: объяснение на придуманном
-    примере, чтобы ребёнок решил своё задание сам.
-    """
-    messages = [
-        {"role": "system", "content": _homework_system_prompt()},
-        {"role": "user", "content": _homework_text_user_prompt(task_text)},
-    ]
-    reply = await get_gateway().complete(
-        ROLE_REASONING, messages, temperature=0.3, max_tokens=1200
-    )
-    return _strip_markdown(reply) if reply else None
-
-
-_MD_BOLD = re.compile(r"\*\*(.+?)\*\*")
-_MD_HEADING = re.compile(r"^#{1,6}\s*", re.MULTILINE)
-_MD_BULLET = re.compile(r"^(\s*)[*+]\s+", re.MULTILINE)
-_MD_TABLE_EDGE = re.compile(r"^\s*\||\|\s*$", re.MULTILINE)
-
-
-def _strip_markdown(text: str) -> str:
-    """Чистим ответ модели от markdown-разметки.
-
-    MAX/Telegram-чаты школы не рендерят markdown: «**правило**» приходит
-    ребёнку со звёздочками и читается как мусор. Промпт запрещает разметку,
-    но модели периодически её вставляют — зачищаем на выходе.
-
-    Одиночные * и _ сознательно НЕ трогаем: в школьных заданиях это
-    умножение («3 * 4») и пропуски («I __ nine») — они важнее разметки.
-    """
-    cleaned = _MD_HEADING.sub("", text)
-    cleaned = _MD_BOLD.sub(r"\1", cleaned)
-    cleaned = _MD_BULLET.sub(r"\1— ", cleaned)
-    cleaned = cleaned.replace("`", "")
-    # Таблицы в чате нечитаемы совсем: убираем разделители, оставляем текст.
-    cleaned = _MD_TABLE_EDGE.sub("", cleaned)
-    cleaned = re.sub(r"^\s*\|[\s:|-]+\|?\s*$", "", cleaned, flags=re.MULTILINE)
-    # Пустых строк подряд больше двух не нужно.
-    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
-    return cleaned.strip()
-
-
-# Фразы-«обёртки», после удаления которых остаётся собственно текст задания.
-_HOMEWRK_FILLER = (
-    "помоги", "помощь", "помогите", "подскажи", "реши", "решить", "объясни",
-    "с домашкой", "домашн", "дз", "задани",
-    "по английскому", "по математике", "по русскому",
-    "пожалуйста", "плиз", "мне", "надо", "нада", "нужн", "школьн",
-)
-
-
-def _homework_task_text(text: str) -> str:
-    """Текст задания из сообщения. Пустая строка — просто просьба о помощи.
-
-    «Помоги с домашкой» — приглашение прислать задание, а
-    «помоги с домашкой: вставь am/is/are — I __ nine» — уже само задание,
-    которое надо разбирать сразу, без лишнего round-trip.
-    """
-    cleaned = text.lower()
-    for kw in _HOMEWRK_FILLER:
-        cleaned = cleaned.replace(kw, " ")
-    cleaned = " ".join(cleaned.split()).strip(" .,!?:;-–—\"'«»")
-    return cleaned if len(cleaned) >= 12 else ""
-
-
-HOMEWORK_INVITE = (
-    "Помощь со школьной домашкой у нас бесплатная 😊 Пришлите фото задания "
-    "или напишите его текстом — я не дам готовый ответ, а объясню на похожем "
-    "примере и научу решать самостоятельно."
-)
-
-HOMEWORK_TEXT_FALLBACK = (
-    "Что-то не получилось разобрать задание 🙏 Пришлите его фото или "
-    "переформулируйте текстом — обязательно помогу."
-)
-
-
-async def explain_homework_image(
-    image_bytes: bytes, content_type: str, note: str = ""
-) -> str | None:
-    """Разбор фотографии задания. None — модель не смогла помочь.
-
-    Общая точка для мини-приложения и для чата: раньше vision работал только
-    в мини-приложении, а на фото в чате бот отвечал «опишите текстом» — то
-    есть отказывался от того, что уже умел.
-    """
-    messages = [
-        {"role": "system", "content": _homework_system_prompt()},
-        {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": _homework_user_prompt(note)},
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": (
-                            f"data:{content_type};base64,"
-                            f"{base64.b64encode(image_bytes).decode('ascii')}"
-                        )
-                    },
-                },
-            ],
-        },
-    ]
-    reply = await get_gateway().vision(messages, temperature=0.2, max_tokens=1200)
-    return _strip_markdown(reply) if reply else None
+    return homework._homework_user_prompt(note)
 
 
 def _admin_authorized(request: Request) -> bool:
