@@ -139,3 +139,20 @@ async def test_explain_homework_text_uses_gateway(monkeypatch):
     assert messages[0]["role"] == "system"
     assert "вставь am/is/are" in messages[1]["content"].lower()
     assert max_tokens and max_tokens >= 1000
+
+
+@pytest.mark.asyncio
+async def test_intent_refiner_never_overrides_homework(monkeypatch):
+    """LLM-рефайнер не должен уводить домашку в QUESTION — иначе задание
+    попадает в консультацию, которая решает за ребёнка."""
+    from app import ai_core
+    from app import intent as I
+    from app.memory import Conversation
+
+    async def fake_refine(text, history, vault=None):
+        return I.QUESTION
+
+    monkeypatch.setattr(ai_core.intent_ai, "refine", fake_refine)
+    conv = Conversation(user_id="test:refine")
+    intent = await ai_core._detect_intent(conv, "помоги с домашкой: вставь am/is/are — I __ nine")
+    assert intent == I.HOMEWORK
