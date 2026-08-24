@@ -6440,6 +6440,10 @@ BLOG_POST_32 = dict(BLOG_FEED, **{
         ("h2", "Пожарная станция: техника, которую можно потрогать"),
         ("p", "На пожарной станции всё было по-настоящему: машины, гидранты, экипировка и рассказы спасателей. Дети увидели, как устроена работа людей, которые приходят на помощь, — и увезли домой не только впечатления, но и живые темы для обсуждения на занятиях."),
         ("html", '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0">'
+                 '<img src="/media/life/2026-06--canon/9G6A4289.900.webp" alt="Ученики Фоксинбурга у здания пожарной станции, июнь 2026" loading="lazy" style="width:100%;height:auto;border-radius:16px">'
+                 '<img src="/media/life/2026-06--canon/9G6A4238.900.webp" alt="Ученица Фоксинбурга в фирменной кепке на экскурсии, июнь 2026" loading="lazy" style="width:100%;height:auto;border-radius:16px">'
+                 '</div>'),
+        ("html", '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0">'
                  '<img src="/media/life/2026-06--canon/9G6A3689.900.webp" alt="Ученики Фоксинбурга на экскурсии: Ю-Клиника и пожарная станция" loading="lazy" style="width:100%;height:auto;border-radius:16px">'
                  '<img src="/media/life/2026-06--canon/9G6A3861.900.webp" alt="Ученики Фоксинбурга на экскурсии в июне 2026" loading="lazy" style="width:100%;height:auto;border-radius:16px">'
                  '</div>'),
