@@ -196,3 +196,12 @@ def test_format_tutor_reply_splits_sections():
     assert "\n\n💡" in out
     assert "📘 Правило\nТекст правила." in out
     assert "💡 Подсказка\nОбрати внимание." in out
+
+
+def test_prompt_requires_single_example_in_task_language():
+    p = _homework_system_prompt().lower()
+    assert "одно похожее задание" in p
+    assert "не несколько" in p
+    # Для английского пример — на английском, объяснение по-русски.
+    assert "на английском" in p
+    assert "по-русски" in p
