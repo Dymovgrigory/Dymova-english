@@ -164,20 +164,94 @@ _BRANCH_CONTACTS = {
 
 def _homework_system_prompt() -> str:
     return (
-        "Ты помогаешь ученику разобраться с домашним заданием. Не давай "
-        "готовых ответов и не решай задание за него: объясняй, как к нему "
-        "подступиться, давай подсказки, задавай наводящие вопросы и приводи "
-        "короткий пример на похожем материале."
+        "Ты — Фокси, педагог-наставник, который профессионально помогает "
+        "школьнику с домашним заданием (английский язык и другие школьные "
+        "предметы). Главное правило: не давай готовых ответов и не решай "
+        "задание за него — учи выполнять его самостоятельно.\n"
+        "Структура каждого ответа:\n"
+        "1) Назови тему и правило, которое проверяет задание, и объясни его "
+        "простыми словами.\n"
+        "2) Придумай ПОХОЖЕЕ задание (другие слова и числа, НЕ из задания "
+        "ученика) и реши его пошагово, комментируя, почему делается именно "
+        "так. Этот пример — главный обучающий приём.\n"
+        "3) Дай план из 2–4 шагов, как ученику решить СВОЁ задание, и "
+        "подсказки, на что обратить внимание.\n"
+        "4) Заверши вопросом: предложи ученику попробовать и написать, что "
+        "получилось.\n"
+        "Тон: добрый и поддерживающий, на «ты», короткие абзацы, язык "
+        "понятный ребёнку 7–15 лет. Отвечай по-русски."
     )
 
 
 def _homework_user_prompt(note: str) -> str:
     extra = f" Дополнительная заметка: {note}." if note else ""
     return (
-        "Не давай готовые ответы, не решай за ребёнка и помоги понять, как "
-        "это сделать самостоятельно. Покажи короткий пример и объясни шаги."
+        "Разбери задание с фото. Не давай готовые ответы и не решай за "
+        "ребёнка: сначала объясни правило, затем придумай похожий пример и "
+        "реши его по шагам, потом дай план, как выполнить своё задание "
+        "самостоятельно."
         f"{extra}"
     )
+
+
+def _homework_text_user_prompt(task_text: str) -> str:
+    return (
+        "Вот задание ученика текстом:\n«" + task_text + "»\n"
+        "Не давай готовые ответы и не решай за ребёнка: сначала объясни "
+        "правило, затем придумай похожий пример (другие слова и числа) и "
+        "реши его по шагам, потом дай план, как выполнить своё задание "
+        "самостоятельно."
+    )
+
+
+async def explain_homework_text(task_text: str) -> str | None:
+    """Разбор задания, присланного текстом. None — модель не смогла помочь.
+
+    Та же педагогика, что и у фото-разбора: объяснение на придуманном
+    примере, чтобы ребёнок решил своё задание сам.
+    """
+    messages = [
+        {"role": "system", "content": _homework_system_prompt()},
+        {"role": "user", "content": _homework_text_user_prompt(task_text)},
+    ]
+    return await get_gateway().complete(
+        ROLE_REASONING, messages, temperature=0.3, max_tokens=1200
+    )
+
+
+# Фразы-«обёртки», после удаления которых остаётся собственно текст задания.
+_HOMEWRK_FILLER = (
+    "помоги", "помощь", "помогите", "подскажи", "реши", "решить", "объясни",
+    "с домашкой", "домашн", "дз", "задани",
+    "по английскому", "по математике", "по русскому",
+    "пожалуйста", "плиз", "мне", "надо", "нада", "нужн", "школьн",
+)
+
+
+def _homework_task_text(text: str) -> str:
+    """Текст задания из сообщения. Пустая строка — просто просьба о помощи.
+
+    «Помоги с домашкой» — приглашение прислать задание, а
+    «помоги с домашкой: вставь am/is/are — I __ nine» — уже само задание,
+    которое надо разбирать сразу, без лишнего round-trip.
+    """
+    cleaned = text.lower()
+    for kw in _HOMEWRK_FILLER:
+        cleaned = cleaned.replace(kw, " ")
+    cleaned = " ".join(cleaned.split()).strip(" .,!?:;-–—\"'«»")
+    return cleaned if len(cleaned) >= 12 else ""
+
+
+HOMEWORK_INVITE = (
+    "Помощь со школьной домашкой у нас бесплатная 😊 Пришлите фото задания "
+    "или напишите его текстом — я не дам готовый ответ, а объясню на похожем "
+    "примере и научу решать самостоятельно."
+)
+
+HOMEWORK_TEXT_FALLBACK = (
+    "Что-то не получилось разобрать задание 🙏 Пришлите его фото или "
+    "переформулируйте текстом — обязательно помогу."
+)
 
 
 async def explain_homework_image(
@@ -919,7 +993,30 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             return
 
         if "домаш" in low or "дз" in low:
-            reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
+            conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+            task_text = _homework_task_text(text)
+            if task_text:
+                conv.awaiting_homework = False
+                get_store().save(conv)
+                reply = await _reply_while_alive(
+                    telegram, chat_id, lambda: explain_homework_text(task_text)
+                ) or HOMEWORK_TEXT_FALLBACK
+            else:
+                conv.awaiting_homework = True
+                get_store().save(conv)
+                reply = HOMEWORK_INVITE
+            await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_buttons(text, reply) or None)
+            return
+
+        # После приглашения «пришлите задание» следующий текст — это и есть
+        # задание, даже без слов «домашка»: сразу разбираем в режиме тьютора.
+        conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+        if conv.awaiting_homework and I.detect_intent(text) in (None, I.QUESTION, I.HOMEWORK):
+            conv.awaiting_homework = False
+            get_store().save(conv)
+            reply = await _reply_while_alive(
+                telegram, chat_id, lambda: explain_homework_text(text)
+            ) or HOMEWORK_TEXT_FALLBACK
             await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_buttons(text, reply) or None)
             return
 
@@ -1315,9 +1412,29 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                     buttons=_branch_admin_buttons(),
                 )
         elif I.detect_intent(text) == I.HOMEWORK:
-            reply = "Помощь с домашкой у нас бесплатная. Пришлите фото задания, и я подскажу, как его разобрать."
+            conv = get_store().get(user_id)
+            task_text = _homework_task_text(text)
+            if task_text:
+                conv.awaiting_homework = False
+                get_store().save(conv)
+                reply = await _reply_while_alive(
+                    max_client, user_id, lambda: explain_homework_text(task_text)
+                ) or HOMEWORK_TEXT_FALLBACK
+            else:
+                conv.awaiting_homework = True
+                get_store().save(conv)
+                reply = HOMEWORK_INVITE
             buttons = _link_button_rows(text, reply)
             await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=buttons or None)
+        elif get_store().get(user_id).awaiting_homework and I.detect_intent(text) in (None, I.QUESTION):
+            # Ждали задание после приглашения — пришёл текст без триггеров.
+            conv = get_store().get(user_id)
+            conv.awaiting_homework = False
+            get_store().save(conv)
+            reply = await _reply_while_alive(
+                max_client, user_id, lambda: explain_homework_text(text)
+            ) or HOMEWORK_TEXT_FALLBACK
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_link_button_rows(text, reply) or None)
         elif low in ("/menu", "меню"):
             await _send_max_logged(max_client, user_id, "Чем помочь? 😊", crm_ctx, buttons=_main_menu(user_id))
         else:
