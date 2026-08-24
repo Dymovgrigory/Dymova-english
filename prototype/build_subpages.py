@@ -3953,6 +3953,7 @@ PAGES["page_otzyvy.html"] = {
         ("chat", "100%", "Отвечаем на обратную связь"),
     ],
     "extra_sections": [
+        media_library.video_reviews_block(),
         '<section class="fxb-section"><div class="fxb-wrap"><div class="fxb-article-body">'
         "<h2>О чём чаще всего пишут родители</h2>"
         "<p>Мы не публикуем здесь чужие тексты дословно — полные отзывы читайте в карточках на Яндекс.Картах (ссылки ниже). Но темы повторяются из отзыва в отзыв, и вот как они звучат:</p>"
