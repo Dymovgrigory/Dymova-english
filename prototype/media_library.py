@@ -416,7 +416,7 @@ VIDEO_REVIEWS_CSS = """
 def video_reviews_block(limit: int | None = None) -> str:
     """Карусель видео-отзывов родителей (реальные ролики, media/reviews/)."""
     names = VIDEO_REVIEWS[:limit] if limit else VIDEO_REVIEWS
-    cards = []
+    cards, schemas = [], []
     for n in names:
         cards.append(
             '<div class="fxb-vr-card">'
@@ -432,15 +432,15 @@ def video_reviews_block(limit: int | None = None) -> str:
             "thumbnailUrl": f"{SITE}/media/reviews/{n}.poster.webp",
             "inLanguage": "ru", "isFamilyFriendly": True,
         }, ensure_ascii=False)
-        cards.append(f'<script type="application/ld+json">{payload}</script>')
+        schemas.append(f'<script type="application/ld+json">{payload}</script>')
     return (
         '<section id="fxb-vreviews"><div class="fxb-vr-wrap">'
         '<span class="fxb-vr-kicker">Видео-отзывы</span>'
         "<h2>Родители рассказывают сами</h2>"
         '<p class="fxb-vr-lead">Настоящие видео-отзывы родителей наших учеников — без сценария и монтажа.</p>'
-        f'<div class="fxb-vr-row">{"".join(cards[:len(names)])}</div>'
+        f'<div class="fxb-vr-row">{"".join(cards)}</div>'
         '<p class="fxb-vr-note">Листайте вбок — все отзывы сняты родителями добровольно. Текстовые отзывы — ниже и на Яндекс.Картах.</p>'
         "</div>"
-        + "".join(cards[len(names):])
+        + "".join(schemas)
         + f"<style>{VIDEO_REVIEWS_CSS}</style></section>"
     )
