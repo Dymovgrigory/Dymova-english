@@ -116,6 +116,8 @@ PAGE_ALIASES = {
     "page_blog_letnij_intensiv_itogi_i_plany.html": "blog-letnij-intensiv-itogi-i-plany",
     "page_blog_vesennyaya_akademiya_2026_kak_eto_bylo.html": "blog-vesennyaya-akademiya-2026-kak-eto-bylo",
     "page_blog_ekskursii_yu_klinika_pozharnaya_stanciya.html": "blog-ekskursii-yu-klinika-pozharnaya-stanciya",
+    "page_blog_halloween_v_foxinburge_kak_eto_bylo.html": "blog-halloween-v-foxinburge-kak-eto-bylo",
+    "page_blog_novyj_god_2026_v_foxinburge.html": "blog-novyj-god-2026-v-foxinburge",
     "page_blog_oshibki_v_anglijskom_top_15.html": "blog-oshibki-v-anglijskom-top-15",
     "page_blog_audirovanie_kak_nauchitsya_ponimat.html": "blog-audirovanie-kak-nauchitsya-ponimat",
     "page_blog_anglijskij_pered_1_sentyabrya.html": "blog-anglijskij-pered-1-sentyabrya",
