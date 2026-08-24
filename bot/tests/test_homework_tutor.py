@@ -29,6 +29,35 @@ def test_system_prompt_teaches_via_invented_example():
     assert "самостоятельно" in p
 
 
+def test_system_prompt_requires_clean_structure():
+    p = _homework_system_prompt().lower()
+    # Формат для мессенджера: абзацы, эмодзи-заголовки, запрет markdown.
+    assert "абзац" in p
+    assert "пустая строка" in p
+    assert "эмодзи" in p
+    assert "никакого markdown" in p
+
+
+def test_strip_markdown_removes_markup():
+    from app.main import _strip_markdown
+
+    raw = "## Правило\n\n**Глагол to be** меняется так:\n* I am\n* You are\n\n\n\n`Пример` готов."
+    cleaned = _strip_markdown(raw)
+    assert "**" not in cleaned
+    assert "#" not in cleaned
+    assert "`" not in cleaned
+    assert "— I am" in cleaned
+    assert "\n\n\n" not in cleaned
+    assert "Глагол to be меняется так" in cleaned
+
+
+def test_strip_markdown_keeps_math_and_blanks():
+    from app.main import _strip_markdown
+
+    # Одиночные * (умножение) и __ (пропуски в заданиях) — не разметка.
+    assert _strip_markdown("3 * 4 = 12, I __ nine.") == "3 * 4 = 12, I __ nine."
+
+
 def test_user_prompt_forbids_solving():
     p = _homework_user_prompt("").lower()
     assert "не давай готовые ответы" in p

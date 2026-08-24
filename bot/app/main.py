@@ -14,6 +14,7 @@ import hashlib
 import hmac
 import json
 import logging
+import re
 import time
 import uuid
 from urllib.parse import urlsplit
@@ -178,8 +179,17 @@ def _homework_system_prompt() -> str:
         "подсказки, на что обратить внимание.\n"
         "4) Заверши вопросом: предложи ученику попробовать и написать, что "
         "получилось.\n"
-        "Тон: добрый и поддерживающий, на «ты», короткие абзацы, язык "
-        "понятный ребёнку 7–15 лет. Отвечай по-русски."
+        "Тон: добрый и поддерживающий, на «ты», язык понятный ребёнку "
+        "7–15 лет. Отвечай по-русски.\n"
+        "Оформление ответа (важно — читает ребёнок в мессенджере):\n"
+        "- разбивай ответ на короткие абзацы по 1–3 предложения, между "
+        "частями — пустая строка;\n"
+        "- каждую часть начинай с эмодзи-заголовка: 📘 правило, ✏️ пример "
+        "с решением, ✅ план для твоего задания, 💡 подсказка, ❓ вопрос "
+        "в конце;\n"
+        "- шаги нумеруй просто: 1) 2) 3), списки — через дефис;\n"
+        "- НИКАКОГО markdown: без **, ##, _, `, без заголовков #, без "
+        "таблиц. Только чистый текст, абзацы и эмодзи."
     )
 
 
@@ -214,9 +224,38 @@ async def explain_homework_text(task_text: str) -> str | None:
         {"role": "system", "content": _homework_system_prompt()},
         {"role": "user", "content": _homework_text_user_prompt(task_text)},
     ]
-    return await get_gateway().complete(
+    reply = await get_gateway().complete(
         ROLE_REASONING, messages, temperature=0.3, max_tokens=1200
     )
+    return _strip_markdown(reply) if reply else None
+
+
+_MD_BOLD = re.compile(r"\*\*(.+?)\*\*")
+_MD_HEADING = re.compile(r"^#{1,6}\s*", re.MULTILINE)
+_MD_BULLET = re.compile(r"^(\s*)[*+]\s+", re.MULTILINE)
+_MD_TABLE_EDGE = re.compile(r"^\s*\||\|\s*$", re.MULTILINE)
+
+
+def _strip_markdown(text: str) -> str:
+    """Чистим ответ модели от markdown-разметки.
+
+    MAX/Telegram-чаты школы не рендерят markdown: «**правило**» приходит
+    ребёнку со звёздочками и читается как мусор. Промпт запрещает разметку,
+    но модели периодически её вставляют — зачищаем на выходе.
+
+    Одиночные * и _ сознательно НЕ трогаем: в школьных заданиях это
+    умножение («3 * 4») и пропуски («I __ nine») — они важнее разметки.
+    """
+    cleaned = _MD_HEADING.sub("", text)
+    cleaned = _MD_BOLD.sub(r"\1", cleaned)
+    cleaned = _MD_BULLET.sub(r"\1— ", cleaned)
+    cleaned = cleaned.replace("`", "")
+    # Таблицы в чате нечитаемы совсем: убираем разделители, оставляем текст.
+    cleaned = _MD_TABLE_EDGE.sub("", cleaned)
+    cleaned = re.sub(r"^\s*\|[\s:|-]+\|?\s*$", "", cleaned, flags=re.MULTILINE)
+    # Пустых строк подряд больше двух не нужно.
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
 
 
 # Фразы-«обёртки», после удаления которых остаётся собственно текст задания.
@@ -281,7 +320,8 @@ async def explain_homework_image(
             ],
         },
     ]
-    return await get_gateway().vision(messages, temperature=0.2, max_tokens=1200)
+    reply = await get_gateway().vision(messages, temperature=0.2, max_tokens=1200)
+    return _strip_markdown(reply) if reply else None
 
 
 def _admin_authorized(request: Request) -> bool:
