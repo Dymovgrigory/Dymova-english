@@ -2403,7 +2403,7 @@ PAGES["page_ekskursii.html"] = {
                 light=True,
             ),
             media_library.media_wall(
-                series="2026-06--canon", limit=24,
+                series="2026-06--canon", limit=39,
                 title="Фотографии экскурсий", kicker="Июнь 2026",
             ),
         ),
