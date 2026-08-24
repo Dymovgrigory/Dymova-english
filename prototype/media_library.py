@@ -393,3 +393,54 @@ def video_jsonld(it: dict, title: str) -> str:
         del data["uploadDate"]
     payload = json.dumps(data, ensure_ascii=False)
     return f'<script type="application/ld+json">{payload}</script>'
+
+
+# ── Видео-отзывы родителей (папка «видео-отзывы», август 2026) ──────────
+VIDEO_REVIEWS = ["IMG_2485", "IMG_2486", "IMG_2488", "IMG_2489",
+                 "IMG_2490", "IMG_2491", "IMG_2492"]
+
+VIDEO_REVIEWS_CSS = """
+#fxb-vreviews{font-family:'Montserrat',Arial,sans-serif;padding:70px 24px;background:linear-gradient(180deg,#f8f5fc 0%,#fff 100%)}
+#fxb-vreviews .fxb-vr-wrap{max-width:1200px;margin:0 auto}
+#fxb-vreviews .fxb-vr-kicker{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#662d92;background:rgba(102,45,146,.08);padding:9px 16px;border-radius:100px}
+#fxb-vreviews .fxb-vr-kicker::before{content:"";width:7px;height:7px;border-radius:50%;background:#c24712}
+#fxb-vreviews h2{font-weight:800;font-size:clamp(26px,3.6vw,40px);line-height:1.1;letter-spacing:-.02em;color:#241a36;margin:16px 0 10px}
+#fxb-vreviews .fxb-vr-lead{color:#6f6883;font-size:16px;font-weight:500;max-width:640px;margin:0 0 30px}
+#fxb-vreviews .fxb-vr-row{display:grid;grid-auto-flow:column;grid-auto-columns:min(240px,62vw);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 4px 18px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+#fxb-vreviews .fxb-vr-card{scroll-snap-align:start;position:relative;border-radius:20px;overflow:hidden;background:#241a36;box-shadow:0 18px 36px -20px rgba(57,40,82,.5);aspect-ratio:9/16}
+#fxb-vreviews video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#241a36}
+#fxb-vreviews .fxb-vr-note{margin:14px 0 0;font-size:13px;color:#6f6883;font-weight:500}
+"""
+
+
+def video_reviews_block(limit: int | None = None) -> str:
+    """Карусель видео-отзывов родителей (реальные ролики, media/reviews/)."""
+    names = VIDEO_REVIEWS[:limit] if limit else VIDEO_REVIEWS
+    cards = []
+    for n in names:
+        cards.append(
+            '<div class="fxb-vr-card">'
+            f'<video controls playsinline preload="none" poster="/media/reviews/{n}.poster.webp">'
+            f'<source src="/media/reviews/{n}.mp4" type="video/mp4">'
+            "</video></div>"
+        )
+        payload = json.dumps({
+            "@context": "https://schema.org", "@type": "VideoObject",
+            "name": "Видео-отзыв родителя о школе Фоксинбург",
+            "description": "Родитель ученика языковой школы Фоксинбург (Долгопрудный) делится впечатлением о занятиях.",
+            "contentUrl": f"{SITE}/media/reviews/{n}.mp4",
+            "thumbnailUrl": f"{SITE}/media/reviews/{n}.poster.webp",
+            "inLanguage": "ru", "isFamilyFriendly": True,
+        }, ensure_ascii=False)
+        cards.append(f'<script type="application/ld+json">{payload}</script>')
+    return (
+        '<section id="fxb-vreviews"><div class="fxb-vr-wrap">'
+        '<span class="fxb-vr-kicker">Видео-отзывы</span>'
+        "<h2>Родители рассказывают сами</h2>"
+        '<p class="fxb-vr-lead">Настоящие видео-отзывы родителей наших учеников — без сценария и монтажа.</p>'
+        f'<div class="fxb-vr-row">{"".join(cards[:len(names)])}</div>'
+        '<p class="fxb-vr-note">Листайте вбок — все отзывы сняты родителями добровольно. Текстовые отзывы — ниже и на Яндекс.Картах.</p>'
+        "</div>"
+        + "".join(cards[len(names):])
+        + f"<style>{VIDEO_REVIEWS_CSS}</style></section>"
+    )
