@@ -58,6 +58,34 @@ def test_strip_markdown_keeps_math_and_blanks():
     assert _strip_markdown("3 * 4 = 12, I __ nine.") == "3 * 4 = 12, I __ nine."
 
 
+@pytest.mark.asyncio
+async def test_ai_core_routes_homework_to_tutor(monkeypatch):
+    """Мини-приложение и виджет идут через ai_core.handle_message — домашка
+    там тоже обязана попадать в тьютора, а не в общую консультацию."""
+    from app import ai_core, homework
+    from app import intent as I
+    from app.memory import Conversation
+
+    async def fake_tutor(task_text):
+        fake_tutor.seen = task_text
+        return "📘 Правило: глагол to be..."
+
+    monkeypatch.setattr(homework, "explain_homework_text", fake_tutor)
+    conv = Conversation(user_id="miniapp:test")
+    reply = await ai_core._route(conv, "помоги с домашкой: вставь am/is/are — I __ nine", None, I.HOMEWORK)
+    assert reply.startswith("📘")
+    assert "am/is/are" in fake_tutor.seen
+
+    reply = await ai_core._route(conv, "помоги с домашкой", None, I.HOMEWORK)
+    assert reply == homework.HOMEWORK_INVITE
+    assert conv.awaiting_homework is True
+
+    # Следующее сообщение без триггеров — само задание.
+    reply = await ai_core._route(conv, "Вставь was/were: we __ happy.", None, None)
+    assert reply.startswith("📘")
+    assert conv.awaiting_homework is False
+
+
 def test_user_prompt_forbids_solving():
     p = _homework_user_prompt("").lower()
     assert "не давай готовые ответы" in p
@@ -95,7 +123,7 @@ def test_invite_mentions_free_and_no_ready_answers():
 
 @pytest.mark.asyncio
 async def test_explain_homework_text_uses_gateway(monkeypatch):
-    from app import main
+    from app import homework
 
     calls = []
 
@@ -104,7 +132,7 @@ async def test_explain_homework_text_uses_gateway(monkeypatch):
             calls.append((role, messages, temperature, max_tokens))
             return "Правило: глагол to be..."
 
-    monkeypatch.setattr(main, "get_gateway", lambda: FakeGateway())
+    monkeypatch.setattr(homework, "get_gateway", lambda: FakeGateway())
     reply = await explain_homework_text("Вставь am/is/are: I __ nine.")
     assert reply.startswith("Правило")
     role, messages, temperature, max_tokens = calls[0]

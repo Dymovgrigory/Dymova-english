@@ -28,6 +28,7 @@ from app.max_client import get_max
 from app import critic
 from app import emotion
 from app import grammar
+from app import homework
 from app import intent_ai
 from app import pii
 from app import recall
@@ -380,11 +381,14 @@ async def _consult(conv: Conversation, text: str, allow_web: bool = False, schoo
         web_ctx = await _web_context_for(text, school_related=school_related)
         if web_ctx:
             context = (kb_context + "\n\n" if kb_context else "") + web_ctx
-    return await _consult_with_context(
+    reply = await _consult_with_context(
         conv, text, context, kb_score=top_score,
         allow_web_retry=allow_web, school_related=school_related,
         search_text=search_text,
     )
+    # Зачистка markdown-мусора (см. homework._strip_markdown): консультации
+    # идут в те же чаты, что и тьютор, — подача должна быть одинаково чистой.
+    return homework._strip_markdown(reply) if reply else reply
 
 
 # Разбор потребности выполняется ДО генерации ответа, поэтому его дедлайн
@@ -904,6 +908,20 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     if intent == I.HANDOFF:
         await hand_off(max_client, conv, reason="запрос оператора")
         return _handoff_reply()
+
+    # 3а. Домашка — единый тьютор (мини-приложение, виджет, мессенджеры).
+    #     Раньше эта ветка жила только в вебхуках MAX/Telegram, а мини-апп
+    #     отвечал общей консультацией с markdown-мусором (сессия 78).
+    if intent == I.HOMEWORK or (
+        conv.awaiting_homework and intent in (None, "", I.QUESTION, I.HOMEWORK)
+    ):
+        task_text = homework._homework_task_text(text)
+        if task_text or conv.awaiting_homework:
+            conv.awaiting_homework = False
+            reply = await homework.explain_homework_text(task_text or text)
+            return reply or homework.HOMEWORK_TEXT_FALLBACK
+        conv.awaiting_homework = True
+        return homework.HOMEWORK_INVITE
 
     # 4. Возражение — отрабатываем по сценарию и подталкиваем к диагностике.
     if intent == I.OBJECTION:
