@@ -16,3 +16,9 @@ secrets/
 _media_review/
 prototype/media/wow-src/
 .playwright-mcp/
+
+# SEO-инструменты: данные и venv — не в git (скрипты и README коммитим)
+seo/.venv/
+seo/*.sqlite
+seo/*.csv
+seo/report.md
