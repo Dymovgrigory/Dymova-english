@@ -62,6 +62,7 @@
         <a href="/anglijskij-dlya-vzroslyh">Английский для взрослых</a>
         <a href="/nemeckij-yazyk">Немецкий язык</a>
         <a href="/kitajskij-yazyk">Китайский язык</a>
+        <a href="/ispanskij-yazyk">Испанский язык</a>
         <a href="/online-zanyatiya">Онлайн-занятия</a>
         <a href="/podderzhivayushchie-online">Поддерживающие онлайн</a>
         <a href="/standartnye-offline">Стандартные офлайн</a>
@@ -84,7 +85,15 @@
         <a href="/vakansii">Вакансии</a>
         <a href="/kontakty">Контакты</a>
         <a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>
-        <a href="/letnyaya-akademiya">Летняя Академия</a>
+        <details class="fxb-ft-dd">
+          <summary>Программы</summary>
+          <a href="/letnyaya-akademiya">Летняя академия</a>
+          <a href="/vesennyaya-akademiya-2026">Весенняя академия</a>
+          <a href="/prazdniki">Праздники</a>
+          <a href="/ekskursii">Экскурсии</a>
+          <a href="/vypusknoj-2026">Выпускной</a>
+          <a href="/meropriyatiya">Мероприятия</a>
+        </details>
         <a href="https://lms.dymova-english.ru">Личный кабинет</a>
       </div>
 
@@ -131,6 +140,14 @@
 #fxb-footer .fxb-ft-col h4{font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
 #fxb-footer .fxb-ft-col a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
 #fxb-footer .fxb-ft-col a:hover{color:var(--yellow)}
+#fxb-footer .fxb-ft-dd{font-size:13px}
+#fxb-footer .fxb-ft-dd summary{cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;font-weight:500;list-style:none;display:flex;align-items:center;gap:6px;transition:color .2s}
+#fxb-footer .fxb-ft-dd summary::-webkit-details-marker{display:none}
+#fxb-footer .fxb-ft-dd summary::after{content:"\25BE";font-size:10px;transition:transform .2s}
+#fxb-footer .fxb-ft-dd[open] summary::after{transform:rotate(180deg)}
+#fxb-footer .fxb-ft-dd summary:hover{color:var(--yellow)}
+#fxb-footer .fxb-ft-dd a{display:block;padding-left:12px;margin-top:8px}
+#fxb-footer .fxb-ft-dd:not([open]) a{display:none}
 #fxb-footer .fxb-ft-text{color:rgba(255,255,255,.4);font-size:12px;font-weight:500;margin-top:4px}
 #fxb-footer .fxb-ft-bottom{display:flex;align-items:center;justify-content:space-between;padding:20px 0;flex-wrap:wrap;gap:12px}
 #fxb-footer .fxb-ft-legal{display:flex;gap:16px;font-size:11.5px;color:rgba(255,255,255,.3);font-weight:500}

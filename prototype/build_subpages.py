@@ -240,6 +240,8 @@ TEAM_CSS = """
 #fxb-team .fxb-accent::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.36em;background:var(--yellow);z-index:-1;border-radius:6px;transform:rotate(-1.2deg)}
 #fxb-team .fxb-sub{max-width:660px;color:var(--muted);font-size:17px;font-weight:500}
 #fxb-team .fxb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+/* Одиночная карточка педагога — по центру, а не влево */
+#fxb-team .fxb-grid:has(> .fxb-card:only-child){grid-template-columns:minmax(0,380px);justify-content:center}
 #fxb-team .fxb-card{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:24px;overflow:hidden;box-shadow:0 18px 40px -22px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;opacity:0;transform:translateY(34px)}
 #fxb-team .fxb-card.fxb-in{opacity:1;transform:none}
 #fxb-team .fxb-card:hover{transform:translateY(-8px);box-shadow:0 30px 56px -24px rgba(102,45,146,.5)}
@@ -1380,9 +1382,9 @@ PAGES["page_preparation.html"] = {
     "teachers": ENGLISH_TEACHERS,
     "prices": True,
     "price_title": "Стоимость занятий",
-    "price_lead": "Подготовка к школе и занятия по общим предметам (математика, русский язык, чтение) — 5 600 ₽/мес.",
+    "price_lead": "Подготовка к школе и занятия по общим предметам (математика, русский язык, чтение) — 7 000 ₽/мес.",
     "price_cards": [
-        ("Месяц занятий", "", '5 600 ₽<span>/мес</span>', "Подготовка к школе и общие предметы: математика, русский язык, чтение"),
+        ("Месяц занятий", "", '7 000 ₽<span>/мес</span>', "Подготовка к школе и общие предметы: математика, русский язык, чтение"),
     ],
     "lead_subject": "Подготовка к школе",
     "lead_hero_window": "Блок героя",

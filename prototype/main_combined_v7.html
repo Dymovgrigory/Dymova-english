@@ -14,16 +14,14 @@
   Назначение: Полностью кастомный hero-блок — единый градиент, без видимых разделителей Tilda.
   Включает в себя:
     - Логотип + бейдж "Хорошее место" Яндекс
-    - Навигационное меню (с выпадающими подменю "Наши курсы" и "Направления")
+    - Навигационное меню (с выпадающими подменю "Наши курсы", "Направления", "Программы" и др.)
     - Контактная строка (адреса филиалов, телефоны, часы работы)
-    - Летние программы (ряд тегов-ссылок на летние курсы)
     - Слоган с анимированной лисой
   
   Что можно менять:
     - Ссылки навигации (href) — менять пункты меню и куда ведут
     - Телефоны и адреса в контактной строке
-    - Ссылки на летние программы (добавлять/убирать теги)
-    - Текст слогана и подзаголовка (возраст, описание школы)
+    - Текст слогана и подзаголовка
     - Цвета градиента в CSS (переменные --purple, --purple-2 и т.д.)
     - Бейдж Яндекс — type=award для "Хорошее место", type=rating для рейтинга
 
@@ -89,6 +87,18 @@
           <div class="fxb-dd-panel">
             <a href="/nemeckij-yazyk">Немецкий язык</a>
             <a href="/kitajskij-yazyk">Китайский язык</a>
+            <a href="/ispanskij-yazyk">Испанский язык</a>
+          </div>
+        </div>
+        <div class="fxb-dd">
+          <button class="fxb-dd-btn" type="button">Программы <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="fxb-dd-panel">
+            <a href="/letnyaya-akademiya">Летняя академия</a>
+            <a href="/vesennyaya-akademiya-2026">Весенняя академия</a>
+            <a href="/prazdniki">Праздники</a>
+            <a href="/ekskursii">Экскурсии</a>
+            <a href="/vypusknoj-2026">Выпускной</a>
+            <a href="/meropriyatiya">Мероприятия</a>
           </div>
         </div>
         <a href="/tseny">Цены</a>
@@ -139,39 +149,11 @@
       <a class="fxb-maxbot" href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">Max Bot</a>
     </div>
 
-    <!-- Летние программы — органично вписанный ряд тегов -->
-    <div class="fxb-summer fxb-anim" style="animation-delay:.3s">
-      <span class="fxb-summer-label">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
-        Летние программы</span>
-      <div class="fxb-summer-tags">
-        <a href="/letnyaya-akademiya">Летняя Академия</a>
-        <a href="/reading">Чтение</a>
-        <a href="/grammar">Грамматика</a>
-        <a href="/online-zanyatiya">Онлайн</a>
-        <a href="/podderzhivayushchie-online">Поддерживающие</a>
-        <a href="/standartnye-offline">Оффлайн</a>
-      </div>
-    </div>
-
     <!-- Слоган — большой центральный блок с лисой -->
     <div class="fxb-slogan">
       <img class="fxb-slogan-fox fxb-anim" style="animation-delay:.45s" src="/assets/brand/fox-head-yellow.webp" alt="" width="56" height="56" loading="lazy">
-      <h1 class="fxb-slogan-text fxb-anim" style="animation-delay:.55s">Подготовься к началу<br> учебного года <span class="fxb-life">вместе с Фоксинбург</span></h1>
-      <div class="fxb-intensive fxb-anim" style="animation-delay:.7s">
-        <div class="fxb-intensive-main">
-          <span class="fxb-intensive-badge">Интенсив</span>
-          <p class="fxb-intensive-title">«Вспомнить всё по школьному английскому»</p>
-          <p class="fxb-intensive-price">весь курс — <strong>5 500 ₽</strong></p>
-        </div>
-        <div class="fxb-intensive-side">
-          <p class="fxb-intensive-dates"><strong>24 — 28</strong>августа 2026</p>
-          <a class="fxb-intensive-btn" href="#zayavka" role="button"
-             data-fxb-zayavka
-             data-fxb-subject="Интенсив «Вспомнить всё по школьному английскому» — 5 500 ₽, 24–28 августа 2026"
-             data-fxb-window="Шапка главной — кнопка «Оставить заявку» (интенсив)">Оставить заявку</a>
-        </div>
-      </div>
+      <h1 class="fxb-slogan-text fxb-anim" style="animation-delay:.55s">ПРИХОДИ, УЧИСЬ, ДОСТИГАЙ!</h1>
+      <p class="fxb-slogan-sub fxb-anim" style="animation-delay:.7s"><span class="fxb-life">вместе с Фоксинбург!</span></p>
     </div>
   </div>
 </div>
@@ -253,17 +235,6 @@
 #fxb-hero .fxb-maxbot{font-size:12px;font-weight:800;color:#fff;background:var(--orange);padding:4px 14px;border-radius:100px;transition:background .2s;margin-left:4px}
 #fxb-hero .fxb-maxbot:hover{background:#d4623b}
 
-/* === SUMMER PROGRAMS (tags) === */
-#fxb-hero .fxb-summer{
-  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
-  padding:12px 0 8px;
-}
-#fxb-hero .fxb-summer-label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--orange);text-shadow:0 1px 8px rgba(0,0,0,.6);white-space:nowrap}
-#fxb-hero .fxb-summer-label svg{stroke:var(--orange)}
-#fxb-hero .fxb-summer-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
-#fxb-hero .fxb-summer-tags a{font-size:12.5px;font-weight:700;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.55);padding:5px 12px;border-radius:100px;border:1px solid rgba(255,255,255,.25);transition:all .2s;white-space:nowrap}
-#fxb-hero .fxb-summer-tags a:hover{color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
-
 /* === SLOGAN === */
 #fxb-hero .fxb-slogan{
   display:flex;flex-direction:column;align-items:center;text-align:center;
@@ -274,45 +245,7 @@
 #fxb-hero .fxb-slogan-text{font-size:clamp(28px,4.5vw,50px);font-weight:900;color:#fff;line-height:1.15;text-shadow:0 2px 26px rgba(0,0,0,.45);letter-spacing:-.01em}
 #fxb-hero .fxb-life{position:relative;display:inline-block}
 #fxb-hero .fxb-life::after{content:'';position:absolute;left:-5px;right:-5px;bottom:2px;height:38%;background:var(--yellow);opacity:.28;border-radius:4px;z-index:-1;transform-origin:left center;animation:fxbMark .7s cubic-bezier(.16,1,.3,1) 1.35s both}
-#fxb-hero .fxb-slogan-sub{font-size:18px;font-weight:600;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.6);max-width:480px;line-height:1.5}
-
-/* === INTENSIVE PROMO (шапка главной) === */
-#fxb-hero .fxb-intensive{
-  display:flex;align-items:center;gap:26px;
-  max-width:640px;padding:22px 28px;border-radius:20px;
-  background:rgba(20,13,36,.42);backdrop-filter:blur(6px);
-  border:1px solid rgba(252,249,81,.35);
-  box-shadow:0 10px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);
-}
-#fxb-hero .fxb-intensive-main{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:10px;flex:1 1 auto;min-width:0}
-#fxb-hero .fxb-intensive-side{display:flex;flex-direction:column;align-items:center;gap:12px;flex:0 0 auto;padding-left:24px;border-left:1px solid rgba(252,249,81,.25)}
-#fxb-hero .fxb-intensive-dates{
-  display:flex;flex-direction:column;align-items:center;line-height:1.15;
-  font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.6);white-space:nowrap;
-}
-#fxb-hero .fxb-intensive-dates strong{font-size:30px;font-weight:900;color:var(--yellow);letter-spacing:.01em}
-#fxb-hero .fxb-intensive-badge{
-  font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
-  color:#241a36;background:var(--yellow);padding:5px 16px;border-radius:999px;
-  box-shadow:0 4px 18px rgba(252,249,81,.45);
-}
-#fxb-hero .fxb-intensive-title{
-  font-size:clamp(19px,2.6vw,26px);font-weight:800;color:#fff;line-height:1.25;
-  text-shadow:0 2px 14px rgba(0,0,0,.5);
-}
-#fxb-hero .fxb-intensive-price{font-size:16px;font-weight:600;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.6)}
-#fxb-hero .fxb-intensive-price strong{font-size:1.35em;font-weight:900;color:var(--yellow)}
-#fxb-hero .fxb-intensive-btn{
-  display:inline-block;margin-top:4px;padding:15px 38px;border-radius:14px;
-  font-size:17px;font-weight:800;color:#241a36;text-decoration:none;
-  background:linear-gradient(135deg,var(--yellow) 0%,#ffd84d 100%);
-  box-shadow:0 8px 28px rgba(252,249,81,.45),0 2px 0 rgba(0,0,0,.15);
-  transition:transform .18s ease,box-shadow .18s ease;
-  animation:fxbCtaPulse 2.4s ease-in-out 1.6s infinite;
-}
-#fxb-hero .fxb-intensive-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 14px 36px rgba(252,249,81,.6),0 2px 0 rgba(0,0,0,.15)}
-#fxb-hero .fxb-intensive-btn:active{transform:translateY(0) scale(.98)}
-@keyframes fxbCtaPulse{0%,100%{box-shadow:0 8px 28px rgba(252,249,81,.45),0 2px 0 rgba(0,0,0,.15)}50%{box-shadow:0 8px 40px rgba(252,249,81,.7),0 2px 0 rgba(0,0,0,.15)}}
+#fxb-hero .fxb-slogan-sub{font-size:clamp(18px,2.4vw,26px);font-weight:800;color:var(--yellow);text-shadow:0 1px 10px rgba(0,0,0,.6);max-width:480px;line-height:1.5;letter-spacing:.01em}
 
 /* ========== MOBILE ========== */
 @media(max-width:960px){
@@ -330,19 +263,11 @@
   #fxb-hero .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
   #fxb-hero .fxb-burger{display:flex;margin-left:auto}
   #fxb-hero .fxb-actions{display:none}
-  #fxb-hero .fxb-summer{padding:10px 0 4px}
-  #fxb-hero .fxb-summer-tags{gap:4px}
-  #fxb-hero .fxb-summer-tags a{font-size:12px;padding:4px 10px}
   #fxb-hero .fxb-slogan{padding:32px 0 42px;gap:12px}
   #fxb-hero .fxb-slogan-fox{width:42px;height:42px}
   #fxb-hero .fxb-slogan-sub{font-size:15.5px}
-  #fxb-hero .fxb-intensive{max-width:100%;padding:16px 18px 20px;flex-direction:column;gap:14px}
-  #fxb-hero .fxb-intensive-main{align-items:center;text-align:center}
-  #fxb-hero .fxb-intensive-side{padding-left:0;padding-top:14px;border-left:none;border-top:1px solid rgba(252,249,81,.25);width:100%}
-  #fxb-hero .fxb-intensive-btn{padding:13px 30px;font-size:16px;margin-top:0}
 }
 @media(max-width:480px){
-  #fxb-hero .fxb-summer-label{font-size:12px}
   #fxb-hero .fxb-slogan-text{font-size:25px}
 }
 
@@ -377,7 +302,6 @@
   #fxb-cinema .fxb-cinema-video{display:none}
   .fxb-anim,.fxb-anim-fade{opacity:1;animation:none}
   #fxb-hero .fxb-life::after{animation:none}
-  #fxb-hero .fxb-intensive-btn{animation:none}
 }
 </style>
 
@@ -2693,7 +2617,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
   
   Что можно менять:
     - Фото (src в img) — заменить заглушки на реальные фото школы
-    - Подписи к фото (alt + текст в .fxb-cap-text)
+    - Подписи к фото: только alt у img (текстовые подписи убраны, остаётся номер)
     - Количество фото (добавлять/удалять div.fxb-scard)
   
   Эффект: карточки складываются «колодой» при скролле (sticky + уменьшение
@@ -2712,7 +2636,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
       1. Положите оптимизированное фото (≤1200px, WebP q80) в prototype/gallery/
       2. URL локальный: /gallery/<файл>.webp (сборка копирует папку в dist, сессия 47)
       3. Скопируйте целиком <div class="fxb-scard">…</div> и вставьте внутрь .fxb-stack,
-         обновите src/alt, подпись в .fxb-cap-text и номер в .fxb-cap-num
+         обновите src/alt и номер в .fxb-cap-num
     -->
     <div class="fxb-stack">
       <div class="fxb-scard">
@@ -2721,7 +2645,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
             <img src="/gallery/school-entrance.webp" alt="Вход в языковую школу Фоксинбург" loading="lazy" decoding="async">
             <figcaption class="fxb-cap">
               <span class="fxb-cap-num">01</span>
-              <span class="fxb-cap-text">Вход в школу</span>
               <span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>
             </figcaption>
           </figure>
@@ -2733,7 +2656,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
             <img src="/gallery/class-kids.webp" alt="Класс для младших школьников с интерактивной панелью" loading="lazy" decoding="async">
             <figcaption class="fxb-cap">
               <span class="fxb-cap-num">02</span>
-              <span class="fxb-cap-text">Класс для младших школьников</span>
               <span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>
             </figcaption>
           </figure>
@@ -2745,7 +2667,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
             <img src="/gallery/class-panel.webp" alt="Учебный класс с интерактивной панелью" loading="lazy" decoding="async">
             <figcaption class="fxb-cap">
               <span class="fxb-cap-num">03</span>
-              <span class="fxb-cap-text">Интерактивные панели</span>
               <span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>
             </figcaption>
           </figure>
@@ -2757,7 +2678,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
             <img src="/gallery/class-group.webp" alt="Класс для занятий в мини-группах" loading="lazy" decoding="async">
             <figcaption class="fxb-cap">
               <span class="fxb-cap-num">04</span>
-              <span class="fxb-cap-text">Занятия в мини-группах</span>
               <span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>
             </figcaption>
           </figure>
@@ -2769,7 +2689,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
             <img src="/gallery/class-light.webp" alt="Светлый учебный класс с видом на зелень" loading="lazy" decoding="async">
             <figcaption class="fxb-cap">
               <span class="fxb-cap-num">05</span>
-              <span class="fxb-cap-text">Светлые классы с видом на зелень</span>
               <span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>
             </figcaption>
           </figure>
@@ -2781,7 +2700,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
             <img src="/gallery/class-room.webp" alt="Учебный класс школы Фоксинбург" loading="lazy" decoding="async">
             <figcaption class="fxb-cap">
               <span class="fxb-cap-num">06</span>
-              <span class="fxb-cap-text">Учебный класс</span>
               <span class="fxb-cap-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Увеличить</span>
             </figcaption>
           </figure>
@@ -2828,7 +2746,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
   #fxb-gallery .fxb-frame img{position:relative;width:100%;height:100%;object-fit:contain;display:block}
   #fxb-gallery .fxb-cap{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;gap:18px;padding:30px 34px;background:linear-gradient(180deg,rgba(20,12,35,0) 0%,rgba(20,12,35,.82) 100%);color:#fff;pointer-events:none}
   #fxb-gallery .fxb-cap-num{font-weight:900;font-size:clamp(34px,5vw,58px);line-height:.85;letter-spacing:-.02em;background:linear-gradient(135deg,#fcf951,#c24712);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  #fxb-gallery .fxb-cap-text{font-weight:700;font-size:clamp(15px,1.7vw,21px);line-height:1.25;padding-bottom:4px}
   #fxb-gallery .fxb-cap-pill{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#fff;border:1.5px solid rgba(255,255,255,.55);border-radius:100px;padding:9px 18px;background:rgba(255,255,255,.08);white-space:nowrap;transition:background .25s}
   #fxb-gallery .fxb-frame:hover .fxb-cap-pill{background:rgba(255,255,255,.22)}
 
@@ -4160,6 +4077,7 @@ fxbGalleryInit();
         <a href="/anglijskij-dlya-vzroslyh">Английский для взрослых</a>
         <a href="/nemeckij-yazyk">Немецкий язык</a>
         <a href="/kitajskij-yazyk">Китайский язык</a>
+        <a href="/ispanskij-yazyk">Испанский язык</a>
         <a href="/online-zanyatiya">Онлайн-занятия</a>
         <a href="/podderzhivayushchie-online">Поддерживающие онлайн</a>
         <a href="/standartnye-offline">Стандартные офлайн</a>
@@ -4182,7 +4100,15 @@ fxbGalleryInit();
         <a href="/vakansii">Вакансии</a>
         <a href="/kontakty">Контакты</a>
         <a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>
-        <a href="/letnyaya-akademiya">Летняя Академия</a>
+        <details class="fxb-ft-dd">
+          <summary>Программы</summary>
+          <a href="/letnyaya-akademiya">Летняя академия</a>
+          <a href="/vesennyaya-akademiya-2026">Весенняя академия</a>
+          <a href="/prazdniki">Праздники</a>
+          <a href="/ekskursii">Экскурсии</a>
+          <a href="/vypusknoj-2026">Выпускной</a>
+          <a href="/meropriyatiya">Мероприятия</a>
+        </details>
         <a href="https://lms.dymova-english.ru">Личный кабинет</a>
       </div>
 
@@ -4229,6 +4155,14 @@ fxbGalleryInit();
 #fxb-footer .fxb-ft-col h4{font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
 #fxb-footer .fxb-ft-col a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
 #fxb-footer .fxb-ft-col a:hover{color:var(--yellow)}
+#fxb-footer .fxb-ft-dd{font-size:13px}
+#fxb-footer .fxb-ft-dd summary{cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;font-weight:500;list-style:none;display:flex;align-items:center;gap:6px;transition:color .2s}
+#fxb-footer .fxb-ft-dd summary::-webkit-details-marker{display:none}
+#fxb-footer .fxb-ft-dd summary::after{content:"\25BE";font-size:10px;transition:transform .2s}
+#fxb-footer .fxb-ft-dd[open] summary::after{transform:rotate(180deg)}
+#fxb-footer .fxb-ft-dd summary:hover{color:var(--yellow)}
+#fxb-footer .fxb-ft-dd a{display:block;padding-left:12px;margin-top:8px}
+#fxb-footer .fxb-ft-dd:not([open]) a{display:none}
 #fxb-footer .fxb-ft-text{color:rgba(255,255,255,.4);font-size:12px;font-weight:500;margin-top:4px}
 #fxb-footer .fxb-ft-bottom{display:flex;align-items:center;justify-content:space-between;padding:20px 0;flex-wrap:wrap;gap:12px}
 #fxb-footer .fxb-ft-legal{display:flex;gap:16px;font-size:11.5px;color:rgba(255,255,255,.3);font-weight:500}
@@ -4478,8 +4412,7 @@ var fxbForm=document.querySelector('#fxbZform');
         var num=('0'+(i+1)).slice(-2);
         return '<div class="fxb-scard"><div class="fxb-sticky"><figure class="fxb-frame">'
           +'<img src="'+esc(p.url)+'" alt="'+esc(p.alt)+'" loading="lazy" decoding="async">'
-          +'<figcaption class="fxb-cap"><span class="fxb-cap-num">'+num+'</span>'
-          +'<span class="fxb-cap-text">'+esc(p.alt)+'</span>'+pill+'</figcaption>'
+          +'<figcaption class="fxb-cap"><span class="fxb-cap-num">'+num+'</span>'+pill+'</figcaption>'
           +'</figure></div></div>';
       }).join('');
       if(window.fxbGalleryInit)window.fxbGalleryInit();
