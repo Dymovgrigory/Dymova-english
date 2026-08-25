@@ -31,7 +31,9 @@ seo/.venv/bin/pip install requests
 
 ```
 YANDEX_WEBMASTER_TOKEN=...   # есть, работает (user_id 1629110380, хост подтверждён)
-DIRECT_TOKEN=                # TODO: получить (см. раздел «Wordstat» ниже)
+WORDSTAT_API_KEY=            # TODO: API-ключ Yandex Cloud (Search API) — см. «Wordstat» ниже
+WORDSTAT_FOLDER_ID=          # TODO: id каталога Yandex Cloud
+DIRECT_TOKEN=                # устарело: OAuth Директа больше не принимается Wordstat API (404)
 GOOGLE_SA_KEY=               # TODO: JSON-ключ service account для GSC (точка расширения)
 ```
 
@@ -66,31 +68,38 @@ target_url и флаги:
   **добавить в SEO_SEMANTIC_MAP.md**;
 - `NO_FREQ` — нет частотности (ждём Wordstat).
 
-## Wordstat: как владельцу получить DIRECT_TOKEN (пошагово)
+## Wordstat: как владельцу получить доступ (пошагово, АКТУАЛЬНО с 2026)
 
-1. Зайти под Яндекс-логином, у которого есть доступ к Директу (или зарегистрировать
-   Директ — достаточно бесплатного кабинета без запуска рекламы).
-2. Зарегистрировать приложение на https://oauth.yandex.ru/ :
-   - название любое (например, «Foxinburg SEO»);
-   - платформа: **веб-сервисы**, Redirect URI: `https://oauth.yandex.ru/verification_code`;
-   - в правах (scope) отметить **«Яндекс Директ API»** (`direct:read` достаточно,
-     обычно ставят «Использование API Яндекс.Директа»).
-3. Скопировать ClientID приложения и открыть в браузере:
-   `https://oauth.yandex.ru/authorize?response_type=token&client_id=<ClientID>`
-   → подтвердить → из URL после редиректа взять `access_token=...`.
-4. Вписать токен в `.env.seo`: `DIRECT_TOKEN=<токен>`.
-5. В кабинете Директа включить доступ к API: https://direct.yandex.ru/ →
-   внизу «API» / https://yandex.ru/dev/direct/doc/ru/concepts/access — принять
-   условия и подать заявку на полный доступ (для WordstatReports хватает тестового,
-   но заявка снимает ограничения).
-6. Проверить: `seo/.venv/bin/python seo/yandex_wordstat.py --limit 5` — закажет
-   1–2 отчёта и запишет частотность в БД.
+⚠️ Старые способы закрыты Яндексом: сервис WordstatReports в Директ API v5 и бета
+`api.wordstat.yandex.net` отдают 404, OAuth-токен Яндекс ID (`DIRECT_TOKEN`, y0__...)
+не принимается. Wordstat API теперь — часть **Yandex Cloud Search API v2**
+(`https://searchapi.api.cloud.yandex.net/v2/wordstat/*`), нужны API-ключ и id каталога.
 
-Лимиты API: до 10 фраз в одном отчёте, до 5 отчётов в очереди, баллы списываются
-за заказ отчётов — скрипт сам держит очередь и делает retry с backoff.
-Регионы по умолчанию: GeoIds 213 (Москва) и 1 (Московская область) — правятся
-константой `GEO_IDS` в `yandex_wordstat.py` (id уточнять через справочник
-Dictionaries/get → GeoRegions).
+1. Зарегистрироваться/войти в **Yandex Cloud** (https://console.cloud.yandex.ru/)
+   под рабочим Яндекс-логином. При первом входе создастся облако и каталог
+   (folder) — бесплатно, карта для активации может быть запрошена, но Wordstat-методы
+   работают в рамках квоты без платного тарифа (лимиты ~10 rps, ~1000 запросов/сутки).
+2. Создать **сервисный аккаунт**: каталог → «Сервисные аккаунты» → «Создать»,
+   роль не критична для Search API (достаточно `search-api.executor` /
+   по доке https://yandex.cloud/ru/docs/search-api/).
+3. В сервисном аккаунте: «Создать новый ключ» → **«Создать API-ключ»** →
+   сохранить секрет (показывается один раз).
+4. **folderId** — в консоли: каталог → «Обзор» → «Идентификатор каталога».
+5. Вписать в `.env.seo`:
+   ```
+   WORDSTAT_API_KEY=<секрет API-ключа>
+   WORDSTAT_FOLDER_ID=<id каталога>
+   ```
+6. Проверить: `seo/.venv/bin/python seo/yandex_wordstat.py --limit 5` —
+   запишет частотность 5 запросов в БД.
+
+Механика скрипта: `v2/wordstat/topRequests` (до 2000 фраз за вызов), частотность
+запроса = count точного совпадения в `results`; не попал в топ-2000 → freq_base=0.
+`--exact` — второй проход точной формой `"!слова"` (только для freq_base > 0).
+Скрипт держит rate-limit (10 rps), считает вызовы и останавливается у дневного
+порога 950 — повторный запуск на следующий день продолжит (пропускает свежие).
+Регионы: 213 (Москва) + 1 (Московская область), константа `REGIONS`; id уточнять
+через `v2/wordstat/getRegionsTree`.
 
 ## Регламент (ежемесячно, начало месяца)
 
