@@ -49,7 +49,7 @@ REGIONS = ["213", "1"]
 REGION_LABEL = "msk+mo"
 NUM_PHRASES = 2000          # максимум API за один вызов
 DAILY_CALL_BUDGET = 950     # стоп-порог суточной квоты (базовый лимит ~1000)
-RPS_DELAY = 0.12            # 10 rps лимит → бережём
+RPS_DELAY = 1.0             # у свежего аккаунта бурст-лимит ниже заявленных 10 rps (50-60 вызовов → 429); идём 1 rps
 CSV_PATH = os.path.join(SEO_DIR, "wordstat.csv")
 
 
@@ -57,7 +57,7 @@ class QuotaExceeded(Exception):
     pass
 
 
-def api_call(api_key, folder_id, method, body, retries=5, counter=None):
+def api_call(api_key, folder_id, method, body, retries=10, counter=None):
     """POST /v2/wordstat/<method> с retry/backoff на 429 и 5xx. counter=[int] — счётчик вызовов."""
     headers = {
         "Authorization": f"Api-Key {api_key}",
@@ -86,7 +86,12 @@ def api_call(api_key, folder_id, method, body, retries=5, counter=None):
             time.sleep(RPS_DELAY)
             return r.json()
         if r.status_code in (429, 500, 502, 503, 504):
-            wait = float(r.headers.get("Retry-After", delay))
+            # Почасовая квота (100/час у свежих аккаунтов): бесполезно ретраить секундами —
+            # ждём до следующего часового окна.
+            if r.status_code == 429 and "PerHour" in r.text:
+                wait = 610.0
+            else:
+                wait = float(r.headers.get("Retry-After", delay))
             print(f"  {r.status_code}, повтор через {wait:.0f} с...", file=sys.stderr)
             time.sleep(wait)
             delay = min(delay * 2, 60)
