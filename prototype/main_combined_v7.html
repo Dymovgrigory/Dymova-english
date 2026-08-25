@@ -2059,7 +2059,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
   БЛОК: КОМАНДА ПЕДАГОГОВ
   =============================================
   Назначение: Карточки педагогов с фото/аватарами и видеопрезентациями.
-  Сейчас используются заглушки (брендовый аватар лисы) — заменить на реальные фото.
+  Фото — реальные (/team-media/<slug>.webp, видео — /team-media/<slug>.mp4).
   
   Что можно менять:
     - Имена и описания педагогов
@@ -2138,6 +2138,45 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
       </article>
 
       <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:url(/team-media/prokudina.webp)"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-teacher">Педагог</span>
+          <h3>Прокудина Мария</h3>
+          <p>Педагог английского языка. Ведёт группы школьников и взрослых</p>
+          <div class="fxb-btns">
+            <button class="fxb-vbtn" type="button" data-video="/team-media/prokudina.mp4"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Видеовизитка</button>
+            <button class="fxb-vbtn fxb-vbtn-2" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Фрагмент урока</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:url(/team-media/vinogradova.webp)"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-teacher">Педагог</span>
+          <h3>Виноградова Анна</h3>
+          <p>Педагог английского языка. Работает с детьми и подростками</p>
+          <div class="fxb-btns">
+            <button class="fxb-vbtn" type="button" data-video="/team-media/vinogradova.mp4"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Видеовизитка</button>
+            <button class="fxb-vbtn fxb-vbtn-2" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Фрагмент урока</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:url(/team-media/sporyhina.webp)"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-teacher">Педагог</span>
+          <h3>Спорыхина Анастасия</h3>
+          <p>Педагог английского и испанского языков</p>
+          <div class="fxb-btns">
+            <button class="fxb-vbtn" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Видеовизитка</button>
+            <button class="fxb-vbtn fxb-vbtn-2" type="button" data-video=""><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Фрагмент урока</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="fxb-card">
         <div class="fxb-photo" style="background-image:url(/team-media/shevchenko.webp)"></div>
         <div class="fxb-body">
           <span class="fxb-role fxb-r-teacher">Педагог</span>
@@ -2172,7 +2211,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
       </article>
 
       <article class="fxb-card">
-        <div class="fxb-photo" style="background-image:linear-gradient(135deg,#6237a2,#5b8def)"><img class="fxb-ava" src="/assets/brand/fox-head-yellow.webp" alt="" width="54" height="54"></div>
+        <div class="fxb-photo" style="background-image:url(/team-media/dzhanuzakova.webp)"></div>
         <div class="fxb-body">
           <span class="fxb-role fxb-r-admin">Администратор</span>
           <h3>Джанузакова Салтанат</h3>
@@ -2181,7 +2220,16 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
       </article>
 
       <article class="fxb-card">
-        <div class="fxb-photo" style="background-image:linear-gradient(135deg,#f5a06f,#7ed957)"><img class="fxb-ava" src="/assets/brand/fox-head-yellow.webp" alt="" width="54" height="54"></div>
+        <div class="fxb-photo" style="background-image:url(/team-media/sushko.webp)"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-admin">Администратор</span>
+          <h3>Сушко Светлана</h3>
+          <p>Поможет с расписанием и записью</p>
+        </div>
+      </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:url(/team-media/dymova.webp)"></div>
         <div class="fxb-body">
           <span class="fxb-role fxb-r-head">Руководитель школы</span>
           <h3>Дымова Вероника Александровна</h3>
@@ -2190,7 +2238,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
       </article>
 
       <article class="fxb-card">
-        <div class="fxb-photo" style="background-image:linear-gradient(135deg,#2bb673,#6237a2)"><img class="fxb-ava" src="/assets/brand/fox-head-yellow.webp" alt="" width="54" height="54"></div>
+        <div class="fxb-photo" style="background-image:url(/team-media/dymov.webp)"></div>
         <div class="fxb-body">
           <span class="fxb-role fxb-r-head">Руководитель школы</span>
           <h3>Дымов Григорий Юрьевич</h3>
@@ -2281,7 +2329,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
 
 <!--
   =============================================
-  БЛОК: ДРУГИЕ ЯЗЫКИ (НЕМЕЦКИЙ, КИТАЙСКИЙ)
+  БЛОК: ДРУГИЕ ЯЗЫКИ (НЕМЕЦКИЙ, КИТАЙСКИЙ, ИСПАНСКИЙ)
   =============================================
   Назначение: Описание дополнительных языковых программ помимо английского.
   
@@ -2297,7 +2345,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
     <div class="fxb-head">
       <span class="fxb-eyebrow"><span class="fxb-dot"></span>Другие языки</span>
       <h2 class="fxb-h2">Изучайте <span class="fxb-accent">новые языки</span> в Фоксинбург</h2>
-      <p class="fxb-sub">Помимо английского, мы обучаем немецкому и китайскому — по той же проверенной методике, в мини-группах.</p>
+      <p class="fxb-sub">Помимо английского, мы обучаем немецкому, китайскому и испанскому — по той же проверенной методике, в мини-группах.</p>
     </div>
 
     <div class="fxb-grid">
@@ -2351,6 +2399,32 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
           <div class="fxb-btns">
             <button class="fxb-btn-primary" type="button" data-lang="Китайский">Записаться на курс</button>
             <button class="fxb-btn-trial" type="button" data-lang="Китайский">Пробный урок — 1 125 &#8381;</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Испанский язык -->
+      <article class="fxb-card fxb-es">
+        <div class="fxb-cover">
+          <span class="fxb-flag">ES</span>
+          <span class="fxb-lang-name">Испанский язык</span>
+        </div>
+        <div class="fxb-body">
+          <div class="fxb-teacher">
+            <div class="fxb-teacher-photo" style="background-image:url(/team-media/sporyhina.webp);background-size:cover;background-position:center"></div>
+            <div>
+              <h3>Спорыхина Анастасия</h3>
+              <span class="fxb-role">Педагог испанского языка</span>
+            </div>
+          </div>
+          <div class="fxb-info">
+            <div class="fxb-info-row"><span class="fxb-info-label">Формат</span><span>2 раза в неделю по 60 мин</span></div>
+            <div class="fxb-info-row"><span class="fxb-info-label">Группа</span><span class="fxb-price">9 000 &#8381;/мес</span></div>
+            <div class="fxb-info-row"><span class="fxb-info-label">Индивидуально</span><span class="fxb-price">2 500 &#8381;/час</span></div>
+          </div>
+          <div class="fxb-btns">
+            <button class="fxb-btn-primary" type="button" data-lang="Испанский">Записаться на курс</button>
+            <button class="fxb-btn-trial" type="button" data-lang="Испанский">Пробный урок — 1 125 &#8381;</button>
           </div>
         </div>
       </article>
@@ -2427,6 +2501,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
   #fxb-lang .fxb-cover{height:100px;display:flex;align-items:center;justify-content:center;gap:16px;position:relative}
   #fxb-lang .fxb-de .fxb-cover{background:linear-gradient(135deg,#1a1a2e,#16213e)}
   #fxb-lang .fxb-cn .fxb-cover{background:linear-gradient(135deg,#8b0000,#c41e3a)}
+  #fxb-lang .fxb-es .fxb-cover{background:linear-gradient(135deg,#c24712,#f5a06f)}
   #fxb-lang .fxb-flag{font-size:20px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);padding:8px 16px;border-radius:10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.3))}
   #fxb-lang .fxb-lang-name{color:#fff;font-size:22px;font-weight:800;letter-spacing:.01em}
   #fxb-lang .fxb-body{padding:28px 28px 30px}
