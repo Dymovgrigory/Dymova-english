@@ -3,7 +3,7 @@
 
 Команды:
   build   — пересобрать HTML-страницы из генераторов
-  minify  — обновить минифицированные Tilda-блоки
+  minify  — обновить минифицированные блоки сайта
   all     — build + minify
   status  — показать, что устарело или отсутствует
 """
@@ -19,24 +19,24 @@ from pathlib import Path
 from minify_block import minify as minify_html
 
 ROOT = Path(__file__).resolve().parent
-BLOCK_DIR = ROOT / "tilda_blocks_min"
+BLOCK_DIR = ROOT / "blocks_min"
 
 MINIFY_SOURCES = [
-    "tilda_advantages.html",
-    "tilda_contacts_map.html",
-    "tilda_cta_diagnostika.html",
-    "tilda_cta_enrollment.html",
-    "tilda_directions.html",
-    "tilda_faq.html",
-    "tilda_footer.html",
-    "tilda_header_unified.html",
-    "tilda_languages.html",
-    "tilda_onboarding.html",
-    "tilda_photobank_gallery.html",
-    "tilda_pricing_enrollment.html",
-    "tilda_svedeniya.html",
-    "tilda_yandex_reviews.html",
-    "tilda_team.html",
+    "block_advantages.html",
+    "block_contacts_map.html",
+    "block_cta_diagnostika.html",
+    "block_cta_enrollment.html",
+    "block_directions.html",
+    "block_faq.html",
+    "block_footer.html",
+    "block_header_unified.html",
+    "block_languages.html",
+    "block_onboarding.html",
+    "block_photobank_gallery.html",
+    "block_pricing_enrollment.html",
+    "block_svedeniya.html",
+    "block_yandex_reviews.html",
+    "block_team.html",
 ]
 
 

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Сборка полноценного статического сайта из фрагментов, которые раньше
-вставлялись вручную в T123-блоки Tilda.
+Сборка полноценного статического сайта из фрагментов-блоков
+(самописный статический сайт, без конструктора).
 
 Берёт:
-  - tilda_shapka.html / tilda_footer.html — общая шапка/подвал;
+  - block_shapka.html / block_footer.html — общая шапка/подвал;
   - page_*.html — контент каждой страницы (вывод build_subpages.py /
     build_course_pages.py, уже актуален после `make build`);
   - main_combined_v7.html — отдельно собранная главная (уже содержит
     шапку и подвал сама, не оборачивается);
   - seo_meta_live.json — title/description/canonical, снятые с реально
-    опубликованных страниц Tilda (не выдуманы, см. DEVLOG);
+    опубликованных страниц сайта (не выдуманы, см. DEVLOG);
   - seo_schema/ — sitewide LocalBusiness + по-страничные Course/FAQ/
     BreadcrumbList JSON-LD (карта — seo_schema/DEPLOY_MAP.md).
 
@@ -36,8 +36,8 @@ from datetime import datetime
 DIR = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://dymova-english.ru"
 
-# page_<slug>.html -> alias на сайте. Совпадает с алиасами в
-# tilda_upload_subpages.py / tilda_bootstrap_articles.py.
+# page_<slug>.html -> alias на сайте. Совпадает с алиасами, которые
+# использовались при выкладке подстраниц (история — в DEVLOG).
 PAGE_ALIASES = {
     "page_doshkolniki.html": "doshkolniki",
     "page_tseny.html": "tseny",
@@ -173,7 +173,7 @@ SCHEMA_MAP = {
 }
 INDEX_SCHEMA = ["faq.html"]
 
-# Новые статьи этой сессии не были на живой Tilda -> нет записи в
+# Новые статьи этой сессии не были на живом сайте -> нет записи в
 # seo_meta_live.json. Title/description для них уже заданы в самом
 # генераторе (NEWS_POST_*["title"/"description"]) — здесь не дублируем
 # вручную, а достаём прямо из HTML (<h1>/шапка статьи), см. extract_article_meta().
@@ -508,8 +508,8 @@ def main() -> None:
     with open(os.path.join(DIR, "seo_meta_live.json"), "r", encoding="utf-8") as f:
         seo_meta = json.load(f)
 
-    shapka = read("tilda_shapka.html")
-    footer = read("tilda_footer.html")
+    shapka = read("block_shapka.html")
+    footer = read("block_footer.html")
 
     written = []
 

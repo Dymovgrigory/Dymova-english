@@ -1,11 +1,10 @@
-# Schema.org JSON-LD snippets for Tilda
+# Schema.org JSON-LD snippets
 
-These files are ready to paste into Tilda page settings → **HTML-код для вставки внутрь HEAD**
-(or a T123 block in `<head>` if you maintain the page code manually).
+These files are included into the static build (`build_static_site.py`) and injected into each page's `<head>`.
 
 ## What goes where
 
-- `head_schema_injector.html` — canonical page-by-page JS injector for Tilda `<head>`; paste it manually into the project head.
+- `head_schema_injector.html` — canonical page-by-page JS injector for the site `<head>`.
 - `org_localbusiness.html` — sitewide, on every public page HEAD.
 - `course_reading.html` — page `/reading` (`pageid 151292376`).
 - `course_grammar.html` — page `/grammar` (`pageid 151292406`).
@@ -40,5 +39,5 @@ Use the same two-level structure everywhere on internal pages:
 ## Notes
 
 - Keep the snippets minimal and valid JSON-LD.
-- Do not paste tracking scripts or Tilda form code into these files.
+- Do not paste tracking scripts or external form code into these files.
 - The root organization graph should be reused unchanged sitewide.

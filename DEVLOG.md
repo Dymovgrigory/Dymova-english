@@ -4723,3 +4723,26 @@ TODO: 6 NO_PAGE_WITH_SHOWS (страницы по запросам с показ
 2. GSC_NOT_IN_CORE: +13 релевантных запросов в карту (раздел 15.9 «Запросы из GSC»; старый 15.9 → 15.10): «курсы в долгопрудном» (64 показа!), гео-варианты «в долгопрудном», китайский/немецкий/носитель, «пробелы по английскому в 3–5 классе». Конкурентные бренды осознанно исключены.
 3. Создана статья BLOG_POST_35 «Пробелы по английскому языку в 3, 4 и 5 классе» → /blog-probely-po-anglijskomu (на проде, в фиде блога). Чек-листы по классам + план закрытия + мягкая конверсия на диагностику/репетитора.
 4. Инфра-находка: новые blog-страницы требуют ТРИ точки регистрации — build_subpages.py (PAGES), build_subpages.py (articles в фиде), build_static_site.py (PAGE_ALIASES). Зафиксировано здесь, чтобы не ловить 404.
+
+## Сессия 84 — 2026-08-26: страница дошкольников (авторская программа) + прощание с Tilda-наследием
+
+**Запрос владельца:** на /doshkolniki в блоке «Пособия и материалы» показать авторскую программу руководителя школы с картинками (preschool 3–5 / 5–6), обновить время занятий (2–3 года — 45 мин, 4–6 лет — 60 мин, вечерние группы). Затем: «сайт не на Тильде — исключи упоминания Tilda из всего проекта, переименуй файлы».
+
+**Что сделано:**
+1. **/doshkolniki** (правки в генераторе `build_subpages.py`, блок PAGES["page_doshkolniki.html"]):
+   - «Пособия и материалы» перестроены с books на ladder-формат (кликабельные карточки с превью 150px, как у младших школьников): «Дошкольники 3–5 лет» (Starter) и «Дошкольники 5–6 лет» (Pre-A1) → открывают полные дорожные карты. Lead: «Используем авторскую программу руководителя школы, адаптированную для дошкольного возраста».
+   - Новые ассеты `prototype/assets/brand/roadmaps/preschool-3-5.webp`, `preschool-5-6.webp` (cwebp q85 из `brand-assets/roadmaps/*.png`, 1200×1680).
+   - Факты: «45 минут» → «45–60 минут (2–3 года — 45, 4–6 лет — 60)», «Утренние группы» → «Вечерние группы»; карточка цены группы — длительность по возрасту (`price_cards` переопределены только для этой страницы, дефолт price_section не тронут).
+2. **Удаление Tilda-наследия** (сайт полностью самописный со времён сессии 30):
+   - Удалены 26 мёртвых скриптов автоматизации Tilda (`tilda_login.py`, `tilda_upload_*.py`, `tilda_publish_*.py`, `tilda_update_*.py`, `tilda_set_settings*.py`, `tilda_fetch_adv.py`, `tilda_reorder.py`, `tilda_relink_index.py`, `tilda_probe_records.py`, `tilda_delete_record.py`, `tilda_bootstrap_articles.py`, `tilda_deploy_*.py`, `tilda_init_subpages.py`, `tilda_upload_part1/2.html`) и `.tilda-venv/` (venv этих скриптов; Makefile использует системный python3).
+   - Живые блоки переименованы: `tilda_X.html` → `block_X.html` (21 файл), `tilda_blocks_min/` → `blocks_min/` (`block_X_min.html`). Обновлены devflow.py, build_static_site.py, build_subpages.py, main_combined_v7.html, test_wrapper.html, WORKFLOW.md, minify_block.py.
+   - Поле формы заявки `tildaspec-formname` → `formname` (build_course_pages.py, main_combined_v7.html, block_footer.html, block_cta_enrollment.html, page_tseny.html). Бот поле не читает (grep bot/app = 0) — безопасно. **page_tseny.html не генерируется пайплайном — правлен вручную на месте** (TODO: вернуть его в генератор).
+   - JSON-LD logo: `static.tildacdn.com/...` → `https://dymova-english.ru/assets/brand/fox-head-yellow.webp` (org_localbusiness.html, feed_education.xml).
+   - Медиа `IMG_1258_tilda53560986` → `IMG_1258_53560986` (исходник + 2 webp + manifest.json).
+   - Комментарии «миграция с Tilda» в bot/app (config/email_notify/main), Caddyfile, wiki, корневых md и скиллах перефразированы под «самописный статический сайт». wiki/02-arhitektura.md переписан под текущий пайплайн.
+3. **Осознанно оставлено:** редирект `/members/*` → tilda-members.tilda.ws в Caddyfile (живые ЛК учеников Tilda Members); аккаунт Tilda в wiki/08 с пометкой «только для Members»; исторические записи DEVLOG.md; regex-санитайзер tildacdn в build_course_pages.py:537 (функциональный код против legacy-вставок).
+4. **Деплой:** два rsync -az --delete `dist_prod/` → yc-user@89.169.132.104:/home/yc-user/foxinburg-site/ (после правок дошкольников и после переименований). Прод сверен curl: / и /doshkolniki 200, preschool-3-5.webp 200, «Вечерние группы»/«45–60 минут»/«авторскую программу» на странице, `grep -ci tilda` на главной = 0.
+
+**Как проверено:** `make build`+`make minify` (0 stale), `build_static_site.py` ×3 (dist/dist_staging/dist_prod по 96 стр.), `grep -ri tilda prototype/dist_prod/` = 0, локальный http.server + Playwright-скриншоты блока «Пособия и материалы» (карточки с картинками рендерятся, webp грузятся 1200px).
+
+**Осталось / следующий шаг:** полный аудит сайта (владелец отложил: контент/навигация/скорость/SEO — «вывести в ТОП-1»); page_tseny.html вернуть в генератор; форму заявки на проде протестировать end-to-end после переименования поля (бот принимает произвольный dict, но стоит отправить тестовую заявку).

@@ -1,13 +1,13 @@
 ---
 name: testing-foxinburg
-description: Test the Foxinburg (dymova-english.ru) Tilda custom blocks end-to-end. Use when verifying HTML/CSS/JS prototype rendering, emoji replacements, responsive layout, or combined page assembly.
+description: Test the Foxinburg (dymova-english.ru) custom site blocks end-to-end. Use when verifying HTML/CSS/JS prototype rendering, emoji replacements, responsive layout, or combined page assembly.
 ---
 
 # Testing Foxinburg Custom Blocks
 
 ## Overview
 
-The Foxinburg site uses custom HTML/CSS/JS blocks inserted into Tilda via T123 "HTML-code" blocks. Individual block files are HTML fragments (no DOCTYPE, no `<meta charset>`) designed to be pasted into Tilda. Testing must account for this.
+The Foxinburg site is a self-hosted static build assembled from custom HTML/CSS/JS block fragments (`prototype/block_*.html`). Individual block files are HTML fragments (no DOCTYPE, no `<meta charset>`) designed to be composed by the build. Testing must account for this.
 
 ## Prerequisites
 
@@ -18,7 +18,6 @@ The Foxinburg site uses custom HTML/CSS/JS blocks inserted into Tilda via T123 "
 ## Devin Secrets Needed
 
 - None required for local prototype testing
-- `TILDA_PASSWORD` needed only if uploading to Tilda (not for local testing)
 
 ## Setup
 
@@ -33,7 +32,7 @@ The Foxinburg site uses custom HTML/CSS/JS blocks inserted into Tilda via T123 "
    The `test_wrapper.html` file fetches and injects block HTML files with proper `<meta charset="UTF-8">`. Open `http://localhost:8080/test_wrapper.html` to see header + directions + team + languages blocks rendered together with correct encoding.
 
 3. **Use main_combined_v5.html** (or latest version) for full-page testing:
-   This file concatenates all blocks. It will show mojibake when opened directly in browser (expected — it's a Tilda fragment). Verify block presence via DOM inspection rather than visual text.
+   This file concatenates all blocks. It may show mojibake when opened directly in browser (expected — it's an HTML fragment). Verify block presence via DOM inspection rather than visual text.
 
 ## Test Categories
 
@@ -72,7 +71,7 @@ The Foxinburg site uses custom HTML/CSS/JS blocks inserted into Tilda via T123 "
 ## Common Pitfalls
 
 - **Encoding**: Always use HTTP server, never `file:///`. Individual HTML files are fragments without charset meta tags.
-- **Chrome URL mangling**: Chrome address bar may strip underscores from `file:///` URLs (e.g., `tilda_header_unified.html` becomes `tildaheader_unified`). HTTP server avoids this.
+- **Chrome URL mangling**: Chrome address bar may strip underscores from `file:///` URLs (e.g., `block_header_unified.html` becomes `blockheader_unified`). HTTP server avoids this.
 - **window.resizeTo()**: May not work on maximized windows. Use `wmctrl` + `xdotool` for reliable window resizing.
 - **DevTools mobile toggle**: Might be hard to interact with via automation. Prefer actual window resize over DevTools device toolbar.
 - **Brand assets**: Images load from `https://raw.githubusercontent.com/Dymovgrigory/Dymova-english/devin/1782590824-session6-redesign/brand-assets/`. If branch changes, URLs may break.
@@ -83,4 +82,4 @@ The Foxinburg site uses custom HTML/CSS/JS blocks inserted into Tilda via T123 "
 - Use `<details>/<summary>` tags to collapse sections
 - Include screenshots for key assertions
 - Flag any emoji characters still visible as high-priority issues
-- Note encoding issues in combined file as "expected" (Tilda provides charset)
+- Note encoding issues in combined file as "expected" (the build provides charset)

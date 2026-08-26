@@ -2,7 +2,7 @@
 
 ## Доступы, которые нужны для работы
 
-- Tilda: `vkrivobokova4@gmail.com`
+- Tilda: `vkrivobokova4@gmail.com` (только для личных кабинетов Members)
 - Яндекс: `kidsfoxclub@yandex.ru`
 - Google: `dymovateacher@gmail.com`
 
@@ -21,7 +21,7 @@
 ## Где что лежит
 
 - `prototype/` — исходники блоков, подстраниц и скриптов;
-- `prototype/tilda_blocks_min/` — минифицированные блоки для Tilda;
+- `prototype/blocks_min/` — минифицированные блоки сайта;
 - `prototype/seo_schema/` — schema.org;
 - `bot/` — бот и CRM-контур;
 - `wiki/` — проектная wiki;

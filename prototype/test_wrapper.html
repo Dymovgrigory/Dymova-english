@@ -11,7 +11,7 @@
 <script>
   // Usage: test_wrapper.html?block=page_novosti.html  (comma-separated for multiple)
   var params = new URLSearchParams(location.search);
-  var blocks = (params.get('block') || 'tilda_shapka.html,page_novosti.html,tilda_footer.html').split(',');
+  var blocks = (params.get('block') || 'block_shapka.html,page_novosti.html,block_footer.html').split(',');
   (async function () {
     var root = document.getElementById('root');
     for (var i = 0; i < blocks.length; i++) {

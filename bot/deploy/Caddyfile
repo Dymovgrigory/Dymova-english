@@ -44,7 +44,7 @@ bot.dymova-english.ru {
 #     reverse_proxy localhost:8000
 # }
 
-# Основной сайт (миграция с Tilda завершена, см. DEVLOG.md "Сессия 28"/29
+# Основной сайт — самописная статическая сборка (см. DEVLOG.md "Сессия 28"/29
 # и wiki/02-arhitektura.md). Собранные файлы (prototype/build_static_site.py,
 # прод-режим — без --noindex) лежат в /srv/foxinburg-site на хосте — том
 # пробрасывается в контейнер тем же способом, что и Caddyfile. Активируется
@@ -82,8 +82,8 @@ dymova-english.ru {
     # Черновик /reading-new (сессия 65): дублировал title/description /reading
     # в выдаче Яндекса — переносим на каноническую страницу.
     redir /reading-new /reading 301
-    # Старые адреса эпохи Tilda (pageXXXXX.html): главная известна точно,
-    # остальные — на главную, чтобы не терять переходы из выдачи.
+    # Старые адреса pageXXXXX.html из индекса поисковиков: главная известна
+    # точно, остальные — на главную, чтобы не терять переходы из выдачи.
     redir /page32889798.html / 301
     @oldtilda path /page*.html
     redir @oldtilda / 301

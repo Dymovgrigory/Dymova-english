@@ -150,7 +150,7 @@ class Settings(BaseSettings):
     GMAIL_SMTP_APP_PASSWORD: str = ""
     LEAD_NOTIFY_EMAILS: str = ""
 
-    # --- Сайт (миграция с Tilda): разрешённые origin для CORS формы заявки ---
+    # --- Статический сайт: разрешённые origin для CORS формы заявки ---
     SITE_CORS_ORIGINS: str = "https://dymova-english.ru,https://new.dymova-english.ru,https://www.dymova-english.ru"
 
     # --- Прочее ---

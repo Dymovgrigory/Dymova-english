@@ -2,7 +2,7 @@
 <!--
   ЕДИНАЯ ШАПКА ФОКСИНБУРГ v3
   Объединяет: навигацию с выпадающими меню, адреса, телефоны, бейдж, часы работы, Max канал, ЛК
-  Одна шапка — без полосочек. Скрывает нативную шапку Tilda.
+  Одна шапка — без полосочек. Скрывает стандартную шапку.
 -->
 <div id="fxb-header">
   <!-- Верхний ряд: адреса + телефоны + часы + Max Bot -->
@@ -202,7 +202,7 @@
 (function(){
   var header=document.getElementById('fxb-header');if(!header)return;
 
-  /* Hide native Tilda header/menus */
+  /* Hide native header/menus */
   document.querySelectorAll('.t228,.t188,.t210,.t-menusub,.t-menu,.t-menusub__menu').forEach(function(el){
     var rec=el.closest('.t-rec');if(rec)rec.style.display='none';
   });
@@ -543,7 +543,7 @@
   <div class="fxb-section">
     <!--
       КАК ДОБАВИТЬ ФОТО:
-      1. Загрузите фото в Tilda (Файловый менеджер) или на внешний хостинг
+      1. Загрузите фото на внешний хостинг или в файловое хранилище проекта
       2. Скопируйте URL фото
       3. Добавьте новый <div class="fxb-item"> внутрь .fxb-grid:
          <div class="fxb-item"><img src="URL_ФОТО" alt="Описание" loading="lazy"></div>

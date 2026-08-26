@@ -297,7 +297,7 @@ COURSES = {
 WA_PHONE = "79939232309"        # WhatsApp + звонок
 MAX_BOT = "https://max.ru/id611904726658_bot"
 LEAD_API_URL = "https://bot.dymova-english.ru/api/lead"
-FORMS_JS_TAG = ""  # Tilda-скрипт форм отключён — заявка идёт на свой /api/lead (см. ZAYAVKA_JS)
+FORMS_JS_TAG = ""  # сторонний скрипт форм отключён — заявка идёт на свой /api/lead (см. ZAYAVKA_JS)
 
 SEND_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
              'stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/>'
@@ -324,7 +324,7 @@ def zayavka_modal():
             '<h3 class="fxb-ztitle">Оставить заявку</h3>'
             '<p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём удобный формат.</p>'
             '<form class="fxb-zform" id="fxbZform" name="fxbZform" role="form">'
-            '<input type="hidden" name="tildaspec-formname" value="">'
+            '<input type="hidden" name="formname" value="">'
             '<input type="hidden" name="Предмет" value="">'
             '<input type="hidden" name="Раздел" value="">'
             '<input type="hidden" name="Страница" value="">'
@@ -408,7 +408,7 @@ ZAYAVKA_JS = """
     var fxbZvThx=fxbZ.querySelector('.fxb-zview--thanks');
     var fxbZtitle=fxbZ.querySelector('.fxb-ztitle');
     var fxbZsub=fxbZ.querySelector('.fxb-zsub');
-    var fxbZformname=fxbZ.querySelector('[name="tildaspec-formname"]');
+    var fxbZformname=fxbZ.querySelector('[name="formname"]');
     var fxbZsubject=fxbZ.querySelector('[name="Предмет"]');
     var fxbZwindow=fxbZ.querySelector('[name="Раздел"]');
     var fxbZpage=fxbZ.querySelector('[name="Страница"]');
@@ -533,6 +533,7 @@ def strip_zayavka_artifacts(s):
     s = re.sub(r'\s*var fxbZ=root\.querySelector[\s\S]*?window\.fxbZSuccess=function\(\)\{[\s\S]*?if\(vt\)vt\.hidden=false;\};', '', s)
     # 5) forms.js tag
     s = s.replace(FORMS_JS_TAG, '')
+    # legacy-скрипт форм конструктора (tilda-forms-1.0.min.js) — вырезаем, если вдруг всплывёт в старой разметке
     s = re.sub(r'\s*<script src="https://static\.tildacdn\.com/js/tilda-forms-1\.0\.min\.js" async></script>', '', s)
     return s
 

@@ -1,14 +1,14 @@
 # Общий аудит проекта Foxinburg
 
 **Дата:** 4 июля 2026  
-**Проект:** dymova-english.ru / Tilda project 2053071  
+**Проект:** dymova-english.ru (самописный статический сайт; исторически — Tilda project 2053071)  
 **Формат:** сводный аудит текущего состояния проекта по SEO, скорости, мобильной вёрстке, контенту, CRO, аналитике, локальному продвижению и боту/CRM.
 
 ## 1) Тех. SEO
 
 ### Текущее состояние
 
-- `https://dymova-english.ru/robots.txt` доступен; закрыты служебные URL (`/lmsfoxinburg`, `/thanks`, `/policy`, `/oshibka`, Tilda-служебные пути), sitemap указан явно.
+- `https://dymova-english.ru/robots.txt` доступен; закрыты служебные URL (`/lmsfoxinburg`, `/thanks`, `/policy`, `/oshibka` и другие служебные пути), sitemap указан явно.
 - `https://dymova-english.ru/sitemap.xml` содержит 14 боевых URL: `/`, `/doshkolniki`, `/mladshie-shkolniki`, `/podrostki`, `/reading`, `/grammar`, `/preparation`, `/online-zanyatiya`, `/podderzhivayushchie-online`, `/standartnye-offline`, `/letnyaya-akademiya`, `/kontakty`, `/novosti`, `/vakansii`.
 - По живым страницам:
   - `lang="ru"` присутствует;

@@ -86,7 +86,7 @@ init_sentry()
 
 app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
 
-# Форма заявки на статическом сайте (миграция с Tilda) шлёт POST с другого
+# Форма заявки на статическом сайте шлёт POST с другого
 # origin (dymova-english.ru / new.dymova-english.ru) — без этого браузер
 # заблокирует запрос.
 app.add_middleware(
@@ -1732,10 +1732,10 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
 
 @app.post("/api/lead")
 async def site_lead(request: Request, data: dict) -> dict:
-    """Приём заявки со статического сайта dymova-english.ru (миграция с Tilda).
+    """Приём заявки со статического сайта dymova-english.ru.
 
-    Реплицирует то, что раньше делала форма Tilda через встроенные "сервисы
-    приёма данных из форм": BigBen CRM + уведомление админам (тем же
+    Реплицирует то, что раньше делала форма конструктора сайта через
+    встроенные "сервисы приёма данных из форм": BigBen CRM + уведомление админам (тем же
     каналом, что уже получает уведомления от бота — MAX, ADMIN_MAX_IDS) +
     email-дубль на dymovgrigory@gmail.com/kidsfoxclub@yandex.ru.
     """

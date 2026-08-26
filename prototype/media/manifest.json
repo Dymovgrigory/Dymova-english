@@ -234,7 +234,7 @@
   "no-date-other": {
    "key": "без даты · other",
    "date": "без даты",
-   "count": 7,
+   "count": 9,
    "event": "Видео с занятий",
    "alt": "Урок английского в Фоксинбурге: игра со словами",
    "tags": [
@@ -2556,7 +2556,7 @@
    }
   },
   {
-   "id": "2026-06-01-iphone/IMG_1258_tilda53560986",
+   "id": "2026-06-01-iphone/IMG_1258_53560986",
    "type": "image",
    "series": "2026-06-01-iphone",
    "date": "2026-06-01",
@@ -2572,10 +2572,10 @@
    "w": 3024,
    "h": 4032,
    "orientation": "portrait",
-   "src": "life/2026-06-01-iphone/IMG_1258_tilda53560986.1600.webp",
+   "src": "life/2026-06-01-iphone/IMG_1258_53560986.1600.webp",
    "srcset": {
-    "900": "life/2026-06-01-iphone/IMG_1258_tilda53560986.900.webp",
-    "1600": "life/2026-06-01-iphone/IMG_1258_tilda53560986.1600.webp"
+    "900": "life/2026-06-01-iphone/IMG_1258_53560986.900.webp",
+    "1600": "life/2026-06-01-iphone/IMG_1258_53560986.1600.webp"
    }
   },
   {
@@ -5163,6 +5163,46 @@
    "orientation": "landscape",
    "src": "life/no-date-other/Flashlight .mp4",
    "poster": "life/no-date-other/Flashlight .poster.webp"
+  },
+  {
+   "id": "no-date-other/Foxinburg_8_23_2026_0_19_21_contentcore.xyz",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 540,
+   "orientation": "landscape",
+   "src": "life/no-date-other/Foxinburg_8_23_2026_0_19_21_contentcore.mp4",
+   "poster": "life/no-date-other/Foxinburg_8_23_2026_0_19_21_contentcore.poster.webp"
+  },
+  {
+   "id": "no-date-other/Foxinburg_8_23_2026_1_10_13_contentcore.xyz",
+   "type": "video",
+   "series": "no-date-other",
+   "date": null,
+   "event": "Видео с занятий",
+   "alt": "Урок английского в Фоксинбурге: игра со словами",
+   "tags": [
+    "classes",
+    "video",
+    "games"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 900,
+   "h": 540,
+   "orientation": "landscape",
+   "src": "life/no-date-other/Foxinburg_8_23_2026_1_10_13_contentcore.mp4",
+   "poster": "life/no-date-other/Foxinburg_8_23_2026_1_10_13_contentcore.poster.webp"
   },
   {
    "id": "no-date-other/Spell and guess",

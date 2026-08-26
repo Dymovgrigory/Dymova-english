@@ -20,7 +20,7 @@ we stopped".
 
 1. Read `DEVLOG.md` top-to-bottom — especially the latest "Сессия N" entry and
    the **"Текущий статус / Где остановились"** section near the end.
-2. Read `PROMPT_FOXINBURG.md` (site/task spec) if the task touches the Tilda
+2. Read `PROMPT_FOXINBURG.md` (historical task spec) if the task touches the
    site, and `bot/README.md` + `bot/DEPLOY.md` if the task touches the MAX bot.
 3. Check open/merged PRs with the `git_view_pr` tool to confirm what already
    shipped.
@@ -77,7 +77,7 @@ and the next step. Never put secrets/tokens in the note or in DEVLOG.md.
 
 - Bot tests: `cd bot && python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt && pytest -q`
 - CI: `.github/workflows/bot-ci.yml` runs `pytest -q` on any change under `bot/**`.
-- Bot lives in `bot/` (FastAPI + MAX + BigBen CRM + LLM). Site work is in Tilda
-  (project 2053071) and prototypes in `prototype/` — see DEVLOG sessions 1–8.
+- Bot lives in `bot/` (FastAPI + MAX + BigBen CRM + LLM). Site is a static
+  build in `prototype/` (generators + `build_static_site.py`) — see DEVLOG sessions 1–8.
 - Key IDs / endpoints / deploy notes: `DEVLOG.md` → "Ключевые значения" and the
   bot "Что осталось сделать" subsection. Secrets are env-only, never committed.

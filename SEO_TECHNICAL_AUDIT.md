@@ -28,7 +28,7 @@
 **Топ-5 приоритетов:**
 1. **C1** Подключить Яндекс.Метрику 109945462 через существующий гейтинг `fxb-consent` — без этого все остальные улучшения неизмеримы.
 2. **H1** Условная/отложенная загрузка three.js + GLB: прелоад только на главной, на остальных — по взаимодействию/idle.
-3. **H2** Редиректы `/news → /novosti` и старых Tilda-URL → 301.
+3. **H2** Редиректы `/news → /novosti` и старых legacy-URL → 301.
 4. **M1** Custom 404-страница.
 5. **M2** Убрать неиспользуемые `foxi.glb` (1.2МБ) и `foxi-rigged-v1-17clips.glb` (1.2МБ) из деплоя.
 
@@ -40,7 +40,7 @@
 |----|----------|-----------|----------|----------------|--------------|--------|
 | C1 | **Critical** | Analytics | Яндекс.Метрика и GA4 отсутствуют на страницах: 0 совпадений `ym(`, `googletagmanager`, `109945462` в `dist_prod`. Счётчик 109945462 и цели существуют, событие согласия `fxb-consent` уже реализовано | `grep -rn "109945462\|ym(\|gtag" prototype/dist_prod/*.html` → пусто; `prototype/wow/foxi-consent.js:3,23` | Подключить Метрику в `build_static_site.py` (head-сниппет с defer-активацией по `fxb-consent`), см. §3.C1 | S (0.5д) |
 | H1 | **High** | Performance | three.js (~700КБ) + `foxi-splash.glb` (688КБ) + `foxi-rigged.glb` (726КБ) грузятся на **каждой** странице (modulepreload в head + инлайн-fetch), включая `/policy` | `prototype/build_static_site.py:341-348` (инлайн-лоадер `window.__fxbPre`); `ls -la prototype/dist_prod/mascot/` | Условная загрузка: прелоад GLB только на главной, на остальных — lazy по IntersectionObserver/idle; three.js динамическим `import()` | M (1-2д) |
-| H2 | **High** | Indexation | `/news` → 404 вместо 301 на `/novosti`; старые Tilda-URL (`/page32889798.html` и аналоги) → 404 без редиректа. Потеря ссылочного веса и исторических позиций | `curl -sI https://dymova-english.ru/news` → `HTTP/2 404`; `curl -sI .../page32889798.html` → 404 | `redir` правила в `bot/deploy/Caddyfile` | S (1ч) |
+| H2 | **High** | Indexation | `/news` → 404 вместо 301 на `/novosti`; старые legacy-URL (`/page32889798.html` и аналоги) → 404 без редиректа. Потеря ссылочного веса и исторических позиций | `curl -sI https://dymova-english.ru/news` → `HTTP/2 404`; `curl -sI .../page32889798.html` → 404 | `redir` правила в `bot/deploy/Caddyfile` | S (1ч) |
 | M1 | **Medium** | UX/Indexation | Нет custom 404-страницы — Caddy отдаёт дефолтную. Потерянные пользователи, нет навигации обратно | `curl -s https://dymova-english.ru/nonexistent-xyz` — дефолтный ответ Caddy | Собрать `404.html` в билде + `handle_errors` в Caddyfile | S (2ч) |
 | M2 | **Medium** | Performance | Неиспользуемые `foxi.glb` (1.2МБ) и `foxi-rigged-v1-17clips.glb` (1.2МБ) уезжают в прод | `ls prototype/dist_prod/mascot/` — файлы присутствуют; не ссылается ни один HTML | Удалить из `dist_prod`/исключить в rsync или билде | XS (15мин) |
 | M3 | **Medium** | Schema | Нет Review/AggregateRating (отзывы Яндекса есть на `/kontakty`), Event (Летняя Академия), VideoObject | Аудит JSON-LD в `dist_prod`: EducationalOrganization+LocalBusiness сайтwide, Course×11, FAQPage, Article×15, BreadcrumbList — Review/Event/VideoObject отсутствуют | Добавить в `SCHEMA_MAP`/`INDEX_SCHEMA` в `build_static_site.py` | M (1д) |
@@ -129,14 +129,14 @@ LAZY_3D = ("<script>"
 **Правка: `bot/deploy/Caddyfile`** (блок `dymova-english.ru`):
 
 ```caddy
-# Legacy Tilda URLs и алиасы
+# Legacy URL (pageXXXXX.html) и алиасы
 redir /news /novosti 301
 redir /page32889798.html / 301
-# …добавить маппинг всех известных старых Tilda-URL из архива/логов:
+# …добавить маппинг всех известных старых URL из архива/логов:
 # redir /page<old>.html /<новый-алиас> 301
 ```
 
-Полный список старых URL получить из Яндекс.Вебмастера (после подключения C1 появятся данные о 404) и из `wget`-архива старого Tilda-сайта, если сохранился. Правило: каждый старый URL → **один хоп** на максимально релевантную новую страницу, не цепочки.
+Полный список старых URL получить из Яндекс.Вебмастера (после подключения C1 появятся данные о 404) и из `wget`-архива старой версии сайта, если сохранился. Правило: каждый старый URL → **один хоп** на максимально релевантную новую страницу, не цепочки.
 
 ### M1 — Custom 404
 
