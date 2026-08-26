@@ -99,10 +99,15 @@ dymova-english.ru {
         file_server
     }
 
-    # Кэширование статики. Имена файлов БЕЗ хэшей в URL — поэтому только
-    # неделя (max-age=604800), immutable и год ставить НЕЛЬЗЯ: при замене
-    # файла клиенты должны получить новую версию в обозримый срок.
-    @static path /mascot/* /wow/* /assets/* /gallery/* /team-media/* /media/* /favicon.png /og-cover.png
+    # Кэширование статики. Имена файлов БЕЗ хэшей в URL.
+    # Фото (команда, галерея, медиа) меняем часто и под теми же именами —
+    # no-cache: ETag-ревалидация, новая версия видна сразу, неизменная
+    # отдаётся 304. Инцидент сессии 83: владелец неделю видел старые
+    # фото карточек направлений из-за max-age=604800.
+    @photos path /gallery/* /team-media/* /media/*
+    header @photos Cache-Control "no-cache"
+    # Редко меняемая статика — неделя (immutable/год НЕЛЬЗЯ: имена без хэшей).
+    @static path /mascot/* /wow/* /assets/* /favicon.png /og-cover.png
     header @static Cache-Control "public, max-age=604800"
 
     # Security-заголовки. HSTS намеренно БЕЗ includeSubDomains — на
