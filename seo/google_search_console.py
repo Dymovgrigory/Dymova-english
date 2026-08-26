@@ -31,8 +31,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import SEO_DIR, get_db, load_env
 
 import requests
+from urllib.parse import quote
 
-SITE_URL = "sc-domain:dymova-english.ru"
+SITE_URL = "https://dymova-english.ru/"  # ресурс-префикс (доменного ресурса у владельца нет)
 API = "https://www.googleapis.com/webmasters/v3"
 SCOPE = "https://www.googleapis.com/auth/webmasters.readonly"
 CSV_PATH = os.path.join(SEO_DIR, "gsc_queries.csv")
@@ -70,7 +71,7 @@ def fetch_queries(token, date_from, date_to):
             "startRow": start,
         }
         r = requests.post(
-            f"{API}/sites/{SITE_URL}/searchAnalytics/query",
+            f"{API}/sites/{quote(SITE_URL, safe='')}/searchAnalytics/query",
             headers={**headers, "Content-Type": "application/json"},
             json=body, timeout=60)
         if r.status_code in (429, 500, 502, 503, 504):
