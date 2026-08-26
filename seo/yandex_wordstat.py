@@ -96,6 +96,9 @@ def api_call(api_key, folder_id, method, body, retries=10, counter=None):
             time.sleep(wait)
             delay = min(delay * 2, 60)
             continue
+        if r.status_code == 400 and "Invalid query" in r.text:
+            print(f"  400 Invalid query, пропускаем: {body.get('phrase')!r}", file=sys.stderr)
+            return None
         raise SystemExit(f"Ошибка API {r.status_code} на {method}: {r.text[:500]}")
     raise SystemExit(f"{method}: не удалось после {retries} попыток")
 
@@ -114,6 +117,8 @@ def fetch_freq(api_key, folder_id, phrase, counter):
     data = api_call(api_key, folder_id, "topRequests",
                     {"phrase": phrase, "numPhrases": NUM_PHRASES, "regions": REGIONS},
                     counter=counter)
+    if data is None:  # 400 Invalid query — помечаем -1, чтобы не переспрашивать
+        return -1
     target = norm(phrase)
     for item in data.get("results", []):
         if norm(item.get("phrase")) == target:
