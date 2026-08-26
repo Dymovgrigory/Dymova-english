@@ -11,7 +11,9 @@ seo/
 ├── common.py             # чтение .env.seo, sqlite-подключение, схема БД
 ├── parse_semantic_map.py # SEO_SEMANTIC_MAP.md → keywords.csv + keywords.sqlite
 ├── yandex_webmaster.py   # API Вебмастера v4 → webmaster_queries (sqlite+csv)
-├── yandex_wordstat.py    # Директ API v5 WordstatReports → wordstat (sqlite+csv)
+├── yandex_wordstat.py    # Yandex Cloud Search API v2 Wordstat → wordstat (sqlite+csv)
+├── google_search_console.py # GSC API → gsc_queries (нужен GOOGLE_SA_KEY)
+├── yandex_metrika.py     # Метрика v1 поисковые фразы → metrika_phrases (нужен METRIKA_TOKEN)
 ├── merge_report.py       # join всего → report.md + report.csv с флагами
 ├── keywords.csv          # [данные, gitignored]
 ├── keywords.sqlite       # [данные, gitignored] таблицы: keywords, webmaster_queries, wordstat
@@ -34,12 +36,11 @@ YANDEX_WEBMASTER_TOKEN=...   # есть, работает (user_id 1629110380, �
 WORDSTAT_API_KEY=            # TODO: API-ключ Yandex Cloud (Search API) — см. «Wordstat» ниже
 WORDSTAT_FOLDER_ID=          # TODO: id каталога Yandex Cloud
 DIRECT_TOKEN=                # устарело: OAuth Директа больше не принимается Wordstat API (404)
-GOOGLE_SA_KEY=               # TODO: JSON-ключ service account для GSC (точка расширения)
+GOOGLE_SA_KEY=               # путь к JSON service account для GSC (или JSON одной строкой)
+METRIKA_TOKEN=               # OAuth-токен Метрики (metrika:read), счётчик 109945462
 ```
 
-TODO Метрика: счётчик 109945462, OAuth-токен Метрики не получен — раздел аналитики
-поисковых фраз Метрики не подключён. Когда будет токен: API Метрики v1,
-`https://api-metrika.yandex.net/stat/v1/data` с `dimensions=ym:s:searchPhrase`.
+Скрипты GSC и Метрики готовы и ждут ключей — см. раздел «GSC и Метрика» ниже.
 
 ## Команды
 
@@ -112,10 +113,25 @@ target_url и флаги:
 4. Wordstat обновлять раз в месяц (частотность меняется медленно; скрипт сам
    пропускает запросы со свежими данными < 35 дней).
 
-## Расширения (заложены, не реализованы)
+## GSC и Метрика: как владельцу получить ключи (пошагово)
 
-- **Google Search Console**: завести service account, JSON в `GOOGLE_SA_KEY`,
-  скрипт `google_search_console.py` → таблица `gsc_queries` (аналог
-  `webmaster_queries`), join в `merge_report.py`.
-- **Яндекс Метрика** (счётчик 109945462): OAuth-токен, поисковые фразы и
-  конверсии по страницам.
+Скрипты `google_search_console.py` и `yandex_metrika.py` реализованы; без ключей
+выходят мягко с подсказкой. После заполнения ключей в `.env.seo` прогон:
+`seo/.venv/bin/python seo/google_search_console.py` и
+`seo/.venv/bin/python seo/yandex_metrika.py` — данные попадут в таблицы
+`gsc_queries` и `metrika_phrases`. Join в `merge_report.py` — следующий шаг
+после первой успешной выгрузки.
+
+**Google Search Console (GOOGLE_SA_KEY):**
+1. console.cloud.google.com → проект → включить «Google Search Console API»;
+2. IAM → Service Accounts → создать, скачать JSON-ключ;
+3. Search Console → Настройки → Пользователи → добавить email сервисного
+   аккаунта с доступом «чтение»;
+4. В `.env.seo`: `GOOGLE_SA_KEY=/полный/путь/key.json` (или JSON одной строкой).
+
+**Яндекс Метрика (METRIKA_TOKEN), счётчик 109945462:**
+1. https://oauth.yandex.ru → «Зарегистрировать новое приложение»,
+   платформа «веб-сервисы», права `metrika:read`;
+2. Открыть `https://oauth.yandex.ru/authorize?response_type=token&client_id=<ID>`
+   под логином владельца счётчика → скопировать токен;
+3. В `.env.seo`: `METRIKA_TOKEN=y0__...`

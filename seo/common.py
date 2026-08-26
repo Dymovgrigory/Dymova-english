@@ -66,6 +66,28 @@ def init_schema(conn):
             fetched_at  TEXT,
             PRIMARY KEY (query, region)
         );
+
+        CREATE TABLE IF NOT EXISTS gsc_queries (
+            query       TEXT,
+            date_from   TEXT,
+            date_to     TEXT,
+            impressions INTEGER DEFAULT 0,
+            clicks      INTEGER DEFAULT 0,
+            ctr         REAL DEFAULT 0,
+            position    REAL,
+            fetched_at  TEXT,
+            PRIMARY KEY (query, date_from, date_to)
+        );
+
+        CREATE TABLE IF NOT EXISTS metrika_phrases (
+            query       TEXT,
+            date_from   TEXT,
+            date_to     TEXT,
+            visits      INTEGER DEFAULT 0,
+            pageviews   INTEGER DEFAULT 0,
+            fetched_at  TEXT,
+            PRIMARY KEY (query, date_from, date_to)
+        );
         """
     )
     conn.commit()
