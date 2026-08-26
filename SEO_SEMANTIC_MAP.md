@@ -894,6 +894,10 @@ Pillar: хранить как поле pillar в Cluster (P0–P9).
 | дымова инглиш | B | `/` |
 | фоксибург | B | `/` |
 | foxy english school | B | `/` |
+| foxy fox языковая студия | B | `/` |
+| foxy fox языковая студия в долгопрудном | B+L | `/` |
+| языковая школа dimova | B | `/` |
+| dimova english school | B | `/` |
 | my level учебники | I | NEW `/blog/my-level-uchebniki` |
 | my level 2 | I | NEW `/blog/my-level-uchebniki` |
 | набор на новый учебный год английский картинки | I | `/novosti` |
