@@ -3,7 +3,7 @@
 
 Сырьё: `фото и видео/` (реальные съёмки школы, ~2,4 ГБ).
 Выход: `prototype/media/life/<серия>/` — веб-ассеты:
-  - фото: `-1600.webp` (hero, q80) и `-900.webp` (card, q75), EXIF-ориентация применена;
+  - фото: `-1600.webp` (hero, q75) и `-900.webp` (card, q75), EXIF-ориентация применена;
   - видео: `.mp4` (H.264 ≤1280px через avconvert) + постер `-poster.webp` (qlmanage);
 и манифест `prototype/media/manifest.json` (см. media_library.py).
 
@@ -74,7 +74,7 @@ def process_photo(src: Path, dst_dir: Path) -> dict | None:
             if w >= MIN_PHOTO_W and not out_big.exists():
                 big = im.copy()
                 big.thumbnail((HERO_W, HERO_W * 2))
-                big.save(out_big, "WEBP", quality=80, method=4)
+                big.save(out_big, "WEBP", quality=75, method=4)
             return {
                 "w": w, "h": h,
                 "orientation": "landscape" if w >= h else "portrait",

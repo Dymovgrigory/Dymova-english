@@ -4746,3 +4746,25 @@ TODO: 6 NO_PAGE_WITH_SHOWS (страницы по запросам с показ
 **Как проверено:** `make build`+`make minify` (0 stale), `build_static_site.py` ×3 (dist/dist_staging/dist_prod по 96 стр.), `grep -ri tilda prototype/dist_prod/` = 0, локальный http.server + Playwright-скриншоты блока «Пособия и материалы» (карточки с картинками рендерятся, webp грузятся 1200px).
 
 **Осталось / следующий шаг:** полный аудит сайта (владелец отложил: контент/навигация/скорость/SEO — «вывести в ТОП-1»); page_tseny.html вернуть в генератор; форму заявки на проде протестировать end-to-end после переименования поля (бот принимает произвольный dict, но стоит отправить тестовую заявку).
+
+## Сессия 85 — 2026-08-27: аудит-волна «приведение в идеал», ч.1 — производительность и контентные правки
+
+**Запрос владельца:** полный аудит сайта и приведение его в идеал (контент/навигация/скорость/SEO). Коммит и деплой делать автоматически, без подтверждений.
+
+**Что сделано:**
+1. **Производительность:**
+   - `build_media.py`: качество hero-webp q80 → q75; пересобраны все `-1600.webp` в `media/life/` (~30 фото, экономия ~30–45% на файл, напр. DSC_0432 860 КБ → 402 КБ).
+   - Атрибуты `width`/`height` у `<img>` в блоках (block_header_unified, block_shapka, block_slogan, block_photobank_gallery и др.) и в генераторах — против CLS.
+   - Лайтбокс (`media_library.py`): убран пустой `src=""` у `<img>` (лишний запрос к текущей странице).
+   - Удалён тяжёлый мусор: неминифицированные `mascot/vendor/three/build/three.{core,module}.js` (~77k строк, в проде используются `.min.js`), исходник `wow/cinema-src.mp4` (4,3 МБ, в проде сжатый cinema.mp4), `media/wow/sphere-anim.webp`.
+2. **Контентные правки (`build_subpages.py`):**
+   - /doshkolniki: eyebrow «3–6 лет» → «2–6 лет»; цены разбиты на «Группа 4–6 лет» 9 000 ₽ (60 мин) и «Малыши 2–3 года» 7 000 ₽ (45 мин).
+   - /letnyaya-akademiya: переведена в прошедшее время («как это было летом 2026»), CTA → «Оставить заявку на 2027», факты/фичи переписаны.
+   - Точечные правки остальных page_* (podrostki, preparation, ekskursii, meropriyatiya и др.) — см. дифф.
+3. **Сборка:** `devflow.py all` + `build_static_site.py` → dist и dist_prod (по 96 стр.). Зачищены сироты в dist*/ (copytree dirs_exist_ok не удаляет устаревшее): cinema-src.mp4, sphere-anim.webp, unminified three.js — rsync `--delete` уберёт их на проде.
+
+**Как проверено:** локальный http.server на dist_prod — /, /podrostki/, /doshkolniki/, /zhizn-shkoly/ → 200; пересобранный webp 200; grep по dist_prod — ссылок на удалённые файлы нет.
+
+**Деплой:** push в main + rsync -az --delete dist_prod/ → yc-user@89.169.132.104:/home/yc-user/foxinburg-site/.
+
+**Осталось / следующий шаг:** аудит продолжается — контент/навигация/скорость/SEO (цель владельца — ТОП-1); page_tseny.html вернуть в генератор; тестовая заявка end-to-end; контроль CTR сниппетов через 2–4 недели после волн 81–83f.
