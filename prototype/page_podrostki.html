@@ -620,6 +620,50 @@
 </style>
 
 
+<style>
+#fxb-page.fxb-blog-page .fxb-hero{padding:66px 24px 44px}
+#fxb-page.fxb-blog-page .fxb-hero-inner{max-width:980px}
+#fxb-page.fxb-blog-page .fxb-h1{font-size:clamp(30px,4.4vw,48px);margin-bottom:14px}
+#fxb-page.fxb-blog-page .fxb-sub{max-width:760px;font-size:16px;margin-bottom:18px}
+#fxb-page.fxb-blog-page .fxb-article-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 14px;color:rgba(255,255,255,.82);font-weight:700;font-size:14px;letter-spacing:.01em}
+#fxb-page.fxb-blog-page .fxb-article-meta span{display:inline-flex;align-items:center;gap:8px}
+#fxb-page.fxb-blog-page .fxb-article-meta span+span::before{content:"•";margin-right:14px;color:rgba(255,255,255,.5)}
+#fxb-page.fxb-blog-page .fxb-article-body{max-width:760px;margin:0 auto;color:var(--ink);font-size:17px;line-height:1.78;font-weight:500}
+#fxb-page.fxb-blog-page .fxb-article-body h2{font-size:clamp(24px,3vw,34px);line-height:1.18;margin:44px 0 14px;font-weight:800;color:var(--ink)}
+#fxb-page.fxb-blog-page .fxb-article-body h3{font-size:clamp(19px,2.4vw,24px);line-height:1.25;margin:34px 0 12px;font-weight:800;color:var(--purple-2)}
+#fxb-page.fxb-blog-page .fxb-article-body p{margin:0 0 18px;color:var(--ink)}
+#fxb-page.fxb-blog-page .fxb-article-body p:last-child{margin-bottom:0}
+#fxb-page.fxb-blog-page .fxb-article-body ul{margin:0 0 18px 20px;padding-left:18px}
+#fxb-page.fxb-blog-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
+#fxb-page.fxb-blog-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
+#fxb-page.fxb-blog-page .fxb-article-body a:hover{color:var(--orange)}
+/* Те же стили для не-блоговых страниц с article_css (geo/mytishchi, podrostki):
+   там #fxb-page без класса fxb-blog-page, иначе текстовые секции без стилей (аудит 85d). */
+#fxb-page .fxb-article-body{max-width:760px;margin:0 auto;color:var(--ink);font-size:17px;line-height:1.78;font-weight:500}
+#fxb-page .fxb-article-body h2{font-size:clamp(24px,3vw,34px);line-height:1.18;margin:44px 0 14px;font-weight:800;color:var(--ink)}
+#fxb-page .fxb-article-body h3{font-size:clamp(19px,2.4vw,24px);line-height:1.25;margin:34px 0 12px;font-weight:800;color:var(--purple-2)}
+#fxb-page .fxb-article-body p{margin:0 0 18px;color:var(--ink)}
+#fxb-page .fxb-article-body p:last-child{margin-bottom:0}
+#fxb-page .fxb-article-body ul{margin:0 0 18px 20px;padding-left:18px}
+#fxb-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
+#fxb-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
+#fxb-page .fxb-article-body a:hover{color:var(--orange)}
+#fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
+#fxb-page .fxb-related h2{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:14px}
+#fxb-page .fxb-related-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+#fxb-page .fxb-related-list a{display:block;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:16px;padding:16px 18px;box-shadow:0 12px 28px -20px rgba(57,40,82,.35);color:var(--purple-2);font-weight:800;line-height:1.35}
+#fxb-page .fxb-related-list a:hover{border-color:rgba(102,45,146,.22);color:var(--orange)}
+#fxb-page.fxb-blog-page .fxb-article-body table{width:100%;border-collapse:collapse;margin:0 0 22px;font-size:15px;line-height:1.55;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 12px 28px -22px rgba(57,40,82,.35)}
+#fxb-page.fxb-blog-page .fxb-article-body th{background:rgba(102,45,146,.08);color:var(--purple-2);font-weight:800;text-align:left;padding:12px 14px}
+#fxb-page.fxb-blog-page .fxb-article-body td{padding:12px 14px;border-top:1px solid rgba(57,40,82,.08);color:var(--ink);vertical-align:top}
+/* Аудит 85c: широкие таблицы выходили за экран на мобильных — горизонтальный
+   скролл всей страницы. Даём таблице собственную прокрутку. */
+@media(max-width:640px){#fxb-page.fxb-blog-page .fxb-article-body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+@media(max-width:860px){#fxb-page .fxb-related-list{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){#fxb-page.fxb-blog-page .fxb-hero{padding:56px 18px 38px}#fxb-page .fxb-related-list{grid-template-columns:1fr}}
+</style>
+
+
 <script>
 (function(){
   var root=document.getElementById('fxb-page');if(!root)return;

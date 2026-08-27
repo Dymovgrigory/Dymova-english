@@ -319,6 +319,17 @@ ARTICLE_CSS = """
 #fxb-page.fxb-blog-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
 #fxb-page.fxb-blog-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
 #fxb-page.fxb-blog-page .fxb-article-body a:hover{color:var(--orange)}
+/* Те же стили для не-блоговых страниц с article_css (geo/mytishchi, podrostki):
+   там #fxb-page без класса fxb-blog-page, иначе текстовые секции без стилей (аудит 85d). */
+#fxb-page .fxb-article-body{max-width:760px;margin:0 auto;color:var(--ink);font-size:17px;line-height:1.78;font-weight:500}
+#fxb-page .fxb-article-body h2{font-size:clamp(24px,3vw,34px);line-height:1.18;margin:44px 0 14px;font-weight:800;color:var(--ink)}
+#fxb-page .fxb-article-body h3{font-size:clamp(19px,2.4vw,24px);line-height:1.25;margin:34px 0 12px;font-weight:800;color:var(--purple-2)}
+#fxb-page .fxb-article-body p{margin:0 0 18px;color:var(--ink)}
+#fxb-page .fxb-article-body p:last-child{margin-bottom:0}
+#fxb-page .fxb-article-body ul{margin:0 0 18px 20px;padding-left:18px}
+#fxb-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
+#fxb-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
+#fxb-page .fxb-article-body a:hover{color:var(--orange)}
 #fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
 #fxb-page .fxb-related h2{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:14px}
 #fxb-page .fxb-related-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -1110,6 +1121,7 @@ PAGES["page_mladshie_shkolniki.html"] = {
 }
 
 PAGES["page_podrostki.html"] = {
+    "article_css": True,
     "hero_grad": "linear-gradient(135deg,#1e1433 0%,#4a2a7a 55%,#662d92 100%)",
     "eyebrow": "Для подростков 11–16 лет",
     "h1": 'Английский для <span class="fxb-accent">подростков</span>',
@@ -1495,6 +1507,7 @@ PAGES["page_preparation.html"] = {
 
 # ----- гео-страницы (подтверждённый Wordstat-спрос, сессия 82) -----
 PAGES["page_geo_mytishchi.html"] = {
+    "article_css": True,
     "hero_grad": "linear-gradient(135deg,#241a36 0%,#4a2a7a 55%,#7b4fc0 100%)",
     "eyebrow": "Рядом с Мытищами",
     "h1": 'Подготовка к школе и английский <span class="fxb-accent">рядом с Мытищами</span>',
