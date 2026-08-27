@@ -196,6 +196,14 @@
   #fxb-shapka .fxb-nav{gap:2px}
   #fxb-shapka .fxb-topline{gap:10px}
 }
+/* Аудит 85c: на 961–1400px топлайн (лого + бейдж + меню + кнопка) не влезал —
+   горизонтальный скролл на всех подстраницах. Бейдж рейтинга прячем,
+   рейтинг дублируется в блоках отзывов. */
+@media(min-width:961px) and (max-width:1400px){
+  #fxb-shapka .fxb-badge{display:none}
+  #fxb-shapka .fxb-nav>a,#fxb-shapka .fxb-dd-btn{font-size:12px;padding:8px 8px}
+  #fxb-shapka .fxb-act-btn{padding:8px 14px}
+}
 @media(max-width:960px){
   #fxb-shapka{overflow:visible}
   #fxb-shapka .fxb-topline{position:relative;z-index:10001;flex-wrap:wrap;padding:12px 0 10px}

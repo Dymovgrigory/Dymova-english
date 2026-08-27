@@ -323,6 +323,9 @@
 #fxb-page.fxb-blog-page .fxb-article-body table{width:100%;border-collapse:collapse;margin:0 0 22px;font-size:15px;line-height:1.55;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 12px 28px -22px rgba(57,40,82,.35)}
 #fxb-page.fxb-blog-page .fxb-article-body th{background:rgba(102,45,146,.08);color:var(--purple-2);font-weight:800;text-align:left;padding:12px 14px}
 #fxb-page.fxb-blog-page .fxb-article-body td{padding:12px 14px;border-top:1px solid rgba(57,40,82,.08);color:var(--ink);vertical-align:top}
+/* Аудит 85c: широкие таблицы выходили за экран на мобильных — горизонтальный
+   скролл всей страницы. Даём таблице собственную прокрутку. */
+@media(max-width:640px){#fxb-page.fxb-blog-page .fxb-article-body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
 @media(max-width:860px){#fxb-page .fxb-related-list{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){#fxb-page.fxb-blog-page .fxb-hero{padding:56px 18px 38px}#fxb-page .fxb-related-list{grid-template-columns:1fr}}
 </style>
