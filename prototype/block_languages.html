@@ -110,7 +110,7 @@
       <button class="fxb-modal-close" type="button">&times;</button>
       <h3 class="fxb-modal-title" id="fxbLangModalTitle">Записаться на курс</h3>
       <div class="fxb-modal-options">
-        <a class="fxb-opt" href="#popup:course">
+        <a class="fxb-opt" id="fxbLangFormLink" data-fxb-zayavka data-fxb-subject="Запись на курс" data-fxb-window="Языки: записаться на курс" role="button" tabindex="0">
           <span class="fxb-opt-ic fxb-opt-form">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#662d92" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
           </span>
@@ -143,9 +143,9 @@
         <div class="fxb-trial-row"><span>Длительность</span><strong>60 минут</strong></div>
         <div class="fxb-trial-row"><span>Формат</span><strong>Индивидуально с педагогом</strong></div>
       </div>
-      <p class="fxb-trial-note">После оплаты с вами свяжется администратор для подбора удобного времени.</p>
-      <a class="fxb-pay-btn" href="#popup:payment">
-        Оплатить 1 125 &#8381;
+      <p class="fxb-trial-note">Оставьте заявку — администратор свяжется, подберёт удобное время и расскажет про оплату.</p>
+      <a class="fxb-pay-btn" id="fxbTrialFormLink" data-fxb-zayavka data-fxb-subject="Пробный урок" data-fxb-window="Языки: пробный урок" role="button" tabindex="0">
+        Записаться на пробный — 1 125 &#8381;
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <p class="fxb-trial-alt">Или <a href="https://max.ru/id611904726658_bot" target="_blank" rel="noopener">напишите в Max</a> — поможем записаться</p>
@@ -249,6 +249,8 @@
       var lang=b.getAttribute('data-lang');
       langTitle.textContent='Записаться на курс — '+lang+' язык';
       maxText.textContent='«Хочу записаться на курс '+lang.toLowerCase()+' языка»';
+      var fl=document.getElementById('fxbLangFormLink');
+      if(fl)fl.setAttribute('data-fxb-subject','Запись на курс — '+lang+' язык');
       openModal(langModal);
     });
   });
@@ -256,8 +258,18 @@
     b.addEventListener('click',function(){
       var lang=b.getAttribute('data-lang');
       trialTitle.textContent='Пробный урок — '+lang+' язык';
+      var tl=document.getElementById('fxbTrialFormLink');
+      if(tl)tl.setAttribute('data-fxb-subject','Пробный урок — '+lang+' язык');
       openModal(trialModal);
     });
+  });
+
+  // Клик по «Оставить заявку на сайте» / «Записаться на пробный» внутри
+  // модалок языков: закрываем родительскую модалку, заявку открывает
+  // глобальный обработчик [data-fxb-zayavka] (см. блок формы заявки).
+  ['fxbLangFormLink','fxbTrialFormLink'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.addEventListener('click',function(){closeModal(langModal);closeModal(trialModal);});
   });
 
   [langModal,trialModal].forEach(function(m){

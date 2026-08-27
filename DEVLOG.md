@@ -4768,3 +4768,26 @@ TODO: 6 NO_PAGE_WITH_SHOWS (страницы по запросам с показ
 **Деплой:** push в main + rsync -az --delete dist_prod/ → yc-user@89.169.132.104:/home/yc-user/foxinburg-site/.
 
 **Осталось / следующий шаг:** аудит продолжается — контент/навигация/скорость/SEO (цель владельца — ТОП-1); page_tseny.html вернуть в генератор; тестовая заявка end-to-end; контроль CTR сниппетов через 2–4 недели после волн 81–83f.
+
+## Сессия 85b — 2026-08-27: аудит-волна «приведение в идеал», ч.2 — полный аудит (4 трека) и исправления
+
+**Запрос владельца:** продолжить полный аудит сайта и приведение в идеал; коммит+деплой всегда автоматически.
+
+**Аудит (4 параллельных трека по dist_prod, 96 стр.):**
+1. **Ссылки/ресурсы:** внутренние битые — 0, кроме двух мёртвых CTA-кнопок `href="#popup:course"` и `href="#popup:payment"` в модалках языков на главной (наследие Tilda: `#popup:*` открывал попапы движком Тильды, у нас обработчика нет). Плюс canonical/og:url на несуществующий `/404` в 404.html.
+2. **SEO on-page:** title/description уникальны, ровно один H1, alt у всех img, canonical/og везде, sitemap 96=96. Важное: неравномерная FAQPage-разметка (нет на /doshkolniki, /mladshie-shkolniki, /grammar, /reading, /letnyaya-akademiya; у /standartnye-offline, /online-zanyatiya, /podderzhivayushchie-online нет и Course); 3 дублирующихся блока EducationalOrganization на каждой странице; 15 description >160 симв. (см. /tmp/seo_audit*.py).
+3. **Контент:** meta description /letnyaya-akademiya в будущем времени («Бронируйте места!») при прошедшем событии; карточка ЛА на /tseny без временной привязки; нестыковка «утренние/вечерние группы» между главной и страницами направлений (нужно уточнение владельца).
+4. **Производительность:** autoplay-видео (sphere 3,5–6,3 МБ на главной, cards.mp4 + iphone на /zhizn-shkoly) качались сразу; foxi-atmos.css/js в конце <body> на всех подстраницах; ~29 МБ мёртвых медиа (старые версии sphere/iphone, cinema.mp4, foxi-3d.js).
+
+**Исправлено:**
+1. **Мёртвые CTA (потеря заявок):** `#popup:course` → `data-fxb-zayavka` («Запись на курс — <язык>»), `#popup:payment` → `data-fxb-zayavka` («Пробный урок — <язык>», текст «Записаться на пробный — 1 125 ₽», примечание про оплату через администратора — платёжного провайдера на сайте нет). Клик закрывает родительскую модалку. Правки в main_combined_v7.html и block_languages.html (+min).
+2. **Lazy-видео:** src autoplay-видео ставится только при приближении к вьюпорту (IntersectionObserver, rootMargin 400px) — главная (sphere) и /zhizn-shkoly (cards.mp4 переведён на data-fxb-lazy-video + preload=none); тот же паттерн в media_library.py (WOW_ALPHA_JS).
+3. **Мета /letnyaya-akademiya** (seo_meta_live.json): прошедшее время, «Запись на лето 2027 откроется в июне». Карточка на /tseny — с пометкой «лето 2026, смены завершены».
+4. **404.html:** canonical/og:url убраны (build_head умеет опускать их при пустом canonical; wrap_page различает «нет ключа» vs «пусто»).
+5. **foxi-atmos.css/js** перенесены из конца <body> в <head> всех подстраниц (build_static_site.py).
+6. **Чистка ~29 МБ:** удалены wow/cinema.mp4, wow/foxi-3d.js, wow/cinema-poster.webp, media/wow/{sphere.mp4, iphone.mp4, sphere.poster.webp, iphone.poster.webp} + сироты старых версий в dist*/.
+7. **Осознанно оставлено:** modulepreload three.js (~850 КБ) — это сознательная цена живого 3D-Фокси на заставке (требование владельца «только живой», сессия 46), заставка есть на всех страницах.
+
+**Как проверено:** сборка 96 стр. ×2; локальный http.server + Playwright: цепочка «Записаться на курс → модалка → Оставить заявку → форма заявки с предметом „Запись на курс — Немецкий язык“» работает; sphere-video без src до скролла, src ставится при входе во вьюпорт; 404 без canonical; atmos в <head>.
+
+**Осталось / следующий шаг:** FAQPage-разметка на страницы без неё; дедупликация JSON-LD организации; 15 длинных description; «утренние/вечерние группы» — уточнить у владельца; форму заявки на проде — тестовая отправка end-to-end; page_tseny.html вернуть в генератор.

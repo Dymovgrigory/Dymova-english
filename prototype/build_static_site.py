@@ -266,7 +266,8 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
         '<link rel="icon" type="image/png" href="/favicon.png">',
         f"<title>{title}</title>",
         f'<meta name="description" content="{description}">',
-        f'<link rel="canonical" href="{canonical}">',
+        # canonical/og:url опускаем, если canonical пуст (404.html — отдаётся с любого URL)
+        *([f'<link rel="canonical" href="{canonical}">'] if canonical else []),
         f'<meta name="robots" content="{robots}">',
         # подтверждение владения сайтом для Яндекс.Вебмастера (сессия 47)
         '<meta name="yandex-verification" content="c08742055e803bc5">',
@@ -274,7 +275,7 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
         '<meta name="google-site-verification" content="ZvzgMgWANwISH6Ke2ApOXh6a-KjCxK-RQPrmjerGoOs">',
         f'<meta property="og:title" content="{title}">',
         f'<meta property="og:description" content="{description}">',
-        f'<meta property="og:url" content="{canonical}">',
+        *([f'<meta property="og:url" content="{canonical}">'] if canonical else []),
         f'<meta property="og:type" content="{og_type}">',
         '<meta property="og:locale" content="ru_RU">',
         '<meta property="og:site_name" content="Языковая школа Фоксинбург">',
@@ -465,13 +466,18 @@ PRELOADER_BODY = (
 def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, noindex: bool) -> str:
     title = meta.get("title") or f"{alias} — Фоксинбург"
     description = meta.get("description") or ""
-    canonical = meta.get("canonical") or f"{SITE}/{alias}"
+    # пустая строка = явное «без canonical» (404); отсутствие ключа = дефолт SITE/alias
+    canonical = meta["canonical"] if "canonical" in meta else f"{SITE}/{alias}"
     extra_schema = INDEX_SCHEMA if alias == "index" else SCHEMA_MAP.get(alias, [])
     og_type = "website"
     if alias in ARTICLE_ALIASES:
         extra_schema = []  # уже есть собственная Article+BreadcrumbList
         og_type = "article"
     head = build_head(alias, title, description, canonical, noindex, extra_schema, og_type)
+    # foxi-atmos (параллакс-атмосфера на подстраницах) — в <head>, а не в конце
+    # body (аудит 85: stylesheet в body задерживал отрисовку и перестраивал стили)
+    if alias != "index":
+        head += "\n" + ATMOS_SNIPPET
     # Видимые хлебные крошки для страниц, чей BreadcrumbList живёт в seo_schema/
     # (курсы из SCHEMA_MAP). У лендингов из build_subpages крошки уже в контенте.
     if alias != "index" and '<nav class="fxb-breadcrumbs"' not in content:
@@ -491,7 +497,6 @@ def wrap_page(alias: str, content: str, shapka: str, footer: str, meta: dict, no
         '<html lang="ru">\n<head>\n' + head + "\n</head>\n<body>\n"
         + PRELOADER_BODY + "\n" + body + "\n"
         + WOW_SNIPPET + "\n"
-        + ("" if alias == "index" else ATMOS_SNIPPET + "\n")
         + "</body>\n</html>\n"
     )
 
@@ -592,14 +597,16 @@ def main() -> None:
         "404", not_found_content, shapka, footer,
         {"title": "Страница не найдена — Фоксинбург",
          "description": "Такой страницы нет. Перейдите на главную, к программам или контактам школы Фоксинбург в Долгопрудном.",
-         "canonical": f"{SITE}/404"},
+         # 404.html отдаётся с любого несуществующего URL — canonical на конкретный
+         # /404 (которого нет) вреден; noindex уже выставлен, canonical не нужен
+         "canonical": ""},
         True,
     )
     with open(os.path.join(out_dir, "404.html"), "w", encoding="utf-8") as f:
         f.write(not_found_html)
 
-    # WOW-ассеты (scroll-эффекты; foxi-3d.js лежит про запас, не подключается;
-    # wow/foxi.glb — 1.2 МБ модель только для него — в прод НЕ уходит, сессия 59)
+    # WOW-ассеты (scroll-эффекты; foxi-3d.js и его модель foxi.glb удалены —
+    # не подключались нигде, сессии 35 и 85)
     wow_src = os.path.join(DIR, "wow")
     if os.path.isdir(wow_src):
         shutil.copytree(wow_src, os.path.join(out_dir, "wow"), dirs_exist_ok=True,

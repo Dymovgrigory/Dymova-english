@@ -250,12 +250,14 @@ WOW_ALPHA_JS = """
 // WOW alpha: Chrome/Firefox → VP9 WebM; Safari → H.264 flat (data-flat),
 // а если flat нет — animated WebP (<img>). hvc1-alpha мерцает на macOS Safari,
 // animated WebP тормозит — поэтому приоритет у аппаратного H.264.
+// src ставим только при приближении к вьюпорту (аудит 85: видео ниже первого
+// экрана не должны качаться при загрузке страницы).
 (function () {
   var isSafari = /^((?!chrome|chromium|android).)*safari/i.test(navigator.userAgent);
-  document.querySelectorAll('video[data-wow-alpha]').forEach(function (v) {
+  function initWowVideo(v) {
     if (isSafari) {
       var flat = v.getAttribute('data-flat');
-      if (flat) { v.src = flat; return; }
+      if (flat) { v.src = flat; var pf = v.play(); if (pf && pf.catch) pf.catch(function () {}); return; }
       var img = document.createElement('img');
       img.src = v.getAttribute('data-webp');
       img.alt = v.getAttribute('data-alt') || '';
@@ -263,8 +265,18 @@ WOW_ALPHA_JS = """
       v.replaceWith(img);
     } else {
       v.src = v.getAttribute('data-webm');
+      var pw = v.play(); if (pw && pw.catch) pw.catch(function () {});
     }
-  });
+  }
+  var vids = document.querySelectorAll('video[data-wow-alpha]');
+  if ('IntersectionObserver' in window) {
+    var wio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { initWowVideo(e.target); wio.unobserve(e.target); } });
+    }, { rootMargin: '400px' });
+    vids.forEach(function (v) { wio.observe(v); });
+  } else {
+    vids.forEach(initWowVideo);
+  }
 })();
 </script>
 """
