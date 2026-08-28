@@ -158,6 +158,11 @@ def _db() -> sqlite3.Connection:
 def _migrate_bookings(conn: sqlite3.Connection) -> None:
     """Платное пробное: колонки инвойса (CREATE TABLE не меняет существующие)."""
     cols = {r["name"] for r in conn.execute("PRAGMA table_info(bookings)")}
+    mcols = {r["name"] for r in conn.execute("PRAGMA table_info(bb_group_meta)")}
+    if "for_events" not in mcols:
+        conn.execute("ALTER TABLE bb_group_meta ADD COLUMN for_events INTEGER NOT NULL DEFAULT 0")
+    if "cost_per_event" not in mcols:
+        conn.execute("ALTER TABLE bb_group_meta ADD COLUMN cost_per_event INTEGER")
     if "invoice_id" not in cols:
         conn.execute("ALTER TABLE bookings ADD COLUMN invoice_id TEXT")
     if "amount_kopecks" not in cols:
@@ -418,14 +423,20 @@ def list_payments_by_student(student_id: int, limit: int = 50) -> list[dict]:
 
 
 def upsert_group_meta(group_id: int, *, teacher: str = "", period_start: str = "",
-                      period_end: str = "", monthly_payment: int | None = None) -> None:
+                      period_end: str = "", monthly_payment: int | None = None,
+                      for_events: bool = False,
+                      cost_per_event: int | None = None) -> None:
     _db().execute(
         "INSERT INTO bb_group_meta (group_id, teacher, period_start, period_end,"
-        " monthly_payment, synced_at) VALUES (?,?,?,?,?,?)"
+        " monthly_payment, for_events, cost_per_event, synced_at)"
+        " VALUES (?,?,?,?,?,?,?,?)"
         " ON CONFLICT(group_id) DO UPDATE SET teacher=excluded.teacher,"
         " period_start=excluded.period_start, period_end=excluded.period_end,"
-        " monthly_payment=excluded.monthly_payment, synced_at=excluded.synced_at",
-        (group_id, teacher, period_start, period_end, monthly_payment, _now()))
+        " monthly_payment=excluded.monthly_payment,"
+        " for_events=excluded.for_events,"
+        " cost_per_event=excluded.cost_per_event, synced_at=excluded.synced_at",
+        (group_id, teacher, period_start, period_end, monthly_payment,
+         1 if for_events else 0, cost_per_event, _now()))
     _db().commit()
 
 

@@ -62,8 +62,10 @@ def _group_card(g: dict, duration_min: int | None = None,
     level = cefr or booking.derive_level(caption)
     # Платное пробное — только для учебных групп (распознанный курс/уровень);
     # мероприятия и консультации остаются бесплатной записью.
+    is_event = bool((meta or {}).get("for_events"))
+    event_price = (meta or {}).get("cost_per_event") if is_event else None
     price = (booking.trial_price_rub(duration_min)
-             if settings.TRIAL_PAID and (course or level) else None)
+             if settings.TRIAL_PAID and (course or level) and not is_event else None)
     return {
         "id": g["id"],
         "caption": caption,
@@ -81,6 +83,8 @@ def _group_card(g: dict, duration_min: int | None = None,
         "teacher": booking.group_teacher(g["id"], caption),
         "duration_min": duration_min,
         "trial_price_rub": price,
+        "is_event": is_event,
+        "event_price_rub": event_price,
         "period_start": (meta or {}).get("period_start") or (period[0] if period else None),
         "period_end": (meta or {}).get("period_end") or (period[1] if period else None),
         "schedule": _json.loads(g.get("schedule_json") or "[]"),
@@ -270,15 +274,32 @@ async def _create_paid_booking(req: "BookingRequest") -> JSONResponse:
             duration = int((t1 - t0).total_seconds() // 60)
         except Exception:
             duration = None
-    if booking.trial_price_rub(duration) is None:
-        # Цена не определена (консультации/мероприятия) — бесплатная запись.
+    meta = await asyncio.to_thread(bb_store.group_meta_map)
+    meta = meta.get(req.group_id) or {}
+    is_event = bool(meta.get("for_events"))
+    event_price = meta.get("cost_per_event") if is_event else None
+    if is_event:
+        if not event_price:
+            # Бесплатное мероприятие (ДОД, консультации) — простая запись.
+            return await _create_free_booking(req)
+        result, pay = await booking.start_paid_trial(
+            parent_name=req.parent_name, phone=req.phone,
+            child_name=req.child_name, child_age=req.child_age,
+            group_id=req.group_id, lesson_id=req.lesson_id,
+            duration_min=duration, comment=req.comment, source=req.source,
+            price_rub=int(event_price),
+            description=f"Мероприятие: {(bb_store.get_group(req.group_id) or {}).get('caption', '')}",
+            idempotency_key=req.idempotency_key)
+    elif booking.trial_price_rub(duration) is None:
+        # Цена не определена (консультации/нестандарт) — бесплатная запись.
         return await _create_free_booking(req)
-    result, pay = await booking.start_paid_trial(
-        parent_name=req.parent_name, phone=req.phone,
-        child_name=req.child_name, child_age=req.child_age,
-        group_id=req.group_id, lesson_id=req.lesson_id,
-        duration_min=duration, comment=req.comment, source=req.source,
-        idempotency_key=req.idempotency_key)
+    else:
+        result, pay = await booking.start_paid_trial(
+            parent_name=req.parent_name, phone=req.phone,
+            child_name=req.child_name, child_age=req.child_age,
+            group_id=req.group_id, lesson_id=req.lesson_id,
+            duration_min=duration, comment=req.comment, source=req.source,
+            idempotency_key=req.idempotency_key)
     if result.status == "awaiting_payment" and pay:
         return JSONResponse({
             "ok": True, "status": "awaiting_payment",

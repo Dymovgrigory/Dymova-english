@@ -317,3 +317,56 @@ def test_teacher_from_meta_overlay(client):
     assert card["teacher"] == "Вероника Дымова"
     assert card["period_start"] == "2026-09-01"
     assert card["period_end"] == "2027-05-31"
+
+
+def test_event_full_payment(client, monkeypatch):
+    """Мероприятие с cost_per_event: оплата полной стоимости, не пробного."""
+    _seed(60)
+    day = (_dt.date.today() + _dt.timedelta(days=10)).isoformat()
+    bb_store.upsert_group({"id": 21, "caption": "Осенняя Академия 5.10-9.10",
+                           "capacity": 10, "occupied": 2, "free_slots": 8,
+                           "overbooked": False,
+                           "filial": {"id": 10, "caption": "F"}, "auditory": {},
+                           "schedule": []})
+    bb_store.upsert_lesson({"id": 77, "date": day,
+                            "starts_at": day + "T09:00:00+03:00",
+                            "ends_at": day + "T13:00:00+03:00",
+                            "group": {"id": 21, "caption": "Осенняя Академия"},
+                            "filial": {"id": 10, "caption": "F"}})
+    bb_store.upsert_group_meta(21, teacher="Анохин Роман Леонидович",
+                               period_start="2026-10-05", period_end="2026-10-09",
+                               for_events=True, cost_per_event=12000)
+    monkeypatch.setattr(booking, "_fresh_group", lambda gid: _async_fresh(gid))
+    # карточка: мероприятие с ценой участия
+    r = client.get("/api/platform/groups")
+    card = [g for g in r.json()["data"] if g["id"] == 21][0]
+    assert card["is_event"] and card["event_price_rub"] == 12000
+    assert card["trial_price_rub"] is None
+    # запись → инвойс на 12000 с описанием «Мероприятие»
+    r = client.post("/api/platform/booking", json={
+        "parent_name": "Анна", "phone": "+7 900 111-22-33",
+        "group_id": 21, "lesson_id": 77, "idempotency_key": "ev1"})
+    assert r.status_code == 201
+    body = r.json()
+    assert body["widget"]["amount"] == 12000.0
+    assert body["widget"]["description"].startswith("Мероприятие")
+
+
+def test_free_event_simple_booking(client, monkeypatch):
+    """Бесплатное мероприятие (cost_per_event=0) — запись без оплаты."""
+    _seed(60)
+    bb_store.upsert_group_meta(1, for_events=True, cost_per_event=None)
+    monkeypatch.setattr(booking, "_fresh_group", lambda gid: _async_fresh(gid))
+    from app.platform.bigben_v2 import get_bigben_v2
+    async def _lead(**kw):
+        return {"id": 903}
+    async def _demo(**kw):
+        return {"id": 803}
+    monkeypatch.setattr(get_bigben_v2(), "create_lead", _lead, raising=False)
+    monkeypatch.setattr(get_bigben_v2(), "create_demo_lesson", _demo, raising=False)
+    monkeypatch.setattr(booking, "_schedule_reminders", lambda *a, **k: None)
+    r = client.post("/api/platform/booking", json={
+        "parent_name": "Анна", "phone": "+7 900 111-22-33",
+        "group_id": 1, "lesson_id": 55, "idempotency_key": "ev2"})
+    assert r.status_code == 201
+    assert r.json()["status"] == "confirmed"

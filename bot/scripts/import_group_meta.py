@@ -21,7 +21,12 @@ import httpx  # noqa: E402
 from app.platform import bb_store  # noqa: E402
 
 API = "https://platformapi.bigbencrm.ru/public/api/groups"
-STATUSES = ("current", "future")
+# all+events_mode — чтобы попали мероприятия (for_events=1), их нет
+# в выдаче current/future.
+LIST_PARAMS = [
+    {"status": "current"}, {"status": "future"},
+    {"status": "all", "events_mode": "true"},
+]
 
 
 def _date(iso: str) -> str:
@@ -35,9 +40,9 @@ def main() -> None:
         raise SystemExit("Задайте BIGBEN_INTERNAL_TOKEN (auth_token из пульта владельца)")
     total = 0
     with httpx.Client(headers={"Authorization": f"Bearer {token}"}, timeout=30) as c:
-        for status in STATUSES:
+        for params in LIST_PARAMS:
             resp = c.get(API, params={
-                "status": status, "sort_by": "caption", "sort_order": "asc",
+                **params, "sort_by": "caption", "sort_order": "asc",
                 "page": 1, "per_page": 500,
             })
             resp.raise_for_status()
@@ -47,12 +52,15 @@ def main() -> None:
             for g in payload.get("data", []):
                 teacher = ((g.get("teacher") or {}).get("fio") or "").strip()
                 monthly = g.get("monthly_payment")
+                cpe = g.get("cost_per_event")
                 bb_store.upsert_group_meta(
                     g["id"],
                     teacher=teacher,
                     period_start=_date(g.get("timestart", "")),
                     period_end=_date(g.get("timefinish", "")),
-                    monthly_payment=int(monthly) if monthly else None)
+                    monthly_payment=int(monthly) if monthly else None,
+                    for_events=bool(g.get("for_events")),
+                    cost_per_event=int(cpe) if cpe else None)
                 total += 1
     print(f"Импортировано метаданных групп: {total}")
 

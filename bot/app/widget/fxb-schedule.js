@@ -32,6 +32,7 @@
     .fxs-tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:#f1f5f9;color:#475569}
     .fxs-tag.level{background:#ede9fe;color:#6d28d9}
     .fxs-tag.course{background:#fef3c7;color:#92400e}
+    .fxs-tag.event{background:#fce7f3;color:#be185d}
     .fxs-tag.teacher{background:#eff6ff;color:#1d4ed8}
     .fxs-meta{font-size:14px;color:#64748b;display:flex;flex-direction:column;gap:4px}
     .fxs-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -225,15 +226,20 @@
       const full = g.free_slots !== null && g.free_slots <= 0;
       const period = fmtPeriod(g);
       const tags = [
+        g.is_event ? `<span class="fxs-tag event">🎉 Мероприятие</span>` : "",
         g.course ? `<span class="fxs-tag course">${esc(g.course)}</span>` : "",
         g.level ? `<span class="fxs-tag level">${esc(g.level)}</span>` : "",
         g.teacher ? `<span class="fxs-tag teacher">👩‍🏫 ${esc(g.teacher)}</span>` : "",
         g.duration_min ? `<span class="fxs-tag">⏱ ${g.duration_min} мин</span>` : "",
       ].join("");
-      const price = g.trial_price_rub
-        ? `<span class="fxs-price">Пробное · ${fmtPrice(g.trial_price_rub)}</span>` : "";
+      const effPrice = g.is_event ? g.event_price_rub : g.trial_price_rub;
+      const priceLabel = g.is_event ? "Участие" : "Пробное";
+      const price = effPrice
+        ? `<span class="fxs-price">${priceLabel} · ${fmtPrice(effPrice)}</span>` : "";
       const btnLabel = full ? "Мест нет"
-        : next ? (g.trial_price_rub ? `Записаться · ${fmtPrice(g.trial_price_rub)}` : "Записаться на пробное")
+        : next ? (effPrice
+            ? (g.is_event ? `Оплатить участие · ${fmtPrice(effPrice)}` : `Записаться · ${fmtPrice(effPrice)}`)
+            : (g.is_event ? "Записаться на мероприятие" : "Записаться на пробное"))
         : "Нет занятий";
       return `<div class="fxs-card">
         <h3>${esc(g.caption)}</h3>
@@ -294,11 +300,11 @@
         <div class="fxs-alt">${alts || "<p>Свободных альтернатив сейчас нет — оставьте заявку, и мы подберём вариант.</p>"}</div>
         <div class="fxs-actions"><button class="fxs-btn ghost" data-fxs="close">Закрыть</button></div></div>`;
     } else {
-      const price = group && group.trial_price_rub;
+      const price = group && (group.is_event ? group.event_price_rub : group.trial_price_rub);
       ov.innerHTML = `<div class="fxs-modal" role="dialog" aria-modal="true" aria-label="Запись на пробное занятие">
-        <h3>Запись на пробное занятие</h3>
+        <h3>${group && group.is_event ? "Запись на мероприятие" : "Запись на пробное занятие"}</h3>
         <p class="fxs-sub">${esc(group ? group.caption : "")}${lesson ? `<br>🗓 ${esc(fmtWhen(lesson))}` : ""}</p>
-        ${price ? `<div class="fxs-payinfo">Стоимость пробного занятия — <b>${fmtPrice(price)}</b>. Оплата картой онлайн, место закрепляется сразу после оплаты.</div>` : ""}
+        ${price ? `<div class="fxs-payinfo">${group && group.is_event ? "Стоимость участия" : "Стоимость пробного занятия"} — <b>${fmtPrice(price)}</b>. Оплата картой онлайн, место закрепляется сразу после оплаты.</div>` : ""}
         <form id="fxs-form" novalidate>
           <div class="fxs-field" data-f="parent_name"><label>Имя родителя</label>
             <input name="parent_name" autocomplete="name" placeholder="Как к вам обращаться">
@@ -312,7 +318,7 @@
             <input name="child_age" inputmode="numeric" placeholder="Например, 8"></div>
           <div class="fxs-actions">
             <button type="button" class="fxs-btn ghost" data-fxs="close">Отмена</button>
-            <button type="submit" class="fxs-btn" ${state.sending ? "disabled" : ""}>${state.sending ? "Отправляем…" : price ? `Перейти к оплате · ${fmtPrice(price)}` : "Записаться"}</button>
+            <button type="submit" class="fxs-btn" ${state.sending ? "disabled" : ""}>${state.sending ? "Отправляем…" : price ? `Перейти к оплате · ${fmtPrice(price)}` : (group && group.is_event ? "Записаться на мероприятие" : "Записаться")}</button>
           </div>
         </form></div>`;
       ov.querySelector("#fxs-form").addEventListener("submit", onSubmit);

@@ -389,6 +389,8 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
                            child_age: str, group_id: int, lesson_id: int,
                            duration_min: int | None, comment: str = "",
                            source: str = "site",
+                           price_rub: int | None = None,
+                           description: str = "",
                            idempotency_key: str | None = None) -> tuple[BookingResult, dict | None]:
     """Создаёт запись в ожидании оплаты + инвойс CloudPayments.
 
@@ -401,10 +403,10 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
     if not phone_norm:
         return BookingResult(0, "failed", error="Некорректный номер телефона"), None
 
-    price = trial_price_rub(duration_min)
+    price = price_rub if price_rub is not None else trial_price_rub(duration_min)
     if price is None:
         return BookingResult(0, "failed",
-                             error="Цена пробного для этой группы не настроена"), None
+                             error="Цена для этой группы не настроена"), None
 
     filial_id = None
     local_group = bb_store.get_group(group_id)
@@ -450,14 +452,16 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
     try:
         inv = provider.create_invoice(
             amount_kopecks=price * 100, phone=phone_norm,
-            description=f"Пробное занятие: {fresh.get('caption', '')}"[:120])
+            description=(description
+                         or f"Пробное занятие: {fresh.get('caption', '')}")[:120])
     except billing.BillingError as exc:
         bb_store.fail_booking(booking_id, f"invoice_failed: {exc}")
         return BookingResult(booking_id, "failed", error=str(exc)), None
     bb_store.set_booking_awaiting_payment(booking_id, inv["invoice_id"],
                                           amount_kopecks=price * 100)
     widget = dict(inv["widget"])
-    widget["description"] = f"Пробное занятие: {fresh.get('caption', '')}"[:120]
+    widget["description"] = (description
+                             or f"Пробное занятие: {fresh.get('caption', '')}")[:120]
     return BookingResult(booking_id, "awaiting_payment"), {
         "invoice_id": inv["invoice_id"], "widget": widget,
         "amount_rub": price}
