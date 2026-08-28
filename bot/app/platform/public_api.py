@@ -170,6 +170,10 @@ async def create_booking(req: BookingRequest, request: Request) -> JSONResponse:
                     meta={"group_id": req.group_id})
     if settings.TRIAL_PAID:
         return await _create_paid_booking(req)
+    return await _create_free_booking(req)
+
+
+async def _create_free_booking(req: "BookingRequest") -> JSONResponse:
     result = await booking.book_trial(
         parent_name=req.parent_name, phone=req.phone,
         child_name=req.child_name, child_age=req.child_age,
@@ -242,6 +246,9 @@ async def _create_paid_booking(req: "BookingRequest") -> JSONResponse:
             duration = int((t1 - t0).total_seconds() // 60)
         except Exception:
             duration = None
+    if booking.trial_price_rub(duration) is None:
+        # Цена не определена (консультации/мероприятия) — бесплатная запись.
+        return await _create_free_booking(req)
     result, pay = await booking.start_paid_trial(
         parent_name=req.parent_name, phone=req.phone,
         child_name=req.child_name, child_age=req.child_age,

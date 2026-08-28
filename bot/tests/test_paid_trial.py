@@ -218,3 +218,22 @@ def test_booking_status_polls_cp_when_webhook_missing(client, monkeypatch):
     assert r.json()["status"] == "confirmed"
     row = bb_store.booking_by_invoice(inv)
     assert row["lead_id"] == 901 and row["demo_lesson_id"] == 801
+
+
+def test_no_price_falls_back_to_free_booking(client, monkeypatch):
+    """Группа без определимой цены (30-мин консультация) — бесплатная запись."""
+    _seed(30)
+    monkeypatch.setattr(booking, "_fresh_group", lambda gid: _async_fresh(gid))
+    from app.platform.bigben_v2 import get_bigben_v2
+    async def _lead(**kw):
+        return {"id": 902}
+    async def _demo(**kw):
+        return {"id": 802}
+    monkeypatch.setattr(get_bigben_v2(), "create_lead", _lead, raising=False)
+    monkeypatch.setattr(get_bigben_v2(), "create_demo_lesson", _demo, raising=False)
+    monkeypatch.setattr(booking, "_schedule_reminders", lambda *a, **k: None)
+    r = client.post("/api/platform/booking", json={
+        "parent_name": "Анна", "phone": "+7 900 111-22-33",
+        "group_id": 1, "lesson_id": 55, "idempotency_key": "k30"})
+    assert r.status_code == 201
+    assert r.json()["status"] == "confirmed"
