@@ -40,7 +40,15 @@ def _verified_identity(request: Request):
 
 
 class PayRequest(BaseModel):
-    amount_rub: float = Field(gt=0, le=500000)
+    # Сумма от клиента используется только если SUBSCRIPTION_PRICE_RUB не задан.
+    amount_rub: float | None = Field(default=None, gt=0, le=500000)
+
+
+def _effective_amount_rub(client_amount: float | None) -> float | None:
+    from app.config import settings
+    if settings.SUBSCRIPTION_PRICE_RUB > 0:
+        return float(settings.SUBSCRIPTION_PRICE_RUB)
+    return client_amount
 
 
 @router.post("/api/miniapp/account/pay")
@@ -57,9 +65,15 @@ async def create_payment(req: PayRequest, request: Request) -> JSONResponse:
     conv = await asyncio.to_thread(get_store().get, identity.user_id, identity.platform)
     phone = (conv.lead.phone or "").strip() if conv and conv.lead else ""
     student = await asyncio.to_thread(bb_store.find_student_by_phone, phone) if phone else None
+    amount_rub = _effective_amount_rub(req.amount_rub)
+    if amount_rub is None:
+        return JSONResponse(
+            {"error": "amount_required",
+             "message": "Цена абонемента не настроена — напишите нам, выставим счёт."},
+            status_code=400)
     try:
         result = provider.create_invoice(
-            amount_kopecks=round(req.amount_rub * 100),
+            amount_kopecks=round(amount_rub * 100),
             phone=phone, student_id=student["id"] if student else None)
         # Т-Банк делает вызов Init (async), CloudPayments — локальный инвойс
         invoice = await result if asyncio.iscoroutine(result) else result

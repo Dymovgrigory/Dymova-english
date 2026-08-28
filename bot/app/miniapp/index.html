@@ -281,6 +281,10 @@
       <div id="ml-groups" style="margin-bottom:12px"></div>
       <div id="ml-lessons"></div>
       <div id="ml-fresh" style="margin-top:12px;font-size:12px;color:#8a8fa3"></div>
+      <div id="ml-pay" style="margin-top:16px">
+        <button class="btn" id="ml-pay-btn">Оплатить абонемент</button>
+        <div id="ml-pay-status" class="notice hidden" style="margin-top:10px"></div>
+      </div>
       <button class="btn btn--ghost" data-go="menu" style="margin-top:14px">Назад</button>
     </div>
   </section>
@@ -396,6 +400,6 @@
        Грузим синхронно и до app.js — тот читает мост сразу при запуске.
        Вне MAX скрипт просто не загрузится, страница работает как обычная. -->
   <script src="https://st.max.ru/js/max-web-app.js"></script>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

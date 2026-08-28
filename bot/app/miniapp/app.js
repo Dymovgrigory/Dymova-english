@@ -97,6 +97,70 @@ async function loadMyLessons() {
   }
 }
 
+// --- Оплата абонемента (CloudPayments-виджет; сумму задаёт сервер) ---
+function loadCpWidgetScript() {
+  return new Promise((resolve, reject) => {
+    if (window.cp && window.cp.CloudPayments) return resolve();
+    const s = document.createElement("script");
+    s.src = "https://widget.cloudpayments.ru/bundles/cloudpayments.min.js";
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("widget_load_failed"));
+    document.head.appendChild(s);
+  });
+}
+
+async function startPayment() {
+  const btn = document.getElementById("ml-pay-btn");
+  const st = document.getElementById("ml-pay-status");
+  btn.disabled = true;
+  st.classList.remove("hidden");
+  st.textContent = "Готовим оплату…";
+  try {
+    const r = await fetch(API + "/api/miniapp/account/pay", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...authHeaders() },
+      body: "{}",
+    });
+    const data = await r.json();
+    if (!r.ok) {
+      st.textContent = data.message || "Онлайн-оплата временно недоступна. Напишите нам — выставим счёт.";
+      return;
+    }
+    if (data.payment_url) { // Т-Банк: редирект на страницу оплаты
+      window.location.href = data.payment_url;
+      return;
+    }
+    if (!data.widget) {
+      st.textContent = "Не удалось подготовить оплату. Попробуйте позже.";
+      return;
+    }
+    st.textContent = "Открываем платёжную форму…";
+    await loadCpWidgetScript();
+    const widget = new window.cp.CloudPayments();
+    widget.pay("charge", {
+      publicId: data.widget.publicId,
+      description: data.widget.description,
+      amount: data.widget.amount,
+      currency: data.widget.currency,
+      invoiceId: data.widget.invoiceId,
+      accountId: data.widget.accountId,
+      skin: "mini",
+    }, {
+      onSuccess: () => {
+        st.textContent = "Оплата отправлена. Подтверждение придёт сообщением — спасибо!";
+      },
+      onFail: () => {
+        st.textContent = "Оплата не прошла. Деньги не списаны — попробуйте ещё раз.";
+      },
+      onComplete: () => { btn.disabled = false; },
+    });
+  } catch (e) {
+    st.textContent = "Не удалось загрузить платёжную форму. Проверьте интернет и попробуйте ещё раз.";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 
 // --- Навигация по экранам ---
 const SCREENS = ["menu", "select", "signup", "homework", "catalog", "branches", "cabinet", "mylessons"];
@@ -115,6 +179,7 @@ document.querySelectorAll("[data-go]").forEach((el) => {
 });
 
 // --- Помощник по выбору ---
+document.getElementById("ml-pay-btn").addEventListener("click", () => startPayment());
 document.getElementById("sel-go").addEventListener("click", async () => {
   const age = document.getElementById("sel-age").value;
   const fmt = document.getElementById("sel-format").value;

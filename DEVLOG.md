@@ -4975,3 +4975,13 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - securepay.tinkoff.ru отдаёт цепочку Russian Trusted Sub CA (Минцифры), которой нет в certifi → SSL verify fail. Добавлен Russian Trusted Root CA (bot/deploy/certs/russian_trusted_root_ca.pem, официальный, с gu-st.ru) и `_tbank_verify()`: ленивая сборка объединённого бандла рядом с certifi.
 - Также починен docker compose .env: `$` в пароле терминала съедался интерполяцией (`$XIUGO` → пусто) — заэкранировано `$$`.
 - Тесты billing зелёные (10).
+
+## 2026-08-28 — Оплата абонемента: CloudPayments как основной провайдер
+
+- Проверена пара CloudPayments (pk_b571... + secret) на api.cloudpayments.ru/test — Success:true. Т-Банк Init по-прежнему отдаёт 204 (пара TerminalKey/SecretKey не подходит для интернет-эквайринга), провайдер переключаем на CloudPayments.
+- config: добавлен SUBSCRIPTION_PRICE_RUB (>0 — сумма платежа только с сервера, клиентскую игнорируем; защита от занижения).
+- billing_api: PayRequest.amount_rub опционален; _effective_amount_rub(); 400 amount_required, если цена не задана.
+- Мини-апп «Мои занятия»: кнопка «Оплатить абонемент» → POST /api/miniapp/account/pay → виджет CloudPayments (charge, skin mini) или редирект на payment_url (Т-Банк). Все состояния (loading/error/success) показаны, успех = «подтверждение придёт сообщением» (истина — webhook pay).
+- app.js версия v=3. Тесты: +2 (server price override, amount_required). Полный регресс: 1062 passed.
+- Прод .env: добавлены CLOUDPAYMENTS_* (пока ENABLED=false до установки цены и вебхуков в ЛК CP).
+- Осталось: цена абонемента от владельца → SUBSCRIPTION_PRICE_RUB + CLOUDPAYMENTS_ENABLED=true; в ЛК CloudPayments прописать вебхуки check/pay/fail на https://bot.foxi-dev.ru/api/webhooks/cloudpayments/{check,pay,fail}.

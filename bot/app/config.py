@@ -125,6 +125,9 @@ class Settings(BaseSettings):
     CLOUDPAYMENTS_ENABLED: bool = False
     # Назначение платежа в чеке/виджете.
     CLOUDPAYMENTS_DESCRIPTION: str = "Оплата занятий Фоксинбург"
+    # Цена месячного абонемента в рублях. Если > 0 — сумма платежа берётся
+    # только отсюда, клиент сумму не присылает (защита от занижения).
+    SUBSCRIPTION_PRICE_RUB: int = 0
 
     # Провайдер оплат: cloudpayments | tbank (один активный).
     BILLING_PROVIDER: str = "cloudpayments"

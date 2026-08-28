@@ -90,3 +90,18 @@ def test_pay_disabled_without_config(tmp_path, monkeypatch):
     with TestClient(app, raise_server_exceptions=False) as c:
         r = c.post("/api/miniapp/account/pay", json={"amount_rub": 100})
     assert r.status_code == 503
+
+
+def test_server_price_overrides_client_amount(env, monkeypatch):
+    """SUBSCRIPTION_PRICE_RUB задан — клиентская сумма игнорируется."""
+    from app.config import settings
+    monkeypatch.setattr(settings, "SUBSCRIPTION_PRICE_RUB", 6900)
+    r = env.post("/api/miniapp/account/pay", json={"amount_rub": 1})
+    assert r.status_code == 201
+    assert r.json()["widget"]["amount"] == 6900.0
+
+
+def test_amount_required_when_no_server_price_and_no_amount(env):
+    r = env.post("/api/miniapp/account/pay", json={})
+    assert r.status_code == 400
+    assert r.json()["error"] == "amount_required"
