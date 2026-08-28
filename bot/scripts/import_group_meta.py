@@ -53,6 +53,11 @@ def main() -> None:
                 teacher = ((g.get("teacher") or {}).get("fio") or "").strip()
                 monthly = g.get("monthly_payment")
                 cpe = g.get("cost_per_event")
+                if g.get("for_events") and cpe is None:
+                    # Цена мероприятия — только в детальной карточке.
+                    d = c.get(f"{API}/{g['id']}", timeout=30)
+                    if d.status_code == 200:
+                        cpe = d.json().get("cost_per_event")
                 bb_store.upsert_group_meta(
                     g["id"],
                     teacher=teacher,
