@@ -4918,3 +4918,10 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - ДЕПЛОЙ сайта: dist_prod собран и залит rsync на foxinburg-vm:/home/yc-user/foxinburg-site/.
 - Живая проверка: /api/platform/health (все сущности свежие), /filials, /groups, /schedule — 200 с реальными данными; CORS для dymova-english.ru (GET + preflight POST booking) ок; страница https://dymova-english.ru/raspisanie/ отдаётся с виджетом.
 - Осталось ручное (с моей помощью): регистрация webhook BigBen (URL https://bot.dymova-english.ru/api/webhooks/bigben, секрет в .env проде), CloudPayments ключи.
+
+## 2026-08-28 — Фаза 12 (часть 1): Customer 360 в админке
+
+- API `GET /admin/api/customers/{id}/crm360` (право customers): CRM-карточка + ученик BigBen (по телефону, 10 цифр) + заявки на пробное + платежи BigBen + онлайн-оплаты CloudPayments + таймлайн + свежесть read-model.
+- Хелперы: `bb_store.list_bookings_by_phone/list_payments_by_student`, `billing.list_payments_by_phone` (нормализация телефона в Python, как find_student_by_phone).
+- Админка (`adminapp/app.js`): секция «Школа (BigBen)» в карточке клиента — ученик и баланс, заявки, платежи, онлайн-оплаты, пометка свежести; секция не блокирует карточку при ошибке (catch → null).
+- Тесты: test_customer360.py (4) — auth, unlinked, linked полная картина, 404. Регресс 1040 passed.

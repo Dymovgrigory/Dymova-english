@@ -695,18 +695,53 @@ async function loadCustomerCard(customerId, target) {
     return;
   }
   try {
-    const [customer, notes, tasks] = await Promise.all([
+    const [customer, notes, tasks, crm360] = await Promise.all([
       api(`/admin/api/customers/${customerId}`),
       api(`/admin/api/customers/${customerId}/notes`),
       api(`/admin/api/customers/${customerId}/tasks`),
+      // Customer 360: BigBen + заявки + платежи. Не критично для карточки —
+      // при ошибке показываем карточку без секции школы.
+      api(`/admin/api/customers/${customerId}/crm360`).catch(() => null),
     ]);
-    container.innerHTML = customerCardHtml(customer, notes.items || [], tasks.items || []);
+    container.innerHTML = customerCardHtml(customer, notes.items || [], tasks.items || [], crm360);
   } catch (err) {
     container.innerHTML = `<div class="customer-empty">${esc(err.message)}</div>`;
   }
 }
 
-function customerCardHtml(c, notes, tasks) {
+function schoolSectionHtml(d) {
+  if (!d) return "";
+  const rub = (k) => `${(Number(k || 0) / 100).toLocaleString("ru-RU")} ₽`;
+  const st = { pending: "в обработке", confirmed: "подтверждена", failed: "ошибка" };
+  let html = `<div class="c360__section"><h4>Школа (BigBen)</h4>`;
+  if (d.bb_student) {
+    html += `<dl class="kv">
+      <dt>Ученик</dt><dd>${esc(d.bb_student.fio)} <span class="muted">#${d.bb_student.id}</span></dd>
+      <dt>Баланс</dt><dd>${rub(d.bb_student.balance_kopecks)}</dd>
+    </dl>`;
+  } else {
+    html += `<div class="muted">Ученик с таким телефоном в BigBen не найден</div>`;
+  }
+  if (d.bookings && d.bookings.length) {
+    html += `<h4>Заявки на пробное</h4>` + d.bookings.slice(0, 5).map((b) =>
+      `<div class="note">${esc(b.child_name || "Ребёнок")} · ${esc(st[b.status] || b.status)}
+       <div class="note__meta">${esc(fmtTime(b.created_at))}${b.error ? ` · ${esc(b.error)}` : ""}</div></div>`).join("");
+  }
+  if (d.bb_payments && d.bb_payments.length) {
+    html += `<h4>Платежи (BigBen)</h4>` + d.bb_payments.slice(0, 5).map((p) =>
+      `<div class="note">${rub(p.amount_kopecks)}<div class="note__meta">${esc(fmtTime(p.paid_at))}</div></div>`).join("");
+  }
+  if (d.billing_payments && d.billing_payments.length) {
+    html += `<h4>Онлайн-оплаты</h4>` + d.billing_payments.slice(0, 5).map((p) =>
+      `<div class="note">${rub(p.amount_kopecks)} · ${esc(p.status)}
+       <div class="note__meta">${esc(fmtTime(p.paid_at || p.created_at))}</div></div>`).join("");
+  }
+  const fresh = d.freshness && d.freshness.students && d.freshness.students.last_synced_at;
+  if (fresh) html += `<div class="muted">Данные школы обновлены ${esc(fmtTime(fresh))}</div>`;
+  return html + `</div>`;
+}
+
+function customerCardHtml(c, notes, tasks, crm360) {
   const channels = (c.identities || []).map((i) =>
     `${channelPill(i.channel)} <span class="muted">${esc(i.external_id)}</span>`).join("<br>");
   const tags = (c.tags || []).map((t) =>
@@ -758,6 +793,7 @@ function customerCardHtml(c, notes, tasks) {
       <h4>Каналы</h4>
       ${channels || `<span class="muted">—</span>`}
     </div>
+    ${schoolSectionHtml(crm360)}
     <div class="c360__section">
       <h4>Теги</h4>
       <div class="tag-row">${tags}</div>

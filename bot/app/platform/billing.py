@@ -145,6 +145,19 @@ def mark_failed(invoice_id: str, raw: dict) -> None:
     _db().commit()
 
 
+def list_payments_by_phone(phone: str, limit: int = 50) -> list[dict]:
+    """Инвойсы CloudPayments по телефону (нормализация по последним 10 цифрам)."""
+    digits = "".join(ch for ch in (phone or "") if ch.isdigit())[-10:]
+    if not digits:
+        return []
+    conn = _db()
+    rows = conn.execute(
+        "SELECT * FROM billing_payments ORDER BY id DESC LIMIT 1000").fetchall()
+    out = [dict(r) for r in rows
+           if "".join(ch for ch in (dict(r).get("phone") or "") if ch.isdigit())[-10:] == digits]
+    return out[:limit]
+
+
 def get_payment(invoice_id: str) -> dict | None:
     row = _db().execute("SELECT * FROM billing_payments WHERE invoice_id=?",
                         (invoice_id,)).fetchone()

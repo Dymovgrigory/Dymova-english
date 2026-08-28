@@ -21,6 +21,7 @@ from fastapi import APIRouter, HTTPException, Request
 from app import crm_store
 from app.config import settings
 from app.max_client import get_max
+from app.platform import billing, bb_store
 from app.telegram_client import get_telegram
 
 logger = logging.getLogger(__name__)
@@ -443,6 +444,32 @@ async def customer_timeline(request: Request, customer_id: int, limit: int = 200
     actor = _authorize(request, "customers")
     _customer_or_404(customer_id)
     return {"items": crm_store.customer_timeline(customer_id, limit=limit)}
+
+
+@router.get("/customers/{customer_id}/crm360")
+async def customer_crm360(request: Request, customer_id: int) -> dict:
+    """Customer 360: карточка CRM + ученик BigBen + заявки + платежи + таймлайн.
+
+    Связка — по телефону (нормализация по последним 10 цифрам), никаких
+    внешних id от клиента. Данные BigBen — из read-model со пометкой свежести.
+    """
+    actor = _authorize(request, "customers")
+    customer = _customer_or_404(customer_id)
+    phone = (customer.get("phone") or "").strip()
+    student = bb_store.find_student_by_phone(phone) if phone else None
+    return {
+        "customer": customer,
+        "bb_student": (
+            {"id": student["id"], "fio": student["fio"],
+             "balance_kopecks": student["balance_kopecks"],
+             "email": student["email"]} if student else None),
+        "bookings": bb_store.list_bookings_by_phone(phone) if phone else [],
+        "bb_payments": (
+            bb_store.list_payments_by_student(student["id"]) if student else []),
+        "billing_payments": billing.list_payments_by_phone(phone) if phone else [],
+        "timeline": crm_store.customer_timeline(customer_id, limit=100),
+        "freshness": bb_store.freshness(),
+    }
 
 
 @router.patch("/customers/{customer_id}")

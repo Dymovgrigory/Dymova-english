@@ -363,6 +363,25 @@ def create_booking(*, parent_name: str, phone: str, child_name: str, child_age: 
         return int(row["id"]), True
 
 
+def list_bookings_by_phone(phone: str, limit: int = 50) -> list[dict]:
+    """Заявки на пробное по телефону (нормализация — как у find_student_by_phone)."""
+    digits = "".join(ch for ch in (phone or "") if ch.isdigit())[-10:]
+    if not digits:
+        return []
+    # Заявок немного (операционная таблица), телефон хранится в свободном
+    # формате — нормализуем в Python по последним 10 цифрам.
+    rows = _rows("SELECT * FROM bookings ORDER BY id DESC LIMIT 1000")
+    return [r for r in rows
+            if "".join(ch for ch in r.get("phone", "") if ch.isdigit())[-10:] == digits
+            ][:limit]
+
+
+def list_payments_by_student(student_id: int, limit: int = 50) -> list[dict]:
+    return _rows(
+        "SELECT * FROM bb_payments WHERE student_id = ? ORDER BY paid_at DESC LIMIT ?",
+        (student_id, limit))
+
+
 def booking_by_id(booking_id: int) -> dict | None:
     rows = _rows("SELECT * FROM bookings WHERE id=?", (booking_id,))
     return rows[0] if rows else None
