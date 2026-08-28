@@ -356,6 +356,9 @@
     state.paying = true;
     try {
       await loadCpWidget();
+      // Наш модал имеет максимальный z-index и перекрыл бы форму оплаты —
+      // прячем его, пока виджет CP открыт. bookingFor сохраняется.
+      closeModal(false);
       const widget = new window.cp.CloudPayments();
       widget.pay("charge", {
         publicId: pay.widget.publicId,
@@ -380,6 +383,7 @@
         },
         onFail: () => {
           state.done = null;
+          state.paying = false;
           renderModal();
           alert("Оплата не прошла — деньги не списаны. Попробуйте ещё раз.");
         },
@@ -387,6 +391,7 @@
       });
     } catch (e) {
       state.paying = false;
+      renderModal();
       alert("Не удалось загрузить платёжную форму. Проверьте интернет и попробуйте ещё раз.");
     }
   }
