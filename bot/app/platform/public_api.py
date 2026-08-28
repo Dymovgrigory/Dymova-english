@@ -45,15 +45,17 @@ def _is_kindergarten(caption: str, filial_caption: str) -> bool:
     return pat in (caption or "").lower() or pat in (filial_caption or "").lower()
 
 
-def _group_card(g: dict) -> dict:
+def _group_card(g: dict, duration_min: int | None = None) -> dict:
     group_raw = g.get("raw_json")
     import json as _json
     raw = _json.loads(group_raw) if isinstance(group_raw, str) else (group_raw or {})
     free = booking.group_free_slots(raw) if raw else g.get("free_slots")
-    age_from, age_to = _age_from_caption(g.get("caption", ""))
+    caption = g.get("caption", "")
+    age_from, age_to = _age_from_caption(caption)
+    price = booking.trial_price_rub(duration_min) if settings.TRIAL_PAID else None
     return {
         "id": g["id"],
-        "caption": g.get("caption", ""),
+        "caption": caption,
         "filial": {"id": g.get("filial_id"), "caption": g.get("filial_caption", "")},
         "auditory": g.get("auditory_caption", ""),
         "capacity": g.get("capacity"),
@@ -62,9 +64,20 @@ def _group_card(g: dict) -> dict:
         "low_availability": free is not None and 0 < free <= settings.LOW_AVAILABILITY_THRESHOLD,
         "age_from": age_from,
         "age_to": age_to,
+        "level": booking.derive_level(caption),
+        "level_rank": booking.level_rank(booking.derive_level(caption)),
+        "teacher": booking.derive_teacher(caption),
+        "duration_min": duration_min,
+        "trial_price_rub": price,
         "schedule": _json.loads(g.get("schedule_json") or "[]"),
         "synced_at": g.get("synced_at"),
     }
+
+
+def _duration_map() -> dict[int, int]:
+    today = date.today()
+    date_to = today + timedelta(days=settings.BIGBEN_LESSONS_WINDOW_DAYS)
+    return bb_store.lesson_duration_map(today.isoformat(), date_to.isoformat())
 
 
 @router.get("/filials")
@@ -89,7 +102,8 @@ async def groups(filial_id: int | None = Query(default=None),
             bb_store.list_lessons, today.isoformat(), date_to.isoformat())
         active_ids = {les.get("group_id") for les in lessons}
         items = [g for g in items if g["id"] in active_ids]
-    return {"data": [_group_card(g) for g in items]}
+    durations = await asyncio.to_thread(_duration_map)
+    return {"data": [_group_card(g, durations.get(g["id"])) for g in items]}
 
 
 @router.get("/schedule")
@@ -105,7 +119,8 @@ async def schedule(
         asyncio.to_thread(bb_store.list_lessons, today.isoformat(), date_to.isoformat(), group_id),
         asyncio.to_thread(bb_store.list_groups, filial_id),
     )
-    cards = {g["id"]: _group_card(g) for g in groups
+    durations = await asyncio.to_thread(_duration_map)
+    cards = {g["id"]: _group_card(g, durations.get(g["id"])) for g in groups
              if not _is_kindergarten(g.get("caption", ""), g.get("filial_caption", ""))}
     out_lessons = []
     for les in lessons:
@@ -153,6 +168,8 @@ class BookingRequest(BaseModel):
 async def create_booking(req: BookingRequest, request: Request) -> JSONResponse:
     analytics.track("booking_started", source=req.source or "site",
                     meta={"group_id": req.group_id})
+    if settings.TRIAL_PAID:
+        return await _create_paid_booking(req)
     result = await booking.book_trial(
         parent_name=req.parent_name, phone=req.phone,
         child_name=req.child_name, child_age=req.child_age,
@@ -203,6 +220,197 @@ async def _notify_booking(req: BookingRequest, result: booking.BookingResult) ->
             await client.send_message(admin_id, text)
         except Exception:
             logger.exception("booking: не удалось уведомить админа %s", admin_id)
+
+
+
+
+async def _create_paid_booking(req: "BookingRequest") -> JSONResponse:
+    """Платное пробное: запись в awaiting_payment + параметры виджета CP.
+
+    Длительность урока берём из read-model (мода по окну) — серверная цена.
+    """
+    from datetime import date as _date, timedelta as _td
+    row = await asyncio.to_thread(
+        bb_store._rows,
+        "SELECT starts_at, ends_at FROM bb_lessons WHERE id=?", (req.lesson_id,))
+    duration = None
+    if row:
+        try:
+            from datetime import datetime as _dt
+            t0 = _dt.fromisoformat(str(row[0]["starts_at"]).replace("Z", "+00:00"))
+            t1 = _dt.fromisoformat(str(row[0]["ends_at"]).replace("Z", "+00:00"))
+            duration = int((t1 - t0).total_seconds() // 60)
+        except Exception:
+            duration = None
+    result, pay = await booking.start_paid_trial(
+        parent_name=req.parent_name, phone=req.phone,
+        child_name=req.child_name, child_age=req.child_age,
+        group_id=req.group_id, lesson_id=req.lesson_id,
+        duration_min=duration, comment=req.comment, source=req.source,
+        idempotency_key=req.idempotency_key)
+    if result.status == "awaiting_payment" and pay:
+        return JSONResponse({
+            "ok": True, "status": "awaiting_payment",
+            "booking_id": result.booking_id,
+            "invoice_id": pay["invoice_id"],
+            "widget": pay["widget"], "amount_rub": pay["amount_rub"],
+        }, status_code=201)
+    if result.status == "duplicate":
+        return JSONResponse({
+            "ok": True, "status": "duplicate", "booking_id": result.booking_id,
+            "message": "Эта запись уже оформлена — мы свяжемся с вами."})
+    if result.status == "slot_unavailable":
+        return JSONResponse({
+            "ok": False, "status": "slot_unavailable",
+            "message": "Это место только что заняли. Вот другие варианты:",
+            "alternatives": result.alternatives or []}, status_code=409)
+    return JSONResponse({
+        "ok": False, "status": "failed",
+        "message": result.error or "Не удалось оформить запись. Попробуйте позже."},
+        status_code=502)
+
+
+@router.get("/booking/{booking_id}")
+async def booking_status(booking_id: int) -> JSONResponse:
+    """Статус записи для поллинга после оплаты. PII не отдаём.
+
+    Если запись ждёт оплаты, а вебхук CP ещё не дошёл — спрашиваем статус
+    платежа напрямую у CloudPayments API (запасной канал подтверждения).
+    """
+    row = await asyncio.to_thread(bb_store.booking_by_id, booking_id)
+    if row is None:
+        return JSONResponse({"ok": False, "error": "not_found"}, status_code=404)
+    status = row.get("status")
+    if status == "awaiting_payment" and row.get("invoice_id"):
+        status = await _refresh_paid_status(row)
+    return {"ok": True, "status": status, "booking_id": row.get("id")}
+
+
+async def _refresh_paid_status(row: dict) -> str:
+    from app.platform import billing
+    model = await billing.cp_find_payment(row["invoice_id"])
+    if not model:
+        return row.get("status")
+    st = str(model.get("Status", ""))
+    if st in ("Completed", "Authorized"):
+        is_new, _pay = billing.mark_paid(
+            row["invoice_id"], str(model.get("TransactionId", "")), model)
+        if is_new:
+            analytics.track("payment_success", source="cloudpayments-poll",
+                            meta={"invoice_id": row["invoice_id"]})
+            res = await booking.fulfill_paid_booking(row["invoice_id"])
+            return res.status if res else row.get("status")
+        fresh = await asyncio.to_thread(bb_store.booking_by_id, row["id"])
+        return fresh.get("status", row.get("status"))
+    if st in ("Declined", "Cancelled"):
+        billing.mark_failed(row["invoice_id"], model)
+        bb_store.fail_booking(row["id"], f"payment_{st.lower()}")
+        return "failed"
+    return row.get("status")
+
+
+class DiagnosticsRequest(BaseModel):
+    parent_name: str = Field(min_length=2, max_length=255)
+    phone: str = Field(min_length=7, max_length=50)
+    child_name: str = Field(default="", max_length=255)
+    child_age: str = Field(default="", max_length=20)
+    filial_id: int | None = Field(default=None)
+    slot: str = Field(default="", max_length=120)
+    comment: str = Field(default="", max_length=800)
+    idempotency_key: str | None = Field(default=None, max_length=64)
+
+
+@router.get("/diagnostics/slots")
+async def diagnostics_slots() -> dict:
+    """Слоты диагностики из конфига + филиалы для формы."""
+    import json as _json
+    raw = (settings.DIAGNOSTIC_SLOTS_JSON or "").strip()
+    slots: list[dict] = []
+    if raw:
+        try:
+            parsed = _json.loads(raw)
+            if isinstance(parsed, list):
+                slots = [x for x in parsed if isinstance(x, dict)]
+        except ValueError:
+            logger.error("DIAGNOSTIC_SLOTS_JSON: невалидный JSON")
+    filials_items = await asyncio.to_thread(bb_store.list_filials)
+    filial_map = {f["id"]: f["caption"] for f in filials_items}
+    weekdays = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"]
+    out = []
+    for sl in slots:
+        fid = sl.get("filial_id")
+        wd = sl.get("weekday")
+        out.append({
+            "filial_id": fid,
+            "filial": filial_map.get(fid, ""),
+            "weekday": wd,
+            "label": f"{weekdays[wd] if isinstance(wd, int) and 0 <= wd <= 6 else ''} "
+                     f"{sl.get('time', '')}".strip(),
+        })
+    return {"data": out,
+            "filials": [{"id": f["id"], "caption": f["caption"]}
+                        for f in filials_items]}
+
+
+@router.post("/diagnostics")
+async def create_diagnostics(req: DiagnosticsRequest) -> JSONResponse:
+    """Заявка на диагностику: лид в CRM + уведомление методисту и админам."""
+    from app.platform.bigben_v2 import BigBenError, get_bigben_v2
+    analytics.track("lead_created", source="site-diagnostics",
+                    meta={"filial_id": req.filial_id})
+    phone = booking.normalize_phone(req.phone)
+    if not phone:
+        return JSONResponse({"ok": False, "message": "Укажите корректный номер"},
+                            status_code=400)
+    note = ["Запись на диагностику (сайт)"]
+    if req.child_name:
+        note.append(f"Ребёнок: {req.child_name}, {req.child_age}")
+    if req.slot:
+        note.append(f"Выбранное время: {req.slot}")
+    if req.comment:
+        note.append(req.comment)
+    client = get_bigben_v2()
+    try:
+        lead = await client.create_lead(
+            name=req.parent_name, phone=phone, source="site-diagnostics",
+            comment=" | ".join(note)[:800],
+            idempotency_key=f"diag-{req.idempotency_key or ''}".strip("-") or None)
+        lead_id = lead.get("id")
+    except BigBenError as exc:
+        logger.error("diagnostics: lead failed: %s %s", exc.code, exc.details)
+        return JSONResponse(
+            {"ok": False,
+             "message": "Не удалось отправить заявку. Позвоните нам, пожалуйста."},
+            status_code=502)
+    await _notify_staff(
+        f"🧪 Диагностика (лид #{lead_id})\n"
+        f"Родитель: {req.parent_name}, {phone}\n"
+        f"Ребёнок: {req.child_name or '—'} {req.child_age}\n"
+        f"Время: {req.slot or 'не выбрано'}\n"
+        f"Филиал: {req.filial_id or '—'}")
+    return JSONResponse({"ok": True, "status": "created", "lead_id": lead_id,
+                         "message": "Заявка отправлена! Мы свяжемся с вами "
+                                    "для подтверждения времени."}, status_code=201)
+
+
+async def _notify_staff(text: str) -> None:
+    """Методисту в TG + админам в MAX. Сбой канала не ломает заявку."""
+    if settings.METHODIST_TG_IDS:
+        from app.telegram_client import TelegramClient
+        tg = TelegramClient()
+        for chat_id in [x.strip() for x in settings.METHODIST_TG_IDS.split(",") if x.strip()]:
+            try:
+                await tg.send_message(chat_id, text)
+            except Exception:
+                logger.exception("notify: TG %s недоступен", chat_id)
+    from app.max_client import get_max
+    client = get_max()
+    if client.configured:
+        for admin_id in settings.admin_ids:
+            try:
+                await client.send_message(admin_id, text)
+            except Exception:
+                logger.exception("notify: MAX %s недоступен", admin_id)
 
 
 @router.post("/events", status_code=204)

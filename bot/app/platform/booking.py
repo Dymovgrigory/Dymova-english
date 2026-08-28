@@ -26,6 +26,52 @@ from app.platform.bigben_v2 import BigBenError, get_bigben_v2
 logger = logging.getLogger(__name__)
 
 
+_LEVEL_RE = re.compile(
+    r"\b(starters?|movers?|flyers?|ket|pet|fce|a0|a1\+?|a2\+?|b1\+?|b2\+?|c1\+?|c2|ml\d)(?![\w+])",
+    re.IGNORECASE)
+# Порядок уровней для сортировки расписания (от младшего к старшему).
+LEVEL_ORDER = ["starter", "starters", "movers", "flyers",
+               "a0", "a1", "a1+", "ket", "a2", "a2+", "pet",
+               "b1", "b1+", "b2", "b2+", "fce", "c1", "c1+", "c2"]
+
+
+def derive_level(caption: str) -> str:
+    """Уровень группы из названия (в API BigBen поля уровня нет)."""
+    m = _LEVEL_RE.search(caption or "")
+    return m.group(1).upper() if m else ""
+
+
+def level_rank(level: str) -> int:
+    try:
+        return LEVEL_ORDER.index(level.lower())
+    except ValueError:
+        return len(LEVEL_ORDER)
+
+
+def derive_teacher(caption: str) -> str:
+    """Педагог из названия группы по списку KNOWN_TEACHERS (фамилия)."""
+    cap = (caption or "").lower()
+    for full in settings.KNOWN_TEACHERS.split(","):
+        full = full.strip()
+        if not full:
+            continue
+        surname = full.split()[-1].lower()
+        if surname and surname in cap:
+            return full
+    return ""
+
+
+def trial_price_rub(duration_min: int | None) -> int | None:
+    """Цена платного пробного по длительности урока (конфиг, не магия)."""
+    if duration_min is None:
+        return None
+    if duration_min >= 55:
+        return settings.TRIAL_PRICE_60_RUB
+    if 40 <= duration_min < 55:
+        return settings.TRIAL_PRICE_45_RUB
+    return None
+
+
 class SlotUnavailable(Exception):
     """Место занято / группа переполнена по свежим данным."""
 
@@ -165,16 +211,38 @@ async def book_trial(*, parent_name: str, phone: str, child_name: str,
         alternatives = await find_alternatives(filial_id, group_id)
         return BookingResult(booking_id, "slot_unavailable", alternatives=alternatives)
 
+    return await fulfill_trial(booking_id, idem=idem, fresh=fresh)
+
+
+async def fulfill_trial(booking_id: int, *, idem: str, fresh: dict) -> BookingResult:
+    """CRM-регистрация подтверждённой записи: лид + демо-урок + напоминания.
+
+    Вызывается сразу (бесплатное пробное) или из webhook об оплате
+    (платное пробное). Идемпотентно: повтор по уже confirmed-записи
+    возвращает duplicate, ключи lead-/demo- не дают дублей в CRM.
+    """
+    row = bb_store.booking_by_id(booking_id)
+    if row is None:
+        return BookingResult(booking_id, "failed", error="Запись не найдена")
+    if row.get("status") == "confirmed":
+        return BookingResult(booking_id, "duplicate",
+                             lead_id=row.get("lead_id"),
+                             demo_lesson_id=row.get("demo_lesson_id"))
+    group_id = row["group_id"]
+    lesson_id = row["lesson_id"]
+    client = get_bigben_v2()
+
     # --- Лид в CRM (идемпотентно) ---
     note_parts = [f"Запись на пробное: {fresh.get('caption', group_id)}"]
-    if child_name:
-        note_parts.append(f"Ребёнок: {child_name}, {child_age}")
-    if comment:
-        note_parts.append(comment)
+    if row.get("child_name"):
+        note_parts.append(f"Ребёнок: {row['child_name']}, {row.get('child_age', '')}")
+    if row.get("comment"):
+        note_parts.append(row["comment"])
     try:
         lead = await client.create_lead(
-            name=parent_name or child_name, phone=phone_norm,
-            source=source or "site-booking",
+            name=row.get("parent_name") or row.get("child_name") or "",
+            phone=row.get("phone", ""),
+            source=row.get("source") or "site-booking",
             comment=" | ".join(note_parts),
             idempotency_key=f"lead-{idem}")
         lead_id = lead.get("id")
@@ -199,7 +267,8 @@ async def book_trial(*, parent_name: str, phone: str, child_name: str,
     bb_store.confirm_booking(booking_id, lead_id=lead_id, demo_lesson_id=demo_id)
     # Оптимистично сдвигаем занятость в read-model до следующей синхронизации.
     _bump_occupied(group_id)
-    _schedule_reminders(booking_id, phone_norm, lesson_id, fresh.get("caption", ""))
+    _schedule_reminders(booking_id, row.get("phone", ""), lesson_id,
+                        fresh.get("caption", ""))
     return BookingResult(booking_id, "confirmed", lead_id=lead_id, demo_lesson_id=demo_id)
 
 
@@ -236,3 +305,115 @@ def normalize_phone(phone: str) -> str:
     if len(digits) == 11 and digits.startswith("7"):
         return "+" + digits
     return ""
+
+
+# --- Платное пробное (TRIAL_PAID): запись подтверждается оплатой ---
+
+async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
+                           child_age: str, group_id: int, lesson_id: int,
+                           duration_min: int | None, comment: str = "",
+                           source: str = "site",
+                           idempotency_key: str | None = None) -> tuple[BookingResult, dict | None]:
+    """Создаёт запись в ожидании оплаты + инвойс CloudPayments.
+
+    Цена — только серверная (по длительности урока). CRM не трогаем до
+    подтверждённого webhook pay: не подтвердилось — место не занято.
+    """
+    from app.platform import billing
+    idem = idempotency_key or uuid.uuid4().hex
+    phone_norm = normalize_phone(phone)
+    if not phone_norm:
+        return BookingResult(0, "failed", error="Некорректный номер телефона"), None
+
+    price = trial_price_rub(duration_min)
+    if price is None:
+        return BookingResult(0, "failed",
+                             error="Цена пробного для этой группы не настроена"), None
+
+    filial_id = None
+    local_group = bb_store.get_group(group_id)
+    if local_group:
+        filial_id = local_group.get("filial_id")
+
+    booking_id, is_dup = bb_store.create_booking(
+        parent_name=parent_name, phone=phone_norm, child_name=child_name,
+        child_age=child_age, comment=comment, source=source,
+        group_id=group_id, lesson_id=lesson_id, filial_id=filial_id,
+        idempotency_key=idem)
+    if is_dup:
+        existing = bb_store.booking_by_id(booking_id)
+        inv = existing.get("invoice_id")
+        if existing.get("status") == "awaiting_payment" and inv:
+            pay = billing.get_payment(inv)
+            if pay and pay.get("status") == "created":
+                return BookingResult(booking_id, "awaiting_payment"), {
+                    "invoice_id": inv, "widget": _widget_params(
+                        inv, price, phone_norm)}
+        return BookingResult(booking_id, "duplicate",
+                             lead_id=existing.get("lead_id"),
+                             demo_lesson_id=existing.get("demo_lesson_id")), None
+
+    # Anti-race: свежая проверка мест до выставления счёта
+    try:
+        fresh = await _fresh_group(group_id)
+    except BigBenError:
+        bb_store.fail_booking(booking_id, "bigben_unavailable")
+        return BookingResult(booking_id, "failed",
+                             error="Не удалось подтвердить свободное место. Попробуйте позже."), None
+    if fresh is None:
+        bb_store.fail_booking(booking_id, "group_not_found")
+        return BookingResult(booking_id, "failed", error="Группа не найдена в CRM"), None
+    free = group_free_slots(fresh)
+    if free is not None and free <= 0:
+        bb_store.fail_booking(booking_id, "slot_unavailable")
+        alternatives = await find_alternatives(filial_id, group_id)
+        return BookingResult(booking_id, "slot_unavailable",
+                             alternatives=alternatives), None
+
+    provider = billing.get_provider()
+    try:
+        inv = provider.create_invoice(
+            amount_kopecks=price * 100, phone=phone_norm,
+            description=f"Пробное занятие: {fresh.get('caption', '')}"[:120])
+    except billing.BillingError as exc:
+        bb_store.fail_booking(booking_id, f"invoice_failed: {exc}")
+        return BookingResult(booking_id, "failed", error=str(exc)), None
+    bb_store.set_booking_awaiting_payment(booking_id, inv["invoice_id"],
+                                          amount_kopecks=price * 100)
+    widget = dict(inv["widget"])
+    widget["description"] = f"Пробное занятие: {fresh.get('caption', '')}"[:120]
+    return BookingResult(booking_id, "awaiting_payment"), {
+        "invoice_id": inv["invoice_id"], "widget": widget,
+        "amount_rub": price}
+
+
+def _widget_params(invoice_id: str, price_rub: int, phone: str) -> dict:
+    from app.config import settings as st
+    return {"publicId": st.CLOUDPAYMENTS_PUBLIC_ID,
+            "amount": float(price_rub), "currency": "RUB",
+            "invoiceId": invoice_id, "accountId": phone,
+            "description": st.CLOUDPAYMENTS_DESCRIPTION}
+
+
+async def fulfill_paid_booking(invoice_id: str) -> BookingResult | None:
+    """Вызывается из webhook об оплате: подтверждает запись в CRM.
+
+    Повторный webhook безопасен: fulfill_trial идемпотентен.
+    """
+    row = bb_store.booking_by_invoice(invoice_id)
+    if row is None:
+        return None
+    idem = row.get("idempotency_key") or uuid.uuid4().hex
+    try:
+        fresh = await _fresh_group(row["group_id"])
+    except BigBenError:
+        fresh = None
+    if fresh is None:
+        # Деньги получены, но CRM недоступна — не теряем: помечаем и
+        # уведомляем; повторная обработка — через replay/ручной запуск.
+        bb_store.mark_booking_paid_unfulfilled(row["id"])
+        logger.error("booking %s оплачен (инвойс %s), но CRM недоступна",
+                     row["id"], invoice_id)
+        return BookingResult(row["id"], "failed",
+                             error="Оплата получена, запись подтвердит менеджер")
+    return await fulfill_trial(row["id"], idem=idem, fresh=fresh)

@@ -4985,3 +4985,16 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - app.js версия v=3. Тесты: +2 (server price override, amount_required). Полный регресс: 1062 passed.
 - Прод .env: добавлены CLOUDPAYMENTS_* (пока ENABLED=false до установки цены и вебхуков в ЛК CP).
 - Осталось: цена абонемента от владельца → SUBSCRIPTION_PRICE_RUB + CLOUDPAYMENTS_ENABLED=true; в ЛК CloudPayments прописать вебхуки check/pay/fail на https://bot.foxi-dev.ru/api/webhooks/cloudpayments/{check,pay,fail}.
+
+## 2026-08-28 — Платные пробные, про-расписание, диагностика
+
+- Оплата убрана из мини-аппа (кнопка+JS), эндпоинты оставлены для сайта.
+- Платное пробное на сайте: TRIAL_PAID — цена серверная по длительности урока (60+ мин → 1125 ₽, 40–54 → 875 ₽; TRIAL_PRICE_60_RUB/TRIAL_PRICE_45_RUB). Запись создаётся в awaiting_payment + инвойс CP; CRM (лид+демо) — ТОЛЬКО после оплаты. booking.py: book_trial разделён на prepare/fulfill_trial; start_paid_trial + fulfill_paid_booking (идемпотентно, paid_unfulfilled если CRM недоступна после оплаты).
+- Подтверждение оплаты двухканальное: webhook CP (check/pay/fail) + polling booking_status → cp_find_payment (GET /payments/find?InvoiceId) — не зависим от настройки вебхуков в ЛК CP.
+- bookings: колонки invoice_id, amount_kopecks (миграция _migrate_bookings), статусы awaiting_payment/paid_unfulfilled.
+- Группы в API: level (regex из caption), level_rank, teacher (KNOWN_TEACHERS по фамилии в caption — в публичном API BigBen педагогов нет, проверено по openapi.json), duration_min (мода по урокам окна), trial_price_rub.
+- Виджет расписания переписан: фильтры филиал/педагог/уровень/день недели, сортировка по уровню, теги, цена на кнопке, оплата CP-виджетом с поллингом статуса, честные состояния (проверяем оплату / место заняли / ошибка).
+- Диагностика: GET /api/platform/diagnostics/slots (конфиг DIAGNOSTIC_SLOTS_JSON) + POST /api/platform/diagnostics (лид в CRM source=site-diagnostics + уведомление методисту TG (METHODIST_TG_IDS) и админам MAX). Страница /diagnostika на сайте (форма + слоты), seo_meta добавлен.
+- Креды CP проверены: pk_b571... + secret — api.cloudpayments.ru/test Success:true. Провайдер по умолчанию cloudpayments, Т-Банк запасной (его Init отдаёт 204 — терминал не интернет-эквайринг).
+- Вебхук BigBen: логин dymovgrigory@mail.ru — роль «Преподаватель», настройки школы/вебхуков недоступны. Нужен аккаунт владельца.
+- Тесты: +9 (test_paid_trial.py). Полный регресс 1071 passed.

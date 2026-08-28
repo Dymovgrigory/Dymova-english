@@ -142,8 +142,19 @@ def _db() -> sqlite3.Connection:
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA journal_mode=WAL")
         conn.executescript(_SCHEMA)
+        _migrate_bookings(conn)
         _local.conn = conn
     return conn
+
+
+def _migrate_bookings(conn: sqlite3.Connection) -> None:
+    """Платное пробное: колонки инвойса (CREATE TABLE не меняет существующие)."""
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(bookings)")}
+    if "invoice_id" not in cols:
+        conn.execute("ALTER TABLE bookings ADD COLUMN invoice_id TEXT")
+    if "amount_kopecks" not in cols:
+        conn.execute("ALTER TABLE bookings ADD COLUMN amount_kopecks INTEGER")
+    conn.commit()
 
 
 def _now() -> str:
@@ -397,6 +408,47 @@ def list_payments_by_student(student_id: int, limit: int = 50) -> list[dict]:
         "SELECT * FROM bb_payments WHERE student_id = ? ORDER BY paid_at DESC LIMIT ?",
         (student_id, limit))
 
+
+def lesson_duration_map(date_from: str, date_to: str) -> dict[int, int]:
+    """Типовая длительность урока группы (минуты, мода по окну расписания)."""
+    from collections import Counter
+    rows = _rows(
+        "SELECT group_id, starts_at, ends_at FROM bb_lessons"
+        " WHERE date BETWEEN ? AND ? AND starts_at IS NOT NULL AND ends_at IS NOT NULL",
+        (date_from, date_to))
+    per_group: dict[int, Counter] = {}
+    for r in rows:
+        try:
+            t0 = datetime.fromisoformat(str(r["starts_at"]).replace("Z", "+00:00"))
+            t1 = datetime.fromisoformat(str(r["ends_at"]).replace("Z", "+00:00"))
+            mins = int((t1 - t0).total_seconds() // 60)
+            if 15 <= mins <= 240:
+                per_group.setdefault(r["group_id"], Counter())[mins] += 1
+        except (ValueError, TypeError):
+            continue
+    return {gid: c.most_common(1)[0][0] for gid, c in per_group.items()}
+
+def booking_by_invoice(invoice_id: str) -> dict | None:
+    rows = _rows("SELECT * FROM bookings WHERE invoice_id=?", (invoice_id,))
+    return rows[0] if rows else None
+
+
+def set_booking_awaiting_payment(booking_id: int, invoice_id: str,
+                                 amount_kopecks: int) -> None:
+    _db().execute(
+        "UPDATE bookings SET status='awaiting_payment', invoice_id=?,"
+        " amount_kopecks=? WHERE id=?",
+        (invoice_id, amount_kopecks, booking_id))
+    _db().commit()
+
+
+def mark_booking_paid_unfulfilled(booking_id: int) -> None:
+    """Деньги получены, но CRM-регистрация не выполнена (CRM недоступна).
+    Отдельный статус, чтобы такие записи не потерялись и их можно было
+    дообработать вручную/replay."""
+    _db().execute(
+        "UPDATE bookings SET status='paid_unfulfilled' WHERE id=?", (booking_id,))
+    _db().commit()
 
 def booking_by_id(booking_id: int) -> dict | None:
     rows = _rows("SELECT * FROM bookings WHERE id=?", (booking_id,))

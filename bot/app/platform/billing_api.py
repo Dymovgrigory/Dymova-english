@@ -121,6 +121,22 @@ async def _cp_webhook(request: Request, action: str) -> JSONResponse:
                 f"Телефон: {row['phone'] or '—'}, ученик: {row['student_id'] or '—'}\n"
                 f"Инвойс: {invoice_id}, транзакция: {transaction_id}\n"
                 f"Отразите оплату в BigBen вручную — API v1 платежи не принимает.")
+            # Платное пробное: если инвойс привязан к записи — подтверждаем
+            # её в CRM (лид + демо-урок) и уведомляем методиста.
+            try:
+                from app.platform import booking as _booking
+                res = await _booking.fulfill_paid_booking(invoice_id)
+                if res is not None:
+                    status_line = ("запись подтверждена в CRM"
+                                   if res.status in ("confirmed", "duplicate")
+                                   else f"ВНИМАНИЕ: запись НЕ подтверждена ({res.error})")
+                    from app.platform.public_api import _notify_staff
+                    await _notify_staff(
+                        f"✅ Оплаченное пробное #{res.booking_id}: {amount_rub} ₽\n"
+                        f"{status_line}")
+            except Exception:
+                logger.exception("billing: fulfill_paid_booking упал (инвойс %s)",
+                                 invoice_id)
         return JSONResponse({"code": 0})
 
     if action == "fail":

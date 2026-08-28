@@ -188,6 +188,34 @@ class TBankProvider:
         return hmac.compare_digest(expected.lower(), token.lower())
 
 
+
+
+async def cp_find_payment(invoice_id: str) -> dict | None:
+    """Статус платежа по InvoiceId напрямую из CloudPayments API.
+
+    Запасной канал подтверждения, если вебхук ещё не настроен в ЛК CP:
+    polling из /api/platform/booking/{id}. Вебхук остаётся основным.
+    """
+    import httpx
+    if not (settings.CLOUDPAYMENTS_ENABLED and settings.CLOUDPAYMENTS_PUBLIC_ID
+            and settings.CLOUDPAYMENTS_API_SECRET):
+        return None
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(
+                f"{settings.CLOUDPAYMENTS_API_BASE}/payments/find",
+                params={"InvoiceId": invoice_id},
+                auth=(settings.CLOUDPAYMENTS_PUBLIC_ID,
+                      settings.CLOUDPAYMENTS_API_SECRET))
+        data = resp.json()
+    except Exception as exc:
+        logger.warning("billing: CP find недоступен для %s: %s", invoice_id, exc)
+        return None
+    if not data.get("Success"):
+        return None
+    return data.get("Model")
+
+
 def _tbank_verify():
     """CA для Т-Банка: certifi + Russian Trusted Root CA (Минцифры).
 

@@ -1,0 +1,120 @@
+<div id="fxb-diagnostics-page" data-fxb-glow="violet">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Диагностика</span>
+      <h1 class="fxb-h1">Бесплатная диагностика уровня английского в Фоксинбурге</h1>
+      <h2 class="fxb-h2">30 минут с методистом — <span class="fxb-accent">и точный план обучения</span></h2>
+      <p class="fxb-sub">Определим уровень ребёнка, подберём программу и группу, ответим на вопросы. Выберите филиал и удобное время — заявка сразу уходит методисту.</p>
+    </div>
+
+    <div id="fxb-diag" role="region" aria-label="Запись на диагностику"></div>
+
+    <div class="fxb-note" style="margin-top:24px;text-align:center">
+      <p>Остались вопросы? <a href="/kontakty">Напишите нам</a> — ответим в течение рабочего дня.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+#fxb-diag{max-width:520px;margin:0 auto;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+#fxb-diag .fxd-card{background:#fff;border:1px solid #ececf4;border-radius:20px;padding:24px;box-shadow:0 6px 24px rgba(15,23,42,.05)}
+#fxb-diag label{display:block;font-size:13px;font-weight:600;margin:0 0 6px;color:#334155}
+#fxb-diag input,#fxb-diag select{width:100%;padding:13px 14px;border-radius:14px;border:1px solid #e2e8f0;font-size:16px;min-height:48px;margin-bottom:14px;box-sizing:border-box;background:#fff}
+#fxb-diag input:focus,#fxb-diag select:focus{outline:2px solid #7c3aed;outline-offset:-1px;border-color:transparent}
+#fxb-diag .fxd-err{color:#dc2626;font-size:13px;margin:-8px 0 10px;display:none}
+#fxb-diag .invalid input{border-color:#dc2626}
+#fxb-diag .invalid .fxd-err{display:block}
+#fxb-diag .fxd-btn{width:100%;border:none;border-radius:14px;padding:14px 18px;font-size:16px;font-weight:600;cursor:pointer;background:linear-gradient(180deg,#7c3aed,#5b21b6);color:#fff;min-height:52px}
+#fxb-diag .fxd-btn:disabled{opacity:.55}
+#fxb-diag .fxd-slots{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#fxb-diag .fxd-slot{border:1px solid #e2e8f0;background:#fff;border-radius:999px;padding:9px 16px;font-size:14px;cursor:pointer}
+#fxb-diag .fxd-slot.active{background:#ede9fe;border-color:#7c3aed;color:#5b21b6;font-weight:600}
+#fxb-diag .fxd-ok{text-align:center;padding:16px 0}
+#fxb-diag .fxd-ok .fxd-ico{font-size:44px;margin-bottom:10px}
+#fxb-diag .fxd-note{font-size:13px;color:#94a3b8;margin-top:10px}
+</style>
+
+<script>
+(() => {
+  const API = "https://bot.dymova-english.ru/api/platform";
+  const root = document.getElementById("fxb-diag");
+  let slots = [], filials = [], picked = null, sending = false;
+
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function render() {
+    const filialOpts = filials.map((f) => `<option value="${f.id}">${esc(f.caption)}</option>`).join("");
+    const slotBtns = slots.length
+      ? `<label>Удобное время</label><div class="fxd-slots">${slots.map((s, i) =>
+          `<button type="button" class="fxd-slot ${picked === i ? "active" : ""}" data-slot="${i}">${esc(s.filial ? s.filial + " · " : "")}${esc(s.label)}</button>`).join("")}</div>`
+      : `<p class="fxd-note">Выберите филиал — методист предложит ближайшее время диагностики.</p>`;
+    root.innerHTML = `<div class="fxd-card"><form id="fxd-form" novalidate>
+      <div data-f="parent_name"><label>Имя родителя</label>
+        <input name="parent_name" autocomplete="name" placeholder="Как к вам обращаться">
+        <div class="fxd-err">Укажите имя</div></div>
+      <div data-f="phone"><label>Номер телефона родителя</label>
+        <input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__">
+        <div class="fxd-err">Укажите корректный номер</div></div>
+      <div><label>Имя ребёнка</label><input name="child_name" placeholder="Например, Маша"></div>
+      <div><label>Возраст ребёнка</label><input name="child_age" inputmode="numeric" placeholder="Например, 8"></div>
+      <div><label>Филиал</label><select name="filial_id">${filialOpts}</select></div>
+      ${slotBtns}
+      <button type="submit" class="fxd-btn" ${sending ? "disabled" : ""}>${sending ? "Отправляем…" : "Записаться на диагностику"}</button>
+      <p class="fxd-note">Нажимая кнопку, вы соглашаетесь с <a href="/policy">политикой конфиденциальности</a>.</p>
+    </form></div>`;
+    root.querySelector("#fxd-form").addEventListener("submit", onSubmit);
+    root.querySelectorAll("[data-slot]").forEach((b) =>
+      b.addEventListener("click", () => { picked = Number(b.getAttribute("data-slot")); render(); }));
+  }
+
+  function renderDone() {
+    root.innerHTML = `<div class="fxd-card"><div class="fxd-ok">
+      <div class="fxd-ico">🎉</div><h3>Заявка отправлена!</h3>
+      <p class="fxd-note">Методист уже получил вашу заявку и свяжется с вами для подтверждения времени.</p>
+    </div></div>`;
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    if (sending) return;
+    const form = e.target;
+    const val = (n) => (form.elements[n] ? form.elements[n].value.trim() : "");
+    let ok = true;
+    const mark = (name, valid) => {
+      const f = form.querySelector(`[data-f="${name}"]`);
+      if (f) f.classList.toggle("invalid", !valid);
+      if (!valid) ok = false;
+    };
+    mark("parent_name", val("parent_name").length >= 2);
+    mark("phone", val("phone").replace(/\D/g, "").length >= 10);
+    if (!ok) return;
+    sending = true; render();
+    const slot = picked !== null && slots[picked]
+      ? `${slots[picked].filial ? slots[picked].filial + " · " : ""}${slots[picked].label}` : "";
+    try {
+      const r = await fetch(`${API}/diagnostics`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          parent_name: val("parent_name"), phone: val("phone"),
+          child_name: val("child_name"), child_age: val("child_age"),
+          filial_id: Number(val("filial_id")) || null, slot,
+          idempotency_key: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+        }),
+      });
+      const body = await r.json().catch(() => ({}));
+      if (r.ok && body.ok) { renderDone(); return; }
+      alert(body.message || "Не удалось отправить заявку. Позвоните нам, пожалуйста.");
+    } catch (err) {
+      alert("Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.");
+    }
+    sending = false; render();
+  }
+
+  fetch(`${API}/diagnostics/slots`).then((r) => r.json()).then((d) => {
+    slots = d.data || [];
+    filials = d.filials || [];
+    render();
+  }).catch(() => render());
+})();
+</script>

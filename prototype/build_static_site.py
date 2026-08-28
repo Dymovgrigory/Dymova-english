@@ -53,6 +53,7 @@ PAGE_ALIASES = {
     "page_letnyaya_akademiya.html": "letnyaya-akademiya",
     "page_kontakty.html": "kontakty",
     "page_raspisanie.html": "raspisanie",
+    "page_diagnostika.html": "diagnostika",
     "page_policy.html": "policy",
     "page_novosti.html": "novosti",
     "page_vakansii.html": "vakansii",
