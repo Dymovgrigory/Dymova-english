@@ -4904,3 +4904,9 @@ anti-race, идемпотентность, demo-failure) + полный регр
 **Осталось из мандата (следующие сессии).** Кампании→оркестратор, Customer 360
 объединение, продуктовая аналитика/воронка, low-balance и inactive детекторы,
 tgapp-экран «Мои занятия», страница /schedule на сайте через build_static_site.
+
+## 2026-08-28 — Фаза 6 (продолжение): «Мои занятия» в TG-мини-аппе
+
+- `bot/app/tgapp/index.html`: кнопка «Мои занятия» в сетке быстрых действий (`data-sheet="mylessons"`).
+- `bot/app/tgapp/app.js`: новый sheet `mylessons` + `buildMyLessons()` — живые данные `/api/miniapp/account/overview` (личность только по подписанному initData, заголовки подставляет `request()`), состояния loading/401/unlinked/stale/empty, человеческое форматирование дат и пометка свежести расписания.
+- Тесты: test_tgapp + design 47 passed; полный регресс 1036 passed.

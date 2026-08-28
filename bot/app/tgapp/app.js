@@ -213,6 +213,7 @@
     picker: { title: "Подбор курса", build: buildPicker },
     signup: { title: "Запись на занятия", build: buildSignup },
     diagnostic: { title: "Запись на диагностику", build: buildDiagnostic },
+    mylessons: { title: "Мои занятия", build: buildMyLessons },
     homework: { title: "Помощь с домашкой", build: buildHomework },
   };
 
@@ -680,6 +681,74 @@
       submitLabel: "Записаться на диагностику",
       required: ["phone", "fio_child", "birthday", "experience"],
       course: "Бесплатная диагностика",
+    });
+  }
+
+  /* Мои занятия: живые данные школы через /api/miniapp/account/overview.
+     Личность — только подписанный initData, который request() подставляет
+     сам; номер телефона на сервере связывается с карточкой ученика. */
+  function buildMyLessons(box) {
+    box.innerHTML =
+      '<div class="lead">' +
+      '<p class="lead__badge">Личный кабинет</p>' +
+      '<h3 class="lead__title">Расписание и баланс</h3>' +
+      '<p class="lead__sub" id="ml-status">Загружаем…</p>' +
+      '<div id="ml-body"></div>' +
+      '<p class="lead__sub" id="ml-fresh"></p>' +
+      "</div>";
+    var status = box.querySelector("#ml-status");
+    var body = box.querySelector("#ml-body");
+    var fresh = box.querySelector("#ml-fresh");
+
+    function fmtLesson(l) {
+      var d = l.starts_at ? new Date(l.starts_at) : null;
+      if (!d || isNaN(d)) return esc(l.date || "");
+      var days = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
+      var hh = String(d.getHours()).padStart(2, "0");
+      var mm = String(d.getMinutes()).padStart(2, "0");
+      return days[d.getDay()] + " " + d.getDate() + "." +
+        String(d.getMonth() + 1).padStart(2, "0") + " · " + hh + ":" + mm;
+    }
+
+    request("/api/miniapp/account/overview").then(function (data) {
+      if (data.__status === 401) {
+        status.textContent = "Откройте приложение внутри Telegram или MAX — так мы поймём, что это вы.";
+        return;
+      }
+      if (!data || data.__status >= 500) {
+        status.textContent = "Не удалось загрузить расписание. Попробуйте ещё раз чуть позже.";
+        return;
+      }
+      if (!data.linked) {
+        status.textContent = data.message || "Профиль пока не связан со школой.";
+        return;
+      }
+      status.textContent = data.live
+        ? ""
+        : "Показываем сохранённые данные — связь с системой школы временно прерывалась.";
+      var html = "<p><b>Баланс:</b> " +
+        esc(Number(data.balance_rub).toLocaleString("ru-RU")) + " ₽</p>";
+      if (data.groups && data.groups.length) {
+        html += "<p><b>Группы:</b><br>" + data.groups.map(function (g) {
+          return "• " + esc(g.caption);
+        }).join("<br>") + "</p>";
+      }
+      if (data.upcoming_lessons && data.upcoming_lessons.length) {
+        html += "<p><b>Ближайшие занятия:</b><br>" + data.upcoming_lessons.map(function (l) {
+          return "• " + fmtLesson(l) + " — " + esc(l.group_caption) +
+            (l.filial ? " (" + esc(l.filial) + ")" : "");
+        }).join("<br>") + "</p>";
+      } else {
+        html += "<p><b>Ближайшие занятия:</b><br>на ближайший месяц занятий не найдено.</p>";
+      }
+      body.innerHTML = html;
+      if (data.freshness && data.freshness.lessons_synced_at) {
+        var mins = Math.max(0, Math.round((Date.now() - new Date(data.freshness.lessons_synced_at)) / 60000));
+        fresh.textContent = "Расписание обновлено " +
+          (mins < 1 ? "только что" : mins < 60 ? mins + " мин назад" : Math.round(mins / 60) + " ч назад");
+      }
+    }).catch(function () {
+      status.textContent = "Не удалось загрузить расписание. Попробуйте ещё раз чуть позже.";
     });
   }
 
