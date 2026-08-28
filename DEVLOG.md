@@ -4832,3 +4832,45 @@ TODO: 6 NO_PAGE_WITH_SHOWS (страницы по запросам с показ
 2. В ARTICLE_CSS добавлены правила с селектором `#fxb-page .fxb-article-body` (без .fxb-blog-page) — дублируют блоговые стили для любых страниц с article_css.
 
 **Как проверено:** пересборка; playwright-скриншот секции на /geo/mytishchi — маркеры списков, жирные фиолетовые ссылки, H2, карточки «Полезное» на месте; контроль блога (blog-probely-po-anglijskomu) — списки disc, ничего не сломалось. На проде curl: стили в HTML обеих страниц.
+
+
+---
+
+## 2026-08-28 — Платформенный слой BigBen API v1 (фазы 0–4)
+
+**Контекст.** Получен API-ключ BigBen Public API v1 (read+write) и мандат на
+цифровую платформу школы: запись на занятия, расписание, свободные места,
+личный кабинет, автоматизации. Полный промпт — мандат из 258 пунктов.
+
+**Сделано.**
+- Аудит (ARCHITECTURE_AUDIT.md, CRM_INTEGRATION_AUDIT.md): сайт статический,
+  бот FastAPI ~16k строк, 1007 тестов, BigBen только через legacy lead-API.
+- `app/platform/bigben_v2.py` — единый async-клиент API v1: Bearer, retry,
+  429/Retry-After, пагинация, Idempotency-Key, маппинг ошибок.
+- `app/platform/bb_store.py` — read-model SQLite: bb_filials/bb_groups/
+  bb_lessons/bb_students/bb_payments + sync_runs + bb_webhook_events + bookings.
+- `app/platform/sync.py` — full + incremental (updated_since) + reconciliation,
+  фоновые asyncio-циклы (15 мин / 6 ч), журналирование прогонов.
+- `app/platform/webhooks.py` — POST /api/webhooks/bigben: HMAC-SHA256
+  (X-BigBen-Signature, timing-safe), дедуп UNIQUE-ключом, fast-200 + фон,
+  реакции на 5 событий + webhook.test.
+- `app/platform/booking.py` — Booking Engine: anti-race (свежая проверка
+  мест через API перед записью), идемпотентные lead+demo, альтернативы при
+  гонке, fallback вместимости из аудитории.
+- `app/platform/public_api.py` — /api/platform/{filials,groups,schedule,
+  booking,health,sync/run}; /groups по умолчанию только активные (75 из 431).
+- Конфиг: BIGBEN_PUBLIC_API_*, BIGBEN_WEBHOOK_SECRET, пороги sync,
+  LOW_AVAILABILITY_THRESHOLD=2; .env.example обновлён; ключ в bot/.env
+  (gitignored, chmod 600).
+- Подключено в main.py (роутеры + фоновые задачи).
+
+**Проверено.** 17 новых тестов (подпись, дедуп, телефоны, вместимость,
+anti-race, идемпотентность, demo-failure) + полный регресс 1007 зелёных;
+живая полная синхронизация: 5 филиалов, 431 группа, 986 уроков, 1562 ученика,
+344 платежа; TestClient: webhook 401/200/duplicate, health ок.
+
+**Дальше.** Фаза 5: бот → живые группы/расписание; фаза 6: виджет
+расписания+записи на сайт; фаза 7: Mini App «мои занятия»; фаза 8: billing
+(CloudPayments онлайн, T-bank терминал). Владельцу: настроить вебхуки в CRM
+(Информация о школе → Интеграции → Вебхуки, секрет → BIGBEN_WEBHOOK_SECRET)
+и автоматизацию первого статуса воронки (лиды из API без автозадачи).

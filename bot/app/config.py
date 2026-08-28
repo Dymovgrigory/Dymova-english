@@ -72,6 +72,25 @@ class Settings(BaseSettings):
     BIGBEN_PIPELINE_ID: str = "1924"
     BIGBEN_PIPELINE_STATUS_ID: str = "1"
 
+    # --- BigBen CRM Public API v1 ---
+    # Ключ выпускается в CRM: Настройки → Интеграции → API-ключи (скоупы read+write).
+    BIGBEN_PUBLIC_API_KEY: str = ""
+    BIGBEN_PUBLIC_API_BASE: str = "https://platformapi.bigbencrm.ru/api/public/v1"
+    # Секрет подписки вебхуков (CRM → Информация о школе → Интеграции → Вебхуки).
+    BIGBEN_WEBHOOK_SECRET: str = ""
+    # Периодичность инкрементальной синхронизации read-model (минуты).
+    BIGBEN_SYNC_INTERVAL_MIN: int = 15
+    # Полная сверка (reconciliation) раз в N часов.
+    BIGBEN_FULL_SYNC_HOURS: int = 6
+    # Окно расписания уроков для синхронизации (дней вперёд).
+    BIGBEN_LESSONS_WINDOW_DAYS: int = 60
+    BIGBEN_SYNC_ENABLED: bool = True
+    # Порог «мало мест» в группе для UI/бота (конфигурация, не магическое число).
+    LOW_AVAILABILITY_THRESHOLD: int = 2
+    # Вместимость по умолчанию, если у группы не задан max_students в CRM:
+    # используем вместимость аудитории как наиболее близкий физический лимит.
+    BIGBEN_CAPACITY_FALLBACK_AUDITORY: bool = True
+
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""
     SENTRY_ENVIRONMENT: str = ""

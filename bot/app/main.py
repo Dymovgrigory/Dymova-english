@@ -117,6 +117,11 @@ async def _start_scheduler() -> None:
     for task in scheduler.start():
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
+    # Платформа: фоновая синхронизация BigBen → read-model.
+    from app.platform import sync as platform_sync
+    for task in platform_sync.start():
+        _BACKGROUND_TASKS.add(task)
+        task.add_done_callback(_BACKGROUND_TASKS.discard)
     telegram = get_telegram()
     if settings.TELEGRAM_POLLING and telegram.configured:
         logger.info("telegram: запуск long-polling")
@@ -1879,8 +1884,12 @@ async def admin_set_webhook(request: Request, data: dict) -> dict:
 # CRM Admin API регистрируется ДО StaticFiles: монтирование перехватывает всё
 # под /admin, что не совпало с уже объявленными маршрутами.
 from app import admin_api
+from app.platform import public_api as platform_public_api
+from app.platform import webhooks as platform_webhooks
 
 app.include_router(admin_api.router)
+app.include_router(platform_webhooks.router)
+app.include_router(platform_public_api.router)
 
 # Монтируется В САМОМ КОНЦЕ файла осознанно: StaticFiles на "/admin"
 # перехватывает всё, что не совпало с уже объявленными маршрутами, поэтому
