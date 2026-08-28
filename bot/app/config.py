@@ -91,11 +91,26 @@ class Settings(BaseSettings):
     # используем вместимость аудитории как наиболее близкий физический лимит.
     BIGBEN_CAPACITY_FALLBACK_AUDITORY: bool = True
 
-    # Детектор низкого баланса (service-уведомление родителю).
-    # Порог в копейках: ниже него считаем, что оплаченные занятия заканчиваются.
-    LOW_BALANCE_ALERT_KOPECKS: int = 200_000  # 2 000 ₽
-    LOW_BALANCE_SCAN_ENABLED: bool = True
-    LOW_BALANCE_SCAN_INTERVAL_HOURS: int = 24
+    # Физические лимиты групп по филиалам (правила школы, 2026-08):
+    # Лихачевский — до 8, Ракетостроителей — до 7, школьные филиалы — до 10.
+    # Детский сад из онлайн-расписания исключаем (запись через менеджера).
+    CAPACITY_LIKHACHEVSKY: int = 8
+    CAPACITY_RAKETOSTROITELEY: int = 7
+    CAPACITY_SCHOOL: int = 10
+    # Фильтр детского сада: по подстроке в названии филиала или группы.
+    KINDERGARTEN_EXCLUDE_PATTERN: str = "детск"
+
+    # Напоминания об оплате абонемента (service-уведомления родителю).
+    # Модель школы: абонемент на месяц, счёт выставляется в CRM 24-го числа,
+    # оплата — до 1-го числа оплачиваемого месяца. Баланс в деньгах клиентам
+    # НЕ показываем (стоимость абонемента фиксирована, число занятий разное).
+    SUBSCRIPTION_REMINDER_ENABLED: bool = True
+    # День месяца, когда напоминаем о выставленном счёте (на следующий день
+    # после автовыставления счетов в CRM).
+    SUBSCRIPTION_REMINDER_DAY: int = 25
+    # День месяца финального напоминания тем, кто ещё не оплатил.
+    SUBSCRIPTION_DUE_DAY: int = 1
+    SUBSCRIPTION_SCAN_INTERVAL_HOURS: int = 24
 
     # Маркетинговые рассылки: тихие часы и frequency cap (§103).
     MARKETING_RESPECT_QUIET_HOURS: bool = True
@@ -110,6 +125,15 @@ class Settings(BaseSettings):
     CLOUDPAYMENTS_ENABLED: bool = False
     # Назначение платежа в чеке/виджете.
     CLOUDPAYMENTS_DESCRIPTION: str = "Оплата занятий Фоксинбург"
+
+    # Провайдер оплат: cloudpayments | tbank (один активный).
+    BILLING_PROVIDER: str = "cloudpayments"
+    # Т-Банк (интернет-эквайринг, securepay API v2). TerminalKey + пароль
+    # из личного кабинета Т-Бизнеса. Оплата — редиректом на PaymentURL.
+    TBANK_ENABLED: bool = False
+    TBANK_TERMINAL_KEY: str = ""
+    TBANK_PASSWORD: str = ""
+    TBANK_API_BASE: str = "https://securepay.tinkoff.ru"
 
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""

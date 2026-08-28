@@ -84,12 +84,9 @@ async def test_run_due_cancels_reminder_for_failed_booking(env):
     assert not notifications.already_sent(f"remind-msg:{bid}:завтра")
 
 
-async def test_low_balance_scan_notifies_and_dedups(env, monkeypatch):
-    from app.platform import automations, bb_store, notifications
-    monkeypatch.setattr("app.config.settings.LOW_BALANCE_SCAN_ENABLED", True)
-    monkeypatch.setattr("app.config.settings.LOW_BALANCE_ALERT_KOPECKS", 200_000)
-    bb_store._local.conn = None
-    sent = []
+def _stub_notify(monkeypatch, sent):
+    from app.platform import notifications
+    monkeypatch.setattr(notifications, "in_quiet_hours", lambda: False)
 
     async def fake_targets(phone):
         return [("telegram", "tg:1")]
@@ -98,32 +95,70 @@ async def test_low_balance_scan_notifies_and_dedups(env, monkeypatch):
         sent.append((channel, external_id, text))
         return True
 
-    # тихие часы не должны делать тест зависимым от времени суток
-    monkeypatch.setattr(notifications, "in_quiet_hours", lambda: False)
     monkeypatch.setattr(notifications, "resolve_targets_by_phone", fake_targets)
     monkeypatch.setattr(notifications, "_send_channel", fake_channel)
-    active = {"active_groups": [{"id": 1, "caption": "A1"}]}
-    bb_store.upsert_student({"id": 1, "fio": "Низкий Баланс", "phone": "79251112233",
-                             "email": "", "balance_kopecks": 50_000, **active})
-    bb_store.upsert_student({"id": 2, "fio": "Богатый Ученик", "phone": "79251112234",
-                             "email": "", "balance_kopecks": 900_000, **active})
-    bb_store.upsert_student({"id": 3, "fio": "Без Телефона", "phone": "",
-                             "email": "", "balance_kopecks": 0, **active})
-    n = await automations.scan_low_balance()
-    assert n == 1
-    assert len(sent) == 1
-    assert "Низкий Баланс" in sent[0][2]
-    # повторный прогон в ту же неделю — дедуп, ничего не уходит
-    sent.clear()
-    assert await automations.scan_low_balance() == 0
-    assert sent == []
 
 
-async def test_low_balance_scan_disabled(env, monkeypatch):
+async def test_subscription_reminder_day_25(env, monkeypatch):
+    from datetime import datetime, timezone
     from app.platform import automations, bb_store
-    monkeypatch.setattr("app.config.settings.LOW_BALANCE_SCAN_ENABLED", False)
+    monkeypatch.setattr("app.config.settings.SUBSCRIPTION_REMINDER_ENABLED", True)
+    bb_store._local.conn = None
+    sent = []
+    _stub_notify(monkeypatch, sent)
+    active = {"active_groups": [{"id": 1}]}
+    bb_store.upsert_student({"id": 1, "fio": "Вася", "phone": "79251112233",
+                             "email": "", "balance_kopecks": 0, **active})
+    bb_store.upsert_student({"id": 2, "fio": "Без Телефона", "phone": "",
+                             "email": "", "balance_kopecks": 0, **active})
+    n = await automations.scan_subscription_reminders(
+        datetime(2026, 8, 25, 12, tzinfo=timezone.utc))
+    assert n == 1
+    assert "сентябрь" in sent[0][2] and "счёт" in sent[0][2]
+    assert "₽" not in sent[0][2]  # деньги не показываем
+    # повтор в тот же день — дедуп
+    sent.clear()
+    assert await automations.scan_subscription_reminders(
+        datetime(2026, 8, 25, 18, tzinfo=timezone.utc)) == 0
+
+
+async def test_subscription_due_day_skips_paid(env, monkeypatch):
+    from datetime import datetime, timezone
+    from app.platform import automations, bb_store
+    monkeypatch.setattr("app.config.settings.SUBSCRIPTION_REMINDER_ENABLED", True)
+    bb_store._local.conn = None
+    sent = []
+    _stub_notify(monkeypatch, sent)
+    active = {"active_groups": [{"id": 1}]}
+    bb_store.upsert_student({"id": 1, "fio": "Должник", "phone": "79251112233",
+                             "email": "", "balance_kopecks": 0, **active})
+    bb_store.upsert_student({"id": 2, "fio": "Оплатил", "phone": "79251112234",
+                             "email": "", "balance_kopecks": 0, **active})
+    # оплата 26 августа — счёт был выставлен 24 августа, за сентябрь оплачено
+    bb_store.upsert_payment({"id": 1, "student_id": 2, "student_fio": "Оплатил",
+                             "group_id": 1, "amount_kopecks": 100,
+                             "paid_at": "2026-08-26T10:00:00Z"})
+    n = await automations.scan_subscription_reminders(
+        datetime(2026, 9, 1, 9, tzinfo=timezone.utc))
+    assert n == 1
+    assert "последний день" in sent[0][2]
+
+
+async def test_subscription_not_reminder_day(env, monkeypatch):
+    from datetime import datetime, timezone
+    from app.platform import automations, bb_store
+    monkeypatch.setattr("app.config.settings.SUBSCRIPTION_REMINDER_ENABLED", True)
     bb_store._local.conn = None
     bb_store.upsert_student({"id": 1, "fio": "X", "phone": "79251112233",
                              "email": "", "balance_kopecks": 0,
                              "active_groups": [{"id": 1}]})
-    assert await automations.scan_low_balance() == 0
+    assert await automations.scan_subscription_reminders(
+        datetime(2026, 8, 10, 12, tzinfo=timezone.utc)) == 0
+
+
+async def test_subscription_disabled(env, monkeypatch):
+    from datetime import datetime, timezone
+    from app.platform import automations
+    monkeypatch.setattr("app.config.settings.SUBSCRIPTION_REMINDER_ENABLED", False)
+    assert await automations.scan_subscription_reminders(
+        datetime(2026, 8, 25, 12, tzinfo=timezone.utc)) == 0

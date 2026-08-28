@@ -37,6 +37,14 @@ def _age_from_caption(caption: str) -> tuple[int | None, int | None]:
     return None, None
 
 
+def _is_kindergarten(caption: str, filial_caption: str) -> bool:
+    """Детский сад исключён из онлайн-расписания (запись через менеджера)."""
+    pat = (settings.KINDERGARTEN_EXCLUDE_PATTERN or "").lower()
+    if not pat:
+        return False
+    return pat in (caption or "").lower() or pat in (filial_caption or "").lower()
+
+
 def _group_card(g: dict) -> dict:
     group_raw = g.get("raw_json")
     import json as _json
@@ -72,6 +80,8 @@ async def groups(filial_id: int | None = Query(default=None),
     """Группы. По умолчанию — только активные (с уроками в окне расписания):
     в CRM сотни архивных групп, показывать их клиенту нельзя."""
     items = await asyncio.to_thread(bb_store.list_groups, filial_id)
+    items = [g for g in items
+             if not _is_kindergarten(g.get("caption", ""), g.get("filial_caption", ""))]
     if not all:
         today = date.today()
         date_to = today + timedelta(days=settings.BIGBEN_LESSONS_WINDOW_DAYS)
@@ -95,12 +105,15 @@ async def schedule(
         asyncio.to_thread(bb_store.list_lessons, today.isoformat(), date_to.isoformat(), group_id),
         asyncio.to_thread(bb_store.list_groups, filial_id),
     )
-    cards = {g["id"]: _group_card(g) for g in groups}
+    cards = {g["id"]: _group_card(g) for g in groups
+             if not _is_kindergarten(g.get("caption", ""), g.get("filial_caption", ""))}
     out_lessons = []
     for les in lessons:
         gid = les.get("group_id")
         if filial_id and les.get("filial_id") != filial_id:
             continue
+        if gid not in cards:
+            continue  # детский сад не показываем
         card = cards.get(gid)
         out_lessons.append({
             "lesson_id": les["id"],

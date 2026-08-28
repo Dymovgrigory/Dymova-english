@@ -371,6 +371,14 @@ def list_active_students(limit: int = 5000) -> list[dict]:
         (limit,))
 
 
+def has_payment_since(student_id: int, since_iso_date: str) -> bool:
+    """Была ли у ученика оплата с датой >= since_iso_date (YYYY-MM-DD)."""
+    row = _rows(
+        "SELECT 1 AS x FROM bb_payments WHERE student_id = ? AND paid_at >= ? LIMIT 1",
+        (student_id, since_iso_date))
+    return bool(row)
+
+
 def list_bookings_by_phone(phone: str, limit: int = 50) -> list[dict]:
     """Заявки на пробное по телефону (нормализация — как у find_student_by_phone)."""
     digits = "".join(ch for ch in (phone or "") if ch.isdigit())[-10:]

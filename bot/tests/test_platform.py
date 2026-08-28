@@ -162,3 +162,25 @@ async def test_booking_demo_failure_keeps_lead(tmp_path, monkeypatch):
         child_age="8", group_id=1, lesson_id=55)
     assert res.status == "failed" and res.lead_id == 101
     assert "менеджер" in res.error
+
+
+def test_filial_capacity_rules():
+    from app.platform import booking
+    assert booking.filial_capacity("Фоксинбург Лихачевский") == 8
+    assert booking.filial_capacity("Фоксинбург Ракетостроителей") == 7
+    assert booking.filial_capacity("Новый корпус 11 школа Фоксинбург") == 10
+    assert booking.filial_capacity("Детский сад Солнышко") is None
+
+
+def test_effective_capacity_rule_caps_explicit():
+    from app.platform import booking
+    # CRM говорит 12, физический лимит филиала 8 → побеждает лимит
+    g = {"capacity": 12, "filial": {"caption": "Фоксинбург Лихачевский"}}
+    assert booking.effective_capacity(g) == 8
+    # без явного лимита — правило филиала
+    g2 = {"capacity": None, "filial": {"caption": "Новый корпус 11 школа"}}
+    assert booking.effective_capacity(g2) == 10
+    # без правила и лимита — fallback аудитории
+    g3 = {"capacity": None, "filial": {"caption": "Неизвестный"},
+          "auditory": {"capacity": 6}}
+    assert booking.effective_capacity(g3) == 6

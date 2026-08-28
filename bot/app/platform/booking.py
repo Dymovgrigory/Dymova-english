@@ -40,10 +40,33 @@ class BookingResult:
     alternatives: list[dict] | None = None
 
 
+def filial_capacity(filial_caption: str) -> int | None:
+    """Физический лимит группы по правилам филиала (конфиг, не магические числа)."""
+    cap = (filial_caption or "").lower()
+    if "лихачев" in cap:
+        return settings.CAPACITY_LIKHACHEVSKY
+    if "ракетостроител" in cap:
+        return settings.CAPACITY_RAKETOSTROITELEY
+    if "школ" in cap:
+        return settings.CAPACITY_SCHOOL
+    return None
+
+
 def effective_capacity(group: dict) -> int | None:
-    """Лимит мест группы: max_students CRM, иначе вместимость аудитории."""
-    if group.get("capacity"):
-        return group["capacity"]
+    """Лимит мест группы.
+
+    Приоритет: правило филиала (физическое ограничение школы) как верхняя
+    граница для явного max_students CRM; если ни того ни другого нет —
+    вместимость аудитории как fallback.
+    """
+    rule = filial_capacity((group.get("filial") or {}).get("caption", ""))
+    explicit = group.get("capacity")
+    if explicit and rule:
+        return min(explicit, rule)
+    if explicit:
+        return explicit
+    if rule:
+        return rule
     if settings.BIGBEN_CAPACITY_FALLBACK_AUDITORY:
         auditory = group.get("auditory") or {}
         cap = auditory.get("capacity")

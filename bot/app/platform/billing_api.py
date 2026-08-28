@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field
 
 from app import miniapp_auth
 from app.memory import get_store
-from app.platform import bb_store, billing
+from app.platform import analytics, bb_store, billing
 
 logger = logging.getLogger(__name__)
 
@@ -58,11 +58,15 @@ async def create_payment(req: PayRequest, request: Request) -> JSONResponse:
     phone = (conv.lead.phone or "").strip() if conv and conv.lead else ""
     student = await asyncio.to_thread(bb_store.find_student_by_phone, phone) if phone else None
     try:
-        invoice = provider.create_invoice(
+        result = provider.create_invoice(
             amount_kopecks=round(req.amount_rub * 100),
             phone=phone, student_id=student["id"] if student else None)
+        # Т-Банк делает вызов Init (async), CloudPayments — локальный инвойс
+        invoice = await result if asyncio.iscoroutine(result) else result
     except billing.BillingError as exc:
         return JSONResponse({"error": "billing_error", "message": str(exc)}, status_code=400)
+    analytics.track("payment_started", source="miniapp",
+                    meta={"invoice_id": invoice["invoice_id"]})
     return JSONResponse(invoice, status_code=201)
 
 
@@ -89,6 +93,8 @@ async def _cp_webhook(request: Request, action: str) -> JSONResponse:
         transaction_id = data.get("TransactionId", "")
         is_new, row = billing.mark_paid(invoice_id, transaction_id, data)
         if is_new and row:
+            analytics.track("payment_success", source="cloudpayments",
+                            meta={"invoice_id": invoice_id})
             amount_rub = round(row["amount_kopecks"] / 100, 2)
             try:
                 from app.platform import automations
@@ -123,6 +129,51 @@ async def cp_pay(request: Request) -> JSONResponse:
 @router.post("/api/webhooks/cloudpayments/fail")
 async def cp_fail(request: Request) -> JSONResponse:
     return await _cp_webhook(request, "fail")
+
+
+@router.post("/api/webhooks/tbank")
+async def tbank_notification(request: Request) -> JSONResponse:
+    """Нотификация Т-Банка: единственное основание считать деньги полученными
+    — статус CONFIRMED с валидной подписью и совпадающей суммой."""
+    provider = billing.get_provider()
+    if provider.name != "tbank":
+        return JSONResponse({"error": "provider_mismatch"}, status_code=400)
+    try:
+        data = await request.json()
+    except Exception:
+        return JSONResponse({"error": "bad_request"}, status_code=400)
+    if not provider.verify_notification(data):
+        logger.warning("billing: tbank webhook с неверной подписью")
+        return JSONResponse({"error": "bad_token"}, status_code=401)
+    invoice_id = str(data.get("OrderId", ""))
+    status = str(data.get("Status", ""))
+    row = billing.get_payment(invoice_id) if invoice_id else None
+    if row is None:
+        return JSONResponse({"error": "unknown_order"}, status_code=404)
+    if status == "CONFIRMED":
+        if int(data.get("Amount", -1)) != row["amount_kopecks"]:
+            logger.error("billing: tbank сумма не совпала: %s != %s (инвойс %s)",
+                         data.get("Amount"), row["amount_kopecks"], invoice_id)
+            return JSONResponse({"error": "amount_mismatch"}, status_code=400)
+        is_new, row = billing.mark_paid(invoice_id, str(data.get("PaymentId", "")), data)
+        if is_new and row:
+            analytics.track("payment_success", source="tbank",
+                            meta={"invoice_id": invoice_id})
+            amount_rub = round(row["amount_kopecks"] / 100, 2)
+            try:
+                from app.platform import automations
+                automations.schedule_payment_thankyou(
+                    invoice_id=invoice_id, phone=row["phone"], amount_rub=amount_rub)
+            except Exception:
+                logger.exception("billing: не удалось запланировать thankyou")
+            await _notify_admins(
+                f"💳 Онлайн-оплата (Т-Банк): {amount_rub} ₽\n"
+                f"Телефон: {row['phone'] or '—'}, ученик: {row['student_id'] or '—'}\n"
+                f"Инвойс: {invoice_id}, платёж: {data.get('PaymentId')}\n"
+                f"Отразите оплату в BigBen вручную — API v1 платежи не принимает.")
+    elif status in ("REJECTED", "CANCELED", "DEADLINE_EXPIRED"):
+        billing.mark_failed(invoice_id, data)
+    return JSONResponse({"ok": True})
 
 
 async def _notify_admins(text: str) -> None:

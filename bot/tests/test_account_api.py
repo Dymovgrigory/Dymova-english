@@ -66,7 +66,7 @@ def test_overview_linked(client):
     assert r.status_code == 200
     body = r.json()
     assert body["linked"] and body["live"]
-    assert body["balance_rub"] == 4500.0
+    assert "balance_rub" not in body  # баланс в деньгах клиенту не показываем
     assert body["groups"] == [{"id": 7, "caption": "English A1"}]
     assert body["upcoming_lessons"][0]["lesson_id"] == 99
 

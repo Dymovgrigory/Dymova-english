@@ -2,11 +2,11 @@
 
 Личность — только подписанный initData (miniapp_auth), никаких user_id из
 параметров (IDOR). Связка с BigBen: телефон из регистрационной анкеты
-диалога → bb_students (нормализация по последним 10 цифрам). Группы ученика
-и его баланс — свежие из API; расписание — из read-model (freshness в ответе).
+диалога → bb_students (нормализация по последним 10 цифрам). Группы ученика —
+свежие из API; расписание — из read-model (freshness в ответе).
 
-BigBen v1 не отдаёт «оставшиеся занятия абонемента» — показываем баланс в
-рублях как есть, без выдуманных метрик.
+Баланс в деньгах клиенту НЕ показываем (модель школы — фиксированный
+абонемент на месяц, число занятий в месяце разное) — поле из ответа убрано.
 """
 from __future__ import annotations
 
@@ -75,12 +75,10 @@ async def overview(request: Request) -> JSONResponse:
     # Свежая карточка ученика (группы + баланс) из API; при недоступности —
     # кэш с пометкой свежести.
     active_groups: list[dict] = []
-    balance_kopecks = student.get("balance_kopecks", 0)
     live = True
     try:
         card = await get_bigben_v2().student(student["id"])
         active_groups = card.get("active_groups") or []
-        balance_kopecks = card.get("balance_kopecks", balance_kopecks)
     except BigBenError as exc:
         live = False
         logger.warning("account: свежая карточка недоступна (%s), отдаём кэш", exc.code)
@@ -102,7 +100,6 @@ async def overview(request: Request) -> JSONResponse:
         "linked": True,
         "live": live,
         "student": {"id": student["id"], "fio": student.get("fio", "")},
-        "balance_rub": round(balance_kopecks / 100, 2),
         "groups": [{"id": g.get("id"), "caption": g.get("caption", "")}
                    for g in active_groups],
         "upcoming_lessons": [{

@@ -135,40 +135,66 @@ async def _handle_payment_thankyou(payload: dict) -> None:
         phone=payload.get("phone", ""), text=text)
 
 
-# --- детектор низкого баланса (по read-model после sync) ---
+# --- напоминания об оплате абонемента (помесячная модель школы) ---
 
-async def scan_low_balance(now: datetime | None = None) -> int:
-    """Service-уведомление родителю, у активного ученика заканчивается баланс.
+_MONTHS_RU = ["", "январь", "февраль", "март", "апрель", "май", "июнь",
+              "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
 
-    Источник — bb_students (активные группы + баланс). Дедуп — раз в
-    ISO-неделю на ученика: неделя та же → повторно не тревожим. Тихие часы
-    обеспечивает слой notifications (service-тип).
+
+def _next_month_name(now: datetime) -> str:
+    return _MONTHS_RU[now.month % 12 + 1]
+
+
+async def scan_subscription_reminders(now: datetime | None = None) -> int:
+    """Service-напоминания об оплате абонемента.
+
+    Модель школы: счёт выставляется в CRM 24-го, оплата — до 1-го числа
+    оплачиваемого месяца. Два касания:
+    - SUBSCRIPTION_REMINDER_DAY (25-е): всем активным — «счёт выставлен»;
+    - SUBSCRIPTION_DUE_DAY (1-е): тем, у кого нет оплаты с 24-го прошлого
+      месяца, — «последний день оплаты».
+    Деньги в текстах НЕ фигурируют: баланс клиентам не показываем.
+    Дедуп — одно касание на ученика в месяц; тихие часы — слой notifications.
     """
     from app.platform import bb_store
-    if not settings.LOW_BALANCE_SCAN_ENABLED:
+    if not settings.SUBSCRIPTION_REMINDER_ENABLED:
         return 0
     moment = now or _now()
-    week = moment.strftime("%G-W%V")  # ISO-год/неделя
-    threshold = settings.LOW_BALANCE_ALERT_KOPECKS
+    day = moment.day
+    is_reminder_day = day == settings.SUBSCRIPTION_REMINDER_DAY
+    is_due_day = day == settings.SUBSCRIPTION_DUE_DAY
+    if not (is_reminder_day or is_due_day):
+        return 0
+    month_key = moment.strftime("%Y-%m")
+    # дата автовыставления счёта — 24-е предыдущего месяца
+    # (1-е число: счёт был выставлен 24-го прошлого месяца)
+    first_of_month = moment.replace(day=1)
+    prev_month_last_day = first_of_month - timedelta(days=1)
+    invoice_date = prev_month_last_day.replace(day=24).isoformat()[:10]
+
     sent = 0
     for st in bb_store.list_active_students():
-        balance = st.get("balance_kopecks", 0)
-        if balance > threshold:
-            continue
         phone = (st.get("phone") or "").strip()
         if not phone:
             continue
-        rub = f"{balance / 100:,.0f}".replace(",", " ")
-        text = (f"Здравствуйте! У {st.get('fio', 'ученика')} на балансе "
-                f"осталось {rub} ₽ — оплаченные занятия скоро закончатся. "
-                "Продлить можно ответным сообщением или в личном кабинете.")
-        res = await notifications.send(
-            notifications.SERVICE, f"lowbal:{st['id']}:{week}",
-            phone=phone, text=text)
+        name = st.get("fio", "ученика")
+        if is_reminder_day:
+            text = (f"Здравствуйте! Выставлен счёт за {_next_month_name(moment)} "
+                    f"для {name}. Оплатить можно до 1-го числа — "
+                    "в личном кабинете или ответным сообщением, поможем.")
+            key = f"subrem:{st['id']}:{month_key}"
+        else:
+            if bb_store.has_payment_since(st["id"], invoice_date):
+                continue  # уже оплатил — не тревожим
+            text = (f"Здравствуйте! Сегодня последний день оплаты абонемента "
+                    f"за {_MONTHS_RU[moment.month]} для {name}. "
+                    "Если уже оплатили — спасибо, проигнорируйте сообщение.")
+            key = f"subdue:{st['id']}:{month_key}"
+        res = await notifications.send(notifications.SERVICE, key, phone=phone, text=text)
         if res.get("sent"):
             sent += 1
     if sent:
-        logger.info("automation: низкий баланс — уведомлений: %d", sent)
+        logger.info("automation: напоминания об абонементе — отправлено: %d", sent)
     return sent
 
 
@@ -224,18 +250,18 @@ async def _worker_loop() -> None:
         await asyncio.sleep(WORKER_INTERVAL_SEC)
 
 
-async def _low_balance_loop() -> None:
+async def _subscription_loop() -> None:
     # первый прогон — вскоре после старта (sync к тому времени уже наполнил
-    # read-model), дальше — раз в сутки по конфигу
+    # read-model), дальше — раз в сутки по конфигу; сканер сам проверяет день
     await asyncio.sleep(300)
     while True:
         try:
-            await scan_low_balance()
+            await scan_subscription_reminders()
         except Exception:
-            logger.exception("automation: сбой сканера низкого баланса")
-        await asyncio.sleep(settings.LOW_BALANCE_SCAN_INTERVAL_HOURS * 3600)
+            logger.exception("automation: сбой сканера напоминаний об абонементе")
+        await asyncio.sleep(settings.SUBSCRIPTION_SCAN_INTERVAL_HOURS * 3600)
 
 
 def start() -> list[asyncio.Task]:
     return [asyncio.create_task(_worker_loop()),
-            asyncio.create_task(_low_balance_loop())]
+            asyncio.create_task(_subscription_loop())]

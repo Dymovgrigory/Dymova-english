@@ -726,8 +726,7 @@
       status.textContent = data.live
         ? ""
         : "Показываем сохранённые данные — связь с системой школы временно прерывалась.";
-      var html = "<p><b>Баланс:</b> " +
-        esc(Number(data.balance_rub).toLocaleString("ru-RU")) + " ₽</p>";
+      var html = "";
       if (data.groups && data.groups.length) {
         html += "<p><b>Группы:</b><br>" + data.groups.map(function (g) {
           return "• " + esc(g.caption);

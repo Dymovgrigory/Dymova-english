@@ -48,13 +48,11 @@ let INFO = null;
 // --- Мои занятия: живые данные BigBen через /api/miniapp/account/overview ---
 async function loadMyLessons() {
   const status = document.getElementById("ml-status");
-  const balance = document.getElementById("ml-balance");
   const groups = document.getElementById("ml-groups");
   const lessons = document.getElementById("ml-lessons");
   const fresh = document.getElementById("ml-fresh");
   status.classList.remove("hidden");
   status.textContent = "Загружаем расписание…";
-  balance.classList.add("hidden");
   groups.innerHTML = ""; lessons.innerHTML = ""; fresh.textContent = "";
   let data;
   try {
@@ -77,8 +75,6 @@ async function loadMyLessons() {
     status.classList.remove("hidden");
     status.textContent = "Показываем сохранённые данные — связь с системой школы временно прерывалась.";
   }
-  balance.classList.remove("hidden");
-  balance.innerHTML = "<b>Баланс:</b> " + esc(Number(data.balance_rub).toLocaleString("ru-RU")) + " ₽";
   if (data.groups && data.groups.length) {
     groups.innerHTML = "<b>Группы:</b><br>" + data.groups.map((g) => "• " + esc(g.caption)).join("<br>");
   }

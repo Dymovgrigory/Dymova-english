@@ -112,7 +112,85 @@ class CloudPaymentsProvider:
         return hmac.compare_digest(expected, signature_b64)
 
 
-def get_provider() -> CloudPaymentsProvider:
+class TBankProvider:
+    """Онлайн-оплата через Т-Банк (securepay API v2).
+
+    Инвойс — вызов Init (OrderId = наш invoice_id), клиенту отдаём PaymentURL.
+    Подпись: sha256 от конкатенации значений параметров (отсортированных по
+    ключу) + пароль терминала — и для запроса, и для проверки нотификации.
+    Суммы — копейки int по всей цепочке.
+    """
+
+    name = "tbank"
+
+    @property
+    def configured(self) -> bool:
+        return bool(settings.TBANK_ENABLED
+                    and settings.TBANK_TERMINAL_KEY
+                    and settings.TBANK_PASSWORD)
+
+    @staticmethod
+    def _token(params: dict) -> str:
+        pairs = sorted((k, str(v)) for k, v in params.items()
+                       if k != "Token" and not isinstance(v, (dict, list)))
+        raw = "".join(v for _, v in pairs) + settings.TBANK_PASSWORD
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+    def create_invoice_local(self, *, amount_kopecks: int, phone: str = "",
+                             student_id: int | None = None,
+                             description: str = "") -> str:
+        """Локальная запись инвойса (OrderId) до вызова Init."""
+        if amount_kopecks <= 0:
+            raise BillingError("Сумма должна быть положительной")
+        invoice_id = uuid.uuid4().hex[:20]
+        _db().execute(
+            "INSERT INTO billing_payments (invoice_id, created_at, amount_kopecks,"
+            " student_id, phone, description) VALUES (?,?,?,?,?,?)",
+            (invoice_id, _now(), amount_kopecks, student_id, phone,
+             description or settings.CLOUDPAYMENTS_DESCRIPTION))
+        _db().commit()
+        return invoice_id
+
+    async def create_invoice(self, *, amount_kopecks: int, phone: str = "",
+                             student_id: int | None = None,
+                             description: str = "") -> dict:
+        if not self.configured:
+            raise BillingError("Т-Банк не сконфигурирован")
+        invoice_id = self.create_invoice_local(
+            amount_kopecks=amount_kopecks, phone=phone,
+            student_id=student_id, description=description)
+        params = {
+            "TerminalKey": settings.TBANK_TERMINAL_KEY,
+            "Amount": amount_kopecks,
+            "OrderId": invoice_id,
+            "Description": (description or settings.CLOUDPAYMENTS_DESCRIPTION)[:140],
+        }
+        params["Token"] = self._token(params)
+        import httpx
+        try:
+            async with httpx.AsyncClient(timeout=15) as client:
+                resp = await client.post(f"{settings.TBANK_API_BASE}/v2/Init",
+                                         json=params)
+                data = resp.json()
+        except Exception as exc:
+            raise BillingError(f"Т-Банк недоступен: {exc}") from exc
+        if not data.get("Success"):
+            raise BillingError(
+                f"Т-Банк отклонил инвойс: {data.get('Message') or data.get('Details') or data.get('ErrorCode')}")
+        return {"invoice_id": invoice_id, "payment_url": data.get("PaymentURL", "")}
+
+    def verify_notification(self, data: dict) -> bool:
+        """Проверка подписи нотификации Т-Банка."""
+        token = data.get("Token", "")
+        if not token or not settings.TBANK_PASSWORD:
+            return False
+        expected = self._token(data)
+        return hmac.compare_digest(expected.lower(), token.lower())
+
+
+def get_provider():
+    if settings.BILLING_PROVIDER == "tbank":
+        return TBankProvider()
     return CloudPaymentsProvider()
 
 
