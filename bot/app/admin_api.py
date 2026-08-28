@@ -559,6 +559,110 @@ async def tag_unassign(request: Request, customer_id: int, tag_name: str) -> dic
 # --------- Статистика и здоровье ---------
 
 
+@router.get("/platform/alerts")
+async def platform_alerts(request: Request) -> dict:
+    """Alert Center: состояние интеграций и фоновых процессов (§68/§139).
+
+    Уровни: critical (красный), warning (оранжевый), info (синий).
+    """
+    _authorize(request, "stats")
+    from datetime import datetime, timedelta, timezone
+    from app.platform import bb_store
+
+    alerts: list[dict] = []
+    now = datetime.now(timezone.utc)
+
+    def _age_min(iso: str | None) -> float | None:
+        if not iso:
+            return None
+        try:
+            return (now - datetime.fromisoformat(iso)).total_seconds() / 60
+        except ValueError:
+            return None
+
+    # Свежесть read-model
+    fresh = bb_store.freshness()
+    stale_after = settings.BIGBEN_SYNC_INTERVAL_MIN * 3
+    for entity, info in fresh.items():
+        age = _age_min(info["last_synced_at"])
+        if info["count"] == 0:
+            alerts.append({"level": "warning", "code": f"sync_empty_{entity}",
+                           "text": f"Нет данных {entity} — синхронизация ещё не отработала"})
+        elif age is not None and age > stale_after:
+            alerts.append({"level": "critical" if entity in ("groups", "lessons") else "warning",
+                           "code": f"sync_stale_{entity}",
+                           "text": f"Данные {entity} устарели: {int(age)} мин без синхронизации"})
+
+    # Последние падения sync
+    failed_runs = [r for r in bb_store.last_sync_runs(10) if r["status"] != "ok"]
+    for r in failed_runs[:3]:
+        alerts.append({"level": "critical", "code": "sync_failed",
+                       "text": f"Sync {r['kind']} упал: {r['error'][:120]}"})
+
+    # Вебхуки BigBen
+    if not settings.BIGBEN_WEBHOOK_SECRET:
+        alerts.append({"level": "warning", "code": "webhook_not_configured",
+                       "text": "Вебхуки BigBen не настроены (нет секрета) — события CRM не приходят"})
+    failed_hooks = bb_store.failed_webhooks(5)
+    for h in failed_hooks:
+        alerts.append({"level": "warning", "code": "webhook_failed",
+                       "text": f"Вебхук {h['event']} не обработан: {h['last_error'][:120]}"})
+
+    # API-ключ
+    if not settings.BIGBEN_PUBLIC_API_KEY:
+        alerts.append({"level": "critical", "code": "no_api_key",
+                       "text": "Нет BIGBEN_PUBLIC_API_KEY — платформа работает на пустых данных"})
+
+    # Очередь автоматизаций
+    db = bb_store._db()
+    backlog = db.execute(
+        "SELECT COUNT(*) c FROM automation_jobs WHERE status='pending'"
+    ).fetchone()["c"]
+    failed_jobs = db.execute(
+        "SELECT COUNT(*) c FROM automation_jobs WHERE status='failed'"
+    ).fetchone()["c"]
+    if failed_jobs:
+        alerts.append({"level": "warning", "code": "automation_failed",
+                       "text": f"Задач автоматизации в failed: {failed_jobs} — нужен retry"})
+    if backlog > 100:
+        alerts.append({"level": "warning", "code": "automation_backlog",
+                       "text": f"Очередь автоматизаций: {backlog} задач"})
+
+    # Оплаты
+    if not settings.CLOUDPAYMENTS_ENABLED:
+        alerts.append({"level": "info", "code": "payments_disabled",
+                       "text": "Онлайн-оплата (CloudPayments) выключена"})
+
+    level_order = {"critical": 0, "warning": 1, "info": 2}
+    alerts.sort(key=lambda a: level_order.get(a["level"], 3))
+    return {
+        "alerts": alerts,
+        "health": {
+            "bigben_key": bool(settings.BIGBEN_PUBLIC_API_KEY),
+            "webhook_secret": bool(settings.BIGBEN_WEBHOOK_SECRET),
+            "cloudpayments": settings.CLOUDPAYMENTS_ENABLED,
+            "freshness": fresh,
+            "automation_pending": backlog,
+            "automation_failed": failed_jobs,
+        },
+    }
+
+
+@router.post("/platform/webhooks/{event_id}/retry")
+async def platform_webhook_retry(event_id: int, request: Request) -> dict:
+    """Replay упавшего вебхука (§138): повторная обработка по id."""
+    _authorize(request, "system")
+    from app.platform import bb_store
+    from app.platform.webhooks import _process
+    rows = bb_store._rows("SELECT * FROM bb_webhook_events WHERE id=?", (event_id,))
+    if not rows:
+        raise HTTPException(status_code=404, detail="event not found")
+    import json as _json
+    row = rows[0]
+    await _process(event_id, row["event"], _json.loads(row["payload_json"]))
+    return {"ok": True, "event": row["event"]}
+
+
 @router.get("/stats/today")
 async def stats_today(request: Request) -> dict:
     actor = _authorize(request, "stats")
