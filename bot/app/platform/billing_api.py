@@ -90,6 +90,12 @@ async def _cp_webhook(request: Request, action: str) -> JSONResponse:
         is_new, row = billing.mark_paid(invoice_id, transaction_id, data)
         if is_new and row:
             amount_rub = round(row["amount_kopecks"] / 100, 2)
+            try:
+                from app.platform import automations
+                automations.schedule_payment_thankyou(
+                    invoice_id=invoice_id, phone=row["phone"], amount_rub=amount_rub)
+            except Exception:
+                logger.exception("billing: не удалось запланировать thankyou")
             await _notify_admins(
                 f"💳 Онлайн-оплата: {amount_rub} ₽\n"
                 f"Телефон: {row['phone'] or '—'}, ученик: {row['student_id'] or '—'}\n"

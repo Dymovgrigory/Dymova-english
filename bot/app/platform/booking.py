@@ -176,7 +176,23 @@ async def book_trial(*, parent_name: str, phone: str, child_name: str,
     bb_store.confirm_booking(booking_id, lead_id=lead_id, demo_lesson_id=demo_id)
     # Оптимистично сдвигаем занятость в read-model до следующей синхронизации.
     _bump_occupied(group_id)
+    _schedule_reminders(booking_id, phone_norm, lesson_id, fresh.get("caption", ""))
     return BookingResult(booking_id, "confirmed", lead_id=lead_id, demo_lesson_id=demo_id)
+
+
+def _schedule_reminders(booking_id: int, phone: str, lesson_id: int, group_caption: str) -> None:
+    """Напоминания о пробном через automation engine. Сбой не ломает запись."""
+    try:
+        from app.platform import automations
+        lessons = bb_store._rows("SELECT starts_at FROM bb_lessons WHERE id=?", (lesson_id,))
+        starts_at = lessons[0]["starts_at"] if lessons else None
+        if starts_at:
+            n = automations.schedule_lesson_reminders(
+                booking_id=booking_id, phone=phone,
+                lesson_starts_at=starts_at, group_caption=group_caption)
+            logger.info("booking %s: напоминаний запланировано: %d", booking_id, n)
+    except Exception:
+        logger.exception("booking %s: не удалось запланировать напоминания", booking_id)
 
 
 def _bump_occupied(group_id: int) -> None:

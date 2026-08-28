@@ -118,6 +118,10 @@ async def _start_scheduler() -> None:
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
     # Платформа: фоновая синхронизация BigBen → read-model.
+    from app.platform import automations as platform_automations
+    for task in platform_automations.start():
+        _BACKGROUND_TASKS.add(task)
+        task.add_done_callback(_BACKGROUND_TASKS.discard)
     from app.platform import sync as platform_sync
     for task in platform_sync.start():
         _BACKGROUND_TASKS.add(task)
