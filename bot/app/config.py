@@ -91,6 +91,12 @@ class Settings(BaseSettings):
     # используем вместимость аудитории как наиболее близкий физический лимит.
     BIGBEN_CAPACITY_FALLBACK_AUDITORY: bool = True
 
+    # Детектор низкого баланса (service-уведомление родителю).
+    # Порог в копейках: ниже него считаем, что оплаченные занятия заканчиваются.
+    LOW_BALANCE_ALERT_KOPECKS: int = 200_000  # 2 000 ₽
+    LOW_BALANCE_SCAN_ENABLED: bool = True
+    LOW_BALANCE_SCAN_INTERVAL_HOURS: int = 24
+
     # --- Платежи: CloudPayments (онлайн-касса) ---
     # Терминал в филиалах — T-bank, он к CloudPayments не относится и через
     # API не управляется. PublicId/secret: личный кабинет CloudPayments.

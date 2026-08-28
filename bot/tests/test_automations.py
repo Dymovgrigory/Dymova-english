@@ -82,3 +82,48 @@ async def test_run_due_cancels_reminder_for_failed_booking(env):
     assert n == 1  # обработана (отменена), без падения
     # сообщение не отправлено: нет записи в notification_log
     assert not notifications.already_sent(f"remind-msg:{bid}:завтра")
+
+
+async def test_low_balance_scan_notifies_and_dedups(env, monkeypatch):
+    from app.platform import automations, bb_store, notifications
+    monkeypatch.setattr("app.config.settings.LOW_BALANCE_SCAN_ENABLED", True)
+    monkeypatch.setattr("app.config.settings.LOW_BALANCE_ALERT_KOPECKS", 200_000)
+    bb_store._local.conn = None
+    sent = []
+
+    async def fake_targets(phone):
+        return [("telegram", "tg:1")]
+
+    async def fake_channel(channel, external_id, text):
+        sent.append((channel, external_id, text))
+        return True
+
+    # тихие часы не должны делать тест зависимым от времени суток
+    monkeypatch.setattr(notifications, "in_quiet_hours", lambda: False)
+    monkeypatch.setattr(notifications, "resolve_targets_by_phone", fake_targets)
+    monkeypatch.setattr(notifications, "_send_channel", fake_channel)
+    active = {"active_groups": [{"id": 1, "caption": "A1"}]}
+    bb_store.upsert_student({"id": 1, "fio": "Низкий Баланс", "phone": "79251112233",
+                             "email": "", "balance_kopecks": 50_000, **active})
+    bb_store.upsert_student({"id": 2, "fio": "Богатый Ученик", "phone": "79251112234",
+                             "email": "", "balance_kopecks": 900_000, **active})
+    bb_store.upsert_student({"id": 3, "fio": "Без Телефона", "phone": "",
+                             "email": "", "balance_kopecks": 0, **active})
+    n = await automations.scan_low_balance()
+    assert n == 1
+    assert len(sent) == 1
+    assert "Низкий Баланс" in sent[0][2]
+    # повторный прогон в ту же неделю — дедуп, ничего не уходит
+    sent.clear()
+    assert await automations.scan_low_balance() == 0
+    assert sent == []
+
+
+async def test_low_balance_scan_disabled(env, monkeypatch):
+    from app.platform import automations, bb_store
+    monkeypatch.setattr("app.config.settings.LOW_BALANCE_SCAN_ENABLED", False)
+    bb_store._local.conn = None
+    bb_store.upsert_student({"id": 1, "fio": "X", "phone": "79251112233",
+                             "email": "", "balance_kopecks": 0,
+                             "active_groups": [{"id": 1}]})
+    assert await automations.scan_low_balance() == 0

@@ -135,6 +135,43 @@ async def _handle_payment_thankyou(payload: dict) -> None:
         phone=payload.get("phone", ""), text=text)
 
 
+# --- детектор низкого баланса (по read-model после sync) ---
+
+async def scan_low_balance(now: datetime | None = None) -> int:
+    """Service-уведомление родителю, у активного ученика заканчивается баланс.
+
+    Источник — bb_students (активные группы + баланс). Дедуп — раз в
+    ISO-неделю на ученика: неделя та же → повторно не тревожим. Тихие часы
+    обеспечивает слой notifications (service-тип).
+    """
+    from app.platform import bb_store
+    if not settings.LOW_BALANCE_SCAN_ENABLED:
+        return 0
+    moment = now or _now()
+    week = moment.strftime("%G-W%V")  # ISO-год/неделя
+    threshold = settings.LOW_BALANCE_ALERT_KOPECKS
+    sent = 0
+    for st in bb_store.list_active_students():
+        balance = st.get("balance_kopecks", 0)
+        if balance > threshold:
+            continue
+        phone = (st.get("phone") or "").strip()
+        if not phone:
+            continue
+        rub = f"{balance / 100:,.0f}".replace(",", " ")
+        text = (f"Здравствуйте! У {st.get('fio', 'ученика')} на балансе "
+                f"осталось {rub} ₽ — оплаченные занятия скоро закончатся. "
+                "Продлить можно ответным сообщением или в личном кабинете.")
+        res = await notifications.send(
+            notifications.SERVICE, f"lowbal:{st['id']}:{week}",
+            phone=phone, text=text)
+        if res.get("sent"):
+            sent += 1
+    if sent:
+        logger.info("automation: низкий баланс — уведомлений: %d", sent)
+    return sent
+
+
 _HANDLERS = {
     "lesson_reminder": _handle_lesson_reminder,
     "payment_thankyou": _handle_payment_thankyou,
@@ -187,5 +224,18 @@ async def _worker_loop() -> None:
         await asyncio.sleep(WORKER_INTERVAL_SEC)
 
 
+async def _low_balance_loop() -> None:
+    # первый прогон — вскоре после старта (sync к тому времени уже наполнил
+    # read-model), дальше — раз в сутки по конфигу
+    await asyncio.sleep(300)
+    while True:
+        try:
+            await scan_low_balance()
+        except Exception:
+            logger.exception("automation: сбой сканера низкого баланса")
+        await asyncio.sleep(settings.LOW_BALANCE_SCAN_INTERVAL_HOURS * 3600)
+
+
 def start() -> list[asyncio.Task]:
-    return [asyncio.create_task(_worker_loop())]
+    return [asyncio.create_task(_worker_loop()),
+            asyncio.create_task(_low_balance_loop())]

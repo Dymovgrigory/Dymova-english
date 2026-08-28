@@ -363,6 +363,14 @@ def create_booking(*, parent_name: str, phone: str, child_name: str, child_age: 
         return int(row["id"]), True
 
 
+def list_active_students(limit: int = 5000) -> list[dict]:
+    """Ученики, у которых есть хотя бы одна активная группа (raw_json.active_groups)."""
+    return _rows(
+        "SELECT * FROM bb_students "
+        "WHERE json_array_length(json_extract(raw_json, '$.active_groups')) > 0 LIMIT ?",
+        (limit,))
+
+
 def list_bookings_by_phone(phone: str, limit: int = 50) -> list[dict]:
     """Заявки на пробное по телефону (нормализация — как у find_student_by_phone)."""
     digits = "".join(ch for ch in (phone or "") if ch.isdigit())[-10:]

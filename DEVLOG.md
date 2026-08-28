@@ -4925,3 +4925,11 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - Хелперы: `bb_store.list_bookings_by_phone/list_payments_by_student`, `billing.list_payments_by_phone` (нормализация телефона в Python, как find_student_by_phone).
 - Админка (`adminapp/app.js`): секция «Школа (BigBen)» в карточке клиента — ученик и баланс, заявки, платежи, онлайн-оплаты, пометка свежести; секция не блокирует карточку при ошибке (catch → null).
 - Тесты: test_customer360.py (4) — auth, unlinked, linked полная картина, 404. Регресс 1040 passed.
+
+## 2026-08-28 — Фаза 10 (продолжение): детектор низкого баланса
+
+- `automations.scan_low_balance()`: раз в сутки (LOW_BALANCE_SCAN_INTERVAL_HOURS=24, первый прогон через 5 мин после старта) находит активных учеников (есть active_groups) с балансом ≤ LOW_BALANCE_ALERT_KOPECKS (default 2000 ₽) и шлёт service-уведомление родителю. Дедуп — ISO-неделя на ученика; тихие часы — слой notifications.
+- `bb_store.list_active_students()` (json_array_length по raw_json.active_groups).
+- Ограничение API v1: персональной посещаемости ученика нет → детектор «неактивный ученик по урокам» невозможен; задокументировано.
+- Исправлено: notifications.send возвращает dict, не bool — подсчёт по res["sent"].
+- Тесты: +2 (notify+dedup+skip no-phone/rich, disabled). Регресс 1042 passed.
