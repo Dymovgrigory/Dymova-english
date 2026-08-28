@@ -914,6 +914,17 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
         await hand_off(max_client, conv, reason="запрос оператора")
         return _handoff_reply()
 
+    # 3б. Расписание и свободные места — только живые данные BigBen,
+    #     без LLM: детерминированный ответ из read-model (анти-галлюцинации).
+    if intent == I.SCHEDULE:
+        from app.platform import bot_bridge
+        try:
+            return bot_bridge.schedule_reply(text)
+        except Exception:
+            logger.exception("schedule: сбой ответа из read-model")
+            return ("Не смогла загрузить расписание — передам вопрос "
+                    "администратору, он подскажет точно.")
+
     # 3а. Домашка — единый тьютор (мини-приложение, виджет, мессенджеры).
     #     Раньше эта ветка жила только в вебхуках MAX/Telegram, а мини-апп
     #     отвечал общей консультацией с markdown-мусором (сессия 78).
