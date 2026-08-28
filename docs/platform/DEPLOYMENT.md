@@ -13,7 +13,10 @@
 
 ## Шаги выкладки
 
-1. Обновить код на сервере, перезапустить сервис (`foxinburg-bot.service`).
+1. Бот: `git pull && cd bot && docker compose build && docker compose up -d`
+   (прод: foxinburg-vm, контейнер bot-bot-1). Сайт: сборка
+   `python3 prototype/build_static_site.py --out dist_prod` + rsync в
+   `/home/yc-user/foxinburg-site/` (первый прод-деплой платформы: 2026-08-28).
 2. Проверить `GET /api/platform/health` — bigben_api_reachable: true.
 3. В CRM настроить вебхуки → URL `https://bot.dymova-english.ru/api/webhooks/bigben`,
    события: все 5. Тестовое событие из панели должно дать 200.
@@ -21,7 +24,9 @@
    `https://bot.dymova-english.ru/api/webhooks/cloudpayments/{check,pay,fail}`.
 5. В CRM: Воронки → первый статус → Автоматизация (автозадача менеджеру) —
    лиды из API не запускают автозадачи сами.
-6. Виджет на сайте: `<div id="fxb-schedule"></div>` + script (SCHEDULE_WIDGET.md).
+6. Виджет на сайте: УЖЕ в проде — страница https://dymova-english.ru/raspisanie
+   (2026-08-28). Для других страниц: `<div id="fxb-schedule"></div>` + script
+   (SCHEDULE_WIDGET.md).
 
 ## Откат
 
