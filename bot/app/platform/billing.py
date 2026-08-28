@@ -168,7 +168,7 @@ class TBankProvider:
         params["Token"] = self._token(params)
         import httpx
         try:
-            async with httpx.AsyncClient(timeout=15) as client:
+            async with httpx.AsyncClient(timeout=15, verify=_tbank_verify()) as client:
                 resp = await client.post(f"{settings.TBANK_API_BASE}/v2/Init",
                                          json=params)
                 data = resp.json()
@@ -186,6 +186,31 @@ class TBankProvider:
             return False
         expected = self._token(data)
         return hmac.compare_digest(expected.lower(), token.lower())
+
+
+def _tbank_verify():
+    """CA для Т-Банка: certifi + Russian Trusted Root CA (Минцифры).
+
+    Сервер Т-Банка отдаёт национальную цепочку, которой нет в certifi.
+    Бандл собирается лениво в каталоге данных; при отсутствии корневого
+    сертификата в образе — обычная верификация (упадёт с понятной ошибкой).
+    """
+    import certifi
+    from pathlib import Path
+    bundle = settings.TBANK_CA_BUNDLE
+    if bundle and Path(bundle).exists():
+        return bundle
+    rca = Path(__file__).resolve().parents[2] / "deploy" / "certs" / "russian_trusted_root_ca.pem"
+    if not rca.exists():
+        return True
+    out = Path(certifi.where()).with_name("tbank-ca-bundle.pem")
+    try:
+        if not out.exists() or out.stat().st_mtime < rca.stat().st_mtime:
+            out.write_text(Path(certifi.where()).read_text() + rca.read_text(),
+                           encoding="utf-8")
+        return str(out)
+    except OSError:
+        return True
 
 
 def get_provider():

@@ -4969,3 +4969,9 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - Лимиты групп по филиалам: Лихачевский 8, Ракетостроителей 7, школьные 10 (`filial_capacity`, явный max_students CRM ограничивается правилом сверху). Детский сад исключён из онлайн-расписания (KINDERGARTEN_EXCLUDE_PATTERN="детск" по названию филиала/группы).
 - Т-Банк интернет-эквайринг: TBankProvider (securepay v2 Init, PaymentURL), вебхук /api/webhooks/tbank (Token-подпись, сверка суммы, идемпотентность), payment_started/success в аналитику (и для CP). Ключи в .env прода, BILLING_PROVIDER=tbank.
 - Тесты: +4 subscription, +2 capacity, +6 tbank, account без balance. Регресс 1060 passed.
+
+## 2026-08-28 — Т-Банк: национальный сертификат Минцифры
+
+- securepay.tinkoff.ru отдаёт цепочку Russian Trusted Sub CA (Минцифры), которой нет в certifi → SSL verify fail. Добавлен Russian Trusted Root CA (bot/deploy/certs/russian_trusted_root_ca.pem, официальный, с gu-st.ru) и `_tbank_verify()`: ленивая сборка объединённого бандла рядом с certifi.
+- Также починен docker compose .env: `$` в пароле терминала съедался интерполяцией (`$XIUGO` → пусто) — заэкранировано `$$`.
+- Тесты billing зелёные (10).

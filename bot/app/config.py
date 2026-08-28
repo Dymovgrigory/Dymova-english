@@ -134,6 +134,9 @@ class Settings(BaseSettings):
     TBANK_TERMINAL_KEY: str = ""
     TBANK_PASSWORD: str = ""
     TBANK_API_BASE: str = "https://securepay.tinkoff.ru"
+    # Объединённый CA-бандл (certifi + Russian Trusted Root CA) — генерируется
+    # лениво; нужен, т.к. Т-Банк использует национальный сертификат Минцифры.
+    TBANK_CA_BUNDLE: str = ""
 
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""
