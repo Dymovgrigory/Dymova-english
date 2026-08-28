@@ -39,8 +39,15 @@ app/platform/bb_store.py     — read-model SQLite + sync_runs + webhook events 
 - [x] Phase 2: sync engine + webhook receiver + read-model
 - [x] Phase 3: schedule/groups API (публичные)
 - [x] Phase 4: Booking engine (API-уровень)
-- [ ] Phase 5: подключение бота к живым группам/расписанию (matching)
-- [ ] Phase 6: виджет расписания/записи на сайте
-- [ ] Phase 7: Mini App «мои занятия» (по телефону → bb_students)
-- [ ] Phase 8: Billing (CloudPayments онлайн + T-bank терминал)
-- [ ] Phase 9+: уведомления, автоматизации, кампании, Customer 360, аналитика
+- [x] Phase 5: бот отвечает о расписании/местах из read-model (детерминированно, без LLM)
+- [x] Phase 6: виджет fxb-schedule.js (карточки, места, booking, anti-race UI)
+- [x] Phase 7: Mini App «Мои занятия» (баланс, группы, расписание; initData-auth)
+- [x] Phase 8: Billing CloudPayments (инвойсы, подписанные вебхуки, идемпотентность)
+- [x] Phase 9: Notification Orchestrator (dedup, тихие часы, приоритеты)
+- [x] Phase 10: Automation Engine (напоминания о пробном, thankyou за оплату)
+- [x] Phase 12 (частично): Alert Center /admin/api/platform/alerts + replay вебхуков
+- [ ] Phase 11: кампании и сегменты (в админке есть broadcasts/segments — связать с оркестратором)
+- [ ] Phase 12 (полностью): Customer 360 (объединить crm_store + bb_* + bookings + billing)
+- [ ] Phase 13: продуктовая аналитика и воронка
+- [ ] Автоматизация low-balance и inactive-student (данные есть — нужны детекторы)
+- [ ] TG-версия экрана «Мои занятия» (tgapp)

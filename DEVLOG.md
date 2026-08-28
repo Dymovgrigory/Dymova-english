@@ -4885,3 +4885,22 @@ anti-race, идемпотентность, demo-failure) + полный регр
   mobile bottom-sheet, a11y. Подключение — docs/platform/SCHEDULE_WIDGET.md.
 - HTTP-тесты эндпоинтов (test_platform_api.py): фильтрация активных, freshness,
   webhook 401/200/dup, валидация booking. Регресс: 1012 зелёных.
+
+### Фазы 8–12: Billing, Notifications, Automations, Alert Center
+
+- `billing.py`/`billing_api.py`: CloudPayments — инвойсы для виджета,
+  вебхуки check/pay/fail с HMAC-подписью, идемпотентное зачисление
+  (transaction_id), суммы строго в копейках. Зачисление в BigBen — вручную
+  менеджером (API v1 платежи не принимает — задокументировано).
+- `notifications.py`: оркестратор с dedup_key, тихими часами (21:00–9:00 МСК,
+  кроме transactional), разрешением каналов по телефону из crm_identities.
+- `automations.py`: automation_jobs + воркер (60с); напоминания о пробном за
+  24ч/2ч (отменяются, если бронь не confirmed), thankyou за оплату; ретраи
+  transient-сбоев (3 попытки, backoff 5 мин).
+- Alert Center: GET /admin/api/platform/alerts (critical/warning/info:
+  устаревший sync, падения, webhook-сбои, backlog, конфиг) + replay вебхуков.
+- Регресс: 1036 зелёных. .env.example и docs/platform/DEPLOYMENT.md обновлены.
+
+**Осталось из мандата (следующие сессии).** Кампании→оркестратор, Customer 360
+объединение, продуктовая аналитика/воронка, low-balance и inactive детекторы,
+tgapp-экран «Мои занятия», страница /schedule на сайте через build_static_site.
