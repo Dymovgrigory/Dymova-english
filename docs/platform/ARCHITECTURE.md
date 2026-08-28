@@ -46,8 +46,12 @@ app/platform/bb_store.py     — read-model SQLite + sync_runs + webhook events 
 - [x] Phase 9: Notification Orchestrator (dedup, тихие часы, приоритеты)
 - [x] Phase 10: Automation Engine (напоминания о пробном, thankyou за оплату)
 - [x] Phase 12 (частично): Alert Center /admin/api/platform/alerts + replay вебхуков
-- [ ] Phase 11: кампании и сегменты (в админке есть broadcasts/segments — связать с оркестратором)
-- [ ] Phase 12 (полностью): Customer 360 (объединить crm_store + bb_* + bookings + billing)
-- [ ] Phase 13: продуктовая аналитика и воронка
-- [ ] Автоматизация low-balance и inactive-student (данные есть — нужны детекторы)
-- [ ] TG-версия экрана «Мои занятия» (tgapp)
+- [x] Phase 11: кампании — тихие часы (возврат в draft) + frequency cap 20ч
+- [x] Phase 12: Customer 360 (/admin/api/customers/{id}/crm360 + секция в карточке админки)
+- [x] Phase 13: продуктовая аналитика (product_events, /api/platform/events, админ-воронка)
+- [x] Автоматизация low-balance (ежедневный скан, ISO-недельный дедуп);
+      inactive-student по урокам НЕВОЗМОЖЕН — API v1 не отдаёт посещаемость ученика
+- [x] TG-версия экрана «Мои занятия» (tgapp, sheet mylessons)
+- [x] Сайт: страница /raspisanie с живым виджетом (в проде)
+- [ ] CloudPayments: код готов, ждёт public_id/api_secret владельца (CLOUDPAYMENTS_ENABLED=false)
+- [ ] Вебхук BigBen: приёмник готов, нужна регистрация URL в кабинете BigBen (секрет в .env прода)

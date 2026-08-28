@@ -4949,3 +4949,9 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - Виджет fxb-schedule.js: track() с session_id из sessionStorage, события schedule_open/filter_used/group_view; keepalive, тихий catch.
 - Админка: `GET /admin/api/platform/analytics/funnel` (право analytics). Конфликт имён: в admin_api уже была функция analytics — импорт как platform_analytics.
 - Тесты: test_platform_analytics.py (6). Регресс 1050 passed.
+
+## 2026-08-28 — Фаза 12 (часть 2): раздел «Платформа» в админке + доки
+
+- adminapp: новый раздел «Платформа» (nav, perm stats) — Alert Center (критические — бейдж в меню), воронка записи за 30 дней, здоровье интеграций (BigBen API, вебхук-секрет, свежесть сущностей). Кнопка «Обновить».
+- docs/platform/ARCHITECTURE.md: чек-лист фаз приведён к факту (11/12/13 закрыты, ограничение inactive-student, ожидание CloudPayments-ключей и регистрации вебхука).
+- Регресс 1050 passed.

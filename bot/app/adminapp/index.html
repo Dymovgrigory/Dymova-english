@@ -66,6 +66,9 @@
       <button class="nav-item" data-section="errors" data-perm="errors">
         <svg viewBox="0 0 16 16"><path d="M8 2L1 14h14z"/><path d="M8 7v3M8 12v.5"/></svg>
         Ошибки <span class="nav-badge" id="nav-errors" hidden></span></button>
+      <button class="nav-item" data-section="platform" data-perm="stats">
+        <svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Платформа <span class="nav-badge" id="nav-alerts" hidden></span></button>
       <button class="nav-item" data-section="users" data-perm="users">
         <svg viewBox="0 0 16 16"><circle cx="6" cy="5" r="3"/><path d="M1 14c0-3 2-5 5-5s5 2 5 5"/><path d="M12 4v4M10 6h4"/></svg>
         Пользователи</button>
@@ -296,6 +299,27 @@
       <div class="dash-grid" style="margin-top:16px">
         <div class="widget"><h3>Каналы</h3><div id="an-channels"></div></div>
         <div class="widget"><h3>Лиды по статусам</h3><div id="an-leads"></div></div>
+      </div>
+    </section>
+
+    <!-- Платформа: Alert Center + воронка -->
+    <section class="page" id="page-platform" hidden>
+      <div class="toolbar">
+        <button class="btn btn--ghost btn--sm" id="platform-refresh">Обновить</button>
+      </div>
+      <div class="dash-grid">
+        <div class="widget">
+          <h3>Здоровье платформы</h3>
+          <div id="platform-alerts"></div>
+        </div>
+        <div class="widget">
+          <h3>Воронка записи (30 дней)</h3>
+          <div id="platform-funnel"></div>
+        </div>
+      </div>
+      <div class="widget" style="margin-top:16px">
+        <h3>Интеграции</h3>
+        <div id="platform-health"></div>
       </div>
     </section>
 

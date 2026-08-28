@@ -205,12 +205,12 @@ function showSection(name, options = {}) {
     dashboard: "stats", inbox: "inbox", requests: "inbox", customers: "customers",
     pipeline: "pipeline", broadcast: "broadcasts", insights: "stats",
     analytics: "analytics", kb: "kb", ai: "prompts", errors: "errors",
-    users: "users", settings: "system",
+    users: "users", settings: "system", platform: "stats",
   };
   if (!hasPerm(sectionPerms[name] || "stats")) name = "inbox";
   SECTION = name;
   ["dashboard", "inbox", "requests", "customers", "pipeline", "broadcast", "insights",
-   "analytics", "kb", "ai", "errors", "users", "settings"].forEach((s) => {
+   "analytics", "kb", "ai", "errors", "users", "settings", "platform"].forEach((s) => {
     $(`page-${s}`).hidden = s !== name;
   });
   document.querySelector(".sidebar").classList.remove("sidebar--open");
@@ -228,6 +228,7 @@ function showSection(name, options = {}) {
   if (name === "insights") loadInsights();
   if (name === "users") loadAdminUsers();
   if (name === "settings") loadSettings();
+  if (name === "platform") loadPlatform();
 }
 
 $("nav").addEventListener("click", (event) => {
@@ -1888,6 +1889,46 @@ async function loadAnalytics() {
 }
 
 $("analytics-days").addEventListener("change", loadAnalytics);
+
+/* Платформа: Alert Center + воронка + здоровье интеграций. */
+async function loadPlatform() {
+  const alertsBox = $("platform-alerts");
+  const funnelBox = $("platform-funnel");
+  const healthBox = $("platform-health");
+  alertsBox.innerHTML = `<div class="muted">Загрузка…</div>`;
+  try {
+    const [alerts, funnel, health] = await Promise.all([
+      api("/admin/api/platform/alerts"),
+      api("/admin/api/platform/analytics/funnel"),
+      api("/api/platform/health"),
+    ]);
+    const list = alerts.alerts || [];
+    const badge = $("nav-alerts");
+    const critical = list.filter((a) => a.level === "critical").length;
+    badge.hidden = critical === 0;
+    badge.textContent = String(critical);
+    alertsBox.innerHTML = list.length === 0
+      ? `<div class="muted">Все системы в порядке</div>`
+      : list.map((a) =>
+        `<div class="note"><b>${a.level === "critical" ? "🔴" : "🟡"} ${esc(a.code)}</b>
+         <div class="note__meta">${esc(a.text || "")}</div></div>`).join("");
+    const steps = (funnel.funnel || []).filter((st) => st.count > 0);
+    funnelBox.innerHTML = steps.length === 0
+      ? `<div class="muted">Событий пока нет</div>`
+      : steps.map((st) =>
+        `<div class="note">${esc(st.event)}<div class="note__meta">${st.count}</div></div>`).join("");
+    const fr = health.freshness || {};
+    healthBox.innerHTML = `<dl class="kv">
+      <dt>BigBen API</dt><dd>${health.bigben_api_reachable ? "🟢 доступен" : "🔴 недоступен"}</dd>
+      <dt>Вебхук-секрет</dt><dd>${health.webhook_secret_configured ? "🟢 задан" : "🟡 не задан"}</dd>
+      ${Object.entries(fr).map(([k, v]) =>
+        `<dt>${esc(k)}</dt><dd>${v.count} запис. · ${esc(fmtTime(v.last_synced_at))}</dd>`).join("")}
+    </dl>`;
+  } catch (err) {
+    alertsBox.innerHTML = `<div class="customer-empty">${esc(err.message)}</div>`;
+  }
+}
+$("platform-refresh").addEventListener("click", loadPlatform);
 
 /* --- база знаний ------------------------------------------------------------ */
 
