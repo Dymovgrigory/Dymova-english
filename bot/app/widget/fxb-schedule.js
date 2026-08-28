@@ -333,7 +333,7 @@
     return new Promise((resolve, reject) => {
       if (window.cp && window.cp.CloudPayments) return resolve();
       const s = document.createElement("script");
-      s.src = "https://widget.cloudpayments.ru/bundles/cloudpayments.min.js";
+      s.src = "https://widget.cloudpayments.ru/bundles/cloudpayments.js";
       s.onload = () => resolve();
       s.onerror = () => reject(new Error("widget_load_failed"));
       document.head.appendChild(s);
