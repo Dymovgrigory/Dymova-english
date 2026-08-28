@@ -91,6 +91,15 @@ class Settings(BaseSettings):
     # используем вместимость аудитории как наиболее близкий физический лимит.
     BIGBEN_CAPACITY_FALLBACK_AUDITORY: bool = True
 
+    # --- Платежи: CloudPayments (онлайн-касса) ---
+    # Терминал в филиалах — T-bank, он к CloudPayments не относится и через
+    # API не управляется. PublicId/secret: личный кабинет CloudPayments.
+    CLOUDPAYMENTS_PUBLIC_ID: str = ""
+    CLOUDPAYMENTS_API_SECRET: str = ""
+    CLOUDPAYMENTS_ENABLED: bool = False
+    # Назначение платежа в чеке/виджете.
+    CLOUDPAYMENTS_DESCRIPTION: str = "Оплата занятий Фоксинбург"
+
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""
     SENTRY_ENVIRONMENT: str = ""

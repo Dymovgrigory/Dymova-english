@@ -1,0 +1,132 @@
+"""HTTP-контур оплат: создание инвойса из мини-аппа и вебхуки CloudPayments.
+
+- POST /api/miniapp/account/pay — инвойс для виджета (initData-авторизация);
+- POST /api/webhooks/cloudpayments/check — CloudPayments спрашивает «можно
+  ли принять оплату»: отвечаем {"code": 0}, если инвойс наш;
+- POST /api/webhooks/cloudpayments/pay — подтверждение оплаты (единственное
+  основание считать деньги полученными);
+- POST /api/webhooks/cloudpayments/fail — отказ.
+"""
+from __future__ import annotations
+
+import asyncio
+import logging
+import urllib.parse
+
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
+
+from app import miniapp_auth
+from app.memory import get_store
+from app.platform import bb_store, billing
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter(tags=["billing"])
+
+SIGNATURE_HEADER = "Content-HMAC-SHA256"
+
+
+def _verified_identity(request: Request):
+    identity = miniapp_auth.identify(
+        init_data=request.headers.get("X-Miniapp-Init-Data", ""),
+        platform_hint=request.headers.get("X-Miniapp-Platform", ""),
+        fallback_user_id="",
+    )
+    if identity is None or not identity.verified:
+        return None
+    return identity
+
+
+class PayRequest(BaseModel):
+    amount_rub: float = Field(gt=0, le=500000)
+
+
+@router.post("/api/miniapp/account/pay")
+async def create_payment(req: PayRequest, request: Request) -> JSONResponse:
+    identity = _verified_identity(request)
+    if identity is None:
+        return JSONResponse({"error": "unauthorized"}, status_code=401)
+    provider = billing.get_provider()
+    if not provider.configured:
+        return JSONResponse(
+            {"error": "payments_disabled",
+             "message": "Онлайн-оплата временно недоступна — оплатите в филиале "
+                        "или напишите нам."}, status_code=503)
+    conv = await asyncio.to_thread(get_store().get, identity.user_id, identity.platform)
+    phone = (conv.lead.phone or "").strip() if conv and conv.lead else ""
+    student = await asyncio.to_thread(bb_store.find_student_by_phone, phone) if phone else None
+    try:
+        invoice = provider.create_invoice(
+            amount_kopecks=round(req.amount_rub * 100),
+            phone=phone, student_id=student["id"] if student else None)
+    except billing.BillingError as exc:
+        return JSONResponse({"error": "billing_error", "message": str(exc)}, status_code=400)
+    return JSONResponse(invoice, status_code=201)
+
+
+async def _cp_webhook(request: Request, action: str) -> JSONResponse:
+    raw = await request.body()
+    provider = billing.get_provider()
+    signature = request.headers.get(SIGNATURE_HEADER, "")
+    if not provider.verify_webhook_signature(raw, signature):
+        logger.warning("billing: %s webhook с неверной подписью", action)
+        return JSONResponse({"code": 13}, status_code=401)
+    try:
+        form = urllib.parse.parse_qs(raw.decode("utf-8"), keep_blank_values=True)
+    except UnicodeDecodeError:
+        return JSONResponse({"code": 13}, status_code=400)
+    data = {k: v[0] for k, v in form.items()}
+    invoice_id = data.get("InvoiceId", "")
+
+    if action == "check":
+        exists = billing.get_payment(invoice_id) is not None if invoice_id else False
+        # code 0 — можно проводить; 10 — неверный номер заказа.
+        return JSONResponse({"code": 0 if exists else 10})
+
+    if action == "pay":
+        transaction_id = data.get("TransactionId", "")
+        is_new, row = billing.mark_paid(invoice_id, transaction_id, data)
+        if is_new and row:
+            amount_rub = round(row["amount_kopecks"] / 100, 2)
+            await _notify_admins(
+                f"💳 Онлайн-оплата: {amount_rub} ₽\n"
+                f"Телефон: {row['phone'] or '—'}, ученик: {row['student_id'] or '—'}\n"
+                f"Инвойс: {invoice_id}, транзакция: {transaction_id}\n"
+                f"Отразите оплату в BigBen вручную — API v1 платежи не принимает.")
+        return JSONResponse({"code": 0})
+
+    if action == "fail":
+        billing.mark_failed(invoice_id, data)
+        return JSONResponse({"code": 0})
+
+    return JSONResponse({"code": 13}, status_code=400)
+
+
+@router.post("/api/webhooks/cloudpayments/check")
+async def cp_check(request: Request) -> JSONResponse:
+    return await _cp_webhook(request, "check")
+
+
+@router.post("/api/webhooks/cloudpayments/pay")
+async def cp_pay(request: Request) -> JSONResponse:
+    return await _cp_webhook(request, "pay")
+
+
+@router.post("/api/webhooks/cloudpayments/fail")
+async def cp_fail(request: Request) -> JSONResponse:
+    return await _cp_webhook(request, "fail")
+
+
+async def _notify_admins(text: str) -> None:
+    from app.config import settings
+    from app.max_client import get_max
+    client = get_max()
+    if not client.configured:
+        return
+    for admin_id in settings.admin_ids:
+        try:
+            await client.send_message(admin_id, text)
+        except Exception:
+            logger.exception("billing: не удалось уведомить админа %s", admin_id)
