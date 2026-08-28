@@ -27,10 +27,11 @@
     .fxs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
     .fxs-card{background:#fff;border:1px solid #ececf4;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 24px rgba(15,23,42,.05);transition:transform .18s ease,box-shadow .18s ease}
     .fxs-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(15,23,42,.09)}
-    .fxs-card h3{margin:0;font-size:17px;line-height:1.35}
+    .fxs-card h3{margin:0;font-size:16.5px;line-height:1.35;letter-spacing:-0.01em}
     .fxs-tags{display:flex;gap:6px;flex-wrap:wrap}
     .fxs-tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:#f1f5f9;color:#475569}
     .fxs-tag.level{background:#ede9fe;color:#6d28d9}
+    .fxs-tag.course{background:#fef3c7;color:#92400e}
     .fxs-tag.teacher{background:#eff6ff;color:#1d4ed8}
     .fxs-meta{font-size:14px;color:#64748b;display:flex;flex-direction:column;gap:4px}
     .fxs-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -98,6 +99,17 @@
   };
 
   const fmtPrice = (rub) => `${Number(rub).toLocaleString("ru-RU")} ₽`;
+
+  const MONTHS_SHORT = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+  const fmtPeriod = (g) => {
+    if (!g.period_start || !g.period_end) return "";
+    const d0 = new Date(g.period_start), d1 = new Date(g.period_end);
+    if (isNaN(d0) || isNaN(d1)) return "";
+    const spanDays = (d1 - d0) / 86400000;
+    if (spanDays < 45) return ""; // короткие наборы не подписываем
+    const f = (d) => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}`;
+    return `Период: ${f(d0)} — ${f(d1)}`;
+  };
 
   async function api(path, opts) {
     const resp = await fetch(`${apiBase}/api/platform${path}`, opts);
@@ -211,7 +223,9 @@
     const cards = groups.map((g) => {
       const next = nextLessonFor(g.id);
       const full = g.free_slots !== null && g.free_slots <= 0;
+      const period = fmtPeriod(g);
       const tags = [
+        g.course ? `<span class="fxs-tag course">${esc(g.course)}</span>` : "",
         g.level ? `<span class="fxs-tag level">${esc(g.level)}</span>` : "",
         g.teacher ? `<span class="fxs-tag teacher">👩‍🏫 ${esc(g.teacher)}</span>` : "",
         g.duration_min ? `<span class="fxs-tag">⏱ ${g.duration_min} мин</span>` : "",
@@ -227,6 +241,7 @@
         <div class="fxs-meta">
           <span>📍 ${esc(g.filial.caption || "")}</span>
           ${next ? `<span>🗓 Ближайшее: ${esc(fmtWhen(next))}</span>` : ""}
+          ${period ? `<span>📅 ${esc(period)}</span>` : ""}
         </div>
         <div class="fxs-row">${slotsBadge(g)}${price}</div>
         <button class="fxs-btn" data-fxs="book" data-group="${g.id}" data-lesson="${next ? next.lesson_id : ""}" ${full || !next ? "disabled" : ""}>${btnLabel}</button>

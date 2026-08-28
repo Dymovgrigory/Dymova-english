@@ -237,3 +237,83 @@ def test_no_price_falls_back_to_free_booking(client, monkeypatch):
         "group_id": 1, "lesson_id": 55, "idempotency_key": "k30"})
     assert r.status_code == 201
     assert r.json()["status"] == "confirmed"
+
+
+def test_course_level_mapping(monkeypatch):
+    monkeypatch.setattr("app.config.settings.KNOWN_TEACHERS", "Вероника Дымова")
+    assert booking.derive_course_level("My level 1 Пн/Ср 11:00") == ("My Level 1", "Pre-A1")
+    assert booking.derive_course_level("My Level 5 Вт/Чт") == ("My Level 5", "A1+")
+    assert booking.derive_course_level("Экспресс курс ML3 ML4") == ("My Level 3", "A1")
+    assert booking.derive_course_level("Get Involved A2 Вт/Чт") == ("Get Involved", "A2")
+    assert booking.derive_course_level("GEt Involved B1+ Пн/ср") == ("Get Involved", "B1+")
+    assert booking.derive_course_level("Baby 2-3 года") == ("Дошкольная программа", "Pre-A1")
+    assert booking.derive_course_level("Группа 4-5 лет Пн/Ср") == ("Дошкольная программа", "Pre-A1")
+    assert booking.derive_course_level("Супер-папы. Гонка!") == ("", "")
+
+
+def test_is_individual(monkeypatch):
+    monkeypatch.setattr("app.config.settings.KNOWN_TEACHERS", "Вероника Дымова")
+    assert booking.is_individual("Индивидуальное Оганесян Анна ВС 12:30")
+    assert booking.is_individual("Вероника Дымова")
+    assert not booking.is_individual("My Level 1 Пн/Ср")
+
+
+def test_price_120():
+    assert booking.trial_price_rub(120) == 2250
+    assert booking.trial_price_rub(90) == 2250
+    assert booking.trial_price_rub(60) == 1125
+
+
+def test_individual_hidden_from_groups(client):
+    _seed(60)
+    day = (_dt.date.today() + _dt.timedelta(days=10)).isoformat()
+    bb_store.upsert_group({"id": 9, "caption": "Индивидуальное Иванов",
+                           "capacity": 1, "occupied": 1, "free_slots": 0,
+                           "overbooked": False,
+                           "filial": {"id": 10, "caption": "F"}, "auditory": {},
+                           "schedule": []})
+    bb_store.upsert_lesson({"id": 56, "date": day,
+                            "starts_at": day + "T12:00:00+03:00",
+                            "ends_at": day + "T13:00:00+03:00",
+                            "group": {"id": 9, "caption": "Индивидуальное"},
+                            "filial": {"id": 10, "caption": "F"}})
+    r = client.get("/api/platform/groups")
+    ids = [g["id"] for g in r.json()["data"]]
+    assert 9 not in ids and 1 in ids
+    r = client.get("/api/platform/schedule?days=30")
+    gids = {l["group_id"] for l in r.json()["data"]}
+    assert 9 not in gids
+
+
+def test_event_group_has_no_price(client):
+    """Мероприятие (без курса/уровня) не получает цену даже при 120 мин."""
+    _seed(60)
+    day = (_dt.date.today() + _dt.timedelta(days=10)).isoformat()
+    bb_store.upsert_group({"id": 7, "caption": "Супер-папы. Гонка чемпионов!",
+                           "capacity": 20, "occupied": 0, "free_slots": 20,
+                           "overbooked": False,
+                           "filial": {"id": 10, "caption": "F"}, "auditory": {},
+                           "schedule": []})
+    bb_store.upsert_lesson({"id": 57, "date": day,
+                            "starts_at": day + "T12:00:00+03:00",
+                            "ends_at": day + "T14:00:00+03:00",
+                            "group": {"id": 7, "caption": "Супер-папы"},
+                            "filial": {"id": 10, "caption": "F"}})
+    r = client.get("/api/platform/groups")
+    card = [g for g in r.json()["data"] if g["id"] == 7][0]
+    assert card["trial_price_rub"] is None
+    card1 = [g for g in r.json()["data"] if g["id"] == 1][0]
+    assert card1["trial_price_rub"] == 1125
+    assert card1["course"] == "Get Involved"
+    assert card1["period_start"] and card1["period_end"]
+
+
+def test_teacher_from_meta_overlay(client):
+    _seed(60)
+    bb_store.upsert_group_meta(1, teacher="Дымова Вероника Александровна",
+                               period_start="2026-09-01", period_end="2027-05-31")
+    r = client.get("/api/platform/groups")
+    card = r.json()["data"][0]
+    assert card["teacher"] == "Вероника Дымова"
+    assert card["period_start"] == "2026-09-01"
+    assert card["period_end"] == "2027-05-31"

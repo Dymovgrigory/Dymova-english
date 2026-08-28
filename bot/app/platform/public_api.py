@@ -45,14 +45,25 @@ def _is_kindergarten(caption: str, filial_caption: str) -> bool:
     return pat in (caption or "").lower() or pat in (filial_caption or "").lower()
 
 
-def _group_card(g: dict, duration_min: int | None = None) -> dict:
+def _is_individual(caption: str) -> bool:
+    return booking.is_individual(caption)
+
+
+def _group_card(g: dict, duration_min: int | None = None,
+                period: tuple[str, str] | None = None,
+                meta: dict | None = None) -> dict:
     group_raw = g.get("raw_json")
     import json as _json
     raw = _json.loads(group_raw) if isinstance(group_raw, str) else (group_raw or {})
     free = booking.group_free_slots(raw) if raw else g.get("free_slots")
     caption = g.get("caption", "")
     age_from, age_to = _age_from_caption(caption)
-    price = booking.trial_price_rub(duration_min) if settings.TRIAL_PAID else None
+    course, cefr = booking.derive_course_level(caption)
+    level = cefr or booking.derive_level(caption)
+    # Платное пробное — только для учебных групп (распознанный курс/уровень);
+    # мероприятия и консультации остаются бесплатной записью.
+    price = (booking.trial_price_rub(duration_min)
+             if settings.TRIAL_PAID and (course or level) else None)
     return {
         "id": g["id"],
         "caption": caption,
@@ -64,11 +75,14 @@ def _group_card(g: dict, duration_min: int | None = None) -> dict:
         "low_availability": free is not None and 0 < free <= settings.LOW_AVAILABILITY_THRESHOLD,
         "age_from": age_from,
         "age_to": age_to,
-        "level": booking.derive_level(caption),
-        "level_rank": booking.level_rank(booking.derive_level(caption)),
-        "teacher": booking.derive_teacher(caption),
+        "course": course,
+        "level": level,
+        "level_rank": booking.level_rank(level) if level else 999,
+        "teacher": booking.group_teacher(g["id"], caption),
         "duration_min": duration_min,
         "trial_price_rub": price,
+        "period_start": (meta or {}).get("period_start") or (period[0] if period else None),
+        "period_end": (meta or {}).get("period_end") or (period[1] if period else None),
         "schedule": _json.loads(g.get("schedule_json") or "[]"),
         "synced_at": g.get("synced_at"),
     }
@@ -94,7 +108,8 @@ async def groups(filial_id: int | None = Query(default=None),
     в CRM сотни архивных групп, показывать их клиенту нельзя."""
     items = await asyncio.to_thread(bb_store.list_groups, filial_id)
     items = [g for g in items
-             if not _is_kindergarten(g.get("caption", ""), g.get("filial_caption", ""))]
+             if not _is_kindergarten(g.get("caption", ""), g.get("filial_caption", ""))
+             and not _is_individual(g.get("caption", ""))]
     if not all:
         today = date.today()
         date_to = today + timedelta(days=settings.BIGBEN_LESSONS_WINDOW_DAYS)
@@ -103,7 +118,11 @@ async def groups(filial_id: int | None = Query(default=None),
         active_ids = {les.get("group_id") for les in lessons}
         items = [g for g in items if g["id"] in active_ids]
     durations = await asyncio.to_thread(_duration_map)
-    return {"data": [_group_card(g, durations.get(g["id"])) for g in items]}
+    periods = await asyncio.to_thread(bb_store.group_period_map)
+    metas = await asyncio.to_thread(bb_store.group_meta_map)
+    return {"data": [_group_card(g, durations.get(g["id"]),
+                                 periods.get(g["id"]),
+                                 metas.get(g["id"])) for g in items]}
 
 
 @router.get("/schedule")
@@ -120,8 +139,13 @@ async def schedule(
         asyncio.to_thread(bb_store.list_groups, filial_id),
     )
     durations = await asyncio.to_thread(_duration_map)
-    cards = {g["id"]: _group_card(g, durations.get(g["id"])) for g in groups
-             if not _is_kindergarten(g.get("caption", ""), g.get("filial_caption", ""))}
+    periods = await asyncio.to_thread(bb_store.group_period_map)
+    metas = await asyncio.to_thread(bb_store.group_meta_map)
+    cards = {g["id"]: _group_card(g, durations.get(g["id"]), periods.get(g["id"]),
+                                  metas.get(g["id"]))
+             for g in groups
+             if not _is_kindergarten(g.get("caption", ""), g.get("filial_caption", ""))
+             and not _is_individual(g.get("caption", ""))}
     out_lessons = []
     for les in lessons:
         gid = les.get("group_id")

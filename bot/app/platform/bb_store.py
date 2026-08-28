@@ -84,6 +84,14 @@ CREATE TABLE IF NOT EXISTS bb_payments (
     synced_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_bb_payments_paid ON bb_payments(paid_at);
+CREATE TABLE IF NOT EXISTS bb_group_meta (
+    group_id INTEGER PRIMARY KEY,
+    teacher TEXT NOT NULL DEFAULT '',
+    period_start TEXT NOT NULL DEFAULT '',
+    period_end TEXT NOT NULL DEFAULT '',
+    monthly_payment INTEGER,
+    synced_at TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS sync_runs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     kind TEXT NOT NULL,
@@ -408,6 +416,29 @@ def list_payments_by_student(student_id: int, limit: int = 50) -> list[dict]:
         "SELECT * FROM bb_payments WHERE student_id = ? ORDER BY paid_at DESC LIMIT ?",
         (student_id, limit))
 
+
+def upsert_group_meta(group_id: int, *, teacher: str = "", period_start: str = "",
+                      period_end: str = "", monthly_payment: int | None = None) -> None:
+    _db().execute(
+        "INSERT INTO bb_group_meta (group_id, teacher, period_start, period_end,"
+        " monthly_payment, synced_at) VALUES (?,?,?,?,?,?)"
+        " ON CONFLICT(group_id) DO UPDATE SET teacher=excluded.teacher,"
+        " period_start=excluded.period_start, period_end=excluded.period_end,"
+        " monthly_payment=excluded.monthly_payment, synced_at=excluded.synced_at",
+        (group_id, teacher, period_start, period_end, monthly_payment, _now()))
+    _db().commit()
+
+
+def group_meta_map() -> dict[int, dict]:
+    rows = _rows("SELECT * FROM bb_group_meta")
+    return {r["group_id"]: dict(r) for r in rows}
+
+def group_period_map() -> dict[int, tuple[str, str]]:
+    """Период группы: (первая, последняя дата) по синхронизированным урокам."""
+    rows = _rows(
+        "SELECT group_id, MIN(date) AS d0, MAX(date) AS d1 FROM bb_lessons"
+        " GROUP BY group_id")
+    return {r["group_id"]: (r["d0"], r["d1"]) for r in rows if r.get("group_id")}
 
 def lesson_duration_map(date_from: str, date_to: str) -> dict[int, int]:
     """Типовая длительность урока группы (минуты, мода по окну расписания)."""

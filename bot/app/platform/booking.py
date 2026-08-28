@@ -30,7 +30,7 @@ _LEVEL_RE = re.compile(
     r"\b(starters?|movers?|flyers?|ket|pet|fce|a0|a1\+?|a2\+?|b1\+?|b2\+?|c1\+?|c2|ml\d)(?![\w+])",
     re.IGNORECASE)
 # Порядок уровней для сортировки расписания (от младшего к старшему).
-LEVEL_ORDER = ["starter", "starters", "movers", "flyers",
+LEVEL_ORDER = ["pre-a1", "pre-a1+", "starter", "starters", "movers", "flyers",
                "a0", "a1", "a1+", "ket", "a2", "a2+", "pet",
                "b1", "b1+", "b2", "b2+", "fce", "c1", "c1+", "c2"]
 
@@ -61,11 +61,87 @@ def derive_teacher(caption: str) -> str:
     return ""
 
 
+# --- Курс и уровень CEFR по учебнику (линейка My Level + Get Involved) ---
+# Источник соответствия: mylevelbook.com (My Level 1-5 — Pre-A1..A1+,
+# дети 6-12), Get Involved — подростковая линейка, CEFR в названии группы.
+_MY_LEVEL_RE = re.compile(r"(?:my\s*level|\bml)\s*(\d)", re.IGNORECASE)
+_GET_INVOLVED_RE = re.compile(
+    r"get\s*involved\s*(a1\+?|a2\+?|b1\+?|b2\+?)", re.IGNORECASE)
+_PRESCHOOL_RE = re.compile(
+    r"(\d{1,2})\s*[-–—]\s*(\d{1,2})\s*лет|baby", re.IGNORECASE)
+
+MY_LEVEL_CEFR = {"1": "Pre-A1", "2": "Pre-A1", "3": "A1", "4": "A1", "5": "A1+"}
+
+
+def derive_course_level(caption: str) -> tuple[str, str]:
+    """(курс, уровень CEFR) из названия группы. Пусто, если не распознано."""
+    cap = caption or ""
+    m = _GET_INVOLVED_RE.search(cap)
+    if m:
+        return "Get Involved", m.group(1).upper()
+    m = _MY_LEVEL_RE.search(cap)
+    if m:
+        n = m.group(1)
+        return f"My Level {n}", MY_LEVEL_CEFR.get(n, "")
+    if _PRESCHOOL_RE.search(cap):
+        return "Дошкольная программа", "Pre-A1"
+    return "", ""
+
+
+def is_individual(caption: str) -> bool:
+    """Индивидуальные занятия — не группы, в онлайн-расписании им не место.
+
+    Признаки: «индивидуальн…» в названии или название = ФИО педагога
+    (в CRM индивидуальные карточки часто названы именем педагога).
+    """
+    cap = (caption or "").strip().lower()
+    if "индивидуальн" in cap:
+        return True
+    for full in settings.KNOWN_TEACHERS.split(","):
+        if full.strip() and full.strip().lower() == cap:
+            return True
+    return False
+
+
+def short_teacher_name(fio: str) -> str:
+    """«Дымова Вероника Александровна» → «Вероника Дымова»."""
+    parts = (fio or "").split()
+    if len(parts) >= 2:
+        return f"{parts[1]} {parts[0]}"
+    return fio or ""
+
+
+def group_teacher(group_id: int, caption: str) -> str:
+    """Педагог: bb_group_meta (внутренний API, источник истины) →
+    таблица соответствия (GROUP_TEACHER_MAP_JSON) → фамилия в названии."""
+    from app.platform import bb_store as _st
+    meta = _st.group_meta_map().get(group_id)
+    if meta and meta.get("teacher"):
+        return short_teacher_name(meta["teacher"])
+    import json as _json
+    raw = (settings.GROUP_TEACHER_MAP_JSON or "").strip()
+    if raw:
+        try:
+            table = _json.loads(raw)
+        except ValueError:
+            logger.error("GROUP_TEACHER_MAP_JSON: невалидный JSON")
+            table = {}
+        hit = table.get(str(group_id))
+        if hit:
+            return str(hit)
+    return derive_teacher(caption)
+
+
 def trial_price_rub(duration_min: int | None) -> int | None:
-    """Цена платного пробного по длительности урока (конфиг, не магия)."""
+    """Цена платного пробного по длительности урока (конфиг, не магия).
+
+    120 мин (сдвоенные) — 2250 ₽; 55–89 мин — 1125 ₽; 40–54 — 875 ₽.
+    """
     if duration_min is None:
         return None
-    if duration_min >= 55:
+    if duration_min >= 90:
+        return settings.TRIAL_PRICE_120_RUB
+    if 55 <= duration_min < 90:
         return settings.TRIAL_PRICE_60_RUB
     if 40 <= duration_min < 55:
         return settings.TRIAL_PRICE_45_RUB
