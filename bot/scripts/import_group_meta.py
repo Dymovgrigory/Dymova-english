@@ -65,7 +65,8 @@ def main() -> None:
                     period_end=_date(g.get("timefinish", "")),
                     monthly_payment=int(monthly) if monthly else None,
                     for_events=bool(g.get("for_events")),
-                    cost_per_event=int(cpe) if cpe else None)
+                    cost_per_event=int(cpe) if cpe else None,
+                    title=(g.get("caption") or "").strip())
                 total += 1
     print(f"Импортировано метаданных групп: {total}")
 

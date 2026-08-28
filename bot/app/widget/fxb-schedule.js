@@ -21,8 +21,11 @@
     #fxb-schedule{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#0f172a}
     #fxb-schedule *{box-sizing:border-box}
     .fxs-filters{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 8px}
-    .fxs-filters select{appearance:none;padding:12px 40px 12px 16px;border-radius:14px;border:1px solid #e2e8f0;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;font-size:15px;min-height:48px;cursor:pointer;flex:1;min-width:150px}
-    .fxs-filters select:focus{outline:2px solid #7c3aed;outline-offset:-1px}
+    .fxs-filters select{appearance:none;padding:12px 42px 12px 18px;border-radius:999px;border:1.5px solid #e9e4f8;background:linear-gradient(180deg,#faf8ff,#f4f0fd) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c3aed' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 16px center;font-family:inherit;font-size:14px;font-weight:600;color:#3b2d66;min-height:48px;cursor:pointer;flex:1;min-width:150px;box-shadow:0 2px 10px rgba(124,58,237,.07);transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease}
+    .fxs-filters select:hover{border-color:#c4b5fd;box-shadow:0 4px 16px rgba(124,58,237,.13);transform:translateY(-1px)}
+    .fxs-filters select:focus{outline:none;border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.18)}
+    .fxs-filters select.fxs-active{background:linear-gradient(180deg,#7c3aed,#5b21b6);color:#fff;border-color:transparent}
+    .fxs-filters select.fxs-active{background-image:linear-gradient(180deg,#7c3aed,#5b21b6),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center,right 16px center}
     .fxs-count{font-size:13px;color:#94a3b8;margin:0 0 16px}
     .fxs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
     .fxs-card{background:#fff;border:1px solid #ececf4;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 24px rgba(15,23,42,.05);transition:transform .18s ease,box-shadow .18s ease}
@@ -255,10 +258,10 @@
     }).join("");
     rootEl.innerHTML = `
       <div class="fxs-filters">
-        <select data-fxs="filial" aria-label="Филиал">${opts(state.filials.map((f) => ({ v: f.id, label: f.caption })), state.filialId, "Все филиалы")}</select>
-        <select data-fxs="teacher" aria-label="Педагог">${opts(teachers.map((t) => ({ v: t, label: t })), state.teacher, "Все педагоги")}</select>
-        <select data-fxs="level" aria-label="Уровень">${opts(levels.map((l) => ({ v: l, label: l })), state.level, "Все уровни")}</select>
-        <select data-fxs="day" aria-label="День недели">${opts(days, state.day, "Любой день")}</select>
+        <select class="${state.filialId ? "fxs-active" : ""}" data-fxs="filial" aria-label="Филиал">${opts(state.filials.map((f) => ({ v: f.id, label: f.caption })), state.filialId, "📍 Все филиалы")}</select>
+        <select class="${state.teacher ? "fxs-active" : ""}" data-fxs="teacher" aria-label="Педагог">${opts(teachers.map((t) => ({ v: t, label: t })), state.teacher, "👩‍🏫 Все педагоги")}</select>
+        <select class="${state.level ? "fxs-active" : ""}" data-fxs="level" aria-label="Уровень">${opts(levels.map((l) => ({ v: l, label: l })), state.level, "🎯 Все уровни")}</select>
+        <select class="${state.day !== "" ? "fxs-active" : ""}" data-fxs="day" aria-label="День недели">${opts(days, state.day, "🗓 Любой день")}</select>
       </div>
       <p class="fxs-count">${groups.length ? `Групп: ${groups.length}` : ""}</p>
       ${groups.length ? `<div class="fxs-grid">${cards}</div>`

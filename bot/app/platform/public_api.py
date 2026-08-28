@@ -56,7 +56,7 @@ def _group_card(g: dict, duration_min: int | None = None,
     import json as _json
     raw = _json.loads(group_raw) if isinstance(group_raw, str) else (group_raw or {})
     free = booking.group_free_slots(raw) if raw else g.get("free_slots")
-    caption = g.get("caption", "")
+    caption = ((meta or {}).get("title") or g.get("caption", "")).strip()
     age_from, age_to = _age_from_caption(caption)
     course, cefr = booking.derive_course_level(caption)
     level = cefr or booking.derive_level(caption)
