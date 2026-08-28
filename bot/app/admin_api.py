@@ -21,7 +21,7 @@ from fastapi import APIRouter, HTTPException, Request
 from app import crm_store
 from app.config import settings
 from app.max_client import get_max
-from app.platform import billing, bb_store
+from app.platform import analytics as platform_analytics, billing, bb_store
 from app.telegram_client import get_telegram
 
 logger = logging.getLogger(__name__)
@@ -584,6 +584,13 @@ async def tag_unassign(request: Request, customer_id: int, tag_name: str) -> dic
 
 
 # --------- Статистика и здоровье ---------
+
+
+@router.get("/platform/analytics/funnel")
+async def platform_funnel(request: Request, date_from: str = "", date_to: str = "") -> dict:
+    """Воронка продуктовых событий за период (site → schedule → booking)."""
+    actor = _authorize(request, "analytics")
+    return platform_analytics.funnel(date_from or None, date_to or None)
 
 
 @router.get("/platform/alerts")

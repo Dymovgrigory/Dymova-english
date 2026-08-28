@@ -12,11 +12,12 @@ import logging
 from datetime import date, datetime, timedelta, timezone
 
 from fastapi import APIRouter, Query, Request
+from fastapi import Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from app.config import settings
-from app.platform import bb_store, booking, sync
+from app.platform import analytics, bb_store, booking, sync
 from app.platform.bigben_v2 import BigBenError
 
 logger = logging.getLogger(__name__)
@@ -137,6 +138,8 @@ class BookingRequest(BaseModel):
 
 @router.post("/booking")
 async def create_booking(req: BookingRequest, request: Request) -> JSONResponse:
+    analytics.track("booking_started", source=req.source or "site",
+                    meta={"group_id": req.group_id})
     result = await booking.book_trial(
         parent_name=req.parent_name, phone=req.phone,
         child_name=req.child_name, child_age=req.child_age,
@@ -144,6 +147,10 @@ async def create_booking(req: BookingRequest, request: Request) -> JSONResponse:
         comment=req.comment, source=req.source,
         idempotency_key=req.idempotency_key)
     if result.status == "confirmed":
+        analytics.track("booking_completed", source=req.source or "site",
+                        meta={"group_id": req.group_id, "booking_id": result.booking_id})
+        analytics.track("lead_created", source=req.source or "site",
+                        meta={"lead_id": result.lead_id})
         await _notify_booking(req, result)
         return JSONResponse({
             "ok": True, "status": "confirmed", "booking_id": result.booking_id,
@@ -160,6 +167,8 @@ async def create_booking(req: BookingRequest, request: Request) -> JSONResponse:
             "message": "Это место только что заняли. Вот другие варианты:",
             "alternatives": result.alternatives or [],
         }, status_code=409)
+    analytics.track("booking_failed", source=req.source or "site",
+                    meta={"group_id": req.group_id, "error": (result.error or "")[:200]})
     return JSONResponse({
         "ok": False, "status": "failed",
         "message": result.error or "Не удалось оформить запись. Попробуйте позже.",
@@ -181,6 +190,27 @@ async def _notify_booking(req: BookingRequest, result: booking.BookingResult) ->
             await client.send_message(admin_id, text)
         except Exception:
             logger.exception("booking: не удалось уведомить админа %s", admin_id)
+
+
+@router.post("/events", status_code=204)
+async def collect_event(request: Request) -> Response:
+    """Приём клиентских событий аналитики (белый список PUBLIC_EVENTS).
+
+    204 всегда — аналитика fire-and-forget; невалидные события молча
+    отбрасываем, чтобы не давать оракул перебору.
+    """
+    try:
+        data = await request.json()
+    except Exception:
+        return Response(status_code=204)
+    event = str(data.get("event", ""))[:60]
+    if event in analytics.PUBLIC_EVENTS:
+        analytics.track(
+            event, source=str(data.get("source", "site"))[:40],
+            session_id=str(data.get("session_id", ""))[:80],
+            anon_id=str(data.get("anon_id", ""))[:80],
+            meta=data.get("meta") if isinstance(data.get("meta"), dict) else None)
+    return Response(status_code=204)
 
 
 @router.get("/health")

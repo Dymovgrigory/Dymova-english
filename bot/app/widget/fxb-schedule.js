@@ -92,6 +92,24 @@
     return { status: resp.status, body };
   }
 
+  /* Аналитика: fire-and-forget, ошибки сети молча игнорируем. */
+  const sessionId = (() => {
+    try {
+      let v = sessionStorage.getItem("fxs:sid");
+      if (!v) { v = Math.random().toString(36).slice(2); sessionStorage.setItem("fxs:sid", v); }
+      return v;
+    } catch (e) { return ""; }
+  })();
+  function track(event, meta) {
+    try {
+      fetch(`${apiBase}/api/platform/events`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event, source: "site", session_id: sessionId, meta: meta || {} }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch (e) { /* аналитика не должна ломать виджет */ }
+  }
+
   async function load() {
     state.loading = true; state.error = "";
     render();
@@ -106,6 +124,7 @@
       state.lessons = s.body.data || [];
       state.freshness = s.body.freshness || null;
       state.loading = false;
+      track("schedule_open", { groups: state.groups.length });
     } catch (e) {
       state.loading = false;
       state.error = "Не удалось загрузить расписание. Мы попробуем обновить данные.";
@@ -166,6 +185,7 @@
   }
 
   function openBooking(groupId, lessonId) {
+    track("group_view", { group_id: Number(groupId) || 0 });
     const g = state.groups.find((x) => String(x.id) === String(groupId));
     const lesson = state.lessons.find((l) => String(l.lesson_id) === String(lessonId));
     state.bookingFor = { groupId, lessonId, group: g, lesson };
@@ -287,7 +307,7 @@
   });
   rootEl.addEventListener("change", (e) => {
     const t = e.target.closest('[data-fxs="filial"]');
-    if (t) { state.filialId = t.value; load(); }
+    if (t) { state.filialId = t.value; track("filter_used", { filial_id: t.value }); load(); }
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && document.getElementById("fxs-overlay")) closeModal();

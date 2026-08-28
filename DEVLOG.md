@@ -4940,3 +4940,12 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - Frequency cap (MARKETING_FREQ_CAP_HOURS=20): клиент, получавший рассылку < N часов назад, пропускается (status=skipped, error=frequency_cap). Хелпер `crm_store.last_broadcast_sent_at`.
 - Конфиг: MARKETING_RESPECT_QUIET_HOURS, MARKETING_FREQ_CAP_HOURS.
 - Тесты: quiet→draft, freq-cap skip; autouse-фикстура глушит in_quiet_hours (ранее новый код сделал бы ночные прогоны падающими). Регресс 1044 passed.
+
+## 2026-08-28 — Фаза 13 (часть 1): продуктовая аналитика
+
+- `platform/analytics.py`: таблица product_events (event, ts, source, session, anon, meta), белые списки PUBLIC_EVENTS/SERVER_EVENTS, funnel() с порядком шагов воронки. PII в meta не пишем.
+- `POST /api/platform/events` (204 fire-and-forget, только белый список, молчаливый отказ — без оракула).
+- Серверные треки в /api/platform/booking: booking_started (при POST), booking_completed + lead_created (при confirmed), booking_failed (при сбое).
+- Виджет fxb-schedule.js: track() с session_id из sessionStorage, события schedule_open/filter_used/group_view; keepalive, тихий catch.
+- Админка: `GET /admin/api/platform/analytics/funnel` (право analytics). Конфликт имён: в admin_api уже была функция analytics — импорт как platform_analytics.
+- Тесты: test_platform_analytics.py (6). Регресс 1050 passed.
