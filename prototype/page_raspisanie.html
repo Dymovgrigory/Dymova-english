@@ -1,0 +1,21 @@
+
+<div id="fxb-schedule-page" data-fxb-glow="violet">
+  <div class="fxb-section">
+    <div class="fxb-head">
+      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Расписание</span>
+      <h1 class="fxb-h1">Расписание занятий школы Фоксинбург в Долгопрудном</h1>
+      <h2 class="fxb-h2">Живые группы и <span class="fxb-accent">свободные места</span></h2>
+      <p class="fxb-sub">Данные обновляются автоматически из учётной системы школы. Выберите филиал и день недели — и запишитесь на пробное занятие прямо здесь.</p>
+    </div>
+
+    <!-- Живой виджет: группы, свободные места и запись на пробное занятие.
+         Источник данных — BigBen CRM через платформенный API бота
+         (обновление каждые 15 минут). Скрипт сам находит #fxb-schedule. -->
+    <div id="fxb-schedule" role="region" aria-label="Расписание групп"></div>
+    <script src="https://bot.dymova-english.ru/widget/fxb-schedule.js" defer></script>
+
+    <div class="fxb-note" style="margin-top:24px;text-align:center">
+      <p>Не нашли удобное время? <a href="/kontakty">Напишите нам</a> — подберём группу или откроем новую при наборе.</p>
+    </div>
+  </div>
+</div>

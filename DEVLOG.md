@@ -4910,3 +4910,11 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - `bot/app/tgapp/index.html`: кнопка «Мои занятия» в сетке быстрых действий (`data-sheet="mylessons"`).
 - `bot/app/tgapp/app.js`: новый sheet `mylessons` + `buildMyLessons()` — живые данные `/api/miniapp/account/overview` (личность только по подписанному initData, заголовки подставляет `request()`), состояния loading/401/unlinked/stale/empty, человеческое форматирование дат и пометка свежести расписания.
 - Тесты: test_tgapp + design 47 passed; полный регресс 1036 passed.
+
+## 2026-08-28 — Фаза 3 (продолжение): страница /raspisanie + ПЕРВЫЙ ДЕПЛОЙ платформы
+
+- `prototype/page_raspisanie.html`: страница «Расписание» с живым виджетом (`#fxb-schedule` + `/widget/fxb-schedule.js`), alias `raspisanie`, SEO-мета в seo_meta_live.json, ссылка «Расписание» в навигации (block_shapka.html + main_combined_v7.html).
+- ДЕПЛОЙ бота: push main → сервер git pull (конфликт Caddyfile решён: серверная правка = уже закоммиченный be4834f, откачена без потерь) → `docker compose build && up -d`. В `.env` на проде добавлены BIGBEN_PUBLIC_API_KEY/BASE и сгенерированный BIGBEN_WEBHOOK_SECRET (бэкап .env.bak-20260828). Стартовая полная выгрузка прошла: filials 5, groups 431, lessons 986, students 1562, payments 344.
+- ДЕПЛОЙ сайта: dist_prod собран и залит rsync на foxinburg-vm:/home/yc-user/foxinburg-site/.
+- Живая проверка: /api/platform/health (все сущности свежие), /filials, /groups, /schedule — 200 с реальными данными; CORS для dymova-english.ru (GET + preflight POST booking) ок; страница https://dymova-english.ru/raspisanie/ отдаётся с виджетом.
+- Осталось ручное (с моей помощью): регистрация webhook BigBen (URL https://bot.dymova-english.ru/api/webhooks/bigben, секрет в .env проде), CloudPayments ключи.
