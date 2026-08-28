@@ -4933,3 +4933,10 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - Ограничение API v1: персональной посещаемости ученика нет → детектор «неактивный ученик по урокам» невозможен; задокументировано.
 - Исправлено: notifications.send возвращает dict, не bool — подсчёт по res["sent"].
 - Тесты: +2 (notify+dedup+skip no-phone/rich, disabled). Регресс 1042 passed.
+
+## 2026-08-28 — Фаза 11: кампании — тихие часы и frequency cap
+
+- `broadcast_runner.run_broadcast`: маркетинг в тихие часы (21:00–9:00) не стартует — рассылка возвращается в draft с ошибкой quiet_hours; повторный запуск безопасен.
+- Frequency cap (MARKETING_FREQ_CAP_HOURS=20): клиент, получавший рассылку < N часов назад, пропускается (status=skipped, error=frequency_cap). Хелпер `crm_store.last_broadcast_sent_at`.
+- Конфиг: MARKETING_RESPECT_QUIET_HOURS, MARKETING_FREQ_CAP_HOURS.
+- Тесты: quiet→draft, freq-cap skip; autouse-фикстура глушит in_quiet_hours (ранее новый код сделал бы ночные прогоны падающими). Регресс 1044 passed.

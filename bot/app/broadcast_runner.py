@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from datetime import datetime, timedelta, timezone
 
 from app import crm_store
 
@@ -65,6 +66,14 @@ async def run_broadcast(broadcast_id: int, max_client=None, telegram_client=None
     broadcast = crm_store.get_broadcast(broadcast_id)
     if broadcast is None:
         return {"ok": False, "error": "broadcast not found"}
+    # Маркетинг в тихие часы не уходит: возвращаем в черновик, запуск
+    # повторяют утром. Транзакционных сообщений здесь нет — только кампании.
+    from app.config import settings
+    from app.platform import notifications
+    if settings.MARKETING_RESPECT_QUIET_HOURS and notifications.in_quiet_hours():
+        crm_store.update_broadcast_status(broadcast_id, "draft")
+        logger.info("broadcast %s: тихие часы — запуск отложен", broadcast_id)
+        return {"ok": False, "error": "quiet_hours"}
     text = broadcast["text"]
     crm_store.update_broadcast_status(broadcast_id, "sending")
     delivered = failed = skipped = 0
@@ -79,6 +88,23 @@ async def run_broadcast(broadcast_id: int, max_client=None, telegram_client=None
             else:
                 skipped += 1
             continue
+        # Frequency cap: если клиент уже получал рассылку недавно — пропускаем,
+        # чтобы не превращать маркетинг в спам (§103).
+        last = crm_store.last_broadcast_sent_at(
+            recipient["customer_id"], exclude_broadcast_id=broadcast_id)
+        if last:
+            try:
+                last_dt = datetime.fromisoformat(last)
+                if last_dt.tzinfo is None:
+                    last_dt = last_dt.replace(tzinfo=timezone.utc)
+                if datetime.now(timezone.utc) - last_dt < timedelta(
+                        hours=settings.MARKETING_FREQ_CAP_HOURS):
+                    crm_store.update_recipient_status(
+                        recipient["id"], "skipped", error="frequency_cap")
+                    skipped += 1
+                    continue
+            except ValueError:
+                pass  # битая дата — не повод блокировать отправку
         ok, error = await _deliver(
             recipient["channel"], recipient["external_user_id"], text,
             max_client=max_client, telegram_client=telegram_client)

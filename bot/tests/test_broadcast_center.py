@@ -17,6 +17,8 @@ def reset_state(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "DB_PATH", str(tmp_path / "crm.db"))
     monkeypatch.setattr(settings, "STATE_FILE", "")
     monkeypatch.setattr(settings, "ADMIN_TOKEN", TOKEN, raising=False)
+    # Тихие часы не должны делать тесты зависимыми от времени суток.
+    monkeypatch.setattr("app.platform.notifications.in_quiet_hours", lambda: False)
     crm_store.reset()
     main_module._BACKGROUND_TASKS.clear()
     yield
@@ -217,3 +219,39 @@ def test_history_and_detail_api(client, monkeypatch):
     assert detail["recipients"][0]["customer_name"] == "Анна"
     sent_only = client.get(f"/admin/api/broadcasts/{created['id']}?status=sent", headers=AUTH).json()
     assert len(sent_only["recipients"]) == 1
+
+
+def test_quiet_hours_returns_to_draft(client, monkeypatch):
+    monkeypatch.setattr("app.platform.notifications.in_quiet_hours", lambda: True)
+    _customer("max", "u1", "Анна")
+    created = client.post("/admin/api/broadcasts", headers=AUTH,
+                          json={"title": "Тест", "text": "Привет!", "rules": []}).json()
+    client.post(f"/admin/api/broadcasts/{created['id']}/send",
+                headers=AUTH, json={"confirm": True})
+    from app import broadcast_runner
+    result = asyncio.run(broadcast_runner.run_broadcast(created["id"], max_client=FakeMax()))
+    assert result["ok"] is False and result["error"] == "quiet_hours"
+    assert crm_store.get_broadcast(created["id"])["status"] == "draft"
+
+
+def test_frequency_cap_skips_recent_recipients(client, monkeypatch):
+    max_client = FakeMax()
+    monkeypatch.setattr("app.max_client.get_max", lambda: max_client)
+    _customer("max", "u1", "Анна")
+    first = client.post("/admin/api/broadcasts", headers=AUTH,
+                        json={"title": "Первая", "text": "Раз", "rules": []}).json()
+    client.post(f"/admin/api/broadcasts/{first['id']}/send",
+                headers=AUTH, json={"confirm": True})
+    _wait_done(client, first["id"], max_client=max_client)
+    assert max_client.sent == ["u1"]
+
+    # Вторая рассылка сразу после первой — клиент в frequency cap.
+    second = client.post("/admin/api/broadcasts", headers=AUTH,
+                         json={"title": "Вторая", "text": "Два", "rules": []}).json()
+    client.post(f"/admin/api/broadcasts/{second['id']}/send",
+                headers=AUTH, json={"confirm": True})
+    detail = _wait_done(client, second["id"], max_client=max_client)
+    assert detail["status"] == "done"
+    assert max_client.sent == ["u1"]  # новых отправок не было
+    recs = crm_store.list_recipients(second["id"], limit=10)
+    assert recs[0]["status"] == "skipped" and recs[0]["error"] == "frequency_cap"

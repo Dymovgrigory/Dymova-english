@@ -1094,6 +1094,19 @@ def add_broadcast_recipient(broadcast_id: int, customer_id: int, channel: str,
         return int(row["id"]), True
 
 
+def last_broadcast_sent_at(customer_id: int, exclude_broadcast_id: int | None = None) -> str | None:
+    """Когда клиент последний раз получал маркетинговую рассылку (ISO или None)."""
+    conn = get_conn()
+    sql = ("SELECT MAX(sent_at) AS last FROM broadcast_recipients "
+           "WHERE customer_id = ? AND status = 'sent' AND sent_at IS NOT NULL")
+    params: list = [customer_id]
+    if exclude_broadcast_id is not None:
+        sql += " AND broadcast_id != ?"
+        params.append(exclude_broadcast_id)
+    row = conn.execute(sql, params).fetchone()
+    return row["last"] if row and row["last"] else None
+
+
 def update_recipient_status(recipient_id: int, status: str, error: str | None = None) -> None:
     conn = get_conn()
     with _tx(conn):

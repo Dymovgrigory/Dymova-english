@@ -97,6 +97,11 @@ class Settings(BaseSettings):
     LOW_BALANCE_SCAN_ENABLED: bool = True
     LOW_BALANCE_SCAN_INTERVAL_HOURS: int = 24
 
+    # Маркетинговые рассылки: тихие часы и frequency cap (§103).
+    MARKETING_RESPECT_QUIET_HOURS: bool = True
+    # Минимальный интервал между маркетинговыми сообщениями одному клиенту.
+    MARKETING_FREQ_CAP_HOURS: int = 20
+
     # --- Платежи: CloudPayments (онлайн-касса) ---
     # Терминал в филиалах — T-bank, он к CloudPayments не относится и через
     # API не управляется. PublicId/secret: личный кабинет CloudPayments.
