@@ -627,6 +627,22 @@ async def platform_alerts(request: Request) -> dict:
                            "code": f"sync_stale_{entity}",
                            "text": f"Данные {entity} устарели: {int(age)} мин без синхронизации"})
 
+    # Качество данных CRM: активные группы, где нельзя вычислить свободные
+    # места (в CRM не задан max_students и вместимость аудитории). Сайт честно
+    # показывает «уточните места», но лучше заполнить вместимость в BigBen.
+    from app.platform import booking as platform_booking
+    unknown_cap = 0
+    for g in bb_store.list_groups():
+        import json as _json
+        raw = _json.loads(g.get("raw_json") or "{}")
+        if platform_booking.group_free_slots(raw) is None:
+            unknown_cap += 1
+    if unknown_cap:
+        alerts.append({"level": "warning", "code": "capacity_unknown",
+                       "text": f"У {unknown_cap} активных групп неизвестна вместимость "
+                               "(max_students и вместимость аудитории не заданы в BigBen) — "
+                               "на сайте они показываются как «уточните места»"})
+
     # Последние падения sync
     failed_runs = [r for r in bb_store.last_sync_runs(10) if r["status"] != "ok"]
     for r in failed_runs[:3]:
