@@ -143,7 +143,7 @@
       const params = state.filialId ? `?filial_id=${state.filialId}` : "";
       const [f, g, s] = await Promise.all([
         api("/filials"), api(`/groups${params}`),
-        api(`/schedule?days=21${state.filialId ? `&filial_id=${state.filialId}` : ""}`),
+        api(`/schedule?days=45${state.filialId ? `&filial_id=${state.filialId}` : ""}`),
       ]);
       state.filials = f.body.data || [];
       state.groups = g.body.data || [];
