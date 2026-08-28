@@ -4874,3 +4874,14 @@ anti-race, идемпотентность, demo-failure) + полный регр
 (CloudPayments онлайн, T-bank терминал). Владельцу: настроить вебхуки в CRM
 (Информация о школе → Интеграции → Вебхуки, секрет → BIGBEN_WEBHOOK_SECRET)
 и автоматизацию первого статуса воронки (лиды из API без автозадачи).
+
+### Продолжение (фазы 3–6, частично)
+
+- `/api/platform/groups` по умолчанию отдаёт только активные группы (75 из 431 —
+  у которых есть уроки в окне расписания), `?all=true` для админки.
+- Виджет сайта `bot/app/widget/fxb-schedule.js`: карточки групп, свободные
+  места, запись на пробное (модалка, валидация, idempotency), anti-race UI
+  (альтернативы при гонке), skeleton/error/empty стейты, freshness-плашка,
+  mobile bottom-sheet, a11y. Подключение — docs/platform/SCHEDULE_WIDGET.md.
+- HTTP-тесты эндпоинтов (test_platform_api.py): фильтрация активных, freshness,
+  webhook 401/200/dup, валидация booking. Регресс: 1012 зелёных.
