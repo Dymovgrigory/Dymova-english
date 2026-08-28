@@ -1884,11 +1884,13 @@ async def admin_set_webhook(request: Request, data: dict) -> dict:
 # CRM Admin API регистрируется ДО StaticFiles: монтирование перехватывает всё
 # под /admin, что не совпало с уже объявленными маршрутами.
 from app import admin_api
+from app.platform import account_api as platform_account_api
 from app.platform import public_api as platform_public_api
 from app.platform import webhooks as platform_webhooks
 
 app.include_router(admin_api.router)
 app.include_router(platform_webhooks.router)
+app.include_router(platform_account_api.router)
 app.include_router(platform_public_api.router)
 
 # Монтируется В САМОМ КОНЦЕ файла осознанно: StaticFiles на "/admin"

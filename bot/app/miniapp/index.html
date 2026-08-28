@@ -256,6 +256,10 @@
         <span class="tile__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
         <span class="tile__body"><b>Филиалы</b><span class="tile__note">Адреса, телефоны, режим работы</span></span>
       </button>
+      <button class="menu-tile" data-go="mylessons">
+        <span class="tile__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/><circle cx="12" cy="15.5" r="2.4"/></svg></span>
+        <span class="tile__body"><b>Мои занятия</b><span class="tile__note">Расписание и баланс — живые данные</span></span>
+      </button>
       <button class="menu-tile" data-go="cabinet">
         <span class="tile__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></span>
         <span class="tile__body"><b>Кабинет</b><span class="tile__note">Расписание, домашка, оплаты</span></span>
@@ -267,6 +271,19 @@
       <a href="https://t.me/foxinburg" target="_blank" rel="noopener">Telegram</a>
       <a href="https://yandex.ru/maps/org/foxinburg/162408588499/" target="_blank" rel="noopener">Мы на картах</a>
     </nav>
+  </section>
+
+  <!-- МОИ ЗАНЯТИЯ (живые данные BigBen) -->
+  <section id="screen-mylessons" class="hidden">
+    <div class="card">
+      <h2>Мои занятия</h2>
+      <div id="ml-status" class="notice hidden"></div>
+      <div id="ml-balance" class="hidden" style="margin:8px 0 14px"></div>
+      <div id="ml-groups" style="margin-bottom:12px"></div>
+      <div id="ml-lessons"></div>
+      <div id="ml-fresh" style="margin-top:12px;font-size:12px;color:#8a8fa3"></div>
+      <button class="btn btn--ghost" data-go="menu" style="margin-top:14px">Назад</button>
+    </div>
   </section>
 
   <!-- ПОДОБРАТЬ КУРС -->

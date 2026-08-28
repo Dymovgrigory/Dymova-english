@@ -45,8 +45,65 @@ async function postJSON(url, body) {
 
 let INFO = null;
 
+// --- Мои занятия: живые данные BigBen через /api/miniapp/account/overview ---
+async function loadMyLessons() {
+  const status = document.getElementById("ml-status");
+  const balance = document.getElementById("ml-balance");
+  const groups = document.getElementById("ml-groups");
+  const lessons = document.getElementById("ml-lessons");
+  const fresh = document.getElementById("ml-fresh");
+  status.classList.remove("hidden");
+  status.textContent = "Загружаем расписание…";
+  balance.classList.add("hidden");
+  groups.innerHTML = ""; lessons.innerHTML = ""; fresh.textContent = "";
+  let data;
+  try {
+    const r = await fetch(API + "/api/miniapp/account/overview", { headers: authHeaders() });
+    if (r.status === 401) {
+      status.textContent = "Откройте приложение внутри MAX или Telegram — так мы поймём, что это вы.";
+      return;
+    }
+    data = await r.json();
+  } catch (e) {
+    status.textContent = "Не удалось загрузить расписание. Попробуйте ещё раз чуть позже.";
+    return;
+  }
+  if (!data.linked) {
+    status.textContent = data.message || "Профиль пока не связан со школой.";
+    return;
+  }
+  status.classList.add("hidden");
+  if (!data.live) {
+    status.classList.remove("hidden");
+    status.textContent = "Показываем сохранённые данные — связь с системой школы временно прерывалась.";
+  }
+  balance.classList.remove("hidden");
+  balance.innerHTML = "<b>Баланс:</b> " + esc(Number(data.balance_rub).toLocaleString("ru-RU")) + " ₽";
+  if (data.groups && data.groups.length) {
+    groups.innerHTML = "<b>Группы:</b><br>" + data.groups.map((g) => "• " + esc(g.caption)).join("<br>");
+  }
+  if (data.upcoming_lessons && data.upcoming_lessons.length) {
+    const fmt = (l) => {
+      const d = l.starts_at ? new Date(l.starts_at) : null;
+      if (!d || isNaN(d)) return esc(l.date || "");
+      const days = ["вс","пн","вт","ср","чт","пт","сб"];
+      const hh = String(d.getHours()).padStart(2,"0"), mm = String(d.getMinutes()).padStart(2,"0");
+      return days[d.getDay()] + " " + d.getDate() + "." + String(d.getMonth()+1).padStart(2,"0") + " · " + hh + ":" + mm;
+    };
+    lessons.innerHTML = "<b>Ближайшие занятия:</b><br>" + data.upcoming_lessons.map((l) =>
+      "• " + fmt(l) + " — " + esc(l.group_caption) + (l.filial ? " (" + esc(l.filial) + ")" : "")).join("<br>");
+  } else {
+    lessons.innerHTML = "<b>Ближайшие занятия:</b><br>на ближайший месяц занятий не найдено.";
+  }
+  if (data.freshness && data.freshness.lessons_synced_at) {
+    const mins = Math.max(0, Math.round((Date.now() - new Date(data.freshness.lessons_synced_at)) / 60000));
+    fresh.textContent = "Расписание обновлено " + (mins < 1 ? "только что" : mins < 60 ? mins + " мин назад" : Math.round(mins/60) + " ч назад");
+  }
+}
+
+
 // --- Навигация по экранам ---
-const SCREENS = ["menu", "select", "signup", "homework", "catalog", "branches", "cabinet"];
+const SCREENS = ["menu", "select", "signup", "homework", "catalog", "branches", "cabinet", "mylessons"];
 function showScreen(name) {
   SCREENS.forEach((s) => {
     document.getElementById("screen-" + s).classList.toggle("hidden", s !== name);
@@ -55,7 +112,10 @@ function showScreen(name) {
   if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
 }
 document.querySelectorAll("[data-go]").forEach((el) => {
-  el.addEventListener("click", () => showScreen(el.dataset.go));
+  el.addEventListener("click", () => {
+    showScreen(el.dataset.go);
+    if (el.dataset.go === "mylessons") loadMyLessons();
+  });
 });
 
 // --- Помощник по выбору ---
