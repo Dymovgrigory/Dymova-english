@@ -80,10 +80,10 @@
     .fxs-qr svg{width:176px;height:176px;border-radius:12px}
     .fxs-qrhint{text-align:center;font-size:12.5px;color:#94a3b8;margin-bottom:8px}
     .fxs-dates{display:flex;flex-direction:column;gap:8px;max-height:216px;overflow:auto;padding-right:2px}
-    .fxs-date{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:14px;font-size:14.5px;color:#334155;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+    .fxs-field label.fxs-date,.fxs-date{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:14px;font-size:14.5px;font-weight:500;color:#334155;cursor:pointer;margin-bottom:0;text-align:left;transition:border-color .15s ease,background .15s ease}
     .fxs-date:hover{border-color:#c4b5fd}
-    .fxs-date input{accent-color:#7c3aed;width:18px;height:18px;flex-shrink:0}
-    .fxs-date:has(input:checked){border-color:#7c3aed;background:#f5f3ff;font-weight:600;color:#3b2d66}
+    .fxs-date input{accent-color:#7c3aed;width:18px;height:18px;flex-shrink:0;margin:0}
+    .fxs-field label.fxs-date:has(input:checked),.fxs-date:has(input:checked){border-color:#7c3aed;background:#f5f3ff;font-weight:600;color:#3b2d66}
     .fxs-when{font-size:14.5px;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px 14px;margin-bottom:12px}
     .fxs-field input[type=date]{color-scheme:light}
     .fxs-link{display:block;text-align:center;font-size:14.5px;font-weight:600;color:#7c3aed;text-decoration:none;padding:12px;border-radius:12px;border:1.5px solid #ede9fe;background:#faf8ff;margin-top:8px}
