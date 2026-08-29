@@ -26,6 +26,11 @@
     .fxs-filters select:focus{outline:none;border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.18)}
     .fxs-filters select.fxs-active{background:linear-gradient(180deg,#7c3aed,#5b21b6);color:#fff;border-color:transparent}
     .fxs-filters select.fxs-active{background-image:linear-gradient(180deg,#7c3aed,#5b21b6),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center,right 16px center}
+    @media(max-width:639px){.fxs-filters select{flex:1 1 100%;min-width:0;font-size:13px;padding-top:10px;padding-bottom:10px;min-height:44px}}
+    .fxs-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .fxs-btn-row .fxs-btn{flex:1 1 140px;margin-top:0}
+    .fxs-btn.secondary{background:#fff;color:#5b21b6;border:1.5px solid #c4b5fd;box-shadow:none}
+    .fxs-btn.secondary:hover{background:#f4f0fd;border-color:#7c3aed}
     .fxs-count{font-size:13px;color:#94a3b8;margin:0 0 16px}
     .fxs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
     .fxs-card{background:#fff;border:1px solid #ececf4;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 24px rgba(15,23,42,.05);transition:transform .18s ease,box-shadow .18s ease}
@@ -253,11 +258,19 @@
       const priceLabel = g.is_event ? "Участие" : "Пробное";
       const price = effPrice
         ? `<span class="fxs-price">${priceLabel} · ${fmtPrice(effPrice)}</span>` : "";
+      const monthly = g.monthly_payment_rub || null;
       const btnLabel = full ? "Мест нет"
         : next ? (effPrice
             ? (g.is_event ? `Оплатить участие · ${fmtPrice(effPrice)}` : `Записаться · ${fmtPrice(effPrice)}`)
             : (g.is_event ? "Записаться на мероприятие" : "Записаться на пробное"))
         : "Нет занятий";
+      const dis = full || !next ? "disabled" : "";
+      const buttons = (!g.is_event && monthly)
+        ? `<div class="fxs-btn-row">
+            <button class="fxs-btn" data-fxs="book" data-kind="enroll" data-group="${g.id}" data-lesson="${next ? next.lesson_id : ""}" ${dis}>В группу · ${fmtPrice(monthly)}/мес</button>
+            <button class="fxs-btn secondary" data-fxs="book" data-kind="trial" data-group="${g.id}" data-lesson="${next ? next.lesson_id : ""}" ${dis}>${next ? (effPrice ? `Пробное · ${fmtPrice(effPrice)}` : "Пробное занятие") : "Нет занятий"}</button>
+          </div>`
+        : `<button class="fxs-btn" data-fxs="book" data-kind="trial" data-group="${g.id}" data-lesson="${next ? next.lesson_id : ""}" ${dis}>${btnLabel}</button>`;
       return `<div class="fxs-card">
         <h3>${esc(g.caption)}</h3>
         ${tags ? `<div class="fxs-tags">${tags}</div>` : ""}
@@ -267,7 +280,7 @@
           ${period ? `<span>📅 ${esc(period)}</span>` : ""}
         </div>
         <div class="fxs-row">${slotsBadge(g)}${price}</div>
-        <button class="fxs-btn" data-fxs="book" data-group="${g.id}" data-lesson="${next ? next.lesson_id : ""}" ${full || !next ? "disabled" : ""}>${btnLabel}</button>
+        ${buttons}
       </div>`;
     }).join("");
     rootEl.innerHTML = `
@@ -284,12 +297,12 @@
         ? `<div class="fxs-note">Данные о местах обновлены ${fmtAgo(state.freshness.groups_synced_at)}</div>` : ""}`;
   }
 
-  function openBooking(groupId, lessonId) {
-    track("group_view", { group_id: Number(groupId) || 0 });
+  function openBooking(groupId, lessonId, kind) {
+    track("group_view", { group_id: Number(groupId) || 0, kind: kind || "trial" });
     const g = state.groups.find((x) => String(x.id) === String(groupId));
     const dates = lessonsFor(Number(groupId)).slice(0, 8);
     const lesson = state.lessons.find((l) => String(l.lesson_id) === String(lessonId)) || dates[0] || null;
-    state.bookingFor = { groupId, lessonId: lesson ? lesson.lesson_id : "", group: g, lesson, dates };
+    state.bookingFor = { groupId, lessonId: lesson ? lesson.lesson_id : "", group: g, lesson, dates, kind: kind || "trial" };
     state.done = null; state.alternatives = []; state.payInfo = null; state.paying = false;
     renderModal();
   }
@@ -301,9 +314,12 @@
     ov.className = "fxs-overlay";
     ov.id = "fxs-overlay";
     if (state.done === "confirmed" || state.done === "duplicate") {
+      const isEnroll = state.bookingFor && state.bookingFor.kind === "enroll" && group && !group.is_event;
       ov.innerHTML = `<div class="fxs-modal"><div class="fxs-success">
-        <div class="fxs-ico">🎉</div><h3>Вы записаны!</h3>
-        <p class="fxs-sub">Оплата подтверждена, место закреплено за вами. Мы свяжемся накануне занятия.</p>
+        <div class="fxs-ico">🎉</div><h3>${isEnroll ? "Вы в группе!" : "Вы записаны!"}</h3>
+        <p class="fxs-sub">${isEnroll
+          ? "Абонемент оплачен, вы зачислены в группу. Ждём вас на первом занятии — напомним накануне."
+          : "Оплата подтверждена, место закреплено за вами. Мы свяжемся накануне занятия."}</p>
         <button class="fxs-btn" data-fxs="close">Хорошо</button></div></div>`;
     } else if (state.done === "pay_tbank") {
       const p = state.payInfo || {};
@@ -327,7 +343,9 @@
         <div class="fxs-alt">${alts || "<p>Свободных альтернатив сейчас нет — оставьте заявку, и мы подберём вариант.</p>"}</div>
         <div class="fxs-actions"><button class="fxs-btn ghost" data-fxs="close">Закрыть</button></div></div>`;
     } else {
-      const price = group && (group.is_event ? group.event_price_rub : group.trial_price_rub);
+      const isEnroll = state.bookingFor.kind === "enroll" && group && !group.is_event;
+      const price = group && (group.is_event ? group.event_price_rub
+        : isEnroll ? group.monthly_payment_rub : group.trial_price_rub);
       const dates = state.bookingFor.dates || [];
       const selId = String(state.bookingFor.lessonId);
       const dateOpts = dates.map((l) => `
@@ -335,11 +353,11 @@
           <span>${esc(fmtWhen(l))}</span></label>`).join("");
       const today = new Date().toISOString().slice(0, 10);
       ov.innerHTML = `<div class="fxs-modal" role="dialog" aria-modal="true" aria-label="Запись на пробное занятие">
-        <h3>${group && group.is_event ? "Запись на мероприятие" : "Запись на пробное занятие"}</h3>
+        <h3>${group && group.is_event ? "Запись на мероприятие" : isEnroll ? "Запись в группу" : "Запись на пробное занятие"}</h3>
         <p class="fxs-sub">${esc(group ? group.caption : "")}</p>
-        ${price ? `<div class="fxs-payinfo">${group && group.is_event ? "Стоимость участия" : "Стоимость пробного занятия"} — <b>${fmtPrice(price)}</b>. Оплата по СБП или картой онлайн, место закрепляется сразу после оплаты.</div>` : ""}
+        ${price ? `<div class="fxs-payinfo">${group && group.is_event ? "Стоимость участия" : isEnroll ? "Абонемент за месяц" : "Стоимость пробного занятия"} — <b>${fmtPrice(price)}</b>. Оплата по СБП или картой онлайн, место закрепляется сразу после оплаты.</div>` : ""}
         <form id="fxs-form" novalidate>
-          ${dates.length > 1 ? `<div class="fxs-field"><label>${group && group.is_event ? "Дата мероприятия" : "Удобная дата пробного"}</label><div class="fxs-dates">${dateOpts}</div></div>`
+          ${dates.length > 1 ? `<div class="fxs-field"><label>${group && group.is_event ? "Дата мероприятия" : isEnroll ? "Первое занятие" : "Удобная дата пробного"}</label><div class="fxs-dates">${dateOpts}</div></div>`
             : (lesson ? `<div class="fxs-when">🗓 ${esc(fmtWhen(lesson))}</div>` : "")}
           <div class="fxs-field" data-f="parent_name"><label>Имя родителя</label>
             <input name="parent_name" autocomplete="name" placeholder="Как к вам обращаться">
@@ -479,6 +497,7 @@
         child_name: val("child_name"), child_birthdate: val("child_birthdate"),
         group_id: Number(state.bookingFor.groupId),
         lesson_id: Number(val("lesson_id") || state.bookingFor.lessonId),
+        kind: state.bookingFor.kind || "trial",
         source: "site-schedule", idempotency_key: idem,
       }),
     });
@@ -515,7 +534,7 @@
     if (!t) return;
     const act = t.getAttribute("data-fxs");
     if (act === "retry") load();
-    if (act === "book") openBooking(t.getAttribute("data-group"), t.getAttribute("data-lesson"));
+    if (act === "book") openBooking(t.getAttribute("data-group"), t.getAttribute("data-lesson"), t.getAttribute("data-kind"));
     if (act === "close") closeModal();
     if (act === "alt") {
       const gid = t.getAttribute("data-group");

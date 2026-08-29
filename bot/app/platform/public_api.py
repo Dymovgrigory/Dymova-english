@@ -83,6 +83,7 @@ def _group_card(g: dict, duration_min: int | None = None,
         "teacher": booking.group_teacher(g["id"], caption),
         "duration_min": duration_min,
         "trial_price_rub": price,
+        "monthly_payment_rub": _monthly_payment(meta),
         "is_event": is_event,
         "event_price_rub": event_price,
         "period_start": (meta or {}).get("period_start") or (period[0] if period else None),
@@ -90,6 +91,15 @@ def _group_card(g: dict, duration_min: int | None = None,
         "schedule": _json.loads(g.get("schedule_json") or "[]"),
         "synced_at": g.get("synced_at"),
     }
+
+
+def _monthly_payment(meta: dict | None) -> int | None:
+    """Цена абонемента в рублях из метаданных пульта. Мусор (<100 ₽) не отдаём."""
+    try:
+        v = int((meta or {}).get("monthly_payment") or 0)
+    except (TypeError, ValueError):
+        return None
+    return v if v >= 100 else None
 
 
 def _duration_map() -> dict[int, int]:
@@ -190,6 +200,7 @@ class BookingRequest(BaseModel):
     lesson_id: int = Field(gt=0)
     comment: str = Field(default="", max_length=800)
     source: str = Field(default="site", max_length=64)
+    kind: str = Field(default="trial", pattern="^(trial|enroll)$")
     idempotency_key: str | None = Field(default=None, max_length=64)
 
 
@@ -276,7 +287,27 @@ async def _create_paid_booking(req: "BookingRequest") -> JSONResponse:
     meta = meta.get(req.group_id) or {}
     is_event = bool(meta.get("for_events"))
     event_price = meta.get("cost_per_event") if is_event else None
-    if is_event:
+    if req.kind == "enroll" and not is_event:
+        # Запись в группу с оплатой абонемента: цена — серверная, из пульта.
+        monthly = _monthly_payment(meta)
+        if monthly is None:
+            return JSONResponse({
+                "ok": False, "status": "failed",
+                "message": "Стоимость абонемента для этой группы ещё не задана. "
+                           "Запишитесь на пробное занятие — менеджер оформит всё остальное."},
+                status_code=400)
+        caption = (bb_store.get_group(req.group_id) or {}).get("caption", "")
+        result, pay = await booking.start_paid_trial(
+            parent_name=req.parent_name, phone=req.phone,
+            child_name=req.child_name, child_age=req.child_age,
+            group_id=req.group_id, lesson_id=req.lesson_id,
+            duration_min=duration, comment=req.comment, source=req.source,
+            price_rub=monthly,
+            description=f"Абонемент: {caption}",
+            idempotency_key=req.idempotency_key,
+            child_birthdate=req.child_birthdate,
+            kind="enroll")
+    elif is_event:
         if not event_price:
             # Бесплатное мероприятие (ДОД, консультации) — простая запись.
             return await _create_free_booking(req)

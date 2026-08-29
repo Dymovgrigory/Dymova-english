@@ -377,13 +377,16 @@ def _ensure_booking_columns(conn) -> None:
         conn.execute("ALTER TABLE bookings ADD COLUMN student_id INTEGER")
     if "child_birthdate" not in cols:
         conn.execute("ALTER TABLE bookings ADD COLUMN child_birthdate TEXT NOT NULL DEFAULT ''")
+    if "kind" not in cols:
+        # trial (пробное) | enroll (запись в группу с оплатой абонемента)
+        conn.execute("ALTER TABLE bookings ADD COLUMN kind TEXT NOT NULL DEFAULT 'trial'")
     conn.commit()
 
 
 def create_booking(*, parent_name: str, phone: str, child_name: str, child_age: str,
                    comment: str, source: str, group_id: int, lesson_id: int,
                    filial_id: int | None, idempotency_key: str,
-                   child_birthdate: str = "") -> tuple[int, bool]:
+                   child_birthdate: str = "", kind: str = "trial") -> tuple[int, bool]:
     """Создаёт бронь в pending. (id, is_duplicate) по idempotency_key."""
     conn = _db()
     _ensure_booking_columns(conn)
@@ -391,10 +394,10 @@ def create_booking(*, parent_name: str, phone: str, child_name: str, child_age: 
         cur = conn.execute(
             "INSERT INTO bookings (created_at, parent_name, phone, child_name, child_age,"
             " comment, source, group_id, lesson_id, filial_id, idempotency_key,"
-            " child_birthdate)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            " child_birthdate, kind)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (_now(), parent_name, phone, child_name, child_age, comment, source,
-             group_id, lesson_id, filial_id, idempotency_key, child_birthdate))
+             group_id, lesson_id, filial_id, idempotency_key, child_birthdate, kind))
         conn.commit()
         return int(cur.lastrowid), False
     except sqlite3.IntegrityError:

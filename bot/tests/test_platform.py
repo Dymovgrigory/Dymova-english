@@ -184,3 +184,82 @@ def test_effective_capacity_rule_caps_explicit():
     g3 = {"capacity": None, "filial": {"caption": "Неизвестный"},
           "auditory": {"capacity": 6}}
     assert booking.effective_capacity(g3) == 6
+
+
+@pytest.mark.asyncio
+async def test_enroll_goes_to_group_not_demo(tmp_path, monkeypatch):
+    """kind=enroll: зачисление в группу, демо-урок НЕ создаётся."""
+    monkeypatch.setattr("app.config.settings.DB_PATH", str(tmp_path / "t.db"))
+    bb_store._local.conn = None
+    monkeypatch.setattr("app.config.settings.BIGBEN_INTERNAL_TOKEN", "tok")
+
+    enrolled = {}
+
+    class _EnrollClient(_FakeClient):
+        async def enroll_group(self, student_id, group_id, idempotency_key=None):
+            enrolled["args"] = (student_id, group_id)
+            return {"ok": True}
+
+    fake = _EnrollClient([_group()])
+    monkeypatch.setattr("app.platform.booking.get_bigben_v2", lambda: fake)
+    monkeypatch.setattr("app.platform.booking._fresh_group",
+                        lambda gid: None)  # заглушка ниже заменит
+    import asyncio as _asyncio
+    async def _fresh(gid):
+        return _group(gid)
+    monkeypatch.setattr("app.platform.booking._fresh_group", _fresh)
+
+    from app.platform import bigben_internal
+    async def _find_or_create(**kw):
+        return {"id": 777}
+    monkeypatch.setattr(bigben_internal, "find_or_create_student", _find_or_create)
+
+    res = await booking.book_trial(
+        parent_name="Иванова Мария", phone="+79261234567", child_name="Маша",
+        child_age="8", group_id=1, lesson_id=55, kind="enroll")
+    assert res.status == "confirmed" and res.student_id == 777
+    assert enrolled["args"] == (777, 1)
+    row = bb_store.booking_by_id(res.booking_id)
+    assert row["kind"] == "enroll" and row["demo_lesson_id"] is None
+
+
+@pytest.mark.asyncio
+async def test_enroll_without_student_card_leaves_lead(tmp_path, monkeypatch):
+    """Internal API недоступен: лид создан, запись подтверждена, демо нет."""
+    monkeypatch.setattr("app.config.settings.DB_PATH", str(tmp_path / "t.db"))
+    bb_store._local.conn = None
+    monkeypatch.setattr("app.config.settings.BIGBEN_INTERNAL_TOKEN", "tok")
+    fake = _FakeClient([_group()])
+    monkeypatch.setattr("app.platform.booking.get_bigben_v2", lambda: fake)
+    async def _fresh(gid):
+        return _group(gid)
+    monkeypatch.setattr("app.platform.booking._fresh_group", _fresh)
+    from app.platform import bigben_internal
+    async def _fail(**kw):
+        raise RuntimeError("internal api down")
+    monkeypatch.setattr(bigben_internal, "find_or_create_student", _fail)
+
+    res = await booking.book_trial(
+        parent_name="Иванова Мария", phone="+79261234567", child_name="Маша",
+        child_age="8", group_id=1, lesson_id=55, kind="enroll")
+    assert res.status == "confirmed" and res.lead_id == 101
+    row = bb_store.booking_by_id(res.booking_id)
+    assert row["demo_lesson_id"] is None
+
+
+def test_phone_dedup_formats():
+    """8…, +7…, 7…, 9… — один и тот же клиент для поиска карточки."""
+    from app.platform import bigben_internal
+    base = bigben_internal._digits("+7 (926) 123-45-67")
+    assert bigben_internal._digits("89261234567") == base
+    assert bigben_internal._digits("79261234567") == base
+    assert bigben_internal._digits("9261234567") == base
+    assert bigben_internal._digits("+79261234567") == base
+
+
+def test_monthly_payment_helper():
+    from app.platform.public_api import _monthly_payment
+    assert _monthly_payment({"monthly_payment": 9000}) == 9000
+    assert _monthly_payment({"monthly_payment": 1}) is None  # мусор
+    assert _monthly_payment({"monthly_payment": None}) is None
+    assert _monthly_payment(None) is None
