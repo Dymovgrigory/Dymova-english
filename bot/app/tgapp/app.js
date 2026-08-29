@@ -32,7 +32,7 @@
   var bridge = tg || max;
   var PLATFORM = tg ? "telegram" : max ? "max" : "web";
   var REQUEST_TIMEOUT_MS = 15000;
-  var TABS = ["home", "programs", "team", "chat"];
+  var TABS = ["home", "programs", "schedule", "team", "chat"];
 
   var state = {
     tab: "home",
