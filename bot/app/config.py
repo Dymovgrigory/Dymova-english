@@ -81,7 +81,10 @@ class Settings(BaseSettings):
     # пульта (auth_token) и перезапустить бота.
     BIGBEN_INTERNAL_TOKEN: str = ""
     # Как часто догружать педагогов/периоды/цены из пульта (минуты).
-    GROUP_META_SYNC_INTERVAL_MIN: int = 360
+    GROUP_META_SYNC_INTERVAL_MIN: int = 60
+    # Полная (не инкрементальная) выгрузка CRM — страховка от пропущенных
+    # updated_since изменений, чтобы read-model не расходилась с CRM.
+    BIGBEN_FULL_SYNC_INTERVAL_MIN: int = 360
     # Секрет подписки вебхуков (CRM → Информация о школе → Интеграции → Вебхуки).
     BIGBEN_WEBHOOK_SECRET: str = ""
     # Периодичность инкрементальной синхронизации read-model (минуты).

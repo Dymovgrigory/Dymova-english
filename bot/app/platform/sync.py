@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 import logging
 from datetime import datetime, timedelta, timezone
 
@@ -137,15 +138,25 @@ def configured() -> bool:
 async def _incremental_loop() -> None:
     # стартовая полная выгрузка, если read-model пуста
     fresh = await asyncio.to_thread(bb_store.freshness)
+    last_full = time.monotonic()
     if fresh["groups"]["count"] == 0:
         logger.info("sync: read-model пуста — стартовая полная выгрузка")
         await run_all("full")
+        last_full = time.monotonic()
     while True:
         await asyncio.sleep(max(1, settings.BIGBEN_SYNC_INTERVAL_MIN) * 60)
         try:
-            await run_all("incremental")
+            # Периодическая полная выгрузка: страховка от изменений в CRM,
+            # которые не двигают updated_at (записи учеников, участники
+            # мероприятий и т.п.) — read-model не должна расходиться с CRM.
+            full_every = max(30, settings.BIGBEN_FULL_SYNC_INTERVAL_MIN) * 60
+            if time.monotonic() - last_full >= full_every:
+                await run_all("full")
+                last_full = time.monotonic()
+            else:
+                await run_all("incremental")
         except Exception:
-            logger.exception("sync: ошибка инкрементального цикла")
+            logger.exception("sync: ошибка цикла синхронизации")
 
 
 async def _full_loop() -> None:
