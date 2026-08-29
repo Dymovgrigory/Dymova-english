@@ -141,6 +141,18 @@ async def _sources_sync_loop() -> None:
         await asyncio.sleep(max(5, settings.SITE_SYNC_INTERVAL_MIN) * 60)
 
 
+async def _group_meta_sync_loop() -> None:
+    """Педагоги/периоды/цены групп из пульта владельца — регулярно."""
+    from app.platform import group_meta_sync
+    while True:
+        try:
+            if settings.BIGBEN_INTERNAL_TOKEN:
+                await group_meta_sync.sync_group_meta()
+        except Exception:
+            logger.exception("group_meta: ошибка синхронизации метаданных групп")
+        await asyncio.sleep(max(30, settings.GROUP_META_SYNC_INTERVAL_MIN) * 60)
+
+
 def start() -> list[asyncio.Task]:
     """Запускает фоновые задачи (отчёт + напоминания)."""
     tasks: list[asyncio.Task] = [asyncio.create_task(_purge_loop())]
@@ -157,6 +169,7 @@ def start() -> list[asyncio.Task]:
         tasks.append(asyncio.create_task(_sources_sync_loop()))
     else:
         logger.info("site_sync: синхронизация с сайтом выключена (SITE_SYNC_ENABLED=false)")
+    tasks.append(asyncio.create_task(_group_meta_sync_loop()))
     if settings.WATCHDOG_ENABLED:
         tasks.append(asyncio.create_task(watchdog.loop()))
     else:

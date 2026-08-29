@@ -43,7 +43,7 @@ def test_hero_shows_the_real_mascot():
 
 def test_menu_tiles_use_drawn_icons():
     """Иконки — векторные и свои, а не картинки системного шрифта."""
-    assert HTML.count('class="tile__ic"') == 7  # 6 разделов + «Мои занятия» (фаза 7)
+    assert HTML.count('class="tile__ic"') == 8  # 6 разделов + «Мои занятия» + «Расписание»
     assert HTML.count("<svg") >= 6
 
 

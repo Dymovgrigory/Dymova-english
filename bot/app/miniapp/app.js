@@ -98,7 +98,7 @@ async function loadMyLessons() {
 }
 
 // --- Навигация по экранам ---
-const SCREENS = ["menu", "select", "signup", "homework", "catalog", "branches", "cabinet", "mylessons"];
+const SCREENS = ["menu", "select", "signup", "homework", "catalog", "branches", "cabinet", "mylessons", "schedule"];
 function showScreen(name) {
   SCREENS.forEach((s) => {
     document.getElementById("screen-" + s).classList.toggle("hidden", s !== name);
