@@ -323,7 +323,7 @@
       ov.innerHTML = `<div class="fxs-modal" role="dialog" aria-modal="true" aria-label="Запись на пробное занятие">
         <h3>${group && group.is_event ? "Запись на мероприятие" : "Запись на пробное занятие"}</h3>
         <p class="fxs-sub">${esc(group ? group.caption : "")}${lesson ? `<br>🗓 ${esc(fmtWhen(lesson))}` : ""}</p>
-        ${price ? `<div class="fxs-payinfo">${group && group.is_event ? "Стоимость участия" : "Стоимость пробного занятия"} — <b>${fmtPrice(price)}</b>. Оплата картой онлайн, место закрепляется сразу после оплаты.</div>` : ""}
+        ${price ? `<div class="fxs-payinfo">${group && group.is_event ? "Стоимость участия" : "Стоимость пробного занятия"} — <b>${fmtPrice(price)}</b>. Оплата по СБП или картой онлайн, место закрепляется сразу после оплаты.</div>` : ""}
         <form id="fxs-form" novalidate>
           <div class="fxs-field" data-f="parent_name"><label>Имя родителя</label>
             <input name="parent_name" autocomplete="name" placeholder="Как к вам обращаться">
