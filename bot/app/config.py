@@ -76,6 +76,10 @@ class Settings(BaseSettings):
     # Ключ выпускается в CRM: Настройки → Интеграции → API-ключи (скоупы read+write).
     BIGBEN_PUBLIC_API_KEY: str = ""
     BIGBEN_PUBLIC_API_BASE: str = "https://platformapi.bigbencrm.ru/api/public/v1"
+    # Bearer-токен пульта владельца (внутренний API: создание карточек учеников,
+    # метаданные групп). Истекает ~через год — тогда обновить из localStorage
+    # пульта (auth_token) и перезапустить бота.
+    BIGBEN_INTERNAL_TOKEN: str = ""
     # Секрет подписки вебхуков (CRM → Информация о школе → Интеграции → Вебхуки).
     BIGBEN_WEBHOOK_SECRET: str = ""
     # Периодичность инкрементальной синхронизации read-model (минуты).

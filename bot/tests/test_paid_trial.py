@@ -370,3 +370,79 @@ def test_free_event_simple_booking(client, monkeypatch):
         "group_id": 1, "lesson_id": 55, "idempotency_key": "ev2"})
     assert r.status_code == 201
     assert r.json()["status"] == "confirmed"
+
+
+def test_fulfill_creates_student_card(client, monkeypatch):
+    """Оплаченная запись: карточка ученика через внутренний API,
+    демо от user_id, лид НЕ создаётся."""
+    _seed(60)
+    monkeypatch.setattr(booking, "_fresh_group", lambda gid: _async_fresh(gid))
+    monkeypatch.setattr("app.config.settings.BIGBEN_INTERNAL_TOKEN", "tok")
+    monkeypatch.setattr("app.config.settings.TRIAL_PAID", False)
+
+    from app.platform import bigben_internal
+    created = {}
+    async def _find_or_create(**kw):
+        created.update(kw)
+        return {"id": 777111}
+    monkeypatch.setattr(bigben_internal, "find_or_create_student", _find_or_create)
+
+    from app.platform.bigben_v2 import get_bigben_v2
+    calls = {"lead": 0, "demo_user": None}
+    async def _lead(**kw):
+        calls["lead"] += 1
+        return {"id": 1}
+    async def _demo(**kw):
+        calls["demo_user"] = kw.get("user_id")
+        return {"id": 800}
+    monkeypatch.setattr(get_bigben_v2(), "create_lead", _lead, raising=False)
+    monkeypatch.setattr(get_bigben_v2(), "create_demo_lesson", _demo, raising=False)
+    monkeypatch.setattr(booking, "_schedule_reminders", lambda *a, **k: None)
+
+    r = client.post("/api/platform/booking", json={
+        "parent_name": "Анна", "phone": "+7 900 111-22-33",
+        "child_name": "Маша", "child_age": "9",
+        "group_id": 1, "lesson_id": 55, "idempotency_key": "k-student"})
+    assert r.status_code == 201, r.json()
+    assert created["fio"] == "Маша"
+    assert created["parentname"] == "Анна"
+    assert calls["lead"] == 0
+    assert calls["demo_user"] == 777111
+    row = bb_store.booking_by_id(r.json()["booking_id"])
+    assert row["status"] == "confirmed"
+    assert row["student_id"] == 777111
+
+
+def test_fulfill_fallback_to_lead(client, monkeypatch):
+    """Внутренний API недоступен/упал — прежний флоу: лид + демо от lead_id."""
+    _seed(60)
+    monkeypatch.setattr(booking, "_fresh_group", lambda gid: _async_fresh(gid))
+    monkeypatch.setattr("app.config.settings.BIGBEN_INTERNAL_TOKEN", "tok")
+    monkeypatch.setattr("app.config.settings.TRIAL_PAID", False)
+
+    from app.platform import bigben_internal
+    async def _boom(**kw):
+        raise bigben_internal.BigBenInternalError("down")
+    monkeypatch.setattr(bigben_internal, "find_or_create_student", _boom)
+
+    from app.platform.bigben_v2 import get_bigben_v2
+    calls = {"lead": 0, "demo_lead": None}
+    async def _lead(**kw):
+        calls["lead"] += 1
+        return {"id": 900}
+    async def _demo(**kw):
+        calls["demo_lead"] = kw.get("lead_id")
+        return {"id": 800}
+    monkeypatch.setattr(get_bigben_v2(), "create_lead", _lead, raising=False)
+    monkeypatch.setattr(get_bigben_v2(), "create_demo_lesson", _demo, raising=False)
+    monkeypatch.setattr(booking, "_schedule_reminders", lambda *a, **k: None)
+
+    r = client.post("/api/platform/booking", json={
+        "parent_name": "Анна", "phone": "+7 900 111-22-33",
+        "group_id": 1, "lesson_id": 55, "idempotency_key": "k-fallback"})
+    assert r.status_code == 201, r.json()
+    assert calls["lead"] == 1
+    assert calls["demo_lead"] == 900
+    row = bb_store.booking_by_id(r.json()["booking_id"])
+    assert row["status"] == "confirmed"
+    assert row["lead_id"] == 900

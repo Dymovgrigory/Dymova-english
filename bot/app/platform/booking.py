@@ -159,6 +159,7 @@ class BookingResult:
     status: str           # confirmed | duplicate | failed | slot_unavailable
     lead_id: int | None = None
     demo_lesson_id: int | None = None
+    student_id: int | None = None
     error: str = ""
     alternatives: list[dict] | None = None
 
@@ -309,44 +310,69 @@ async def fulfill_trial(booking_id: int, *, idem: str, fresh: dict) -> BookingRe
     lesson_id = row["lesson_id"]
     client = get_bigben_v2()
 
-    # --- Лид в CRM (идемпотентно) ---
     note_parts = [f"Запись на пробное: {fresh.get('caption', group_id)}"]
     if row.get("child_name"):
         note_parts.append(f"Ребёнок: {row['child_name']}, {row.get('child_age', '')}")
     if row.get("comment"):
         note_parts.append(row["comment"])
-    try:
-        lead = await client.create_lead(
-            name=row.get("parent_name") or row.get("child_name") or "",
-            phone=row.get("phone", ""),
-            source=row.get("source") or "site-booking",
-            comment=" | ".join(note_parts),
-            idempotency_key=f"lead-{idem}")
-        lead_id = lead.get("id")
-    except BigBenError as exc:
-        bb_store.fail_booking(booking_id, f"lead_failed: {exc.code} {exc.details}")
-        return BookingResult(booking_id, "failed",
-                             error="Не удалось передать заявку в CRM")
+    note = " | ".join(note_parts)
 
-    # --- Демо-урок ---
+    # --- Карточка ученика через внутренний API (основной путь) ---
+    student_id = None
+    if settings.BIGBEN_INTERNAL_TOKEN:
+        try:
+            from app.platform import bigben_internal
+            student = await bigben_internal.find_or_create_student(
+                fio=row.get("child_name") or row.get("parent_name") or "",
+                phone=row.get("phone", ""),
+                parentname=row.get("parent_name", ""),
+                parent_phone=row.get("phone", ""),
+                filial_id=row.get("filial_id"),
+                comment=note)
+            student_id = student.get("id") if student else None
+        except Exception:
+            logger.exception("booking %s: карточка ученика не создана, "
+                             "откат на лид-флоу", booking_id)
+
+    # --- Лид в CRM (fallback или дополнительно при недоступности internal API) ---
+    lead_id = None
+    if not student_id:
+        try:
+            lead = await client.create_lead(
+                name=row.get("parent_name") or row.get("child_name") or "",
+                phone=row.get("phone", ""),
+                source=row.get("source") or "site-booking",
+                comment=note,
+                idempotency_key=f"lead-{idem}")
+            lead_id = lead.get("id")
+        except BigBenError as exc:
+            bb_store.fail_booking(booking_id, f"lead_failed: {exc.code} {exc.details}")
+            return BookingResult(booking_id, "failed",
+                                 error="Не удалось передать заявку в CRM")
+
+    # --- Демо-урок (от ученика, если есть карточка; иначе от лида) ---
     try:
         demo = await client.create_demo_lesson(
-            group_id=group_id, lesson_id=lesson_id, lead_id=lead_id,
+            group_id=group_id, lesson_id=lesson_id,
+            user_id=student_id, lead_id=lead_id,
             idempotency_key=f"demo-{idem}")
         demo_id = demo.get("id")
     except BigBenError as exc:
         bb_store.fail_booking(booking_id, f"demo_failed: {exc.code} {exc.details}")
-        logger.error("booking %s: лид %s создан, демо не создано: %s",
-                     booking_id, lead_id, exc)
+        logger.error("booking %s: ученик %s / лид %s создан, демо не создано: %s",
+                     booking_id, student_id, lead_id, exc)
         return BookingResult(booking_id, "failed", lead_id=lead_id,
+                             student_id=student_id,
                              error="Заявка принята, но запись на занятие требует подтверждения менеджером")
 
-    bb_store.confirm_booking(booking_id, lead_id=lead_id, demo_lesson_id=demo_id)
+    bb_store.confirm_booking(booking_id, lead_id=lead_id,
+                             demo_lesson_id=demo_id, student_id=student_id)
     # Оптимистично сдвигаем занятость в read-model до следующей синхронизации.
     _bump_occupied(group_id)
     _schedule_reminders(booking_id, row.get("phone", ""), lesson_id,
                         fresh.get("caption", ""))
-    return BookingResult(booking_id, "confirmed", lead_id=lead_id, demo_lesson_id=demo_id)
+    return BookingResult(booking_id, "confirmed", lead_id=lead_id,
+                         demo_lesson_id=demo_id, student_id=student_id)
 
 
 def _schedule_reminders(booking_id: int, phone: str, lesson_id: int, group_caption: str) -> None:
@@ -487,6 +513,65 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
     return BookingResult(booking_id, "awaiting_payment"), pay
 
 
+def booking_admin_text(booking_id: int, *, amount_rub: float | None = None) -> str:
+    """Полная карточка заявки для менеджера: кто, куда, когда, источник,
+    оплата и CRM-идентификаторы. Один формат для всех каналов."""
+    row = bb_store.booking_by_id(booking_id) or {}
+    group = bb_store.get_group(row.get("group_id") or 0) or {}
+    lesson = bb_store._rows("SELECT * FROM bb_lessons WHERE id=?",
+                            (row.get("lesson_id") or 0,))
+    les = lesson[0] if lesson else {}
+    when = ""
+    if les.get("starts_at"):
+        try:
+            from datetime import datetime as _dt
+            d = _dt.fromisoformat(str(les["starts_at"]).replace("Z", "+00:00"))
+            when = d.strftime("%d.%m.%Y %H:%M")
+        except ValueError:
+            when = str(les.get("starts_at"))[:16]
+    lines = [f"📋 Заявка #{booking_id} — запись на "
+             + ("мероприятие" if (group.get("for_events") or _is_event_group(group))
+                else "пробное занятие")]
+    lines.append(f"Родитель: {row.get('parent_name') or '—'}, {row.get('phone') or '—'}")
+    if row.get("child_name"):
+        lines.append(f"Ребёнок: {row['child_name']}"
+                     + (f", {row['child_age']}" if row.get("child_age") else ""))
+    lines.append(f"Группа: {group.get('caption') or row.get('group_id')}")
+    if group.get("filial_caption"):
+        lines.append(f"Филиал: {group['filial_caption']}")
+    if when:
+        lines.append(f"Время: {when}")
+    if amount_rub:
+        lines.append(f"Оплата: {amount_rub} ₽ — подтверждена онлайн ✅")
+    elif row.get("amount_kopecks"):
+        lines.append(f"Сумма: {round(row['amount_kopecks'] / 100, 2)} ₽")
+    src_map = {"site-schedule": "сайт, страница «Расписание»",
+               "site-diagnostics": "сайт, страница «Диагностика»",
+               "site": "сайт"}
+    lines.append(f"Источник: {src_map.get(row.get('source'), row.get('source') or '—')}"
+                 f" (форма онлайн-записи)")
+    if row.get("comment"):
+        lines.append(f"Комментарий клиента: {row['comment']}")
+    crm = []
+    if row.get("student_id"):
+        crm.append(f"ученик #{row['student_id']}")
+    if row.get("lead_id"):
+        crm.append(f"лид #{row['lead_id']}")
+    if row.get("demo_lesson_id"):
+        crm.append(f"демо #{row['demo_lesson_id']}")
+    if crm:
+        lines.append("В CRM: " + ", ".join(crm))
+    return "\n".join(lines)
+
+
+def _is_event_group(group: dict) -> bool:
+    try:
+        meta = bb_store.group_meta_map().get(group.get("id")) or {}
+        return bool(meta.get("for_events"))
+    except Exception:
+        return False
+
+
 async def handle_payment_confirmed(invoice_id: str, *, source: str) -> None:
     """Единая реакция на подтверждённую оплату — из вебхука или из polling.
 
@@ -518,14 +603,15 @@ async def handle_payment_confirmed(invoice_id: str, *, source: str) -> None:
         logger.exception("billing: не удалось уведомить админов (инвойс %s)",
                          invoice_id)
     if res is not None:
-        status_line = ("запись подтверждена в CRM"
+        status_line = ("запись подтверждена в CRM автоматически"
                        if res.status in ("confirmed", "duplicate")
-                       else f"ВНИМАНИЕ: запись НЕ подтверждена ({res.error})")
+                       else f"ВНИМАНИЕ: запись НЕ подтверждена ({res.error}) — "
+                            f"свяжитесь с клиентом")
         try:
             from app.platform.public_api import _notify_staff
             await _notify_staff(
-                f"✅ Оплаченное пробное #{res.booking_id}: {amount_rub} ₽\n"
-                f"{status_line}")
+                booking_admin_text(res.booking_id, amount_rub=amount_rub)
+                + f"\n{status_line}")
         except Exception:
             logger.exception("billing: не удалось уведомить методиста (инвойс %s)",
                              invoice_id)

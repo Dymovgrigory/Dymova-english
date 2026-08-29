@@ -238,20 +238,16 @@ async def _create_free_booking(req: "BookingRequest") -> JSONResponse:
 
 
 async def _notify_booking(req: BookingRequest, result: booking.BookingResult) -> None:
-    from app.max_client import get_max
-    client = get_max()
-    if not client.configured:
-        return
-    text = (f"📝 Запись на пробное (#{result.booking_id})\n"
-            f"Родитель: {req.parent_name}, {req.phone}\n"
-            f"Ребёнок: {req.child_name} {req.child_age}\n"
-            f"Группа #{req.group_id}, урок #{req.lesson_id}\n"
-            f"Источник: {req.source}")
-    for admin_id in settings.admin_ids:
-        try:
-            await client.send_message(admin_id, text)
-        except Exception:
-            logger.exception("booking: не удалось уведомить админа %s", admin_id)
+    """Полная карточка заявки менеджеру (MAX-админы + методист в TG)."""
+    try:
+        text = (booking.booking_admin_text(result.booking_id)
+                + "\nЗапись подтверждена в CRM автоматически")
+    except Exception:
+        logger.exception("booking: не удалось собрать текст заявки")
+        text = (f"📝 Запись на пробное (#{result.booking_id})\n"
+                f"Родитель: {req.parent_name}, {req.phone}\n"
+                f"Группа #{req.group_id}, урок #{req.lesson_id}")
+    await _notify_staff(text)
 
 
 

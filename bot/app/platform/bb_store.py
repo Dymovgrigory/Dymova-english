@@ -500,12 +500,24 @@ def booking_by_id(booking_id: int) -> dict | None:
     return rows[0] if rows else None
 
 
-def confirm_booking(booking_id: int, *, lead_id: int | None, demo_lesson_id: int | None) -> None:
-    _db().execute(
-        "UPDATE bookings SET status='confirmed', lead_id=?, demo_lesson_id=?, confirmed_at=?,"
-        " error='' WHERE id=?",
-        (lead_id, demo_lesson_id, _now(), booking_id))
-    _db().commit()
+def _ensure_booking_student_column(conn) -> None:
+    """Миграция: колонка student_id (карточка ученика в CRM)."""
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(bookings)")}
+    if "student_id" not in cols:
+        conn.execute("ALTER TABLE bookings ADD COLUMN student_id INTEGER")
+        conn.commit()
+
+
+def confirm_booking(booking_id: int, *, lead_id: int | None,
+                    demo_lesson_id: int | None,
+                    student_id: int | None = None) -> None:
+    conn = _db()
+    _ensure_booking_student_column(conn)
+    conn.execute(
+        "UPDATE bookings SET status='confirmed', lead_id=?, demo_lesson_id=?,"
+        " student_id=?, confirmed_at=?, error='' WHERE id=?",
+        (lead_id, demo_lesson_id, student_id, _now(), booking_id))
+    conn.commit()
 
 
 def fail_booking(booking_id: int, error: str) -> None:
