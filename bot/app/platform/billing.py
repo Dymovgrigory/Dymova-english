@@ -93,6 +93,7 @@ class CloudPaymentsProvider:
         _db().commit()
         return {
             "invoice_id": invoice_id,
+            "provider": "cloudpayments",
             "widget": {
                 "publicId": settings.CLOUDPAYMENTS_PUBLIC_ID,
                 "amount": round(amount_kopecks / 100, 2),
@@ -131,9 +132,20 @@ class TBankProvider:
 
     @staticmethod
     def _token(params: dict) -> str:
-        pairs = sorted((k, str(v)) for k, v in params.items()
-                       if k != "Token" and not isinstance(v, (dict, list)))
-        raw = "".join(v for _, v in pairs) + settings.TBANK_PASSWORD
+        """Подпись Т-Банка: пароль участвует как параметр Password, все
+        скалярные значения сортируются по имени ключа и конкатенируются
+        (проверено на боевом терминале: иная схема даёт ошибку 204)."""
+        def _norm(v):
+            # В подписи нотификаций булевы значения — строчными ("true"/"false")
+            if v is True:
+                return "true"
+            if v is False:
+                return "false"
+            return str(v)
+        merged = {k: _norm(v) for k, v in params.items()
+                  if k != "Token" and not isinstance(v, (dict, list))}
+        merged["Password"] = settings.TBANK_PASSWORD
+        raw = "".join(merged[k] for k in sorted(merged))
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
     def create_invoice_local(self, *, amount_kopecks: int, phone: str = "",
@@ -151,6 +163,41 @@ class TBankProvider:
         _db().commit()
         return invoice_id
 
+    def _receipt(self, *, amount_kopecks: int, phone: str,
+                 description: str) -> dict:
+        """Фискальный чек — терминал школы требует его в каждом Init
+        (без Receipt отвечает ошибкой 309)."""
+        receipt: dict = {
+            "Taxation": settings.TBANK_TAXATION,
+            "Items": [{
+                "Name": (description or settings.CLOUDPAYMENTS_DESCRIPTION)[:128],
+                "Price": amount_kopecks,
+                "Quantity": 1,
+                "Amount": amount_kopecks,
+                "Tax": settings.TBANK_ITEM_TAX,
+                "PaymentMethod": "full_payment",
+                "PaymentObject": "service",
+            }],
+        }
+        if phone:
+            receipt["Phone"] = phone
+        elif settings.TBANK_RECEIPT_EMAIL:
+            receipt["Email"] = settings.TBANK_RECEIPT_EMAIL
+        else:
+            raise BillingError(
+                "Для чека нужен телефон клиента или TBANK_RECEIPT_EMAIL")
+        return receipt
+
+    async def _api(self, method: str, params: dict) -> dict:
+        params = dict(params)
+        params["TerminalKey"] = settings.TBANK_TERMINAL_KEY
+        params["Token"] = self._token(params)
+        import httpx
+        async with httpx.AsyncClient(timeout=15, verify=_tbank_verify()) as client:
+            resp = await client.post(f"{settings.TBANK_API_BASE}/v2/{method}",
+                                     json=params)
+        return resp.json()
+
     async def create_invoice(self, *, amount_kopecks: int, phone: str = "",
                              student_id: int | None = None,
                              description: str = "") -> dict:
@@ -160,24 +207,57 @@ class TBankProvider:
             amount_kopecks=amount_kopecks, phone=phone,
             student_id=student_id, description=description)
         params = {
-            "TerminalKey": settings.TBANK_TERMINAL_KEY,
             "Amount": amount_kopecks,
             "OrderId": invoice_id,
             "Description": (description or settings.CLOUDPAYMENTS_DESCRIPTION)[:140],
+            "Receipt": self._receipt(amount_kopecks=amount_kopecks,
+                                     phone=phone, description=description),
         }
-        params["Token"] = self._token(params)
-        import httpx
         try:
-            async with httpx.AsyncClient(timeout=15, verify=_tbank_verify()) as client:
-                resp = await client.post(f"{settings.TBANK_API_BASE}/v2/Init",
-                                         json=params)
-                data = resp.json()
+            data = await self._api("Init", params)
         except Exception as exc:
             raise BillingError(f"Т-Банк недоступен: {exc}") from exc
         if not data.get("Success"):
             raise BillingError(
                 f"Т-Банк отклонил инвойс: {data.get('Message') or data.get('Details') or data.get('ErrorCode')}")
-        return {"invoice_id": invoice_id, "payment_url": data.get("PaymentURL", "")}
+        payment_id = data.get("PaymentId")
+        payment_url = data.get("PaymentURL", "")
+        sbp_url, sbp_qr_svg = "", ""
+        try:  # СБП-линк (deeplink qr.nspk.ru) — главный способ оплаты
+            qr = await self._api("GetQr", {"PaymentId": payment_id,
+                                           "DataType": "PAYLOAD"})
+            if qr.get("Success"):
+                sbp_url = qr.get("Data", "")
+        except Exception:
+            logger.warning("tbank: GetQr PAYLOAD не удался", exc_info=True)
+        try:  # QR-картинка (SVG) — для оплаты с десктопа
+            qr_img = await self._api("GetQr", {"PaymentId": payment_id,
+                                               "DataType": "IMAGE"})
+            if qr_img.get("Success"):
+                sbp_qr_svg = qr_img.get("Data", "")
+        except Exception:
+            logger.warning("tbank: GetQr IMAGE не удался", exc_info=True)
+        # Реквизиты платежа — для повторной выдачи (дубль заявки) и поллинга.
+        _db().execute(
+            "UPDATE billing_payments SET transaction_id=?, raw_json=?"
+            " WHERE invoice_id=?",
+            (str(payment_id or ""),
+             json.dumps({"payment_id": payment_id, "payment_url": payment_url,
+                         "sbp_url": sbp_url, "sbp_qr_svg": sbp_qr_svg},
+                        ensure_ascii=False)[:4000], invoice_id))
+        _db().commit()
+        return {"invoice_id": invoice_id, "provider": "tbank",
+                "payment_url": payment_url,
+                "sbp_url": sbp_url, "sbp_qr_svg": sbp_qr_svg}
+
+    async def get_state(self, payment_id) -> dict | None:
+        """Статус платежа (GetState) — запасной канал к вебхуку."""
+        try:
+            data = await self._api("GetState", {"PaymentId": payment_id})
+        except Exception as exc:
+            logger.warning("tbank: GetState недоступен: %s", exc)
+            return None
+        return data if data.get("Success") else None
 
     def verify_notification(self, data: dict) -> bool:
         """Проверка подписи нотификации Т-Банка."""
@@ -214,6 +294,26 @@ async def cp_find_payment(invoice_id: str) -> dict | None:
     if not data.get("Success"):
         return None
     return data.get("Model")
+
+
+async def tbank_find_payment(invoice_id: str) -> dict | None:
+    """Статус платежа напрямую из Т-Банка (запасной канал к вебхуку):
+    polling из /api/platform/booking/{id}. Вебхук остаётся основным."""
+    if not settings.TBANK_ENABLED:
+        return None
+    row = get_payment(invoice_id)
+    if not row:
+        return None
+    payment_id = (row.get("transaction_id") or "").strip()
+    if not payment_id:
+        try:
+            raw = json.loads(row.get("raw_json") or "{}")
+        except ValueError:
+            raw = {}
+        payment_id = str(raw.get("payment_id") or "")
+    if not payment_id:
+        return None
+    return await TBankProvider().get_state(payment_id)
 
 
 def _tbank_verify():

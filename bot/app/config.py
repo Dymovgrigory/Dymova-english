@@ -141,6 +141,11 @@ class Settings(BaseSettings):
     # Объединённый CA-бандл (certifi + Russian Trusted Root CA) — генерируется
     # лениво; нужен, т.к. Т-Банк использует национальный сертификат Минцифры.
     TBANK_CA_BUNDLE: str = ""
+    # Фискальный чек (терминал требует Receipt в каждом Init): система
+    # налогообложения школы, ставка НДС и запасной email, если нет телефона.
+    TBANK_TAXATION: str = "usn_income"
+    TBANK_ITEM_TAX: str = "none"
+    TBANK_RECEIPT_EMAIL: str = ""
 
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""

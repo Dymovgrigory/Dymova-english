@@ -74,6 +74,13 @@
     .fxs-alt button{text-align:left;border:1px solid #e2e8f0;background:#fff;border-radius:14px;padding:12px 14px;font-size:14px;cursor:pointer}
     .fxs-alt button:hover{border-color:#7c3aed}
     .fxs-payinfo{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px 14px;font-size:14px;color:#334155;margin-top:4px}
+    .fxs-sbp{display:block;text-align:center;text-decoration:none;border:none;border-radius:16px;padding:16px 18px;font-size:17px;font-weight:700;color:#fff;min-height:56px;background:linear-gradient(135deg,#0aa75d,#0879c4);box-shadow:0 8px 24px rgba(10,167,93,.3);cursor:pointer;transition:filter .15s ease,transform .15s ease;margin-top:6px}
+    .fxs-sbp:hover{filter:brightness(1.07);transform:translateY(-1px)}
+    .fxs-qr{display:flex;justify-content:center;margin:14px 0 6px}
+    .fxs-qr svg{width:176px;height:176px;border-radius:12px}
+    .fxs-qrhint{text-align:center;font-size:12.5px;color:#94a3b8;margin-bottom:8px}
+    .fxs-link{display:block;text-align:center;font-size:14.5px;font-weight:600;color:#7c3aed;text-decoration:none;padding:12px;border-radius:12px;border:1.5px solid #ede9fe;background:#faf8ff;margin-top:8px}
+    .fxs-link:hover{border-color:#c4b5fd}
     @media(prefers-reduced-motion:reduce){.fxs-skel{animation:none}.fxs-card{transition:none}}
   `;
   document.head.appendChild(css);
@@ -290,6 +297,15 @@
         <div class="fxs-ico">🎉</div><h3>Вы записаны!</h3>
         <p class="fxs-sub">Оплата подтверждена, место закреплено за вами. Мы свяжемся накануне занятия.</p>
         <button class="fxs-btn" data-fxs="close">Хорошо</button></div></div>`;
+    } else if (state.done === "pay_tbank") {
+      const p = state.payInfo || {};
+      ov.innerHTML = `<div class="fxs-modal" role="dialog" aria-modal="true" aria-label="Оплата">
+        <h3>Оплата — ${fmtPrice(p.amount_rub)}</h3>
+        <p class="fxs-sub">Место зарезервировано за вами. Оплатите — и запись подтвердится автоматически, обычно это занимает несколько секунд.</p>
+        ${p.sbp_url ? `<a class="fxs-sbp" href="${esc(p.sbp_url)}" target="_blank" rel="noopener">Оплатить по СБП</a>` : ""}
+        ${p.sbp_qr_svg ? `<div class="fxs-qr">${p.sbp_qr_svg}</div><div class="fxs-qrhint">Или наведите камеру телефона — откроется приложение банка</div>` : ""}
+        ${p.payment_url ? `<a class="fxs-link" href="${esc(p.payment_url)}" target="_blank" rel="noopener">Оплатить картой онлайн</a>` : ""}
+        <div class="fxs-actions"><button class="fxs-btn ghost" data-fxs="close">Закрыть</button></div></div>`;
     } else if (state.done === "pending_payment") {
       ov.innerHTML = `<div class="fxs-modal"><div class="fxs-success">
         <div class="fxs-ico">⏳</div><h3>Проверяем оплату…</h3>
@@ -359,6 +375,21 @@
       } catch (e) { /* повторяем */ }
     }
     return "timeout";
+  }
+
+  function startTbankPayment(pay) {
+    track("payment_started", { invoice_id: pay.invoice_id, provider: "tbank" });
+    state.payInfo = pay;
+    state.done = "pay_tbank";
+    renderModal();
+    // Подтверждение приходит вебхуком или опросом статуса — ждём и обновляем.
+    pollBooking(pay.booking_id).then((res) => {
+      if (res === "confirmed") {
+        state.done = "confirmed";
+        renderModal();
+        load();
+      }
+    });
   }
 
   async function startCpPayment(pay) {
@@ -435,9 +466,13 @@
     });
     state.sending = false;
     if (status === 201 && body && body.status === "awaiting_payment") {
-      // Платное пробное: открываем платёжную форму CloudPayments
-      state.payInfo = { booking_id: body.booking_id, invoice_id: body.invoice_id, widget: body.widget };
-      startCpPayment(state.payInfo);
+      // Платное пробное: экран оплаты активного провайдера (Т-Банк/СБП или CP)
+      if (body.provider === "tbank") {
+        startTbankPayment(body);
+      } else {
+        state.payInfo = { booking_id: body.booking_id, invoice_id: body.invoice_id, widget: body.widget };
+        startCpPayment(state.payInfo);
+      }
       return;
     }
     if (status === 201 || (body && body.status === "duplicate")) {

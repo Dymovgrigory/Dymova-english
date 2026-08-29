@@ -14,6 +14,7 @@
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
 import uuid
@@ -422,11 +423,23 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
         existing = bb_store.booking_by_id(booking_id)
         inv = existing.get("invoice_id")
         if existing.get("status") == "awaiting_payment" and inv:
-            pay = billing.get_payment(inv)
-            if pay and pay.get("status") == "created":
-                return BookingResult(booking_id, "awaiting_payment"), {
-                    "invoice_id": inv, "widget": _widget_params(
-                        inv, price, phone_norm)}
+            pay_row = billing.get_payment(inv)
+            if pay_row and pay_row.get("status") == "created":
+                provider = billing.get_provider()
+                pay: dict = {"invoice_id": inv, "amount_rub": price,
+                             "provider": provider.name}
+                if provider.name == "tbank":
+                    import json as _json
+                    try:
+                        raw = _json.loads(pay_row.get("raw_json") or "{}")
+                    except ValueError:
+                        raw = {}
+                    pay.update({"payment_url": raw.get("payment_url", ""),
+                                "sbp_url": raw.get("sbp_url", ""),
+                                "sbp_qr_svg": raw.get("sbp_qr_svg", "")})
+                else:
+                    pay["widget"] = _widget_params(inv, price, phone_norm)
+                return BookingResult(booking_id, "awaiting_payment"), pay
         return BookingResult(booking_id, "duplicate",
                              lead_id=existing.get("lead_id"),
                              demo_lesson_id=existing.get("demo_lesson_id")), None
@@ -449,22 +462,73 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
                              alternatives=alternatives), None
 
     provider = billing.get_provider()
+    desc = (description or f"Пробное занятие: {fresh.get('caption', '')}")[:120]
     try:
         inv = provider.create_invoice(
-            amount_kopecks=price * 100, phone=phone_norm,
-            description=(description
-                         or f"Пробное занятие: {fresh.get('caption', '')}")[:120])
+            amount_kopecks=price * 100, phone=phone_norm, description=desc)
+        # Т-Банк делает вызов Init (async), CloudPayments — локальный инвойс
+        if asyncio.iscoroutine(inv):
+            inv = await inv
     except billing.BillingError as exc:
         bb_store.fail_booking(booking_id, f"invoice_failed: {exc}")
         return BookingResult(booking_id, "failed", error=str(exc)), None
     bb_store.set_booking_awaiting_payment(booking_id, inv["invoice_id"],
                                           amount_kopecks=price * 100)
-    widget = dict(inv["widget"])
-    widget["description"] = (description
-                             or f"Пробное занятие: {fresh.get('caption', '')}")[:120]
-    return BookingResult(booking_id, "awaiting_payment"), {
-        "invoice_id": inv["invoice_id"], "widget": widget,
-        "amount_rub": price}
+    pay: dict = {"invoice_id": inv["invoice_id"], "amount_rub": price,
+                 "provider": provider.name}
+    if provider.name == "tbank":
+        pay.update({"payment_url": inv.get("payment_url", ""),
+                    "sbp_url": inv.get("sbp_url", ""),
+                    "sbp_qr_svg": inv.get("sbp_qr_svg", "")})
+    else:
+        widget = dict(inv["widget"])
+        widget["description"] = desc
+        pay["widget"] = widget
+    return BookingResult(booking_id, "awaiting_payment"), pay
+
+
+async def handle_payment_confirmed(invoice_id: str, *, source: str) -> None:
+    """Единая реакция на подтверждённую оплату — из вебхука или из polling.
+
+    Вызывать только когда billing.mark_paid вернул is_new=True: повторные
+    вебхуки/опросы сюда не доходят, дублей уведомлений нет.
+    Порядок: аналитика → thankyou клиенту → CRM-регистрация записи →
+    уведомления админам и методисту.
+    """
+    from app.platform import analytics, automations, billing
+    row = billing.get_payment(invoice_id)
+    if row is None:
+        return
+    amount_rub = round(row["amount_kopecks"] / 100, 2)
+    analytics.track("payment_success", source=source,
+                    meta={"invoice_id": invoice_id})
+    try:
+        automations.schedule_payment_thankyou(
+            invoice_id=invoice_id, phone=row["phone"], amount_rub=amount_rub)
+    except Exception:
+        logger.exception("billing: не удалось запланировать thankyou")
+    res = await fulfill_paid_booking(invoice_id)
+    try:
+        from app.platform.billing_api import _notify_admins
+        await _notify_admins(
+            f"💳 Онлайн-оплата: {amount_rub} ₽\n"
+            f"Телефон: {row['phone'] or '—'}, ученик: {row['student_id'] or '—'}\n"
+            f"Инвойс: {invoice_id}")
+    except Exception:
+        logger.exception("billing: не удалось уведомить админов (инвойс %s)",
+                         invoice_id)
+    if res is not None:
+        status_line = ("запись подтверждена в CRM"
+                       if res.status in ("confirmed", "duplicate")
+                       else f"ВНИМАНИЕ: запись НЕ подтверждена ({res.error})")
+        try:
+            from app.platform.public_api import _notify_staff
+            await _notify_staff(
+                f"✅ Оплаченное пробное #{res.booking_id}: {amount_rub} ₽\n"
+                f"{status_line}")
+        except Exception:
+            logger.exception("billing: не удалось уведомить методиста (инвойс %s)",
+                             invoice_id)
 
 
 def _widget_params(invoice_id: str, price_rub: int, phone: str) -> dict:

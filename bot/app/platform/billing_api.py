@@ -107,36 +107,9 @@ async def _cp_webhook(request: Request, action: str) -> JSONResponse:
         transaction_id = data.get("TransactionId", "")
         is_new, row = billing.mark_paid(invoice_id, transaction_id, data)
         if is_new and row:
-            analytics.track("payment_success", source="cloudpayments",
-                            meta={"invoice_id": invoice_id})
-            amount_rub = round(row["amount_kopecks"] / 100, 2)
-            try:
-                from app.platform import automations
-                automations.schedule_payment_thankyou(
-                    invoice_id=invoice_id, phone=row["phone"], amount_rub=amount_rub)
-            except Exception:
-                logger.exception("billing: не удалось запланировать thankyou")
-            await _notify_admins(
-                f"💳 Онлайн-оплата: {amount_rub} ₽\n"
-                f"Телефон: {row['phone'] or '—'}, ученик: {row['student_id'] or '—'}\n"
-                f"Инвойс: {invoice_id}, транзакция: {transaction_id}\n"
-                f"Отразите оплату в BigBen вручную — API v1 платежи не принимает.")
-            # Платное пробное: если инвойс привязан к записи — подтверждаем
-            # её в CRM (лид + демо-урок) и уведомляем методиста.
-            try:
-                from app.platform import booking as _booking
-                res = await _booking.fulfill_paid_booking(invoice_id)
-                if res is not None:
-                    status_line = ("запись подтверждена в CRM"
-                                   if res.status in ("confirmed", "duplicate")
-                                   else f"ВНИМАНИЕ: запись НЕ подтверждена ({res.error})")
-                    from app.platform.public_api import _notify_staff
-                    await _notify_staff(
-                        f"✅ Оплаченное пробное #{res.booking_id}: {amount_rub} ₽\n"
-                        f"{status_line}")
-            except Exception:
-                logger.exception("billing: fulfill_paid_booking упал (инвойс %s)",
-                                 invoice_id)
+            from app.platform import booking as _booking
+            await _booking.handle_payment_confirmed(
+                invoice_id, source="cloudpayments")
         return JSONResponse({"code": 0})
 
     if action == "fail":
@@ -187,20 +160,8 @@ async def tbank_notification(request: Request) -> JSONResponse:
             return JSONResponse({"error": "amount_mismatch"}, status_code=400)
         is_new, row = billing.mark_paid(invoice_id, str(data.get("PaymentId", "")), data)
         if is_new and row:
-            analytics.track("payment_success", source="tbank",
-                            meta={"invoice_id": invoice_id})
-            amount_rub = round(row["amount_kopecks"] / 100, 2)
-            try:
-                from app.platform import automations
-                automations.schedule_payment_thankyou(
-                    invoice_id=invoice_id, phone=row["phone"], amount_rub=amount_rub)
-            except Exception:
-                logger.exception("billing: не удалось запланировать thankyou")
-            await _notify_admins(
-                f"💳 Онлайн-оплата (Т-Банк): {amount_rub} ₽\n"
-                f"Телефон: {row['phone'] or '—'}, ученик: {row['student_id'] or '—'}\n"
-                f"Инвойс: {invoice_id}, платёж: {data.get('PaymentId')}\n"
-                f"Отразите оплату в BigBen вручную — API v1 платежи не принимает.")
+            from app.platform import booking as _booking
+            await _booking.handle_payment_confirmed(invoice_id, source="tbank")
     elif status in ("REJECTED", "CANCELED", "DEADLINE_EXPIRED"):
         billing.mark_failed(invoice_id, data)
     return JSONResponse({"ok": True})

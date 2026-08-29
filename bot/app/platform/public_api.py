@@ -301,12 +301,15 @@ async def _create_paid_booking(req: "BookingRequest") -> JSONResponse:
             duration_min=duration, comment=req.comment, source=req.source,
             idempotency_key=req.idempotency_key)
     if result.status == "awaiting_payment" and pay:
-        return JSONResponse({
-            "ok": True, "status": "awaiting_payment",
-            "booking_id": result.booking_id,
-            "invoice_id": pay["invoice_id"],
-            "widget": pay["widget"], "amount_rub": pay["amount_rub"],
-        }, status_code=201)
+        resp = {"ok": True, "status": "awaiting_payment",
+                "booking_id": result.booking_id,
+                "invoice_id": pay["invoice_id"],
+                "amount_rub": pay["amount_rub"],
+                "provider": pay.get("provider", "cloudpayments")}
+        for key in ("widget", "payment_url", "sbp_url", "sbp_qr_svg"):
+            if pay.get(key):
+                resp[key] = pay[key]
+        return JSONResponse(resp, status_code=201)
     if result.status == "duplicate":
         return JSONResponse({
             "ok": True, "status": "duplicate", "booking_id": result.booking_id,
@@ -339,23 +342,35 @@ async def booking_status(booking_id: int) -> JSONResponse:
 
 
 async def _refresh_paid_status(row: dict) -> str:
+    """Запасной канал подтверждения оплаты (если вебхук не дошёл): спрашиваем
+    статус напрямую у активного провайдера. Модель доверия та же: paid только
+    по подтверждению провайдера, зачисление идемпотентно."""
     from app.platform import billing
-    model = await billing.cp_find_payment(row["invoice_id"])
-    if not model:
-        return row.get("status")
-    st = str(model.get("Status", ""))
-    if st in ("Completed", "Authorized"):
-        is_new, _pay = billing.mark_paid(
-            row["invoice_id"], str(model.get("TransactionId", "")), model)
+    if settings.BILLING_PROVIDER == "tbank":
+        raw = await billing.tbank_find_payment(row["invoice_id"])
+        if not raw:
+            return row.get("status")
+        st = str(raw.get("Status", ""))
+        paid = st in ("CONFIRMED", "AUTHORIZED")
+        failed = st in ("REJECTED", "CANCELED", "DEADLINE_EXPIRED")
+        txn = str(raw.get("PaymentId", ""))
+    else:
+        raw = await billing.cp_find_payment(row["invoice_id"])
+        if not raw:
+            return row.get("status")
+        st = str(raw.get("Status", ""))
+        paid = st in ("Completed", "Authorized")
+        failed = st in ("Declined", "Cancelled")
+        txn = str(raw.get("TransactionId", ""))
+    if paid:
+        is_new, _pay = billing.mark_paid(row["invoice_id"], txn, raw)
         if is_new:
-            analytics.track("payment_success", source="cloudpayments-poll",
-                            meta={"invoice_id": row["invoice_id"]})
-            res = await booking.fulfill_paid_booking(row["invoice_id"])
-            return res.status if res else row.get("status")
+            await booking.handle_payment_confirmed(
+                row["invoice_id"], source=f"{settings.BILLING_PROVIDER}-poll")
         fresh = await asyncio.to_thread(bb_store.booking_by_id, row["id"])
         return fresh.get("status", row.get("status"))
-    if st in ("Declined", "Cancelled"):
-        billing.mark_failed(row["invoice_id"], model)
+    if failed:
+        billing.mark_failed(row["invoice_id"], raw)
         bb_store.fail_booking(row["id"], f"payment_{st.lower()}")
         return "failed"
     return row.get("status")
