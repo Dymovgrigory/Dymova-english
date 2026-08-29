@@ -64,7 +64,7 @@ async def find_student_by_phone(phone: str) -> dict | None:
 
 async def create_student(*, fio: str, phone: str, parentname: str = "",
                          parent_phone: str = "", filial_id: int | None = None,
-                         comment: str = "") -> dict:
+                         birthday: str = "", comment: str = "") -> dict:
     """Создаёт карточку ученика. Возвращает {"id": ..., "fio": ...}."""
     body = {
         "fio": fio.strip(),
@@ -73,7 +73,7 @@ async def create_student(*, fio: str, phone: str, parentname: str = "",
         "parentname": parentname.strip(),
         "parent_phone": parent_phone,
         "parent_gender": "",
-        "birthday": "",
+        "birthday": birthday or "",
         "ages": None,
         "phone": phone,
         "email": "",

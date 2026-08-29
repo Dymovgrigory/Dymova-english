@@ -1,21 +1,69 @@
-
 <div id="fxb-schedule-page" data-fxb-glow="violet">
-  <div class="fxb-section">
-    <div class="fxb-head">
-      <span class="fxb-eyebrow"><span class="fxb-dot"></span>Расписание</span>
-      <h1 class="fxb-h1">Расписание занятий школы Фоксинбург в Долгопрудном</h1>
-      <h2 class="fxb-h2">Живые группы и <span class="fxb-accent">свободные места</span></h2>
-      <p class="fxb-sub">Данные обновляются автоматически из учётной системы школы. Выберите филиал и день недели — и запишитесь на пробное занятие прямо здесь.</p>
+  <section class="rasp-hero">
+    <div class="rasp-hero-decor rasp-d1"></div>
+    <div class="rasp-hero-decor rasp-d2"></div>
+    <div class="rasp-hero-inner">
+      <span class="rasp-eyebrow"><span class="rasp-dot"></span>Расписание · обновляется автоматически</span>
+      <h1 class="rasp-h1">Расписание занятий <span class="rasp-accent">Фоксинбурга</span><br>в Долгопрудном</h1>
+      <p class="rasp-sub">Живые группы и свободные места — прямо из учётной системы школы. Выберите филиал, педагога и день недели — и запишитесь на пробное занятие за минуту.</p>
+      <div class="rasp-points">
+        <span class="rasp-chip">🟢 Свободные места вживую</span>
+        <span class="rasp-chip">⚡ Запись за 1 минуту</span>
+        <span class="rasp-chip">💳 Оплата по СБП или картой</span>
+      </div>
     </div>
+  </section>
 
+  <div class="rasp-body">
     <!-- Живой виджет: группы, свободные места и запись на пробное занятие.
          Источник данных — BigBen CRM через платформенный API бота
          (обновление каждые 15 минут). Скрипт сам находит #fxb-schedule. -->
     <div id="fxb-schedule" role="region" aria-label="Расписание групп"></div>
     <script src="https://bot.dymova-english.ru/widget/fxb-schedule.js?v=20260829" defer></script>
 
-    <div class="fxb-note" style="margin-top:24px;text-align:center">
+    <div class="rasp-note">
       <p>Не нашли удобное время? <a href="/kontakty">Напишите нам</a> — подберём группу или откроем новую при наборе.</p>
     </div>
   </div>
 </div>
+
+<style>
+#fxb-schedule-page{--purple:#392852;--purple-2:#662d92;--yellow:#fcf951;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+#fxb-schedule-page *{box-sizing:border-box}
+
+/* ---------- HERO ---------- */
+.rasp-hero{position:relative;overflow:hidden;color:#fff;text-align:center;
+  background:linear-gradient(165deg,#1e1433 0%,var(--purple) 30%,var(--purple-2) 75%,#7a3db0 100%);
+  padding:clamp(44px,7vw,76px) 24px clamp(52px,7vw,84px)}
+.rasp-hero-decor{position:absolute;border-radius:50%;pointer-events:none;filter:blur(70px)}
+.rasp-d1{width:420px;height:420px;right:-120px;top:-140px;background:rgba(252,249,81,.14)}
+.rasp-d2{width:360px;height:360px;left:-110px;bottom:-140px;background:rgba(124,58,237,.35)}
+.rasp-hero-inner{position:relative;z-index:1;max-width:820px;margin:0 auto}
+.rasp-eyebrow{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:12.5px;
+  letter-spacing:.15em;text-transform:uppercase;background:rgba(255,255,255,.14);
+  padding:9px 18px;border-radius:100px;margin-bottom:22px;backdrop-filter:blur(4px)}
+.rasp-dot{width:7px;height:7px;border-radius:50%;background:var(--yellow);
+  box-shadow:0 0 0 4px rgba(252,249,81,.28)}
+.rasp-h1{font-weight:900;font-size:clamp(28px,4.6vw,48px);line-height:1.1;
+  margin:0 0 18px;letter-spacing:-.02em;text-shadow:0 2px 20px rgba(0,0,0,.2)}
+.rasp-accent{position:relative;white-space:nowrap;color:var(--yellow)}
+.rasp-sub{font-size:clamp(15px,1.6vw,17.5px);font-weight:500;line-height:1.6;
+  color:rgba(255,255,255,.88);max-width:640px;margin:0 auto 26px}
+.rasp-points{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.rasp-chip{font-size:13.5px;font-weight:700;color:#fff;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);
+  padding:9px 16px;border-radius:100px;backdrop-filter:blur(4px)}
+
+/* ---------- ТЕЛО ---------- */
+.rasp-body{max-width:1180px;margin:0 auto;padding:clamp(28px,4vw,48px) 20px 64px}
+.rasp-note{margin-top:28px;text-align:center;font-size:15px;color:#64748b;
+  background:#f8f6ff;border:1px solid #ece7fb;border-radius:18px;padding:18px 22px}
+.rasp-note p{margin:0}
+.rasp-note a{color:#662d92;font-weight:700;text-decoration:none;border-bottom:1.5px solid rgba(102,45,146,.3)}
+.rasp-note a:hover{border-bottom-color:#662d92}
+@media(max-width:640px){
+  .rasp-hero{padding:36px 18px 44px}
+  .rasp-chip{font-size:12.5px;padding:8px 13px}
+}
+</style>

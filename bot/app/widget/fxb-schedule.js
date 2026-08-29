@@ -79,6 +79,13 @@
     .fxs-qr{display:flex;justify-content:center;margin:14px 0 6px}
     .fxs-qr svg{width:176px;height:176px;border-radius:12px}
     .fxs-qrhint{text-align:center;font-size:12.5px;color:#94a3b8;margin-bottom:8px}
+    .fxs-dates{display:flex;flex-direction:column;gap:8px;max-height:216px;overflow:auto;padding-right:2px}
+    .fxs-date{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:14px;font-size:14.5px;color:#334155;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+    .fxs-date:hover{border-color:#c4b5fd}
+    .fxs-date input{accent-color:#7c3aed;width:18px;height:18px;flex-shrink:0}
+    .fxs-date:has(input:checked){border-color:#7c3aed;background:#f5f3ff;font-weight:600;color:#3b2d66}
+    .fxs-when{font-size:14.5px;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px 14px;margin-bottom:12px}
+    .fxs-field input[type=date]{color-scheme:light}
     .fxs-link{display:block;text-align:center;font-size:14.5px;font-weight:600;color:#7c3aed;text-decoration:none;padding:12px;border-radius:12px;border:1.5px solid #ede9fe;background:#faf8ff;margin-top:8px}
     .fxs-link:hover{border-color:#c4b5fd}
     @media(prefers-reduced-motion:reduce){.fxs-skel{animation:none}.fxs-card{transition:none}}
@@ -280,8 +287,9 @@
   function openBooking(groupId, lessonId) {
     track("group_view", { group_id: Number(groupId) || 0 });
     const g = state.groups.find((x) => String(x.id) === String(groupId));
-    const lesson = state.lessons.find((l) => String(l.lesson_id) === String(lessonId));
-    state.bookingFor = { groupId, lessonId, group: g, lesson };
+    const dates = lessonsFor(Number(groupId)).slice(0, 8);
+    const lesson = state.lessons.find((l) => String(l.lesson_id) === String(lessonId)) || dates[0] || null;
+    state.bookingFor = { groupId, lessonId: lesson ? lesson.lesson_id : "", group: g, lesson, dates };
     state.done = null; state.alternatives = []; state.payInfo = null; state.paying = false;
     renderModal();
   }
@@ -320,11 +328,19 @@
         <div class="fxs-actions"><button class="fxs-btn ghost" data-fxs="close">Закрыть</button></div></div>`;
     } else {
       const price = group && (group.is_event ? group.event_price_rub : group.trial_price_rub);
+      const dates = state.bookingFor.dates || [];
+      const selId = String(state.bookingFor.lessonId);
+      const dateOpts = dates.map((l) => `
+        <label class="fxs-date"><input type="radio" name="lesson_id" value="${l.lesson_id}" ${String(l.lesson_id) === selId ? "checked" : ""}>
+          <span>${esc(fmtWhen(l))}</span></label>`).join("");
+      const today = new Date().toISOString().slice(0, 10);
       ov.innerHTML = `<div class="fxs-modal" role="dialog" aria-modal="true" aria-label="Запись на пробное занятие">
         <h3>${group && group.is_event ? "Запись на мероприятие" : "Запись на пробное занятие"}</h3>
-        <p class="fxs-sub">${esc(group ? group.caption : "")}${lesson ? `<br>🗓 ${esc(fmtWhen(lesson))}` : ""}</p>
+        <p class="fxs-sub">${esc(group ? group.caption : "")}</p>
         ${price ? `<div class="fxs-payinfo">${group && group.is_event ? "Стоимость участия" : "Стоимость пробного занятия"} — <b>${fmtPrice(price)}</b>. Оплата по СБП или картой онлайн, место закрепляется сразу после оплаты.</div>` : ""}
         <form id="fxs-form" novalidate>
+          ${dates.length > 1 ? `<div class="fxs-field"><label>${group && group.is_event ? "Дата мероприятия" : "Удобная дата пробного"}</label><div class="fxs-dates">${dateOpts}</div></div>`
+            : (lesson ? `<div class="fxs-when">🗓 ${esc(fmtWhen(lesson))}</div>` : "")}
           <div class="fxs-field" data-f="parent_name"><label>Имя родителя</label>
             <input name="parent_name" autocomplete="name" placeholder="Как к вам обращаться">
             <div class="fxs-err">Укажите имя</div></div>
@@ -333,8 +349,9 @@
             <div class="fxs-err">Укажите корректный номер</div></div>
           <div class="fxs-field" data-f="child_name"><label>Имя ребёнка</label>
             <input name="child_name" placeholder="Например, Маша"></div>
-          <div class="fxs-field" data-f="child_age"><label>Возраст ребёнка</label>
-            <input name="child_age" inputmode="numeric" placeholder="Например, 8"></div>
+          <div class="fxs-field" data-f="child_birthdate"><label>Дата рождения ребёнка</label>
+            <input name="child_birthdate" type="date" min="2005-01-01" max="${today}">
+            <div class="fxs-err">Укажите дату рождения</div></div>
           <div class="fxs-actions">
             <button type="button" class="fxs-btn ghost" data-fxs="close">Отмена</button>
             <button type="submit" class="fxs-btn" ${state.sending ? "disabled" : ""}>${state.sending ? "Отправляем…" : price ? `Перейти к оплате · ${fmtPrice(price)}` : (group && group.is_event ? "Записаться на мероприятие" : "Записаться")}</button>
@@ -449,6 +466,7 @@
     };
     mark("parent_name", val("parent_name").length >= 2);
     mark("phone", val("phone").replace(/\D/g, "").length >= 10);
+    mark("child_birthdate", /^\d{4}-\d{2}-\d{2}$/.test(val("child_birthdate")));
     if (!ok) return;
 
     state.sending = true; renderModal();
@@ -458,9 +476,9 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         parent_name: val("parent_name"), phone: val("phone"),
-        child_name: val("child_name"), child_age: val("child_age"),
+        child_name: val("child_name"), child_birthdate: val("child_birthdate"),
         group_id: Number(state.bookingFor.groupId),
-        lesson_id: Number(state.bookingFor.lessonId),
+        lesson_id: Number(val("lesson_id") || state.bookingFor.lessonId),
         source: "site-schedule", idempotency_key: idem,
       }),
     });
@@ -490,7 +508,9 @@
     }
   }
 
-  rootEl.addEventListener("click", (e) => {
+  // Клики делегируем на document: модал рендерится в <body>, вне rootEl —
+  // поэтому «Отмена»/«Закрыть» раньше не работали.
+  document.addEventListener("click", (e) => {
     const t = e.target.closest("[data-fxs]");
     if (!t) return;
     const act = t.getAttribute("data-fxs");

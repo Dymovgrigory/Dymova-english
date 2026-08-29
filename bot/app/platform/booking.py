@@ -249,7 +249,8 @@ async def find_alternatives(filial_id: int | None, exclude_group_id: int,
 async def book_trial(*, parent_name: str, phone: str, child_name: str,
                      child_age: str, group_id: int, lesson_id: int,
                      comment: str = "", source: str = "site",
-                     idempotency_key: str | None = None) -> BookingResult:
+                     idempotency_key: str | None = None,
+                     child_birthdate: str = "") -> BookingResult:
     """Полная запись на пробное занятие с anti-race проверкой."""
     idem = idempotency_key or uuid.uuid4().hex
     phone_norm = normalize_phone(phone)
@@ -265,7 +266,7 @@ async def book_trial(*, parent_name: str, phone: str, child_name: str,
         parent_name=parent_name, phone=phone_norm, child_name=child_name,
         child_age=child_age, comment=comment, source=source,
         group_id=group_id, lesson_id=lesson_id, filial_id=filial_id,
-        idempotency_key=idem)
+        idempotency_key=idem, child_birthdate=child_birthdate)
     if is_dup:
         existing = bb_store.booking_by_id(booking_id)
         return BookingResult(booking_id, "duplicate",
@@ -312,7 +313,10 @@ async def fulfill_trial(booking_id: int, *, idem: str, fresh: dict) -> BookingRe
 
     note_parts = [f"Запись на пробное: {fresh.get('caption', group_id)}"]
     if row.get("child_name"):
-        note_parts.append(f"Ребёнок: {row['child_name']}, {row.get('child_age', '')}")
+        bd = row.get("child_birthdate") or ""
+        note_parts.append(f"Ребёнок: {row['child_name']}"
+                          + (f", д.р. {bd}" if bd else
+                             (f", {row['child_age']}" if row.get('child_age') else "")))
     if row.get("comment"):
         note_parts.append(row["comment"])
     note = " | ".join(note_parts)
@@ -328,6 +332,7 @@ async def fulfill_trial(booking_id: int, *, idem: str, fresh: dict) -> BookingRe
                 parentname=row.get("parent_name", ""),
                 parent_phone=row.get("phone", ""),
                 filial_id=row.get("filial_id"),
+                birthday=row.get("child_birthdate", ""),
                 comment=note)
             student_id = student.get("id") if student else None
         except Exception:
@@ -350,7 +355,27 @@ async def fulfill_trial(booking_id: int, *, idem: str, fresh: dict) -> BookingRe
             return BookingResult(booking_id, "failed",
                                  error="Не удалось передать заявку в CRM")
 
-    # --- Демо-урок (от ученика, если есть карточка; иначе от лида) ---
+    is_event = _is_event_group(fresh)
+    if is_event and student_id:
+        # --- Мероприятие: зачисление прямо в список участников (не демо) ---
+        try:
+            await client.enroll_group(
+                student_id, group_id, idempotency_key=f"enroll-{idem}")
+        except BigBenError as exc:
+            bb_store.fail_booking(booking_id, f"enroll_failed: {exc.code} {exc.details}")
+            logger.error("booking %s: ученик %s создан, зачисление не удалось: %s",
+                         booking_id, student_id, exc)
+            return BookingResult(booking_id, "failed", student_id=student_id,
+                                 error="Заявка принята, но запись на мероприятие требует подтверждения менеджером")
+        bb_store.confirm_booking(booking_id, lead_id=None,
+                                 demo_lesson_id=None, student_id=student_id)
+        _bump_occupied(group_id)
+        return BookingResult(booking_id, "confirmed", student_id=student_id)
+    if is_event:
+        logger.warning("booking %s: мероприятие, но нет student_id — только лид",
+                       booking_id)
+
+    # --- Пробное занятие: демо-урок (от ученика, если есть карточка; иначе от лида) ---
     try:
         demo = await client.create_demo_lesson(
             group_id=group_id, lesson_id=lesson_id,
@@ -418,7 +443,8 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
                            source: str = "site",
                            price_rub: int | None = None,
                            description: str = "",
-                           idempotency_key: str | None = None) -> tuple[BookingResult, dict | None]:
+                           idempotency_key: str | None = None,
+                           child_birthdate: str = "") -> tuple[BookingResult, dict | None]:
     """Создаёт запись в ожидании оплаты + инвойс CloudPayments.
 
     Цена — только серверная (по длительности урока). CRM не трогаем до
@@ -444,7 +470,7 @@ async def start_paid_trial(*, parent_name: str, phone: str, child_name: str,
         parent_name=parent_name, phone=phone_norm, child_name=child_name,
         child_age=child_age, comment=comment, source=source,
         group_id=group_id, lesson_id=lesson_id, filial_id=filial_id,
-        idempotency_key=idem)
+        idempotency_key=idem, child_birthdate=child_birthdate)
     if is_dup:
         existing = bb_store.booking_by_id(booking_id)
         inv = existing.get("invoice_id")
@@ -534,8 +560,10 @@ def booking_admin_text(booking_id: int, *, amount_rub: float | None = None) -> s
                 else "пробное занятие")]
     lines.append(f"Родитель: {row.get('parent_name') or '—'}, {row.get('phone') or '—'}")
     if row.get("child_name"):
+        bd = row.get("child_birthdate") or ""
         lines.append(f"Ребёнок: {row['child_name']}"
-                     + (f", {row['child_age']}" if row.get("child_age") else ""))
+                     + (f", д.р. {bd}" if bd else
+                        (f", {row['child_age']}" if row.get("child_age") else "")))
     lines.append(f"Группа: {group.get('caption') or row.get('group_id')}")
     if group.get("filial_caption"):
         lines.append(f"Филиал: {group['filial_caption']}")

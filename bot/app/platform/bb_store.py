@@ -370,21 +370,35 @@ def failed_webhooks(limit: int = 50) -> list[dict]:
 
 # --- bookings ---
 
+def _ensure_booking_columns(conn) -> None:
+    """Миграции bookings: student_id (карточка ученика), child_birthdate."""
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(bookings)")}
+    if "student_id" not in cols:
+        conn.execute("ALTER TABLE bookings ADD COLUMN student_id INTEGER")
+    if "child_birthdate" not in cols:
+        conn.execute("ALTER TABLE bookings ADD COLUMN child_birthdate TEXT NOT NULL DEFAULT ''")
+    conn.commit()
+
+
 def create_booking(*, parent_name: str, phone: str, child_name: str, child_age: str,
                    comment: str, source: str, group_id: int, lesson_id: int,
-                   filial_id: int | None, idempotency_key: str) -> tuple[int, bool]:
+                   filial_id: int | None, idempotency_key: str,
+                   child_birthdate: str = "") -> tuple[int, bool]:
     """Создаёт бронь в pending. (id, is_duplicate) по idempotency_key."""
+    conn = _db()
+    _ensure_booking_columns(conn)
     try:
-        cur = _db().execute(
+        cur = conn.execute(
             "INSERT INTO bookings (created_at, parent_name, phone, child_name, child_age,"
-            " comment, source, group_id, lesson_id, filial_id, idempotency_key)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            " comment, source, group_id, lesson_id, filial_id, idempotency_key,"
+            " child_birthdate)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
             (_now(), parent_name, phone, child_name, child_age, comment, source,
-             group_id, lesson_id, filial_id, idempotency_key))
-        _db().commit()
+             group_id, lesson_id, filial_id, idempotency_key, child_birthdate))
+        conn.commit()
         return int(cur.lastrowid), False
     except sqlite3.IntegrityError:
-        row = _db().execute(
+        row = conn.execute(
             "SELECT id FROM bookings WHERE idempotency_key=?", (idempotency_key,)).fetchone()
         return int(row["id"]), True
 
@@ -500,19 +514,11 @@ def booking_by_id(booking_id: int) -> dict | None:
     return rows[0] if rows else None
 
 
-def _ensure_booking_student_column(conn) -> None:
-    """Миграция: колонка student_id (карточка ученика в CRM)."""
-    cols = {r[1] for r in conn.execute("PRAGMA table_info(bookings)")}
-    if "student_id" not in cols:
-        conn.execute("ALTER TABLE bookings ADD COLUMN student_id INTEGER")
-        conn.commit()
-
-
 def confirm_booking(booking_id: int, *, lead_id: int | None,
                     demo_lesson_id: int | None,
                     student_id: int | None = None) -> None:
     conn = _db()
-    _ensure_booking_student_column(conn)
+    _ensure_booking_columns(conn)
     conn.execute(
         "UPDATE bookings SET status='confirmed', lead_id=?, demo_lesson_id=?,"
         " student_id=?, confirmed_at=?, error='' WHERE id=?",

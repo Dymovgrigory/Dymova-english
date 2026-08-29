@@ -185,6 +185,7 @@ class BookingRequest(BaseModel):
     phone: str = Field(min_length=7, max_length=50)
     child_name: str = Field(default="", max_length=255)
     child_age: str = Field(default="", max_length=20)
+    child_birthdate: str = Field(default="", max_length=10)
     group_id: int = Field(gt=0)
     lesson_id: int = Field(gt=0)
     comment: str = Field(default="", max_length=800)
@@ -207,7 +208,8 @@ async def _create_free_booking(req: "BookingRequest") -> JSONResponse:
         child_name=req.child_name, child_age=req.child_age,
         group_id=req.group_id, lesson_id=req.lesson_id,
         comment=req.comment, source=req.source,
-        idempotency_key=req.idempotency_key)
+        idempotency_key=req.idempotency_key,
+        child_birthdate=req.child_birthdate)
     if result.status == "confirmed":
         analytics.track("booking_completed", source=req.source or "site",
                         meta={"group_id": req.group_id, "booking_id": result.booking_id})
@@ -285,7 +287,8 @@ async def _create_paid_booking(req: "BookingRequest") -> JSONResponse:
             duration_min=duration, comment=req.comment, source=req.source,
             price_rub=int(event_price),
             description=f"Мероприятие: {(bb_store.get_group(req.group_id) or {}).get('caption', '')}",
-            idempotency_key=req.idempotency_key)
+            idempotency_key=req.idempotency_key,
+            child_birthdate=req.child_birthdate)
     elif booking.trial_price_rub(duration) is None:
         # Цена не определена (консультации/нестандарт) — бесплатная запись.
         return await _create_free_booking(req)
@@ -295,7 +298,8 @@ async def _create_paid_booking(req: "BookingRequest") -> JSONResponse:
             child_name=req.child_name, child_age=req.child_age,
             group_id=req.group_id, lesson_id=req.lesson_id,
             duration_min=duration, comment=req.comment, source=req.source,
-            idempotency_key=req.idempotency_key)
+            idempotency_key=req.idempotency_key,
+            child_birthdate=req.child_birthdate)
     if result.status == "awaiting_payment" and pay:
         resp = {"ok": True, "status": "awaiting_payment",
                 "booking_id": result.booking_id,
