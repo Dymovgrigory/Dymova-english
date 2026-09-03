@@ -242,6 +242,19 @@
     "video",
     "games"
    ]
+  },
+  "2026-09-01-canon": {
+   "key": "2026-09-01 · canon",
+   "date": "2026-09-01",
+   "count": 5,
+   "event": "1 сентября в парке",
+   "alt": "Мероприятие Фоксинбурга 1 сентября 2026 в парке Долгопрудного",
+   "tags": [
+    "park",
+    "event",
+    "september"
+   ],
+   "title": "1 сентября в парке"
   }
  },
  "items": [
@@ -5263,6 +5276,121 @@
    "orientation": "landscape",
    "src": "life/no-date-other/фразы.mp4",
    "poster": "life/no-date-other/фразы.poster.webp"
+  },
+  {
+   "id": "2026-09-01-canon/9G6A5102",
+   "type": "image",
+   "series": "2026-09-01-canon",
+   "date": "2026-09-01",
+   "event": "1 сентября в парке",
+   "alt": "Мероприятие Фоксинбурга 1 сентября 2026 в парке Долгопрудного",
+   "tags": [
+    "park",
+    "event",
+    "september"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-09-01-canon/9G6A5102.1600.webp",
+   "srcset": {
+    "900": "life/2026-09-01-canon/9G6A5102.900.webp",
+    "1600": "life/2026-09-01-canon/9G6A5102.1600.webp"
+   }
+  },
+  {
+   "id": "2026-09-01-canon/9G6A5104",
+   "type": "image",
+   "series": "2026-09-01-canon",
+   "date": "2026-09-01",
+   "event": "1 сентября в парке",
+   "alt": "Мероприятие Фоксинбурга 1 сентября 2026 в парке Долгопрудного",
+   "tags": [
+    "park",
+    "event",
+    "september"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-09-01-canon/9G6A5104.1600.webp",
+   "srcset": {
+    "900": "life/2026-09-01-canon/9G6A5104.900.webp",
+    "1600": "life/2026-09-01-canon/9G6A5104.1600.webp"
+   }
+  },
+  {
+   "id": "2026-09-01-canon/9G6A5107",
+   "type": "image",
+   "series": "2026-09-01-canon",
+   "date": "2026-09-01",
+   "event": "1 сентября в парке",
+   "alt": "Мероприятие Фоксинбурга 1 сентября 2026 в парке Долгопрудного",
+   "tags": [
+    "park",
+    "event",
+    "september"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-09-01-canon/9G6A5107.1600.webp",
+   "srcset": {
+    "900": "life/2026-09-01-canon/9G6A5107.900.webp",
+    "1600": "life/2026-09-01-canon/9G6A5107.1600.webp"
+   }
+  },
+  {
+   "id": "2026-09-01-canon/9G6A5119",
+   "type": "image",
+   "series": "2026-09-01-canon",
+   "date": "2026-09-01",
+   "event": "1 сентября в парке",
+   "alt": "Мероприятие Фоксинбурга 1 сентября 2026 в парке Долгопрудного",
+   "tags": [
+    "park",
+    "event",
+    "september"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-09-01-canon/9G6A5119.1600.webp",
+   "srcset": {
+    "900": "life/2026-09-01-canon/9G6A5119.900.webp",
+    "1600": "life/2026-09-01-canon/9G6A5119.1600.webp"
+   }
+  },
+  {
+   "id": "2026-09-01-canon/9G6A5126",
+   "type": "image",
+   "series": "2026-09-01-canon",
+   "date": "2026-09-01",
+   "event": "1 сентября в парке",
+   "alt": "Мероприятие Фоксинбурга 1 сентября 2026 в парке Долгопрудного",
+   "tags": [
+    "park",
+    "event",
+    "september"
+   ],
+   "featured": false,
+   "hero": false,
+   "w": 4000,
+   "h": 6000,
+   "orientation": "portrait",
+   "src": "life/2026-09-01-canon/9G6A5126.1600.webp",
+   "srcset": {
+    "900": "life/2026-09-01-canon/9G6A5126.900.webp",
+    "1600": "life/2026-09-01-canon/9G6A5126.1600.webp"
+   }
   }
  ]
 }
