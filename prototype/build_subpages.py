@@ -396,9 +396,9 @@ FOX_AVATAR = "/assets/brand/fox-head-yellow.webp"
 ENGLISH_TEACHERS = [
     {"name": "Дмитроченко Юлия", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "dmitrochenko.webp", "video": TEAM_MEDIA + "dmitrochenko.mp4", "lesson": TEAM_MEDIA + "dmitrochenko_lesson.mp4"},
     {"name": "Птицын Владислав", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "ptitsyn.webp", "video": TEAM_MEDIA + "ptitsyn.mp4", "lesson": TEAM_MEDIA + "ptitsyn_lesson.mp4"},
-    {"name": "Анохин Роман", "role": "Педагог английского языка", "photo": "/team-media/anokhin.webp"},
+    {"name": "Анохин Роман", "role": "Педагог английского языка", "photo": "/team-media/anokhin.webp", "video": TEAM_MEDIA + "anokhin.mp4"},
     {"name": "Саляхова Алина", "role": "Педагог английского и немецкого языков", "photo": TEAM_MEDIA + "salyahova.webp", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
-    {"name": "Спорыхина Анастасия", "role": "Педагог английского и испанского языков", "photo": TEAM_MEDIA + "sporyhina.webp"},
+    {"name": "Спорыхина Анастасия", "role": "Педагог английского и испанского языков", "photo": TEAM_MEDIA + "sporyhina.webp", "video": TEAM_MEDIA + "sporyhina.mp4"},
     {"name": "Прокудина Мария", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "prokudina.webp", "video": TEAM_MEDIA + "prokudina.mp4"},
     {"name": "Виноградова Анна", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "vinogradova.webp", "video": TEAM_MEDIA + "vinogradova.mp4"},
 ]
@@ -409,7 +409,10 @@ CHINESE_TEACHERS = [
     {"name": "Шевченко Дарья", "role": "Педагог китайского языка", "photo": TEAM_MEDIA + "shevchenko.webp", "video": TEAM_MEDIA + "shevchenko.mp4"},
 ]
 SPANISH_TEACHERS = [
-    {"name": "Спорыхина Анастасия", "role": "Педагог английского и испанского языков", "photo": TEAM_MEDIA + "sporyhina.webp"},
+    {"name": "Спорыхина Анастасия", "role": "Педагог английского и испанского языков", "photo": TEAM_MEDIA + "sporyhina.webp", "video": TEAM_MEDIA + "sporyhina.mp4"},
+]
+PREP_TEACHERS = [
+    {"name": "Кальченко Анастасия", "role": "Педагог по подготовке к школе", "photo": TEAM_MEDIA + "kalchenko.webp", "video": TEAM_MEDIA + "kalchenko.mp4"},
 ]
 
 
@@ -1484,7 +1487,7 @@ PAGES["page_preparation.html"] = {
         ("group", "Мини-группы", "Внимание каждому ребёнку"),
         ("chart", "Видимый прогресс", "Регулярные отчёты родителям"),
     ],
-    "teachers": ENGLISH_TEACHERS,
+    "teachers": PREP_TEACHERS,
     "prices": True,
     "price_title": "Стоимость занятий",
     "price_lead": "Подготовка к школе и занятия по общим предметам (математика, русский язык, чтение) — 7 000 ₽/мес.",
@@ -2423,6 +2426,10 @@ PAGES["page_meropriyatiya.html"] = {
                 series="2026-08-15-canon", limit=6,
                 title="Мероприятие в парке", kicker="Август 2026 · Долгопрудный",
                 light=True,
+            ),
+            media_library.media_wall(
+                series="2026-09-01-canon", limit=6,
+                title="1 сентября в парке", kicker="1 сентября 2026 · Долгопрудный",
             ),
         ),
     ],
