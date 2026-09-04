@@ -138,6 +138,26 @@ PAGE_ALIASES = {
     "page_blog_halloween_rozhdestvo_foxinburg.html": "blog-halloween-rozhdestvo-foxinburg",
 }
 
+# Новые страницы сессии 2026-09-03: geo + словарь + блог/новости
+for _a in [
+    "geo/himki", "geo/moskva-sao", "geo/hlebnikovo",
+    "english-words/professii", "english-words/odezhda", "english-words/pogoda",
+    "english-words/transport", "english-words/dom", "english-words/sport",
+    "blog-chto-dolzhen-umet-rebenok-pered-1-klassom", "blog-kak-nauchit-rebenka-chitat-po-slogam",
+    "blog-schet-do-20-kak-gotovit-doma", "blog-razvitie-rechi-pered-shkoloj",
+    "blog-podgotovka-ruki-k-pismu", "blog-psihologicheskaya-gotovnost-k-shkole",
+    "blog-ispanskij-dlya-detej-s-chego-nachat", "blog-kitajskij-s-nulya-tony-i-ieroglify",
+    "blog-nemeckij-dlya-shkolnikov", "blog-ispanskij-ili-nemeckij-vtorym-yazykom",
+    "blog-kitajskij-dlya-vzroslyh", "blog-ispanskij-dlya-puteshestvij",
+    "blog-probely-po-anglijskomu-5-klass", "blog-probely-po-russkomu-3-klass",
+    "blog-anglijskij-s-nositelem-kogda-nuzhen", "blog-vtoroj-inostrannyj-kogda-nachinat",
+    "blog-kak-vybrat-kruzhok-rebenku", "blog-repetitor-nachalnoj-shkoly-kogda-nuzhen",
+    "blog-kak-ne-poteryat-anglijskij-v-techenie-goda", "blog-god-podgotovki-k-ege-plan",
+    "novosti-1-sentyabrya-v-parke-2026", "novosti-raspisanie-na-sentyabr-2026",
+    "novosti-novye-gruppy-2026", "novosti-dognat-programmu-posle-leta",
+]:
+    PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
+
 # Статьи уже несут собственную Article+BreadcrumbList JSON-LD внутри себя
 # (article_jsonld() в build_subpages.py) — им из seo_schema/ ничего не
 # добавляем, чтобы не задвоить разметку.
