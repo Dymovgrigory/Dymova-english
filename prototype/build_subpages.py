@@ -3853,7 +3853,9 @@ def make_words_page(page_key, alias, slug, theme_ru, theme_ru_rod, h1, sub, desc
     other_topics = [
         (t_slug, t_name) for t_slug, t_name in [
             ("zhivotnye", "Животные"), ("eda", "Еда"), ("shkola", "Школа"),
-            ("semya", "Семья"), ("tsveta", "Цвета"),
+            ("semya", "Семья"), ("tsveta", "Цвета"), ("professii", "Профессии"),
+            ("odezhda", "Одежда"), ("pogoda", "Погода"), ("transport", "Транспорт"),
+            ("dom", "Дом"), ("sport", "Спорт"),
         ] if t_slug != slug
     ]
     other_html = "".join(
@@ -4148,20 +4150,20 @@ PAGES["page_english_words.html"] = {
     "hero_grad": "linear-gradient(135deg,#241a36 0%,#392852 55%,#662d92 100%)",
     "eyebrow": "Словарь · бесплатно · для детей и родителей",
     "h1": 'Английские слова по темам: <span class="fxb-accent">словарь</span> для детей',
-    "sub": "Тематические подборки английских слов с транскрипцией, переводом и примерами: животные, еда, школа, семья и цвета. Уровень A1 — идеально для старта.",
+    "sub": "Тематические подборки английских слов с транскрипцией, переводом и примерами: животные, еда, школа, семья, цвета, профессии, одежда, погода, транспорт, дом и спорт. Уровень A1 — идеально для старта.",
     "cta_label": "Бесплатная диагностика",
     "feat_kicker": "Как это работает",
     "feat_title": "Учим слова темами, а не списками",
     "feat_lead": "Тематический словарь связывает слова в сетку: «животные» легко превращаются в рассказ про питомца, «еда» — в заказ в кафе. Так лексика переходит в активный запас.",
     "features": [
-        ("book", "5 тем, 140+ слов", "Животные, еда, школа, семья, цвета — базовая лексика уровня A1 с переводом."),
+        ("book", "11 тем, 320+ слов", "Животные, еда, школа, семья, цвета, профессии, одежда, погода, транспорт, дом и спорт — базовая лексика уровня A1 с переводом."),
         ("chat", "Транскрипция у каждого слова", "Родитель без языкового опыта прочитает слово правильно и поможет ребёнку."),
         ("chat", "Примеры с переводом", "Каждое слово — в коротком живом предложении: сразу понятно, как его использовать."),
         ("target", "План на неделю", "По 5–7 слов в день тема осваивается за неделю — с играми и интервальными повторами."),
     ],
     "facts_title": "Коротко о словаре",
     "facts": [
-        ("book", "140+ слов", "5 базовых тем"),
+        ("book", "320+ слов", "11 базовых тем"),
         ("check", "A1", "Начальный уровень"),
         ("clock", "7 дней на тему", "По 5–7 слов в день"),
         ("star", "Бесплатно", "Без регистрации"),
@@ -4175,7 +4177,13 @@ PAGES["page_english_words.html"] = {
         '<li><a href="/english-words/eda"><b>Еда</b></a> — 29 слов: от bread и milk до pizza и ice cream;</li>'
         '<li><a href="/english-words/shkola"><b>Школа</b></a> — 29 слов: от pen и book до timetable и homework;</li>'
         '<li><a href="/english-words/semya"><b>Семья</b></a> — 29 слов: от mum и dad до niece и grandson;</li>'
-        '<li><a href="/english-words/tsveta"><b>Цвета</b></a> — 25 слов: от red и blue до turquoise и rainbow.</li>'
+        '<li><a href="/english-words/tsveta"><b>Цвета</b></a> — 25 слов: от red и blue до turquoise и rainbow;</li>'
+        '<li><a href="/english-words/professii"><b>Профессии</b></a> — 30 слов: от doctor и teacher до engineer и artist;</li>'
+        '<li><a href="/english-words/odezhda"><b>Одежда</b></a> — 30 слов: от shirt и dress до jacket и boots;</li>'
+        '<li><a href="/english-words/pogoda"><b>Погода</b></a> — 30 слов: от sun и rain до storm и hail;</li>'
+        '<li><a href="/english-words/transport"><b>Транспорт</b></a> — 30 слов: от car и bus до ferry и helicopter;</li>'
+        '<li><a href="/english-words/dom"><b>Дом</b></a> — 30 слов: от room и door до garden и roof;</li>'
+        '<li><a href="/english-words/sport"><b>Спорт</b></a> — 30 слов: от ball и run до swimming и football.</li>'
         "</ul>"
         "<h2>Как учить слова, чтобы они не забывались</h2>"
         "<p>Три правила, которые работают у детей и взрослых: мало, но каждый день (5–7 слов вместо списка раз в неделю); слово сразу в предложение про свою жизнь; повтор с нарастающими интервалами. Полный разбор приёмов — в статье «<a href=\"/blog-kak-vyuchit-anglijskie-slova-bystro\">Как быстро учить английские слова: 7 рабочих способов</a>».</p>"
@@ -6936,6 +6944,21 @@ BLOG_POSTS_NEW = [BLOG_POST_20, BLOG_POST_19, BLOG_POST_18, BLOG_POST_17, BLOG_P
 BLOG_POSTS_NEW3 = [BLOG_POST_21, BLOG_POST_22, BLOG_POST_23, BLOG_POST_24, BLOG_POST_25,
                    BLOG_POST_26, BLOG_POST_27, BLOG_POST_28, BLOG_POST_29, BLOG_POST_30]
 
+# ----- контент-модули сессии 2026-09-03 (geo, словарь, подготовка, языки, новости) -----
+import pages_geo2
+import pages_words2  # регистрирует 6 новых тем словаря в PAGES при импорте
+import pages_prep
+import pages_lang_news
+
+pages_geo2.register_geo()
+pages_prep.register_prep_sections()
+
+EXTRA_BLOG_POSTS = pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_NEWS_POSTS = pages_lang_news.NEWS2_POSTS
+
+for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
+    PAGES["page_" + _post["alias"].replace("-", "_") + ".html"] = _post
+
 PAGES["page_blog.html"] = {
     "type": "feed",
     "hero_grad": "linear-gradient(135deg,#241a36 0%,#392852 55%,#662d92 100%)",
@@ -6949,7 +6972,7 @@ PAGES["page_blog.html"] = {
                   '<b>«Учим английский»</b> — чтение, говорение и домашняя практика; <b>«Экзамены»</b> — ВПР, ОГЭ и ЕГЭ без паники; '
                   '<b>«Школа и учёба»</b> — подготовка к школе и поддержка по школьной программе. '
                   'Короткие новости и анонсы школы живут в разделе <a href="/novosti">«Новости»</a>.</p>',
-    "articles": [BLOG_POST_35, BLOG_POST_34, BLOG_POST_33, BLOG_POST_32, BLOG_POST_31] + BLOG_POSTS_NEW3 + BLOG_POSTS_NEW + BLOG_POSTS,
+    "articles": EXTRA_BLOG_POSTS + [BLOG_POST_35, BLOG_POST_34, BLOG_POST_33, BLOG_POST_32, BLOG_POST_31] + BLOG_POSTS_NEW3 + BLOG_POSTS_NEW + BLOG_POSTS,
     "extra_jsonld": [
         webpage_jsonld(
             "CollectionPage",
@@ -7009,7 +7032,7 @@ PAGES["page_novosti.html"] = {
     "sub": "Полезные материалы для родителей, разборы экзаменов и новости о наших программах. Всё, что помогает ориентироваться в обучении и выбирать подходящий курс.",
     "lead": "Последние публикации Фоксинбурга — о языке, школе и летних программах.",
     "intro_html": '<p class="fxb-lead">Большие практические разборы для родителей — о выборе программы, уровне, экзаменах и учёбе — теперь живут в нашем <a href="/blog">блоге</a>. Здесь — короткие новости и анонсы школы.</p>',
-    "articles": [NEWS_POST_15, NEWS_POST_14, NEWS_POST_13, NEWS_POST_12, NEWS_POST_11, NEWS_POST_10, NEWS_POST_9, NEWS_POST_8, NEWS_POST_7, NEWS_POST_6, NEWS_POST_5, NEWS_POST_4, NEWS_POST_3, NEWS_POST_2, NEWS_POST_1],
+    "articles": EXTRA_NEWS_POSTS + [NEWS_POST_15, NEWS_POST_14, NEWS_POST_13, NEWS_POST_12, NEWS_POST_11, NEWS_POST_10, NEWS_POST_9, NEWS_POST_8, NEWS_POST_7, NEWS_POST_6, NEWS_POST_5, NEWS_POST_4, NEWS_POST_3, NEWS_POST_2, NEWS_POST_1],
 }
 
 PAGES["page_novosti_so_skolki_let_uchit_anglijskij.html"] = NEWS_POST_1
