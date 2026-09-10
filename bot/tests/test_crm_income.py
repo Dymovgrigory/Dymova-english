@@ -94,25 +94,52 @@ def _paid_booking(monkeypatch, calls: dict) -> str:
 
 @pytest.mark.asyncio
 async def test_confirmed_payment_lands_in_crm_income(client, monkeypatch):
-    """Подтверждённая оплата → счёт + доход в кассе, без участия менеджера."""
+    """Подтверждённая оплата → доход в кассе, без участия менеджера."""
     _seed()
     calls: dict = {}
     invoice = _paid_booking(monkeypatch, calls)
 
     await booking.handle_payment_confirmed(invoice, source="tbank")
 
-    assert len(calls["payments"]) == 1
     assert len(calls["incomes"]) == 1
-    pay = calls["payments"][0]
-    assert pay["user_id"] == 1197608 and pay["group_id"] == 1
-    assert pay["summ"] == 1125
     inc = calls["incomes"][0]
     assert inc["summ"] == 1125
     assert inc["filial_id"] == 13296
-    assert inc["user_payment_id"] == 23606531
+    assert inc["type_id"] == 1 and inc["bycard"] == 4
     row = billing.get_payment(invoice)
-    assert row["crm_payment_id"] == 23606531
     assert row["crm_income_id"] == 1705976
+
+
+@pytest.mark.asyncio
+async def test_invoice_is_not_created_by_default(client, monkeypatch):
+    """Счёт не создаём: пометить его оплаченным API пульта не умеет, и он
+    висел бы в карточке ученика как долг при уже полученных деньгах."""
+    _seed()
+    calls: dict = {}
+    invoice = _paid_booking(monkeypatch, calls)
+
+    await booking.handle_payment_confirmed(invoice, source="tbank")
+
+    assert calls.get("payments") is None
+    assert billing.get_payment(invoice)["crm_payment_id"] is None
+    assert calls["incomes"][0].get("user_payment_id") is None
+
+
+@pytest.mark.asyncio
+async def test_invoice_created_when_explicitly_enabled(client, monkeypatch):
+    """Флаг на случай, если появится способ проводить оплату по счёту."""
+    _seed()
+    monkeypatch.setattr("app.config.settings.CRM_CREATE_INVOICE", True)
+    calls: dict = {}
+    invoice = _paid_booking(monkeypatch, calls)
+
+    await booking.handle_payment_confirmed(invoice, source="tbank")
+
+    assert len(calls["payments"]) == 1
+    pay = calls["payments"][0]
+    assert pay["user_id"] == 1197608 and pay["group_id"] == 1 and pay["summ"] == 1125
+    assert calls["incomes"][0]["user_payment_id"] == 23606531
+    assert billing.get_payment(invoice)["crm_payment_id"] == 23606531
 
 
 @pytest.mark.asyncio
@@ -125,7 +152,6 @@ async def test_income_is_not_written_twice(client, monkeypatch):
     await booking.handle_payment_confirmed(invoice, source="tbank")
     await booking.record_crm_income(invoice)
 
-    assert len(calls["payments"]) == 1
     assert len(calls["incomes"]) == 1
 
 
@@ -139,12 +165,12 @@ async def test_crm_failure_does_not_break_booking(client, monkeypatch):
     async def _boom(**kw):
         raise bigben_internal.BigBenInternalError("500")
 
-    monkeypatch.setattr(bigben_internal, "create_payment", _boom, raising=False)
+    monkeypatch.setattr(bigben_internal, "create_income", _boom, raising=False)
 
     await booking.handle_payment_confirmed(invoice, source="tbank")
 
     assert bb_store.booking_by_invoice(invoice)["status"] == "confirmed"
-    assert billing.get_payment(invoice)["crm_payment_id"] is None
+    assert billing.get_payment(invoice)["crm_income_id"] is None
 
 
 @pytest.mark.asyncio

@@ -755,7 +755,7 @@ async def record_crm_income(invoice_id: str) -> bool:
             f"{settings.BILLING_PROVIDER} {pay.get('transaction_id') or ''}")
 
     crm_payment_id = pay.get("crm_payment_id")
-    if not crm_payment_id:
+    if settings.CRM_CREATE_INVOICE and not crm_payment_id:
         created = await bigben_internal.create_payment(
             user_id=row["student_id"], group_id=row["group_id"], summ=summ,
             bycard=settings.CRM_INCOME_BYCARD, date=paid_at, comment=note)
