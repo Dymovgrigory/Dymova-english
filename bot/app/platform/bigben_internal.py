@@ -119,12 +119,20 @@ async def find_or_create_student(**kwargs) -> dict:
 #     bycard, date). Именно эта запись видна как оплата в Public API v1;
 #     внутреннее поле summ_paid CRM для признания оплаты не использует
 #     (у платежей, заведённых самим пультом, оно тоже 0.00).
-#   POST /user/incomes — поступление в кассу (type_id, summ, bycard,
-#     filial_id); связывается со счётом через user_payment_id.
+#   POST /user/payments/{id}/full — провести счёт как полностью оплаченный.
+#     CRM сама создаёт при этом доход в кассе с тем же способом оплаты и
+#     привязкой к счёту — писать доход отдельно НЕЛЬЗЯ, деньги задвоятся.
+#     (Маршрут найден в бандле пульта: StudentPaymentCreateModal.)
+#   POST /user/payments/{id}/partial — частичная оплата (summ_paid,
+#     lessons_balance_paid, paydate, from_user_balance).
+#   POST /user/incomes — поступление в кассу напрямую (type_id, summ,
+#     bycard, filial_id). Нужен, только если счёта нет.
 #
 # Коды подтверждены на живых данных школы:
-#   bycard: 0 — наличные, 4 — из приложения (онлайн), 7 — расчётный счёт,
-#           10 — другое;
+#   bycard (/user/incomes/payment-methods): 0 — наличными, 1 — терминал,
+#           2 — онлайн, 3 — в рассрочку, 4 — из приложения, 5 — на сайте,
+#           6 — с карты на карту, 7 — на расчётный счёт, 10 — другое,
+#           100 — Р/С Сбербанк, 101 — Р/С Альфа банк;
 #   type_id (доход): 1 — оплата обучения, 2 — продажа УМК, 10 — внесение
 #           наличных, 11 — другое, 12 — орг. взнос.
 
@@ -166,3 +174,22 @@ async def create_income(*, type_id: int, summ: int, bycard: int,
     if not income.get("id"):
         raise BigBenInternalError(f"доход не создан: {data!r}"[:200])
     return income
+
+
+async def settle_payment_full(*, payment_id: int, paydate: str) -> dict:
+    """Проводит счёт как полностью оплаченный.
+
+    CRM сама создаёт доход в кассе (способ оплаты берёт из счёта, привязка —
+    user_payment_id). Поэтому после успешного вызова доход руками НЕ писать.
+
+    from_user_balance=False: деньги пришли извне (эквайринг), а не списаны
+    с кошелька ученика.
+    """
+    return await _request("POST", f"/user/payments/{payment_id}/full",
+                          json_body={"paydate": paydate,
+                                     "from_user_balance": False})
+
+
+async def delete_payment(*, payment_id: int) -> dict:
+    """Отменяет счёт. ВНИМАНИЕ: каскадно отменяет и связанный доход."""
+    return await _request("DELETE", f"/user/payments/{payment_id}")

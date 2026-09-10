@@ -716,14 +716,18 @@ async def fulfill_paid_booking(invoice_id: str) -> BookingResult | None:
 
 
 async def record_crm_income(invoice_id: str) -> bool:
-    """Счёт ученика + поступление в кассу CRM по подтверждённой оплате.
+    """Счёт ученика в CRM, сразу проведённый как оплаченный.
 
     Public API v1 деньги только читает, поэтому пишем через внутренний API
-    пульта. Идемпотентно по crm_payment_id/crm_income_id: повторная
-    обработка инвойса деньги в кассе не задваивает.
+    пульта: создаём счёт и проводим его (`/full`). Доход в кассу создаёт
+    сама CRM при проведении — писать его отдельно нельзя, деньги задвоятся.
 
-    Сбой здесь не отменяет запись клиента — деньги уже получены, а карточку
-    оплаты менеджер заведёт руками по уведомлению.
+    Идемпотентно по crm_payment_id: повторная обработка инвойса второй счёт
+    не создаст. Если провести не удалось, счёт удаляем — неоплаченный счёт
+    выглядит в карточке как долг, хотя деньги школа уже получила.
+
+    Сбой здесь не отменяет запись клиента: оплату менеджер заведёт руками
+    по уведомлению.
     """
     from app.platform import bigben_internal, billing
     if not (settings.CRM_AUTO_INCOME_ENABLED and bigben_internal.configured()):
@@ -731,44 +735,42 @@ async def record_crm_income(invoice_id: str) -> bool:
     pay = billing.get_payment(invoice_id)
     if pay is None or pay.get("status") != "paid":
         return False
-    if pay.get("crm_income_id"):
-        return False  # уже в кассе
+    if pay.get("crm_payment_id"):
+        return False  # уже в CRM
 
     row = bb_store.booking_by_invoice(invoice_id)
     if row is None or not row.get("student_id"):
         # Без карточки ученика счёт привязать не к кому: заявка ушла лидом,
         # менеджер оформит оплату вместе с карточкой.
-        logger.info("booking: доход по инвойсу %s без карточки ученика — "
+        logger.info("booking: оплата по инвойсу %s без карточки ученика — "
                     "оставляем менеджеру", invoice_id)
         return False
 
     summ = round(pay["amount_kopecks"] / 100)
-    group = bb_store.get_group(row.get("group_id") or 0) or {}
-    filial_id = row.get("filial_id") or group.get("filial_id")
-    if not filial_id:
-        logger.warning("booking: доход по инвойсу %s без филиала — пропуск",
-                       invoice_id)
-        return False
     paid_at = (pay.get("paid_at") or "")[:19].replace("T", " ") or _now_msk()
     note = (f"Оплата с сайта: {pay.get('description') or 'занятие'} / "
             f"{row.get('parent_name', '')}, {row.get('child_name', '')} / "
             f"{settings.BILLING_PROVIDER} {pay.get('transaction_id') or ''}")
 
-    crm_payment_id = pay.get("crm_payment_id")
-    if settings.CRM_CREATE_INVOICE and not crm_payment_id:
-        created = await bigben_internal.create_payment(
-            user_id=row["student_id"], group_id=row["group_id"], summ=summ,
-            bycard=settings.CRM_INCOME_BYCARD, date=paid_at, comment=note)
-        crm_payment_id = created["payment_id"]
-        billing.set_crm_refs(invoice_id, payment_id=crm_payment_id)
+    created = await bigben_internal.create_payment(
+        user_id=row["student_id"], group_id=row["group_id"], summ=summ,
+        bycard=settings.CRM_INCOME_BYCARD, date=paid_at, comment=note)
+    crm_payment_id = created["payment_id"]
+    try:
+        await bigben_internal.settle_payment_full(
+            payment_id=crm_payment_id, paydate=paid_at)
+    except Exception:
+        # Счёт создан, но не проведён — он выглядел бы как долг ученика.
+        logger.exception("booking: счёт %s не проведён, удаляем", crm_payment_id)
+        try:
+            await bigben_internal.delete_payment(payment_id=crm_payment_id)
+        except Exception:
+            logger.exception("booking: не удалось удалить счёт %s", crm_payment_id)
+        raise
 
-    income = await bigben_internal.create_income(
-        type_id=settings.CRM_INCOME_TYPE_ID, summ=summ,
-        bycard=settings.CRM_INCOME_BYCARD, filial_id=filial_id,
-        user_payment_id=crm_payment_id, comment=note)
-    billing.set_crm_refs(invoice_id, income_id=income["id"])
-    logger.info("booking: оплата %s ₽ записана в CRM (счёт %s, доход %s)",
-                summ, crm_payment_id, income["id"])
+    billing.set_crm_refs(invoice_id, payment_id=crm_payment_id)
+    logger.info("booking: оплата %s ₽ проведена в CRM (счёт %s)",
+                summ, crm_payment_id)
     return True
 
 
