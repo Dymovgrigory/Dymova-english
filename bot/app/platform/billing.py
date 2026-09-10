@@ -51,7 +51,34 @@ def _db() -> sqlite3.Connection:
     from app.platform import bb_store  # та же база, что и read-model
     conn = bb_store._db()
     conn.executescript(_SCHEMA)
+    _ensure_crm_columns(conn)
     return conn
+
+
+def _ensure_crm_columns(conn: sqlite3.Connection) -> None:
+    """Ссылки на созданные в CRM счёт и доход — защита от повторной записи
+    денег в кассу при любой повторной обработке инвойса."""
+    if getattr(_local, "crm_columns_ready", None) is conn:
+        return
+    _local.crm_columns_ready = conn
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(billing_payments)")}
+    if "crm_payment_id" not in cols:
+        conn.execute("ALTER TABLE billing_payments ADD COLUMN crm_payment_id INTEGER")
+    if "crm_income_id" not in cols:
+        conn.execute("ALTER TABLE billing_payments ADD COLUMN crm_income_id INTEGER")
+    conn.commit()
+
+
+def set_crm_refs(invoice_id: str, *, payment_id: int | None = None,
+                 income_id: int | None = None) -> None:
+    db = _db()
+    if payment_id is not None:
+        db.execute("UPDATE billing_payments SET crm_payment_id=? WHERE invoice_id=?",
+                   (payment_id, invoice_id))
+    if income_id is not None:
+        db.execute("UPDATE billing_payments SET crm_income_id=? WHERE invoice_id=?",
+                   (income_id, invoice_id))
+    db.commit()
 
 
 def _now() -> str:
@@ -209,6 +236,10 @@ class TBankProvider:
         params = {
             "Amount": amount_kopecks,
             "OrderId": invoice_id,
+            # Одностадийная оплата: деньги списываются сразу. Двухстадийная
+            # оставила бы холд, требующий отдельного Confirm, — место было бы
+            # занято под деньги, которые школа ещё не получила.
+            "PayType": "O",
             "Description": (description or settings.CLOUDPAYMENTS_DESCRIPTION)[:140],
             "Receipt": self._receipt(amount_kopecks=amount_kopecks,
                                      phone=phone, description=description),
@@ -334,7 +365,10 @@ async def fetch_remote_state(invoice_id: str) -> tuple[str, str, dict] | None:
             return None
         status = str(raw.get("Status", ""))
         txn = str(raw.get("PaymentId", ""))
-        paid = status in ("CONFIRMED", "AUTHORIZED")
+        # Только CONFIRMED: AUTHORIZED — это холд на карте, деньги ещё не
+        # списаны и могут не списаться. Оплату инициируем одностадийной
+        # (PayType=O), так что штатно холд и не возникает.
+        paid = status == "CONFIRMED"
         failed = status in ("REJECTED", "CANCELED", "DEADLINE_EXPIRED")
     else:
         raw = await cp_find_payment(invoice_id)

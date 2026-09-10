@@ -256,3 +256,63 @@ def test_receipt_taxation_matches_patent(monkeypatch):
 
     assert receipt["Taxation"] == "patent"
     assert receipt["Items"][0]["Tax"] == "none"
+
+
+@pytest.mark.asyncio
+async def test_authorized_is_not_treated_as_paid(client, monkeypatch):
+    """AUTHORIZED — деньги лишь заблокированы на карте, не списаны.
+    Записывать бронь по холду нельзя: холд может не превратиться в списание."""
+    _seed()
+    crm = _crm(monkeypatch)
+    booking_id = _awaiting(monkeypatch)
+    _state(monkeypatch, "AUTHORIZED")
+
+    stats = await reconcile.reconcile_pending_payments()
+
+    assert stats["confirmed"] == 0
+    assert bb_store.booking_by_id(booking_id)["status"] == "awaiting_payment"
+    assert billing.get_payment("inv-1")["status"] == "created"
+    assert crm["demo"] == 0
+
+
+def test_init_requests_one_stage_payment(monkeypatch):
+    """Одностадийная оплата (PayType=O): деньги списываются сразу, без
+    отдельного Confirm — иначе холд повиснет, а место будет занято."""
+    import asyncio
+
+    import httpx as _httpx
+
+    monkeypatch.setattr("app.config.settings.TBANK_ENABLED", True)
+    monkeypatch.setattr("app.config.settings.TBANK_TERMINAL_KEY", "term")
+    monkeypatch.setattr("app.config.settings.TBANK_PASSWORD", "pwd")
+    monkeypatch.setattr("app.config.settings.BILLING_PROVIDER", "tbank")
+    sent = {}
+
+    class _Client:
+        def __init__(self, **kw):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *a):
+            return False
+
+        async def post(self, url, json=None):
+            method = url.rsplit("/", 1)[-1]
+            sent.setdefault(method, json)
+
+            class _R:
+                @staticmethod
+                def json():
+                    if method == "Init":
+                        return {"Success": True, "PaymentId": 1,
+                                "PaymentURL": "https://pay"}
+                    return {"Success": True, "Data": "x"}
+            return _R()
+
+    monkeypatch.setattr(_httpx, "AsyncClient", _Client)
+    asyncio.run(billing.TBankProvider().create_invoice(
+        amount_kopecks=112500, phone="+79000000000", description="Пробное"))
+
+    assert sent["Init"]["PayType"] == "O"

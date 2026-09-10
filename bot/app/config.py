@@ -165,6 +165,16 @@ class Settings(BaseSettings):
     BILLING_RECONCILE_INTERVAL_MIN: int = 5
     BILLING_RECONCILE_MAX_AGE_HOURS: int = 168
 
+    # Автоматическая запись подтверждённой онлайн-оплаты в CRM (счёт ученика
+    # + поступление в кассу) через внутренний API пульта: Public API v1
+    # деньги только читает. Требует BIGBEN_INTERNAL_TOKEN.
+    CRM_AUTO_INCOME_ENABLED: bool = True
+    # Тип дохода: 1 — «Оплата обучения» (справочник /user/incomes/types).
+    CRM_INCOME_TYPE_ID: int = 1
+    # Способ оплаты: 4 — «Из приложения» (онлайн-эквайринг), как у платежей
+    # мобильного приложения школы. 0 — наличные, 7 — расчётный счёт.
+    CRM_INCOME_BYCARD: int = 4
+
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""
     SENTRY_ENVIRONMENT: str = ""
