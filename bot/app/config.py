@@ -152,9 +152,18 @@ class Settings(BaseSettings):
     TBANK_CA_BUNDLE: str = ""
     # Фискальный чек (терминал требует Receipt в каждом Init): система
     # налогообложения школы, ставка НДС и запасной email, если нет телефона.
-    TBANK_TAXATION: str = "usn_income"
+    # ИП школы — на патенте, плательщиком НДС не является: Taxation=patent,
+    # Tax=none («без НДС»). НДС в банковском ордере относится к комиссии
+    # эквайера — это налог банка, к чеку школы отношения не имеет.
+    TBANK_TAXATION: str = "patent"
     TBANK_ITEM_TAX: str = "none"
     TBANK_RECEIPT_EMAIL: str = ""
+
+    # Фоновая сверка оплат: единственный канал подтверждения, не зависящий
+    # ни от браузера клиента, ни от настроек нотификаций в ЛК банка.
+    BILLING_RECONCILE_ENABLED: bool = True
+    BILLING_RECONCILE_INTERVAL_MIN: int = 5
+    BILLING_RECONCILE_MAX_AGE_HOURS: int = 168
 
     # --- Интеграции разработки и наблюдаемости ---
     SENTRY_DSN: str = ""
