@@ -682,6 +682,9 @@ async def platform_alerts(request: Request) -> dict:
     if not settings.CLOUDPAYMENTS_ENABLED:
         alerts.append({"level": "info", "code": "payments_disabled",
                        "text": "Онлайн-оплата (CloudPayments) выключена"})
+    # Деньги получены, а записи в CRM нет — самое дорогое расхождение.
+    from app.platform import reconcile
+    alerts.extend(await reconcile.alerts())
 
     level_order = {"critical": 0, "warning": 1, "info": 2}
     alerts.sort(key=lambda a: level_order.get(a["level"], 3))

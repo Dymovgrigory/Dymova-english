@@ -377,32 +377,20 @@ async def _refresh_paid_status(row: dict) -> str:
     статус напрямую у активного провайдера. Модель доверия та же: paid только
     по подтверждению провайдера, зачисление идемпотентно."""
     from app.platform import billing
-    if settings.BILLING_PROVIDER == "tbank":
-        raw = await billing.tbank_find_payment(row["invoice_id"])
-        if not raw:
-            return row.get("status")
-        st = str(raw.get("Status", ""))
-        paid = st in ("CONFIRMED", "AUTHORIZED")
-        failed = st in ("REJECTED", "CANCELED", "DEADLINE_EXPIRED")
-        txn = str(raw.get("PaymentId", ""))
-    else:
-        raw = await billing.cp_find_payment(row["invoice_id"])
-        if not raw:
-            return row.get("status")
-        st = str(raw.get("Status", ""))
-        paid = st in ("Completed", "Authorized")
-        failed = st in ("Declined", "Cancelled")
-        txn = str(raw.get("TransactionId", ""))
-    if paid:
+    remote = await billing.fetch_remote_state(row["invoice_id"])
+    if remote is None:
+        return row.get("status")
+    state, txn, raw = remote
+    if state == "paid":
         is_new, _pay = billing.mark_paid(row["invoice_id"], txn, raw)
         if is_new:
             await booking.handle_payment_confirmed(
                 row["invoice_id"], source=f"{settings.BILLING_PROVIDER}-poll")
         fresh = await asyncio.to_thread(bb_store.booking_by_id, row["id"])
         return fresh.get("status", row.get("status"))
-    if failed:
+    if state == "failed":
         billing.mark_failed(row["invoice_id"], raw)
-        bb_store.fail_booking(row["id"], f"payment_{st.lower()}")
+        bb_store.fail_booking(row["id"], "payment_failed")
         return "failed"
     return row.get("status")
 

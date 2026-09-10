@@ -153,6 +153,20 @@ async def _group_meta_sync_loop() -> None:
         await asyncio.sleep(max(30, settings.GROUP_META_SYNC_INTERVAL_MIN) * 60)
 
 
+async def _payment_reconcile_loop() -> None:
+    """Сверка оплат с провайдером — деньги не должны теряться, если клиент
+    ушёл со страницы, а нотификация из ЛК банка не пришла."""
+    from app.platform import reconcile
+    while True:
+        try:
+            stats = await reconcile.reconcile_pending_payments()
+            if stats["confirmed"] or stats["failed"] or stats["refulfilled"]:
+                logger.info("reconcile: %s", stats)
+        except Exception:
+            logger.exception("reconcile: ошибка сверки оплат")
+        await asyncio.sleep(max(1, settings.BILLING_RECONCILE_INTERVAL_MIN) * 60)
+
+
 def start() -> list[asyncio.Task]:
     """Запускает фоновые задачи (отчёт + напоминания)."""
     tasks: list[asyncio.Task] = [asyncio.create_task(_purge_loop())]
@@ -170,6 +184,11 @@ def start() -> list[asyncio.Task]:
     else:
         logger.info("site_sync: синхронизация с сайтом выключена (SITE_SYNC_ENABLED=false)")
     tasks.append(asyncio.create_task(_group_meta_sync_loop()))
+    if settings.BILLING_RECONCILE_ENABLED:
+        tasks.append(asyncio.create_task(_payment_reconcile_loop()))
+    else:
+        logger.info("reconcile: сверка оплат выключена "
+                    "(BILLING_RECONCILE_ENABLED=false)")
     if settings.WATCHDOG_ENABLED:
         tasks.append(asyncio.create_task(watchdog.loop()))
     else:

@@ -400,9 +400,15 @@
     });
   }
 
-  async function pollBooking(bookingId, attempts = 15) {
+  // Оплата по СБП/картой уводит человека в приложение банка на минуты, а
+  // фоновую вкладку браузер тормозит — 30 секунд опроса не хватало, и
+  // подтверждение терялось. Держим окно 10 минут; итог всё равно
+  // подтверждает серверная сверка, даже если вкладку закрыли.
+  async function pollBooking(bookingId, attempts = 70) {
     for (let i = 0; i < attempts; i++) {
-      await new Promise((r) => setTimeout(r, 2000));
+      // Частый опрос первую минуту (обычный случай), дальше реже —
+      // каждый опрос дёргает API банка.
+      await new Promise((r) => setTimeout(r, i < 20 ? 3000 : 12000));
       try {
         const { body } = await api(`/booking/${bookingId}`);
         if (body && (body.status === "confirmed" || body.status === "duplicate")) return "confirmed";

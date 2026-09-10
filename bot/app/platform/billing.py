@@ -281,10 +281,12 @@ async def cp_find_payment(invoice_id: str) -> dict | None:
             and settings.CLOUDPAYMENTS_API_SECRET):
         return None
     try:
+        # Только POST: на GET CloudPayments отвечает 200 + Success:false
+        # «Only POST method allowed» — запасной канал молча не работал.
         async with httpx.AsyncClient(timeout=10) as client:
-            resp = await client.get(
+            resp = await client.post(
                 f"{settings.CLOUDPAYMENTS_API_BASE}/payments/find",
-                params={"InvoiceId": invoice_id},
+                json={"InvoiceId": invoice_id},
                 auth=(settings.CLOUDPAYMENTS_PUBLIC_ID,
                       settings.CLOUDPAYMENTS_API_SECRET))
         data = resp.json()
@@ -314,6 +316,35 @@ async def tbank_find_payment(invoice_id: str) -> dict | None:
     if not payment_id:
         return None
     return await TBankProvider().get_state(payment_id)
+
+
+async def fetch_remote_state(invoice_id: str) -> tuple[str, str, dict] | None:
+    """Статус инвойса у активного провайдера, нормализованный.
+
+    Возвращает (state, transaction_id, raw), где state — paid | failed |
+    pending. None — провайдер не ответил или инвойса у него нет: это НЕ
+    «не оплачено», решение откладываем до следующей сверки.
+
+    Единая точка нормализации для всех каналов подтверждения (поллинг из
+    браузера и фоновая сверка), чтобы их трактовки статусов не разъезжались.
+    """
+    if settings.BILLING_PROVIDER == "tbank":
+        raw = await tbank_find_payment(invoice_id)
+        if not raw:
+            return None
+        status = str(raw.get("Status", ""))
+        txn = str(raw.get("PaymentId", ""))
+        paid = status in ("CONFIRMED", "AUTHORIZED")
+        failed = status in ("REJECTED", "CANCELED", "DEADLINE_EXPIRED")
+    else:
+        raw = await cp_find_payment(invoice_id)
+        if not raw:
+            return None
+        status = str(raw.get("Status", ""))
+        txn = str(raw.get("TransactionId", ""))
+        paid = status in ("Completed", "Authorized")
+        failed = status in ("Declined", "Cancelled")
+    return ("paid" if paid else "failed" if failed else "pending"), txn, raw
 
 
 def _tbank_verify():
@@ -387,6 +418,20 @@ def list_payments_by_phone(phone: str, limit: int = 50) -> list[dict]:
     out = [dict(r) for r in rows
            if "".join(ch for ch in (dict(r).get("phone") or "") if ch.isdigit())[-10:] == digits]
     return out[:limit]
+
+
+def list_unresolved_invoices(*, max_age_hours: int, limit: int) -> list[dict]:
+    """Инвойсы, по которым исход ещё не известен (ни paid, ни failed).
+
+    Окно ограничено: банк не помнит платежи вечно, а дёргать его по всем
+    брошенным формам школы смысла нет.
+    """
+    from datetime import timedelta
+    since = (datetime.now(timezone.utc) - timedelta(hours=max_age_hours)).isoformat()
+    rows = _db().execute(
+        "SELECT * FROM billing_payments WHERE status NOT IN ('paid','failed')"
+        " AND created_at >= ? ORDER BY id DESC LIMIT ?", (since, limit)).fetchall()
+    return [dict(r) for r in rows]
 
 
 def get_payment(invoice_id: str) -> dict | None:
