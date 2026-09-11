@@ -84,7 +84,17 @@ def verify_telegram_init_data(init_data: str, token: str | None = None) -> MiniA
         secret, _data_check_string(parsed).encode(), hashlib.sha256
     ).hexdigest()
     if not hmac.compare_digest(computed, received_hash):
-        logger.warning("miniapp: неверная подпись Telegram initData")
+        # Временная диагностика (2026-09-11): у части сессий подпись не
+        # сходится. Логируем контекст без самих подписей: кто, когда открыта
+        # сессия и сколько полей пришло — чтобы отличить «чужой бот» от
+        # «битая строка».
+        user = _parse_user(parsed)
+        logger.warning(
+            "miniapp: неверная подпись Telegram initData "
+            "(user_id=%s, auth_date=%s, полей=%s, длина=%s)",
+            user.get("id"), parsed.get("auth_date", [""])[0],
+            len(parsed), len(init_data),
+        )
         return None
     if not _auth_date_fresh(parsed):
         logger.warning("miniapp: просроченный auth_date в Telegram initData")
