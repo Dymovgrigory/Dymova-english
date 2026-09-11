@@ -1,0 +1,222 @@
+# -*- coding: utf-8 -*-
+"""Новые страницы тематического словаря (волна 6): путешествия, время и числа,
+хобби, природа, праздники. Регистрирует страницы в build_subpages.PAGES
+через make_words_page(). Импорт модуля вызывает register_words()."""
+
+import sys as _sys
+if hasattr(_sys.modules.get("__main__"), "PAGES"):
+    B = _sys.modules["__main__"]  # build_subpages запущен как скрипт
+else:
+    import build_subpages as B
+
+WORDS_PUTESHESTVIYA = [
+    ("trip", "[trɪp]", "поездка", "Our trip to the sea was fun.", "Наша поездка на море была весёлой."),
+    ("journey", "[ˈdʒɜːni]", "путешествие", "The journey takes two hours.", "Путешествие занимает два часа."),
+    ("ticket", "[ˈtɪkɪt]", "билет", "I buy a ticket for the train.", "Я покупаю билет на поезд."),
+    ("train", "[treɪn]", "поезд", "The train is very fast.", "Поезд очень быстрый."),
+    ("airport", "[ˈeəpɔːt]", "аэропорт", "Planes take off at the airport.", "Самолёты взлетают в аэропорту."),
+    ("plane", "[pleɪn]", "самолёт", "The plane flies high.", "Самолёт летит высоко."),
+    ("suitcase", "[ˈsuːtkeɪs]", "чемодан", "My suitcase is heavy.", "Мой чемодан тяжёлый."),
+    ("luggage", "[ˈlʌɡɪdʒ]", "багаж", "Our luggage is at the hotel.", "Наш багаж в отеле."),
+    ("map", "[mæp]", "карта", "Look at the map, please.", "Посмотри на карту, пожалуйста."),
+    ("hotel", "[həʊˈtel]", "отель", "The hotel is near the sea.", "Отель находится у моря."),
+    ("passport", "[ˈpɑːspɔːt]", "паспорт", "Show your passport, please.", "Покажите ваш паспорт, пожалуйста."),
+    ("beach", "[biːtʃ]", "пляж", "We play on the beach.", "Мы играем на пляже."),
+    ("camera", "[ˈkæmərə]", "фотоаппарат", "I take photos with my camera.", "Я фотографирую на свой фотоаппарат."),
+    ("ticket office", "[ˈtɪkɪt ˌɒfɪs]", "билетная касса", "The ticket office opens at eight.", "Билетная касса открывается в восемь."),
+    ("platform", "[ˈplætfɔːm]", "платформа", "We wait on the platform.", "Мы ждём на платформе."),
+    ("abroad", "[əˈbrɔːd]", "за границей", "My friend travels abroad.", "Мой друг путешествует за границей."),
+    ("tourist", "[ˈtʊərɪst]", "турист", "The tourist asks the way.", "Турист спрашивает дорогу."),
+    ("holiday", "[ˈhɒlədeɪ]", "отпуск, каникулы", "We go to the sea on holiday.", "В отпуск мы едем на море."),
+    ("sea", "[siː]", "море", "The sea is warm in summer.", "Море тёплое летом."),
+    ("mountain", "[ˈmaʊntɪn]", "гора", "We climb the mountain.", "Мы поднимаемся на гору."),
+    ("backpack", "[ˈbækpæk]", "рюкзак", "My backpack is full.", "Мой рюкзак полный."),
+    ("souvenir", "[ˌsuːvəˈnɪə]", "сувенир", "I buy a souvenir for Grandma.", "Я покупаю сувенир для бабушки."),
+    ("guide", "[ɡaɪd]", "гид", "The guide tells us about the city.", "Гид рассказывает нам о городе."),
+    ("museum", "[mjuːˈzɪəm]", "музей", "We visit a museum in London.", "Мы посещаем музей в Лондоне."),
+    ("bus stop", "[ˈbʌs stɒp]", "автобусная остановка", "The bus stop is near the hotel.", "Автобусная остановка рядом с отелем."),
+    ("photo", "[ˈfəʊtəʊ]", "фотография", "This photo is from our trip.", "Эта фотография из нашей поездки."),
+    ("excursion", "[ɪkˈskɜːʃn]", "экскурсия", "The excursion starts at ten.", "Экскурсия начинается в десять."),
+    ("seat", "[siːt]", "место (сиденье)", "My seat is near the window.", "Моё место у окна."),
+]
+
+WORDS_VREMYA = [
+    ("time", "[taɪm]", "время", "What time is it?", "Который час?"),
+    ("clock", "[klɒk]", "часы", "The clock is on the wall.", "Часы висят на стене."),
+    ("hour", "[ˈaʊə]", "час", "The lesson is one hour long.", "Урок длится один час."),
+    ("minute", "[ˈmɪnɪt]", "минута", "Wait a minute, please.", "Подожди минуту, пожалуйста."),
+    ("day", "[deɪ]", "день", "Today is a good day.", "Сегодня хороший день."),
+    ("week", "[wiːk]", "неделя", "There are seven days in a week.", "В неделе семь дней."),
+    ("month", "[mʌnθ]", "месяц", "My favourite month is June.", "Мой любимый месяц — июнь."),
+    ("year", "[jɪə]", "год", "A year has twelve months.", "В году двенадцать месяцев."),
+    ("today", "[təˈdeɪ]", "сегодня", "We have English today.", "Сегодня у нас английский."),
+    ("tomorrow", "[təˈmɒrəʊ]", "завтра", "Tomorrow we go to the zoo.", "Завтра мы идём в зоопарк."),
+    ("yesterday", "[ˈjestədeɪ]", "вчера", "Yesterday was Sunday.", "Вчера было воскресенье."),
+    ("morning", "[ˈmɔːnɪŋ]", "утро", "I get up in the morning.", "Я встаю утром."),
+    ("afternoon", "[ˌɑːftəˈnuːn]", "время после полудня", "We play in the afternoon.", "Мы играем после обеда."),
+    ("evening", "[ˈiːvnɪŋ]", "вечер", "We read books in the evening.", "Вечером мы читаем книги."),
+    ("night", "[naɪt]", "ночь", "Stars shine at night.", "Ночью светят звёзды."),
+    ("calendar", "[ˈkælɪndə]", "календарь", "The calendar hangs in the kitchen.", "Календарь висит на кухне."),
+    ("date", "[deɪt]", "дата", "What is the date today?", "Какое сегодня число?"),
+    ("birthday", "[ˈbɜːθdeɪ]", "день рождения", "My birthday is in May.", "Мой день рождения в мае."),
+    ("number", "[ˈnʌmbə]", "число, номер", "Write the number five.", "Напиши число пять."),
+    ("first", "[fɜːst]", "первый", "Monday is the first day of the week.", "Понедельник — первый день недели."),
+    ("second", "[ˈsekənd]", "второй; секунда", "February is the second month.", "Февраль — второй месяц."),
+    ("third", "[θɜːd]", "третий", "I am the third child in the family.", "Я третий ребёнок в семье."),
+    ("ten", "[ten]", "десять", "I can count to ten.", "Я умею считать до десяти."),
+    ("twenty", "[ˈtwenti]", "двадцать", "There are twenty pupils in our class.", "В нашем классе двадцать учеников."),
+    ("hundred", "[ˈhʌndrəd]", "сто", "A hundred children play here.", "Здесь играет сто детей."),
+    ("thousand", "[ˈθaʊzənd]", "тысяча", "A thousand stars are in the sky.", "В небе тысяча звёзд."),
+    ("half", "[hɑːf]", "половина", "It is half past seven.", "Сейчас половина восьмого."),
+    ("weekend", "[ˌwiːkˈend]", "выходные", "We visit Grandma at the weekend.", "В выходные мы навещаем бабушку."),
+]
+
+WORDS_HOBBI = [
+    ("hobby", "[ˈhɒbi]", "хобби", "My hobby is drawing.", "Моё хобби — рисование."),
+    ("reading", "[ˈriːdɪŋ]", "чтение", "Reading is my favourite hobby.", "Чтение — моё любимое хобби."),
+    ("drawing", "[ˈdrɔːɪŋ]", "рисование", "I like drawing animals.", "Мне нравится рисовать животных."),
+    ("painting", "[ˈpeɪntɪŋ]", "живопись", "Painting is fun.", "Рисовать красками — весело."),
+    ("dancing", "[ˈdɑːnsɪŋ]", "танцы", "Dancing makes me happy.", "Танцы делают меня счастливой."),
+    ("singing", "[ˈsɪŋɪŋ]", "пение", "Singing is her hobby.", "Пение — её хобби."),
+    ("swimming", "[ˈswɪmɪŋ]", "плавание", "Swimming is good for you.", "Плавание полезно для здоровья."),
+    ("football", "[ˈfʊtbɔːl]", "футбол", "My hobby is football.", "Моё хобби — футбол."),
+    ("chess", "[tʃes]", "шахматы", "We play chess with Grandpa.", "Мы играем в шахматы с дедушкой."),
+    ("music", "[ˈmjuːzɪk]", "музыка", "I listen to music every day.", "Я слушаю музыку каждый день."),
+    ("cooking", "[ˈkʊkɪŋ]", "готовка", "Cooking with Mum is fun.", "Готовить с мамой весело."),
+    ("photography", "[fəˈtɒɡrəfi]", "фотография", "Photography is his hobby.", "Фотография — его хобби."),
+    ("collecting", "[kəˈlektɪŋ]", "коллекционирование", "Collecting stickers is popular.", "Собирать наклейки — популярно."),
+    ("gardening", "[ˈɡɑːdnɪŋ]", "садоводство", "Grandma likes gardening.", "Бабушка любит садоводство."),
+    ("fishing", "[ˈfɪʃɪŋ]", "рыбалка", "Dad goes fishing on Sundays.", "Папа ходит на рыбалку по воскресеньям."),
+    ("games", "[ɡeɪmz]", "игры", "Board games are fun for all.", "Настольные игры веселы для всех."),
+    ("book", "[bʊk]", "книга", "This book is about pirates.", "Эта книга про пиратов."),
+    ("song", "[sɒŋ]", "песня", "I know this song in English.", "Я знаю эту песню на английском."),
+    ("picture", "[ˈpɪktʃə]", "картина, рисунок", "Draw a picture of your family.", "Нарисуй рисунок своей семьи."),
+    ("puzzle", "[ˈpʌzl]", "пазл, головоломка", "We do a big puzzle together.", "Мы собираем большой пазл вместе."),
+    ("knitting", "[ˈnɪtɪŋ]", "вязание", "Grandma's hobby is knitting.", "Хобби бабушки — вязание."),
+    ("stamp", "[stæmp]", "марка", "My uncle collects stamps.", "Мой дядя собирает марки."),
+    ("bicycle", "[ˈbaɪsɪkl]", "велосипед", "Riding a bicycle is my hobby.", "Езда на велосипеде — моё хобби."),
+    ("doll", "[dɒl]", "кукла", "She makes clothes for her dolls.", "Она шьёт одежду для кукол."),
+    ("instrument", "[ˈɪnstrəmənt]", "инструмент", "The guitar is a music instrument.", "Гитара — музыкальный инструмент."),
+    ("free time", "[friː taɪm]", "свободное время", "What do you do in your free time?", "Чем ты занимаешься в свободное время?"),
+]
+
+WORDS_PRIRODA = [
+    ("nature", "[ˈneɪtʃə]", "природа", "I love walks in nature.", "Я люблю прогулки на природе."),
+    ("tree", "[triː]", "дерево", "The tree is very old.", "Дерево очень старое."),
+    ("flower", "[ˈflaʊə]", "цветок", "The flower is red.", "Цветок красный."),
+    ("grass", "[ɡrɑːs]", "трава", "The grass is green.", "Трава зелёная."),
+    ("forest", "[ˈfɒrɪst]", "лес", "Mushrooms grow in the forest.", "В лесу растут грибы."),
+    ("river", "[ˈrɪvə]", "река", "The river is long.", "Река длинная."),
+    ("lake", "[leɪk]", "озеро", "We swim in the lake.", "Мы купаемся в озере."),
+    ("mountain", "[ˈmaʊntɪn]", "гора", "The mountain is high.", "Гора высокая."),
+    ("sea", "[siː]", "море", "The sea is blue.", "Море синее."),
+    ("sky", "[skaɪ]", "небо", "The sky is blue today.", "Сегодня небо голубое."),
+    ("sun", "[sʌn]", "солнце", "The sun shines in the sky.", "Солнце светит в небе."),
+    ("moon", "[muːn]", "луна", "The moon is round.", "Луна круглая."),
+    ("star", "[stɑː]", "звезда", "I see a star in the sky.", "Я вижу звезду в небе."),
+    ("cloud", "[klaʊd]", "облако", "The cloud looks like a cat.", "Облако похоже на кошку."),
+    ("wind", "[wɪnd]", "ветер", "The wind blows the leaves.", "Ветер качает листья."),
+    ("rain", "[reɪn]", "дождь", "The rain waters the flowers.", "Дождь поливает цветы."),
+    ("leaf", "[liːf]", "лист", "The leaf falls from the tree.", "Лист падает с дерева."),
+    ("bird", "[bɜːd]", "птица", "A bird sings in the tree.", "Птица поёт на дереве."),
+    ("stone", "[stəʊn]", "камень", "The stone is grey.", "Камень серый."),
+    ("field", "[fiːld]", "поле", "Cows eat grass in the field.", "Коровы едят траву в поле."),
+    ("island", "[ˈaɪlənd]", "остров", "The island is small.", "Остров маленький."),
+    ("mushroom", "[ˈmʌʃruːm]", "гриб", "We find mushrooms in the forest.", "Мы находим грибы в лесу."),
+    ("butterfly", "[ˈbʌtəflaɪ]", "бабочка", "The butterfly is beautiful.", "Бабочка красивая."),
+    ("rainbow", "[ˈreɪnbəʊ]", "радуга", "I see a rainbow after the rain.", "Я вижу радугу после дождя."),
+    ("snow", "[snəʊ]", "снег", "The snow is white and cold.", "Снег белый и холодный."),
+    ("sand", "[sænd]", "песок", "We build castles from sand.", "Мы строим замки из песка."),
+]
+
+WORDS_PRAZDNIKI = [
+    ("holiday", "[ˈhɒlədeɪ]", "праздник, каникулы", "My favourite holiday is New Year.", "Мой любимый праздник — Новый год."),
+    ("birthday", "[ˈbɜːθdeɪ]", "день рождения", "My birthday is in May.", "Мой день рождения в мае."),
+    ("party", "[ˈpɑːti]", "вечеринка", "We have a party at school.", "У нас в школе вечеринка."),
+    ("gift", "[ɡɪft]", "подарок", "This gift is for you.", "Этот подарок для тебя."),
+    ("present", "[ˈpreznt]", "подарок", "I get many presents on my birthday.", "На день рождения я получаю много подарков."),
+    ("cake", "[keɪk]", "торт", "The birthday cake is big.", "Праздничный торт большой."),
+    ("candle", "[ˈkændl]", "свеча", "There are seven candles on the cake.", "На торте семь свечей."),
+    ("card", "[kɑːd]", "открытка", "I make a card for Mum.", "Я делаю открытку для мамы."),
+    ("New Year", "[njuː jɪə]", "Новый год", "We decorate the tree for New Year.", "Мы наряжаем ёлку на Новый год."),
+    ("Christmas", "[ˈkrɪsməs]", "Рождество", "Children love Christmas.", "Дети любят Рождество."),
+    ("celebration", "[ˌselɪˈbreɪʃn]", "празднование", "The celebration starts at six.", "Празднование начинается в шесть."),
+    ("fireworks", "[ˈfaɪəwɜːks]", "фейерверк", "We watch fireworks at night.", "Ночью мы смотрим фейерверк."),
+    ("balloon", "[bəˈluːn]", "воздушный шарик", "The balloon is red.", "Шарик красный."),
+    ("invitation", "[ˌɪnvɪˈteɪʃn]", "приглашение", "I send invitations to my friends.", "Я отправляю приглашения друзьям."),
+    ("guest", "[ɡest]", "гость", "Ten guests come to the party.", "На праздник приходят десять гостей."),
+    ("fun", "[fʌn]", "веселье", "Holidays are full of fun.", "Праздники полны веселья."),
+    ("song", "[sɒŋ]", "песня", "We sing songs at the party.", "Мы поём песни на празднике."),
+    ("dance", "[dɑːns]", "танец; танцевать", "We dance at the party.", "Мы танцуем на празднике."),
+    ("Christmas tree", "[ˈkrɪsməs triː]", "новогодняя ёлка", "The Christmas tree is beautiful.", "Новогодняя ёлка красивая."),
+    ("toy", "[tɔɪ]", "игрушка", "The toy is under the tree.", "Игрушка лежит под ёлкой."),
+    ("sweet", "[swiːt]", "конфета; сладкий", "Children get sweets at the party.", "Дети получают конфеты на празднике."),
+    ("surprise", "[səˈpraɪz]", "сюрприз", "The gift is a surprise.", "Подарок — это сюрприз."),
+    ("wish", "[wɪʃ]", "желание; пожелание", "Make a wish and blow out the candles.", "Загадай желание и задуй свечи."),
+    ("flag", "[flæɡ]", "флаг", "Flags are on the street on holidays.", "В праздники на улице флаги."),
+    ("carnival", "[ˈkɑːnɪvl]", "карнавал", "The carnival is bright and loud.", "Карнавал яркий и шумный."),
+]
+
+NEW_TOPICS = [
+    ("puteshestviya", "Путешествия"),
+    ("vremya-i-chisla", "Время и числа"),
+    ("hobbi", "Хобби"),
+    ("priroda", "Природа"),
+    ("prazdniki", "Праздники"),
+]
+
+
+def register_words():
+    B.make_words_page(
+        "page_english_words_puteshestviya.html", "english-words/puteshestviya", "puteshestviya",
+        "Путешествия", "путешествий",
+        'Английские слова по теме <span class="fxb-accent">«Путешествия»</span>',
+        "28 слов по теме «Путешествия» с транскрипцией, переводом и примерами: билет, чемодан, аэропорт — вся лексика поездки по-английски. Уровень A1.",
+        "Английские слова по теме «Путешествия» с транскрипцией и переводом: 28 слов уровня A1 с примерами предложений. Словарь для детей и родителей — бесплатно, от школы Фоксинбург.",
+        WORDS_PUTESHESTVIYA,
+        "linear-gradient(135deg,#12222e 0%,#1f4a5e 55%,#35808f 100%)",
+        [("/mladshie-shkolniki", "Младшим школьникам"), ("/podrostki", "Подросткам")],
+    )
+    B.make_words_page(
+        "page_english_words_vremya-i-chisla.html", "english-words/vremya-i-chisla", "vremya-i-chisla",
+        "Время и числа", "времени и чисел",
+        'Английские слова по теме <span class="fxb-accent">«Время и числа»</span>',
+        "28 слов по теме «Время и числа» с транскрипцией, переводом и примерами: часы, дни недели, числа — считаем и называем время по-английски. Уровень A1.",
+        "Английские слова по теме «Время и числа» с транскрипцией и переводом: 28 слов уровня A1 с примерами предложений. Словарь для детей и родителей — бесплатно, от школы Фоксинбург.",
+        WORDS_VREMYA,
+        "linear-gradient(135deg,#231a12 0%,#5e4a1f 55%,#8f772f 100%)",
+        [("/doshkolniki", "Дошкольникам"), ("/mladshie-shkolniki", "Младшим школьникам")],
+    )
+    B.make_words_page(
+        "page_english_words_hobbi.html", "english-words/hobbi", "hobbi",
+        "Хобби", "хобби",
+        'Английские слова по теме <span class="fxb-accent">«Хобби»</span>',
+        "26 слов по теме «Хобби» с транскрипцией, переводом и примерами: рассказываем о любимом занятии по-английски. Уровень A1.",
+        "Английские слова по теме «Хобби» с транскрипцией и переводом: 26 слов уровня A1 с примерами предложений. Словарь для детей и родителей — бесплатно, от школы Фоксинбург.",
+        WORDS_HOBBI,
+        "linear-gradient(135deg,#1d1230 0%,#452a63 55%,#7a3fb8 100%)",
+        [("/doshkolniki", "Дошкольникам"), ("/mladshie-shkolniki", "Младшим школьникам"), ("/podrostki", "Подросткам")],
+    )
+    B.make_words_page(
+        "page_english_words_priroda.html", "english-words/priroda", "priroda",
+        "Природа", "природы",
+        'Английские слова по теме <span class="fxb-accent">«Природа»</span>',
+        "26 слов по теме «Природа» с транскрипцией, переводом и примерами: лес, река, солнце — описываем мир вокруг по-английски. Уровень A1.",
+        "Английские слова по теме «Природа» с транскрипцией и переводом: 26 слов уровня A1 с примерами предложений. Словарь для детей и родителей — бесплатно, от школы Фоксинбург.",
+        WORDS_PRIRODA,
+        "linear-gradient(135deg,#12251c 0%,#2a5443 55%,#4b8a5a 100%)",
+        [("/doshkolniki", "Дошкольникам"), ("/mladshie-shkolniki", "Младшим школьникам")],
+    )
+    B.make_words_page(
+        "page_english_words_prazdniki.html", "english-words/prazdniki", "prazdniki",
+        "Праздники", "праздников",
+        'Английские слова по теме <span class="fxb-accent">«Праздники»</span>',
+        "25 слов по теме «Праздники» с транскрипцией, переводом и примерами: день рождения, Новый год и подарки по-английски. Уровень A1.",
+        "Английские слова по теме «Праздники» с транскрипцией и переводом: 25 слов уровня A1 с примерами предложений. Словарь для детей и родителей — бесплатно, от школы Фоксинбург.",
+        WORDS_PRAZDNIKI,
+        "linear-gradient(135deg,#2e1226 0%,#5c1f4a 55%,#93396f 100%)",
+        [("/doshkolniki", "Дошкольникам"), ("/mladshie-shkolniki", "Младшим школьникам")],
+    )
+
+
+register_words()
