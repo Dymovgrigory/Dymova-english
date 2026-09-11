@@ -38,12 +38,14 @@ from app.email_notify import send_lead_email
 from app import intent as I
 from app import group_chat
 from app import homework
+from app import identify
 from app import insights
 from app import leveltest
 from app import nudge
 from app import profile
 from app import registration
 from app import runtime
+from app import sales
 from app import scheduler
 from app import watchdog
 from app.homework import (
@@ -656,6 +658,28 @@ def _telegram_start_buttons(text: str, reply: str, user_id: str = "") -> list[li
     return _telegram_menu_buttons(user_id) or _telegram_buttons(text, reply) or None
 
 
+def _start_buttons(user_id: str, platform: str) -> list[list[dict]]:
+    """Стартовое меню. Если включена идентификация и номер ещё не известен,
+    первой строкой идёт «📞 Поделиться номером» (в MAX это callback —
+    нативного request_contact у MAX Bot API нет, номер просим текстом)."""
+    menu = _main_menu(user_id)
+    if identify.needs_gate(get_store().get(user_id, platform=platform)):
+        return [[callback_button(identify.SHARE_BUTTON_TEXT, identify.SHARE_BUTTON_PAYLOAD)]] + menu
+    return menu
+
+
+async def _maybe_send_tg_contact_request(telegram, chat_id, user_id: str) -> None:
+    """Reply-клавиатура «Поделиться номером», если диалог ещё под гейтом."""
+    if not identify.needs_gate(get_store().get(user_id, platform=TELEGRAM_PLATFORM)):
+        return
+    try:
+        await telegram.send_contact_request(
+            chat_id, "Нажмите кнопку ниже 👇", button_text=identify.SHARE_BUTTON_TEXT
+        )
+    except Exception:
+        logger.exception("telegram: не удалось отправить кнопку запроса контакта")
+
+
 def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
     return [[link_button(button["title"], button["url"])] for button in _contextual_buttons(text, reply)]
 
@@ -848,6 +872,22 @@ async def _process_telegram_update(update: dict, telegram) -> None:
                 await _handle_telegram_photo(message, chat_id, telegram)
                 return
 
+        # Контакт (кнопка «Поделиться номером») — не медиа и не текст:
+        # обрабатываем до ветки «голосовые и файлы», иначе он в неё провалится.
+        contact = message.get("contact")
+        if isinstance(contact, dict) and contact.get("phone_number"):
+            user_id = f"tg:{chat_id}"
+            crm_ctx = _telegram_inbound_ctx(update, message, user_id, "[контакт]")
+            conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+            conv.add("user", "[поделился номером телефона]")
+            reply = identify.handle_contact(conv, str(contact["phone_number"]))
+            if not identify.needs_gate(conv) and not registration.is_registered(conv):
+                reply = f"{reply}\n\n{registration.start_registration(conv)}"
+            conv.add("assistant", reply)
+            get_store().save(conv)
+            await _send_tg_logged(telegram, chat_id, reply, crm_ctx)
+            return
+
         # Подпись к остальным вложениям лежит в caption, не в text.
         text = str(message.get("text") or message.get("caption") or "").strip()
         if not text:
@@ -877,6 +917,7 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             _remember_deeplink(user_id, TELEGRAM_PLATFORM, text)
             reply = await handle_start(user_id, platform=TELEGRAM_PLATFORM)
             await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_start_buttons(text, reply, user_id))
+            await _maybe_send_tg_contact_request(telegram, chat_id, user_id)
             return
 
         if low in ("/menu", "меню", "/app", "кабинет"):
@@ -931,6 +972,9 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             lambda: handle_message(user_id, text, platform=TELEGRAM_PLATFORM),
         )
         await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_buttons(text, reply) or None)
+        # Если идентификация ещё не пройдена, рядом с ответом-просьбой должна
+        # быть и сама кнопка — иначе клиенту нечем поделиться номером.
+        await _maybe_send_tg_contact_request(telegram, chat_id, user_id)
     except Exception:
         # Раньше исключение здесь просто убивало фоновую задачу молча —
         # пользователь не получал вообще ничего, что выглядело как
@@ -1130,6 +1174,47 @@ async def admin_insights(request: Request, days: int = 7, top: int = 20) -> dict
     return insights.summarize(days=days, top=top)
 
 
+@app.get("/admin/learning_log")
+async def admin_learning_log(request: Request, limit: int = 50) -> dict:
+    """Журнал автоприменений ночного анализатора (approach-1, р. 5.2)."""
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    return {"rows": crm_store.learning_log_list(limit=limit)}
+
+
+@app.post("/admin/learning_log/{entry_id}/rollback")
+async def admin_learning_log_rollback(entry_id: int, request: Request) -> dict:
+    """Откат применённого улучшения: возврат версии промпта «до» и пометка записи."""
+    if not _admin_authorized(request):
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    entry = crm_store.learning_log_get(entry_id)
+    if entry is None:
+        return JSONResponse({"detail": "not found"}, status_code=404)
+    if entry["status"] != "active":
+        return JSONResponse({"detail": "already rolled back"}, status_code=400)
+    version_before = int(entry["prompt_version_before"])
+    if version_before:
+        target = next(
+            (row for row in crm_store.prompt_list() if int(row["version"]) == version_before),
+            None,
+        )
+        if target is None:
+            return JSONResponse(
+                {"detail": f"prompt version {version_before} not found"}, status_code=404)
+        crm_store.prompt_activate(int(target["id"]), actor="admin_rollback")
+        sales.reset_prompt_cache()
+    crm_store.learning_log_mark_rolled_back(entry_id)
+    # Откат — тоже изменение: фиксируем его отдельной записью в том же журнале.
+    crm_store.learning_log_add(
+        prompt_version_before=int(entry["prompt_version_after"]),
+        prompt_version_after=version_before,
+        changes={"rollback_of": entry_id},
+        insights_analyzed=0,
+        status="active",
+    )
+    return {"ok": True, "restored_version": version_before}
+
+
 @app.post("/admin/digest/send")
 async def admin_digest_send(request: Request) -> dict:
     if not _admin_authorized(request):
@@ -1173,6 +1258,8 @@ async def health() -> dict:
             for role in (ROLE_REASONING, ROLE_FAST, ROLE_VISION, ROLE_CRITIC)
         },
         "llm_role_stats": get_gateway().stats(),
+        # Рост счётчика = основной LLM-провайдер нестабилен (approach-1, р. 7).
+        "fallback_switches": llm.fallback_switches,
         "max_configured": max_client.configured,
         "bigben_configured": get_bigben().configured,
         "kb_documents": len(get_kb().documents),
@@ -1266,7 +1353,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 external_event_id=_extract_update_id(update),
             )
             reply = await handle_start(user_id)
-            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_start_buttons(user_id, PLATFORM))
         return
 
     if update_type == "message_created":
@@ -1301,7 +1388,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         low = text.lower()
         if low in ("/start", "start"):
             reply = await handle_start(user_id)
-            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
+            await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_start_buttons(user_id, PLATFORM))
         elif I.detect_intent(text) == I.HANDOFF:
             conv = get_store().get(user_id)
             if conv.selected_branch:
@@ -1392,6 +1479,12 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             # а не имитация текстового вопроса через _CALLBACK_TEXT.
             reply = await _request_manager(user_id, PLATFORM)
             await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
+        elif user_id and payload == identify.SHARE_BUTTON_PAYLOAD:
+            # У MAX Bot API нет кнопки request_contact — просим номер текстом.
+            conv = get_store().get(user_id)
+            conv.identify_state = identify.STATE_AWAIT_CONTACT
+            get_store().save(conv)
+            await _send_max_logged(max_client, user_id, identify.ASK_PHONE_TEXT_MAX, crm_ctx)
         elif user_id and payload in _CALLBACK_TEXT:
             reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
             if reply:  # пустой ответ — AI на паузе/у менеджера, молчим

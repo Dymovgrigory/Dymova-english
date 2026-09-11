@@ -1761,6 +1761,16 @@ def init_kb_tables(conn: sqlite3.Connection) -> None:
             created_by TEXT NOT NULL DEFAULT '',
             created_at TEXT NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS learning_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            applied_at TEXT NOT NULL,
+            prompt_version_before INTEGER NOT NULL DEFAULT 0,
+            prompt_version_after INTEGER NOT NULL DEFAULT 0,
+            changes_json TEXT NOT NULL DEFAULT '{}',
+            insights_analyzed INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT 'active'
+        );
         """
     )
 
@@ -1859,6 +1869,55 @@ def prompt_list(name: str = "system") -> list[dict]:
 def prompt_get(prompt_id: int) -> dict | None:
     row = get_conn().execute("SELECT * FROM ai_prompts WHERE id = ?", (prompt_id,)).fetchone()
     return dict(row) if row else None
+
+
+# --- learning_log: журнал автоприменений ночного анализатора (approach-1, р. 5) ---
+
+def learning_log_add(
+    *,
+    prompt_version_before: int = 0,
+    prompt_version_after: int = 0,
+    changes: dict | None = None,
+    insights_analyzed: int = 0,
+    status: str = "active",
+) -> int:
+    """Запись о применённых (или откаченных) изменениях learning loop."""
+    conn = get_conn()
+    with _tx(conn):
+        cur = conn.execute(
+            "INSERT INTO learning_log(applied_at, prompt_version_before,"
+            " prompt_version_after, changes_json, insights_analyzed, status)"
+            " VALUES (?, ?, ?, ?, ?, ?)",
+            (
+                _now(),
+                int(prompt_version_before),
+                int(prompt_version_after),
+                json.dumps(changes or {}, ensure_ascii=False),
+                int(insights_analyzed),
+                status,
+            ),
+        )
+        return int(cur.lastrowid)
+
+
+def learning_log_list(limit: int = 50) -> list[dict]:
+    limit = max(1, min(int(limit), 500))
+    return _rows(get_conn().execute(
+        "SELECT * FROM learning_log ORDER BY id DESC LIMIT ?", (limit,)))
+
+
+def learning_log_get(entry_id: int) -> dict | None:
+    row = get_conn().execute(
+        "SELECT * FROM learning_log WHERE id = ?", (entry_id,)).fetchone()
+    return dict(row) if row else None
+
+
+def learning_log_mark_rolled_back(entry_id: int) -> bool:
+    conn = get_conn()
+    with _tx(conn):
+        cur = conn.execute(
+            "UPDATE learning_log SET status = 'rolled_back' WHERE id = ?", (entry_id,))
+        return cur.rowcount == 1
 
 
 def analytics(days: int = 30) -> dict:

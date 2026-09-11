@@ -993,11 +993,41 @@ modern english school, english first, элингва) осознанно НЕ в
   для детей» (160) переназначены с NEW `/blog/*` на существующие `/english-words/tsveta`
   и `/english-words/zhivotnye`.
 
+### 15.11. Запросы из Вебмастера/GSC (сентябрь 2026, волна 5)
+
+Источник: `seo/report.csv`, свежий срез Вебмастер + GSC от 11.09.2026. Шесть новых статей
+(`pages_wave5.py`, публикации задним числом 05.09–10.09.2026) + три ретаргета сниппетов
+(нулевой CTR при позициях 8–11). «my level учебники» и «my level 2» были предусмотрены
+ещё в разделе 15.8 (NEW `/blog/my-level-uchebniki`) — страница реализована в этой волне.
+
+| Запрос | Интент | Страница |
+|---|---|---|
+| my level учебники | I | `/blog-my-level-uchebniki` |
+| my level 2 | I | `/blog-my-level-uchebniki` |
+| present simple для детей | I | `/blog-present-simple-detyam` |
+| present simple для детей объяснение | I | `/blog-present-simple-detyam` |
+| как объяснить present simple детям | I | `/blog-present-simple-detyam` |
+| в каком классе проходят презент симпл | I | `/blog-present-simple-detyam` |
+| мне 10 лет на английском | I | `/blog-vozrast-na-anglijskom` |
+| пробелы по английскому в 3 классе | I | `/blog-probely-po-anglijskomu-3-klass` |
+| устранить пробелы по английскому языку в 3 классе | I | `/blog-probely-po-anglijskomu-3-klass` |
+| пробелы по английскому языку в 6 классе | I | `/blog-probely-po-anglijskomu-6-klass` |
+| пробелы по английскому в 6 классе | I | `/blog-probely-po-anglijskomu-6-klass` |
+| пробелы по английскому языку в 8 классе | I | `/blog-probely-po-anglijskomu-8-klass` |
+| урок английского для малышей 3 4 года | I | `/blog-anglijskij-dlya-detej-3-4-goda` *(retarget сниппета, волна 5)* |
+| английские слова по темам с транскрипцией и переводом | I | `/english-words` *(retarget сниппета, волна 5)* |
+| английские слова для детей | I | `/english-words` *(retarget сниппета, волна 5)* |
+| английские слова на тему семья | I | `/english-words/semya` |
+| слова по теме семья на английском | I | `/english-words/semya` |
+| подготовка к школе в долгопрудном | C+L | `/preparation` |
+| зачем нужен репетитор по английскому | I | `/novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov` *(retarget сниппета, волна 5)* |
+
 ---
 
 ## 16. Итоговая статистика карты
 
-- Запросов в структуре (включая 60 AI-вопросов раздела 12 и 32 запроса из Вебмастера, раздел 15.8): **~560**.
+- Запросов в структуре (включая 60 AI-вопросов раздела 12, 32 запроса из Вебмастера, раздел 15.8,
+  и 19 запросов сентябрьской волны 5, раздел 15.11): **~580**.
 - Пилларов: 10 (P0–P9). Кластеров: 22 + 7 добивочных подблоков.
 - Новых страниц: 8 типовых (`ceny`, `otzyvy`, `vpr-anglijskij`, `razgovornyj-anglijskij`,
   `repetitor-anglijskij`, `russkij-i-matematika`, `probnoe-zanyatie`, `blog`-раздел) +

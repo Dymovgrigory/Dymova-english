@@ -123,8 +123,11 @@ def test_english_request_keeps_age_programs():
 def test_foxi_gender_is_pinned_in_prompt():
     from app.sales import SYSTEM_PROMPT
 
-    assert "МУЖСКОГО рода" in SYSTEM_PROMPT
-    assert "я понял" in SYSTEM_PROMPT
+    # Спека approach-1: фраза про род Фокси убрана (была для голосового
+    # ассистента); вместо неё — премиальный тон и границы по финансам.
+    assert "МУЖСКОГО рода" not in SYSTEM_PROMPT
+    assert "консультанта дорогой школы" in SYSTEM_PROMPT
+    assert "НЕ консультируешь по финансам" in SYSTEM_PROMPT
 
 
 # --- Тест уровня: 10 заданий, картинки, сбор предложения ----------------------

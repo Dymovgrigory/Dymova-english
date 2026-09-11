@@ -16,6 +16,7 @@ import time
 from datetime import datetime, timezone
 
 from app import intent as I
+from app import identify
 from app import runtime
 from app import registration
 from app import convlog
@@ -562,7 +563,32 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     if _crm_ai_silenced(platform, user_id):
         store.save(conv)
         return ""
+    # Решение о гейте принимаем ДО захвата сущностей: иначе номер, присланный
+    # этим же сообщением, _capture_entities уже сохранит в lead.phone, и гейт
+    # молча пропустит диалог без собственно идентификации.
+    gated = identify.needs_gate(conv)
     _capture_entities(conv, text)
+
+    # Гейт идентификации (спека approach-1, раздел 6): пока клиент не
+    # поделился номером, по существу не отвечаем.
+    if gated:
+        pending_reply = identify.handle_pending(conv, text)
+        if pending_reply is not None:
+            reply = pending_reply
+        elif conv.lead.phone:
+            # Номер прислали текстом — обрабатываем как поделившийся контакт.
+            reply = identify.handle_contact(conv, conv.lead.phone)
+        else:
+            reply = identify.gate_reply(conv)
+        if not identify.needs_gate(conv) and not registration.is_registered(conv):
+            # Идентификация завершилась новым лидом — сразу открываем анкету
+            # (шаг «телефон» она пропустит: номер уже известен).
+            reply = f"{reply}\n\n{registration.start_registration(conv)}"
+        conv.add("assistant", reply)
+        store.save(conv)
+        convlog.log_turn(user_id, text, reply, "", conv.stage, "identify_gate")
+        return reply
+
     await _update_need(conv, text)
     intent = await _detect_intent(conv, text)
     _remember_dialogue_state(conv, text, intent)
@@ -1194,6 +1220,13 @@ async def handle_start(user_id: str, platform: str = "max") -> str:
     """Ответ на команду /start или событие bot_started."""
     store = get_store()
     conv = store.get(user_id, platform=platform)
+    if identify.needs_gate(conv):
+        # Сначала идентификация по номеру: кнопку «Поделиться номером»
+        # дорисовывает транспорт (main.py) рядом с этим ответом.
+        reply = identify.start_prompt(conv)
+        conv.add("assistant", reply)
+        store.save(conv)
+        return reply
     if not registration.is_registered(conv):
         reply = registration.start_registration(conv)
         conv.add("assistant", reply)
