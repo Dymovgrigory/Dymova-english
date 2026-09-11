@@ -246,6 +246,13 @@ class Settings(BaseSettings):
     DIGEST_TZ_OFFSET: int = 3  # МСК
     DIGEST_DAYS: int = 1
 
+    # --- Ночной анализатор (approach-1, р. 5.1) ---
+    # Каждую ночь анализирует слабые ответы за сутки и автоприменяет улучшения
+    # базы знаний и промпта с записью в learning_log (откат — /admin/learning_log).
+    LEARNING_LOOP_ENABLED: bool = False
+    LEARNING_HOUR: int = 3
+    LEARNING_MINUTE: int = 0
+
     # --- Живая синхронизация KB с сайтом ---
     SITE_SYNC_ENABLED: bool = True
     SITE_SYNC_URLS: str = ""  # список URL через запятую; пусто = главная сайта
@@ -289,6 +296,10 @@ class Settings(BaseSettings):
 
     # --- Прочее ---
     REGISTRATION_REQUIRED: bool = False
+    # Идентификация по номеру телефона в начале диалога (спеки approach-1,
+    # разделы 2/6): пока клиент не поделился номером, бот просит контакт и
+    # по существу не отвечает. По номеру находим ученика в read-model CRM.
+    IDENTIFICATION_REQUIRED: bool = True
     # Пароль первого пользователя админки (логин admin) при начальной
     # инициализации RBAC. Пусто = сгенерировать и напечатать в лог один раз.
     ADMIN_BOOTSTRAP_PASSWORD: str = ""

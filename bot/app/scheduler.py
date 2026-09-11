@@ -99,6 +99,22 @@ async def _nudge_loop() -> None:
         await asyncio.sleep(60)
 
 
+async def _learning_loop() -> None:
+    """Ночной анализатор слабых ответов (approach-1, р. 5.1)."""
+    from app import learning_loop
+
+    while True:
+        delay = _seconds_until(settings.LEARNING_HOUR, settings.LEARNING_MINUTE)
+        logger.info("learning_loop: следующий ночной анализ через %.0f мин", delay / 60)
+        await asyncio.sleep(delay)
+        try:
+            stats = await learning_loop.run_nightly_learning()
+            await learning_loop.notify_admins(stats)
+        except Exception:
+            logger.exception("learning_loop: ошибка ночного анализа")
+        await asyncio.sleep(60)
+
+
 async def _purge_loop() -> None:
     """Раз в сутки чистит журнал обработанных событий.
 
@@ -193,4 +209,8 @@ def start() -> list[asyncio.Task]:
         tasks.append(asyncio.create_task(watchdog.loop()))
     else:
         logger.info("watchdog: сторож доступности выключен (WATCHDOG_ENABLED=false)")
+    if settings.LEARNING_LOOP_ENABLED:
+        tasks.append(asyncio.create_task(_learning_loop()))
+    else:
+        logger.info("learning_loop: ночной анализатор выключен (LEARNING_LOOP_ENABLED=false)")
     return tasks

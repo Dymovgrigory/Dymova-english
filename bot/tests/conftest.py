@@ -71,6 +71,10 @@ def _disable_registration(monkeypatch):
     by re-enabling it via monkeypatch.
     """
     monkeypatch.setattr(settings, "REGISTRATION_REQUIRED", False)
+    # Идентификация по номеру (как и регистрация) — гейт, который по умолчанию
+    # мешал бы старым тестам диалога: они пишут боту без контакта. Тесты
+    # идентификации включают флаг сами (test_identify.py).
+    monkeypatch.setattr(settings, "IDENTIFICATION_REQUIRED", False)
     monkeypatch.setattr(settings, "SITE_SYNC_ENABLED", False)
     # Живой веб-поиск в тестах — это настоящий запрос в интернет: он делает
     # прогон медленным и зависящим от сети. Тесты самого поиска подменяют

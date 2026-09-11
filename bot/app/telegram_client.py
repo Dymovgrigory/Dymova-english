@@ -256,6 +256,31 @@ class TelegramClient:
                 external_id = str(result["message_id"])
         return delivered, external_id, None if delivered else (first_error or "send failed")
 
+    async def send_contact_request(
+        self,
+        chat_id: str | int,
+        text: str,
+        button_text: str = "📞 Поделиться номером",
+    ) -> bool:
+        """Сообщение с reply-клавиатурой «Поделиться номером» (request_contact).
+
+        Inline-кнопки запрашивать контакт не умеют — только KeyboardButton
+        в ReplyKeyboardMarkup, поэтому это отдельный метод, а не ещё один
+        тип в _normalize_button.
+        """
+        reply_markup = {
+            "keyboard": [[{"text": button_text, "request_contact": True}]],
+            "resize_keyboard": True,
+            "one_time_keyboard": True,
+        }
+        data = {
+            "chat_id": str(chat_id),
+            "text": text,
+            "reply_markup": json.dumps(reply_markup, ensure_ascii=False),
+        }
+        result = await self._post("sendMessage", data)
+        return result is not None
+
     async def send_chat_action(self, chat_id: str | int, action: str = "typing") -> bool:
         """Индикатор «печатает». Не ретраим: это косметика, а не доставка."""
         result = await self._post(

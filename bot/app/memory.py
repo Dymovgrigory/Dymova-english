@@ -107,6 +107,14 @@ class Conversation:
     # текстовое сообщение без слов-триггеров считаем самим заданием и сразу
     # разбираем в режиме тьютора, а не общей консультацией.
     awaiting_homework: bool = False
+    # Идентификация по номеру телефона (разделы 2/6 спеки approach-1):
+    # student_id — ученик из read-model BigBen, к которому привязан номер;
+    # identify_state — шаг сценария ("await_contact" | "await_child_name" |
+    # "await_child_choice"), identify_candidates — кандидаты на выбор, когда
+    # на одном номере несколько детей.
+    student_id: int = 0
+    identify_state: str = ""
+    identify_candidates: list[dict] = field(default_factory=list)
 
     def add(self, role: str, content: str) -> None:
         ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -380,6 +388,9 @@ def _conv_from_dict(d: dict) -> Conversation:
         reg_nudges=d.get("reg_nudges", 0),
         lead_submitted_at=d.get("lead_submitted_at", ""),
         awaiting_homework=d.get("awaiting_homework", False),
+        student_id=int(d.get("student_id") or 0),
+        identify_state=d.get("identify_state", ""),
+        identify_candidates=d.get("identify_candidates", []) or [],
     )
 
 

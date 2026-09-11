@@ -14,9 +14,10 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import sqlite3
 import threading
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from app.config import settings
@@ -290,14 +291,181 @@ def list_lessons(date_from: str, date_to: str, group_id: int | None = None) -> l
 
 
 def find_student_by_phone(phone: str) -> dict | None:
+    rows = find_students_by_phone(phone)
+    return rows[0] if rows else None
+
+
+def find_students_by_phone(phone: str) -> list[dict]:
+    """Все ученики с этим номером: у одного родителя детей может быть
+    несколько, поэтому идентификации нужен весь список, а не первый
+    попавшийся."""
     digits = "".join(c for c in phone if c.isdigit())[-10:]
     if not digits:
-        return None
-    rows = _rows("SELECT * FROM bb_students")
-    for r in rows:
-        if "".join(c for c in (r["phone"] or "") if c.isdigit()).endswith(digits):
-            return r
-    return None
+        return []
+    return [
+        dict(r) for r in _rows("SELECT * FROM bb_students")
+        if "".join(c for c in (r["phone"] or "") if c.isdigit()).endswith(digits)
+    ]
+
+
+def student_age(row: dict) -> str:
+    """Возраст ученика из raw_json, если CRM его отдала; иначе пусто."""
+    try:
+        raw = json.loads(row.get("raw_json") or "{}")
+    except (TypeError, ValueError):
+        return ""
+    for key in ("age", "vozrast"):
+        if raw.get(key):
+            return str(raw[key])
+    birthday = str(raw.get("birthday") or raw.get("birth_date") or "")
+    match = re.match(r"(\d{4})-\d{2}-\d{2}", birthday)
+    if match:
+        age = date.today().year - int(match.group(1))
+        if 0 < age < 100:
+            return str(age)
+    return ""
+
+
+# --- CRM-контекст ученика для консультаций (спека approach-1, раздел 4) ---
+
+_WEEKDAYS_RU = ("пн", "вт", "ср", "чт", "пт", "сб", "вс")
+_CONTEXT_DAYS_AHEAD = 7
+_CONTEXT_ATTENDANCE_DAYS = 30
+
+# Статусы посещения в сырых данных урока → русская формулировка для промпта.
+_VISIT_STATUS_RU = {
+    "present": "присутствовал", "visited": "присутствовал", "attended": "присутствовал",
+    "присутствовал": "присутствовал", "был": "присутствовал",
+    "absent": "отсутствовал", "missed": "отсутствовал",
+    "отсутствовал": "отсутствовал", "не был": "отсутствовал",
+    "late": "опоздал", "опоздал": "опоздал",
+}
+
+
+def _student_groups(student: dict) -> list[dict]:
+    """Активные группы ученика из raw_json.active_groups (см. list_active_students)."""
+    try:
+        raw = json.loads(student.get("raw_json") or "{}")
+    except (TypeError, ValueError):
+        return []
+    return [g for g in (raw.get("active_groups") or []) if isinstance(g, dict)]
+
+
+def _lesson_visit_status(lesson: dict, student_id: int) -> str:
+    """Статус посещения ученика на уроке, если CRM отдала его в raw_json.
+
+    Публичный API /lessons отдаёт расписание групп; персональные отметки
+    посещаемости встречаются не во всех выгрузках, поэтому ищем их
+    оборонительно в списках students/visits/attendance. Нет данных — пустая
+    строка, и раздел посещаемости в контекст не попадёт вовсе.
+    """
+    try:
+        raw = json.loads(lesson.get("raw_json") or "{}")
+    except (TypeError, ValueError):
+        return ""
+    entries = []
+    for key in ("students", "visits", "attendance", "attendances"):
+        value = raw.get(key)
+        if isinstance(value, list):
+            entries.extend(value)
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        entry_id = (entry.get("user_id") or entry.get("student_id")
+                    or entry.get("userId") or entry.get("id"))
+        if entry_id != student_id:
+            continue
+        status = str(entry.get("status") or entry.get("visit")
+                     or entry.get("attendance_status") or "").strip().lower()
+        if status in _VISIT_STATUS_RU:
+            return _VISIT_STATUS_RU[status]
+        if isinstance(entry.get("visit"), bool):
+            return "присутствовал" if entry["visit"] else "отсутствовал"
+    return ""
+
+
+def _format_lesson_line(lesson: dict) -> str:
+    """«ср, 12.03, 17:00–18:00 — группа …» из строки bb_lessons."""
+    parts = []
+    lesson_date = str(lesson.get("date") or "")
+    try:
+        parsed = date.fromisoformat(lesson_date)
+        parts.append(f"{_WEEKDAYS_RU[parsed.weekday()]}, {parsed.strftime('%d.%m')}")
+    except ValueError:
+        if lesson_date:
+            parts.append(lesson_date)
+    starts = str(lesson.get("starts_at") or "")[:5]
+    ends = str(lesson.get("ends_at") or "")[:5]
+    if starts:
+        parts.append(f"{starts}–{ends}" if ends else starts)
+    line = " ".join(parts) if parts else "занятие"
+    caption = lesson.get("group_caption") or ""
+    if caption:
+        line += f" — {caption}"
+    return line
+
+
+def get_customer_context(student_id: int, *, today: date | None = None) -> str:
+    """Текстовый блок о ребёнке для системного промпта консультанта.
+
+    Источник — только локальный read-model (bb_* таблицы). В блок НЕ
+    включаются баланс, задолженности, платежи и счета (спека approach-1,
+    раздел 4): эти темы — зона администратора, а не бота. Разделы, по
+    которым в кэше нет данных (посещаемость без отметок, домашние задания,
+    комментарии педагога), опускаются целиком — не выдумываем.
+    """
+    rows = _rows("SELECT * FROM bb_students WHERE id=?", (student_id,))
+    if not rows:
+        return ""
+    student = rows[0]
+    today = today or date.today()
+    lines: list[str] = []
+
+    fio = student.get("fio") or ""
+    header = f"Ребёнок: {fio}" if fio else f"Ученик №{student_id}"
+    age = student_age(student)
+    if age:
+        header += f", {age} лет"
+    lines.append(header)
+
+    groups = _student_groups(student)
+    group_ids = [g.get("id") for g in groups if g.get("id")]
+    meta = group_meta_map()
+    for group in groups:
+        caption = group.get("caption") or ""
+        teacher = meta.get(group.get("id") or 0, {}).get("teacher") or ""
+        line = f"Группа: {caption}" if caption else ""
+        if teacher:
+            line += f" (преподаватель: {teacher})" if line else f"Преподаватель: {teacher}"
+        if line:
+            lines.append(line)
+
+    if group_ids:
+        upcoming = [
+            lesson for lesson in list_lessons(
+                today.isoformat(), (today + timedelta(days=_CONTEXT_DAYS_AHEAD)).isoformat())
+            if lesson.get("group_id") in group_ids
+        ]
+        if upcoming:
+            lines.append("Расписание на неделю вперёд:")
+            lines.extend(f"- {_format_lesson_line(l)}" for l in upcoming[:10])
+
+        past = [
+            lesson for lesson in list_lessons(
+                (today - timedelta(days=_CONTEXT_ATTENDANCE_DAYS)).isoformat(),
+                (today - timedelta(days=1)).isoformat())
+            if lesson.get("group_id") in group_ids
+        ]
+        attendance = []
+        for lesson in past:
+            status = _lesson_visit_status(lesson, student_id)
+            if status:
+                attendance.append(f"- {_format_lesson_line(lesson)}: {status}")
+        if attendance:
+            lines.append("Посещаемость за последние 30 дней:")
+            lines.extend(attendance[:10])
+
+    return "\n".join(lines)
 
 
 def get_group(group_id: int) -> dict | None:

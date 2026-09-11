@@ -235,6 +235,10 @@ async def _complete_with_provider(
 class LLMClient:
     def __init__(self) -> None:
         self.providers = _build_provider_configs()
+        # Сколько раз каскаду пришлось отвечать запасным провайдером вместо
+        # основного. Рост счётчика = основной провайдер нестабилен (спека
+        # approach-1, раздел 7). Виден в /health.
+        self.fallback_switches: int = 0
 
     @property
     def enabled(self) -> bool:
@@ -288,6 +292,12 @@ class LLMClient:
                 raw=raw,
             )
             if reply:
+                if index > 0:
+                    self.fallback_switches += 1
+                    logger.error(
+                        "LLM cascade exhausted primary provider, switched to fallback %s",
+                        provider.label,
+                    )
                 return reply
         logger.error("LLM cascade exhausted all providers")
         return None
