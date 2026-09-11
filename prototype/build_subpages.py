@@ -6959,11 +6959,12 @@ import pages_words2  # регистрирует 6 новых тем словар
 import pages_prep
 import pages_lang_news
 import pages_wave5
+import pages_drafts  # 43 черновика из blog_drafts/ (прерванная сессия 2026-09-11)
 
 pages_geo2.register_geo()
 pages_prep.register_prep_sections()
 
-EXTRA_BLOG_POSTS = pages_wave5.WAVE5_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
