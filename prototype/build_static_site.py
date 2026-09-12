@@ -202,6 +202,8 @@ for _a in [
     "blog-repetitor-ili-kursy", "blog-slova-po-temam",
     "blog-frazy-na-anglijskom-dlya-detej", "blog-anglijskij-dlya-puteshestvij",
     "blog-nemeckij-s-nulya", "blog-anglijskij-dlya-pensionerov",
+    "blog-anglijskij-dlya-raboty-i-pereezda", "blog-podgotovka-k-shkole-matematika-i-gramota",
+    "blog-anglijskij-po-vozrastam", "geo/lobnya",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 
