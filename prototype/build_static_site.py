@@ -200,6 +200,8 @@ for _a in [
     "blog-future-simple-detyam", "blog-present-continuous-detyam",
     "blog-anglijskij-alfavit-dlya-detej",
     "blog-repetitor-ili-kursy", "blog-slova-po-temam",
+    "blog-frazy-na-anglijskom-dlya-detej", "blog-anglijskij-dlya-puteshestvij",
+    "blog-nemeckij-s-nulya", "blog-anglijskij-dlya-pensionerov",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 

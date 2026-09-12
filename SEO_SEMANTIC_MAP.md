@@ -1430,6 +1430,60 @@ JSON-LD на месте (4–5 вопросов); «Долгопрудноме»
 Сборка: **206** страниц (+2: /blog-repetitor-ili-kursy,
 /blog-slova-po-temam).
 
+### 15.23. Фразы для детей, путешествия, немецкий, пенсионеры (волна 17)
+
+**Контекст:** по seo/report.csv (12.09.2026) все «жирные» кластеры
+с показами ≥15 уже покрыты страницами. Волна 17 закрывает четыре
+оставшихся кластера без статей (по частоте) и дожимает страницы
+словаря и взрослого направления.
+
+**Новые статьи (кластеры без страниц):**
+
+- `/blog-frazy-na-anglijskom-dlya-detej` — «фразы на английском для
+  детей» («я пью воду на английском» 7/8.6 + хвост). Базовые фразы
+  по темам (еда, вода, школа, дом), как отрабатывать без зубрёжки.
+  Ссылки: /english-words/eda, /english-words/shkola, /doshkolniki,
+  /mladshie-shkolniki, /test-uroven. FAQ ×4, CTA на /diagnostika.
+- `/blog-anglijskij-dlya-puteshestvij` — «английский для
+  путешествий» (частота 976). Фразы для аэропорта, отеля, ресторана,
+  магазина; план подготовки к поездке. Ссылки: /anglijskij-dlya-vzroslyh,
+  /english-words/puteshestviya, /test-uroven. FAQ ×4, CTA на
+  /diagnostika.
+- `/blog-nemeckij-s-nulya` — «немецкий язык с нуля» (частота 2815).
+  С чего начать, сколько времени до A1–B1, чем немецкий проще и
+  сложнее английского. Ссылки: /nemeckij-yazyk,
+  /blog-zachem-uchit-nemeckij, /blog-nemeckij-ili-francuzskij,
+  /diagnostika. FAQ ×4.
+- `/blog-anglijskij-dlya-pensionerov` — «английский для пенсионеров»
+  (частота 126). Почему не поздно в 50–60+, подход и темп, польза для
+  памяти. Ссылки: /anglijskij-dlya-vzroslyh, /diagnostika. FAQ ×4.
+
+**Дожим существующих страниц:**
+
+- `/english-words/eda` и `/english-words/shkola` (~45 и ~90 показов,
+  поз. 8–12): description дополнены «сохраните или распечатайте»;
+  в make_words_page добавлен параметр faq_extra, по 1 тематическому
+  FAQ-вопросу со ссылкой на /blog-frazy-na-anglijskom-dlya-detej.
+- `/anglijskij-dlya-vzroslyh` («онлайн английский для взрослых»
+  13/15.2 + частотные «для путешествий» 976, «для переезда» 100,
+  «для пенсионеров» 126): title → «…с нуля до разговора, для работы,
+  путешествий и переезда», description — «2 филиала очно и онлайн»
+  (seo_meta_live.json). FAQ 6 → 7: новый вопрос «Не поздно ли
+  начинать учить английский во взрослом возрасте?» со ссылками на
+  /blog-anglijskij-dlya-puteshestvij и /blog-anglijskij-dlya-pensionerov.
+
+**Технически:** статьи — `prototype/pages_wave17.py` (WAVE17_POSTS,
+импорт в build_subpages.py, первым в EXTRA_BLOG_POSTS); алиасы
+добавлены в PAGE_ALIASES (`build_static_site.py`).
+
+**QA после пересборки:** **210** страниц (+4); сервер :8993 — 4 новые
+статьи и 3 дожатые страницы → 200, ровно один h1, FAQPage JSON-LD на
+месте; «Долгопрудноме» — 0; эмодзи в новых/изменённых страницах — 0.
+
+Сборка: **210** страниц (+4: /blog-frazy-na-anglijskom-dlya-detej,
+/blog-anglijskij-dlya-puteshestvij, /blog-nemeckij-s-nulya,
+/blog-anglijskij-dlya-pensionerov).
+
 ---
 
 ## 16. Итоговая статистика карты
