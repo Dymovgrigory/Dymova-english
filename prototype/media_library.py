@@ -383,6 +383,42 @@ def video_story(item_id: str, title: str, lead: str | None = None,
 
 SITE = "https://dymova-english.ru"
 
+# Метаданные self-hosted роликов для VideoObject (волна 13): uploadDate —
+# дата съёмки (из пути life/<дата>-*) или добавления файла, duration (ISO 8601)
+# замерена ffprobe. Ключ — путь относительно media/.
+VIDEO_METADATA: dict[str, dict] = {
+    "doshkolniki.mp4": {"uploadDate": "2026-08-04", "duration": "PT24S"},
+    "summer-academy.mp4": {"uploadDate": "2026-08-04", "duration": "PT45S"},
+    "life/2025-05-28-other/8686004881408589323.mp4": {"uploadDate": "2025-05-28", "duration": "PT44S"},
+    "life/2025-05-30-other/-3667809791914063915.mp4": {"uploadDate": "2025-05-30", "duration": "PT6S"},
+    "life/2025-10-27-other/3836574427212237692.mp4": {"uploadDate": "2025-10-27", "duration": "PT16S"},
+    "life/2025-10-27-other/570690408558754058.mp4": {"uploadDate": "2025-10-27", "duration": "PT36S"},
+    "life/2025-12-17-other/3614670975323174660.mp4": {"uploadDate": "2025-12-17", "duration": "PT1M34S"},
+    "life/2025-12-20-other/8598129996493797092.mp4": {"uploadDate": "2025-12-20", "duration": "PT43S"},
+    "life/2025-12-20-other/9197161958741947074.mp4": {"uploadDate": "2025-12-20", "duration": "PT1M2S"},
+    "life/2026-07-09-other/-4292209495913586662.mp4": {"uploadDate": "2026-07-09", "duration": "PT45S"},
+    "life/no-date-other/Ask and answer in pairs.mp4": {"uploadDate": "2026-08-23", "duration": "PT24S"},
+    "life/no-date-other/Describe and guess an animal .mp4": {"uploadDate": "2026-08-23", "duration": "PT24S"},
+    "life/no-date-other/Spell and guess.mp4": {"uploadDate": "2026-08-23", "duration": "PT9S"},
+    "life/no-date-other/фразы.mp4": {"uploadDate": "2026-08-23", "duration": "PT2M29S"},
+    "life/no-date-other/педагог.mp4": {"uploadDate": "2026-08-23", "duration": "PT3M53S"},
+    "reviews/IMG_2485.mp4": {"uploadDate": "2026-08-24", "duration": "PT18S"},
+    "reviews/IMG_2486.mp4": {"uploadDate": "2026-08-24", "duration": "PT8S"},
+    "reviews/IMG_2488.mp4": {"uploadDate": "2026-08-24", "duration": "PT24S"},
+    "reviews/IMG_2489.mp4": {"uploadDate": "2026-08-24", "duration": "PT14S"},
+    "reviews/IMG_2490.mp4": {"uploadDate": "2026-08-24", "duration": "PT25S"},
+    "reviews/IMG_2491.mp4": {"uploadDate": "2026-08-24", "duration": "PT7S"},
+    "reviews/IMG_2492.mp4": {"uploadDate": "2026-08-24", "duration": "PT36S"},
+}
+
+
+def video_meta(src: str) -> dict:
+    """Метаданные ролика по пути (/media/..., media/... или относительному)."""
+    key = src.lstrip("/")
+    if key.startswith("media/"):
+        key = key[len("media/"):]
+    return VIDEO_METADATA.get(key, {})
+
 
 def video_jsonld(it: dict, title: str) -> str:
     """VideoObject из реальных данных манифеста (дата/событие/постер) —
@@ -401,8 +437,14 @@ def video_jsonld(it: dict, title: str) -> str:
     }
     if it.get("poster"):
         data["thumbnailUrl"] = f"{SITE}/media/{it['poster'].lstrip('/')}"
+    meta = video_meta(it["src"])
+    if meta.get("duration"):
+        data["duration"] = meta["duration"]
     if not data["uploadDate"]:
-        del data["uploadDate"]
+        if meta.get("uploadDate"):
+            data["uploadDate"] = meta["uploadDate"]
+        else:
+            del data["uploadDate"]
     payload = json.dumps(data, ensure_ascii=False)
     return f'<script type="application/ld+json">{payload}</script>'
 
@@ -443,6 +485,7 @@ def video_reviews_block(limit: int | None = None) -> str:
             "contentUrl": f"{SITE}/media/reviews/{n}.mp4",
             "thumbnailUrl": f"{SITE}/media/reviews/{n}.poster.webp",
             "inLanguage": "ru", "isFamilyFriendly": True,
+            **video_meta(f"reviews/{n}.mp4"),
         }, ensure_ascii=False)
         schemas.append(f'<script type="application/ld+json">{payload}</script>')
     return (
