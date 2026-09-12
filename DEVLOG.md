@@ -5342,6 +5342,14 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 102 (агент — Kimi, сайт: SEO-волна 17 — 4 статьи по новым кластерам + дожимы) — PR #206
+
+- Новые статьи (pages_wave17.py, FAQ ×4, CTA /diagnostika и /test-uroven): /blog-frazy-na-anglijskom-dlya-detej (кластер «фразы для детей»), /blog-anglijskij-dlya-puteshestvij (частота 976), /blog-nemeckij-s-nulya (частота 2815), /blog-anglijskij-dlya-pensionerov (126). Алиасы в PAGE_ALIASES.
+- Дожим: /english-words/eda и /english-words/shkola (make_words_page получил параметр faq_extra; description с «сохраните или распечатайте» + тематический FAQ-вопрос), /anglijskij-dlya-vzroslyh (title «с нуля до разговора, для работы, путешествий и переезда», FAQ 6→7).
+- Дзен исключён из плана по решению владельца (постит сам, уже 10 статей).
+- QA: 210 страниц (+4), http.server :8993 — 7 URL HTTP 200, H1=1, FAQPage на месте; «Долгопрудноме»=0, эмодзи=0. SEO_SEMANTIC_MAP.md — раздел 15.23.
+- Деплой на прод, проверено вживую: все 4 новые статьи и дожатые страницы 200.
+
 ### Сессия 101 (агент — Kimi, сайт: SEO-волна 16 — дожим striking distance + 2 статьи) — PR #205
 
 - Дожим страниц в зоне поз 4–20: /preparation (WM 71 показов: title с «5–7 лет, 7 000 ₽/мес», FAQ 4→5 с вопросом про цену), /kitajskij-yazyk (GSC 34+21: «от 9 000 ₽/мес», HSK в сниппете), /novosti-komu-nuzhen-repetitor (84+43: title «5 честных признаков», гео, FAQ 3→5), /english-words/semya (~98: description, счётчики тем), /blog-present-simple-detyam (29: «+ 5 игр» в title).
