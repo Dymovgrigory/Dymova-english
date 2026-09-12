@@ -658,13 +658,13 @@ def main() -> None:
         '<p class="fxb-sub">Похоже, такой страницы нет или она переехала. '
         "Вот что может помочь:</p>"
         '<div class="fxb-card-grid" style="max-width:900px;margin:40px auto 0">'
-        '<a class="fxb-card" href="/"><h3>Главная</h3>'
+        '<a class="fxb-card" href="/"><h2 style="font-size:1.17em;margin:1em 0">Главная</h2>'
         "<p>Программы, цены и запись на бесплатную диагностику.</p></a>"
-        '<a class="fxb-card" href="/doshkolniki"><h3>Английский для детей</h3>'
+        '<a class="fxb-card" href="/doshkolniki"><h2 style="font-size:1.17em;margin:1em 0">Английский для детей</h2>'
         "<p>Дошкольники, младшие школьники и подростки.</p></a>"
-        '<a class="fxb-card" href="/tseny"><h3>Цены</h3>'
+        '<a class="fxb-card" href="/tseny"><h2 style="font-size:1.17em;margin:1em 0">Цены</h2>'
         "<p>Стоимость всех программ и форматов.</p></a>"
-        '<a class="fxb-card" href="/kontakty"><h3>Контакты</h3>'
+        '<a class="fxb-card" href="/kontakty"><h2 style="font-size:1.17em;margin:1em 0">Контакты</h2>'
         "<p>Адреса филиалов, телефон и мессенджеры.</p></a>"
         "</div></section>"
     )
