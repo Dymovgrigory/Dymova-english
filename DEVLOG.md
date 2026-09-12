@@ -5342,6 +5342,15 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 100 (агент — Kimi, сайт: SEO-волна 15 — лендинг «Курсы в Долгопрудном») — PR #204
+
+- Новый лендинг `/kursy-v-dolgoprudnom` (кластер «курсы в долгопрудном»: GSC 89 показов, поз 11.3, CTR 0): 15 карточек программ, форматы обучения, цены сверены с /tseny (9 000 ₽/мес группа, 7 000 ₽/мес подготовка к школе, 2 500 ₽/час индивидуально, 1 125 ₽ пробный), FAQ ×4 + FAQPage/CollectionPage/BreadcrumbList JSON-LD, CTA на /diagnostika. Алиас добавлен в PAGE_ALIASES (build_static_site.py).
+- Статья «когда начинать готовиться к ОГЭ» уже существовала (BLOG_POST_29) — дубль не создавался; ретаргет title («в 7, 8 или 9 классе») и description для CTR (GSC 35 показов, поз 9.1).
+- pages_wave7.py: нейтральные упоминания брендов Globish School и MEschool в обзоре школ (GSC 16+18 и 17 показов).
+- Перелинковка: →/blog-probely-po-anglijskomu-8-klass (GSC 35, поз 15.9), →/nositel-yazyka (36); на /nemeckij-yazyk и /preparation ссылки уже были + добавлены с нового лендинга.
+- QA: 204 страницы (+1), http.server :8993 — новые страницы HTTP 200, H1=1, title/description заполнены; «Долгопрудноме»=0, эмодзи=0. Карта SEO_SEMANTIC_MAP.md — раздел 15.21.
+- Деплой на прод, проверено вживую: /kursy-v-dolgoprudnom 200, /blog-kogda-nachinat-gotovitsya-k-oge 200.
+
 ### Сессия 99 (агент — Kimi, сайт: SEO-волна 14 — Lighthouse-фиксы) — PR #203
 
 **Дата:** 2026-09-12
