@@ -190,6 +190,12 @@ for _a in [
     "blog-ustnaya-chast-oge", "blog-ustnaya-chast-ege",
     "blog-vpr-zadaniya", "blog-yazykovoj-barer",
     "blog-zachem-uchit-nemeckij",
+    "blog-mne-10-let-na-anglijskom", "blog-v-kakom-klasse-prohodyat-present-simple",
+    "blog-urok-anglijskogo-dlya-malyshej-3-4-goda", "blog-probely-po-anglijskomu-2-klass",
+    "blog-probely-po-anglijskomu-4-klass", "blog-probely-po-anglijskomu-7-klass",
+    "blog-probely-po-anglijskomu-9-klass", "blog-past-simple-detyam",
+    "blog-future-simple-detyam", "blog-present-continuous-detyam",
+    "blog-anglijskij-alfavit-dlya-detej",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 

@@ -6970,12 +6970,13 @@ import pages_wave5
 import pages_wave7  # бренд-защита: гид по выбору школы английского в Долгопрудном
 import pages_wave9  # волна 9: новостной пак сентябрь 2026
 import pages_wave10  # волна 10: обзор центров подготовки к школе в Долгопрудном
+import pages_wave11  # волна 11: возрастные фразы, грамматика для детей, пробелы по классам
 import pages_drafts  # 43 черновика из blog_drafts/ (прерванная сессия 2026-09-11)
 
 pages_geo2.register_geo()
 pages_prep.register_prep_sections()
 
-EXTRA_BLOG_POSTS = pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:

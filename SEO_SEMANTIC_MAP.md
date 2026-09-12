@@ -1176,6 +1176,41 @@ FAQ 3–4 с FAQPage JSON-LD, внутренние ссылки на `/doshkolni
 
 ---
 
+### 15.17. Волна 11: возрастные фразы, грамматика для детей, пробелы по классам
+
+**Контекст спроса:** GSC «мне 10 лет на английском» — 68 показов без
+посадочной страницы; «в каком классе проходят present simple» — 19 показов;
+«урок английского для малышей 3 4 года» — 20 показов. Плюс добивка серии
+«пробелы по классам» (волна 5 дала 3/6/8 классы, здесь — 2/4/7/9) и
+детская линейка времён (Past/Future/Present Continuous к существующему
+`blog-present-simple-detyam`).
+
+**Новые статьи** (prototype/pages_wave11.py, первыми в EXTRA_BLOG_POSTS,
+даты 2026-09-12…17, каждая с FAQ ×3–5 и FAQPage JSON-LD, CTA на
+`/diagnostika` / `/test-uroven`):
+
+| Slug | Запрос / тема | Перелинковка |
+|---|---|---|
+| `blog-mne-10-let-na-anglijskom` | «мне 10 лет на английском» — I'm ten, таблица 5–18 лет с транскрипцией, When is your birthday | `/blog-vozrast-na-anglijskom`, `/english-words` |
+| `blog-v-kakom-klasse-prohodyat-present-simple` | Spotlight 4–5 класс и др. УМК, что входит в тему | `/blog-present-simple-detyam`, `/blog-probely-po-anglijskomu-5-klass` |
+| `blog-urok-anglijskogo-dlya-malyshej-3-4-goda` | структура урока 30 мин для малышей | `/blog-anglijskij-dlya-detej-3-4-goda`, `/doshkolniki` |
+| `blog-probely-po-anglijskomu-2-klass` | алфавит, чтение, пассивный словарь | `/blog-anglijskij-alfavit-dlya-detej`, хаб `/blog-probely-po-anglijskomu` |
+| `blog-probely-po-anglijskomu-4-klass` | -s в he/she/it, do/does, последнее окно до 5 класса | `/blog-present-simple-detyam` |
+| `blog-probely-po-anglijskomu-7-klass` | временная «каша», система времён | `/blog-past-simple-detyam`, `/podrostki` |
+| `blog-probely-po-anglijskomu-9-klass` | начало ОГЭ-трека, план сентябрь→май | `/oge-anglijskij`, `/blog-struktura-oge-anglijskij` |
+| `blog-past-simple-detyam` | -ed и неправильные глаголы, did | `/blog-present-simple-detyam`, `/blog-future-simple-detyam` |
+| `blog-future-simple-detyam` | will / won't, will vs going to | обе статьи линейки |
+| `blog-present-continuous-detyam` | am/is/are + -ing, «сейчас» vs «обычно» | `/blog-present-simple-detyam` |
+| `blog-anglijskij-alfavit-dlya-detej` | 26 букв таблицей с транскрипцией, песня ABC | `/english-words`, `/blog-kak-nauchit-rebenka-chitat-po-anglijski` |
+
+**Примечание:** `blog-probely-po-anglijskomu-5-klass` уже существовал
+(MISC_POST_1 в pages_lang_news.py, 2026-08-21) — в волну не входит,
+дубль alias не создавался.
+
+Сборка: 192 → **203** страницы.
+
+---
+
 
 ## 16. Итоговая статистика карты
 
