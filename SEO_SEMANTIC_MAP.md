@@ -1105,7 +1105,38 @@ WM_NOT_IN_CORE-запросы про семью/школу/еду («слова 
 во всех исходниках генератора (build_subpages.py, pages_wave5.py, pages_wave7.py,
 seo_meta_live.json, blog_drafts/*.py).
 
+### 15.15. C-02 + новостной пак (волна 9, сентябрь 2026)
+
+**C-02: оптимизация 15 самых старых novosti-статей** (NEWS_POST_1..15
+в build_subpages.py, даты 2025-06-15…2026-08-18). У каждой обновлены:
+title (≤60 симв., ключевая фраза в начале, добавлены «2026», «2026/27»,
+«в Долгопрудном», «для родителей»), description (140–160 симв. с глаголом-призывом),
+добавлены 2–3 внутренние ссылки на страницы волн 5–8 (`/english-words`,
+`/test-uroven`, `/diagnostika`,
+`/blog-kak-vybrat-shkolu-anglijskogo-v-dolgoprudnom` и др.),
+формулировки освежены под учебный год 2026/27. Приоритет сниппета —
+`/novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov`
+(единственная novosti-статья в seo/report.csv: 43 показа, CTR 0, LOW_CTR).
+
+**Новостной пак: 5 новых статей** (prototype/pages_wave9.py, даты 2026-09-05…09,
+FAQ 3–4 с FAQPage JSON-LD, внутренние ссылки на `/doshkolniki`,
+`/mladshie-shkolniki`, `/podrostki`, `/oge-anglijskij`, `/ege-anglijskij`,
+`/diagnostika`, `/test-uroven`, `/raspisanie`, `/tseny`, `/repetitor`,
+`/online-zanyatiya`):
+
+| URL | Тема |
+| --- | ---- |
+| `/novosti-nabor-2026-2027` | Набор на 2026/27 открыт: группы по возрастам, 2 филиала, бонус ранней записи, запись через диагностику |
+| `/novosti-akciya-privedi-druga` | Акция «Приведи друга»: месяц со скидкой (размер — у администратора, без выдуманных процентов) |
+| `/novosti-den-otkrytyh-dverej-sentyabr-2026` | День открытых дверей сентября 2026 |
+| `/novosti-raspisanie-osen-2026` | Осеннее расписание 2026: форматы, свободные окна |
+| `/novosti-itogi-oge-ege-2026` | Итоги ОГЭ/ЕГЭ 2026 (без выдуманных чисел), приглашение в группы 2027 |
+
+Сборка: 186 → **191** страница. Лента `/novosti` сортируется по дате desc
+автоматически; регистрация алиасов — в build_static_site.py (явный список).
+
 ---
+
 
 ## 16. Итоговая статистика карты
 
