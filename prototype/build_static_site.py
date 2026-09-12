@@ -160,6 +160,7 @@ for _a in [
     "blog-kak-ne-poteryat-anglijskij-v-techenie-goda", "blog-god-podgotovki-k-ege-plan",
     "novosti-1-sentyabrya-v-parke-2026", "novosti-raspisanie-na-sentyabr-2026",
     "novosti-novye-gruppy-2026", "novosti-dognat-programmu-posle-leta",
+    "blog-kak-vybrat-shkolu-anglijskogo-v-dolgoprudnom",
     "blog-my-level-uchebniki", "blog-present-simple-detyam",
     "blog-vozrast-na-anglijskom", "blog-probely-po-anglijskomu-3-klass",
     "blog-probely-po-anglijskomu-6-klass", "blog-probely-po-anglijskomu-8-klass",
