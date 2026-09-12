@@ -5342,6 +5342,17 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 98 (агент — Kimi, сайт: SEO-волна 13 — VideoObject на 12 страницах) — PR #202
+
+**Дата:** 2026-09-12
+**PR:** #202 — «site: SEO волна 13 — VideoObject с uploadDate/duration на 12 страницах» (seo-wave13-video → main), влит squash ee90d791. Откат: `git revert ee90d791` + rsync.
+**Запрос владельца:** «Делай всё из плана автоматически» (п.3 — видео + разметка).
+
+**Что сделано:** VideoObject уже частично был; добавлены требуемые Google поля uploadDate + duration (ffprobe, ISO 8601) через media_library.VIDEO_METADATA (22 ролика) во все генераторы (build_subpages.video_section, video_jsonld, video_reviews_block, main_combined_v7). Итого 30 VideoObject на 12 страницах (7 видео-отзывов на / и /otzyvy, /prazdniki, /zhizn-shkoly, академии, программы). Декоративные фоновые лупы не размечены. Карта 15.19.
+**Как проверено:** сборка 203 стр.; 12 страниц → 200 локально; 30 JSON-LD валидны (6 полей); 44 URL mp4+постеров → 200 на проде; «Долгопрудноме» 0.
+**Деплой:** да, 2026-09-12 — rsync → прод; /otzyvy на проде содержит VideoObject.
+**Далее:** волна 14 — Lighthouse-фиксы (aspect-ratio, порядок заголовков).
+
 ### Сессия 97 (агент — Kimi, сайт: SEO-волна 12 — фирменные иллюстрации в 30 статей) — PR #201
 
 **Дата:** 2026-09-12
