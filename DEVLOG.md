@@ -5340,6 +5340,22 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 92 (агент — Kimi, сайт: SEO-волна 7 — бренд-защита + перелинковка на главную + ретаргет сниппетов)
+
+**Дата:** 2026-09-12
+**PR:** нет — ветка `seo-wave7-brand` от `origin/main`, коммит локально, push/PR не делались (по ТЗ).
+**Запрос владельца:** SEO-волна 7: статья бренд-защиты, перелинковка на главную по гео-запросам, ретаргет title/description страниц с низким CTR.
+
+**Что сделано:**
+1. `prototype/pages_wave7.py` — статья `/blog-kak-vybrat-shkolu-anglijskogo-v-dolgoprudnom` («Как выбрать школу английского в Долгопрудноме: честный гид 2026»): чек-лист 10 критериев, нейтральные упоминания брендовых запросов конкурентов («english first долгопрудный», «modern english school долгопрудный», «friends school долгопрудный», «дмитроченко юлия английский», «финти фокс»), FAQ ×5 с FAQPage JSON-LD, CTA на диагностику и /test-uroven. Подключена в `EXTRA_BLOG_POSTS` (первая) и в авто-алиасы `build_static_site.py`.
+2. **Перелинковка на главную:** анкоры «школа английского языка в Долгопрудноме» / «школа английского для детей в Долгопрудноме» → `/` в 10 статьях: blog-kak-vybrat-repetitora, blog-gruppa-ili-individualno, blog-razmer-gruppy, blog-effektivnost-onlajn, blog-anglijskij-vzroslomu-s-nulya, blog-pozdno-li-uchit-anglijskij, blog-skolko-vremeni-uchit-anglijskij, blog-my-level-uchebniki (pages_wave5), blog-shkola-ili-repetitor-otlichiya (BLOG_POST_27), novosti-kak-vybrat-programmu-anglijskogo-dlya-rebenka (NEWS_POST_13).
+3. **Ретаргет сниппетов LOW_CTR** в `prototype/seo_meta_live.json` (6 URL): preparation, kitajskij-yazyk, anglijskij-dlya-vzroslyh, repetitor, nemeckij-yazyk, novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov — в title гео/выгода/CTA-глагол (55–60 симв.), в description конкретика (146–155 симв.).
+4. `SEO_SEMANTIC_MAP.md` — подраздел 15.13 (волна 7).
+
+**Как проверено:** сборка `build_subpages.py` + `build_static_site.py --out dist_prod` → **186 страниц** (185+1), robots индексируемый. Локальный http.server (порт 8978, 8899 занят): новая статья 200, ровно 1 H1, FAQPage JSON-LD на месте, все 5 брендовых упоминаний присутствуют, статья первая в ленте /blog (дата 2026-09-12), URL в sitemap.xml, эмодзи 0. Title всех 6 ретаргет-страниц на сборке соответствуют новым. Дублей `<title>` по всем 166 title в dist_prod нет. Все 10 анкоров перелинковки присутствуют в собранных страницах.
+**Деплой:** нет (только локальная ветка). Откат: `git revert` коммита ветки.
+**Осталось / следующий шаг:** push + PR после подтверждения владельца; контроль CTR/позиций через 2–4 недели; далее по SEO_BACKLOG — C-02 (оптимизация 15 старых novosti-статей) и GSC_STRIKING.
+
 ### Сессия 91 (агент — Kimi, сайт: SEO-волна 6 — словарь english-words расширен до 16 тем) — PR #194
 
 **Дата:** 2026-09-11

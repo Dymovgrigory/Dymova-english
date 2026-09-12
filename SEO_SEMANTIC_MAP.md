@@ -1051,6 +1051,33 @@ WM_NOT_IN_CORE-запросы про семью/школу/еду («слова 
 страницами `/english-words/semya`, `/english-words/shkola`, `/english-words/eda`;
 отдельные страницы под них не нужны — в волне 6 хаб и перелинковка усилены.
 
+### 15.13. Бренд-защита и дожим striking distance (волна 7, сентябрь 2026)
+
+Три направления:
+
+1. **Статья бренд-защиты** `/blog-kak-vybrat-shkolu-anglijskogo-v-dolgoprudnom` —
+   гид «Как выбрать школу английского в Долгопрудноме: честный гид 2026».
+   Чек-лист из 10 критериев выбора, нейтральные упоминания брендовых запросов
+   конкурентов («english first долгопрудный», «modern english school долгопрудный»,
+   «friends school долгопрудный», «дмитроченко юлия английский», «финти фокс»)
+   в обзорном контексте, FAQ с FAQPage JSON-LD, CTA на бесплатную диагностику
+   и `/test-uroven`.
+
+2. **Перелинковка на главную** по запросам «школа английского долгопрудный» /
+   «английский для детей долгопрудный» — анкоры «школа английского языка
+   в Долгопрудноме» и «школа английского для детей в Долгопрудноме» на `/`
+   добавлены в 10 статей: blog-kak-vybrat-repetitora, blog-gruppa-ili-individualno,
+   blog-razmer-gruppy, blog-effektivnost-onlajn, blog-anglijskij-vzroslomu-s-nulya,
+   blog-pozdno-li-uchit-anglijskij, blog-skolko-vremeni-uchit-anglijskij,
+   blog-my-level-uchebniki, blog-shkola-ili-repetitor-otlichiya,
+   novosti-kak-vybrat-programmu-anglijskogo-dlya-rebenka.
+
+3. **Ретаргет title/description** 6 страниц с низким CTR (striking distance):
+   `/preparation`, `/kitajskij-yazyk`, `/anglijskij-dlya-vzroslyh`, `/repetitor`,
+   `/nemeckij-yazyk`, `/novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov` —
+   в title добавлены гео-модификатор, выгода или CTA-глагол, в description —
+   конкретика (мини-группы до 7 человек, бесплатная диагностика/пробный урок).
+
 ---
 
 ## 16. Итоговая статистика карты
