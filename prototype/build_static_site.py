@@ -48,6 +48,7 @@ PAGE_ALIASES = {
     "page_reading.html": "reading",
     "page_grammar.html": "grammar",
     "page_preparation.html": "preparation",
+    "page_kursy_v_dolgoprudnom.html": "kursy-v-dolgoprudnom",
     "page_geo_mytishchi.html": "geo/mytishchi",
     "page_online_zanyatiya.html": "online-zanyatiya",
     "page_podderzhivayushchie_online.html": "podderzhivayushchie-online",
