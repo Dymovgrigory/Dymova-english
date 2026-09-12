@@ -5342,6 +5342,13 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 101 (агент — Kimi, сайт: SEO-волна 16 — дожим striking distance + 2 статьи) — PR #205
+
+- Дожим страниц в зоне поз 4–20: /preparation (WM 71 показов: title с «5–7 лет, 7 000 ₽/мес», FAQ 4→5 с вопросом про цену), /kitajskij-yazyk (GSC 34+21: «от 9 000 ₽/мес», HSK в сниппете), /novosti-komu-nuzhen-repetitor (84+43: title «5 честных признаков», гео, FAQ 3→5), /english-words/semya (~98: description, счётчики тем), /blog-present-simple-detyam (29: «+ 5 игр» в title).
+- Новые статьи: /blog-repetitor-ili-kursy (~45 показов), /blog-slova-po-temam (~50 показов, хаб-статья словаря, на неё теперь ссылается FAQ-шаблон всех 16 страниц english-words). FAQ ×4, CTA /diagnostika, алиасы в PAGE_ALIASES.
+- QA: 206 страниц (+2), http.server :8993 — 9 URL HTTP 200, H1=1, FAQPage на месте; «Долгопрудноме»=0, эмодзи=0. SEO_SEMANTIC_MAP.md — раздел 15.22.
+- Деплой на прод, проверено вживую: обе новые статьи и дожатые страницы 200.
+
 ### Сессия 100 (агент — Kimi, сайт: SEO-волна 15 — лендинг «Курсы в Долгопрудном») — PR #204
 
 - Новый лендинг `/kursy-v-dolgoprudnom` (кластер «курсы в долгопрудном»: GSC 89 показов, поз 11.3, CTR 0): 15 карточек программ, форматы обучения, цены сверены с /tseny (9 000 ₽/мес группа, 7 000 ₽/мес подготовка к школе, 2 500 ₽/час индивидуально, 1 125 ₽ пробный), FAQ ×4 + FAQPage/CollectionPage/BreadcrumbList JSON-LD, CTA на /diagnostika. Алиас добавлен в PAGE_ALIASES (build_static_site.py).
