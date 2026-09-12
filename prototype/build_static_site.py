@@ -164,6 +164,7 @@ for _a in [
     "novosti-den-otkrytyh-dverej-sentyabr-2026", "novosti-raspisanie-osen-2026",
     "novosti-itogi-oge-ege-2026",
     "blog-kak-vybrat-shkolu-anglijskogo-v-dolgoprudnom",
+    "blog-podgotovka-k-shkole-v-dolgoprudnom-obzor",
     "blog-my-level-uchebniki", "blog-present-simple-detyam",
     "blog-vozrast-na-anglijskom", "blog-probely-po-anglijskomu-3-klass",
     "blog-probely-po-anglijskomu-6-klass", "blog-probely-po-anglijskomu-8-klass",
