@@ -1239,6 +1239,37 @@ loading="lazy", width/height для CLS=0): 27 статей блога/ново�
 
 ---
 
+### 15.19. VideoObject на страницах с видео (волна 13)
+
+**Цель:** видеопревью в выдаче Google/Яндекса (video rich results) → рост
+CTR страниц с self-hosted роликами.
+
+Разметка VideoObject (JSON-LD) уже выводилась генераторами
+(`video_section()` в build_subpages.py, `video_jsonld()` и
+`video_reviews_block()` в media_library.py), но без `uploadDate` и
+`duration` — обязательных/рекомендованных полей Google для видео-поиска.
+Волна 13: единая карта метаданных `VIDEO_METADATA` в
+`prototype/media_library.py` (uploadDate = дата съёмки из пути
+`life/<дата>-*` либо дата добавления файла; duration в ISO 8601, замер
+ffprobe) + хелпер `video_meta(src)`, подключённый во все три генератора
+и в главную (`main_combined_v7.html`, 7 видео-отзывов).
+
+Итог: **30 VideoObject на 12 страницах**, у всех — name, description,
+contentUrl, thumbnailUrl, uploadDate, duration (валидный JSON, проверено
+парсингом). Страницы: `/` (7 отзывов), `/otzyvy` (7), `/prazdniki` (4),
+`/zhizn-shkoly` (3), `/letnyaya-akademiya` (2), `/doshkolniki`,
+`/mladshie-shkolniki`, `/podrostki`, `/vesennyaya-akademiya-2026`,
+`/novosti-kak-prohodyat-smeny-letnej-akademii`,
+`/blog-halloween-v-foxinburge-kak-eto-bylo`,
+`/blog-novyj-god-2026-v-foxinburge`. Длительности роликов — от 6 с
+(праздники) до 3 мин 53 с («педагог» на /zhizn-shkoly). Все 44 URL
+(mp4 + постеры) отдают 200 на проде. Декоративные фоновые лупы
+(`wow_scene`, muted autoplay) намеренно не размечаются.
+
+Сборка: **203** страницы (без изменений).
+
+---
+
 
 ## 16. Итоговая статистика карты
 
