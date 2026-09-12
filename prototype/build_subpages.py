@@ -328,6 +328,10 @@ ARTICLE_CSS = """
 #fxb-page .fxb-article-body p:last-child{margin-bottom:0}
 #fxb-page .fxb-article-body ul{margin:0 0 18px 20px;padding-left:18px}
 #fxb-page .fxb-article-body li{margin:0 0 10px;color:var(--ink)}
+/* Фирменная иллюстрация статьи (волна 12): webp 896x512, CLS=0 за счёт width/height */
+#fxb-page .fxb-article-figure{margin:26px auto 30px;max-width:760px}
+#fxb-page .fxb-article-figure img{display:block;width:100%;height:auto;border-radius:20px;box-shadow:0 14px 40px rgba(51,37,79,.16)}
+#fxb-page .fxb-article-figure figcaption{margin-top:12px;font-size:14px;line-height:1.5;color:rgba(51,37,79,.62);font-weight:600;text-align:center}
 #fxb-page .fxb-article-body a{color:var(--purple-2);font-weight:800}
 #fxb-page .fxb-article-body a:hover{color:var(--orange)}
 #fxb-page .fxb-related{max-width:760px;margin:44px auto 0}
@@ -577,6 +581,14 @@ def format_date_ru(date_str):
     return f"{d} {RU_MONTHS[m]} {y}"
 
 
+def article_figure_html(fig):
+    """Фирменная AI-иллюстрация статьи (волна 12). fig: {img, alt, caption}."""
+    return ('<figure class="fxb-article-figure"><img src="' + escape(fig["img"], quote=True)
+            + '" alt="' + escape(fig["alt"], quote=True)
+            + '" loading="lazy" width="896" height="512"><figcaption>'
+            + escape(fig["caption"]) + '</figcaption></figure>')
+
+
 def render_article_body(items):
     parts = []
     pre = []
@@ -635,6 +647,10 @@ def landing_page(p):
         h.append('<a data-fxb-zayavka data-fxb-subject="' + p["lead_subject"] + '" data-fxb-window="' + p["lead_hero_window"] + '" role="button" tabindex="0" class="fxb-btn-main">' + p["cta_label"] + '</a>')
         h.append('<a href="#fxb-program" class="fxb-btn-sec">Подробнее о программе</a>')
         h.append('</div></div></section>')
+    if p.get("figure"):
+        # Волна 12: фирменная иллюстрация сразу после hero на лендингах
+        h.append('<section class="fxb-section fxb-bg-light"><div class="fxb-wrap">'
+                 + article_figure_html(p["figure"]) + '</div></section>')
     # FEATURES
     h.append('<section class="fxb-section" id="fxb-program"><div class="fxb-wrap">')
     h.append('<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>' + p["feat_kicker"] + '</span>')
@@ -715,7 +731,7 @@ def landing_page(p):
         h.append(TEAM_JS)
     if p.get("prices"):
         h.append(PRICE_CSS)
-    if p.get("article_css"):
+    if p.get("article_css") or p.get("figure"):
         h.append(ARTICLE_CSS)
     h.append(JS)
     return "\n".join(h)
@@ -942,6 +958,14 @@ def article_page(p):
     pre_blocks, prose_html = render_article_body(p["body"])
     for block in pre_blocks:
         h.append(block)
+    if p.get("figure"):
+        # Волна 12: фирменная иллюстрация после первого абзаца статьи
+        fig_html = article_figure_html(p["figure"])
+        pos = prose_html.find("</p>")
+        if pos != -1:
+            prose_html = prose_html[:pos + 4] + "\n" + fig_html + prose_html[pos + 4:]
+        else:
+            prose_html = fig_html + "\n" + prose_html
     h.append(prose_html)
     if p.get("related"):
         h.append('<div class="fxb-related"><h2>Читайте также</h2><div class="fxb-related-list">')
@@ -6972,6 +6996,7 @@ import pages_wave9  # волна 9: новостной пак сентябрь 2
 import pages_wave10  # волна 10: обзор центров подготовки к школе в Долгопрудном
 import pages_wave11  # волна 11: возрастные фразы, грамматика для детей, пробелы по классам
 import pages_drafts  # 43 черновика из blog_drafts/ (прерванная сессия 2026-09-11)
+import pages_wave12  # волна 12: фирменные иллюстрации к 30 статьям
 
 pages_geo2.register_geo()
 pages_prep.register_prep_sections()
@@ -7074,6 +7099,21 @@ PAGES["page_novosti_otkryt_nabor_na_novyj_uchebnyj_god_2026.html"] = NEWS_POST_1
 PAGES["page_novosti_kak_vybrat_programmu_anglijskogo_dlya_rebenka.html"] = NEWS_POST_13
 PAGES["page_novosti_podgotovka_k_novomu_uchebnomu_godu_anglijskij.html"] = NEWS_POST_14
 PAGES["page_novosti_start_novogo_uchebnogo_goda_2026.html"] = NEWS_POST_15
+
+# Волна 12: привязываем иллюстрации к страницам (27 статей блога/новостей
+# и лендинги /repetitor, /preparation). Цикл стоит ПОСЛЕ всех присваиваний
+# PAGES: часть алиасов регистрируется через EXTRA_*-посты выше, часть —
+# прямыми присваиваниями NEWS_POST_*/BLOG_POST_*.
+for _alias, _fig in pages_wave12.WAVE12_FIGURES.items():
+    _fname = "page_" + _alias.replace("-", "_") + ".html"
+    if _fname in PAGES:
+        PAGES[_fname]["figure"] = {
+            "img": "/article-images/" + _alias + ".webp",
+            "alt": _fig["alt"],
+            "caption": _fig["caption"],
+        }
+    else:
+        print("!! wave12: страница не найдена в PAGES:", _alias)
 
 
 def main():

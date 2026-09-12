@@ -1209,6 +1209,34 @@ FAQ 3–4 с FAQPage JSON-LD, внутренние ссылки на `/doshkolni
 
 Сборка: 192 → **203** страницы.
 
+### 15.18. Реалистичные иллюстрации с маскотом в статьях (волна 12)
+
+**Цель:** рост CTR сниппета (превью в выдаче и соцсетях), времени на
+странице и трафика из Яндекс.Картинок (alt = ключевая фраза статьи).
+
+30 страниц получили фотореалистичную AI-иллюстрацию с РЕАЛЬНЫМ маскотом
+бренда (endpoint images/edits, референс «Маскот Фоксинбург.PNG» — рыжий
+лисёнок в жёлтой футболке, фиолетовых шортах/рюкзаке/кедах, большие голубые
+глаза; центральный кроп до 7:4) → webp (896×512,
+loading="lazy", width/height для CLS=0): 27 статей блога/новостей +
+коммерческие `/repetitor` и `/preparation`. Карта alias → alt/caption —
+`prototype/pages_wave12.py` (WAVE12_FIGURES); файлы —
+`prototype/article-images/<alias>.webp`. Figure вставляется после первого
+абзаца статьи (лендинги — после hero), стили `.fxb-article-figure` —
+в ARTICLE_CSS. Этим же 30 страницам — per-page `og:image`
+(/article-images/<alias>.webp) вместо общей заглушки и image-image
+расширение в sitemap.xml.
+
+Топ по показам (seo/report.csv, 11.09.2026):
+`novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov` (127),
+`/preparation` (105), `/repetitor` (35); далее — обзорные волн 7–10
+(`blog-kak-vybrat-shkolu-anglijskogo-v-dolgoprudnom`,
+`blog-podgotovka-k-shkole-v-dolgoprudnom-obzor`) и evergreen-статьи
+волн 5–11 и черновиков (ОГЭ/ЕГЭ/ВПР, пробелы по классам, чтение, слова,
+мультфильмы, песни, китайский).
+
+Сборка: **203** страницы (без изменений — меняется контент существующих).
+
 ---
 
 
