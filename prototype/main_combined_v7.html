@@ -53,78 +53,98 @@
         <iframe title="Награда Яндекс.Карт: Хорошее место" src="https://yandex.ru/sprav/widget/rating-badge/162408588499?type=award" width="150" height="50" frameborder="0" scrolling="no" style="pointer-events:auto"></iframe>
       </div>
 
-      <button class="fxb-burger" id="fxbBurger" type="button" aria-label="Меню">
+      <button class="fxb-burger" id="fxbBurger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="fxbNav">
         <span></span><span></span><span></span>
       </button>
 
-      <nav class="fxb-nav" id="fxbNav">
-        <a href="/">Главная</a>
+      <nav class="fxb-nav" id="fxbNav" aria-label="Основная навигация">
         <div class="fxb-dd">
-          <button class="fxb-dd-btn" type="button">Наши курсы <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="fxb-dd-btn" type="button" aria-haspopup="true" aria-expanded="false">Программы <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="fxb-dd-panel">
+            <span class="fxb-dd-head">По возрастам</span>
+            <a href="/doshkolniki">Дошкольники (2–6 лет)</a>
+            <a href="/mladshie-shkolniki">Младшие школьники (7–10)</a>
+            <a href="/podrostki">Подростки (11–16)</a>
+            <a href="/anglijskij-dlya-vzroslyh">Взрослые</a>
+            <a href="/preparation">Подготовка к школе</a>
+            <span class="fxb-dd-head">Форматы</span>
+            <a href="/standartnye-offline">Группы офлайн</a>
+            <a href="/online-zanyatiya">Онлайн-занятия</a>
+            <a href="/podderzhivayushchie-online">Поддерживающие онлайн</a>
+            <a href="/repetitor">Индивидуально с репетитором</a>
+            <a href="/repetitor-nachalnaya-shkola">Репетитор 1–4 класс</a>
+            <span class="fxb-dd-head">Курсы</span>
+            <a href="/razgovornyj-anglijskij">Разговорный английский</a>
+            <a href="/nositel-yazyka">Занятия с носителем языка</a>
             <a href="/reading">Курс по чтению</a>
             <a href="/grammar">Курс по грамматике</a>
-            <a href="/preparation">Подготовка к школе</a>
-            <a href="/oge-anglijskij">Подготовка к ОГЭ по английскому</a>
-            <a href="/ege-anglijskij">Подготовка к ЕГЭ по английскому</a>
-            <a href="/vpr-anglijskij">Подготовка к ВПР по английскому</a>
-            <a href="/razgovornyj-anglijskij">Разговорный английский</a>
-            <a href="/repetitor">Индивидуальные занятия</a>
-            <a href="/repetitor-nachalnaya-shkola">Репетитор 1–4 класс</a>
           </div>
         </div>
         <div class="fxb-dd">
-          <button class="fxb-dd-btn" type="button">Направления <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="fxb-dd-btn" type="button" aria-haspopup="true" aria-expanded="false">Экзамены <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="fxb-dd-panel">
-            <a href="/doshkolniki">Дошкольники (2-6)</a>
-            <a href="/mladshie-shkolniki">Младшие школьники (7-10)</a>
-            <a href="/podrostki">Подростки (11-16)</a>
-            <a href="/anglijskij-dlya-vzroslyh">Английский для взрослых</a>
+            <a href="/oge-anglijskij">Подготовка к ОГЭ</a>
+            <a href="/ege-anglijskij">Подготовка к ЕГЭ</a>
+            <a href="/vpr-anglijskij">Подготовка к ВПР</a>
+            <a href="/test-uroven">Тест уровня английского</a>
           </div>
         </div>
         <div class="fxb-dd">
-          <button class="fxb-dd-btn" type="button">Другие языки <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="fxb-dd-btn" type="button" aria-haspopup="true" aria-expanded="false">Языки <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="fxb-dd-panel">
+            <a href="/kursy-v-dolgoprudnom">Английский язык</a>
             <a href="/nemeckij-yazyk">Немецкий язык</a>
             <a href="/kitajskij-yazyk">Китайский язык</a>
             <a href="/ispanskij-yazyk">Испанский язык</a>
           </div>
         </div>
         <div class="fxb-dd">
-          <button class="fxb-dd-btn" type="button">Программы <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="fxb-dd-btn" type="button" aria-haspopup="true" aria-expanded="false">Родителям <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="fxb-dd-panel">
-            <a href="/letnyaya-akademiya">Летняя академия</a>
-            <a href="/vesennyaya-akademiya-2026">Весенняя академия</a>
-            <a href="/prazdniki">Праздники</a>
-            <a href="/ekskursii">Экскурсии</a>
-            <a href="/vypusknoj-2026">Выпускной</a>
-            <a href="/meropriyatiya">Мероприятия</a>
+            <a href="/tseny">Цены</a>
+            <a href="/raspisanie">Расписание</a>
+            <a href="/blog">Блог: 100+ статей</a>
+            <a href="/english-words">Словарь по темам</a>
+            <a href="/novosti">Новости</a>
+            <a href="/otzyvy">Отзывы</a>
+            <a href="/diagnostika">Диагностика уровня</a>
+            <a href="/test-gotov-k-shkole">Тест: готовность к школе</a>
+            <a href="/test-format">Тест: какой формат выбрать</a>
           </div>
         </div>
-        <a href="/tseny">Цены</a>
-        <a href="/raspisanie">Расписание</a>
         <div class="fxb-dd">
-          <button class="fxb-dd-btn" type="button">Полезное <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="fxb-dd-btn" type="button" aria-haspopup="true" aria-expanded="false">О школе <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="fxb-dd-panel">
-            <a href="/blog">Блог</a>
+            <a href="/about">О нас</a>
             <a href="/zhizn-shkoly">Жизнь школы</a>
             <a href="/meropriyatiya">Мероприятия</a>
-            <a href="/test-uroven">Тест уровня английского</a>
-            <a href="/english-words">Словарь по темам</a>
-            <a href="/otzyvy">Отзывы</a>
-            <a href="/about">О школе</a>
-            <a href="/novosti">Новости</a>
+            <a href="/letnyaya-akademiya">Летняя академия</a>
+            <a href="/vesennyaya-akademiya-2026">Весенняя академия</a>
+            <a href="/ekskursii">Экскурсии</a>
+            <a href="/prazdniki">Праздники</a>
+            <a href="/vypusknoj-2026">Выпускной</a>
+            <a href="/vakansii">Вакансии</a>
           </div>
         </div>
-        <a href="/vakansii">Вакансии</a>
+        <div class="fxb-dd">
+          <button class="fxb-dd-btn" type="button" aria-haspopup="true" aria-expanded="false">Филиалы <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="fxb-dd-panel">
+            <a href="/kursy-v-dolgoprudnom">Долгопрудный</a>
+            <a href="/geo/himki">Химки</a>
+            <a href="/geo/mytishchi">Мытищи</a>
+            <a href="/geo/hlebnikovo">Хлебниково</a>
+            <a href="/geo/moskva-sao">Москва (САО)</a>
+            <a href="/geo/lobnya">Лобня</a>
+          </div>
+        </div>
         <a href="/kontakty">Контакты</a>
+        <a class="fxb-nav-lk" href="https://lms.dymova-english.ru">Вход в ЛК</a>
+        <button class="fxb-nav-cta" type="button" data-fxb-zayavka data-fxb-subject="Запись на занятия" data-fxb-window="Мобильное меню">Записаться</button>
       </nav>
 
       <div class="fxb-actions">
-        <a class="fxb-act-link" href="https://max.ru/id611904726658_biz" target="_blank" rel="noopener">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
-          Max</a>
-        <a class="fxb-act-btn" href="https://lms.dymova-english.ru">Вход в ЛК</a>
+        <a class="fxb-act-link" href="https://lms.dymova-english.ru">Вход в ЛК</a>
+        <button class="fxb-act-btn" type="button" data-fxb-zayavka data-fxb-subject="Запись на занятия" data-fxb-window="Шапка сайта">Записаться</button>
       </div>
     </div>
 
@@ -211,10 +231,14 @@
 #fxb-hero .fxb-dd.fxb-open .fxb-dd-btn svg{transform:rotate(180deg)}
 #fxb-hero .fxb-dd-panel a{display:block;padding:11px 16px;font-size:13.5px;font-weight:600;color:var(--purple);border-radius:10px;transition:background .15s}
 #fxb-hero .fxb-dd-panel a:hover{background:rgba(102,45,146,.06)}
+#fxb-hero .fxb-dd-head{display:block;padding:10px 16px 4px;font-size:10.5px;font-weight:800;color:rgba(57,40,82,.42);text-transform:uppercase;letter-spacing:.08em}
+#fxb-hero .fxb-nav>a:focus-visible,#fxb-hero .fxb-dd-btn:focus-visible{outline:2px solid var(--yellow);outline-offset:2px;color:#fff}
+#fxb-hero .fxb-dd-panel a:focus-visible{outline:2px solid var(--purple-2);outline-offset:-2px;background:rgba(102,45,146,.08)}
+#fxb-hero .fxb-nav-lk,#fxb-hero .fxb-nav-cta{display:none}
 #fxb-hero .fxb-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
 #fxb-hero .fxb-act-link{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:rgba(255,255,255,.78);padding:8px 14px;border:1.5px solid rgba(255,255,255,.14);border-radius:10px;transition:all .2s;white-space:nowrap}
 #fxb-hero .fxb-act-link:hover{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)}
-#fxb-hero .fxb-act-btn{font-size:13.5px;font-weight:800;color:var(--purple);background:var(--yellow);padding:9px 20px;border-radius:10px;transition:all .2s;white-space:nowrap}
+#fxb-hero .fxb-act-btn{font-family:inherit;border:0;cursor:pointer;font-size:13.5px;font-weight:800;color:var(--purple);background:var(--yellow);padding:9px 20px;border-radius:10px;transition:all .2s;white-space:nowrap}
 #fxb-hero .fxb-act-btn:hover{background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.18)}
 #fxb-hero .fxb-burger{display:none;background:0;border:0;width:34px;height:26px;flex-direction:column;justify-content:space-between;cursor:pointer;padding:0}
 #fxb-hero .fxb-burger span{display:block;width:100%;height:2.5px;background:#fff;border-radius:2px;transition:all .3s}
@@ -264,6 +288,10 @@
   #fxb-hero .fxb-dd-panel a:hover{color:#fff;background:rgba(255,255,255,.06)}
   #fxb-hero .fxb-burger{display:flex;margin-left:auto}
   #fxb-hero .fxb-actions{display:none}
+  #fxb-hero .fxb-dd-head{color:rgba(255,255,255,.4);padding:12px 16px 4px}
+  #fxb-hero .fxb-dd-btn{justify-content:space-between}
+  #fxb-hero .fxb-nav-lk{display:block;margin-top:8px;font-size:15px;font-weight:700;color:#fff;padding:13px 16px;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;text-align:center}
+  #fxb-hero .fxb-nav-cta{display:block;width:100%;margin-top:8px;font-family:inherit;font-size:15px;font-weight:800;color:var(--purple);background:var(--yellow);padding:14px 16px;border:0;border-radius:12px;cursor:pointer}
   #fxb-hero .fxb-slogan{padding:32px 0 42px;gap:12px}
   #fxb-hero .fxb-slogan-fox{width:42px;height:42px}
   #fxb-hero .fxb-slogan-sub{font-size:15.5px}
@@ -290,6 +318,16 @@
   #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:13.5px;padding:8px 10px}
   #fxb-hero .fxb-nav{gap:2px}
   #fxb-hero .fxb-topline{gap:10px}
+}
+/* На широких экранах есть место и для «Вход в ЛК» */
+@media(min-width:1401px){
+  #fxb-hero .fxb-act-link{display:inline-flex}
+}
+/* На 961–1400px топлайн не влезал бы с бейджем — прячем (рейтинг есть в блоках отзывов) */
+@media(min-width:961px) and (max-width:1400px){
+  #fxb-hero .fxb-badge{display:none}
+  #fxb-hero .fxb-nav>a,#fxb-hero .fxb-dd-btn{font-size:12px;padding:8px 8px}
+  #fxb-hero .fxb-act-btn{padding:8px 14px}
 }
 @keyframes fxbFadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fxbFadeIn{from{opacity:0}to{opacity:1}}
@@ -1543,32 +1581,64 @@ function fluidSimulation(canvas, opts) {
   /* Burger toggle */
   var burger=document.getElementById('fxbBurger');
   var nav=document.getElementById('fxbNav');
+  function setNav(open){
+    nav.classList.toggle('fxb-open',open);
+    burger.setAttribute('aria-expanded',open?'true':'false');
+    var spans=burger.querySelectorAll('span');
+    if(open){
+      spans[0].style.transform='rotate(45deg) translate(5px,5px)';
+      spans[1].style.opacity='0';
+      spans[2].style.transform='rotate(-45deg) translate(6px,-6px)';
+    }else{
+      spans[0].style.transform='';spans[1].style.opacity='';spans[2].style.transform='';
+    }
+  }
   if(burger&&nav){
-    burger.addEventListener('click',function(){
-      nav.classList.toggle('fxb-open');
-      var spans=burger.querySelectorAll('span');
-      if(nav.classList.contains('fxb-open')){
-        spans[0].style.transform='rotate(45deg) translate(5px,5px)';
-        spans[1].style.opacity='0';
-        spans[2].style.transform='rotate(-45deg) translate(6px,-6px)';
-      }else{
-        spans[0].style.transform='';spans[1].style.opacity='';spans[2].style.transform='';
-      }
-    });
+    burger.addEventListener('click',function(){setNav(!nav.classList.contains('fxb-open'));});
   }
 
-  /* Dropdown toggles */
-  document.querySelectorAll('#fxb-hero .fxb-dd-btn').forEach(function(btn){
+  /* Dropdown: hover (десктоп, с задержкой закрытия), click, клавиатура */
+  var ddCloseTimer=null;
+  function ddOpen(dd){
+    document.querySelectorAll('#fxb-hero .fxb-dd.fxb-open').forEach(function(d){
+      if(d!==dd)ddClose(d);
+    });
+    dd.classList.add('fxb-open');
+    dd.querySelector('.fxb-dd-btn').setAttribute('aria-expanded','true');
+  }
+  function ddClose(dd){
+    dd.classList.remove('fxb-open');
+    dd.querySelector('.fxb-dd-btn').setAttribute('aria-expanded','false');
+  }
+  function ddCloseAll(){
+    document.querySelectorAll('#fxb-hero .fxb-dd.fxb-open').forEach(ddClose);
+  }
+  var hoverFine=window.matchMedia&&window.matchMedia('(hover:hover) and (min-width:961px)');
+  document.querySelectorAll('#fxb-hero .fxb-dd').forEach(function(dd){
+    var btn=dd.querySelector('.fxb-dd-btn');
     btn.addEventListener('click',function(e){
       e.stopPropagation();
-      var dd=btn.closest('.fxb-dd');
-      var wasOpen=dd.classList.contains('fxb-open');
-      document.querySelectorAll('#fxb-hero .fxb-dd').forEach(function(d){d.classList.remove('fxb-open')});
-      if(!wasOpen)dd.classList.add('fxb-open');
+      if(dd.classList.contains('fxb-open'))ddClose(dd);else ddOpen(dd);
+    });
+    dd.addEventListener('mouseenter',function(){
+      if(hoverFine&&hoverFine.matches){clearTimeout(ddCloseTimer);ddOpen(dd);}
+    });
+    dd.addEventListener('mouseleave',function(){
+      if(hoverFine&&hoverFine.matches){clearTimeout(ddCloseTimer);ddCloseTimer=setTimeout(function(){ddClose(dd);},250);}
+    });
+    dd.addEventListener('focusin',function(){
+      if(hoverFine&&hoverFine.matches){clearTimeout(ddCloseTimer);ddOpen(dd);}
+    });
+    dd.addEventListener('focusout',function(e){
+      if(hoverFine&&hoverFine.matches&&!dd.contains(e.relatedTarget)){clearTimeout(ddCloseTimer);ddCloseTimer=setTimeout(function(){ddClose(dd);},200);}
     });
   });
-  document.addEventListener('click',function(){
-    document.querySelectorAll('#fxb-hero .fxb-dd').forEach(function(d){d.classList.remove('fxb-open')});
+  document.addEventListener('click',ddCloseAll);
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape')return;
+    var opened=document.querySelector('#fxb-hero .fxb-dd.fxb-open');
+    if(opened){ddClose(opened);opened.querySelector('.fxb-dd-btn').focus();return;}
+    if(nav&&nav.classList.contains('fxb-open')){setNav(false);burger.focus();}
   });
 })();
 </script>
@@ -4103,71 +4173,91 @@ fxbGalleryInit();
             <svg viewBox="0 0 24 24" width="18" height="18"><path d="M17.5 14.4c-.3-.1-1.6-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.7 1.9-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3zM12 21.5c-1.8 0-3.4-.5-4.8-1.3l-.3-.2-3.5.9.9-3.4-.2-.3A9.4 9.4 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zM12 1C6 1 1 6 1 12c0 1.9.5 3.8 1.4 5.4L1 23l5.7-1.5c1.6.9 3.4 1.4 5.3 1.4 6 0 11-5 11-11S18 1 12 1z" fill="currentColor"/></svg>
           </a>
         </div>
+        <div class="fxb-ft-contacts">
+          <a href="tel:+79939232309">8 993 923-23-09</a>
+          <a href="tel:+79167323169">8 916 732-31-69</a>
+          <a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a>
+          <span class="fxb-ft-text">Ежедневно 9:00 — 21:00</span>
+        </div>
       </div>
 
-      <!-- Колонка 2: Навигация -->
+      <!-- Колонка 2: Программы -->
       <div class="fxb-ft-col">
-        <h2>Навигация</h2>
-        <a href="/">Главная</a>
+        <h2>Программы</h2>
+        <a href="/doshkolniki">Дошкольники (2–6)</a>
+        <a href="/mladshie-shkolniki">Младшие школьники (7–10)</a>
+        <a href="/podrostki">Подростки (11–16)</a>
+        <a href="/anglijskij-dlya-vzroslyh">Взрослые</a>
+        <a href="/preparation">Подготовка к школе</a>
+        <a href="/razgovornyj-anglijskij">Разговорный английский</a>
+        <a href="/nositel-yazyka">Занятия с носителем</a>
         <a href="/reading">Курс по чтению</a>
         <a href="/grammar">Курс по грамматике</a>
-        <a href="/preparation">Подготовка к школе</a>
-        <a href="/oge-anglijskij">Подготовка к ОГЭ по английскому</a>
-        <a href="/ege-anglijskij">Подготовка к ЕГЭ по английскому</a>
-        <a href="/vpr-anglijskij">Подготовка к ВПР по английскому</a>
-        <a href="/razgovornyj-anglijskij">Разговорный английский</a>
-        <a href="/repetitor">Индивидуальные занятия (репетитор)</a>
-        <a href="/repetitor-nachalnaya-shkola">Репетитор: русский и математика (1–4 класс)</a>
-        <a href="/doshkolniki">Для дошкольников</a>
-        <a href="/mladshie-shkolniki">Для младших школьников</a>
-        <a href="/podrostki">Для подростков</a>
-        <a href="/anglijskij-dlya-vzroslyh">Английский для взрослых</a>
-        <a href="/nemeckij-yazyk">Немецкий язык</a>
-        <a href="/kitajskij-yazyk">Китайский язык</a>
-        <a href="/ispanskij-yazyk">Испанский язык</a>
+        <a href="/standartnye-offline">Группы офлайн</a>
         <a href="/online-zanyatiya">Онлайн-занятия</a>
         <a href="/podderzhivayushchie-online">Поддерживающие онлайн</a>
-        <a href="/standartnye-offline">Стандартные офлайн</a>
+        <a href="/repetitor">Индивидуально (репетитор)</a>
+        <a href="/repetitor-nachalnaya-shkola">Репетитор 1–4 класс</a>
       </div>
 
-      <!-- Колонка 3: О школе -->
+      <!-- Колонка 3: Экзамены -->
       <div class="fxb-ft-col">
-        <h2>О школе</h2>
-        <a href="/about">О нас</a>
-        <a href="/otzyvy">Отзывы</a>
-        <a href="/zhizn-shkoly">Жизнь школы</a>
-        <a href="/meropriyatiya">Мероприятия</a>
-        <a href="/tseny">Цены</a>
-        <a href="/raspisanie">Расписание</a>
-        <a href="/blog">Блог</a>
+        <h2>Экзамены</h2>
+        <a href="/oge-anglijskij">Подготовка к ОГЭ</a>
+        <a href="/ege-anglijskij">Подготовка к ЕГЭ</a>
+        <a href="/vpr-anglijskij">Подготовка к ВПР</a>
         <a href="/test-uroven">Тест уровня английского</a>
         <a href="/test-gotov-k-shkole">Тест: готовность к школе</a>
         <a href="/test-format">Тест: какой формат выбрать</a>
+        <a href="/diagnostika">Диагностика уровня</a>
+      </div>
+
+      <!-- Колонка 4: Языки -->
+      <div class="fxb-ft-col">
+        <h2>Языки</h2>
+        <a href="/kursy-v-dolgoprudnom">Английский</a>
+        <a href="/nemeckij-yazyk">Немецкий</a>
+        <a href="/kitajskij-yazyk">Китайский</a>
+        <a href="/ispanskij-yazyk">Испанский</a>
+      </div>
+
+      <!-- Колонка 5: Родителям -->
+      <div class="fxb-ft-col">
+        <h2>Родителям</h2>
+        <a href="/tseny">Цены</a>
+        <a href="/raspisanie">Расписание</a>
+        <a href="/blog">Блог: 100+ статей</a>
         <a href="/english-words">Словарь по темам</a>
         <a href="/novosti">Новости</a>
-        <a href="/vakansii">Вакансии</a>
-        <a href="/kontakty">Контакты</a>
-        <a href="/geo/mytishchi">Рядом с Мытищами</a>
-        <a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>
-        <details class="fxb-ft-dd">
-          <summary>Программы</summary>
-          <a href="/letnyaya-akademiya">Летняя академия</a>
-          <a href="/vesennyaya-akademiya-2026">Весенняя академия</a>
-          <a href="/prazdniki">Праздники</a>
-          <a href="/ekskursii">Экскурсии</a>
-          <a href="/vypusknoj-2026">Выпускной</a>
-          <a href="/meropriyatiya">Мероприятия</a>
-        </details>
+        <a href="/otzyvy">Отзывы</a>
         <a href="https://lms.dymova-english.ru">Личный кабинет</a>
       </div>
 
-      <!-- Колонка 4: Контакты -->
+      <!-- Колонка 6: О школе -->
       <div class="fxb-ft-col">
-        <h2>Контакты</h2>
-        <a href="tel:+79939232309">8 993 923-23-09</a>
-        <a href="tel:+79167323169">8 916 732-31-69</a>
-        <a href="mailto:school@foxinburg-edu.ru">school@foxinburg-edu.ru</a>
-        <span class="fxb-ft-text">Ежедневно 9:00 — 21:00</span>
+        <h2>О школе</h2>
+        <a href="/about">О нас</a>
+        <a href="/zhizn-shkoly">Жизнь школы</a>
+        <a href="/meropriyatiya">Мероприятия</a>
+        <a href="/letnyaya-akademiya">Летняя академия</a>
+        <a href="/vesennyaya-akademiya-2026">Весенняя академия</a>
+        <a href="/ekskursii">Экскурсии</a>
+        <a href="/prazdniki">Праздники</a>
+        <a href="/vypusknoj-2026">Выпускной</a>
+        <a href="/vakansii">Вакансии</a>
+        <a href="/kontakty">Контакты</a>
+        <a href="https://disk.yandex.ru/d/ZDlm_uGmwxH4kw" target="_blank" rel="noopener">Лицензия</a>
+      </div>
+
+      <!-- Колонка 7: География -->
+      <div class="fxb-ft-col">
+        <h2>Филиалы</h2>
+        <a href="/kursy-v-dolgoprudnom">Долгопрудный</a>
+        <a href="/geo/himki">Химки</a>
+        <a href="/geo/mytishchi">Мытищи</a>
+        <a href="/geo/hlebnikovo">Хлебниково</a>
+        <a href="/geo/moskva-sao">Москва (САО)</a>
+        <a href="/geo/lobnya">Лобня</a>
       </div>
     </div>
 
@@ -4192,32 +4282,31 @@ fxbGalleryInit();
 #fxb-footer *{box-sizing:border-box;margin:0;padding:0}
 #fxb-footer .fxb-ft-bg{position:absolute;inset:0;pointer-events:none}
 #fxb-footer .fxb-ft-decor{position:absolute;right:-60px;bottom:-40px;width:300px;opacity:.04}
-#fxb-footer .fxb-section{max-width:1200px;margin:0 auto;position:relative;z-index:1}
-#fxb-footer .fxb-ft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
+#fxb-footer .fxb-section{max-width:1260px;margin:0 auto;position:relative;z-index:1}
+#fxb-footer .fxb-ft-grid{display:grid;grid-template-columns:1.4fr repeat(6,1fr);gap:28px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
 #fxb-footer .fxb-ft-logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:900;font-size:18px;margin-bottom:12px}
 #fxb-footer .fxb-ft-logo img{border-radius:8px}
 #fxb-footer .fxb-ft-desc{font-size:13px;line-height:1.6;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:16px}
-#fxb-footer .fxb-ft-socials{display:flex;gap:8px}
+#fxb-footer .fxb-ft-socials{display:flex;gap:8px;margin-bottom:18px}
 #fxb-footer .fxb-ft-socials a{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);display:grid;place-items:center;text-decoration:none;transition:all .2s}
 #fxb-footer .fxb-ft-socials a:hover{background:var(--purple-2);color:#fff;transform:translateY(-2px)}
+#fxb-footer .fxb-ft-contacts{display:flex;flex-direction:column;gap:8px}
+#fxb-footer .fxb-ft-contacts a{color:rgba(255,255,255,.75);text-decoration:none;font-size:13.5px;font-weight:700;transition:color .2s}
+#fxb-footer .fxb-ft-contacts a:hover{color:var(--yellow)}
 #fxb-footer .fxb-ft-col{display:flex;flex-direction:column;gap:8px}
 #fxb-footer .fxb-ft-col h2{font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-#fxb-footer .fxb-ft-col a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+#fxb-footer .fxb-ft-col a{color:rgba(255,255,255,.55);text-decoration:none;font-size:12.5px;font-weight:500;transition:color .2s}
 #fxb-footer .fxb-ft-col a:hover{color:var(--yellow)}
-#fxb-footer .fxb-ft-dd{font-size:13px}
-#fxb-footer .fxb-ft-dd summary{cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;font-weight:500;list-style:none;display:flex;align-items:center;gap:6px;transition:color .2s}
-#fxb-footer .fxb-ft-dd summary::-webkit-details-marker{display:none}
-#fxb-footer .fxb-ft-dd summary::after{content:"\25BE";font-size:10px;transition:transform .2s}
-#fxb-footer .fxb-ft-dd[open] summary::after{transform:rotate(180deg)}
-#fxb-footer .fxb-ft-dd summary:hover{color:var(--yellow)}
-#fxb-footer .fxb-ft-dd a{display:block;padding-left:12px;margin-top:8px}
-#fxb-footer .fxb-ft-dd:not([open]) a{display:none}
+#fxb-footer .fxb-ft-col a:focus-visible,#fxb-footer .fxb-ft-contacts a:focus-visible{outline:2px solid var(--yellow);outline-offset:2px;color:#fff}
 #fxb-footer .fxb-ft-text{color:rgba(255,255,255,.4);font-size:12px;font-weight:500;margin-top:4px}
 #fxb-footer .fxb-ft-bottom{display:flex;align-items:center;justify-content:space-between;padding:20px 0;flex-wrap:wrap;gap:12px}
 #fxb-footer .fxb-ft-legal{display:flex;gap:16px;font-size:11.5px;color:rgba(255,255,255,.3);font-weight:500}
 #fxb-footer .fxb-ft-links{display:flex;gap:16px}
 #fxb-footer .fxb-ft-links a{font-size:11.5px;color:rgba(255,255,255,.35);text-decoration:none;font-weight:500;transition:color .2s}
 #fxb-footer .fxb-ft-links a:hover{color:rgba(255,255,255,.7)}
+@media(max-width:1200px){
+  #fxb-footer .fxb-ft-grid{grid-template-columns:1.3fr repeat(3,1fr);gap:28px}
+}
 @media(max-width:860px){
   #fxb-footer .fxb-ft-grid{grid-template-columns:1fr 1fr;gap:28px}
 }
