@@ -5342,6 +5342,14 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 103 (агент — Kimi, сайт: SEO-волна 18 — работа/переезд, математика и грамота, по возрастам, гео Лобня) — PR #207
+
+- Новые статьи (pages_wave18.py, FAQ ×4, CTA): /blog-anglijskij-dlya-raboty-i-pereezda (кластеры 1351+100), /blog-podgotovka-k-shkole-matematika-i-gramota (математика 1124, русский 300, возрасты 967+319), /blog-anglijskij-po-vozrastam (суммарно ~1235).
+- Новая гео-страница /geo/lobnya («курсы английского в Лобне», по образцу /geo/mytishchi, FAQ ×4).
+- Дожим: /podrostki (title/description + 2 FAQ), /repetitor (title/description + FAQ для взрослых), /razgovornyj-anglijskij (title/description + FAQ про цену).
+- QA: 214 страниц (+4), 7 URL HTTP 200, H1=1, FAQPage на месте; «Долгопрудноме»=0, эмодзи=0. SEO_SEMANTIC_MAP.md — раздел 15.24.
+- Деплой на прод, проверено вживую: все новые страницы 200.
+
 ### Сессия 102 (агент — Kimi, сайт: SEO-волна 17 — 4 статьи по новым кластерам + дожимы) — PR #206
 
 - Новые статьи (pages_wave17.py, FAQ ×4, CTA /diagnostika и /test-uroven): /blog-frazy-na-anglijskom-dlya-detej (кластер «фразы для детей»), /blog-anglijskij-dlya-puteshestvij (частота 976), /blog-nemeckij-s-nulya (частота 2815), /blog-anglijskij-dlya-pensionerov (126). Алиасы в PAGE_ALIASES.
