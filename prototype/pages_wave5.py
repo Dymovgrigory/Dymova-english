@@ -60,8 +60,8 @@ W5_POST_1 = dict(B.BLOG_FEED, **{
 W5_POST_2 = dict(B.BLOG_FEED, **{
     "type": "article",
     "alias": "blog-present-simple-detyam",
-    "title": "Present Simple для детей: объяснение простыми словами",
-    "description": "Present Simple для детей простыми словами: правило с примерами, ошибка he/she/it + s, игры для дома и в каком классе проходят презент симпл в школе.",
+    "title": "Present Simple для детей: правило простыми словами + игры",
+    "description": "Present Simple для детей простыми словами: правило с примерами, ошибка he/she/it + s, 5 игр для дома и в каком классе проходят презент симпл в школе.",
     "category": "Учим английский",
     "date": "2026-09-06",
     "reading_time": "8 минут чтения",

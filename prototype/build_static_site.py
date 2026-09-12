@@ -199,6 +199,7 @@ for _a in [
     "blog-probely-po-anglijskomu-9-klass", "blog-past-simple-detyam",
     "blog-future-simple-detyam", "blog-present-continuous-detyam",
     "blog-anglijskij-alfavit-dlya-detej",
+    "blog-repetitor-ili-kursy", "blog-slova-po-temam",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 
