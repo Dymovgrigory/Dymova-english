@@ -33,6 +33,8 @@ import re
 import shutil
 from datetime import datetime
 
+from pages_wave12 import WAVE12_FIGURES
+
 DIR = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://dymova-english.ru"
 
@@ -313,7 +315,11 @@ def extract_article_meta(html: str) -> tuple[str | None, str | None]:
 
 def build_head(alias: str, title: str, description: str, canonical: str, noindex: bool, extra_schema: list[str], og_type: str = "website") -> str:
     robots = "noindex,nofollow" if noindex else "index,follow"
-    og_image = f"{SITE}/assets/og-cover.png"
+    # Волна 12: у 30 статей — фирменная иллюстрация вместо общей og-заглушки
+    if alias in WAVE12_FIGURES:
+        og_image = f"{SITE}/article-images/{alias}.webp"
+    else:
+        og_image = f"{SITE}/assets/og-cover.png"
     parts = [
         '<meta charset="UTF-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -616,14 +622,20 @@ def main() -> None:
     # <lastmod> — mtime исходного файла страницы (page_*.html / главная),
     # если он недоступен — дата сборки.
     build_date = datetime.now().date().isoformat()
-    urlset = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    urlset = ['<?xml version="1.0" encoding="UTF-8"?>',
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">']
     for alias, path, src in written:
         loc = SITE + (path if path != "/" else "/")
         try:
             lastmod = datetime.fromtimestamp(os.path.getmtime(src)).date().isoformat()
         except OSError:
             lastmod = build_date
-        urlset.append(f"  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod></url>")
+        # Волна 12: image-sitemap для страниц с фирменной иллюстрацией
+        image_xml = ""
+        if alias in WAVE12_FIGURES:
+            image_xml = (f'<image:image><image:loc>{SITE}/article-images/{alias}.webp</image:loc>'
+                         f'</image:image>')
+        urlset.append(f"  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod>{image_xml}</url>")
     urlset.append("</urlset>")
     with open(os.path.join(out_dir, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write("\n".join(urlset) + "\n")
@@ -697,6 +709,13 @@ def main() -> None:
         if os.path.isdir(src):
             shutil.copytree(src, os.path.join(out_dir, media_dir), dirs_exist_ok=True,
                             ignore=shutil.ignore_patterns("*.jpg", "*.jpeg", "*.png", "*.opt.mp4", "*-src.mp4", "wow-src"))
+
+    # Иллюстрации к статьям (волна 12): в прод уходят только webp,
+    # png-исходники 1792x1024 остаются в репозитории.
+    article_images_src = os.path.join(DIR, "article-images")
+    if os.path.isdir(article_images_src):
+        shutil.copytree(article_images_src, os.path.join(out_dir, "article-images"), dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("*.png", "*.jpg", "*.jpeg"))
 
     # favicon → корень сайта
     favicon_src = os.path.join(DIR, "favicon.png")
