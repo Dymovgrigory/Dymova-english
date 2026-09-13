@@ -91,3 +91,37 @@ def test_unknown_quest_404():
     core.get_or_create_player("child-1")
     with pytest.raises(core.NotFound):
         core.start_quest("child-1", "no-such-quest")
+
+
+def test_advance_quest_step_in_order():
+    core.get_or_create_player("child-step")
+    core.start_quest("child-step", "first-day-at-foxinburg")
+    r1 = core.advance_quest_step("child-step", "first-day-at-foxinburg", "visit", "school-hub")
+    assert r1["step"] == 1 and r1["steps_total"] == 3 and r1["all_steps_done"] is False
+    r2 = core.advance_quest_step("child-step", "first-day-at-foxinburg", "talk", "foxi")
+    assert r2["step"] == 2
+    r3 = core.advance_quest_step("child-step", "first-day-at-foxinburg",
+                                 "activity", "vocabulary-challenge-1")
+    assert r3["step"] == 3 and r3["all_steps_done"] is True
+
+
+def test_advance_quest_step_rejects_wrong_step():
+    core.get_or_create_player("child-step2")
+    core.start_quest("child-step2", "first-day-at-foxinburg")
+    with pytest.raises(core.Conflict):
+        core.advance_quest_step("child-step2", "first-day-at-foxinburg", "talk", "foxi")
+
+
+def test_advance_quest_step_requires_started_quest():
+    core.get_or_create_player("child-step3")
+    with pytest.raises(core.Conflict):
+        core.advance_quest_step("child-step3", "first-day-at-foxinburg", "visit", "school-hub")
+
+
+def test_quest_progress_survives_reload():
+    core.get_or_create_player("child-step4")
+    core.start_quest("child-step4", "first-day-at-foxinburg")
+    core.advance_quest_step("child-step4", "first-day-at-foxinburg", "visit", "school-hub")
+    quest = next(q for q in core.list_quests("child-step4")
+                 if q["id"] == "first-day-at-foxinburg")
+    assert quest["step"] == 1 and quest["status"] == "active"

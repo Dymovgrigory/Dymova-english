@@ -216,6 +216,45 @@ def start_quest(external_key: str, quest_id: str) -> dict:
     return {"quest_id": quest_id, "status": "active"}
 
 
+def advance_quest_step(external_key: str, quest_id: str, action: str,
+                       target: str) -> dict:
+    """Двигает квест на шаг вперёд, если действие совпало с текущим шагом.
+
+    Порядок шагов проверяет сервер: клиент не может перепрыгнуть шаг (§84).
+    """
+    player = get_player(external_key)
+    quest = get_quest(quest_id)
+    steps = quest["config"].get("steps", [])
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT status, step FROM quest_progress WHERE player_id=? AND quest_id=?",
+        (player["id"], quest_id),
+    ).fetchone()
+    if row is None:
+        raise Conflict("quest not started")
+    if row["status"] == "completed":
+        raise Conflict("quest already completed")
+    step = row["step"]
+    if step >= len(steps):
+        raise Conflict("all steps already done")
+    current = steps[step]
+    if current["action"] != action or current["target"] != target:
+        raise Conflict(
+            f"step mismatch: expected {current['action']}:{current['target']}"
+        )
+    new_step = step + 1
+    conn.execute(
+        "UPDATE quest_progress SET step=? WHERE player_id=? AND quest_id=?",
+        (new_step, player["id"], quest_id),
+    )
+    return {
+        "quest_id": quest_id,
+        "step": new_step,
+        "steps_total": len(steps),
+        "all_steps_done": new_step >= len(steps),
+    }
+
+
 def complete_quest(external_key: str, quest_id: str,
                    idempotency_key: str | None = None) -> dict:
     """Завершение квеста → награды из config.quests (server-authoritative)."""
