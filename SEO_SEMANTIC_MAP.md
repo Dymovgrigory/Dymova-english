@@ -1644,6 +1644,67 @@ sitemap.xml и ленте /blog.
 
 ---
 
+### 15.27. Возраст старта, времена-хаб, методика слов, ошибки ОГЭ (SEO-волна 20)
+
+**Контекст:** по seo/report.csv и keywords.csv (13.09.2026) закрываем
+оставшиеся непокрытые кластеры: «со скольки лет учить английский ребёнку»
+(keywords.csv: NEW /blog/so-skolki-let-anglijskij + хвост из 15+ вариаций
+в Вебмастере), «времена английского для школьников» (сводного хаба не
+было — по одному времени статьи есть), «как учить английские слова с
+ребёнком / карточки / сколько слов школьнику» (keywords.csv: NEW, десятки
+хвостов «выучить слова к диктанту»), «типичные ошибки на ОГЭ по
+английскому» (keywords.csv: NEW, самый жирный ОГЭ-кластер).
+
+**Новые статьи:**
+
+- `/blog-so-skolki-let-anglijskij` — честный разбор по возрастам
+  (2–3, 4–6, 7–10 лет), сигналы «уже пора». Ссылки: /doshkolniki,
+  /mladshie-shkolniki, /blog-anglijskij-po-vozrastam,
+  /blog-kogda-nachinat-gotovitsya-k-oge. FAQ ×4, CTA /diagnostika.
+- `/blog-vremena-dlya-shkolnikov` — хаб времён: логика «3 оси»,
+  таблица по классам. Ссылки на /blog-present-simple-detyam,
+  /blog-past-simple-detyam, /blog-future-simple-detyam,
+  /blog-present-continuous-detyam, /blog-v-kakom-klasse-prohodyat-present-simple.
+  FAQ ×4, CTA /diagnostika.
+- `/blog-kak-uchit-slova` — 5 способов без зубрёжки (интервальные
+  карточки, контекст, игры), нормы слов по классам. Ссылки:
+  /english-words (+/semya, /eda, /shkola), /blog-frazy-na-anglijskom-dlya-detej,
+  /blog-anglijskij-cherez-igru. FAQ ×4, CTA /diagnostika.
+- `/blog-oshibki-oge` — типичные потери баллов по разделам
+  (аудирование, грамматика, письмо, устная часть). Ссылки:
+  /blog-vremena-dlya-shkolnikov, /blog-kriterii-oge-anglijskij,
+  /blog-ustnaya-chast-oge, /oge-anglijskij. FAQ ×4, CTA /diagnostika.
+
+**Дожим существующих страниц:**
+
+- `/kursy-v-dolgoprudnom` («курсы в долгопрудном», 89 показов GSC,
+  поз. 11,3, CTR 0): title/description переписаны с ценой и точным
+  вхождением запроса; FAQ +1 (группы или репетитор →
+  /blog-repetitor-ili-kursy, /blog-kak-vybrat-shkolu-anglijskogo-v-dolgoprudnom).
+- `/preparation` (105 показов, поз. 9,7, CTR 1,41): description
+  усилен (маткапитал, вычет 13%); FAQ +1 (чек-лист перед 1 классом →
+  /blog-chto-dolzhen-znat-pervoklassnik,
+  /blog-podgotovka-k-shkole-matematika-i-gramota).
+- `/kitajskij-yazyk` (~110 показов суммарно, поз. 5,8–8,8): description
+  переписан (дети и взрослые, HSK); FAQ +1 (китайский vs европейский →
+  /blog-kitajskij-ili-anglijskij, /blog-slozhno-li-kitajskij,
+  /blog-hsk-ekzamen).
+
+**Технически:** статьи — `prototype/pages_wave20.py` (WAVE20_POSTS,
+импорт в build_subpages.py, первым в EXTRA_BLOG_POSTS); алиасы добавлены
+в PAGE_ALIASES (`build_static_site.py`); дожимы — build_subpages.py
+(preparation, kitajskij), pages_wave15.py (kursy) и seo_meta_live.json.
+
+**QA после пересборки:** **222** страницы (+4); сервер :8993 — 4 новые
+и 3 дожатые страницы → 200, ровно один h1, FAQPage JSON-LD на месте;
+«Долгопрудноме» — 0; эмодзи в новых страницах — 0; все 4 URL в
+sitemap.xml и ленте /blog.
+
+Сборка: **222** страницы (+4: /blog-so-skolki-let-anglijskij,
+/blog-vremena-dlya-shkolnikov, /blog-kak-uchit-slova, /blog-oshibki-oge).
+
+---
+
 ## 16. Итоговая статистика карты
 
 - Запросов в структуре (включая 60 AI-вопросов раздела 12, 32 запроса из Вебмастера, раздел 15.8,

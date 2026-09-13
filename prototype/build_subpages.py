@@ -1534,6 +1534,7 @@ PAGES["page_preparation.html"] = {
         ("В каком возрасте начинать?", "Основные группы — 5–6 и 6–7 лет. Точный старт подскажем после бесплатной диагностики готовности к школе."),
         ("Сколько стоит подготовка к школе в Долгопрудном?", "Месяц занятий — 7 000 ₽: в абонемент входят занятия по английскому, чтению, математике и русскому языку в мини-группах до 7 человек. Диагностика перед стартом бесплатна, а часть стоимости можно вернуть налоговым вычетом 13%."),
         ("Мы живём в Мытищах — нам удобно до вас добираться?", "Да, Долгопрудный граничит с Мытищами, а наш филиал на Лихачёвском проспекте — ближайший к границе города. Подробности — на странице <a href=\"/geo/mytishchi\">для семей из Мытищ</a>."),
+        ("Что должен уметь ребёнок перед первым классом?", "Считать до 20, читать по слогам, пересказывать короткий текст и удерживать внимание 20–30 минут. Полный чек-лист — в статье «<a href=\"/blog-chto-dolzhen-znat-pervoklassnik\">Что должен знать первоклассник</a>», а по предметам — в разборе «<a href=\"/blog-podgotovka-k-shkole-matematika-i-gramota\">Подготовка к школе: математика и грамота</a>»."),
     ],
 }
 
@@ -2103,6 +2104,7 @@ PAGES["page_kitajskij_yazyk.html"] = {
         ("Занятия очно или онлайн?", "Есть оба формата: очно в Долгопрудном (два филиала рядом с МФТИ) и онлайн."),
         ("Можно оплатить материнским капиталом?", "Да. Занятия можно оплатить материнским капиталом и вернуть 13% стоимости налоговым вычетом."),
         ("Как проходит пробный урок?", "Познакомим с преподавателем и методикой, определим цель обучения и подберём группу."),
+        ("Что лучше для ребёнка: китайский или второй европейский язык?", "Зависит от цели: немецкий ближе к школьной программе, китайский — редкий навык с сильным карьерным потенциалом. Разобрали выбор в статьях «<a href=\"/blog-kitajskij-ili-anglijskij\">Китайский или английский: что перспективнее</a>» и «<a href=\"/blog-slozhno-li-kitajskij\">Сложно ли учить китайский ребёнку</a>», а про экзамен — «<a href=\"/blog-hsk-ekzamen\">Подготовка к HSK</a>»."),
     ],
     "lead_subject": "Китайский язык",
     "lead_hero_window": "Блок героя",
@@ -7026,11 +7028,12 @@ import pages_wave16  # волна 16: дожим — репетитор или �
 import pages_wave17  # волна 17: фразы для детей, английский для путешествий, немецкий с нуля, английский для пенсионеров
 import pages_wave18  # волна 18: для работы/переезда, подготовка к школе (математика/русский), по возрастам, geo/lobnya
 import pages_wave19  # волна 19: пробелы по русскому 4 класс, счёт на английском, для студентов, на каникулах
+import pages_wave20  # волна 20: со скольки лет английский, времена для школьников, как учить слова, ошибки ОГЭ
 
 pages_geo2.register_geo()
 pages_prep.register_prep_sections()
 
-EXTRA_BLOG_POSTS = pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
