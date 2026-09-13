@@ -212,6 +212,8 @@ for _a in [
     "blog-10-minut-v-den", "blog-audirovanie-ege",
     "blog-kak-vybrat-kursy", "blog-nositel-ili-ne-nositel",
     "blog-grammatika-prosto", "blog-skolko-slov-shkolniku",
+    "geo/vodniki", "geo/pavelcevo", "geo/vinogradovo", "geo/hovrino",
+    "probnoe-zanyatie", "russkij-i-matematika",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 
