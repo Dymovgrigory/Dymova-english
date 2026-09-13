@@ -5342,6 +5342,16 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 112 (агент — Kimi, сайт: SEO-волна 23 — гео-районы + коммерческие страницы) — PR #216 (локальный squash 7d76fa68)
+
+- Гео-страницы районов (уникальные тексты, не клоны): /geo/vodniki (север, платформа Водники → филиал Ракетостроителей), /geo/pavelcevo (юг → Лихачёвский), /geo/vinogradovo (запад, подростки/ОГЭ/ЕГЭ), /geo/hovrino (честно «рядом с Ховрино», цены ниже московских).
+- Коммерческие: /probnoe-zanyatie (60 минут, 1 125 ₽ сверена с /tseny, Course JSON-LD offer=1125, FAQ ×5), /russkij-i-matematika (подготовка к школе 5–7 лет, 7 000 ₽/мес, разграничена с /repetitor-nachalnaya-shkola).
+- Перелинковка из blog-kak-vybrat-kursy, blog-kak-proverit-uroven, blog-podgotovka-k-shkole-matematika-i-gramota.
+- GitHub Merge API был недоступен (GraphQL 500) — PR влит локальным squash-мержем и закрыт комментарием.
+- QA: 236 страниц (+6), 6 URL HTTP 200, H1=1, FAQPage на месте; «Долгопрудноме»=0, эмодзи=0; sitemap 236 loc. SEO_SEMANTIC_MAP.md — 15.30.
+- Деплой на прод, проверено вживую: все 6 новых страниц 200.
+- Follow-up: /geo/novaya-dacha, /geo/sheremetevskij — кандидаты волны 24.
+
 ### Сессия 111 (агент — Kimi, сайт: SEO-волна 22 — 4 статьи + дожимы) — PR #215
 
 - Новые статьи (pages_wave22.py, FAQ ×4, CTA): /blog-kak-vybrat-kursy, /blog-nositel-ili-ne-nositel, /blog-grammatika-prosto (хаб на разборы времён), /blog-skolko-slov-shkolniku.
