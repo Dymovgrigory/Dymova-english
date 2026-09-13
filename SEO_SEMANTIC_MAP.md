@@ -1770,6 +1770,78 @@ sitemap.xml (226 loc) и ленте /blog (146 карточек).
 
 ---
 
+### 15.29. Выбор курсов, носитель vs педагог, грамматика-хаб, нормы слов (SEO-волна 22)
+
+**Контекст:** по seo/keywords.csv и report.csv (13.09.2026) закрываем
+оставшиеся NEW-кластеры блога: «как выбрать курсы английского для
+ребёнка» (keywords.csv: NEW /blog/kak-vybrat-kursy + «на что смотреть
+при выборе языковой школы»; в report.csv хвост «сравнение репетитор и
+частная школа», 10 показов, поз. 6.4), «курсы с носителем или без /
+носитель для детей плюсы и минусы» (keywords.csv: NEW ×2), «грамматика
+английского для детей простыми словами» (keywords.csv: NEW — хаб на
+разборы времён волн 5/11/20) и «сколько слов нужно знать школьнику
+по английскому» (keywords.csv: NEW). Кластеры «малыши 3–4 года»,
+«present simple», «my level» и «как заговорить» оказались уже закрыты
+(волны 5, 11, 16) — ушли в дожим или оставлены.
+
+**Новые статьи:**
+
+- `/blog-kak-vybrat-kursy` — чек-лист выбора курсов из 7 пунктов:
+  программа, размер группы, педагоги, пробное занятие, отчётность,
+  договор/лицензия, отзывы; локальная vs сетевая школа. Ссылки:
+  /blog-my-level-uchebniki, /blog-kak-vybrat-shkolu-anglijskogo-
+  v-dolgoprudnom, /blog-repetitor-ili-kursy, /tseny, /otzyvy.
+  FAQ ×4, CTA /diagnostika.
+- `/blog-nositel-ili-ne-nositel` — честное сравнение носителя и
+  русскоязычного педагога с ориентиром по уровням A0→B1+. Ссылки:
+  /nositel-yazyka, /blog-anglijskij-s-nositelem-kogda-nuzhen,
+  /blog-yazykovoj-barer, /razgovornyj-anglijskij. FAQ ×4,
+  CTA /diagnostika.
+- `/blog-grammatika-prosto` — карта грамматических тем по классам
+  (1–9), три принципа объяснения без зубрёжки, природа пробелов.
+  Ссылки: /blog-vremena-dlya-shkolnikov, /blog-present-simple-detyam,
+  /blog-present-continuous-detyam, /blog-past-simple-detyam,
+  /blog-future-simple-detyam, /blog-present-perfect-prostymi-slovami,
+  /blog-probely-po-anglijskomu, /grammar. FAQ ×4, CTA /test-uroven.
+- `/blog-skolko-slov-shkolniku` — нормы словарного запаса по классам
+  (150–250 в 1–2 классе → 2500–3000 к ЕГЭ), активный vs пассивный
+  запас, интервальные повторы. Ссылки: /english-words,
+  /blog-kak-uchit-slova, /blog-10-minut-v-den, /mladshie-shkolniki.
+  FAQ ×4, CTA /test-uroven и /diagnostika.
+
+**Дожим существующих страниц:**
+
+- `/novosti-komu-nuzhen-repetitor-po-anglijskomu-5-priznakov`
+  («нужен ли / зачем нужен репетитор по английскому», 84+43 показа,
+  поз. 6.1–9.9): description переписан с точным вхождением «зачем
+  нужен репетитор по английскому» (в NEWS_POST_11 и seo_meta_live.json);
+  добавлена внутренняя ссылка на /blog-kak-vybrat-repetitora.
+- `/blog-my-level-uchebniki` («my level учебники», 19 показов,
+  поз. 10.5): title/H1 расширен до «My Level 1, 2 и 3: учебники
+  английского…», description с точным вхождением; внутренняя ссылка
+  на /blog-kak-proverit-uroven.
+- `/blog-present-simple-detyam` («present simple для детей»,
+  29 показов, поз. 8.1): description со словом «объяснение»;
+  внутренние ссылки на новый хаб /blog-grammatika-prosto
+  (в тексте и в related).
+
+**Технически:** статьи — `prototype/pages_wave22.py` (WAVE22_POSTS,
+импорт в build_subpages.py, первым в EXTRA_BLOG_POSTS); алиасы
+добавлены в PAGE_ALIASES (`build_static_site.py`); дожимы —
+build_subpages.py (NEWS_POST_11), pages_wave5.py (оба поста) и
+seo_meta_live.json.
+
+**QA после пересборки:** **230** страниц (+4); сервер :8993 — 4 новые
+и 3 дожатые страницы → 200, ровно один h1, FAQPage JSON-LD на месте;
+«Долгопрудноме» — 0; эмодзи в новых страницах — 0; все 4 URL в
+sitemap.xml (230 loc) и ленте /blog (142 карточки).
+
+Сборка: **230** страниц (+4: /blog-kak-vybrat-kursy,
+/blog-nositel-ili-ne-nositel, /blog-grammatika-prosto,
+/blog-skolko-slov-shkolniku).
+
+---
+
 ## 16. Итоговая статистика карты
 
 - Запросов в структуре (включая 60 AI-вопросов раздела 12, 32 запроса из Вебмастера, раздел 15.8,
