@@ -5658,3 +5658,29 @@ tgapp-экран «Мои занятия», страница /schedule на са
 
 **Осталось / следующий шаг:** владельцу — продлить/заменить платный SOCKS5-прокси для Telegram (`TELEGRAM_PROXY_URL` в прод `.env`), без него Telegram будет отвечать рывками (MAX и виджет не затронуты); либо поднять relay api.telegram.org на Cloudflare Workers (workers.dev из РФ доступен). Живой тест идентификации в MAX/Telegram — продолжить.
 
+
+---
+
+### Сессия 94 (Kimi Code) — старт FOXINBURG WORLD: аудит, ключи, pipeline, backend-ядро vertical slice
+
+**Дата:** 2026-09-13
+**Запрос владельца:** «промт World в папке проекта! начинаем! используй нашу новую внешнюю модель + Meshy API; работай автономно». Бриф: `промт World .md` (5575 строк, 259 пунктов) — интерактивный 3D-мир для детей.
+
+**Что сделано:**
+- **Аудит (STEP 1–2 брифа):** Node-проектов нет; backend — FastAPI-бот с BigBen CRM; есть ригнутый Фокси `prototype/mascot/foxi-rigged.glb` (726 КБ, 6 клипов) и отработанный GLB-pipeline (Meshy→скиннинг-фикс→gltf-transform).
+- **Ключи:** Gemini-прокси (`sk-cvc-…`, модели gemini-3.1-pro / 3.8-flash — проверены) и Meshy API (`msy_…`, баланс 1286 кр — проверен). Лежат в `world-pipeline/.env` (gitignored). Зафиксировано в `docs/world/recommended-services.md`.
+- **Документы (STEP 3–4):** `docs/world/architecture.md` (выбор Three.js/R3F вместо PlayCanvas — обоснование; backend = модуль в FastAPI; Postgres для прода, SQLite для dev/тестов; server-authoritative экономика), `docs/world/world-art-bible.md` (бренд-палитра #3a2953/#f5ed75, Montserrat/DM Sans, масштаб, материалы, свет, зоны v1).
+- **Pipeline доказан end-to-end:** концепт School Hub через gpt-image-2 (`generated/world/school-hub-concept-v1.png` — в бренде); FoxCoin через Meshy API (preview 20 кр + refine 10 кр): золотая монета с лапкой, 6,07 МБ → 182 КБ draco+webp. Заскриптовано: `world-pipeline/meshy_asset.py` + `asset-registry.json` + README.
+- **Backend-ядро slice (§84/§160):** `bot/app/world/` — db.py (SQLite/PG по env), core.py (players, XP/coin ledger идемпотентный, levels/titles, data-driven квест «first-day-at-foxinburg», инвентарь, unlocks), api.py (`/api/world/*`: players, quests start/complete, inventory, unlocks; auth пока заголовок X-World-Player). Роутер подключён в `bot/app/main.py`.
+- **Фронтенд начат:** `world/` — create-next-app (Next 16.3.5, TS, Tailwind), deps + three/R3F/drei/postprocessing/zustand установлены; ассеты скопированы в `world/public/assets/`; написан `src/lib/api.ts` (клиент backend). НЕ написано: сцены/страницы (прервано).
+
+**Как проверено:**
+- `cd bot && .venv313/bin/pytest tests/test_world.py -q` → 8 passed; полный сьют → **1155 passed**.
+- Meshy: task SUCCEEDED, GLB скачан и оптимизирован; концепт-арт просмотрен.
+
+**Осталось / следующий шаг:**
+1. Фронтенд мира: `world/src/app/page.tsx` (Home Hub), `world/src/app/world/page.tsx` + `src/engine/*` (R3F сцена School Hub: свет, земля, школа, Фокси GLB, монета, частицы), `src/game/*` (HUD, VocabularyChallenge, RewardOverlay). Сборка `cd world && npm run build`, dev-верификация скриншотом.
+2. Auth: привязка X-World-Player → miniapp-auth/CRM child id.
+3. Postgres (prod) + psycopg-слой в `bot/app/world/db.py` (заглушка raise).
+4. Дальше по брифу: схема расширенная, CMS, parent dashboard, zones.
+- ВАЖНО: `world/AGENTS.md` — Next 16 имеет breaking changes, читать `node_modules/next/dist/docs` при сомнениях.

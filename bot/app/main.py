@@ -1985,8 +1985,13 @@ from app.platform import account_api as platform_account_api
 from app.platform import billing_api as platform_billing_api
 from app.platform import public_api as platform_public_api
 from app.platform import webhooks as platform_webhooks
+from app.world import api as world_api
+from app.world import core as world_core
+
+world_core.seed_quests()
 
 app.include_router(admin_api.router)
+app.include_router(world_api.router)
 app.include_router(platform_webhooks.router)
 app.include_router(platform_account_api.router)
 app.include_router(platform_billing_api.router)

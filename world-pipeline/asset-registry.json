@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "assetId": "school-foxcoin",
+      "type": "model/gltf-binary",
+      "url": "assets/school-foxcoin/school-foxcoin-v1.glb",
+      "thumbnail": "assets/school-foxcoin/school-foxcoin-thumb.png",
+      "version": 1,
+      "category": "collectibles",
+      "lod": [
+        "v1"
+      ],
+      "mobileVariant": "assets/school-foxcoin/school-foxcoin-v1.glb",
+      "desktopVariant": "assets/school-foxcoin/school-foxcoin-v1.glb",
+      "dependencies": [],
+      "sizeKb": 177,
+      "source": {
+        "provider": "meshy",
+        "task": "01a09b0c-b5b7-7243-ac7c-51f0cb6f3614",
+        "prompt": "Stylized cartoon gold coin ... fox paw print ... (preview 01a09af7)"
+      }
+    }
+  ]
+}
