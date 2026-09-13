@@ -48,3 +48,46 @@ def start(external_key: str, activity_id: str, seed: int | None = None) -> dict:
             for i, q in enumerate(questions)
         ],
     }
+
+
+def _load_session(external_key: str, session_id: str) -> tuple[dict, dict, dict]:
+    """Возвращает (игрок, строка сессии как dict, payload). Чужая сессия — NotFound."""
+    player = core.get_player(external_key)
+    row = get_conn().execute(
+        "SELECT * FROM activity_sessions WHERE id=? AND player_id=?",
+        (session_id, player["id"]),
+    ).fetchone()
+    if row is None:
+        raise core.NotFound(f"activity session {session_id!r} not found")
+    return player, dict(row), json.loads(row["payload"])
+
+
+def answer(external_key: str, session_id: str, index: int, choice: int) -> dict:
+    """Сверяет ответ с серверной копией и запоминает его в сессии."""
+    _player, session, payload = _load_session(external_key, session_id)
+    if session["status"] == "completed":
+        raise core.Conflict("activity already completed")
+    questions = payload["questions"]
+    if not 0 <= index < len(questions):
+        raise core.NotFound(f"question {index} not found")
+
+    answers = json.loads(session["answers"])
+    if str(index) in answers:
+        raise core.Conflict(f"question {index} already answered")
+
+    question = questions[index]
+    correct = int(choice) == question["correct_index"]
+    answers[str(index)] = {"choice": int(choice), "correct": correct}
+    get_conn().execute(
+        "UPDATE activity_sessions SET answers=? WHERE id=?",
+        (json.dumps(answers, ensure_ascii=False), session_id),
+    )
+    return {
+        "index": index,
+        "correct": correct,
+        "correct_index": question["correct_index"],
+        "example_en": question["example_en"],
+        "example_ru": question["example_ru"],
+        "answered": len(answers),
+        "total": len(questions),
+    }
