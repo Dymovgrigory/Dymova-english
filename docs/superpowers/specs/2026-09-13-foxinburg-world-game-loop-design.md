@@ -106,7 +106,7 @@ completed_at):
 на сервере с проверкой порядка шагов, чтобы прогресс переживал
 перезагрузку страницы.
 
-Новые маршруты: `POST /api/world/activities/vocabulary/start`,
+Новые маршруты: `POST /api/world/activities/start`,
 `POST /api/world/activities/{session}/answer`,
 `POST /api/world/activities/{session}/finish`,
 `POST /api/world/quests/{id}/step`.
