@@ -1582,6 +1582,68 @@ URL из шапки/подвала → 200 (после 301 на trailing slash);
 
 ---
 
+### 15.26. Русский 4 класс, счёт на английском, студенты, каникулы (SEO-волна 19)
+
+**Контекст:** по seo/report.csv (Вебмастер + GSC, 13.09.2026) и keywords.csv
+закрываем непокрытые кластеры: «пробелы по русскому языку в 4 классе»
+(43+30=73 показа, поз. 55–58), «счёт на английском для детей»
+(keywords.csv: NEW /blog/schot-na-anglijskom), «английский для студентов»
+(15.x, МФТИ/технический/стажировка), «английский на каникулах для детей»
+(15.x, сезонные). Плюс дожим трёх страниц с позициями 9–11.
+
+**Новые статьи (кластеры без страниц):**
+
+- `/blog-probely-po-russkomu-4-klass` — «пробелы по русскому в 4 классе»
+  (73 показа). Продолжение серии (3 класс уже есть): типичные провалы
+  (падежи, безударные гласные, изложения, скорость письма), как закрыть
+  до 5 класса. Ссылки: /blog-probely-po-russkomu-3-klass,
+  /repetitor-nachalnaya-shkola, /preparation. FAQ ×4, CTA /diagnostika.
+- `/blog-schot-na-anglijskom` — «счёт на английском для детей» (NEW в
+  keywords.csv). Числа 1–100 с транскрипцией, пары thirteen/thirty,
+  песни-считалки и игры. Ссылки: /english-words/vremya-i-chisla,
+  /blog-mne-10-let-na-anglijskom, /doshkolniki. FAQ ×4, CTA /diagnostika.
+- `/blog-anglijskij-dlya-studentov` — «английский для студентов
+  долгопрудный / мфти / технический / для стажировки» (кластер 15.x).
+  Три задачи (учёба, стажировка, работа), технический английский,
+  форматы рядом с МФТИ. Ссылки: /anglijskij-dlya-vzroslyh,
+  /blog-anglijskij-dlya-raboty-i-pereezda, /online-zanyatiya,
+  /test-uroven. FAQ ×4, CTA /diagnostika.
+- `/blog-anglijskij-na-kanikulah` — «английский на каникулах для детей»
+  (15.x, сезонные). Домашние ритуалы 15 мин/день + каникулярные
+  академии; впереди осенние каникулы. Ссылки: /letnyaya-akademiya,
+  /mladshie-shkolniki, /podrostki, /oge-anglijskij. FAQ ×4,
+  CTA /diagnostika.
+
+**Дожим существующих страниц:**
+
+- `/blog-kogda-nachinat-gotovitsya-k-oge` («когда начинать готовиться к
+  огэ», 35 показов, поз. 9,1): description переписан под запрос,
+  FAQ +1: «Что делать, если в 9 классе база слабая?».
+- `/blog-mne-10-let-na-anglijskom` (68 показов, поз. 9,3): FAQ +1
+  («10 лет и 6 месяцев»), внутренняя ссылка на новую статью
+  /blog-schot-na-anglijskom.
+- `/english-words/semya` («английские слова на тему семья», ~98 показов
+  суммарно, поз. 10–11): sub/description переписаны с точным вхождением
+  запроса, FAQ +1: «Как рассказать о своей семье по-английски?» со
+  ссылками на /blog-mne-10-let-na-anglijskom и
+  /blog-frazy-na-anglijskom-dlya-detej.
+
+**Технически:** статьи — `prototype/pages_wave19.py` (WAVE19_POSTS,
+импорт в build_subpages.py, первым в EXTRA_BLOG_POSTS); алиасы добавлены
+в PAGE_ALIASES (`build_static_site.py`); дожимы — build_subpages.py
+(BLOG_POST_29, make_words_page semya) и pages_wave11.py.
+
+**QA после пересборки:** **218** страниц (+4); сервер :8993 — 4 новые
+и 3 дожатые страницы → 200, ровно один h1, FAQPage JSON-LD на месте;
+«Долгопрудноме» — 0; эмодзи в новых страницах — 0; все 4 URL в
+sitemap.xml и ленте /blog.
+
+Сборка: **218** страниц (+4: /blog-probely-po-russkomu-4-klass,
+/blog-schot-na-anglijskom, /blog-anglijskij-dlya-studentov,
+/blog-anglijskij-na-kanikulah).
+
+---
+
 ## 16. Итоговая статистика карты
 
 - Запросов в структуре (включая 60 AI-вопросов раздела 12, 32 запроса из Вебмастера, раздел 15.8,

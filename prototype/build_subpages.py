@@ -4168,11 +4168,15 @@ make_words_page(
     "page_english_words_semya.html", "english-words/semya", "semya",
     "Семья", "семьи",
     'Английские слова на тему <span class="fxb-accent">«Семья»</span>',
-    "33 слова по теме «Семья» с транскрипцией, переводом и примерами: базовый словарь уровня A1 для детей и родителей.",
+    "Английские слова на тему «Семья»: 33 слова с транскрипцией, переводом и примерами — от mum и dad до niece и grandson. Базовый словарь уровня A1 для детей и родителей.",
     "Английские слова на тему «Семья» с транскрипцией и переводом: 33 слова уровня A1 с примерами предложений. Бесплатный словарь для детей и родителей — сохраните или распечатайте.",
     WORDS_SEMA,
     "linear-gradient(135deg,#26161f 0%,#4d2440 55%,#7a3560 100%)",
     [("/doshkolniki", "Дошкольникам"), ("/mladshie-shkolniki", "Младшим школьникам")],
+    faq_extra=[
+        ("Как рассказать о своей семье по-английски?",
+         "Начните с шаблона: There are four people in my family — my mum, my dad, my sister and me. Затем добавьте по одному предложению о каждом (имя, возраст, хобби). Готовые фразы про возраст — в статье «<a href=\"/blog-mne-10-let-na-anglijskom\">Мне 10 лет на английском</a>», а простые бытовые фразы — в подборке «<a href=\"/blog-frazy-na-anglijskom-dlya-detej\">Фразы на английском для детей</a>»."),
+    ],
 )
 make_words_page(
     "page_english_words_tsveta.html", "english-words/tsveta", "tsveta",
@@ -6646,7 +6650,7 @@ BLOG_POST_29 = dict(BLOG_FEED, **{
     "type": "article",
     "alias": "blog-kogda-nachinat-gotovitsya-k-oge",
     "title": "Когда начинать готовиться к ОГЭ по английскому: в 7, 8 или 9 классе",
-    "description": "Оптимальный старт подготовки к ОГЭ по английскому — 8 класс: план по классам (7, 8, 9), 5 сигналов, что пора на курс, и как замерить текущий уровень ребёнка.",
+    "description": "Когда начинать готовиться к ОГЭ по английскому: оптимальный старт — 8 класс. План подготовки по классам (7, 8, 9), 5 сигналов, что пора на курс, и как замерить уровень ребёнка.",
     "category": "Экзамены",
     "date": "2026-08-14",
     "reading_time": "8 минут чтения",
@@ -6681,6 +6685,7 @@ BLOG_POST_29 = dict(BLOG_FEED, **{
         ("Можно ли подготовиться к ОГЭ за 3 месяца?", "Только если база уже крепкая: за три месяца отрабатывается формат и уверенность, но не строятся автоматизм грамматики и тренированное аудирование. При слабой базе реалистичная цель такого срока — уверенная «тройка-четвёрка»."),
         ("Что самое сложное в ОГЭ по английскому?", "Статистически — устная часть и аудирование: их не выучить по учебнику, нужны месяцы регулярной практики. Именно эти разделы стоит начинать тренировать раньше всего."),
         ("Нужен ли репетитор или курс в 7–8 классе?", "В седьмом — достаточно хорошего основного курса и домашней регулярности. С восьмого класса экзаменационный курс окупается: педагог знает специфику ОГЭ и ловит типовые ошибки до того, как они закрепятся."),
+        ("Что делать, если в 9 классе база слабая?", "Не паниковать, а менять формат: при стабильной «тройке» на пробнике группа уже не успевает выровнять персональные провалы — переходите на индивидуальные занятия с точечным планом по разделам. Реалистичная цель такого года — уверенная «четвёрка»."),
     ],
 })
 
@@ -7020,11 +7025,12 @@ import pages_wave15  # волна 15: лендинг-витрина /kursy-v-dol
 import pages_wave16  # волна 16: дожим — репетитор или курсы, хаб словаря по темам
 import pages_wave17  # волна 17: фразы для детей, английский для путешествий, немецкий с нуля, английский для пенсионеров
 import pages_wave18  # волна 18: для работы/переезда, подготовка к школе (математика/русский), по возрастам, geo/lobnya
+import pages_wave19  # волна 19: пробелы по русскому 4 класс, счёт на английском, для студентов, на каникулах
 
 pages_geo2.register_geo()
 pages_prep.register_prep_sections()
 
-EXTRA_BLOG_POSTS = pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
