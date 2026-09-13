@@ -44,3 +44,36 @@ def test_export_word_shape_and_volume(exported):
 def test_every_theme_has_enough_words_for_a_question(exported):
     for theme in exported["themes"]:
         assert len(theme["words"]) >= 10, theme["id"]
+
+
+from app.world import vocabulary
+
+
+def test_build_questions_shape():
+    questions = vocabulary.build_questions("zhivotnye", count=5, seed=42)
+    assert len(questions) == 5
+    for q in questions:
+        assert len(q["options"]) == 4
+        assert len(set(q["options"])) == 4
+        assert 0 <= q["correct_index"] < 4
+        assert q["en"] and q["ipa"]
+
+
+def test_build_questions_correct_option_is_the_translation():
+    themes = vocabulary.load_themes()
+    by_en = {w["en"]: w["ru"] for w in themes["zhivotnye"]["words"]}
+    for q in vocabulary.build_questions("zhivotnye", count=5, seed=7):
+        assert q["options"][q["correct_index"]] == by_en[q["en"]]
+
+
+def test_build_questions_deterministic_with_seed():
+    a = vocabulary.build_questions("eda", count=5, seed=1)
+    b = vocabulary.build_questions("eda", count=5, seed=1)
+    c = vocabulary.build_questions("eda", count=5, seed=2)
+    assert a == b
+    assert a != c
+
+
+def test_build_questions_unknown_theme():
+    with pytest.raises(vocabulary.ThemeNotFound):
+        vocabulary.build_questions("dragons")
