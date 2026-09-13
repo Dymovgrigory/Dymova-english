@@ -3,6 +3,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --world-purple: #3a2953;
+  --world-purple-dark: #241a30;
+  --world-yellow: #f5ed75;
+  --world-teal: #7fd8c9;
+  --world-ink: #ffffff;
 }
 
 @theme inline {
@@ -20,7 +25,7 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--world-purple-dark);
+  color: var(--world-ink);
   font-family: Arial, Helvetica, sans-serif;
 }
