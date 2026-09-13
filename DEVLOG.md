@@ -5342,6 +5342,13 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 110 (агент — Kimi, сайт: SEO-волна 21 — 4 статьи + дожимы) — PR #214
+
+- Новые статьи (pages_wave21.py, FAQ ×4, CTA): /blog-onlajn-ili-offlajn (~27 показов хвоста), /blog-kak-proverit-uroven (CTA на /test-uroven), /blog-10-minut-v-den (комбо домашней практики), /blog-audirovanie-ege (последний незакрытый подраздел ЕГЭ).
+- Дожим: /nositel-yazyka (46 пок., поз 5.7 — title с точным вхождением, FAQ+1), /blog-probely-po-anglijskomu-3-klass (~101 пок.), /blog-slova-po-temam (~50 пок.).
+- QA: 226 страниц (+4), sitemap 226 loc, лента /blog — 146 карточек; 8 URL HTTP 200, H1=1, FAQPage на месте; «Долгопрудноме»=0, эмодзи=0. SEO_SEMANTIC_MAP.md — 15.28.
+- Деплой на прод, проверено вживую: все 4 новые статьи 200.
+
 ### Сессия 109 (агент — Kimi, сайт: SEO-волна 20 — 4 статьи + дожимы флагманов) — PR #213
 
 - Новые статьи (pages_wave20.py, FAQ ×4, CTA): /blog-so-skolki-let-anglijskij (15+ вариаций запроса), /blog-vremena-dlya-shkolnikov (хаб-навигатор по разборам времён), /blog-kak-uchit-slova (карточки, диктанты), /blog-oshibki-oge.
