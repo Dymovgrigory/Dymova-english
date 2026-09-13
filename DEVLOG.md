@@ -5342,6 +5342,14 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 111 (агент — Kimi, сайт: SEO-волна 22 — 4 статьи + дожимы) — PR #215
+
+- Новые статьи (pages_wave22.py, FAQ ×4, CTA): /blog-kak-vybrat-kursy, /blog-nositel-ili-ne-nositel, /blog-grammatika-prosto (хаб на разборы времён), /blog-skolko-slov-shkolniku.
+- Дожим: /novosti-komu-nuzhen-repetitor (127 пок., поз 6.1–9.9), /blog-my-level-uchebniki (19 пок., поз 10.5), /blog-present-simple-detyam (29 пок., поз 8.1).
+- QA: 230 страниц (+4), sitemap 230 loc, лента /blog — 142 карточки; 7 URL HTTP 200, H1=1, FAQPage на месте; «Долгопрудноме»=0, эмодзи=0. SEO_SEMANTIC_MAP.md — 15.29.
+- Деплой на прод, проверено вживую: все 4 новые статьи 200.
+- Резерв следующих волн (из отчёта агента): коммерческие /probnoe-zanyatie, /repetitor-anglijskij, /russkij-i-matematika; гео /geo/{vodniki,pavelcevo,novaya-dacha,vinogradovo,sheremetevskij,hovrino}.
+
 ### Сессия 110 (агент — Kimi, сайт: SEO-волна 21 — 4 статьи + дожимы) — PR #214
 
 - Новые статьи (pages_wave21.py, FAQ ×4, CTA): /blog-onlajn-ili-offlajn (~27 показов хвоста), /blog-kak-proverit-uroven (CTA на /test-uroven), /blog-10-minut-v-den (комбо домашней практики), /blog-audirovanie-ege (последний незакрытый подраздел ЕГЭ).
