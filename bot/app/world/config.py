@@ -29,3 +29,16 @@ LEVEL_TITLES = [
 ]
 ITEM_PRICES: dict[str, int] = {}
 STREAK_BONUSES = {7: 20, 14: 40, 30: 100, 60: 200, 100: 400, 365: 2000}
+
+# Активности (§68): data-driven описание, связь с шагом квеста.
+ACTIVITIES = {
+    "vocabulary-challenge-1": {
+        "kind": "vocabulary",
+        "title_ru": "Первый английский челлендж",
+        "theme": "zhivotnye",
+        "questions": 5,
+        "quest_id": "first-day-at-foxinburg",
+    },
+}
+# Бонус за безошибочное прохождение активности.
+PERFECT_BONUS = {"xp": 10, "coins": 5}

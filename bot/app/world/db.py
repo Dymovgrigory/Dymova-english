@@ -148,4 +148,17 @@ CREATE TABLE IF NOT EXISTS world_state (
     updated_at  TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (player_id, key)
 );
+
+-- Сессия активности: вопросы и правильные ответы живут на сервере (§84).
+CREATE TABLE IF NOT EXISTS activity_sessions (
+    id           TEXT PRIMARY KEY,
+    player_id    INTEGER NOT NULL REFERENCES players(id),
+    activity_id  TEXT NOT NULL,
+    payload      TEXT NOT NULL,               -- {questions:[...с correct_index]}
+    answers      TEXT NOT NULL DEFAULT '{}',  -- {"0": {"choice":2,"correct":true}}
+    status       TEXT NOT NULL DEFAULT 'active',  -- active|completed
+    score        INTEGER NOT NULL DEFAULT 0,
+    created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    completed_at TEXT
+);
 """
