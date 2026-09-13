@@ -5342,6 +5342,13 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** да, 2026-09-11 — PR #192 влит (squash, 0084993), `build_static_site.py --out dist_prod` (137 стр., robots индексируемый) + rsync → прод (RSYNC=0). Проверка вживую: `/`, все 6 новых URL, /blog, /english-words, /sitemap.xml → 200; новые URL в sitemap. Откат: `git revert 0084993` + повторный rsync (предыдущий good — 594497c).
 **Осталось / следующий шаг:** контроль CTR/позиций через 2–4 недели (пересобрать report); далее — GSC_STRIKING (37 запросов, дожать топ-3: «школа английского долгопрудный» и др.) и C-02 (оптимизация 15 старых novosti-статей) из SEO_BACKLOG.md.
 
+### Сессия 108 (агент — Kimi, сайт: SEO-волна 19 — 4 статьи + дожимы) — PR #212
+
+- Новые статьи (pages_wave19.py, FAQ ×4, CTA): /blog-probely-po-russkomu-4-klass (73 показа Вебмастер), /blog-schot-na-anglijskom, /blog-anglijskij-dlya-studentov (кластер МФТИ/технический/стажировка), /blog-anglijskij-na-kanikulah (сезонный, под осенние каникулы).
+- Дожим: /blog-kogda-nachinat-gotovitsya-k-oge (35 пок., поз 9.1 — description под запрос, FAQ+1), /blog-mne-10-let-na-anglijskom (68 пок., поз 9.3), /english-words/semya (~98 пок., поз 10–11).
+- QA: 218 страниц (+4), 8 URL HTTP 200, H1=1, FAQPage на месте, sitemap и лента /blog ок; «Долгопрудноме»=0, эмодзи=0. SEO_SEMANTIC_MAP.md — 15.26.
+- Деплой на прод, проверено вживую: все 4 новые статьи 200.
+
 ### Сессия 107 (агент — Kimi, сайт: замена ссылки «Лицензия» на новую выписку) — PR #211
 
 - Старая ссылка disk.yandex.ru/d/ZDlm_uGmwxH4kw вела на устаревшую выписку — заменена на https://disk.yandex.com/i/OCN_thyX8hazDg в block_footer.html (подвал всех страниц), block_svedeniya.html и main_combined_v7.html (2 места), плюс blocks_min для консистентности.
