@@ -7036,13 +7036,14 @@ import pages_wave21  # волна 21: онлайн или офлайн, пров
 import pages_wave22  # волна 22: как выбрать курсы, носитель или нет, грамматика-хаб, сколько слов школьнику
 import pages_wave23  # волна 23: гео районов (Водники, Павельцево, Виноградово, Ховрино) + пробное занятие и русский/математика
 import pages_wave24  # волна 24: гео Новая Дача и Шереметьевский + ОГЭ с нуля, карточки, лексика ЕГЭ
+import pages_wave25  # волна 25: семья 5–7 класс, ВПР 5 класс, транскрипция, разговорный клуб
 
 pages_geo2.register_geo()
 pages_wave23.register_wave23()
 pages_wave24.register_wave24()
 pages_prep.register_prep_sections()
 
-EXTRA_BLOG_POSTS = pages_wave24.WAVE24_POSTS + pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave25.WAVE25_POSTS + pages_wave24.WAVE24_POSTS + pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
