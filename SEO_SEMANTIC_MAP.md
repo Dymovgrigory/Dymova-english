@@ -1705,6 +1705,71 @@ sitemap.xml и ленте /blog.
 
 ---
 
+### 15.28. Онлайн-офлайн, проверка уровня, 10 минут в день, аудирование ЕГЭ (SEO-волна 21)
+
+**Контекст:** по seo/report.csv и keywords.csv (13.09.2026) закрываем
+оставшиеся непокрытые кластеры: «онлайн или оффлайн английский для
+ребёнка» (keywords.csv: NEW /blog/onlajn-ili-offlajn; в report.csv
+хвост «занятия онлайн или офлайн / что эффективнее» на ~27 показов,
+поз. 5–11), «как проверить уровень английского у ребёнка» (keywords.csv:
+NEW ×3), комбинация NEW-кластеров домашней практики (/blog/10-minut-v-den,
+/blog/igry-doma, /blog/kartochki-anglijskij, /blog/samouchitel-detyam)
+и «аудирование ЕГЭ» (keywords.csv: NEW /blog/audirovanie-ege — единственный
+незакрытый подраздел ЕГЭ). Кластер «пробелы по классам» (3/5/6/8 класс)
+оказался уже закрытым (волны 5 и 11) — ушёл в дожим.
+
+**Новые статьи:**
+
+- `/blog-onlajn-ili-offlajn` — честное сравнение форматов по возрастам,
+  целям и логистике, гибридная схема. Ссылки: /online-zanyatiya,
+  /standartnye-offline, /nositel-yazyka, /blog-effektivnost-onlajn,
+  /blog-gruppa-ili-individualno. FAQ ×4, CTA /diagnostika.
+- `/blog-kak-proverit-uroven` — домашняя проверка словаря, грамматики,
+  чтения и аудирования за 20 минут. Ссылки: /test-uroven, /english-words,
+  /blog-vremena-dlya-shkolnikov, /blog-probely-po-anglijskomu. FAQ ×4,
+  CTA /test-uroven и /diagnostika.
+- `/blog-10-minut-v-den` — домашняя рутина по 10 минут: ритуал, план
+  на неделю (слова/чтение/аудио/игра/повторение). Ссылки: /english-words,
+  /blog-kak-uchit-slova, /blog-anglijskij-cherez-igru. FAQ ×4,
+  CTA /test-uroven и /diagnostika.
+- `/blog-audirovanie-ege` — устройство раздела (3 задания), типовые
+  ловушки, план тренировки за год и полгода. Ссылки: /ege-anglijskij,
+  /blog-struktura-ege-anglijskij, /blog-ege-za-god, /blog-ege-na-80-ballov.
+  FAQ ×4, CTA /diagnostika.
+
+**Дожим существующих страниц:**
+
+- `/nositel-yazyka` («английский с носителем в Долгопрудном», 46 показов,
+  поз. 5.7–6.6): добавлена запись в seo_meta_live.json (title/description
+  с точным вхождением и УТП «входит в абонемент»); FAQ +1 (носитель vs
+  русскоязычный педагог → /blog-anglijskij-s-nositelem-kogda-nuzhen);
+  внутренние ссылки на /blog-anglijskij-s-nositelem-kogda-nuzhen и новую
+  /blog-onlajn-ili-offlajn.
+- `/blog-probely-po-anglijskomu-3-klass` («пробелы по английскому языку
+  в 3 классе», ~101 показ суммарно, поз. 3.5–28.3): title/description
+  переписаны с точным вхождением запроса («по английскому языку»);
+  FAQ +1 (устранение дома → /blog-kak-proverit-uroven).
+- `/blog-slova-po-temam` («английские слова по темам», ~50 показов,
+  поз. 7.1–11.1): FAQ +1 (рутина 10 минут → /blog-10-minut-v-den,
+  /blog-kak-uchit-slova).
+
+**Технически:** статьи — `prototype/pages_wave21.py` (WAVE21_POSTS,
+импорт в build_subpages.py, первым в EXTRA_BLOG_POSTS); алиасы добавлены
+в PAGE_ALIASES (`build_static_site.py`); дожимы — build_subpages.py
+(nositel-yazyka), pages_wave5.py (probely-3), pages_wave16.py
+(slova-po-temam) и seo_meta_live.json.
+
+**QA после пересборки:** **226** страниц (+4); сервер :8993 — 4 новые
+и 3 дожатые страницы → 200, ровно один h1, FAQPage JSON-LD на месте;
+«Долгопрудноме» — 0; эмодзи в новых страницах — 0 (только шаблонная
+типографская стрелка «→», как на всех страницах); все 4 URL в
+sitemap.xml (226 loc) и ленте /blog (146 карточек).
+
+Сборка: **226** страниц (+4: /blog-onlajn-ili-offlajn,
+/blog-kak-proverit-uroven, /blog-10-minut-v-den, /blog-audirovanie-ege).
+
+---
+
 ## 16. Итоговая статистика карты
 
 - Запросов в структуре (включая 60 AI-вопросов раздела 12, 32 запроса из Вебмастера, раздел 15.8,

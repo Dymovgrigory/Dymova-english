@@ -2984,7 +2984,7 @@ PAGES["page_nositel_yazyka.html"] = {
         "<p>Разговорный клуб с носителем — не отдельная платная услуга, а часть абонемента учеников Фоксинбурга. Вы оплачиваете обычный абонемент, а живая практика с носителем уже включена в него.</p>"
         "<h2>Зачем нужен клуб с носителем</h2>"
         "<p>На основных занятиях мы даём систему: грамматику, лексику, чтение и письмо. Клуб с носителем добавляет главное — живую речь. Ученик слышит естественный темп и произношение, учится понимать на слух и перестаёт бояться говорить: с носителем по-русски не «переключишься», и это мягко выводит из зоны комфорта.</p>"
-        "<p>Клуб дополняет разговорную практику наших программ — подробнее о ней на странице <a href=\"/razgovornyj-anglijskij\">разговорного английского</a>.</p>"
+        "<p>Клуб дополняет разговорную практику наших программ — подробнее о ней на странице <a href=\"/razgovornyj-anglijskij\">разговорного английского</a>. Когда именно нужен носитель, а когда хватит сильного русскоязычного педагога, разобрали в статье «<a href=\"/blog-anglijskij-s-nositelem-kogda-nuzhen\">Английский с носителем: когда он действительно нужен</a>», а про выбор формата занятий — «<a href=\"/blog-onlajn-ili-offlajn\">Онлайн или офлайн: что выбрать ребёнку</a>».</p>"
         '<div class="fxb-related"><h2>Смежные страницы</h2><div class="fxb-related-list">'
         '<a href="/razgovornyj-anglijskij">Разговорный английский</a>'
         '<a href="/tseny">Цены и абонементы</a>'
@@ -2999,6 +2999,7 @@ PAGES["page_nositel_yazyka.html"] = {
         ("Какой уровень нужен для участия?", "Клуб полезен с разных уровней — группы подбираем после бесплатной диагностики так, чтобы каждому было комфортно говорить."),
         ("Как часто проходят встречи?", "Регулярно в течение учебного года. Точное расписание подскажет администратор — оно зависит от группы и филиала."),
         ("Можно прийти только на клуб, без основных занятий?", "Клуб задуман как часть обучения учеников школы — максимум пользы он даёт вместе с основной программой. Приходите на бесплатную диагностику: подберём формат под вашу задачу."),
+        ("Что лучше: занятия с носителем или с русскоязычным педагогом?", "Зависит от задачи: систему грамматики и школьную программу эффективнее даёт русскоязычный педагог, а носитель незаменим для живой речи, произношения и преодоления языкового барьера. Поэтому у нас основные занятия ведут педагоги школы, а клуб с носителем добавляет разговорную практику — подробный разбор в статье «<a href=\"/blog-anglijskij-s-nositelem-kogda-nuzhen\">когда носитель действительно нужен</a>»."),
     ],
     "extra_jsonld": [
         course_jsonld(
@@ -7029,11 +7030,12 @@ import pages_wave17  # волна 17: фразы для детей, англий
 import pages_wave18  # волна 18: для работы/переезда, подготовка к школе (математика/русский), по возрастам, geo/lobnya
 import pages_wave19  # волна 19: пробелы по русскому 4 класс, счёт на английском, для студентов, на каникулах
 import pages_wave20  # волна 20: со скольки лет английский, времена для школьников, как учить слова, ошибки ОГЭ
+import pages_wave21  # волна 21: онлайн или офлайн, проверка уровня, 10 минут в день, аудирование ЕГЭ
 
 pages_geo2.register_geo()
 pages_prep.register_prep_sections()
 
-EXTRA_BLOG_POSTS = pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
