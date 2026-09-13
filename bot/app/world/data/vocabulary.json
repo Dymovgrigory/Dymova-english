@@ -1,0 +1,3285 @@
+{
+  "themes": [
+    {
+      "id": "dom",
+      "title_ru": "Дом",
+      "words": [
+        {
+          "en": "house",
+          "ipa": "[haʊs]",
+          "ru": "дом",
+          "example_en": "Our house is big.",
+          "example_ru": "Наш дом большой."
+        },
+        {
+          "en": "flat",
+          "ipa": "[flæt]",
+          "ru": "квартира",
+          "example_en": "We live in a flat.",
+          "example_ru": "Мы живём в квартире."
+        },
+        {
+          "en": "room",
+          "ipa": "[ruːm]",
+          "ru": "комната",
+          "example_en": "My room is cosy.",
+          "example_ru": "Моя комната уютная."
+        },
+        {
+          "en": "kitchen",
+          "ipa": "[ˈkɪtʃɪn]",
+          "ru": "кухня",
+          "example_en": "Mum cooks in the kitchen.",
+          "example_ru": "Мама готовит на кухне."
+        },
+        {
+          "en": "bedroom",
+          "ipa": "[ˈbedruːm]",
+          "ru": "спальня",
+          "example_en": "I sleep in my bedroom.",
+          "example_ru": "Я сплю в своей спальне."
+        },
+        {
+          "en": "bathroom",
+          "ipa": "[ˈbɑːθruːm]",
+          "ru": "ванная",
+          "example_en": "I wash my hands in the bathroom.",
+          "example_ru": "Я мою руки в ванной."
+        },
+        {
+          "en": "living room",
+          "ipa": "[ˈlɪvɪŋ ruːm]",
+          "ru": "гостиная",
+          "example_en": "We watch TV in the living room.",
+          "example_ru": "Мы смотрим телевизор в гостиной."
+        },
+        {
+          "en": "hall",
+          "ipa": "[hɔːl]",
+          "ru": "прихожая",
+          "example_en": "Leave your shoes in the hall.",
+          "example_ru": "Оставь обувь в прихожей."
+        },
+        {
+          "en": "window",
+          "ipa": "[ˈwɪndəʊ]",
+          "ru": "окно",
+          "example_en": "Open the window, please.",
+          "example_ru": "Открой окно, пожалуйста."
+        },
+        {
+          "en": "door",
+          "ipa": "[dɔː]",
+          "ru": "дверь",
+          "example_en": "Close the door.",
+          "example_ru": "Закрой дверь."
+        },
+        {
+          "en": "wall",
+          "ipa": "[wɔːl]",
+          "ru": "стена",
+          "example_en": "A picture hangs on the wall.",
+          "example_ru": "Картина висит на стене."
+        },
+        {
+          "en": "floor",
+          "ipa": "[flɔː]",
+          "ru": "пол",
+          "example_en": "The floor is clean.",
+          "example_ru": "Пол чистый."
+        },
+        {
+          "en": "roof",
+          "ipa": "[ruːf]",
+          "ru": "крыша",
+          "example_en": "The roof is red.",
+          "example_ru": "Крыша красная."
+        },
+        {
+          "en": "stairs",
+          "ipa": "[steəz]",
+          "ru": "лестница",
+          "example_en": "Go up the stairs.",
+          "example_ru": "Поднимись по лестнице."
+        },
+        {
+          "en": "garden",
+          "ipa": "[ˈɡɑːdn]",
+          "ru": "сад",
+          "example_en": "Flowers grow in the garden.",
+          "example_ru": "В саду растут цветы."
+        },
+        {
+          "en": "table",
+          "ipa": "[ˈteɪbl]",
+          "ru": "стол",
+          "example_en": "The book is on the table.",
+          "example_ru": "Книга лежит на столе."
+        },
+        {
+          "en": "sofa",
+          "ipa": "[ˈsəʊfə]",
+          "ru": "диван",
+          "example_en": "The cat sleeps on the sofa.",
+          "example_ru": "Кошка спит на диване."
+        },
+        {
+          "en": "armchair",
+          "ipa": "[ˈɑːmtʃeə]",
+          "ru": "кресло",
+          "example_en": "Grandpa sits in the armchair.",
+          "example_ru": "Дедушка сидит в кресле."
+        },
+        {
+          "en": "bed",
+          "ipa": "[bed]",
+          "ru": "кровать",
+          "example_en": "I go to bed at nine.",
+          "example_ru": "Я ложусь спать в девять."
+        },
+        {
+          "en": "lamp",
+          "ipa": "[læmp]",
+          "ru": "лампа",
+          "example_en": "Turn on the lamp.",
+          "example_ru": "Включи лампу."
+        },
+        {
+          "en": "fridge",
+          "ipa": "[frɪdʒ]",
+          "ru": "холодильник",
+          "example_en": "The milk is in the fridge.",
+          "example_ru": "Молоко в холодильнике."
+        },
+        {
+          "en": "cooker",
+          "ipa": "[ˈkʊkə]",
+          "ru": "плита",
+          "example_en": "Mum cooks soup on the cooker.",
+          "example_ru": "Мама варит суп на плите."
+        },
+        {
+          "en": "cupboard",
+          "ipa": "[ˈkʌbəd]",
+          "ru": "шкаф (кухонный)",
+          "example_en": "The cups are in the cupboard.",
+          "example_ru": "Чашки в шкафу."
+        },
+        {
+          "en": "wardrobe",
+          "ipa": "[ˈwɔːdrəʊb]",
+          "ru": "шкаф для одежды",
+          "example_en": "My clothes are in the wardrobe.",
+          "example_ru": "Моя одежда в шкафу."
+        },
+        {
+          "en": "mirror",
+          "ipa": "[ˈmɪrə]",
+          "ru": "зеркало",
+          "example_en": "I look in the mirror.",
+          "example_ru": "Я смотрю в зеркало."
+        },
+        {
+          "en": "carpet",
+          "ipa": "[ˈkɑːpɪt]",
+          "ru": "ковёр",
+          "example_en": "The carpet is soft.",
+          "example_ru": "Ковёр мягкий."
+        },
+        {
+          "en": "curtain",
+          "ipa": "[ˈkɜːtn]",
+          "ru": "штора",
+          "example_en": "Close the curtains, please.",
+          "example_ru": "Закрой шторы, пожалуйста."
+        },
+        {
+          "en": "shelf",
+          "ipa": "[ʃelf]",
+          "ru": "полка",
+          "example_en": "Books are on the shelf.",
+          "example_ru": "Книги стоят на полке."
+        },
+        {
+          "en": "clock",
+          "ipa": "[klɒk]",
+          "ru": "часы",
+          "example_en": "The clock is on the wall.",
+          "example_ru": "Часы висят на стене."
+        },
+        {
+          "en": "balcony",
+          "ipa": "[ˈbælkəni]",
+          "ru": "балкон",
+          "example_en": "Flowers grow on our balcony.",
+          "example_ru": "На нашем балконе растут цветы."
+        }
+      ]
+    },
+    {
+      "id": "eda",
+      "title_ru": "Еда",
+      "words": [
+        {
+          "en": "bread",
+          "ipa": "[bred]",
+          "ru": "хлеб",
+          "example_en": "I eat bread with butter.",
+          "example_ru": "Я ем хлеб с маслом."
+        },
+        {
+          "en": "milk",
+          "ipa": "[mɪlk]",
+          "ru": "молоко",
+          "example_en": "The cat drinks milk.",
+          "example_ru": "Кошка пьёт молоко."
+        },
+        {
+          "en": "cheese",
+          "ipa": "[tʃiːz]",
+          "ru": "сыр",
+          "example_en": "Cheese is yellow.",
+          "example_ru": "Сыр жёлтый."
+        },
+        {
+          "en": "butter",
+          "ipa": "[ˈbʌtə]",
+          "ru": "масло",
+          "example_en": "Put butter on the bread.",
+          "example_ru": "Намажь масло на хлеб."
+        },
+        {
+          "en": "egg",
+          "ipa": "[eɡ]",
+          "ru": "яйцо",
+          "example_en": "I boil an egg for breakfast.",
+          "example_ru": "Я варю яйцо на завтрак."
+        },
+        {
+          "en": "apple",
+          "ipa": "[ˈæpl]",
+          "ru": "яблоко",
+          "example_en": "The apple is sweet and red.",
+          "example_ru": "Яблоко сладкое и красное."
+        },
+        {
+          "en": "banana",
+          "ipa": "[bəˈnɑːnə]",
+          "ru": "банан",
+          "example_en": "The monkey eats a banana.",
+          "example_ru": "Обезьяна ест банан."
+        },
+        {
+          "en": "orange",
+          "ipa": "[ˈɒrɪndʒ]",
+          "ru": "апельсин",
+          "example_en": "I like orange juice.",
+          "example_ru": "Я люблю апельсиновый сок."
+        },
+        {
+          "en": "meat",
+          "ipa": "[miːt]",
+          "ru": "мясо",
+          "example_en": "We cook meat for dinner.",
+          "example_ru": "Мы готовим мясо на ужин."
+        },
+        {
+          "en": "chicken",
+          "ipa": "[ˈtʃɪkɪn]",
+          "ru": "курица (мясо)",
+          "example_en": "The chicken soup is hot.",
+          "example_ru": "Куриный суп горячий."
+        },
+        {
+          "en": "rice",
+          "ipa": "[raɪs]",
+          "ru": "рис",
+          "example_en": "Rice is white.",
+          "example_ru": "Рис белый."
+        },
+        {
+          "en": "potato",
+          "ipa": "[pəˈteɪtəʊ]",
+          "ru": "картофель",
+          "example_en": "I like mashed potatoes.",
+          "example_ru": "Я люблю картофельное пюре."
+        },
+        {
+          "en": "tomato",
+          "ipa": "[təˈmɑːtəʊ]",
+          "ru": "помидор",
+          "example_en": "The tomato is red.",
+          "example_ru": "Помидор красный."
+        },
+        {
+          "en": "cucumber",
+          "ipa": "[ˈkjuːkʌmbə]",
+          "ru": "огурец",
+          "example_en": "The cucumber is green.",
+          "example_ru": "Огурец зелёный."
+        },
+        {
+          "en": "carrot",
+          "ipa": "[ˈkærət]",
+          "ru": "морковь",
+          "example_en": "Rabbits like carrots.",
+          "example_ru": "Кролики любят морковь."
+        },
+        {
+          "en": "onion",
+          "ipa": "[ˈʌnjən]",
+          "ru": "лук",
+          "example_en": "The onion makes me cry.",
+          "example_ru": "Лук заставляет меня плакать."
+        },
+        {
+          "en": "soup",
+          "ipa": "[suːp]",
+          "ru": "суп",
+          "example_en": "Mum cooks soup every day.",
+          "example_ru": "Мама варит суп каждый день."
+        },
+        {
+          "en": "salad",
+          "ipa": "[ˈsæləd]",
+          "ru": "салат",
+          "example_en": "We make a salad with tomatoes.",
+          "example_ru": "Мы делаем салат с помидорами."
+        },
+        {
+          "en": "cake",
+          "ipa": "[keɪk]",
+          "ru": "торт",
+          "example_en": "The birthday cake is big.",
+          "example_ru": "Именинный торт большой."
+        },
+        {
+          "en": "ice cream",
+          "ipa": "[aɪs kriːm]",
+          "ru": "мороженое",
+          "example_en": "Ice cream is cold and sweet.",
+          "example_ru": "Мороженое холодное и сладкое."
+        },
+        {
+          "en": "chocolate",
+          "ipa": "[ˈtʃɒklət]",
+          "ru": "шоколад",
+          "example_en": "I love chocolate.",
+          "example_ru": "Я люблю шоколад."
+        },
+        {
+          "en": "sugar",
+          "ipa": "[ˈʃʊɡə]",
+          "ru": "сахар",
+          "example_en": "I put sugar in my tea.",
+          "example_ru": "Я кладу сахар в чай."
+        },
+        {
+          "en": "salt",
+          "ipa": "[sɔːlt]",
+          "ru": "соль",
+          "example_en": "Add a little salt.",
+          "example_ru": "Добавь немного соли."
+        },
+        {
+          "en": "juice",
+          "ipa": "[dʒuːs]",
+          "ru": "сок",
+          "example_en": "Apple juice is tasty.",
+          "example_ru": "Яблочный сок вкусный."
+        },
+        {
+          "en": "water",
+          "ipa": "[ˈwɔːtə]",
+          "ru": "вода",
+          "example_en": "I drink water every day.",
+          "example_ru": "Я пью воду каждый день."
+        },
+        {
+          "en": "tea",
+          "ipa": "[tiː]",
+          "ru": "чай",
+          "example_en": "Granny drinks tea with lemon.",
+          "example_ru": "Бабушка пьёт чай с лимоном."
+        },
+        {
+          "en": "coffee",
+          "ipa": "[ˈkɒfi]",
+          "ru": "кофе",
+          "example_en": "Dad drinks coffee in the morning.",
+          "example_ru": "Папа пьёт кофе по утрам."
+        },
+        {
+          "en": "sandwich",
+          "ipa": "[ˈsænwɪdʒ]",
+          "ru": "бутерброд",
+          "example_en": "I take a sandwich to school.",
+          "example_ru": "Я беру бутерброд в школу."
+        },
+        {
+          "en": "pizza",
+          "ipa": "[ˈpiːtsə]",
+          "ru": "пицца",
+          "example_en": "We order pizza on Saturday.",
+          "example_ru": "Мы заказываем пиццу в субботу."
+        }
+      ]
+    },
+    {
+      "id": "hobbi",
+      "title_ru": "Хобби",
+      "words": [
+        {
+          "en": "hobby",
+          "ipa": "[ˈhɒbi]",
+          "ru": "хобби",
+          "example_en": "My hobby is drawing.",
+          "example_ru": "Моё хобби — рисование."
+        },
+        {
+          "en": "reading",
+          "ipa": "[ˈriːdɪŋ]",
+          "ru": "чтение",
+          "example_en": "Reading is my favourite hobby.",
+          "example_ru": "Чтение — моё любимое хобби."
+        },
+        {
+          "en": "drawing",
+          "ipa": "[ˈdrɔːɪŋ]",
+          "ru": "рисование",
+          "example_en": "I like drawing animals.",
+          "example_ru": "Мне нравится рисовать животных."
+        },
+        {
+          "en": "painting",
+          "ipa": "[ˈpeɪntɪŋ]",
+          "ru": "живопись",
+          "example_en": "Painting is fun.",
+          "example_ru": "Рисовать красками — весело."
+        },
+        {
+          "en": "dancing",
+          "ipa": "[ˈdɑːnsɪŋ]",
+          "ru": "танцы",
+          "example_en": "Dancing makes me happy.",
+          "example_ru": "Танцы делают меня счастливой."
+        },
+        {
+          "en": "singing",
+          "ipa": "[ˈsɪŋɪŋ]",
+          "ru": "пение",
+          "example_en": "Singing is her hobby.",
+          "example_ru": "Пение — её хобби."
+        },
+        {
+          "en": "swimming",
+          "ipa": "[ˈswɪmɪŋ]",
+          "ru": "плавание",
+          "example_en": "Swimming is good for you.",
+          "example_ru": "Плавание полезно для здоровья."
+        },
+        {
+          "en": "football",
+          "ipa": "[ˈfʊtbɔːl]",
+          "ru": "футбол",
+          "example_en": "My hobby is football.",
+          "example_ru": "Моё хобби — футбол."
+        },
+        {
+          "en": "chess",
+          "ipa": "[tʃes]",
+          "ru": "шахматы",
+          "example_en": "We play chess with Grandpa.",
+          "example_ru": "Мы играем в шахматы с дедушкой."
+        },
+        {
+          "en": "music",
+          "ipa": "[ˈmjuːzɪk]",
+          "ru": "музыка",
+          "example_en": "I listen to music every day.",
+          "example_ru": "Я слушаю музыку каждый день."
+        },
+        {
+          "en": "cooking",
+          "ipa": "[ˈkʊkɪŋ]",
+          "ru": "готовка",
+          "example_en": "Cooking with Mum is fun.",
+          "example_ru": "Готовить с мамой весело."
+        },
+        {
+          "en": "photography",
+          "ipa": "[fəˈtɒɡrəfi]",
+          "ru": "фотография",
+          "example_en": "Photography is his hobby.",
+          "example_ru": "Фотография — его хобби."
+        },
+        {
+          "en": "collecting",
+          "ipa": "[kəˈlektɪŋ]",
+          "ru": "коллекционирование",
+          "example_en": "Collecting stickers is popular.",
+          "example_ru": "Собирать наклейки — популярно."
+        },
+        {
+          "en": "gardening",
+          "ipa": "[ˈɡɑːdnɪŋ]",
+          "ru": "садоводство",
+          "example_en": "Grandma likes gardening.",
+          "example_ru": "Бабушка любит садоводство."
+        },
+        {
+          "en": "fishing",
+          "ipa": "[ˈfɪʃɪŋ]",
+          "ru": "рыбалка",
+          "example_en": "Dad goes fishing on Sundays.",
+          "example_ru": "Папа ходит на рыбалку по воскресеньям."
+        },
+        {
+          "en": "games",
+          "ipa": "[ɡeɪmz]",
+          "ru": "игры",
+          "example_en": "Board games are fun for all.",
+          "example_ru": "Настольные игры веселы для всех."
+        },
+        {
+          "en": "book",
+          "ipa": "[bʊk]",
+          "ru": "книга",
+          "example_en": "This book is about pirates.",
+          "example_ru": "Эта книга про пиратов."
+        },
+        {
+          "en": "song",
+          "ipa": "[sɒŋ]",
+          "ru": "песня",
+          "example_en": "I know this song in English.",
+          "example_ru": "Я знаю эту песню на английском."
+        },
+        {
+          "en": "picture",
+          "ipa": "[ˈpɪktʃə]",
+          "ru": "картина, рисунок",
+          "example_en": "Draw a picture of your family.",
+          "example_ru": "Нарисуй рисунок своей семьи."
+        },
+        {
+          "en": "puzzle",
+          "ipa": "[ˈpʌzl]",
+          "ru": "пазл, головоломка",
+          "example_en": "We do a big puzzle together.",
+          "example_ru": "Мы собираем большой пазл вместе."
+        },
+        {
+          "en": "knitting",
+          "ipa": "[ˈnɪtɪŋ]",
+          "ru": "вязание",
+          "example_en": "Grandma's hobby is knitting.",
+          "example_ru": "Хобби бабушки — вязание."
+        },
+        {
+          "en": "stamp",
+          "ipa": "[stæmp]",
+          "ru": "марка",
+          "example_en": "My uncle collects stamps.",
+          "example_ru": "Мой дядя собирает марки."
+        },
+        {
+          "en": "bicycle",
+          "ipa": "[ˈbaɪsɪkl]",
+          "ru": "велосипед",
+          "example_en": "Riding a bicycle is my hobby.",
+          "example_ru": "Езда на велосипеде — моё хобби."
+        },
+        {
+          "en": "doll",
+          "ipa": "[dɒl]",
+          "ru": "кукла",
+          "example_en": "She makes clothes for her dolls.",
+          "example_ru": "Она шьёт одежду для кукол."
+        },
+        {
+          "en": "instrument",
+          "ipa": "[ˈɪnstrəmənt]",
+          "ru": "инструмент",
+          "example_en": "The guitar is a music instrument.",
+          "example_ru": "Гитара — музыкальный инструмент."
+        },
+        {
+          "en": "free time",
+          "ipa": "[friː taɪm]",
+          "ru": "свободное время",
+          "example_en": "What do you do in your free time?",
+          "example_ru": "Чем ты занимаешься в свободное время?"
+        }
+      ]
+    },
+    {
+      "id": "odezhda",
+      "title_ru": "Одежда",
+      "words": [
+        {
+          "en": "T-shirt",
+          "ipa": "[ˈtiː ʃɜːt]",
+          "ru": "футболка",
+          "example_en": "I wear a white T-shirt.",
+          "example_ru": "Я ношу белую футболку."
+        },
+        {
+          "en": "shirt",
+          "ipa": "[ʃɜːt]",
+          "ru": "рубашка",
+          "example_en": "His shirt is blue.",
+          "example_ru": "Его рубашка синяя."
+        },
+        {
+          "en": "trousers",
+          "ipa": "[ˈtraʊzəz]",
+          "ru": "брюки",
+          "example_en": "These trousers are long.",
+          "example_ru": "Эти брюки длинные."
+        },
+        {
+          "en": "jeans",
+          "ipa": "[dʒiːnz]",
+          "ru": "джинсы",
+          "example_en": "I like my new jeans.",
+          "example_ru": "Мне нравятся мои новые джинсы."
+        },
+        {
+          "en": "dress",
+          "ipa": "[dres]",
+          "ru": "платье",
+          "example_en": "Her dress is beautiful.",
+          "example_ru": "Её платье красивое."
+        },
+        {
+          "en": "skirt",
+          "ipa": "[skɜːt]",
+          "ru": "юбка",
+          "example_en": "The skirt is short.",
+          "example_ru": "Юбка короткая."
+        },
+        {
+          "en": "jacket",
+          "ipa": "[ˈdʒækɪt]",
+          "ru": "куртка",
+          "example_en": "Put on your jacket, it is cold.",
+          "example_ru": "Надень куртку, холодно."
+        },
+        {
+          "en": "coat",
+          "ipa": "[kəʊt]",
+          "ru": "пальто",
+          "example_en": "She wears a warm coat in winter.",
+          "example_ru": "Зимой она носит тёплое пальто."
+        },
+        {
+          "en": "hat",
+          "ipa": "[hæt]",
+          "ru": "шляпа, шапка",
+          "example_en": "The hat is on my head.",
+          "example_ru": "Шапка на моей голове."
+        },
+        {
+          "en": "cap",
+          "ipa": "[kæp]",
+          "ru": "кепка",
+          "example_en": "The boy wears a red cap.",
+          "example_ru": "Мальчик носит красную кепку."
+        },
+        {
+          "en": "scarf",
+          "ipa": "[skɑːf]",
+          "ru": "шарф",
+          "example_en": "This scarf is very warm.",
+          "example_ru": "Этот шарф очень тёплый."
+        },
+        {
+          "en": "gloves",
+          "ipa": "[ɡlʌvz]",
+          "ru": "перчатки",
+          "example_en": "I put on my gloves.",
+          "example_ru": "Я надеваю перчатки."
+        },
+        {
+          "en": "socks",
+          "ipa": "[sɒks]",
+          "ru": "носки",
+          "example_en": "My socks are grey.",
+          "example_ru": "Мои носки серые."
+        },
+        {
+          "en": "shoes",
+          "ipa": "[ʃuːz]",
+          "ru": "туфли, обувь",
+          "example_en": "These shoes are new.",
+          "example_ru": "Эти туфли новые."
+        },
+        {
+          "en": "boots",
+          "ipa": "[buːts]",
+          "ru": "сапоги, ботинки",
+          "example_en": "I wear boots in the rain.",
+          "example_ru": "Я ношу сапоги в дождь."
+        },
+        {
+          "en": "trainers",
+          "ipa": "[ˈtreɪnəz]",
+          "ru": "кроссовки",
+          "example_en": "I run in my trainers.",
+          "example_ru": "Я бегаю в кроссовках."
+        },
+        {
+          "en": "sweater",
+          "ipa": "[ˈswetə]",
+          "ru": "свитер",
+          "example_en": "The sweater is soft.",
+          "example_ru": "Свитер мягкий."
+        },
+        {
+          "en": "pyjamas",
+          "ipa": "[pəˈdʒɑːməz]",
+          "ru": "пижама",
+          "example_en": "I sleep in my pyjamas.",
+          "example_ru": "Я сплю в пижаме."
+        },
+        {
+          "en": "shorts",
+          "ipa": "[ʃɔːts]",
+          "ru": "шорты",
+          "example_en": "He wears shorts in summer.",
+          "example_ru": "Летом он носит шорты."
+        },
+        {
+          "en": "blouse",
+          "ipa": "[blaʊz]",
+          "ru": "блузка",
+          "example_en": "The blouse is white.",
+          "example_ru": "Блузка белая."
+        },
+        {
+          "en": "suit",
+          "ipa": "[suːt]",
+          "ru": "костюм",
+          "example_en": "Dad wears a suit to work.",
+          "example_ru": "Папа носит костюм на работу."
+        },
+        {
+          "en": "tie",
+          "ipa": "[taɪ]",
+          "ru": "галстук",
+          "example_en": "The tie is dark blue.",
+          "example_ru": "Галстук тёмно-синий."
+        },
+        {
+          "en": "belt",
+          "ipa": "[belt]",
+          "ru": "ремень",
+          "example_en": "The belt is black.",
+          "example_ru": "Ремень чёрный."
+        },
+        {
+          "en": "raincoat",
+          "ipa": "[ˈreɪnkəʊt]",
+          "ru": "дождевик",
+          "example_en": "Take your raincoat, it is raining.",
+          "example_ru": "Возьми дождевик, идёт дождь."
+        },
+        {
+          "en": "mittens",
+          "ipa": "[ˈmɪtnz]",
+          "ru": "варежки",
+          "example_en": "My mittens are red.",
+          "example_ru": "Мои варежки красные."
+        },
+        {
+          "en": "tights",
+          "ipa": "[taɪts]",
+          "ru": "колготки",
+          "example_en": "The girl wears tights.",
+          "example_ru": "Девочка носит колготки."
+        },
+        {
+          "en": "swimsuit",
+          "ipa": "[ˈswɪmsuːt]",
+          "ru": "купальник",
+          "example_en": "I swim in a swimsuit.",
+          "example_ru": "Я плаваю в купальнике."
+        },
+        {
+          "en": "hoodie",
+          "ipa": "[ˈhʊdi]",
+          "ru": "толстовка с капюшоном",
+          "example_en": "The hoodie is warm and cosy.",
+          "example_ru": "Толстовка тёплая и уютная."
+        },
+        {
+          "en": "uniform",
+          "ipa": "[ˈjuːnɪfɔːm]",
+          "ru": "форма",
+          "example_en": "Pupils wear a school uniform.",
+          "example_ru": "Ученики носят школьную форму."
+        },
+        {
+          "en": "slippers",
+          "ipa": "[ˈslɪpəz]",
+          "ru": "тапочки",
+          "example_en": "I wear slippers at home.",
+          "example_ru": "Я ношу тапочки дома."
+        }
+      ]
+    },
+    {
+      "id": "pogoda",
+      "title_ru": "Погода",
+      "words": [
+        {
+          "en": "sun",
+          "ipa": "[sʌn]",
+          "ru": "солнце",
+          "example_en": "The sun shines in the sky.",
+          "example_ru": "Солнце светит в небе."
+        },
+        {
+          "en": "rain",
+          "ipa": "[reɪn]",
+          "ru": "дождь",
+          "example_en": "The rain falls from the clouds.",
+          "example_ru": "Дождь падает из туч."
+        },
+        {
+          "en": "snow",
+          "ipa": "[snəʊ]",
+          "ru": "снег",
+          "example_en": "The snow is white and cold.",
+          "example_ru": "Снег белый и холодный."
+        },
+        {
+          "en": "wind",
+          "ipa": "[wɪnd]",
+          "ru": "ветер",
+          "example_en": "The wind blows the leaves.",
+          "example_ru": "Ветер качает листья."
+        },
+        {
+          "en": "cloud",
+          "ipa": "[klaʊd]",
+          "ru": "облако",
+          "example_en": "The cloud is grey.",
+          "example_ru": "Облако серое."
+        },
+        {
+          "en": "sky",
+          "ipa": "[skaɪ]",
+          "ru": "небо",
+          "example_en": "The sky is blue today.",
+          "example_ru": "Сегодня небо голубое."
+        },
+        {
+          "en": "storm",
+          "ipa": "[stɔːm]",
+          "ru": "буря, гроза",
+          "example_en": "The storm is strong.",
+          "example_ru": "Гроза сильная."
+        },
+        {
+          "en": "thunder",
+          "ipa": "[ˈθʌndə]",
+          "ru": "гром",
+          "example_en": "I hear the thunder.",
+          "example_ru": "Я слышу гром."
+        },
+        {
+          "en": "lightning",
+          "ipa": "[ˈlaɪtnɪŋ]",
+          "ru": "молния",
+          "example_en": "The lightning is bright.",
+          "example_ru": "Молния яркая."
+        },
+        {
+          "en": "fog",
+          "ipa": "[fɒɡ]",
+          "ru": "туман",
+          "example_en": "We cannot see in the fog.",
+          "example_ru": "В тумане ничего не видно."
+        },
+        {
+          "en": "ice",
+          "ipa": "[aɪs]",
+          "ru": "лёд",
+          "example_en": "The ice is slippery.",
+          "example_ru": "Лёд скользкий."
+        },
+        {
+          "en": "hail",
+          "ipa": "[heɪl]",
+          "ru": "град",
+          "example_en": "Hail falls from the sky.",
+          "example_ru": "Град падает с неба."
+        },
+        {
+          "en": "hot",
+          "ipa": "[hɒt]",
+          "ru": "жаркий",
+          "example_en": "It is hot in summer.",
+          "example_ru": "Летом жарко."
+        },
+        {
+          "en": "cold",
+          "ipa": "[kəʊld]",
+          "ru": "холодный",
+          "example_en": "It is cold in winter.",
+          "example_ru": "Зимой холодно."
+        },
+        {
+          "en": "warm",
+          "ipa": "[wɔːm]",
+          "ru": "тёплый",
+          "example_en": "Spring days are warm.",
+          "example_ru": "Весенние дни тёплые."
+        },
+        {
+          "en": "cool",
+          "ipa": "[kuːl]",
+          "ru": "прохладный",
+          "example_en": "Autumn evenings are cool.",
+          "example_ru": "Осенние вечера прохладные."
+        },
+        {
+          "en": "sunny",
+          "ipa": "[ˈsʌni]",
+          "ru": "солнечный",
+          "example_en": "It is a sunny day.",
+          "example_ru": "Сегодня солнечный день."
+        },
+        {
+          "en": "rainy",
+          "ipa": "[ˈreɪni]",
+          "ru": "дождливый",
+          "example_en": "I do not like rainy days.",
+          "example_ru": "Я не люблю дождливые дни."
+        },
+        {
+          "en": "snowy",
+          "ipa": "[ˈsnəʊi]",
+          "ru": "снежный",
+          "example_en": "It is snowy in January.",
+          "example_ru": "В январе снежно."
+        },
+        {
+          "en": "windy",
+          "ipa": "[ˈwɪndi]",
+          "ru": "ветреный",
+          "example_en": "It is windy outside.",
+          "example_ru": "На улице ветрено."
+        },
+        {
+          "en": "cloudy",
+          "ipa": "[ˈklaʊdi]",
+          "ru": "облачный",
+          "example_en": "The day is cloudy.",
+          "example_ru": "День облачный."
+        },
+        {
+          "en": "foggy",
+          "ipa": "[ˈfɒɡi]",
+          "ru": "туманный",
+          "example_en": "It is foggy in the morning.",
+          "example_ru": "Утром туманно."
+        },
+        {
+          "en": "weather",
+          "ipa": "[ˈweðə]",
+          "ru": "погода",
+          "example_en": "What is the weather like today?",
+          "example_ru": "Какая сегодня погода?"
+        },
+        {
+          "en": "season",
+          "ipa": "[ˈsiːzn]",
+          "ru": "время года",
+          "example_en": "My favourite season is summer.",
+          "example_ru": "Моё любимое время года — лето."
+        },
+        {
+          "en": "summer",
+          "ipa": "[ˈsʌmə]",
+          "ru": "лето",
+          "example_en": "We swim in summer.",
+          "example_ru": "Летом мы купаемся."
+        },
+        {
+          "en": "winter",
+          "ipa": "[ˈwɪntə]",
+          "ru": "зима",
+          "example_en": "It snows in winter.",
+          "example_ru": "Зимой идёт снег."
+        },
+        {
+          "en": "spring",
+          "ipa": "[sprɪŋ]",
+          "ru": "весна",
+          "example_en": "Flowers grow in spring.",
+          "example_ru": "Весной растут цветы."
+        },
+        {
+          "en": "autumn",
+          "ipa": "[ˈɔːtəm]",
+          "ru": "осень",
+          "example_en": "Leaves fall in autumn.",
+          "example_ru": "Осенью падают листья."
+        },
+        {
+          "en": "temperature",
+          "ipa": "[ˈtemprətʃə]",
+          "ru": "температура",
+          "example_en": "The temperature is low.",
+          "example_ru": "Температура низкая."
+        },
+        {
+          "en": "umbrella",
+          "ipa": "[ʌmˈbrelə]",
+          "ru": "зонт",
+          "example_en": "Take an umbrella, it may rain.",
+          "example_ru": "Возьми зонт, может пойти дождь."
+        }
+      ]
+    },
+    {
+      "id": "prazdniki",
+      "title_ru": "Праздники",
+      "words": [
+        {
+          "en": "holiday",
+          "ipa": "[ˈhɒlədeɪ]",
+          "ru": "праздник, каникулы",
+          "example_en": "My favourite holiday is New Year.",
+          "example_ru": "Мой любимый праздник — Новый год."
+        },
+        {
+          "en": "birthday",
+          "ipa": "[ˈbɜːθdeɪ]",
+          "ru": "день рождения",
+          "example_en": "My birthday is in May.",
+          "example_ru": "Мой день рождения в мае."
+        },
+        {
+          "en": "party",
+          "ipa": "[ˈpɑːti]",
+          "ru": "вечеринка",
+          "example_en": "We have a party at school.",
+          "example_ru": "У нас в школе вечеринка."
+        },
+        {
+          "en": "gift",
+          "ipa": "[ɡɪft]",
+          "ru": "подарок",
+          "example_en": "This gift is for you.",
+          "example_ru": "Этот подарок для тебя."
+        },
+        {
+          "en": "present",
+          "ipa": "[ˈpreznt]",
+          "ru": "подарок",
+          "example_en": "I get many presents on my birthday.",
+          "example_ru": "На день рождения я получаю много подарков."
+        },
+        {
+          "en": "cake",
+          "ipa": "[keɪk]",
+          "ru": "торт",
+          "example_en": "The birthday cake is big.",
+          "example_ru": "Праздничный торт большой."
+        },
+        {
+          "en": "candle",
+          "ipa": "[ˈkændl]",
+          "ru": "свеча",
+          "example_en": "There are seven candles on the cake.",
+          "example_ru": "На торте семь свечей."
+        },
+        {
+          "en": "card",
+          "ipa": "[kɑːd]",
+          "ru": "открытка",
+          "example_en": "I make a card for Mum.",
+          "example_ru": "Я делаю открытку для мамы."
+        },
+        {
+          "en": "New Year",
+          "ipa": "[njuː jɪə]",
+          "ru": "Новый год",
+          "example_en": "We decorate the tree for New Year.",
+          "example_ru": "Мы наряжаем ёлку на Новый год."
+        },
+        {
+          "en": "Christmas",
+          "ipa": "[ˈkrɪsməs]",
+          "ru": "Рождество",
+          "example_en": "Children love Christmas.",
+          "example_ru": "Дети любят Рождество."
+        },
+        {
+          "en": "celebration",
+          "ipa": "[ˌselɪˈbreɪʃn]",
+          "ru": "празднование",
+          "example_en": "The celebration starts at six.",
+          "example_ru": "Празднование начинается в шесть."
+        },
+        {
+          "en": "fireworks",
+          "ipa": "[ˈfaɪəwɜːks]",
+          "ru": "фейерверк",
+          "example_en": "We watch fireworks at night.",
+          "example_ru": "Ночью мы смотрим фейерверк."
+        },
+        {
+          "en": "balloon",
+          "ipa": "[bəˈluːn]",
+          "ru": "воздушный шарик",
+          "example_en": "The balloon is red.",
+          "example_ru": "Шарик красный."
+        },
+        {
+          "en": "invitation",
+          "ipa": "[ˌɪnvɪˈteɪʃn]",
+          "ru": "приглашение",
+          "example_en": "I send invitations to my friends.",
+          "example_ru": "Я отправляю приглашения друзьям."
+        },
+        {
+          "en": "guest",
+          "ipa": "[ɡest]",
+          "ru": "гость",
+          "example_en": "Ten guests come to the party.",
+          "example_ru": "На праздник приходят десять гостей."
+        },
+        {
+          "en": "fun",
+          "ipa": "[fʌn]",
+          "ru": "веселье",
+          "example_en": "Holidays are full of fun.",
+          "example_ru": "Праздники полны веселья."
+        },
+        {
+          "en": "song",
+          "ipa": "[sɒŋ]",
+          "ru": "песня",
+          "example_en": "We sing songs at the party.",
+          "example_ru": "Мы поём песни на празднике."
+        },
+        {
+          "en": "dance",
+          "ipa": "[dɑːns]",
+          "ru": "танец; танцевать",
+          "example_en": "We dance at the party.",
+          "example_ru": "Мы танцуем на празднике."
+        },
+        {
+          "en": "Christmas tree",
+          "ipa": "[ˈkrɪsməs triː]",
+          "ru": "новогодняя ёлка",
+          "example_en": "The Christmas tree is beautiful.",
+          "example_ru": "Новогодняя ёлка красивая."
+        },
+        {
+          "en": "toy",
+          "ipa": "[tɔɪ]",
+          "ru": "игрушка",
+          "example_en": "The toy is under the tree.",
+          "example_ru": "Игрушка лежит под ёлкой."
+        },
+        {
+          "en": "sweet",
+          "ipa": "[swiːt]",
+          "ru": "конфета; сладкий",
+          "example_en": "Children get sweets at the party.",
+          "example_ru": "Дети получают конфеты на празднике."
+        },
+        {
+          "en": "surprise",
+          "ipa": "[səˈpraɪz]",
+          "ru": "сюрприз",
+          "example_en": "The gift is a surprise.",
+          "example_ru": "Подарок — это сюрприз."
+        },
+        {
+          "en": "wish",
+          "ipa": "[wɪʃ]",
+          "ru": "желание; пожелание",
+          "example_en": "Make a wish and blow out the candles.",
+          "example_ru": "Загадай желание и задуй свечи."
+        },
+        {
+          "en": "flag",
+          "ipa": "[flæɡ]",
+          "ru": "флаг",
+          "example_en": "Flags are on the street on holidays.",
+          "example_ru": "В праздники на улице флаги."
+        },
+        {
+          "en": "carnival",
+          "ipa": "[ˈkɑːnɪvl]",
+          "ru": "карнавал",
+          "example_en": "The carnival is bright and loud.",
+          "example_ru": "Карнавал яркий и шумный."
+        }
+      ]
+    },
+    {
+      "id": "priroda",
+      "title_ru": "Природа",
+      "words": [
+        {
+          "en": "nature",
+          "ipa": "[ˈneɪtʃə]",
+          "ru": "природа",
+          "example_en": "I love walks in nature.",
+          "example_ru": "Я люблю прогулки на природе."
+        },
+        {
+          "en": "tree",
+          "ipa": "[triː]",
+          "ru": "дерево",
+          "example_en": "The tree is very old.",
+          "example_ru": "Дерево очень старое."
+        },
+        {
+          "en": "flower",
+          "ipa": "[ˈflaʊə]",
+          "ru": "цветок",
+          "example_en": "The flower is red.",
+          "example_ru": "Цветок красный."
+        },
+        {
+          "en": "grass",
+          "ipa": "[ɡrɑːs]",
+          "ru": "трава",
+          "example_en": "The grass is green.",
+          "example_ru": "Трава зелёная."
+        },
+        {
+          "en": "forest",
+          "ipa": "[ˈfɒrɪst]",
+          "ru": "лес",
+          "example_en": "Mushrooms grow in the forest.",
+          "example_ru": "В лесу растут грибы."
+        },
+        {
+          "en": "river",
+          "ipa": "[ˈrɪvə]",
+          "ru": "река",
+          "example_en": "The river is long.",
+          "example_ru": "Река длинная."
+        },
+        {
+          "en": "lake",
+          "ipa": "[leɪk]",
+          "ru": "озеро",
+          "example_en": "We swim in the lake.",
+          "example_ru": "Мы купаемся в озере."
+        },
+        {
+          "en": "mountain",
+          "ipa": "[ˈmaʊntɪn]",
+          "ru": "гора",
+          "example_en": "The mountain is high.",
+          "example_ru": "Гора высокая."
+        },
+        {
+          "en": "sea",
+          "ipa": "[siː]",
+          "ru": "море",
+          "example_en": "The sea is blue.",
+          "example_ru": "Море синее."
+        },
+        {
+          "en": "sky",
+          "ipa": "[skaɪ]",
+          "ru": "небо",
+          "example_en": "The sky is blue today.",
+          "example_ru": "Сегодня небо голубое."
+        },
+        {
+          "en": "sun",
+          "ipa": "[sʌn]",
+          "ru": "солнце",
+          "example_en": "The sun shines in the sky.",
+          "example_ru": "Солнце светит в небе."
+        },
+        {
+          "en": "moon",
+          "ipa": "[muːn]",
+          "ru": "луна",
+          "example_en": "The moon is round.",
+          "example_ru": "Луна круглая."
+        },
+        {
+          "en": "star",
+          "ipa": "[stɑː]",
+          "ru": "звезда",
+          "example_en": "I see a star in the sky.",
+          "example_ru": "Я вижу звезду в небе."
+        },
+        {
+          "en": "cloud",
+          "ipa": "[klaʊd]",
+          "ru": "облако",
+          "example_en": "The cloud looks like a cat.",
+          "example_ru": "Облако похоже на кошку."
+        },
+        {
+          "en": "wind",
+          "ipa": "[wɪnd]",
+          "ru": "ветер",
+          "example_en": "The wind blows the leaves.",
+          "example_ru": "Ветер качает листья."
+        },
+        {
+          "en": "rain",
+          "ipa": "[reɪn]",
+          "ru": "дождь",
+          "example_en": "The rain waters the flowers.",
+          "example_ru": "Дождь поливает цветы."
+        },
+        {
+          "en": "leaf",
+          "ipa": "[liːf]",
+          "ru": "лист",
+          "example_en": "The leaf falls from the tree.",
+          "example_ru": "Лист падает с дерева."
+        },
+        {
+          "en": "bird",
+          "ipa": "[bɜːd]",
+          "ru": "птица",
+          "example_en": "A bird sings in the tree.",
+          "example_ru": "Птица поёт на дереве."
+        },
+        {
+          "en": "stone",
+          "ipa": "[stəʊn]",
+          "ru": "камень",
+          "example_en": "The stone is grey.",
+          "example_ru": "Камень серый."
+        },
+        {
+          "en": "field",
+          "ipa": "[fiːld]",
+          "ru": "поле",
+          "example_en": "Cows eat grass in the field.",
+          "example_ru": "Коровы едят траву в поле."
+        },
+        {
+          "en": "island",
+          "ipa": "[ˈaɪlənd]",
+          "ru": "остров",
+          "example_en": "The island is small.",
+          "example_ru": "Остров маленький."
+        },
+        {
+          "en": "mushroom",
+          "ipa": "[ˈmʌʃruːm]",
+          "ru": "гриб",
+          "example_en": "We find mushrooms in the forest.",
+          "example_ru": "Мы находим грибы в лесу."
+        },
+        {
+          "en": "butterfly",
+          "ipa": "[ˈbʌtəflaɪ]",
+          "ru": "бабочка",
+          "example_en": "The butterfly is beautiful.",
+          "example_ru": "Бабочка красивая."
+        },
+        {
+          "en": "rainbow",
+          "ipa": "[ˈreɪnbəʊ]",
+          "ru": "радуга",
+          "example_en": "I see a rainbow after the rain.",
+          "example_ru": "Я вижу радугу после дождя."
+        },
+        {
+          "en": "snow",
+          "ipa": "[snəʊ]",
+          "ru": "снег",
+          "example_en": "The snow is white and cold.",
+          "example_ru": "Снег белый и холодный."
+        },
+        {
+          "en": "sand",
+          "ipa": "[sænd]",
+          "ru": "песок",
+          "example_en": "We build castles from sand.",
+          "example_ru": "Мы строим замки из песка."
+        }
+      ]
+    },
+    {
+      "id": "professii",
+      "title_ru": "Профессии",
+      "words": [
+        {
+          "en": "doctor",
+          "ipa": "[ˈdɒktə]",
+          "ru": "врач",
+          "example_en": "The doctor helps sick people.",
+          "example_ru": "Врач помогает больным людям."
+        },
+        {
+          "en": "nurse",
+          "ipa": "[nɜːs]",
+          "ru": "медсестра",
+          "example_en": "The nurse works in a hospital.",
+          "example_ru": "Медсестра работает в больнице."
+        },
+        {
+          "en": "manager",
+          "ipa": "[ˈmænɪdʒə]",
+          "ru": "менеджер",
+          "example_en": "The manager works in an office.",
+          "example_ru": "Менеджер работает в офисе."
+        },
+        {
+          "en": "policeman",
+          "ipa": "[pəˈliːsmən]",
+          "ru": "полицейский",
+          "example_en": "The policeman helps people.",
+          "example_ru": "Полицейский помогает людям."
+        },
+        {
+          "en": "fireman",
+          "ipa": "[ˈfaɪəmən]",
+          "ru": "пожарный",
+          "example_en": "The fireman puts out fires.",
+          "example_ru": "Пожарный тушит пожары."
+        },
+        {
+          "en": "cook",
+          "ipa": "[kʊk]",
+          "ru": "повар",
+          "example_en": "The cook makes tasty food.",
+          "example_ru": "Повар готовит вкусную еду."
+        },
+        {
+          "en": "driver",
+          "ipa": "[ˈdraɪvə]",
+          "ru": "водитель",
+          "example_en": "The driver drives a bus.",
+          "example_ru": "Водитель ведёт автобус."
+        },
+        {
+          "en": "farmer",
+          "ipa": "[ˈfɑːmə]",
+          "ru": "фермер",
+          "example_en": "The farmer has many animals.",
+          "example_ru": "У фермера много животных."
+        },
+        {
+          "en": "singer",
+          "ipa": "[ˈsɪŋə]",
+          "ru": "певец",
+          "example_en": "The singer sings beautiful songs.",
+          "example_ru": "Певец поёт красивые песни."
+        },
+        {
+          "en": "dancer",
+          "ipa": "[ˈdɑːnsə]",
+          "ru": "танцор",
+          "example_en": "The dancer dances on the stage.",
+          "example_ru": "Танцор танцует на сцене."
+        },
+        {
+          "en": "actor",
+          "ipa": "[ˈæktə]",
+          "ru": "актёр",
+          "example_en": "The actor plays in the theatre.",
+          "example_ru": "Актёр играет в театре."
+        },
+        {
+          "en": "artist",
+          "ipa": "[ˈɑːtɪst]",
+          "ru": "художник",
+          "example_en": "The artist paints pictures.",
+          "example_ru": "Художник рисует картины."
+        },
+        {
+          "en": "writer",
+          "ipa": "[ˈraɪtə]",
+          "ru": "писатель",
+          "example_en": "The writer writes books.",
+          "example_ru": "Писатель пишет книги."
+        },
+        {
+          "en": "vet",
+          "ipa": "[vet]",
+          "ru": "ветеринар",
+          "example_en": "The vet helps animals.",
+          "example_ru": "Ветеринар лечит животных."
+        },
+        {
+          "en": "pilot",
+          "ipa": "[ˈpaɪlət]",
+          "ru": "пилот",
+          "example_en": "The pilot flies a plane.",
+          "example_ru": "Пилот управляет самолётом."
+        },
+        {
+          "en": "builder",
+          "ipa": "[ˈbɪldə]",
+          "ru": "строитель",
+          "example_en": "The builder builds houses.",
+          "example_ru": "Строитель строит дома."
+        },
+        {
+          "en": "dentist",
+          "ipa": "[ˈdentɪst]",
+          "ru": "стоматолог",
+          "example_en": "The dentist looks at my teeth.",
+          "example_ru": "Стоматолог смотрит мои зубы."
+        },
+        {
+          "en": "postman",
+          "ipa": "[ˈpəʊstmən]",
+          "ru": "почтальон",
+          "example_en": "The postman brings letters.",
+          "example_ru": "Почтальон приносит письма."
+        },
+        {
+          "en": "shop assistant",
+          "ipa": "[ʃɒp əˈsɪstənt]",
+          "ru": "продавец",
+          "example_en": "The shop assistant works in a shop.",
+          "example_ru": "Продавец работает в магазине."
+        },
+        {
+          "en": "waiter",
+          "ipa": "[ˈweɪtə]",
+          "ru": "официант",
+          "example_en": "The waiter brings us food.",
+          "example_ru": "Официант приносит нам еду."
+        },
+        {
+          "en": "hairdresser",
+          "ipa": "[ˈheədresə]",
+          "ru": "парикмахер",
+          "example_en": "The hairdresser cuts my hair.",
+          "example_ru": "Парикмахер стрижёт мои волосы."
+        },
+        {
+          "en": "scientist",
+          "ipa": "[ˈsaɪəntɪst]",
+          "ru": "учёный",
+          "example_en": "The scientist works in a lab.",
+          "example_ru": "Учёный работает в лаборатории."
+        },
+        {
+          "en": "engineer",
+          "ipa": "[endʒɪˈnɪə]",
+          "ru": "инженер",
+          "example_en": "The engineer makes machines.",
+          "example_ru": "Инженер создаёт машины."
+        },
+        {
+          "en": "mechanic",
+          "ipa": "[mɪˈkænɪk]",
+          "ru": "механик",
+          "example_en": "The mechanic fixes cars.",
+          "example_ru": "Механик чинит машины."
+        },
+        {
+          "en": "soldier",
+          "ipa": "[ˈsəʊldʒə]",
+          "ru": "солдат",
+          "example_en": "The soldier is brave.",
+          "example_ru": "Солдат храбрый."
+        },
+        {
+          "en": "sailor",
+          "ipa": "[ˈseɪlə]",
+          "ru": "моряк",
+          "example_en": "The sailor sails a ship.",
+          "example_ru": "Моряк ходит на корабле."
+        },
+        {
+          "en": "footballer",
+          "ipa": "[ˈfʊtbɔːlə]",
+          "ru": "футболист",
+          "example_en": "The footballer scores goals.",
+          "example_ru": "Футболист забивает голы."
+        },
+        {
+          "en": "musician",
+          "ipa": "[mjuːˈzɪʃn]",
+          "ru": "музыкант",
+          "example_en": "The musician plays the piano.",
+          "example_ru": "Музыкант играет на пианино."
+        },
+        {
+          "en": "photographer",
+          "ipa": "[fəˈtɒɡrəfə]",
+          "ru": "фотограф",
+          "example_en": "The photographer takes photos.",
+          "example_ru": "Фотограф делает фотографии."
+        },
+        {
+          "en": "astronaut",
+          "ipa": "[ˈæstrənɔːt]",
+          "ru": "космонавт",
+          "example_en": "The astronaut flies into space.",
+          "example_ru": "Космонавт летит в космос."
+        }
+      ]
+    },
+    {
+      "id": "puteshestviya",
+      "title_ru": "Путешествия",
+      "words": [
+        {
+          "en": "trip",
+          "ipa": "[trɪp]",
+          "ru": "поездка",
+          "example_en": "Our trip to the sea was fun.",
+          "example_ru": "Наша поездка на море была весёлой."
+        },
+        {
+          "en": "journey",
+          "ipa": "[ˈdʒɜːni]",
+          "ru": "путешествие",
+          "example_en": "The journey takes two hours.",
+          "example_ru": "Путешествие занимает два часа."
+        },
+        {
+          "en": "ticket",
+          "ipa": "[ˈtɪkɪt]",
+          "ru": "билет",
+          "example_en": "I buy a ticket for the train.",
+          "example_ru": "Я покупаю билет на поезд."
+        },
+        {
+          "en": "train",
+          "ipa": "[treɪn]",
+          "ru": "поезд",
+          "example_en": "The train is very fast.",
+          "example_ru": "Поезд очень быстрый."
+        },
+        {
+          "en": "airport",
+          "ipa": "[ˈeəpɔːt]",
+          "ru": "аэропорт",
+          "example_en": "Planes take off at the airport.",
+          "example_ru": "Самолёты взлетают в аэропорту."
+        },
+        {
+          "en": "plane",
+          "ipa": "[pleɪn]",
+          "ru": "самолёт",
+          "example_en": "The plane flies high.",
+          "example_ru": "Самолёт летит высоко."
+        },
+        {
+          "en": "suitcase",
+          "ipa": "[ˈsuːtkeɪs]",
+          "ru": "чемодан",
+          "example_en": "My suitcase is heavy.",
+          "example_ru": "Мой чемодан тяжёлый."
+        },
+        {
+          "en": "luggage",
+          "ipa": "[ˈlʌɡɪdʒ]",
+          "ru": "багаж",
+          "example_en": "Our luggage is at the hotel.",
+          "example_ru": "Наш багаж в отеле."
+        },
+        {
+          "en": "map",
+          "ipa": "[mæp]",
+          "ru": "карта",
+          "example_en": "Look at the map, please.",
+          "example_ru": "Посмотри на карту, пожалуйста."
+        },
+        {
+          "en": "hotel",
+          "ipa": "[həʊˈtel]",
+          "ru": "отель",
+          "example_en": "The hotel is near the sea.",
+          "example_ru": "Отель находится у моря."
+        },
+        {
+          "en": "passport",
+          "ipa": "[ˈpɑːspɔːt]",
+          "ru": "паспорт",
+          "example_en": "Show your passport, please.",
+          "example_ru": "Покажите ваш паспорт, пожалуйста."
+        },
+        {
+          "en": "beach",
+          "ipa": "[biːtʃ]",
+          "ru": "пляж",
+          "example_en": "We play on the beach.",
+          "example_ru": "Мы играем на пляже."
+        },
+        {
+          "en": "camera",
+          "ipa": "[ˈkæmərə]",
+          "ru": "фотоаппарат",
+          "example_en": "I take photos with my camera.",
+          "example_ru": "Я фотографирую на свой фотоаппарат."
+        },
+        {
+          "en": "ticket office",
+          "ipa": "[ˈtɪkɪt ˌɒfɪs]",
+          "ru": "билетная касса",
+          "example_en": "The ticket office opens at eight.",
+          "example_ru": "Билетная касса открывается в восемь."
+        },
+        {
+          "en": "platform",
+          "ipa": "[ˈplætfɔːm]",
+          "ru": "платформа",
+          "example_en": "We wait on the platform.",
+          "example_ru": "Мы ждём на платформе."
+        },
+        {
+          "en": "abroad",
+          "ipa": "[əˈbrɔːd]",
+          "ru": "за границей",
+          "example_en": "My friend travels abroad.",
+          "example_ru": "Мой друг путешествует за границей."
+        },
+        {
+          "en": "tourist",
+          "ipa": "[ˈtʊərɪst]",
+          "ru": "турист",
+          "example_en": "The tourist asks the way.",
+          "example_ru": "Турист спрашивает дорогу."
+        },
+        {
+          "en": "holiday",
+          "ipa": "[ˈhɒlədeɪ]",
+          "ru": "отпуск, каникулы",
+          "example_en": "We go to the sea on holiday.",
+          "example_ru": "В отпуск мы едем на море."
+        },
+        {
+          "en": "sea",
+          "ipa": "[siː]",
+          "ru": "море",
+          "example_en": "The sea is warm in summer.",
+          "example_ru": "Море тёплое летом."
+        },
+        {
+          "en": "mountain",
+          "ipa": "[ˈmaʊntɪn]",
+          "ru": "гора",
+          "example_en": "We climb the mountain.",
+          "example_ru": "Мы поднимаемся на гору."
+        },
+        {
+          "en": "backpack",
+          "ipa": "[ˈbækpæk]",
+          "ru": "рюкзак",
+          "example_en": "My backpack is full.",
+          "example_ru": "Мой рюкзак полный."
+        },
+        {
+          "en": "souvenir",
+          "ipa": "[ˌsuːvəˈnɪə]",
+          "ru": "сувенир",
+          "example_en": "I buy a souvenir for Grandma.",
+          "example_ru": "Я покупаю сувенир для бабушки."
+        },
+        {
+          "en": "guide",
+          "ipa": "[ɡaɪd]",
+          "ru": "гид",
+          "example_en": "The guide tells us about the city.",
+          "example_ru": "Гид рассказывает нам о городе."
+        },
+        {
+          "en": "museum",
+          "ipa": "[mjuːˈzɪəm]",
+          "ru": "музей",
+          "example_en": "We visit a museum in London.",
+          "example_ru": "Мы посещаем музей в Лондоне."
+        },
+        {
+          "en": "bus stop",
+          "ipa": "[ˈbʌs stɒp]",
+          "ru": "автобусная остановка",
+          "example_en": "The bus stop is near the hotel.",
+          "example_ru": "Автобусная остановка рядом с отелем."
+        },
+        {
+          "en": "photo",
+          "ipa": "[ˈfəʊtəʊ]",
+          "ru": "фотография",
+          "example_en": "This photo is from our trip.",
+          "example_ru": "Эта фотография из нашей поездки."
+        },
+        {
+          "en": "excursion",
+          "ipa": "[ɪkˈskɜːʃn]",
+          "ru": "экскурсия",
+          "example_en": "The excursion starts at ten.",
+          "example_ru": "Экскурсия начинается в десять."
+        },
+        {
+          "en": "seat",
+          "ipa": "[siːt]",
+          "ru": "место (сиденье)",
+          "example_en": "My seat is near the window.",
+          "example_ru": "Моё место у окна."
+        }
+      ]
+    },
+    {
+      "id": "semya",
+      "title_ru": "Семья",
+      "words": [
+        {
+          "en": "family",
+          "ipa": "[ˈfæməli]",
+          "ru": "семья",
+          "example_en": "My family is big.",
+          "example_ru": "Моя семья большая."
+        },
+        {
+          "en": "mother",
+          "ipa": "[ˈmʌðə]",
+          "ru": "мама",
+          "example_en": "My mother cooks well.",
+          "example_ru": "Моя мама хорошо готовит."
+        },
+        {
+          "en": "father",
+          "ipa": "[ˈfɑːðə]",
+          "ru": "папа",
+          "example_en": "My father drives a car.",
+          "example_ru": "Мой папа водит машину."
+        },
+        {
+          "en": "parents",
+          "ipa": "[ˈpeərənts]",
+          "ru": "родители",
+          "example_en": "My parents work a lot.",
+          "example_ru": "Мои родители много работают."
+        },
+        {
+          "en": "sister",
+          "ipa": "[ˈsɪstə]",
+          "ru": "сестра",
+          "example_en": "My sister is five.",
+          "example_ru": "Моей сестре пять лет."
+        },
+        {
+          "en": "brother",
+          "ipa": "[ˈbrʌðə]",
+          "ru": "брат",
+          "example_en": "My brother plays football.",
+          "example_ru": "Мой брат играет в футбол."
+        },
+        {
+          "en": "grandmother",
+          "ipa": "[ˈɡrænmʌðə]",
+          "ru": "бабушка",
+          "example_en": "My grandmother bakes pies.",
+          "example_ru": "Моя бабушка печёт пироги."
+        },
+        {
+          "en": "grandfather",
+          "ipa": "[ˈɡrænfɑːðə]",
+          "ru": "дедушка",
+          "example_en": "My grandfather tells stories.",
+          "example_ru": "Мой дедушка рассказывает истории."
+        },
+        {
+          "en": "grandparents",
+          "ipa": "[ˈɡrænpeərənts]",
+          "ru": "бабушка и дедушка",
+          "example_en": "I visit my grandparents on Sundays.",
+          "example_ru": "Я навещаю бабушку и дедушку по воскресеньям."
+        },
+        {
+          "en": "aunt",
+          "ipa": "[ɑːnt]",
+          "ru": "тётя",
+          "example_en": "My aunt lives in Moscow.",
+          "example_ru": "Моя тётя живёт в Москве."
+        },
+        {
+          "en": "uncle",
+          "ipa": "[ˈʌŋkl]",
+          "ru": "дядя",
+          "example_en": "My uncle is a doctor.",
+          "example_ru": "Мой дядя — врач."
+        },
+        {
+          "en": "cousin",
+          "ipa": "[ˈkʌzn]",
+          "ru": "двоюродный брат/сестра",
+          "example_en": "My cousin and I are friends.",
+          "example_ru": "Мы с двоюродным братом друзья."
+        },
+        {
+          "en": "son",
+          "ipa": "[sʌn]",
+          "ru": "сын",
+          "example_en": "Their son is ten.",
+          "example_ru": "Их сыну десять лет."
+        },
+        {
+          "en": "daughter",
+          "ipa": "[ˈdɔːtə]",
+          "ru": "дочь",
+          "example_en": "Her daughter draws well.",
+          "example_ru": "Её дочь хорошо рисует."
+        },
+        {
+          "en": "child",
+          "ipa": "[tʃaɪld]",
+          "ru": "ребёнок",
+          "example_en": "The child plays in the yard.",
+          "example_ru": "Ребёнок играет во дворе."
+        },
+        {
+          "en": "children",
+          "ipa": "[ˈtʃɪldrən]",
+          "ru": "дети",
+          "example_en": "The children are in the park.",
+          "example_ru": "Дети в парке."
+        },
+        {
+          "en": "baby",
+          "ipa": "[ˈbeɪbi]",
+          "ru": "малыш",
+          "example_en": "The baby sleeps a lot.",
+          "example_ru": "Малыш много спит."
+        },
+        {
+          "en": "husband",
+          "ipa": "[ˈhʌzbənd]",
+          "ru": "муж",
+          "example_en": "Her husband works in an office.",
+          "example_ru": "Её муж работает в офисе."
+        },
+        {
+          "en": "wife",
+          "ipa": "[waɪf]",
+          "ru": "жена",
+          "example_en": "His wife is a teacher.",
+          "example_ru": "Его жена — учительница."
+        },
+        {
+          "en": "grandson",
+          "ipa": "[ˈɡrænsʌn]",
+          "ru": "внук",
+          "example_en": "The grandson visits his granny.",
+          "example_ru": "Внук навещает бабушку."
+        },
+        {
+          "en": "granddaughter",
+          "ipa": "[ˈɡrændɔːtə]",
+          "ru": "внучка",
+          "example_en": "The granddaughter sings songs.",
+          "example_ru": "Внучка поёт песни."
+        },
+        {
+          "en": "nephew",
+          "ipa": "[ˈnefjuː]",
+          "ru": "племянник",
+          "example_en": "My nephew is little.",
+          "example_ru": "Мой племянник маленький."
+        },
+        {
+          "en": "niece",
+          "ipa": "[niːs]",
+          "ru": "племянница",
+          "example_en": "My niece likes cats.",
+          "example_ru": "Моя племянница любит кошек."
+        },
+        {
+          "en": "mum",
+          "ipa": "[mʌm]",
+          "ru": "мама (разг.)",
+          "example_en": "Mum hugs me every morning.",
+          "example_ru": "Мама обнимает меня каждое утро."
+        },
+        {
+          "en": "dad",
+          "ipa": "[dæd]",
+          "ru": "папа (разг.)",
+          "example_en": "Dad reads me a book.",
+          "example_ru": "Папа читает мне книгу."
+        },
+        {
+          "en": "granny",
+          "ipa": "[ˈɡræni]",
+          "ru": "бабушка (разг.)",
+          "example_en": "Granny knits a scarf.",
+          "example_ru": "Бабушка вяжет шарф."
+        },
+        {
+          "en": "grandpa",
+          "ipa": "[ˈɡrænpɑː]",
+          "ru": "дедушка (разг.)",
+          "example_en": "Grandpa walks in the park.",
+          "example_ru": "Дедушка гуляет в парке."
+        },
+        {
+          "en": "relative",
+          "ipa": "[ˈrelətɪv]",
+          "ru": "родственник",
+          "example_en": "All our relatives come for the holiday.",
+          "example_ru": "Все наши родственники приезжают на праздник."
+        },
+        {
+          "en": "pet",
+          "ipa": "[pet]",
+          "ru": "питомец",
+          "example_en": "Our pet is a hamster.",
+          "example_ru": "Наш питомец — хомяк."
+        }
+      ]
+    },
+    {
+      "id": "shkola",
+      "title_ru": "Школа",
+      "words": [
+        {
+          "en": "school",
+          "ipa": "[skuːl]",
+          "ru": "школа",
+          "example_en": "I go to school every day.",
+          "example_ru": "Я хожу в школу каждый день."
+        },
+        {
+          "en": "teacher",
+          "ipa": "[ˈtiːtʃə]",
+          "ru": "учитель",
+          "example_en": "Our teacher is kind.",
+          "example_ru": "Наш учитель добрый."
+        },
+        {
+          "en": "pupil",
+          "ipa": "[ˈpjuːpl]",
+          "ru": "ученик",
+          "example_en": "The pupil raises his hand.",
+          "example_ru": "Ученик поднимает руку."
+        },
+        {
+          "en": "lesson",
+          "ipa": "[ˈlesn]",
+          "ru": "урок",
+          "example_en": "The lesson starts at nine.",
+          "example_ru": "Урок начинается в девять."
+        },
+        {
+          "en": "break",
+          "ipa": "[breɪk]",
+          "ru": "перемена",
+          "example_en": "We play at break.",
+          "example_ru": "Мы играем на перемене."
+        },
+        {
+          "en": "desk",
+          "ipa": "[desk]",
+          "ru": "парта",
+          "example_en": "The book is on the desk.",
+          "example_ru": "Книга лежит на парте."
+        },
+        {
+          "en": "chair",
+          "ipa": "[tʃeə]",
+          "ru": "стул",
+          "example_en": "Sit on the chair, please.",
+          "example_ru": "Сядь на стул, пожалуйста."
+        },
+        {
+          "en": "blackboard",
+          "ipa": "[ˈblækbɔːd]",
+          "ru": "доска",
+          "example_en": "The teacher writes on the blackboard.",
+          "example_ru": "Учитель пишет на доске."
+        },
+        {
+          "en": "book",
+          "ipa": "[bʊk]",
+          "ru": "книга",
+          "example_en": "Open your books, please.",
+          "example_ru": "Откройте книги, пожалуйста."
+        },
+        {
+          "en": "notebook",
+          "ipa": "[ˈnəʊtbʊk]",
+          "ru": "тетрадь",
+          "example_en": "Write in your notebook.",
+          "example_ru": "Пиши в тетради."
+        },
+        {
+          "en": "pen",
+          "ipa": "[pen]",
+          "ru": "ручка",
+          "example_en": "My pen is blue.",
+          "example_ru": "Моя ручка синяя."
+        },
+        {
+          "en": "pencil",
+          "ipa": "[ˈpensl]",
+          "ru": "карандаш",
+          "example_en": "I draw with a pencil.",
+          "example_ru": "Я рисую карандашом."
+        },
+        {
+          "en": "ruler",
+          "ipa": "[ˈruːlə]",
+          "ru": "линейка",
+          "example_en": "The ruler is long.",
+          "example_ru": "Линейка длинная."
+        },
+        {
+          "en": "eraser",
+          "ipa": "[ɪˈreɪzə]",
+          "ru": "ластик",
+          "example_en": "I need an eraser.",
+          "example_ru": "Мне нужен ластик."
+        },
+        {
+          "en": "schoolbag",
+          "ipa": "[ˈskuːlbæɡ]",
+          "ru": "портфель",
+          "example_en": "My schoolbag is heavy.",
+          "example_ru": "Мой портфель тяжёлый."
+        },
+        {
+          "en": "pencil case",
+          "ipa": "[ˈpensl keɪs]",
+          "ru": "пенал",
+          "example_en": "The pencil case is full.",
+          "example_ru": "Пенал полный."
+        },
+        {
+          "en": "scissors",
+          "ipa": "[ˈsɪzəz]",
+          "ru": "ножницы",
+          "example_en": "Cut the paper with scissors.",
+          "example_ru": "Режь бумагу ножницами."
+        },
+        {
+          "en": "glue",
+          "ipa": "[ɡluː]",
+          "ru": "клей",
+          "example_en": "We glue the picture.",
+          "example_ru": "Мы клеим картинку."
+        },
+        {
+          "en": "map",
+          "ipa": "[mæp]",
+          "ru": "карта",
+          "example_en": "The map hangs on the wall.",
+          "example_ru": "Карта висит на стене."
+        },
+        {
+          "en": "computer",
+          "ipa": "[kəmˈpjuːtə]",
+          "ru": "компьютер",
+          "example_en": "We work on the computer.",
+          "example_ru": "Мы работаем на компьютере."
+        },
+        {
+          "en": "homework",
+          "ipa": "[ˈhəʊmwɜːk]",
+          "ru": "домашнее задание",
+          "example_en": "I do my homework after school.",
+          "example_ru": "Я делаю домашнее задание после школы."
+        },
+        {
+          "en": "mark",
+          "ipa": "[mɑːk]",
+          "ru": "оценка",
+          "example_en": "I got a good mark today.",
+          "example_ru": "Я сегодня получил хорошую оценку."
+        },
+        {
+          "en": "timetable",
+          "ipa": "[ˈtaɪmteɪbl]",
+          "ru": "расписание",
+          "example_en": "The timetable is on the door.",
+          "example_ru": "Расписание на двери."
+        },
+        {
+          "en": "subject",
+          "ipa": "[ˈsʌbdʒɪkt]",
+          "ru": "предмет",
+          "example_en": "My favourite subject is English.",
+          "example_ru": "Мой любимый предмет — английский."
+        },
+        {
+          "en": "holidays",
+          "ipa": "[ˈhɒlədeɪz]",
+          "ru": "каникулы",
+          "example_en": "Summer holidays are long.",
+          "example_ru": "Летние каникулы длинные."
+        },
+        {
+          "en": "bell",
+          "ipa": "[bel]",
+          "ru": "звонок",
+          "example_en": "The bell rings at nine.",
+          "example_ru": "Звонок звенит в девять."
+        },
+        {
+          "en": "library",
+          "ipa": "[ˈlaɪbrəri]",
+          "ru": "библиотека",
+          "example_en": "We take books in the library.",
+          "example_ru": "Мы берём книги в библиотеке."
+        },
+        {
+          "en": "gym",
+          "ipa": "[dʒɪm]",
+          "ru": "спортзал",
+          "example_en": "We play games in the gym.",
+          "example_ru": "Мы играем в спортзале."
+        },
+        {
+          "en": "canteen",
+          "ipa": "[kænˈtiːn]",
+          "ru": "столовая",
+          "example_en": "We have lunch in the canteen.",
+          "example_ru": "Мы обедаем в столовой."
+        }
+      ]
+    },
+    {
+      "id": "sport",
+      "title_ru": "Спорт",
+      "words": [
+        {
+          "en": "sport",
+          "ipa": "[spɔːt]",
+          "ru": "спорт",
+          "example_en": "Sport is good for health.",
+          "example_ru": "Спорт полезен для здоровья."
+        },
+        {
+          "en": "football",
+          "ipa": "[ˈfʊtbɔːl]",
+          "ru": "футбол",
+          "example_en": "We play football on Saturdays.",
+          "example_ru": "Мы играем в футбол по субботам."
+        },
+        {
+          "en": "basketball",
+          "ipa": "[ˈbɑːskɪtbɔːl]",
+          "ru": "баскетбол",
+          "example_en": "Basketball is a tall game.",
+          "example_ru": "В баскетбол играют высокие."
+        },
+        {
+          "en": "volleyball",
+          "ipa": "[ˈvɒlibɔːl]",
+          "ru": "волейбол",
+          "example_en": "We play volleyball on the beach.",
+          "example_ru": "Мы играем в волейбол на пляже."
+        },
+        {
+          "en": "tennis",
+          "ipa": "[ˈtenɪs]",
+          "ru": "теннис",
+          "example_en": "She plays tennis well.",
+          "example_ru": "Она хорошо играет в теннис."
+        },
+        {
+          "en": "swimming",
+          "ipa": "[ˈswɪmɪŋ]",
+          "ru": "плавание",
+          "example_en": "Swimming is fun.",
+          "example_ru": "Плавание — это весело."
+        },
+        {
+          "en": "running",
+          "ipa": "[ˈrʌnɪŋ]",
+          "ru": "бег",
+          "example_en": "Running in the morning is nice.",
+          "example_ru": "Бегать по утрам приятно."
+        },
+        {
+          "en": "hockey",
+          "ipa": "[ˈhɒki]",
+          "ru": "хоккей",
+          "example_en": "Hockey is popular in Russia.",
+          "example_ru": "Хоккей популярен в России."
+        },
+        {
+          "en": "skating",
+          "ipa": "[ˈskeɪtɪŋ]",
+          "ru": "катание на коньках",
+          "example_en": "We go skating in winter.",
+          "example_ru": "Зимой мы катаемся на коньках."
+        },
+        {
+          "en": "skiing",
+          "ipa": "[ˈskiːɪŋ]",
+          "ru": "катание на лыжах",
+          "example_en": "I like skiing in the mountains.",
+          "example_ru": "Мне нравится кататься на лыжах в горах."
+        },
+        {
+          "en": "snowboard",
+          "ipa": "[ˈsnəʊbɔːd]",
+          "ru": "сноуборд",
+          "example_en": "He rides a snowboard fast.",
+          "example_ru": "Он быстро катается на сноуборде."
+        },
+        {
+          "en": "gymnastics",
+          "ipa": "[dʒɪmˈnæstɪks]",
+          "ru": "гимнастика",
+          "example_en": "She does gymnastics every day.",
+          "example_ru": "Она занимается гимнастикой каждый день."
+        },
+        {
+          "en": "karate",
+          "ipa": "[kəˈrɑːti]",
+          "ru": "карате",
+          "example_en": "My brother does karate.",
+          "example_ru": "Мой брат занимается карате."
+        },
+        {
+          "en": "boxing",
+          "ipa": "[ˈbɒksɪŋ]",
+          "ru": "бокс",
+          "example_en": "Boxing is a hard sport.",
+          "example_ru": "Бокс — тяжёлый спорт."
+        },
+        {
+          "en": "cycling",
+          "ipa": "[ˈsaɪklɪŋ]",
+          "ru": "велоспорт",
+          "example_en": "Cycling is good exercise.",
+          "example_ru": "Езда на велосипеде — хорошее упражнение."
+        },
+        {
+          "en": "dancing",
+          "ipa": "[ˈdɑːnsɪŋ]",
+          "ru": "танцы",
+          "example_en": "Dancing makes me happy.",
+          "example_ru": "Танцы делают меня счастливой."
+        },
+        {
+          "en": "ball",
+          "ipa": "[bɔːl]",
+          "ru": "мяч",
+          "example_en": "Kick the ball to me.",
+          "example_ru": "Ударь мяч мне."
+        },
+        {
+          "en": "team",
+          "ipa": "[tiːm]",
+          "ru": "команда",
+          "example_en": "Our team wins the game.",
+          "example_ru": "Наша команда выигрывает матч."
+        },
+        {
+          "en": "player",
+          "ipa": "[ˈpleɪə]",
+          "ru": "игрок",
+          "example_en": "The player runs fast.",
+          "example_ru": "Игрок бегает быстро."
+        },
+        {
+          "en": "coach",
+          "ipa": "[kəʊtʃ]",
+          "ru": "тренер",
+          "example_en": "The coach helps the team.",
+          "example_ru": "Тренер помогает команде."
+        },
+        {
+          "en": "match",
+          "ipa": "[mætʃ]",
+          "ru": "матч",
+          "example_en": "The match starts at six.",
+          "example_ru": "Матч начинается в шесть."
+        },
+        {
+          "en": "game",
+          "ipa": "[ɡeɪm]",
+          "ru": "игра",
+          "example_en": "This game is interesting.",
+          "example_ru": "Эта игра интересная."
+        },
+        {
+          "en": "goal",
+          "ipa": "[ɡəʊl]",
+          "ru": "гол",
+          "example_en": "He scores a goal!",
+          "example_ru": "Он забивает гол!"
+        },
+        {
+          "en": "win",
+          "ipa": "[wɪn]",
+          "ru": "побеждать",
+          "example_en": "I want to win the race.",
+          "example_ru": "Я хочу выиграть гонку."
+        },
+        {
+          "en": "lose",
+          "ipa": "[luːz]",
+          "ru": "проигрывать",
+          "example_en": "It is OK to lose sometimes.",
+          "example_ru": "Иногда проигрывать — это нормально."
+        },
+        {
+          "en": "run",
+          "ipa": "[rʌn]",
+          "ru": "бегать",
+          "example_en": "I run in the park.",
+          "example_ru": "Я бегаю в парке."
+        },
+        {
+          "en": "jump",
+          "ipa": "[dʒʌmp]",
+          "ru": "прыгать",
+          "example_en": "The children jump high.",
+          "example_ru": "Дети прыгают высоко."
+        },
+        {
+          "en": "swim",
+          "ipa": "[swɪm]",
+          "ru": "плавать",
+          "example_en": "Fish swim in the river.",
+          "example_ru": "Рыбы плавают в реке."
+        },
+        {
+          "en": "race",
+          "ipa": "[reɪs]",
+          "ru": "гонка, забег",
+          "example_en": "The race is long.",
+          "example_ru": "Забег длинный."
+        },
+        {
+          "en": "champion",
+          "ipa": "[ˈtʃæmpiən]",
+          "ru": "чемпион",
+          "example_en": "She is the school champion.",
+          "example_ru": "Она чемпионка школы."
+        }
+      ]
+    },
+    {
+      "id": "transport",
+      "title_ru": "Транспорт",
+      "words": [
+        {
+          "en": "car",
+          "ipa": "[kɑː]",
+          "ru": "машина",
+          "example_en": "Dad drives a car.",
+          "example_ru": "Папа водит машину."
+        },
+        {
+          "en": "bus",
+          "ipa": "[bʌs]",
+          "ru": "автобус",
+          "example_en": "I go to school by bus.",
+          "example_ru": "Я еду в школу на автобусе."
+        },
+        {
+          "en": "train",
+          "ipa": "[treɪn]",
+          "ru": "поезд",
+          "example_en": "The train is very fast.",
+          "example_ru": "Поезд очень быстрый."
+        },
+        {
+          "en": "plane",
+          "ipa": "[pleɪn]",
+          "ru": "самолёт",
+          "example_en": "The plane flies high.",
+          "example_ru": "Самолёт летит высоко."
+        },
+        {
+          "en": "ship",
+          "ipa": "[ʃɪp]",
+          "ru": "корабль",
+          "example_en": "The ship sails on the sea.",
+          "example_ru": "Корабль плывёт по морю."
+        },
+        {
+          "en": "boat",
+          "ipa": "[bəʊt]",
+          "ru": "лодка",
+          "example_en": "We row a boat on the lake.",
+          "example_ru": "Мы катаемся на лодке по озеру."
+        },
+        {
+          "en": "bicycle",
+          "ipa": "[ˈbaɪsɪkl]",
+          "ru": "велосипед",
+          "example_en": "I ride my bicycle in the park.",
+          "example_ru": "Я катаюсь на велосипеде в парке."
+        },
+        {
+          "en": "motorbike",
+          "ipa": "[ˈməʊtəbaɪk]",
+          "ru": "мотоцикл",
+          "example_en": "The motorbike is loud.",
+          "example_ru": "Мотоцикл громкий."
+        },
+        {
+          "en": "taxi",
+          "ipa": "[ˈtæksi]",
+          "ru": "такси",
+          "example_en": "We take a taxi home.",
+          "example_ru": "Мы едем домой на такси."
+        },
+        {
+          "en": "lorry",
+          "ipa": "[ˈlɒri]",
+          "ru": "грузовик",
+          "example_en": "The lorry carries food.",
+          "example_ru": "Грузовик везёт еду."
+        },
+        {
+          "en": "tram",
+          "ipa": "[træm]",
+          "ru": "трамвай",
+          "example_en": "The tram goes along the street.",
+          "example_ru": "Трамвай едет по улице."
+        },
+        {
+          "en": "underground",
+          "ipa": "[ˌʌndəˈɡraʊnd]",
+          "ru": "метро",
+          "example_en": "We go by underground in Moscow.",
+          "example_ru": "В Москве мы ездим на метро."
+        },
+        {
+          "en": "helicopter",
+          "ipa": "[ˈhelɪkɒptə]",
+          "ru": "вертолёт",
+          "example_en": "The helicopter flies over the city.",
+          "example_ru": "Вертолёт летит над городом."
+        },
+        {
+          "en": "rocket",
+          "ipa": "[ˈrɒkɪt]",
+          "ru": "ракета",
+          "example_en": "The rocket flies to the Moon.",
+          "example_ru": "Ракета летит на Луну."
+        },
+        {
+          "en": "scooter",
+          "ipa": "[ˈskuːtə]",
+          "ru": "самокат",
+          "example_en": "I ride my scooter after school.",
+          "example_ru": "Я катаюсь на самокате после школы."
+        },
+        {
+          "en": "ambulance",
+          "ipa": "[ˈæmbjələns]",
+          "ru": "скорая помощь",
+          "example_en": "The ambulance helps sick people.",
+          "example_ru": "Скорая помощь помогает больным."
+        },
+        {
+          "en": "fire engine",
+          "ipa": "[ˈfaɪə endʒɪn]",
+          "ru": "пожарная машина",
+          "example_en": "The fire engine is red.",
+          "example_ru": "Пожарная машина красная."
+        },
+        {
+          "en": "police car",
+          "ipa": "[pəˈliːs kɑː]",
+          "ru": "полицейская машина",
+          "example_en": "The police car is fast.",
+          "example_ru": "Полицейская машина быстрая."
+        },
+        {
+          "en": "van",
+          "ipa": "[væn]",
+          "ru": "фургон",
+          "example_en": "The van brings our food.",
+          "example_ru": "Фургон привозит нашу еду."
+        },
+        {
+          "en": "platform",
+          "ipa": "[ˈplætfɔːm]",
+          "ru": "платформа",
+          "example_en": "We wait on the platform.",
+          "example_ru": "Мы ждём на платформе."
+        },
+        {
+          "en": "ferry",
+          "ipa": "[ˈferi]",
+          "ru": "паром",
+          "example_en": "The ferry crosses the river.",
+          "example_ru": "Паром переправляется через реку."
+        },
+        {
+          "en": "yacht",
+          "ipa": "[jɒt]",
+          "ru": "яхта",
+          "example_en": "The yacht is white.",
+          "example_ru": "Яхта белая."
+        },
+        {
+          "en": "sledge",
+          "ipa": "[sledʒ]",
+          "ru": "санки",
+          "example_en": "Children ride sledges in winter.",
+          "example_ru": "Зимой дети катаются на санках."
+        },
+        {
+          "en": "hot-air balloon",
+          "ipa": "[hɒt eə bəˈluːn]",
+          "ru": "воздушный шар",
+          "example_en": "The hot-air balloon rises up.",
+          "example_ru": "Воздушный шар поднимается вверх."
+        },
+        {
+          "en": "wheel",
+          "ipa": "[wiːl]",
+          "ru": "колесо",
+          "example_en": "A car has four wheels.",
+          "example_ru": "У машины четыре колеса."
+        },
+        {
+          "en": "ticket",
+          "ipa": "[ˈtɪkɪt]",
+          "ru": "билет",
+          "example_en": "I buy a ticket for the train.",
+          "example_ru": "Я покупаю билет на поезд."
+        },
+        {
+          "en": "station",
+          "ipa": "[ˈsteɪʃn]",
+          "ru": "станция",
+          "example_en": "The train stops at the station.",
+          "example_ru": "Поезд останавливается на станции."
+        },
+        {
+          "en": "airport",
+          "ipa": "[ˈeəpɔːt]",
+          "ru": "аэропорт",
+          "example_en": "Planes take off at the airport.",
+          "example_ru": "Самолёты взлетают в аэропорту."
+        },
+        {
+          "en": "road",
+          "ipa": "[rəʊd]",
+          "ru": "дорога",
+          "example_en": "The road is long.",
+          "example_ru": "Дорога длинная."
+        },
+        {
+          "en": "passenger",
+          "ipa": "[ˈpæsɪndʒə]",
+          "ru": "пассажир",
+          "example_en": "The passenger buys a ticket.",
+          "example_ru": "Пассажир покупает билет."
+        }
+      ]
+    },
+    {
+      "id": "tsveta",
+      "title_ru": "Цвета",
+      "words": [
+        {
+          "en": "red",
+          "ipa": "[red]",
+          "ru": "красный",
+          "example_en": "The rose is red.",
+          "example_ru": "Роза красная."
+        },
+        {
+          "en": "blue",
+          "ipa": "[bluː]",
+          "ru": "синий, голубой",
+          "example_en": "The sky is blue.",
+          "example_ru": "Небо голубое."
+        },
+        {
+          "en": "green",
+          "ipa": "[ɡriːn]",
+          "ru": "зелёный",
+          "example_en": "The grass is green.",
+          "example_ru": "Трава зелёная."
+        },
+        {
+          "en": "yellow",
+          "ipa": "[ˈjeləʊ]",
+          "ru": "жёлтый",
+          "example_en": "The sun is yellow.",
+          "example_ru": "Солнце жёлтое."
+        },
+        {
+          "en": "orange",
+          "ipa": "[ˈɒrɪndʒ]",
+          "ru": "оранжевый",
+          "example_en": "The fox is orange.",
+          "example_ru": "Лиса оранжевая."
+        },
+        {
+          "en": "purple",
+          "ipa": "[ˈpɜːpl]",
+          "ru": "фиолетовый",
+          "example_en": "The flower is purple.",
+          "example_ru": "Цветок фиолетовый."
+        },
+        {
+          "en": "pink",
+          "ipa": "[pɪŋk]",
+          "ru": "розовый",
+          "example_en": "Her dress is pink.",
+          "example_ru": "Её платье розовое."
+        },
+        {
+          "en": "brown",
+          "ipa": "[braʊn]",
+          "ru": "коричневый",
+          "example_en": "The bear is brown.",
+          "example_ru": "Медведь коричневый."
+        },
+        {
+          "en": "black",
+          "ipa": "[blæk]",
+          "ru": "чёрный",
+          "example_en": "The cat is black.",
+          "example_ru": "Кошка чёрная."
+        },
+        {
+          "en": "white",
+          "ipa": "[waɪt]",
+          "ru": "белый",
+          "example_en": "The snow is white.",
+          "example_ru": "Снег белый."
+        },
+        {
+          "en": "grey",
+          "ipa": "[ɡreɪ]",
+          "ru": "серый",
+          "example_en": "The mouse is grey.",
+          "example_ru": "Мышь серая."
+        },
+        {
+          "en": "light blue",
+          "ipa": "[laɪt bluː]",
+          "ru": "светло-голубой",
+          "example_en": "The ball is light blue.",
+          "example_ru": "Мяч светло-голубой."
+        },
+        {
+          "en": "dark blue",
+          "ipa": "[dɑːk bluː]",
+          "ru": "тёмно-синий",
+          "example_en": "His jeans are dark blue.",
+          "example_ru": "Его джинсы тёмно-синие."
+        },
+        {
+          "en": "golden",
+          "ipa": "[ˈɡəʊldən]",
+          "ru": "золотой",
+          "example_en": "The crown is golden.",
+          "example_ru": "Корона золотая."
+        },
+        {
+          "en": "silver",
+          "ipa": "[ˈsɪlvə]",
+          "ru": "серебряный",
+          "example_en": "The ring is silver.",
+          "example_ru": "Кольцо серебряное."
+        },
+        {
+          "en": "colourful",
+          "ipa": "[ˈkʌləfəl]",
+          "ru": "разноцветный",
+          "example_en": "The rainbow is colourful.",
+          "example_ru": "Радуга разноцветная."
+        },
+        {
+          "en": "rainbow",
+          "ipa": "[ˈreɪnbəʊ]",
+          "ru": "радуга",
+          "example_en": "I see a rainbow in the sky.",
+          "example_ru": "Я вижу радугу в небе."
+        },
+        {
+          "en": "dark",
+          "ipa": "[dɑːk]",
+          "ru": "тёмный",
+          "example_en": "It is dark at night.",
+          "example_ru": "Ночью темно."
+        },
+        {
+          "en": "light",
+          "ipa": "[laɪt]",
+          "ru": "светлый",
+          "example_en": "The room is light.",
+          "example_ru": "Комната светлая."
+        },
+        {
+          "en": "bright",
+          "ipa": "[braɪt]",
+          "ru": "яркий",
+          "example_en": "The sun is bright.",
+          "example_ru": "Солнце яркое."
+        },
+        {
+          "en": "colour",
+          "ipa": "[ˈkʌlə]",
+          "ru": "цвет",
+          "example_en": "What is your favourite colour?",
+          "example_ru": "Какой твой любимый цвет?"
+        },
+        {
+          "en": "paint",
+          "ipa": "[peɪnt]",
+          "ru": "краска; рисовать красками",
+          "example_en": "I paint a red flower.",
+          "example_ru": "Я рисую красный цветок."
+        },
+        {
+          "en": "violet",
+          "ipa": "[ˈvaɪələt]",
+          "ru": "сиреневый; фиалка",
+          "example_en": "The violet is a small flower.",
+          "example_ru": "Фиалка — маленький цветок."
+        },
+        {
+          "en": "beige",
+          "ipa": "[beɪʒ]",
+          "ru": "бежевый",
+          "example_en": "The sofa is beige.",
+          "example_ru": "Диван бежевый."
+        },
+        {
+          "en": "turquoise",
+          "ipa": "[ˈtɜːkwɔɪz]",
+          "ru": "бирюзовый",
+          "example_en": "The sea is turquoise.",
+          "example_ru": "Море бирюзовое."
+        }
+      ]
+    },
+    {
+      "id": "vremya-i-chisla",
+      "title_ru": "Время и числа",
+      "words": [
+        {
+          "en": "time",
+          "ipa": "[taɪm]",
+          "ru": "время",
+          "example_en": "What time is it?",
+          "example_ru": "Который час?"
+        },
+        {
+          "en": "clock",
+          "ipa": "[klɒk]",
+          "ru": "часы",
+          "example_en": "The clock is on the wall.",
+          "example_ru": "Часы висят на стене."
+        },
+        {
+          "en": "hour",
+          "ipa": "[ˈaʊə]",
+          "ru": "час",
+          "example_en": "The lesson is one hour long.",
+          "example_ru": "Урок длится один час."
+        },
+        {
+          "en": "minute",
+          "ipa": "[ˈmɪnɪt]",
+          "ru": "минута",
+          "example_en": "Wait a minute, please.",
+          "example_ru": "Подожди минуту, пожалуйста."
+        },
+        {
+          "en": "day",
+          "ipa": "[deɪ]",
+          "ru": "день",
+          "example_en": "Today is a good day.",
+          "example_ru": "Сегодня хороший день."
+        },
+        {
+          "en": "week",
+          "ipa": "[wiːk]",
+          "ru": "неделя",
+          "example_en": "There are seven days in a week.",
+          "example_ru": "В неделе семь дней."
+        },
+        {
+          "en": "month",
+          "ipa": "[mʌnθ]",
+          "ru": "месяц",
+          "example_en": "My favourite month is June.",
+          "example_ru": "Мой любимый месяц — июнь."
+        },
+        {
+          "en": "year",
+          "ipa": "[jɪə]",
+          "ru": "год",
+          "example_en": "A year has twelve months.",
+          "example_ru": "В году двенадцать месяцев."
+        },
+        {
+          "en": "today",
+          "ipa": "[təˈdeɪ]",
+          "ru": "сегодня",
+          "example_en": "We have English today.",
+          "example_ru": "Сегодня у нас английский."
+        },
+        {
+          "en": "tomorrow",
+          "ipa": "[təˈmɒrəʊ]",
+          "ru": "завтра",
+          "example_en": "Tomorrow we go to the zoo.",
+          "example_ru": "Завтра мы идём в зоопарк."
+        },
+        {
+          "en": "yesterday",
+          "ipa": "[ˈjestədeɪ]",
+          "ru": "вчера",
+          "example_en": "Yesterday was Sunday.",
+          "example_ru": "Вчера было воскресенье."
+        },
+        {
+          "en": "morning",
+          "ipa": "[ˈmɔːnɪŋ]",
+          "ru": "утро",
+          "example_en": "I get up in the morning.",
+          "example_ru": "Я встаю утром."
+        },
+        {
+          "en": "afternoon",
+          "ipa": "[ˌɑːftəˈnuːn]",
+          "ru": "время после полудня",
+          "example_en": "We play in the afternoon.",
+          "example_ru": "Мы играем после обеда."
+        },
+        {
+          "en": "evening",
+          "ipa": "[ˈiːvnɪŋ]",
+          "ru": "вечер",
+          "example_en": "We read books in the evening.",
+          "example_ru": "Вечером мы читаем книги."
+        },
+        {
+          "en": "night",
+          "ipa": "[naɪt]",
+          "ru": "ночь",
+          "example_en": "Stars shine at night.",
+          "example_ru": "Ночью светят звёзды."
+        },
+        {
+          "en": "calendar",
+          "ipa": "[ˈkælɪndə]",
+          "ru": "календарь",
+          "example_en": "The calendar hangs in the kitchen.",
+          "example_ru": "Календарь висит на кухне."
+        },
+        {
+          "en": "date",
+          "ipa": "[deɪt]",
+          "ru": "дата",
+          "example_en": "What is the date today?",
+          "example_ru": "Какое сегодня число?"
+        },
+        {
+          "en": "birthday",
+          "ipa": "[ˈbɜːθdeɪ]",
+          "ru": "день рождения",
+          "example_en": "My birthday is in May.",
+          "example_ru": "Мой день рождения в мае."
+        },
+        {
+          "en": "number",
+          "ipa": "[ˈnʌmbə]",
+          "ru": "число, номер",
+          "example_en": "Write the number five.",
+          "example_ru": "Напиши число пять."
+        },
+        {
+          "en": "first",
+          "ipa": "[fɜːst]",
+          "ru": "первый",
+          "example_en": "Monday is the first day of the week.",
+          "example_ru": "Понедельник — первый день недели."
+        },
+        {
+          "en": "second",
+          "ipa": "[ˈsekənd]",
+          "ru": "второй; секунда",
+          "example_en": "February is the second month.",
+          "example_ru": "Февраль — второй месяц."
+        },
+        {
+          "en": "third",
+          "ipa": "[θɜːd]",
+          "ru": "третий",
+          "example_en": "I am the third child in the family.",
+          "example_ru": "Я третий ребёнок в семье."
+        },
+        {
+          "en": "ten",
+          "ipa": "[ten]",
+          "ru": "десять",
+          "example_en": "I can count to ten.",
+          "example_ru": "Я умею считать до десяти."
+        },
+        {
+          "en": "twenty",
+          "ipa": "[ˈtwenti]",
+          "ru": "двадцать",
+          "example_en": "There are twenty pupils in our class.",
+          "example_ru": "В нашем классе двадцать учеников."
+        },
+        {
+          "en": "hundred",
+          "ipa": "[ˈhʌndrəd]",
+          "ru": "сто",
+          "example_en": "A hundred children play here.",
+          "example_ru": "Здесь играет сто детей."
+        },
+        {
+          "en": "thousand",
+          "ipa": "[ˈθaʊzənd]",
+          "ru": "тысяча",
+          "example_en": "A thousand stars are in the sky.",
+          "example_ru": "В небе тысяча звёзд."
+        },
+        {
+          "en": "half",
+          "ipa": "[hɑːf]",
+          "ru": "половина",
+          "example_en": "It is half past seven.",
+          "example_ru": "Сейчас половина восьмого."
+        },
+        {
+          "en": "weekend",
+          "ipa": "[ˌwiːkˈend]",
+          "ru": "выходные",
+          "example_en": "We visit Grandma at the weekend.",
+          "example_ru": "В выходные мы навещаем бабушку."
+        }
+      ]
+    },
+    {
+      "id": "zhivotnye",
+      "title_ru": "Животные",
+      "words": [
+        {
+          "en": "cat",
+          "ipa": "[kæt]",
+          "ru": "кошка",
+          "example_en": "The cat sleeps on the sofa.",
+          "example_ru": "Кошка спит на диване."
+        },
+        {
+          "en": "dog",
+          "ipa": "[dɒɡ]",
+          "ru": "собака",
+          "example_en": "My dog likes to run.",
+          "example_ru": "Моя собака любит бегать."
+        },
+        {
+          "en": "bird",
+          "ipa": "[bɜːd]",
+          "ru": "птица",
+          "example_en": "A bird sings in the morning.",
+          "example_ru": "Птица поёт по утрам."
+        },
+        {
+          "en": "fish",
+          "ipa": "[fɪʃ]",
+          "ru": "рыба",
+          "example_en": "The fish swims fast.",
+          "example_ru": "Рыба плавает быстро."
+        },
+        {
+          "en": "horse",
+          "ipa": "[hɔːs]",
+          "ru": "лошадь",
+          "example_en": "The horse is very strong.",
+          "example_ru": "Лошадь очень сильная."
+        },
+        {
+          "en": "cow",
+          "ipa": "[kaʊ]",
+          "ru": "корова",
+          "example_en": "The cow gives milk.",
+          "example_ru": "Корова даёт молоко."
+        },
+        {
+          "en": "pig",
+          "ipa": "[pɪɡ]",
+          "ru": "свинья",
+          "example_en": "The pig is pink.",
+          "example_ru": "Свинья розовая."
+        },
+        {
+          "en": "sheep",
+          "ipa": "[ʃiːp]",
+          "ru": "овца",
+          "example_en": "The sheep eats grass.",
+          "example_ru": "Овца ест траву."
+        },
+        {
+          "en": "rabbit",
+          "ipa": "[ˈræbɪt]",
+          "ru": "кролик",
+          "example_en": "The rabbit has long ears.",
+          "example_ru": "У кролика длинные уши."
+        },
+        {
+          "en": "hamster",
+          "ipa": "[ˈhæmstə]",
+          "ru": "хомяк",
+          "example_en": "Our hamster runs in a wheel.",
+          "example_ru": "Наш хомяк бегает в колесе."
+        },
+        {
+          "en": "fox",
+          "ipa": "[fɒks]",
+          "ru": "лиса",
+          "example_en": "The fox is clever.",
+          "example_ru": "Лиса хитрая."
+        },
+        {
+          "en": "wolf",
+          "ipa": "[wʊlf]",
+          "ru": "волк",
+          "example_en": "The wolf lives in the forest.",
+          "example_ru": "Волк живёт в лесу."
+        },
+        {
+          "en": "bear",
+          "ipa": "[beə]",
+          "ru": "медведь",
+          "example_en": "The bear sleeps in winter.",
+          "example_ru": "Медведь спит зимой."
+        },
+        {
+          "en": "tiger",
+          "ipa": "[ˈtaɪɡə]",
+          "ru": "тигр",
+          "example_en": "The tiger is orange and black.",
+          "example_ru": "Тигр оранжевый с чёрным."
+        },
+        {
+          "en": "lion",
+          "ipa": "[ˈlaɪən]",
+          "ru": "лев",
+          "example_en": "The lion is the king of animals.",
+          "example_ru": "Лев — царь зверей."
+        },
+        {
+          "en": "elephant",
+          "ipa": "[ˈelɪfənt]",
+          "ru": "слон",
+          "example_en": "The elephant has a long trunk.",
+          "example_ru": "У слона длинный хобот."
+        },
+        {
+          "en": "monkey",
+          "ipa": "[ˈmʌŋki]",
+          "ru": "обезьяна",
+          "example_en": "The monkey likes bananas.",
+          "example_ru": "Обезьяна любит бананы."
+        },
+        {
+          "en": "giraffe",
+          "ipa": "[dʒɪˈrɑːf]",
+          "ru": "жираф",
+          "example_en": "The giraffe has a long neck.",
+          "example_ru": "У жирафа длинная шея."
+        },
+        {
+          "en": "zebra",
+          "ipa": "[ˈzebrə]",
+          "ru": "зебра",
+          "example_en": "The zebra is black and white.",
+          "example_ru": "Зебра чёрно-белая."
+        },
+        {
+          "en": "crocodile",
+          "ipa": "[ˈkrɒkədaɪl]",
+          "ru": "крокодил",
+          "example_en": "The crocodile has big teeth.",
+          "example_ru": "У крокодила большие зубы."
+        },
+        {
+          "en": "snake",
+          "ipa": "[sneɪk]",
+          "ru": "змея",
+          "example_en": "The snake is very long.",
+          "example_ru": "Змея очень длинная."
+        },
+        {
+          "en": "frog",
+          "ipa": "[frɒɡ]",
+          "ru": "лягушка",
+          "example_en": "The frog jumps high.",
+          "example_ru": "Лягушка прыгает высоко."
+        },
+        {
+          "en": "duck",
+          "ipa": "[dʌk]",
+          "ru": "утка",
+          "example_en": "The duck swims in the pond.",
+          "example_ru": "Утка плавает в пруду."
+        },
+        {
+          "en": "hen",
+          "ipa": "[hen]",
+          "ru": "курица",
+          "example_en": "The hen lays eggs.",
+          "example_ru": "Курица несёт яйца."
+        },
+        {
+          "en": "mouse",
+          "ipa": "[maʊs]",
+          "ru": "мышь",
+          "example_en": "The mouse is small and grey.",
+          "example_ru": "Мышь маленькая и серая."
+        },
+        {
+          "en": "turtle",
+          "ipa": "[ˈtɜːtl]",
+          "ru": "черепаха",
+          "example_en": "The turtle walks slowly.",
+          "example_ru": "Черепаха ходит медленно."
+        },
+        {
+          "en": "parrot",
+          "ipa": "[ˈpærət]",
+          "ru": "попугай",
+          "example_en": "The parrot can talk.",
+          "example_ru": "Попугай умеет говорить."
+        },
+        {
+          "en": "hedgehog",
+          "ipa": "[ˈhedʒhɒɡ]",
+          "ru": "ёж",
+          "example_en": "The hedgehog has needles.",
+          "example_ru": "У ежа иголки."
+        },
+        {
+          "en": "squirrel",
+          "ipa": "[ˈskwɪrəl]",
+          "ru": "белка",
+          "example_en": "The squirrel collects nuts.",
+          "example_ru": "Белка собирает орехи."
+        },
+        {
+          "en": "dolphin",
+          "ipa": "[ˈdɒlfɪn]",
+          "ru": "дельфин",
+          "example_en": "The dolphin jumps in the sea.",
+          "example_ru": "Дельфин прыгает в море."
+        }
+      ]
+    }
+  ]
+}
