@@ -4171,14 +4171,16 @@ make_words_page(
     "page_english_words_semya.html", "english-words/semya", "semya",
     "Семья", "семьи",
     'Английские слова на тему <span class="fxb-accent">«Семья»</span>',
-    "Английские слова на тему «Семья»: 33 слова с транскрипцией, переводом и примерами — от mum и dad до niece и grandson. Базовый словарь уровня A1 для детей и родителей.",
-    "Английские слова на тему «Семья» с транскрипцией и переводом: 33 слова уровня A1 с примерами предложений. Бесплатный словарь для детей и родителей — сохраните или распечатайте.",
+    "Слова по теме «Семья» на английском: 33 слова с транскрипцией, переводом и примерами — от mum и dad до niece и grandson. Уровень A1 для детей и родителей, бесплатно.",
+    "Английские слова на тему «Семья» с транскрипцией и переводом: 33 слова по теме «семья» на английском языке уровня A1 с примерами предложений. Бесплатный словарь для детей и родителей — сохраните или распечатайте.",
     WORDS_SEMA,
     "linear-gradient(135deg,#26161f 0%,#4d2440 55%,#7a3560 100%)",
     [("/doshkolniki", "Дошкольникам"), ("/mladshie-shkolniki", "Младшим школьникам")],
     faq_extra=[
         ("Как рассказать о своей семье по-английски?",
          "Начните с шаблона: There are four people in my family — my mum, my dad, my sister and me. Затем добавьте по одному предложению о каждом (имя, возраст, хобби). Готовые фразы про возраст — в статье «<a href=\"/blog-mne-10-let-na-anglijskom\">Мне 10 лет на английском</a>», а простые бытовые фразы — в подборке «<a href=\"/blog-frazy-na-anglijskom-dlya-detej\">Фразы на английском для детей</a>»."),
+        ("Какие слова про семью учат в начальной школе?",
+         "Во 2–4 классе школьная программа требует базовый набор: mother/mum, father/dad, parents, brother, sister, grandmother/granny, grandfather/grandpa, aunt, uncle, cousin. Все они есть в этой подборке с транскрипцией. Карточки из этих слов закрывают школьный словарь темы — как их сделать, разобрали в статье «<a href=\"/blog-kartochki-anglijskij\">Карточки для изучения английского</a>», а методика запоминания — в «<a href=\"/blog-kak-uchit-slova\">Как учить слова с ребёнком</a>»."),
     ],
 )
 make_words_page(
@@ -7033,12 +7035,14 @@ import pages_wave20  # волна 20: со скольки лет английс�
 import pages_wave21  # волна 21: онлайн или офлайн, проверка уровня, 10 минут в день, аудирование ЕГЭ
 import pages_wave22  # волна 22: как выбрать курсы, носитель или нет, грамматика-хаб, сколько слов школьнику
 import pages_wave23  # волна 23: гео районов (Водники, Павельцево, Виноградово, Ховрино) + пробное занятие и русский/математика
+import pages_wave24  # волна 24: гео Новая Дача и Шереметьевский + ОГЭ с нуля, карточки, лексика ЕГЭ
 
 pages_geo2.register_geo()
 pages_wave23.register_wave23()
+pages_wave24.register_wave24()
 pages_prep.register_prep_sections()
 
-EXTRA_BLOG_POSTS = pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave24.WAVE24_POSTS + pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
