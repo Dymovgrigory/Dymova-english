@@ -9,7 +9,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
-from . import core
+from . import activities, core
 
 router = APIRouter(prefix="/api/world", tags=["world"])
 
@@ -78,3 +78,46 @@ def inventory(x_world_player: str | None = Header(None)):
 @router.get("/unlocks")
 def unlocks(x_world_player: str | None = Header(None)):
     return _guard(core.get_unlocks, _player_key(x_world_player))
+
+
+class StepBody(BaseModel):
+    action: str
+    target: str
+
+
+@router.post("/quests/{quest_id}/step")
+def quest_step(quest_id: str, body: StepBody, x_world_player: str | None = Header(None)):
+    return _guard(core.advance_quest_step, _player_key(x_world_player), quest_id,
+                  body.action, body.target)
+
+
+class ActivityStartBody(BaseModel):
+    activity_id: str
+
+
+@router.post("/activities/start")
+def activity_start(body: ActivityStartBody, x_world_player: str | None = Header(None)):
+    return _guard(activities.start, _player_key(x_world_player), body.activity_id)
+
+
+class ActivityAnswerBody(BaseModel):
+    index: int
+    choice: int
+
+
+@router.post("/activities/{session_id}/answer")
+def activity_answer(session_id: str, body: ActivityAnswerBody,
+                    x_world_player: str | None = Header(None)):
+    return _guard(activities.answer, _player_key(x_world_player), session_id,
+                  body.index, body.choice)
+
+
+class ActivityFinishBody(BaseModel):
+    idempotency_key: str | None = None
+
+
+@router.post("/activities/{session_id}/finish")
+def activity_finish(session_id: str, body: ActivityFinishBody | None = None,
+                    x_world_player: str | None = Header(None)):
+    return _guard(activities.finish, _player_key(x_world_player), session_id,
+                  body.idempotency_key if body else None)
