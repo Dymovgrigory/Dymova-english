@@ -19,7 +19,7 @@ SOURCES = [
     REPO / "prototype" / "pages_words2.py",
     REPO / "prototype" / "pages_words3.py",
 ]
-DEFAULT_OUT = REPO / "bot" / "app" / "world" / "data" / "vocabulary.json"
+DEFAULT_OUT = REPO / "world-backend" / "app" / "world" / "data" / "vocabulary.json"
 
 # Имя списка в исходнике -> slug темы на сайте.
 VAR_TO_SLUG = {

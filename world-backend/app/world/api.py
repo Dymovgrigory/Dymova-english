@@ -1,8 +1,7 @@
-"""HTTP API Foxinburg World (§158). Router монтируется в bot/app/main.py.
+"""HTTP API Foxinburg World (§158).
 
-Auth v1 (slice): заголовок X-World-Player (external_key). Интеграция с
-miniapp-auth (TG/MAX initData) и CRM child id — следующий шаг; контракт
-эндпоинтов от этого не меняется.
+Отдельный процесс world-backend (не школьный бот). Auth v1: заголовок
+X-World-Player (external_key игрока мира). Не CRM и не miniapp школы.
 """
 from __future__ import annotations
 

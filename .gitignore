@@ -23,3 +23,7 @@ seo/*.csv
 seo/report.md
 seo-fox-506709-972a5b8fcee0.json
 .venv-qa/
+world-backend/.venv/
+world-backend/data/*.sqlite
+.pytest_cache/
+__pycache__/

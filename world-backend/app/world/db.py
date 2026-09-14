@@ -1,9 +1,7 @@
 """Слой БД Foxinburg World.
 
-Prod: PostgreSQL (WORLD_DATABASE_URL, psycopg). Dev/тесты: SQLite
-(WORLD_DB_PATH, по умолчанию bot/data/world.sqlite) — тот же SQL-диалект
-(плейсхолдеры ?), компромисс зафиксирован в docs/world/architecture.md.
-Переключение только через env (§105).
+Dev/тесты: SQLite (WORLD_DB_PATH, по умолчанию world-backend/data/world.sqlite).
+Prod Postgres (WORLD_DATABASE_URL) — отдельный шаг, не слой бота.
 """
 from __future__ import annotations
 

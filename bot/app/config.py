@@ -217,13 +217,6 @@ class Settings(BaseSettings):
     # приоритет над распознаванием фамилии в названии группы.
     GROUP_TEACHER_MAP_JSON: str = ""
 
-    # --- Foxinburg World (игровой слой School Hub) ---
-    # У мира пока нет настоящей авторизации: личность — заголовок
-    # X-World-Player, который клиент сам себе генерирует. Роутер смонтирован
-    # в прод-бота, поэтому маршруты /api/world/* по умолчанию выключены —
-    # включать на проде можно только после привязки к miniapp-auth.
-    WORLD_API_ENABLED: bool = False
-
     # --- Мини-приложение ---
     MINIAPP_BASE_URL: str = ""
     MINIAPP_REQUIRE_REGISTRATION: bool = True

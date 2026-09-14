@@ -5709,8 +5709,27 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - `bot/.env` — gitignored и в коммит не входит; чтобы локальный dev-цикл фронтенда работал у следующего агента/разработчика, `SITE_CORS_ORIGINS` там должен включать используемый порт `world`-фронтенда (сейчас 3000 и 3002).
 
 **Осталось / следующий шаг:**
-1. Postgres-слой в `bot/app/world/db.py` (сейчас SQLite/заглушка) — нужен для прода.
-2. Auth: привязать `X-World-Player` к miniapp-auth и CRM (сейчас это просто заголовок без проверки личности).
-3. Здание школы — заменить плейсхолдер-геометрию на модель через Meshy.
-4. Вторая зона — Library Courtyard (уже анонсирована в награде как «открыта»).
-5. Звук — озвучка Фокси, эффекты челленджа и награды сейчас отсутствуют.
+1. Postgres в `world-backend` (свой инстанс, не bot.db).
+2. Здание школы — модель Meshy вместо плейсхолдера.
+3. Вторая зона — Library Courtyard.
+4. Звук.
+Связка с CRM / miniapp **не планируется** на этом этапе (решение владельца 2026-09-14).
+
+### Сессия 96 (агент — Cursor, World — отдельная платформа, не CRM)
+
+**Дата:** 2026-09-14
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** мир не должен быть CRM и не должен быть с ней связан; отдельная новая платформа в том же репозитории (вариант A).
+
+**Что сделано:**
+- Игровой API вынесен из `bot/app/world/` в `world-backend/` (свой FastAPI, порт 8010, своя SQLite `world-backend/data/world.sqlite`).
+- Из бота удалены монтирование `/api/world/*`, флаг `WORLD_API_ENABLED`, CORS под мир и world-тесты. Добавлен `bot/tests/test_world_absent.py`: пакета `app.world` нет, `/api/world/player` → 404.
+- Фронт `world/` по умолчанию ходит на `http://localhost:8010`.
+- Игрок — ник + `X-World-Player`. Импорты CRM/BigBen/miniapp_auth в `world-backend` запрещены тестом изоляции.
+- CI: `.github/workflows/world-ci.yml`. Spec: `docs/superpowers/specs/2026-09-14-foxinburg-world-separate-platform-design.md`.
+
+**Как проверено:** `cd world-backend && pytest -q` → **45 passed**; `cd bot && pytest tests/test_world_absent.py -q` → **2 passed**. Полный сьют бота и `npm test`/`npm run build` фронта в этой сессии после выноса не гонялись.
+
+**Деплой:** прод бота не трогали (мира на боте больше нет даже как флага). Прод мира не выкатывали.
+**Осталось / следующий шаг:** локально `uvicorn main:app --port 8010` + `cd world && npm run dev`; дальше контент мира (школа Meshy, Library Courtyard, звук), не CRM.
+

@@ -97,7 +97,7 @@ export type FinishResult = {
   practice: boolean;
 };
 
-const API = process.env.NEXT_PUBLIC_WORLD_API ?? "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_WORLD_API ?? "http://localhost:8010";
 
 /** Ошибка ответа API с числовым HTTP-статусом — не парсить статус из текста сообщения. */
 export class ApiError extends Error {

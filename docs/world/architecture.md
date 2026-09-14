@@ -1,21 +1,20 @@
 # Foxinburg World — Architecture Proposal (STEP 3)
 
-Статус: v1 (2026-09-13). Основано на аудите репозитория (STEP 1–2) и брифе
-«промт World» (§1–259). Решения приняты самостоятельно (§254); существующие
-системы не ломаем (§238) — World строится как изолированный модуль.
+Статус: v2 (2026-09-14). World — **отдельная игровая платформа** в том же
+git-репозитории: свой процесс `world-backend/`, своя БД, свои игроки.
+Школьный бот и BigBen CRM не вызываются и не импортируются.
 
 ## 1. Что уже есть (аудит — вход для решений)
 
 | Слой | Существующее | Решение для World |
 |---|---|---|
-| Сайт | Статический Python-билд (`prototype/`, 185 страниц, прод `dymova-english.ru`) | Не трогаем. World — отдельное приложение `world.` поддомен / `/world` |
-| Backend | FastAPI-бот (`bot/app`), BigBen CRM = source of truth, miniapp-auth (TG/MAX), биллинг, аналитика | Расширяем новым саб-доменом `world` внутри того же FastAPI (один сервер, один деплой) |
-| Auth | `miniapp_auth.py` (initData TG/MAX) + BigBen identities | Реиспольз; child profile привязан к ученику CRM |
-| 3D маскот | `foxi-rigged.glb` 726 КБ, 6 клипов, draco+webp pipeline (gltf-transform) | Базовый аватар/компаньон мира |
-| Node-стек | **Отсутствует** (нет ни одного package.json) | Создаём `world/` монорепо с нуля |
-| PostgreSQL | Нет (SQLite read-model) | Новый Postgres (Docker) — игровая транзакционная БД |
-| AI | LLM gateway OpenAI-совместимый; новый Gemini-прокси (ключ получен) | AIProvider abstraction (§100–101): reasoning gemini-3.1-pro, fast gemini-3.8-flash |
-| 3D-генерация | Meshy web-UI вручную | Meshy API (ключ получен, 1286 кредитов) → `world-pipeline/` |
+| Сайт | Статический Python-билд (`prototype/`, прод `dymova-english.ru`) | Не трогаем |
+| Backend | FastAPI-бот (`bot/app`) + CRM — **школа** | Игра: отдельный FastAPI `world-backend/` на порту 8010 |
+| Auth | miniapp + BigBen — только бот | Игрок мира: ник + `X-World-Player`. Не ученик CRM |
+| 3D маскот | `foxi-rigged.glb` | Базовый аватар/компаньон мира |
+| Node-стек | `world/` Next 16 + R3F | Фронт мира |
+| БД мира v1 | SQLite `world-backend/data/world.sqlite` | Postgres — позже, свой инстанс, не `bot.db` |
+| AI / 3D-gen | Gemini-прокси, Meshy | `world-pipeline/` |
 
 ## 2. Выбор World Engine (§6): PlayCanvas vs Three.js/R3F
 
@@ -65,23 +64,22 @@ world/                         ← новый монорепо-модуль (pnp
 └── world-pipeline/            (уже создан) asset pipeline: Gemini concept →
                                Meshy 3D → gltf-transform → manifest → CDN
 
-bot/app/world/                 ← backend-модуль в существующем FastAPI
-├── api/                       typed routes (§158): /api/world/{player,quests,rewards,...}
-├── domain/                    progression, economy, quests (server-authoritative)
-├── db/                        Postgres (SQLAlchemy/asyncpg), migrations (Alembic)
-└── ai/                        AIProvider abstraction → Gemini-прокси
+world-backend/                 FastAPI только мира (порт 8010)
+├── app/world/                 игровое ядро: api, core, db, activities
+├── tests/
+└── data/world.sqlite          gitignored, не bot.db
+
+world/                         Next.js + R3F (клиент)
+world-pipeline/                Gemini concept → Meshy 3D → gltf-transform
 ```
 
-**Почему backend — в существующем FastAPI, а не Next API routes:**
-(1) server-authoritative rewards (§84) и BigBen-интеграция уже там;
-(2) auth ученика/родителя уже там (miniapp-auth + CRM); (3) один деплой,
-один мониторинг, один домен `bot.dymova-english.ru`; (4) Next.js остаётся
-тонким — shell + рендер. Next API используется только для BFF-прокси
-и SSR-персонализации.
+**Почему отдельный FastAPI, а не модуль бота и не Next API routes:**
+(1) server-authoritative rewards (§84) без школьной CRM; (2) бот и игра
+не делят процесс, секреты и деплой; (3) Next.js остаётся тонким клиентом.
+Связка «игрок мира ↔ ученик школы» на этом этапе запрещена.
 
-**Почему Postgres, а не расширение SQLite:** транзакционный ledger (§85),
-идемпотентность (§160), конкурентная запись (streak/XP с нескольких
-устройств), JSONB для world state (§28). SQLite read-model бота не трогаем.
+**Почему Postgres позже:** транзакционный ledger (§85) понадобится на проде;
+сейчас SQLite в `world-backend/data/`. Read-model бота не трогаем.
 
 ## 4. Доменные границы (§156)
 
@@ -149,7 +147,7 @@ speaking-MVP), seasons/weather (flags есть, контент Phase 2), season 
 | Решение | Выбрано | Альтернатива | Граница замены |
 |---|---|---|---|
 | Engine | Three.js/R3F | PlayCanvas | `packages/world-engine` — единственный импортёр three |
-| Backend | FastAPI `bot/app/world` | отдельный NestJS | REST-контракт `/api/world/*` |
+| Backend | FastAPI `world-backend/` | NestJS / модуль бота | REST-контракт `/api/world/*` |
 | DB | self-hosted Postgres | Supabase | `WORLD_DATABASE_URL` |
 | Storage | локально → YC S3+CDN | Cloudflare R2 | `WORLD_CDN_BASE_URL` + manifest |
 | LLM | Gemini-прокси | OpenAI/OpenRouter | `AIProvider` adapter |
