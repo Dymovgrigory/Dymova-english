@@ -14,6 +14,8 @@ import { Hud } from "@/game/hud/Hud";
 import { FoxiDialogue } from "@/game/dialogue/FoxiDialogue";
 import { VocabularyChallenge } from "@/game/activities/VocabularyChallenge";
 import { RewardCinematic } from "@/game/reward/RewardCinematic";
+import { Glass } from "@/ui/Glass";
+import { GameButton } from "@/ui/Button";
 import { useGame } from "@/game/store";
 import type { Phase } from "@/game/phases";
 
@@ -33,20 +35,23 @@ const CLIP_BY_PHASE: Record<Phase, FoxiClip> = {
   reward: "cheer",
 };
 
+function resolvePlayerName(): string {
+  if (typeof window === "undefined") return "Исследователь";
+  return window.localStorage.getItem("world.name") || "Исследователь";
+}
+
 export default function WorldPage() {
-  const { phase, player, error, boot, clickSchool, finish } = useGame();
+  const { phase, player, quest, error, boot, clickSchool, finish } = useGame();
   const fireflies = FIREFLIES[qualityProfile()];
 
   useEffect(() => {
-    if (!player) {
-      const name =
-        (typeof window !== "undefined" && window.localStorage.getItem("world.name")) ||
-        "Исследователь";
-      void boot(name);
-    }
+    if (!player) void boot(resolvePlayerName());
   }, [boot, player]);
 
-  const rewardCoins = phase === "reward" && finish ? Math.min(finish.coins_delta, 12) : 0;
+  const retryBoot = () => void boot(resolvePlayerName());
+
+  const rewardCoins = phase === "reward" && finish && !finish.practice ? Math.min(finish.coins_delta, 12) : 0;
+  const questActive = phase === "explore" && quest?.status !== "completed";
 
   return (
     <main className="relative h-dvh w-full overflow-hidden bg-[#241a30]">
@@ -54,7 +59,7 @@ export default function WorldPage() {
         <Lighting />
         <CameraRig shot={SHOT_BY_PHASE[phase]} />
         <Ground />
-        <SchoolBuilding highlighted={phase === "explore"} onClick={() => void clickSchool()} />
+        <SchoolBuilding highlighted={questActive} onClick={() => void clickSchool()} />
         <Foxi clip={CLIP_BY_PHASE[phase]} />
         {Array.from({ length: rewardCoins }).map((_, i) => (
           <FoxCoin key={i} position={[2.4, 1.2, -0.4]} swirl seed={i * 0.7} />
@@ -68,14 +73,26 @@ export default function WorldPage() {
       <RewardCinematic />
 
       {phase === "boot" ? (
-        <div className="absolute inset-0 grid place-items-center bg-[#241a30]">
-          <p className="font-[family-name:var(--font-display)] text-lg font-extrabold tracking-wide text-[#f5ed75]">
-            Фоксинбург просыпается…
-          </p>
+        <div className="absolute inset-0 grid place-items-center bg-[#241a30] p-6">
+          {error ? (
+            <Glass className="w-full max-w-md p-6 text-center">
+              <p className="font-[family-name:var(--font-display)] text-lg font-extrabold tracking-wide text-[#f5ed75]">
+                Фоксинбург не отвечает
+              </p>
+              <p className="mt-2 text-sm text-white/70">{error}</p>
+              <div className="mt-5 flex justify-center">
+                <GameButton onClick={retryBoot}>Попробовать снова</GameButton>
+              </div>
+            </Glass>
+          ) : (
+            <p className="font-[family-name:var(--font-display)] text-lg font-extrabold tracking-wide text-[#f5ed75]">
+              Фоксинбург просыпается…
+            </p>
+          )}
         </div>
       ) : null}
 
-      {error ? (
+      {error && phase !== "boot" ? (
         <div className="absolute inset-x-0 bottom-0 bg-[#c96f4a] p-3 text-center text-sm">
           Мир недоступен: {error}
         </div>

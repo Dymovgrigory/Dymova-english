@@ -36,7 +36,7 @@ export function Hud() {
               />
             </div>
             <p className="mt-1 text-xs text-white/60">
-              {player.xp} XP{player.xp_to_next ? ` · до уровня ${player.xp_to_next}` : ""}
+              {player.xp} XP{player.xp_to_next ? ` · до следующего уровня ${player.xp_to_next} XP` : ""}
             </p>
           </div>
           <div className="text-right">

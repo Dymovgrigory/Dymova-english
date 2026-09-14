@@ -93,9 +93,22 @@ export type FinishResult = {
   new_title: string;
   player: Player;
   quest: QuestStepResult | null;
+  /** true — повторное прохождение уже пройденной активности: тренировка, xp_delta/coins_delta равны нулю. */
+  practice: boolean;
 };
 
 const API = process.env.NEXT_PUBLIC_WORLD_API ?? "http://localhost:8000";
+
+/** Ошибка ответа API с числовым HTTP-статусом — не парсить статус из текста сообщения. */
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
 
 export function playerKey(): string {
   if (typeof window === "undefined") return "guest";
@@ -116,7 +129,7 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
       ...(init?.headers ?? {}),
     },
   });
-  if (!res.ok) throw new Error(`${path}: ${res.status} ${await res.text()}`);
+  if (!res.ok) throw new ApiError(res.status, `${path}: ${res.status} ${await res.text()}`);
   return (await res.json()) as T;
 }
 

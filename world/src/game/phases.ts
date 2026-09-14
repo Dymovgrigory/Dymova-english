@@ -21,9 +21,17 @@ export function transition(phase: Phase, event: GameEvent): Phase {
   return TRANSITIONS[phase][event] ?? phase;
 }
 
-/** Восстановление фазы по прогрессу квеста с сервера (перезагрузка страницы). */
-export function phaseForStep(step: number, status: string): Phase {
+/**
+ * Восстановление фазы по прогрессу квеста с сервера (перезагрузка страницы).
+ * totalSteps — число шагов квеста (quest.config.steps.length). Шаг, равный
+ * totalSteps или больше, значит «все шаги пройдены» — это explore, а не challenge,
+ * независимо от status: сервер может ещё не успеть проставить quest.status="completed"
+ * (например, между finish активности и complete квеста), и без этой проверки игрок
+ * попадал в challenge без сессии — тупик без единой кликабельной точки.
+ */
+export function phaseForStep(step: number, status: string, totalSteps: number): Phase {
   if (status === "completed") return "explore";
+  if (step >= totalSteps) return "explore";
   if (step <= 0) return "explore";
   if (step === 1) return "dialogue";
   return "challenge";

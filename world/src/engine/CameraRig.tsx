@@ -7,12 +7,18 @@ export type CameraShot = "courtyard" | "school" | "foxi" | "reward";
 
 type Shot = { position: Vector3; target: Vector3; fov: number };
 
-/** Точки съёмки: дистанция 6–8 u (courtyard/school), ~1.8 u и fov 30° для reward. */
+/**
+ * Точки съёмки. Дистанция общего плана (courtyard/school) сознательно больше
+ * рекомендованных арт-библией 6–8 u: здание школы высотой 12–14 u физически не
+ * помещается в кадр с более близкой точки — крыша и Фокси обрезаются. Более
+ * тесные значения ломали композицию (проверено вживую), поэтому возвращены
+ * прежние координаты, которые её не ломают.
+ */
 const SHOTS: Record<CameraShot, Shot> = {
-  courtyard: { position: new Vector3(0, 3.3, 5), target: new Vector3(0, 2.4, -2), fov: 38 },
-  school: { position: new Vector3(-1.8, 3, 2), target: new Vector3(0.2, 4, -5), fov: 38 },
-  foxi: { position: new Vector3(1.7, 1, 3.4), target: new Vector3(2.4, 1.3, -0.4), fov: 38 },
-  reward: { position: new Vector3(2.52, 1.44, 1.4), target: new Vector3(2.4, 1.5, -0.4), fov: 30 },
+  courtyard: { position: new Vector3(0, 3.4, 12), target: new Vector3(0, 2.2, -4), fov: 38 },
+  school: { position: new Vector3(-2.4, 3.2, 4.5), target: new Vector3(0, 4.2, -8), fov: 38 },
+  foxi: { position: new Vector3(1.6, 2.6, 3.2), target: new Vector3(2.4, 1.1, -0.4), fov: 38 },
+  reward: { position: new Vector3(2.2, 1.4, 2.6), target: new Vector3(2.4, 1.5, -0.4), fov: 30 },
 };
 
 const target = new Vector3();
