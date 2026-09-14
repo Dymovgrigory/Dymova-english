@@ -22,7 +22,7 @@ W11_POST_1 = dict(B.BLOG_FEED, **{
     "type": "article",
     "alias": "blog-mne-10-let-na-anglijskom",
     "title": "Как сказать <span class=\"fxb-accent\">свой возраст</span> по-английски: I'm ten и другие фразы",
-    "description": "Как сказать «мне 10 лет» по-английски: I'm ten или I am ten years old, таблица возрастов 5–18 лет с транскрипцией и мини-диалоги для тренировки. Попробуйте с ребёнком!",
+    "description": "Как сказать «мне 10 лет» по-английски: I'm ten или I am ten years old, таблица возрастов 5–18 лет с транскрипцией и мини-диалоги.",
     "category": "Учим английский",
     "date": "2026-09-12",
     "reading_time": "6 минут чтения",

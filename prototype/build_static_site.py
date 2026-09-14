@@ -11,7 +11,14 @@
   - main_combined_v7.html — отдельно собранная главная (уже содержит
     шапку и подвал сама, не оборачивается);
   - seo_meta_live.json — title/description/canonical, снятые с реально
-    опубликованных страниц сайта (не выдуманы, см. DEVLOG);
+    опубликованных страниц сайта (не выдуманы, см. DEVLOG).
+    ВАЖНО: этот файл ПЕРЕОПРЕДЕЛЯЕТ то, что извлекается из страницы
+    (extract_article_meta: title из <h1>, description из Article JSON-LD),
+    причём по каждому ключу отдельно. 14.09.2026 сюда добавлены
+    укороченные title для 54 страниц: в выдаче Google обрезается всё
+    длиннее ~65 символов, а <h1> и текст статей при этом менять не нужно.
+    Следствие: если поменять <h1> у такой страницы, title в выдаче
+    НЕ изменится — правку надо вносить и здесь;
   - seo_schema/ — sitewide LocalBusiness + по-страничные Course/FAQ/
     BreadcrumbList JSON-LD (карта — seo_schema/DEPLOY_MAP.md).
 
@@ -37,6 +44,15 @@ from pages_wave12 import WAVE12_FIGURES
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://dymova-english.ru"
+
+# Параметры-метки, не меняющие содержимое страницы: уходят в Clean-param
+# robots.txt, чтобы Яндекс склеивал такие URL с чистым адресом.
+# erid — обязательная маркировка рекламы (Яндекс.Директ, ВК, посевы),
+# utm_* — кампании, yclid/gclid/ymclid/_openstat — клики из рекламных систем.
+TRACKING_PARAMS = [
+    "erid", "utm_source", "utm_medium", "utm_campaign", "utm_content",
+    "utm_term", "yclid", "gclid", "ymclid", "_openstat", "from",
+]
 
 # page_<slug>.html -> alias на сайте. Совпадает с алиасами, которые
 # использовались при выкладке подстраниц (история — в DEVLOG).
@@ -208,7 +224,7 @@ for _a in [
     "blog-anglijskij-dlya-studentov", "blog-anglijskij-na-kanikulah",
     "blog-so-skolki-let-anglijskij", "blog-vremena-dlya-shkolnikov",
     "blog-kak-uchit-slova", "blog-oshibki-oge",
-    "blog-onlajn-ili-offlajn", "blog-kak-proverit-uroven",
+    "blog-kak-proverit-uroven",
     "blog-10-minut-v-den", "blog-audirovanie-ege",
     "blog-kak-vybrat-kursy", "blog-nositel-ili-ne-nositel",
     "blog-grammatika-prosto", "blog-skolko-slov-shkolniku",
@@ -319,6 +335,72 @@ def crumbs_from_schema_files(fnames: list) -> list | None:
 # каждой страницы. Файлы — variable font (кириллица 21 КБ, латиница 35 КБ)
 # в assets/fonts/, копируются в dist вместе с assets/.
 FONT_FACE_STYLE = "<style>" + read("assets/fonts/montserrat.css") + "</style>"
+
+
+def iso_duration_seconds(iso: str) -> int | None:
+    """PT1M34S → 94. Video-sitemap требует длительность в секундах,
+    тогда как schema.org VideoObject — в формате ISO 8601."""
+    m = re.fullmatch(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", iso or "")
+    if not m or not any(m.groups()):
+        return None
+    h, mi, s = (int(x) if x else 0 for x in m.groups())
+    return h * 3600 + mi * 60 + s
+
+
+def video_sitemap(pages: list[tuple[str, str]]) -> tuple[str, int]:
+    """sitemap-video.xml из VideoObject-разметки собранных страниц.
+
+    Источник намеренно один и тот же — JSON-LD, который уже стоит на
+    странице: так карта видео не может разойтись с разметкой. Ролики без
+    обязательных для Google полей (thumbnail_loc/title/description/
+    content_loc) в карту не попадают — неполная запись всё равно была бы
+    отклонена.
+    """
+    def esc(s: str) -> str:
+        return (s.replace("&", "&amp;").replace("<", "&lt;")
+                 .replace(">", "&gt;").replace('"', "&quot;"))
+
+    out = ['<?xml version="1.0" encoding="UTF-8"?>',
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+           'xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">']
+    total = 0
+    for loc, html in pages:
+        entries = []
+        for raw in re.findall(
+                r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
+            try:
+                data = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+            for item in (data if isinstance(data, list) else [data]):
+                if not isinstance(item, dict) or item.get("@type") != "VideoObject":
+                    continue
+                need = (item.get("thumbnailUrl"), item.get("name"),
+                        item.get("description"), item.get("contentUrl"))
+                if not all(need):
+                    continue
+                thumb, name, desc, content = need
+                fields = [f"      <video:thumbnail_loc>{esc(thumb)}</video:thumbnail_loc>",
+                          f"      <video:title>{esc(name)}</video:title>",
+                          f"      <video:description>{esc(desc)}</video:description>",
+                          f"      <video:content_loc>{esc(content)}</video:content_loc>"]
+                secs = iso_duration_seconds(item.get("duration", ""))
+                if secs:
+                    fields.append(f"      <video:duration>{secs}</video:duration>")
+                if item.get("uploadDate"):
+                    fields.append("      <video:publication_date>"
+                                  f"{esc(item['uploadDate'])}</video:publication_date>")
+                fields.append("      <video:family_friendly>"
+                              f"{'yes' if item.get('isFamilyFriendly', True) else 'no'}"
+                              "</video:family_friendly>")
+                entries.append("    <video:video>\n" + "\n".join(fields)
+                               + "\n    </video:video>")
+        if entries:
+            total += len(entries)
+            out.append(f"  <url><loc>{esc(loc)}</loc>\n"
+                       + "\n".join(entries) + "\n  </url>")
+    out.append("</urlset>")
+    return "\n".join(out) + "\n", total
 
 
 def extract_article_meta(html: str) -> tuple[str | None, str | None]:
@@ -660,10 +742,38 @@ def main() -> None:
     with open(os.path.join(out_dir, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write("\n".join(urlset) + "\n")
 
+    # sitemap-video.xml: отдельная карта для видео-поиска. Google не выводит
+    # ролики в видео-выдачу по одной VideoObject-разметке — карта видео даёт
+    # ему явный список и отчёт «Видео» в Search Console.
+    video_pages = []
+    for alias, path, _src in written:
+        page_file = (os.path.join(out_dir, "index.html") if path == "/"
+                     else os.path.join(out_dir, alias, "index.html"))
+        loc = SITE + (path if path != "/" else "/")
+        with open(page_file, "r", encoding="utf-8") as f:
+            video_pages.append((loc, f.read()))
+    video_xml, video_count = video_sitemap(video_pages)
+    with open(os.path.join(out_dir, "sitemap-video.xml"), "w", encoding="utf-8") as f:
+        f.write(video_xml)
+
     if args.noindex:
         robots = "User-agent: *\nDisallow: /\n"
     else:
-        robots = f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n"
+        # Clean-param (только Яндекс): рекламные и аналитические метки не должны
+        # плодить дубли. Проверка 14.09.2026 нашла в индексе Яндекса отдельную
+        # страницу /?erid=3MtFQRkqfB2huzBcHHttG97eGrRorw — это главная с меткой
+        # маркировки рекламы. canonical у Google это снимает, Яндекс же требует
+        # явной директивы. Директива нестандартная: другие роботы её игнорируют,
+        # поэтому вынесена в отдельную секцию User-agent: Yandex.
+        robots = (
+            "User-agent: *\n"
+            "Allow: /\n\n"
+            "User-agent: Yandex\n"
+            "Allow: /\n"
+            f"Clean-param: {'&'.join(TRACKING_PARAMS)}\n\n"
+            f"Sitemap: {SITE}/sitemap.xml\n"
+            f"Sitemap: {SITE}/sitemap-video.xml\n"
+        )
     with open(os.path.join(out_dir, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
 
@@ -751,6 +861,7 @@ def main() -> None:
             shutil.copy(feed_src, os.path.join(out_dir, feed))
 
     print(f"\nСобрано страниц: {len(written)} -> {out_dir}")
+    print(f"sitemap-video.xml: {video_count} роликов")
     print(f"robots: {'NOINDEX (стейджинг)' if args.noindex else 'индексируемый (прод)'}")
     if missing_meta:
         print(f"!! нет title/description (ни в seo_meta_live.json, ни в <h1>/<p>): {missing_meta}")

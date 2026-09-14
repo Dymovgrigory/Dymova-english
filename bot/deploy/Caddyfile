@@ -82,6 +82,23 @@ dymova-english.ru {
     # Черновик /reading-new (сессия 65): дублировал title/description /reading
     # в выдаче Яндекса — переносим на каноническую страницу.
     redir /reading-new /reading 301
+    # Волна 21 создала вторую статью на тему «онлайн или офлайн» с тем же
+    # title, что у августовской — каннибализация в выдаче. Оставлена
+    # августовская (длиннее, собирает показы в Google, лучше перелинкована).
+    redir /blog-onlajn-ili-offlajn /blog-onlajn-ili-oflajn-anglijskij 301
+    # Черновик /grammar-new: в индексе Яндекса остался, на сайте уже 404 —
+    # переносим на каноническую страницу грамматики, а не теряем в ошибке.
+    redir /grammar-new /grammar 301
+
+    # Один URL — одна страница. try_files отдаёт <path>/index.html, из-за
+    # чего /tseny, /tseny/ и /tseny/index.html возвращали 200 каждый.
+    # canonical это прикрывал, но три живых адреса вместо одного — лишний
+    # расход краулингового бюджета, поэтому склеиваем их редиректом.
+    @trailing_slash path_regexp tslash ^(/.+)/$
+    redir @trailing_slash {re.tslash.1} 301
+    redir /index.html / 301
+    @index_html path_regexp ihtml ^(/.+)/index\.html$
+    redir @index_html {re.ihtml.1} 301
     # Старые адреса pageXXXXX.html из индекса поисковиков: главная известна
     # точно, остальные — на главную, чтобы не терять переходы из выдачи.
     redir /page32889798.html / 301
