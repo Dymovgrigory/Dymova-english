@@ -91,3 +91,69 @@ def answer(external_key: str, session_id: str, index: int, choice: int) -> dict:
         "answered": len(answers),
         "total": len(questions),
     }
+
+
+def finish(external_key: str, session_id: str,
+           idempotency_key: str | None = None) -> dict:
+    """Закрывает сессию, начисляет награду и двигает шаг квеста.
+
+    Награда считается сервером по config; повторный вызов ничего не
+    начисляет второй раз и возвращает те же цифры (§160).
+    """
+    _player, session, payload = _load_session(external_key, session_id)
+    questions = payload["questions"]
+    answers = json.loads(session["answers"])
+    if len(answers) < len(questions):
+        raise core.Conflict("activity not finished: not all questions answered")
+
+    score = sum(1 for a in answers.values() if a["correct"])
+    perfect = score == len(questions)
+    spec = _activity(session["activity_id"])
+    xp = config.XP_REWARDS["vocabulary_challenge"]
+    coins = config.COIN_REWARDS["vocabulary_challenge"]
+    if perfect:
+        xp += config.PERFECT_BONUS["xp"]
+        coins += config.PERFECT_BONUS["coins"]
+
+    result = core.award(
+        external_key,
+        xp=xp, coins=coins,
+        source=session["activity_id"],
+        type_="ACTIVITY_REWARD",
+        idempotency_key=idempotency_key or f"activity-finish:{session_id}",
+    )
+    # Суммы фиксируются в сессии при первом завершении: повтор возвращает
+    # их же, хотя core.award второй раз ничего не начисляет (§160).
+    if session["status"] != "completed":
+        payload["reward"] = {"xp": xp, "coins": coins}
+        get_conn().execute(
+            "UPDATE activity_sessions SET status='completed', score=?, payload=?,"
+            " completed_at=datetime('now') WHERE id=?",
+            (score, json.dumps(payload, ensure_ascii=False), session_id),
+        )
+    reward = payload.get("reward", {"xp": xp, "coins": coins})
+
+    quest_result = None
+    quest_id = spec.get("quest_id")
+    if quest_id:
+        try:
+            quest_result = core.advance_quest_step(
+                external_key, quest_id, "activity", session["activity_id"]
+            )
+        except core.Conflict:
+            quest_result = None  # шаг уже пройден или квест на другом шаге
+
+    return {
+        "session_id": session_id,
+        "activity_id": session["activity_id"],
+        "score": score,
+        "total": len(questions),
+        "perfect": perfect,
+        "xp_delta": reward["xp"],
+        "coins_delta": reward["coins"],
+        "level_up": result["level_up"],
+        "new_level": result["new_level"],
+        "new_title": result["new_title"],
+        "player": result["player"],
+        "quest": quest_result,
+    }
