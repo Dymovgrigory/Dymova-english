@@ -47,6 +47,54 @@ export type InventoryItem = {
   acquired_at: string;
 };
 
+export type ChallengeQuestion = {
+  index: number;
+  en: string;
+  ipa: string;
+  example_en: string;
+  options: string[];
+};
+
+export type ChallengeSession = {
+  session_id: string;
+  activity_id: string;
+  title_ru: string;
+  total: number;
+  questions: ChallengeQuestion[];
+};
+
+export type AnswerResult = {
+  index: number;
+  correct: boolean;
+  correct_index: number;
+  example_en: string;
+  example_ru: string;
+  answered: number;
+  total: number;
+};
+
+export type QuestStepResult = {
+  quest_id: string;
+  step: number;
+  steps_total: number;
+  all_steps_done: boolean;
+};
+
+export type FinishResult = {
+  session_id: string;
+  activity_id: string;
+  score: number;
+  total: number;
+  perfect: boolean;
+  xp_delta: number;
+  coins_delta: number;
+  level_up: boolean;
+  new_level: number;
+  new_title: string;
+  player: Player;
+  quest: QuestStepResult | null;
+};
+
 const API = process.env.NEXT_PUBLIC_WORLD_API ?? "http://localhost:8000";
 
 export function playerKey(): string {
@@ -89,4 +137,24 @@ export const worldApi = {
     }),
   getInventory: () => call<InventoryItem[]>("/api/world/inventory"),
   getUnlocks: () => call<string[]>("/api/world/unlocks"),
+  advanceStep: (questId: string, action: string, target: string) =>
+    call<QuestStepResult>(`/api/world/quests/${questId}/step`, {
+      method: "POST",
+      body: JSON.stringify({ action, target }),
+    }),
+  startActivity: (activityId: string) =>
+    call<ChallengeSession>("/api/world/activities/start", {
+      method: "POST",
+      body: JSON.stringify({ activity_id: activityId }),
+    }),
+  answer: (sessionId: string, index: number, choice: number) =>
+    call<AnswerResult>(`/api/world/activities/${sessionId}/answer`, {
+      method: "POST",
+      body: JSON.stringify({ index, choice }),
+    }),
+  finishActivity: (sessionId: string) =>
+    call<FinishResult>(`/api/world/activities/${sessionId}/finish`, {
+      method: "POST",
+      body: JSON.stringify({ idempotency_key: crypto.randomUUID() }),
+    }),
 };
