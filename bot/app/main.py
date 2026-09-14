@@ -94,8 +94,8 @@ app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.site_cors_origins,
-    allow_methods=["POST"],
-    allow_headers=["Content-Type"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "X-World-Player"],
 )
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")

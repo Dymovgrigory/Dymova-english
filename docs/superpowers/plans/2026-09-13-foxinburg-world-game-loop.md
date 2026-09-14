@@ -2515,12 +2515,12 @@ git commit -m "feat(world): reward cinematic и сборка страницы м
 - Consumes: всё предыдущее.
 - Produces: запись сессии в DEVLOG, скриншоты фаз в `/private/tmp/claude-501/-Users-grigory-Dymova-english/e3897c78-7e69-4819-aa52-670f09ed0bf5/scratchpad/`.
 
-- [ ] **Step 1: Запустить бэкенд**
+- [x] **Step 1: Запустить бэкенд**
 
 Run (в фоне): `cd bot && .venv313/bin/python -m uvicorn app.main:app --port 8000`
 Проверка: `curl -s localhost:8000/api/world/quests -H "X-World-Player: smoke-1"` → 404 (игрока нет) — сервер отвечает.
 
-- [ ] **Step 2: Прогнать цикл по HTTP до браузера**
+- [x] **Step 2: Прогнать цикл по HTTP до браузера**
 
 ```bash
 curl -s -X POST localhost:8000/api/world/players -H "X-World-Player: smoke-1" \
@@ -2531,32 +2531,36 @@ curl -s -X POST localhost:8000/api/world/quests/first-day-at-foxinburg/step -H "
 ```
 Expected: последний ответ — `{"quest_id":"first-day-at-foxinburg","step":1,...}`.
 
-- [ ] **Step 3: Запустить фронтенд**
+- [x] **Step 3: Запустить фронтенд**
 
 Run (в фоне): `cd world && npm run dev`
 Expected: `http://localhost:3000` отвечает.
+Фактически: порт 3000 был занят посторонним процессом другого проекта пользователя (`/Users/grigory/dashenka`), dev-сервер `world` поднялся на 3002 — цикл пройден там.
 
-- [ ] **Step 4: Пройти цикл в браузере**
+- [x] **Step 4: Пройти цикл в браузере**
 
 Через claude-in-chrome: открыть `http://localhost:3000`, ввести имя, войти в мир, кликнуть школу, пройти диалог, ответить на 5 вопросов, посмотреть награду, вернуться в мир. На каждой фазе — скриншот в scratchpad (`01-boot.png` … `06-explore-after.png`). Проверить в консоли отсутствие ошибок (`read_console_messages`).
+Фактически: расширение Claude in Chrome не подключилось к сессии — цикл пройден через Playwright MCP (реальный Chromium). По пути найден и исправлен блокирующий баг CORS (`bot/app/main.py` не разрешал `GET` и заголовок `X-World-Player`) — без фикса ни один запрос из браузера не проходил. После фикса — 0 ошибок в консоли по всему циклу. Подробности и скриншоты — DEVLOG, Сессия 95.
 
-- [ ] **Step 5: Проверить восстановление прогресса**
+- [x] **Step 5: Проверить восстановление прогресса**
 
 Перезагрузить страницу на фазе `dialogue` (после клика по школе) и убедиться, что игра вернулась в диалог, а не в начало.
+Подтверждено: после `reload` игра вернулась в диалог с Фокси (реплика 1 из 3), а не на экран входа.
 
-- [ ] **Step 6: Финальные прогоны тестов**
+- [x] **Step 6: Финальные прогоны тестов**
 
 ```bash
 cd bot && .venv313/bin/python -m pytest -q
 cd ../world && npm test && npm run build
 ```
 Expected: бот — 0 failed; world — тесты зелёные, сборка успешна.
+Фактически: бот — 1185 passed; world — vitest 3 passed, `npm run build` успешно.
 
-- [ ] **Step 7: Запись в DEVLOG**
+- [x] **Step 7: Запись в DEVLOG**
 
 Добавить в `DEVLOG.md` запись «Сессия 95» по формату соседних записей: запрос владельца, что сделано (пункты по задачам плана), как проверено (числа тестов, скриншоты), решения и нюансы, осталось/следующий шаг (Postgres, auth через miniapp, Meshy-школа, вторая зона).
 
-- [ ] **Step 8: Коммит**
+- [x] **Step 8: Коммит**
 
 ```bash
 git add DEVLOG.md docs/superpowers/plans/2026-09-13-foxinburg-world-game-loop.md

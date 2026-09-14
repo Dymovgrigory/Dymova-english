@@ -5684,3 +5684,33 @@ tgapp-экран «Мои занятия», страница /schedule на са
 3. Postgres (prod) + psycopg-слой в `bot/app/world/db.py` (заглушка raise).
 4. Дальше по брифу: схема расширенная, CMS, parent dashboard, zones.
 - ВАЖНО: `world/AGENTS.md` — Next 16 имеет breaking changes, читать `node_modules/next/dist/docs` при сомнениях.
+
+### Сессия 95 — живая верификация игрового цикла School Hub + фикс CORS
+
+**Дата:** 2026-09-14. Ветка: `foxinburg-world-v1`. Задача 15 плана `docs/superpowers/plans/2026-09-13-foxinburg-world-game-loop.md`: не переписывать код, а честно проверить, что цикл, собранный в задачах 1–14, реально работает вживую в браузере, и записать результат.
+
+**Что сделано:**
+- Поднят бэкенд (`bot && .venv313/bin/python -m uvicorn app.main:app --port 8000`) и фронтенд (`world && npm run dev`, реально встал на порт 3002 — 3000 занят посторонним процессом другого проекта пользователя, `/Users/grigory/dashenka`, трогать его не стали).
+- HTTP-цикл по брифу curl'ом: создание игрока, старт квеста `first-day-at-foxinburg`, шаг `visit school-hub` → `{"quest_id":"first-day-at-foxinburg","step":1,"steps_total":3,"all_steps_done":false}` — как и ожидалось.
+- Живой цикл в браузере (Playwright MCP, т.к. расширение Claude in Chrome не подключилось к сессии): ввод имени → вход в мир → двор со светящейся школой → клик по школе → диалог с Фокси (3 реплики, кнопка «Погнали») → vocabulary-челлендж (cat/elephant/monkey/mouse/turtle, все 5 отвечены верно) → экран награды («Безошибочно! 5 из 5», +35 XP, +15 FoxCoins, открыт Библиотечный двор) → «Вернуться в Фоксинбург» → двор с обновлённым HUD (35 XP, 15 FoxCoins, квест «Поговори с Фокси»). Скриншоты всех фаз — в scratchpad сессии: `01-boot.png`, `02-yard.png`, `03-dialogue.png`, `03b-dialogue-after-reload.png`, `03c-dialogue-final.png`, `04-challenge-1.png`, `05-challenge-mid.png`, `05-reward.png`, `06-explore-after.png`.
+- Восстановление прогресса: перезагрузка страницы (`goto` того же `/world`) на фазе диалога с Фокси вернула именно в диалог (реплика 1 из 3), а не на экран входа или в начало — состояние квеста тянется с бэкенда по `X-World-Player`, не только из локального стора.
+- Финальные прогоны: `bot && .venv313/bin/python -m pytest -q` → **1185 passed**; `world && npm test` → **3 passed** (vitest); `world && npm run build` → успешно (Next 16 Turbopack, 3 статичных роута `/`, `/_not-found`, `/world`).
+
+**Найдена и исправлена реальная поломка (CORS):**
+- При первом заходе в браузер запросы `POST /api/world/players` падали с `CORS policy: No 'Access-Control-Allow-Origin' header`. Причина в двух слоях:
+  1. `bot/app/main.py` — `CORSMiddleware` был настроен только под форму заявки сайта: `allow_methods=["POST"]`, `allow_headers=["Content-Type"]`. World API использует `GET` (квесты, инвентарь) и кастомный заголовок `X-World-Player` (авторизация) — оба были не разрешены, и preflight падал с `400 Disallowed CORS headers`. Это блокировало браузерный цикл целиком, независимо от порта фронтенда — раньше это не всплывало, потому что весь предыдущий цикл проверялся только юнит-тестами (vitest/pytest), без реального CORS в браузере.
+  2. `SITE_CORS_ORIGINS` (env, дефолт в `app/config.py`) содержит только продовые домены сайта — никакого `localhost` там не было, то есть даже на «штатном» порту 3000 браузерный цикл упёрся бы в тот же CORS.
+- Правки: `bot/app/main.py` — `allow_methods=["GET", "POST"]`, `allow_headers=["Content-Type", "X-World-Player"]` (существующий сценарий формы заявки не тронут — POST и Content-Type остались). `bot/.env` (gitignored, локальный) — в `SITE_CORS_ORIGINS` добавлены `http://localhost:3000,http://localhost:3002` для локальной разработки; продовые origin'ы не убирались.
+- После фикса и рестарта бэкенда цикл в браузере прошёл с 0 ошибок в консоли (только безобидные deprecation-warning'и Three.js: `THREE.Clock`/`PCFSoftShadowMap`).
+
+**Нюансы:**
+- Порт 3000 был занят чужим процессом (`node_modules/.bin/next dev --turbopack` в `/Users/grigory/dashenka`, работает независимо от этой задачи 8+ дней) — фронтенд поднялся сам на 3002, это никак не связано с миром и трогать процесс не стали.
+- Claude in Chrome не подключился к этой сессии («Browser extension is not connected») — цикл пройден через Playwright MCP вместо него; это не влияет на достоверность проверки (реальный браузер Chromium, реальный fetch, реальный CORS).
+- `bot/.env` — gitignored и в коммит не входит; чтобы локальный dev-цикл фронтенда работал у следующего агента/разработчика, `SITE_CORS_ORIGINS` там должен включать используемый порт `world`-фронтенда (сейчас 3000 и 3002).
+
+**Осталось / следующий шаг:**
+1. Postgres-слой в `bot/app/world/db.py` (сейчас SQLite/заглушка) — нужен для прода.
+2. Auth: привязать `X-World-Player` к miniapp-auth и CRM (сейчас это просто заголовок без проверки личности).
+3. Здание школы — заменить плейсхолдер-геометрию на модель через Meshy.
+4. Вторая зона — Library Courtyard (уже анонсирована в награде как «открыта»).
+5. Звук — озвучка Фокси, эффекты челленджа и награды сейчас отсутствуют.
