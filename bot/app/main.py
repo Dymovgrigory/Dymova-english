@@ -91,11 +91,19 @@ app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
 # Форма заявки на статическом сайте шлёт POST с другого
 # origin (dymova-english.ru / new.dymova-english.ru) — без этого браузер
 # заблокирует запрос.
+# GET и заголовок X-World-Player нужны только браузерному циклу Foxinburg
+# World — расширяем их лишь при включённом WORLD_API_ENABLED, иначе CORS
+# остаётся прежним (POST + Content-Type).
+_cors_methods = ["POST"]
+_cors_headers = ["Content-Type"]
+if settings.WORLD_API_ENABLED:
+    _cors_methods = ["GET", "POST"]
+    _cors_headers = ["Content-Type", "X-World-Player"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.site_cors_origins,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "X-World-Player"],
+    allow_methods=_cors_methods,
+    allow_headers=_cors_headers,
 )
 
 _MINIAPP_DIR = Path(__file__).with_name("miniapp")
@@ -118,12 +126,14 @@ async def _start_scheduler() -> None:
         logger.exception("crm: ошибка инициализации/миграции")
     # World: сиды базовых квестов/айтемов. Открывает соединение с БД мира
     # и гоняет миграции — сбой здесь не должен ронять весь бот, только мир.
-    try:
-        from app.world import core as world_core
+    # Только при включённом флаге — иначе мир не смонтирован вовсе.
+    if settings.WORLD_API_ENABLED:
+        try:
+            from app.world import core as world_core
 
-        world_core.seed_quests()
-    except Exception:
-        logger.exception("world: ошибка seed_quests")
+            world_core.seed_quests()
+        except Exception:
+            logger.exception("world: ошибка seed_quests")
     for task in scheduler.start():
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
@@ -1996,7 +2006,11 @@ from app.platform import webhooks as platform_webhooks
 from app.world import api as world_api
 
 app.include_router(admin_api.router)
-app.include_router(world_api.router)
+if settings.WORLD_API_ENABLED:
+    # Мир пока без настоящей авторизации (личность — заголовок
+    # X-World-Player, который клиент сам себе генерирует) — маршруты
+    # /api/world/* монтируются только под явным флагом (см. .env.example).
+    app.include_router(world_api.router)
 app.include_router(platform_webhooks.router)
 app.include_router(platform_account_api.router)
 app.include_router(platform_billing_api.router)
