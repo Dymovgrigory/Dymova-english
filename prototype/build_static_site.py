@@ -470,7 +470,10 @@ def build_head(alias: str, title: str, description: str, canonical: str, noindex
 # поэтому он вынесен в PRELOADER_BODY (самое начало <body>).
 # Чат-виджет Фокси (бот, POST /api/chat) — на всех страницах, правый нижний угол.
 # Cookie-согласие (wow/foxi-consent.js) — баннер с localStorage + событие
-# 'fxb-consent' для будущего гейтинга аналитики (сессия 46).
+# 'fxb-consent' (сессия 46). С 14.09.2026 согласием управляется не вся
+# аналитика, а расширенная часть: вебвизор, карта кликов и GA4. Базовая
+# обезличенная Метрика работает всегда — подробный разбор в шапке
+# wow/foxi-analytics.js.
 WOW_SNIPPET = (
     '<link rel="stylesheet" href="/wow/foxi-wow.css">\n'
     '<link rel="stylesheet" href="/wow/foxi-consent.css">\n'
@@ -478,9 +481,10 @@ WOW_SNIPPET = (
     "<script>window.FOXI_CONFIG={modelUrl:'/mascot/foxi-rigged.glb'};</script>\n"
     '<script type="module" src="/mascot/mascot.js"></script>\n'
     '<script src="https://bot.dymova-english.ru/widget/foxi.js" defer></script>\n'
-    # Аналитика (Метрика 109945462 + GA4) — гейтится согласием fxb-consent;
-    # должна идти РАНЬШЕ foxi-consent.js, чтобы успеть подписаться на событие
-    # до announce() сохранённого выбора на DOMContentLoaded.
+    # Аналитика: базовая Метрика 109945462 стартует сразу, вебвизор, карта
+    # кликов и GA4 — по согласию fxb-consent. Порядок важен: этот файл должен
+    # идти РАНЬШЕ foxi-consent.js, иначе тот успеет разослать announce()
+    # сохранённого выбора до того, как мы подпишемся на событие.
     '<script src="/wow/foxi-analytics.js" defer></script>\n'
     '<script src="/wow/foxi-consent.js" defer></script>'
 )
