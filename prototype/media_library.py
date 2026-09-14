@@ -471,16 +471,20 @@ def video_reviews_block(limit: int | None = None) -> str:
     """Карусель видео-отзывов родителей (реальные ролики, media/reviews/)."""
     names = VIDEO_REVIEWS[:limit] if limit else VIDEO_REVIEWS
     cards, schemas = [], []
-    for n in names:
+    for i, n in enumerate(names, 1):
         cards.append(
             '<div class="fxb-vr-card">'
             f'<video controls playsinline preload="none" poster="/media/reviews/{n}.poster.webp">'
             f'<source src="/media/reviews/{n}.mp4" type="video/mp4">'
             "</video></div>"
         )
+        # name должен быть уникальным: до 14.09.2026 все семь роликов шли под
+        # одним заголовком, и в видео-выдаче это одна запись вместо семи.
+        # Нумеруем, а не придумываем содержание — что говорит каждый родитель,
+        # из манифеста не известно, а выдумывать заголовок под видео нельзя.
         payload = json.dumps({
             "@context": "https://schema.org", "@type": "VideoObject",
-            "name": "Видео-отзыв родителя о школе Фоксинбург",
+            "name": f"Видео-отзыв родителя о школе Фоксинбург — отзыв {i}",
             "description": "Родитель ученика языковой школы Фоксинбург (Долгопрудный) делится впечатлением о занятиях.",
             "contentUrl": f"{SITE}/media/reviews/{n}.mp4",
             "thumbnailUrl": f"{SITE}/media/reviews/{n}.poster.webp",
