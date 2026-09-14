@@ -116,6 +116,14 @@ async def _start_scheduler() -> None:
             logger.info("crm: миграция legacy-истории: %s", report)
     except Exception:
         logger.exception("crm: ошибка инициализации/миграции")
+    # World: сиды базовых квестов/айтемов. Открывает соединение с БД мира
+    # и гоняет миграции — сбой здесь не должен ронять весь бот, только мир.
+    try:
+        from app.world import core as world_core
+
+        world_core.seed_quests()
+    except Exception:
+        logger.exception("world: ошибка seed_quests")
     for task in scheduler.start():
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
@@ -1986,9 +1994,6 @@ from app.platform import billing_api as platform_billing_api
 from app.platform import public_api as platform_public_api
 from app.platform import webhooks as platform_webhooks
 from app.world import api as world_api
-from app.world import core as world_core
-
-world_core.seed_quests()
 
 app.include_router(admin_api.router)
 app.include_router(world_api.router)

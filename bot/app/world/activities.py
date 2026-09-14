@@ -97,14 +97,20 @@ def finish(external_key: str, session_id: str,
            idempotency_key: str | None = None) -> dict:
     """Закрывает сессию, начисляет награду и двигает шаг квеста.
 
-    Решение "начислять или нет" зависит только от status сессии, а не от
-    клиентского idempotency_key: клиент не должен иметь возможность
-    получить повторное начисление, подсунув другой ключ. Повторный finish
-    (в т.ч. с другим idempotency_key) не вызывает ни core.award, ни
-    core.advance_quest_step второй раз и отдаёт ровно те же суммы и тот же
-    результат продвижения квеста, что и первый вызов (§160).
+    Решение "начислять или нет" зависит только от status сессии и от того,
+    получал ли игрок уже награду за эту активность — а не от клиентского
+    idempotency_key, который на итоговую сумму не влияет (§160). Повторное
+    прохождение той же активности в НОВОЙ сессии разрешено как тренировка,
+    но награды не даёт: ledger хранит не более одной записи ACTIVITY_REWARD
+    на пару (игрок, активность) — это гарантирует UNIQUE по
+    idempotency_key вида "activity-reward:{player_id}:{activity_id}",
+    построенному сервером, а не по session_id (иначе новая сессия давала
+    бы новый ключ и награду можно было бы накручивать реплеем). Повторный
+    finish (в т.ч. с другим idempotency_key) той же сессии не вызывает ни
+    core.award, ни core.advance_quest_step второй раз и отдаёт ровно те же
+    суммы и тот же результат продвижения квеста, что и первый вызов.
     """
-    _player, session, payload = _load_session(external_key, session_id)
+    player, session, payload = _load_session(external_key, session_id)
     questions = payload["questions"]
     answers = json.loads(session["answers"])
     if len(answers) < len(questions):
@@ -123,6 +129,7 @@ def finish(external_key: str, session_id: str,
             "perfect": perfect,
             "xp_delta": payload["reward"]["xp"],
             "coins_delta": payload["reward"]["coins"],
+            "practice": payload.get("practice", False),
             "level_up": completion["level_up"],
             "new_level": completion["new_level"],
             "new_title": completion["new_title"],
@@ -137,13 +144,21 @@ def finish(external_key: str, session_id: str,
         xp += config.PERFECT_BONUS["xp"]
         coins += config.PERFECT_BONUS["coins"]
 
+    # Ключ идемпотентности привязан к игроку и активности, а не к сессии:
+    # сколько бы новых сессий этой активности игрок ни начал, ledger-запись
+    # ACTIVITY_REWARD для неё может появиться только одна (UNIQUE-конфликт
+    # в core._ledger делает повторное начисление no-op атомарно, без гонки).
     result = core.award(
         external_key,
         xp=xp, coins=coins,
         source=session["activity_id"],
         type_="ACTIVITY_REWARD",
-        idempotency_key=idempotency_key or f"activity-finish:{session_id}",
+        idempotency_key=f"activity-reward:{player['id']}:{session['activity_id']}",
     )
+    # Награда уже была выдана раньше (другой сессией этой же активности):
+    # requested xp/coins > 0, но ledger их отклонил как дубликат — это
+    # тренировочное прохождение.
+    practice = (xp > 0 or coins > 0) and result["xp_delta"] == 0 and result["coins_delta"] == 0
 
     quest_result = None
     quest_id = spec.get("quest_id")
@@ -157,7 +172,8 @@ def finish(external_key: str, session_id: str,
 
     # Суммы и результат квеста фиксируются в сессии при первом завершении:
     # повтор читает их отсюда, не пересчитывая и не начисляя заново.
-    payload["reward"] = {"xp": xp, "coins": coins}
+    payload["reward"] = {"xp": result["xp_delta"], "coins": result["coins_delta"]}
+    payload["practice"] = practice
     payload["quest_result"] = quest_result
     payload["completion"] = {
         "level_up": result["level_up"],
@@ -177,8 +193,9 @@ def finish(external_key: str, session_id: str,
         "score": score,
         "total": len(questions),
         "perfect": perfect,
-        "xp_delta": xp,
-        "coins_delta": coins,
+        "xp_delta": result["xp_delta"],
+        "coins_delta": result["coins_delta"],
+        "practice": practice,
         "level_up": result["level_up"],
         "new_level": result["new_level"],
         "new_title": result["new_title"],

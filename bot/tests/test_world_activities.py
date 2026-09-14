@@ -170,6 +170,54 @@ def test_finish_ignores_client_idempotency_key_and_charges_once():
     assert rows["c"] == 1
 
 
+def test_finish_first_completion_is_not_practice():
+    s = activities.start("child-1", "vocabulary-challenge-1", seed=20)
+    _answer_all(s["session_id"], correct=True)
+    r = activities.finish("child-1", s["session_id"])
+    assert r["practice"] is False
+    assert r["xp_delta"] > 0 and r["coins_delta"] > 0
+
+
+def test_finish_new_session_of_same_activity_gives_no_reward_and_is_practice():
+    """БЛОКЕР: replay-фарм через activities.start новой сессии той же
+    активности не должен давать награду второй раз — награда выдаётся
+    игроку за активность один раз, повтор — тренировка без начисления."""
+    from app.world import config
+
+    s1 = activities.start("child-1", "vocabulary-challenge-1", seed=21)
+    _answer_all(s1["session_id"], correct=True)
+    first = activities.finish("child-1", s1["session_id"])
+    assert first["practice"] is False
+    assert first["xp_delta"] == (config.XP_REWARDS["vocabulary_challenge"]
+                                 + config.PERFECT_BONUS["xp"])
+
+    s2 = activities.start("child-1", "vocabulary-challenge-1", seed=22)
+    _answer_all(s2["session_id"], correct=True)
+    second = activities.finish("child-1", s2["session_id"])
+    assert second["session_id"] != first["session_id"]
+    assert second["practice"] is True
+    assert second["xp_delta"] == 0
+    assert second["coins_delta"] == 0
+
+    p = core.get_player("child-1")
+    assert p["xp"] == first["player"]["xp"]
+    assert p["coins"] == first["player"]["coins"]
+
+    rows = get_conn().execute(
+        "SELECT COUNT(*) c FROM xp_transactions WHERE type='ACTIVITY_REWARD'"
+    ).fetchone()
+    assert rows["c"] == 1
+    coin_rows = get_conn().execute(
+        "SELECT COUNT(*) c FROM coin_transactions WHERE type='ACTIVITY_REWARD'"
+    ).fetchone()
+    assert coin_rows["c"] == 1
+
+    # Повторный finish второй (тренировочной) сессии остаётся стабильным.
+    second_again = activities.finish("child-1", s2["session_id"])
+    assert second_again["practice"] is True
+    assert second_again["xp_delta"] == 0 and second_again["coins_delta"] == 0
+
+
 def test_finish_repeat_returns_same_quest_result():
     """Повторный finish отдаёт тот же quest, что и первый, а не None."""
     core.start_quest("child-1", "first-day-at-foxinburg")

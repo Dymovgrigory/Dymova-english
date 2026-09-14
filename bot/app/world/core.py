@@ -226,27 +226,33 @@ def advance_quest_step(external_key: str, quest_id: str, action: str,
     quest = get_quest(quest_id)
     steps = quest["config"].get("steps", [])
     conn = get_conn()
-    row = conn.execute(
-        "SELECT status, step FROM quest_progress WHERE player_id=? AND quest_id=?",
-        (player["id"], quest_id),
-    ).fetchone()
-    if row is None:
-        raise Conflict("quest not started")
-    if row["status"] == "completed":
-        raise Conflict("quest already completed")
-    step = row["step"]
-    if step >= len(steps):
-        raise Conflict("all steps already done")
-    current = steps[step]
-    if current["action"] != action or current["target"] != target:
-        raise Conflict(
-            f"step mismatch: expected {current['action']}:{current['target']}"
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute(
+            "SELECT status, step FROM quest_progress WHERE player_id=? AND quest_id=?",
+            (player["id"], quest_id),
+        ).fetchone()
+        if row is None:
+            raise Conflict("quest not started")
+        if row["status"] == "completed":
+            raise Conflict("quest already completed")
+        step = row["step"]
+        if step >= len(steps):
+            raise Conflict("all steps already done")
+        current = steps[step]
+        if current["action"] != action or current["target"] != target:
+            raise Conflict(
+                f"step mismatch: expected {current['action']}:{current['target']}"
+            )
+        new_step = step + 1
+        conn.execute(
+            "UPDATE quest_progress SET step=? WHERE player_id=? AND quest_id=?",
+            (new_step, player["id"], quest_id),
         )
-    new_step = step + 1
-    conn.execute(
-        "UPDATE quest_progress SET step=? WHERE player_id=? AND quest_id=?",
-        (new_step, player["id"], quest_id),
-    )
+        conn.execute("COMMIT")
+    except Exception:
+        conn.execute("ROLLBACK")
+        raise
     return {
         "quest_id": quest_id,
         "step": new_step,
@@ -257,7 +263,17 @@ def advance_quest_step(external_key: str, quest_id: str, action: str,
 
 def complete_quest(external_key: str, quest_id: str,
                    idempotency_key: str | None = None) -> dict:
-    """Завершение квеста → награды из config.quests (server-authoritative)."""
+    """Завершение квеста → награды из config.quests (server-authoritative).
+
+    `idempotency_key` принимается из тела запроса только для обратной
+    совместимости API — на реальный ключ ledger он не влияет и нигде не
+    используется. Ledger-запись всегда идёт под ключом, который сервер
+    строит сам из player_id и quest_id: иначе клиент мог бы прислать чужой
+    предсказуемый ключ (например ключ, который сервер построил бы для
+    другого игрока) и сжечь UNIQUE-слот в ledger до того, как настоящий
+    адресат квест завершит — тот получил бы нулевую награду при помеченном
+    завершённым квесте.
+    """
     player = get_player(external_key)
     quest = get_quest(quest_id)
     conn = get_conn()
@@ -279,7 +295,7 @@ def complete_quest(external_key: str, quest_id: str,
         unlocks=rewards.get("unlocks"),
         source=quest_id,
         type_="QUEST_REWARD",
-        idempotency_key=idempotency_key or f"quest-complete:{player['id']}:{quest_id}",
+        idempotency_key=f"quest-complete:{player['id']}:{quest_id}",
     )
     conn.execute(
         "UPDATE quest_progress SET status='completed', completed_at=datetime('now')"

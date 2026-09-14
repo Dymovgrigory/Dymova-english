@@ -125,3 +125,41 @@ def test_quest_progress_survives_reload():
     quest = next(q for q in core.list_quests("child-step4")
                  if q["id"] == "first-day-at-foxinburg")
     assert quest["step"] == 1 and quest["status"] == "active"
+
+
+def test_advance_quest_step_after_all_steps_done_conflicts():
+    """Ветка step >= len(steps): все шаги уже пройдены, но квест ещё не
+    завершён (complete_quest не вызван) — дальше двигать некуда."""
+    core.get_or_create_player("child-step5")
+    core.start_quest("child-step5", "first-day-at-foxinburg")
+    core.advance_quest_step("child-step5", "first-day-at-foxinburg", "visit", "school-hub")
+    core.advance_quest_step("child-step5", "first-day-at-foxinburg", "talk", "foxi")
+    r = core.advance_quest_step("child-step5", "first-day-at-foxinburg",
+                                "activity", "vocabulary-challenge-1")
+    assert r["all_steps_done"] is True
+    with pytest.raises(core.Conflict):
+        core.advance_quest_step("child-step5", "first-day-at-foxinburg",
+                                "activity", "vocabulary-challenge-1")
+
+
+def test_complete_quest_client_idempotency_key_cannot_steal_another_players_reward():
+    """Игрок A не может сжечь ledger-слот игрока B, подсунув ключ, который
+    сервер построил бы для B: ключ клиента на выбор ledger-ключа не влияет,
+    и B получает свою награду полностью (§84, §160)."""
+    core.get_or_create_player("player-a")
+    core.get_or_create_player("player-b")
+    core.start_quest("player-a", "first-day-at-foxinburg")
+    core.start_quest("player-b", "first-day-at-foxinburg")
+
+    b_player = core.get_player("player-b")
+    key_server_would_build_for_b = f"quest-complete:{b_player['id']}:first-day-at-foxinburg"
+
+    r_a = core.complete_quest("player-a", "first-day-at-foxinburg",
+                              idempotency_key=key_server_would_build_for_b)
+    assert r_a["xp_delta"] == 60 and r_a["coins_delta"] == 30
+
+    r_b = core.complete_quest("player-b", "first-day-at-foxinburg",
+                              idempotency_key=key_server_would_build_for_b)
+    assert r_b["xp_delta"] == 60 and r_b["coins_delta"] == 30
+    p_b = core.get_player("player-b")
+    assert p_b["xp"] == 60 and p_b["coins"] == 30
