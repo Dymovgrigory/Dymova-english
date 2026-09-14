@@ -8,6 +8,7 @@
   --world-yellow: #f5ed75;
   --world-teal: #7fd8c9;
   --world-ink: #ffffff;
+  --font-ui: var(--font-display);
 }
 
 @theme inline {
