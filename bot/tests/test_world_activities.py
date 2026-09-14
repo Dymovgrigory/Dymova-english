@@ -152,3 +152,32 @@ def test_finish_without_matching_quest_step_still_awards():
     r = activities.finish("child-1", s["session_id"])
     assert r["quest"] is None
     assert r["xp_delta"] > 0
+
+
+def test_finish_ignores_client_idempotency_key_and_charges_once():
+    """Клиент не может обойти идемпотентность, подсовывая новый ключ (§160)."""
+    core.start_quest("child-1", "first-day-at-foxinburg")
+    s = activities.start("child-1", "vocabulary-challenge-1", seed=11)
+    _answer_all(s["session_id"], correct=True)
+    r1 = activities.finish("child-1", s["session_id"], idempotency_key="key-a")
+    r2 = activities.finish("child-1", s["session_id"], idempotency_key="key-b")
+    r3 = activities.finish("child-1", s["session_id"], idempotency_key="key-c")
+    assert r1["xp_delta"] == r2["xp_delta"] == r3["xp_delta"]
+    assert r1["player"]["xp"] == r2["player"]["xp"] == r3["player"]["xp"]
+    rows = get_conn().execute(
+        "SELECT COUNT(*) c FROM xp_transactions WHERE type='ACTIVITY_REWARD'"
+    ).fetchone()
+    assert rows["c"] == 1
+
+
+def test_finish_repeat_returns_same_quest_result():
+    """Повторный finish отдаёт тот же quest, что и первый, а не None."""
+    core.start_quest("child-1", "first-day-at-foxinburg")
+    core.advance_quest_step("child-1", "first-day-at-foxinburg", "visit", "school-hub")
+    core.advance_quest_step("child-1", "first-day-at-foxinburg", "talk", "foxi")
+    s = activities.start("child-1", "vocabulary-challenge-1", seed=12)
+    _answer_all(s["session_id"], correct=True)
+    first = activities.finish("child-1", s["session_id"])
+    second = activities.finish("child-1", s["session_id"])
+    assert first["quest"] is not None
+    assert second["quest"] == first["quest"]

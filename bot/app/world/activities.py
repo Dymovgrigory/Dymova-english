@@ -97,8 +97,12 @@ def finish(external_key: str, session_id: str,
            idempotency_key: str | None = None) -> dict:
     """Закрывает сессию, начисляет награду и двигает шаг квеста.
 
-    Награда считается сервером по config; повторный вызов ничего не
-    начисляет второй раз и возвращает те же цифры (§160).
+    Решение "начислять или нет" зависит только от status сессии, а не от
+    клиентского idempotency_key: клиент не должен иметь возможность
+    получить повторное начисление, подсунув другой ключ. Повторный finish
+    (в т.ч. с другим idempotency_key) не вызывает ни core.award, ни
+    core.advance_quest_step второй раз и отдаёт ровно те же суммы и тот же
+    результат продвижения квеста, что и первый вызов (§160).
     """
     _player, session, payload = _load_session(external_key, session_id)
     questions = payload["questions"]
@@ -108,6 +112,24 @@ def finish(external_key: str, session_id: str,
 
     score = sum(1 for a in answers.values() if a["correct"])
     perfect = score == len(questions)
+
+    if session["status"] == "completed":
+        completion = payload["completion"]
+        return {
+            "session_id": session_id,
+            "activity_id": session["activity_id"],
+            "score": score,
+            "total": len(questions),
+            "perfect": perfect,
+            "xp_delta": payload["reward"]["xp"],
+            "coins_delta": payload["reward"]["coins"],
+            "level_up": completion["level_up"],
+            "new_level": completion["new_level"],
+            "new_title": completion["new_title"],
+            "player": completion["player"],
+            "quest": payload.get("quest_result"),
+        }
+
     spec = _activity(session["activity_id"])
     xp = config.XP_REWARDS["vocabulary_challenge"]
     coins = config.COIN_REWARDS["vocabulary_challenge"]
@@ -122,16 +144,6 @@ def finish(external_key: str, session_id: str,
         type_="ACTIVITY_REWARD",
         idempotency_key=idempotency_key or f"activity-finish:{session_id}",
     )
-    # Суммы фиксируются в сессии при первом завершении: повтор возвращает
-    # их же, хотя core.award второй раз ничего не начисляет (§160).
-    if session["status"] != "completed":
-        payload["reward"] = {"xp": xp, "coins": coins}
-        get_conn().execute(
-            "UPDATE activity_sessions SET status='completed', score=?, payload=?,"
-            " completed_at=datetime('now') WHERE id=?",
-            (score, json.dumps(payload, ensure_ascii=False), session_id),
-        )
-    reward = payload.get("reward", {"xp": xp, "coins": coins})
 
     quest_result = None
     quest_id = spec.get("quest_id")
@@ -143,14 +155,30 @@ def finish(external_key: str, session_id: str,
         except core.Conflict:
             quest_result = None  # шаг уже пройден или квест на другом шаге
 
+    # Суммы и результат квеста фиксируются в сессии при первом завершении:
+    # повтор читает их отсюда, не пересчитывая и не начисляя заново.
+    payload["reward"] = {"xp": xp, "coins": coins}
+    payload["quest_result"] = quest_result
+    payload["completion"] = {
+        "level_up": result["level_up"],
+        "new_level": result["new_level"],
+        "new_title": result["new_title"],
+        "player": result["player"],
+    }
+    get_conn().execute(
+        "UPDATE activity_sessions SET status='completed', score=?, payload=?,"
+        " completed_at=datetime('now') WHERE id=?",
+        (score, json.dumps(payload, ensure_ascii=False), session_id),
+    )
+
     return {
         "session_id": session_id,
         "activity_id": session["activity_id"],
         "score": score,
         "total": len(questions),
         "perfect": perfect,
-        "xp_delta": reward["xp"],
-        "coins_delta": reward["coins"],
+        "xp_delta": xp,
+        "coins_delta": coins,
         "level_up": result["level_up"],
         "new_level": result["new_level"],
         "new_title": result["new_title"],
