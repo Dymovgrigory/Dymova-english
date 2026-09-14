@@ -14,7 +14,11 @@ export function SchoolBuilding({ highlighted, onClick }: Props) {
   const group = useRef<Group>(null);
 
   useFrame((state) => {
-    if (!group.current || !highlighted) return;
+    if (!group.current) return;
+    if (!highlighted) {
+      group.current.scale.setScalar(1);
+      return;
+    }
     const pulse = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.012;
     group.current.scale.setScalar(pulse);
   });

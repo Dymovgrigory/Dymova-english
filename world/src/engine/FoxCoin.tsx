@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
@@ -15,6 +15,7 @@ type Props = {
 export function FoxCoin({ position = [0, 1.2, 0], swirl = false, seed = 0 }: Props) {
   const group = useRef<Group>(null);
   const { scene } = useGLTF("/assets/school-foxcoin-v1.glb");
+  const model = useMemo(() => scene.clone(), [scene]);
 
   useFrame((state) => {
     if (!group.current) return;
@@ -33,7 +34,7 @@ export function FoxCoin({ position = [0, 1.2, 0], swirl = false, seed = 0 }: Pro
 
   return (
     <group ref={group}>
-      <primitive object={scene.clone()} scale={0.5} />
+      <primitive object={model} scale={0.5} />
       <pointLight color="#f5ed75" intensity={2.4} distance={3} />
     </group>
   );

@@ -28,5 +28,5 @@
 body {
   background: var(--world-purple-dark);
   color: var(--world-ink);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ui), Arial, Helvetica, sans-serif;
 }

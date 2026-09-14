@@ -22,6 +22,8 @@ type GameState = {
   answers: Record<number, AnswerResult>;
   finish: FinishResult | null;
   error: string | null;
+  /** Идёт сетевой запрос игрового действия — повторные клики игнорируются. */
+  busy: boolean;
   boot: (displayName: string) => Promise<void>;
   clickSchool: () => Promise<void>;
   finishDialogue: () => Promise<void>;
@@ -47,8 +49,11 @@ export const useGame = create<GameState>((set, get) => ({
   answers: {},
   finish: null,
   error: null,
+  busy: false,
 
   boot: async (displayName) => {
+    if (get().busy) return;
+    set({ busy: true });
     try {
       const player = await worldApi.ensurePlayer(displayName);
       const quests = await worldApi.getQuests();
@@ -62,40 +67,76 @@ export const useGame = create<GameState>((set, get) => ({
         phase: step === 0 ? transition("boot", "loaded") : phaseForStep(step, status),
         error: null,
       });
-    } catch (err) {
-      set({ error: String(err) });
+    } catch {
+      set({ error: "Фоксинбург не отвечает. Проверь соединение и попробуй снова." });
+    } finally {
+      set({ busy: false });
     }
   },
 
   clickSchool: async () => {
-    if (get().phase !== "explore") return;
-    await advance("visit", "school-hub");
-    set((s) => ({ phase: transition(s.phase, "school-clicked") }));
+    if (get().phase !== "explore" || get().busy) return;
+    set({ busy: true });
+    try {
+      await advance("visit", "school-hub");
+      set((s) => ({ phase: transition(s.phase, "school-clicked"), error: null }));
+    } catch {
+      set({ error: "Не получилось войти в школу. Попробуй ещё раз." });
+    } finally {
+      set({ busy: false });
+    }
   },
 
   finishDialogue: async () => {
-    if (get().phase !== "dialogue") return;
-    await advance("talk", "foxi");
-    const session = await worldApi.startActivity(ACTIVITY_ID);
-    set((s) => ({ session, answers: {}, phase: transition(s.phase, "dialogue-done") }));
+    if (get().phase !== "dialogue" || get().busy) return;
+    set({ busy: true });
+    try {
+      await advance("talk", "foxi");
+      const session = await worldApi.startActivity(ACTIVITY_ID);
+      set((s) => ({
+        session,
+        answers: {},
+        phase: transition(s.phase, "dialogue-done"),
+        error: null,
+      }));
+    } catch {
+      set({ error: "Фокси не может начать задание. Попробуй ещё раз." });
+    } finally {
+      set({ busy: false });
+    }
   },
 
   answerQuestion: async (index, choice) => {
     const session = get().session;
-    if (!session || get().answers[index]) return;
-    const result = await worldApi.answer(session.session_id, index, choice);
-    set((s) => ({ answers: { ...s.answers, [index]: result } }));
+    if (!session || get().answers[index] || get().busy) return;
+    set({ busy: true });
+    try {
+      const result = await worldApi.answer(session.session_id, index, choice);
+      set((s) => ({ answers: { ...s.answers, [index]: result }, error: null }));
+    } catch {
+      set({ error: "Ответ не отправился. Проверь соединение и попробуй снова." });
+    } finally {
+      set({ busy: false });
+    }
   },
 
   finishChallenge: async () => {
     const session = get().session;
-    if (!session) return;
-    const finish = await worldApi.finishActivity(session.session_id);
-    set((s) => ({
-      finish,
-      player: finish.player,
-      phase: transition(s.phase, "challenge-done"),
-    }));
+    if (!session || get().busy) return;
+    set({ busy: true });
+    try {
+      const finish = await worldApi.finishActivity(session.session_id);
+      set((s) => ({
+        finish,
+        player: finish.player,
+        phase: transition(s.phase, "challenge-done"),
+        error: null,
+      }));
+    } catch {
+      set({ error: "Не получилось забрать награду. Попробуй ещё раз." });
+    } finally {
+      set({ busy: false });
+    }
   },
 
   closeReward: () => {
