@@ -1,9 +1,14 @@
-/* Foxinburg cookie-consent (сессия 46).
-   Показывает баннер согласия на cookie, выбор хранит в localStorage
-   (ключ fxb_cookie_consent_v1) и рассылает событие 'fxb-consent'
-   (document, detail: {v: 'accept'|'decline'}) — задел для будущего
-   гейтинга аналитики/пикселей по согласию. window.FXBConsent.get()
-   возвращает сохранённый выбор или null. */
+/* Foxinburg cookie-consent (сессия 46, текст пересмотрен 14.09.2026).
+   Показывает баннер, выбор хранит в localStorage (ключ
+   fxb_cookie_consent_v1 — тот же ключ читает foxi-analytics.js) и
+   рассылает событие 'fxb-consent' (document, detail: {v:
+   'accept'|'decline'}). window.FXBConsent.get() возвращает сохранённый
+   выбор или null.
+
+   Чем управляет выбор: НЕ фактом сбора статистики (обезличенная Метрика
+   работает всегда — так же, как это описано в /policy), а расширенной
+   аналитикой: вебвизором, картой кликов и GA4. Раскладка и причины —
+   в шапке foxi-analytics.js. */
 (function () {
   var KEY = "fxb_cookie_consent_v1";
 
@@ -40,14 +45,19 @@
     box.id = "fxb-consent";
     box.setAttribute("role", "dialog");
     box.setAttribute("aria-live", "polite");
-    box.setAttribute("aria-label", "Согласие на использование cookie");
+    box.setAttribute("aria-label", "Cookie и аналитика");
+    // Текст информирующий, а не выпрашивающий разрешение: обезличенная
+    // статистика собирается всегда (так и записано в /policy), а кнопки
+    // управляют именно расширенной аналитикой — вебвизором, картой кликов
+    // и GA4. Называем это прямо, чтобы баннер не обещал того, чего не делает.
     box.innerHTML =
-      '<p class="fxb-consent-text">Мы используем cookie, чтобы сайт работал стабильно, ' +
-      "а мы могли понимать, что интересно посетителям, и делать школу лучше. " +
+      '<p class="fxb-consent-text">Сайт собирает обезличенную статистику посещений — ' +
+      "так мы понимаем, что интересно посетителям. Если разрешите расширенную аналитику, " +
+      "мы сможем видеть, как вы пользуетесь страницами, и быстрее чинить неудобства. " +
       'Подробнее — в <a href="/policy" target="_blank" rel="noopener">политике конфиденциальности</a>.</p>' +
       '<div class="fxb-consent-btns">' +
-      '<button type="button" class="fxb-consent-btn fxb-consent-accept">Принять</button>' +
-      '<button type="button" class="fxb-consent-btn fxb-consent-decline">Отклонить</button>' +
+      '<button type="button" class="fxb-consent-btn fxb-consent-accept">Разрешить</button>' +
+      '<button type="button" class="fxb-consent-btn fxb-consent-decline">Только необходимое</button>' +
       "</div>";
     document.body.appendChild(box);
     requestAnimationFrame(function () {
