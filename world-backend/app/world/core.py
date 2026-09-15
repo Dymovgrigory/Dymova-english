@@ -40,9 +40,14 @@ def _row_to_player(row: sqlite3.Row) -> dict:
         "coins": row["coins"],
         "level": lvl,
         "level_title": config.LEVEL_TITLES[lvl - 1],
+        "level_title_ru": config.LEVEL_TITLES_RU[min(lvl - 1, len(config.LEVEL_TITLES_RU) - 1)],
         "xp_into_level": row["xp"] - cur,
         "xp_to_next": (nxt - row["xp"]) if nxt else None,
         "streak_days": row["streak_days"],
+        "hearts": int(row["hearts"]) if "hearts" in row.keys() else 5,
+        "streak_freeze": int(row["streak_freeze"]) if "streak_freeze" in row.keys() else 0,
+        "daily_xp": int(row["daily_xp"]) if "daily_xp" in row.keys() else 0,
+        "daily_goal": int(row["daily_goal"]) if "daily_goal" in row.keys() else config.DAILY_XP_GOAL,
     }
 
 
@@ -152,6 +157,33 @@ def award(external_key: str, *, xp: int = 0, coins: int = 0, source: str,
     }
 
 
+def spend(external_key: str, *, coins: int, source: str, type_: str,
+          idempotency_key: str) -> dict:
+    if coins <= 0:
+        raise Conflict("invalid spend")
+    player = get_player(external_key)
+    if player["coins"] < coins:
+        raise Conflict("not enough coins")
+    conn = get_conn()
+    pid = player["id"]
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute("SELECT coins FROM players WHERE id=?", (pid,)).fetchone()
+        if row["coins"] < coins:
+            raise Conflict("not enough coins")
+        if _ledger(conn, "coin_transactions", pid, type_, -coins, source,
+                   f"{idempotency_key}:coins", {}):
+            conn.execute(
+                "UPDATE players SET coins=coins-?, updated_at=datetime('now') WHERE id=?",
+                (coins, pid),
+            )
+        conn.execute("COMMIT")
+    except Exception:
+        conn.execute("ROLLBACK")
+        raise
+    return {"coins_delta": -coins, "player": get_player(external_key)}
+
+
 # --- Quests (§19, §168 data-driven) ---
 
 def seed_quests() -> None:
@@ -179,6 +211,31 @@ def seed_quests() -> None:
         ("fox-badge-first", "badges", "rare", "Первая значка Фокси", None,
          "quest:first-day-at-foxinburg"),
     )
+    for sid, spec in config.STICKERS.items():
+        conn.execute(
+            "INSERT OR IGNORE INTO items (id, category, rarity, title_ru, asset_id, unlock_condition)"
+            " VALUES (?,?,?,?,?,?)",
+            (sid, "stickers", "common", spec["title_ru"], spec["emoji"],
+             f"unit:{spec['unit']}" if spec.get("unit") else "earn"),
+        )
+    from . import catalog
+    for uid, unit in catalog.load_units().items():
+        sid = f"sticker-{uid}"
+        conn.execute(
+            "INSERT OR IGNORE INTO items (id, category, rarity, title_ru, asset_id, unlock_condition)"
+            " VALUES (?,?,?,?,?,?)",
+            (sid, "stickers", "common", unit["place_ru"], "🦊", f"unit:{uid}"),
+        )
+    extras = (
+        ("foxi-cape", "clothes", "uncommon", "Плащ Фокси", "🦊"),
+        ("castle-banner", "collectibles", "uncommon", "Знамя замка", "🏳️"),
+    )
+    for item_id, category, rarity, title, asset in extras:
+        conn.execute(
+            "INSERT OR IGNORE INTO items (id, category, rarity, title_ru, asset_id, unlock_condition)"
+            " VALUES (?,?,?,?,?,?)",
+            (item_id, category, rarity, title, asset, "shop"),
+        )
 
 
 def get_quest(quest_id: str) -> dict:

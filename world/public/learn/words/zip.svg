@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 480">
+  <rect width="408" height="480" rx="36" fill="#fffaf0"/>
+  <rect x="18" y="18" width="372" height="300" rx="28" fill="#3a2953"/>
+  <g transform="translate(0,8)"><g transform="translate(84,44) scale(2.2)"><path fill="#3B88C3" d="M20.182 0H10v4.568L3.818 33.682 11.545 36l6.41-23.182z"/><path fill="#3B88C3" d="M15.818 0H26v4.568l6.182 29.114L24.454 36l-6.409-23.182z"/><path fill="#269" d="M10 2h16v2H10zm9 10h-2l-4-2h10z"/><path fill="#269" d="M12 0h2v3h-2zm10 0h2v3h-2zm-6 4h2v7h-2z"/></g></g>
+  <text x="204" y="360" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="42" font-weight="800" fill="#3a2953">zip</text>
+  <text x="204" y="408" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="26" fill="#241a30" opacity="0.55">молния</text>
+</svg>

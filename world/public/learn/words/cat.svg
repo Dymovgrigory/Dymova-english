@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 480">
+  <rect width="408" height="480" rx="36" fill="#fffaf0"/>
+  <rect x="18" y="18" width="372" height="300" rx="28" fill="#3a2953"/>
+  <g transform="translate(0,8)">
+  <ellipse cx="204" cy="230" rx="90" ry="70" fill="#ee7349"/>
+  <circle cx="204" cy="168" r="62" fill="#ee7349"/>
+  <polygon points="150,140 158,88 186,138" fill="#ee7349"/>
+  <polygon points="258,140 250,88 222,138" fill="#ee7349"/>
+  <circle cx="184" cy="162" r="8" fill="#241a30"/>
+  <circle cx="224" cy="162" r="8" fill="#241a30"/>
+  <ellipse cx="204" cy="186" rx="10" ry="7" fill="#3a2953"/>
+  <path d="M160 200 Q204 220 248 200" fill="none" stroke="#3a2953" stroke-width="5"/></g>
+  <text x="204" y="360" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="42" font-weight="800" fill="#3a2953">cat</text>
+  <text x="204" y="408" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="26" fill="#241a30" opacity="0.55">кот</text>
+</svg>

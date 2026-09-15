@@ -1,6 +1,12 @@
 PYTHON ?= python3
 
-.PHONY: help build minify all status media
+.PHONY: help build minify all status media world-dev world-stop
+
+world-dev:
+	@./scripts/foxinburg-world-dev.sh start
+
+world-stop:
+	@./scripts/foxinburg-world-dev.sh stop
 
 media:
 	@$(PYTHON) prototype/build_media.py

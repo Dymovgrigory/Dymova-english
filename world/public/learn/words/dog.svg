@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 480">
+  <rect width="408" height="480" rx="36" fill="#fffaf0"/>
+  <rect x="18" y="18" width="372" height="300" rx="28" fill="#3a2953"/>
+  <g transform="translate(0,8)">
+  <ellipse cx="210" cy="236" rx="92" ry="64" fill="#c47a3a"/>
+  <circle cx="200" cy="168" r="66" fill="#c47a3a"/>
+  <ellipse cx="132" cy="176" rx="28" ry="44" fill="#8b5a2b"/>
+  <ellipse cx="268" cy="176" rx="22" ry="36" fill="#8b5a2b"/>
+  <circle cx="184" cy="160" r="8" fill="#241a30"/>
+  <circle cx="228" cy="160" r="8" fill="#241a30"/>
+  <ellipse cx="204" cy="188" rx="16" ry="10" fill="#241a30"/>
+  <path d="M188 206 Q204 220 222 206" fill="none" stroke="#241a30" stroke-width="5"/></g>
+  <text x="204" y="360" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="42" font-weight="800" fill="#3a2953">dog</text>
+  <text x="204" y="408" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="26" fill="#241a30" opacity="0.55">собака</text>
+</svg>

@@ -9,7 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.world import api as world_api
 from app.world import core
 
-_DEFAULT_ORIGINS = "http://localhost:3000,http://localhost:3002"
+_DEFAULT_ORIGINS = (
+    "http://localhost:3000,http://localhost:3002,"
+    "http://127.0.0.1:3000,http://127.0.0.1:3002"
+)
 
 
 def _cors_origins() -> list[str]:

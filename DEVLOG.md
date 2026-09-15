@@ -5733,3 +5733,60 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Деплой:** прод бота не трогали (мира на боте больше нет даже как флага). Прод мира не выкатывали.
 **Осталось / следующий шаг:** локально `uvicorn main:app --port 8010` + `cd world && npm run dev`; дальше контент мира (школа Meshy, Library Courtyard, звук), не CRM.
 
+### Сессия 97 (агент — Cursor, Master Prompt + шесть фаз World)
+
+**Дата:** 2026-09-16
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** профессиональный промт дальнейшей разработки + довести Foxinburg World до лидера рынка (логика как часы, Meshy-арт, методика, UX, фундамент, замок).
+
+**Что сделано:**
+- Главный промт: [docs/world/FOXINBURG_WORLD_MASTER_PROMPT.md](docs/world/FOXINBURG_WORLD_MASTER_PROMPT.md) (11 разделов, реестр 17 дефектов). Старый `промт World .md` помечен историческим.
+- Фаза 1: гашение `mistakes.cleared`, дедуп промахов, реальная лига (`rank`/`size`/`top`), эхо-гейт на `listen`, монеты за практику с суточным лимитом, удалены мёртвый 3D-код (`world/src/game`, `engine`, `FoxiAnim`) и 50 неотображаемых wiki-JPG.
+- Фаза 2: `app/world/srs.py` (Лейтнер + `due_at`), практика по срокам, чекпойнты юнитов включены, `GET /learn/review`, счётчик в замке.
+- Фаза 3: пилот + ~20 листов Meshy `nano-banana-pro` (3×3), скрипт `scripts/slice_word_sheet.py`, каталог `word_sheets.py`, `ATTRIBUTION.md`. Фирменные jpg ≈212; покрытие курса: фото/бренд для всех слов, где картинка нужна (служебные — глифы).
+- Фаза 4: звуки ответа (`sfx.ts`), прогресс на экране финиша, анимация сердец, зоны нажатия 44+, отказ микрофона с обходом после 5 попыток.
+- Фаза 5: HMAC-токен игрока (`auth.py` + `WORLD_PLAYER_SECRET`), Postgres-слой в `db.py`, TTS fallback `espeak-ng`, `scripts/pregen_tts.py`, CI фронта в `world-ci.yml`, Playwright e2e-скелет, [docs/world/DEPLOY.md](docs/world/DEPLOY.md).
+- Фаза 6: таблица лиги в Башне Славы, мини-игра `/learn/sprint`, товары магазина (плащ/знамя), вечерний фильтр карты + `map-dusk.png`.
+
+**Как проверено:**
+- `cd world-backend && pytest -q` → **82 passed**
+- `cd world && npm test` → **10 passed**
+- Пилотный лист Meshy визуально принят; неоднозначные ячейки (jug/sat/pat/…) выбрасывались, не оставлялись.
+
+**Решения и нюансы:**
+- Листы 3×3 вместо одиночных картинок: ~9 кредитов → 9 карточек в одном стиле.
+- Вечерняя карта не подменяет кликабельный `map.png` (хитбоксы), а даёт CSS-фильтр + отдельный арт `map-dusk.png` для интерьеров/фона.
+- Postgres: адаптер SQL (`?`→`%s`, `INSERT OR IGNORE`, `datetime('now')`); полный e2e на Postgres в этой сессии не гонялся.
+
+**Деплой:** прод не трогали.
+**Осталось / следующий шаг:**
+1. Commit/PR ветки `foxinburg-world-v1` (по запросу владельца).
+2. Поднять `WORLD_PLAYER_SECRET` и Postgres на сервере по `docs/world/DEPLOY.md`.
+3. Живой Playwright UI с `WORLD_E2E_UI=1` после `npx playwright install`.
+4. По желанию — доп. фонетические листы Meshy.
+
+### Сессия 98 (агент — Cursor, smoke после закрытия плана World)
+
+**Дата:** 2026-09-16
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** «как правильно так и делаем дальше» / «не тупи».
+
+**Что сделано:**
+- `npm run build` падал на e2e без `@playwright/test` в tsconfig → exclude `e2e` + `playwright.config.ts`; установлен `@playwright/test`.
+- Перезапущен API :8010 (старый процесс → ложный 404 на `/learn/review`).
+- e2e: API-смоук отвечает первые шаги урока + review/league; UI только при `WORLD_E2E_UI=1`.
+- Удалены мёртвые зависимости three/r3f/zustand из `world/package.json`.
+
+**Как проверено:**
+- `pytest -q` → 82; `npm test` → 10; `npm run build` → ok; Playwright API → 1 passed.
+- Живо: `/world` «Замок Фоксинбург», review/league/sprint/path 200, lesson start 32 items.
+
+**Деплой:** нет.
+**Осталось / следующий шаг:** commit/PR по команде владельца → DEPLOY.md (секрет + Postgres).
+
+## Текущий статус / Где остановились
+
+- World: план 6 фаз закрыт; смоук после рестарта API зелёный; prod build ок.
+- Тесты: backend 82, frontend 10, e2e API 1.
+- Следующий шаг: **commit/PR**, затем деплой-контур (`WORLD_PLAYER_SECRET`, Postgres, TTS).
+
