@@ -77,8 +77,16 @@ def _textbook_section(deck):
         '<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Учебник</span>'
         '<h2 class="fxb-h2">Работаем по <span class="fxb-accent">Spotlight ' + str(grade) + '</span></h2></div>'
         '<div class="fxb-sp-book">'
+        '<div class="fxb-sp-cover-col">'
         '<img class="fxb-sp-cover" src="' + ASSETS + '/cover-sp' + str(grade) + '.jpg" '
         'alt="Учебник «Английский в фокусе» Spotlight ' + str(grade) + '" width="420" height="595" loading="lazy">'
+        '<a class="fxb-sp-pdf" href="' + ASSETS + '/spotlight-' + str(grade) +
+        '-klass-foxinburg.pdf" target="_blank" rel="noopener">'
+        '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" '
+        'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'
+        '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/>'
+        '<path d="M12 15V3"/></svg>Скачать презентацию курса</a>'
+        '</div>'
         '<div class="fxb-sp-book-txt">'
         '<p><b>«Английский в фокусе» · Spotlight ' + str(grade) + '</b><br>' + deck["authors"] + '</p>'
         '<p>Издательство «Просвещение» и Express Publishing, редакция ФГОС 2021.</p>'
@@ -87,8 +95,6 @@ def _textbook_section(deck):
         'Мы берём <b>тот же учебник</b> и подкрепляем его отработкой каждого правила, '
         'чтением вслух, говорением и домашними заданиями, на которые в школе не хватает времени.</p>'
         '<div class="fxb-sp-stats">' + stats + '</div>'
-        '<a class="fxb-btn-sec fxb-sp-pdf" href="' + ASSETS + '/spotlight-' + str(grade) +
-        '-klass-foxinburg.pdf" target="_blank" rel="noopener">Скачать презентацию курса (PDF)</a>'
         '</div></div></div></section>')
 
 
@@ -121,13 +127,20 @@ SPOTLIGHT_CSS = """
 #fxb-page .fxb-sp-mod-topic{display:block;font-size:13px;font-weight:700;color:var(--purple-2);margin-bottom:8px}
 #fxb-page .fxb-sp-mod-txt p{font-size:14px;color:var(--muted);line-height:1.55}
 #fxb-page .fxb-sp-book{display:grid;grid-template-columns:280px 1fr;gap:42px;align-items:start}
+#fxb-page .fxb-sp-cover-col{display:flex;flex-direction:column;gap:16px}
 #fxb-page .fxb-sp-cover{width:100%;height:auto;border-radius:14px;box-shadow:0 18px 44px -18px rgba(57,40,82,.45)}
+/* Своя заливка: fxb-btn-sec рассчитан на тёмный hero и на светлой секции сливается. */
+#fxb-page .fxb-sp-pdf{display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:14px 20px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14.5px;
+  color:#fff;background:linear-gradient(135deg,var(--purple-2),#7a3db0);
+  box-shadow:0 12px 26px -12px rgba(102,45,146,.6);transition:transform .18s,box-shadow .18s}
+#fxb-page .fxb-sp-pdf:hover{transform:translateY(-2px);box-shadow:0 18px 34px -14px rgba(102,45,146,.7)}
+#fxb-page .fxb-sp-pdf svg{flex:0 0 auto}
 #fxb-page .fxb-sp-book-txt p{font-size:15px;color:var(--muted);line-height:1.65;margin-bottom:14px}
 #fxb-page .fxb-sp-book-txt b{color:var(--ink)}
 #fxb-page .fxb-sp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0}
 #fxb-page .fxb-sp-stat b{display:block;font-size:26px;font-weight:900;color:var(--purple-2);line-height:1.1}
 #fxb-page .fxb-sp-stat span{font-size:12.5px;color:var(--muted);font-weight:600}
-#fxb-page .fxb-sp-pdf{display:inline-block;margin-top:6px}
 #fxb-page .fxb-sp-cols{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
 #fxb-page .fxb-sp-col h3{font-size:18px;color:var(--ink);margin-bottom:14px}
 #fxb-page .fxb-sp-list{list-style:none;padding:0;margin:0}
@@ -140,7 +153,7 @@ SPOTLIGHT_CSS = """
 @media(max-width:900px){
   #fxb-page .fxb-sp-mods,#fxb-page .fxb-sp-cols,#fxb-page .fxb-sp-extras{grid-template-columns:1fr}
   #fxb-page .fxb-sp-book{grid-template-columns:1fr;gap:26px}
-  #fxb-page .fxb-sp-cover{max-width:260px}
+  #fxb-page .fxb-sp-cover-col{max-width:280px}
   #fxb-page .fxb-sp-stats{grid-template-columns:repeat(2,1fr)}
 }
 </style>

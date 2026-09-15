@@ -9,6 +9,7 @@ SUBJECTS = (
     "Неделя знакомства — Английский язык",
     "Неделя знакомства — Китайский язык",
     "Неделя знакомства — Немецкий язык",
+    "Неделя знакомства — Испанский язык",
     "Неделя знакомства — Подготовка к школе",
 )
 
@@ -42,7 +43,7 @@ def test_event_section_states_the_offer():
 def test_every_try_button_opens_a_lead_with_a_subject():
     section = event_section()
     buttons = re.findall(r"<[^>]*data-fxb-zayavka[^>]*>", section)
-    assert len(buttons) >= 5, "4 направления + общая кнопка"
+    assert len(buttons) >= 6, "5 направлений + общая кнопка"
     for tag in buttons:
         subject = re.search(r'data-fxb-subject="([^"]+)"', tag)
         assert subject, "кнопка без data-fxb-subject: " + tag
@@ -91,4 +92,29 @@ def test_landing_has_a_try_button_on_every_direction():
     buttons = re.findall(r"<[^>]*data-fxb-zayavka[^>]*>", html)
     subjects = [re.search(r'data-fxb-subject="([^"]+)"', b).group(1) for b in buttons]
     assert all(s.startswith("Неделя знакомства") for s in subjects), subjects
-    assert len(set(subjects)) >= 5, "4 направления + общая кнопка заявки"
+    assert len(set(subjects)) >= 6, "5 направлений + общая кнопка заявки"
+
+
+def test_event_section_blends_into_the_hero():
+    """Секция лежит внутри #fxb-cinema, где действует CINEMA MODE: блоки
+    прозрачны, фон общий. Свой непрозрачный градиент давал жёсткий шов
+    и сверху, и снизу — вместо него мягкое высветление с растворяющимися краями."""
+    section = event_section()
+    base = re.search(r"#fxb-event\{(.*?)\}", section, re.S).group(1)
+    assert "background:transparent" in base.replace(" ", ""), \
+        "секция обязана быть прозрачной, фон даёт #fxb-cinema"
+    for opaque in ("#241540", "#5f2a8c", "#3a1c5e"):
+        assert opaque not in base, "непрозрачный градиент в фоне секции: " + opaque
+
+    veil = re.search(r"#fxb-event::before\{(.*?)\}", section, re.S)
+    assert veil, "нет слоя высветления"
+    veil = veil.group(1)
+    assert "rgba(255,255,255,0)" in veil.replace(" ", ""), \
+        "края слоя должны уходить в ноль, иначе шов остаётся"
+
+
+def test_landing_offers_five_directions():
+    html = B.render_page(B.PAGES["page_nedelya_znakomstva.html"])
+    for subject in SUBJECTS:
+        assert 'data-fxb-subject="%s"' % subject in html, "нет кнопки: " + subject
+    assert "4 направления" not in html, "осталось старое «4 направления»"
