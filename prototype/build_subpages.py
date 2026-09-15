@@ -116,6 +116,8 @@ CSS = """
 #fxb-page .fxb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
 #fxb-page .fxb-card{position:relative;overflow:hidden;background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:22px;padding:30px 28px;box-shadow:0 16px 36px -22px rgba(57,40,82,.4);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s;opacity:0;transform:translateY(30px)}
 #fxb-page .fxb-card.fxb-in{opacity:1;transform:none}
+#fxb-page .fxb-card-cta{margin-top:18px;width:100%;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:14px;padding:12px 18px;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--purple-2),#7a3db0);transition:transform .18s,box-shadow .18s}
+#fxb-page .fxb-card-cta:hover{transform:translateY(-1px);box-shadow:0 12px 26px -10px rgba(102,45,146,.55)}
 #fxb-page .fxb-card:hover{transform:translateY(-8px);box-shadow:0 30px 54px -24px rgba(102,45,146,.5);border-color:rgba(102,45,146,.2)}
 #fxb-page .fxb-ic{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;margin-bottom:18px;background:linear-gradient(135deg,rgba(102,45,146,.12),rgba(102,45,146,.04))}
 #fxb-page .fxb-ic svg{width:28px;height:28px;stroke:var(--purple-2)}
@@ -420,9 +422,18 @@ PREP_TEACHERS = [
 ]
 
 
-def feature_card(icon, title, text):
+def feature_card(icon, title, text, cta=None):
+    """cta: (label, subject) — кнопка заявки прямо в карточке. Нужна там, где
+    карточка описывает один конкретный выбор (направление акции): предмет
+    заявки уезжает вместе с кликом, а не выбирается потом в форме."""
+    btn = ""
+    if cta:
+        label, subject = cta
+        btn = ('<button class="fxb-card-cta" type="button" data-fxb-zayavka'
+               ' data-fxb-subject="' + escape(subject, quote=True) + '"'
+               ' data-fxb-window="Карточка направления">' + label + '</button>')
     return ('<article class="fxb-card"><div class="fxb-ic">' + svg(icon) +
-            '</div><h3>' + title + '</h3><p>' + text + '</p></article>')
+            '</div><h3>' + title + '</h3><p>' + text + '</p>' + btn + '</article>')
 
 
 def card_grid_section(kicker, title, lead, cards, light=False):
@@ -1536,13 +1547,17 @@ PAGES["page_nedelya_znakomstva.html"] = {
     "formats_lead": "Пробное занятие можно взять по любому из четырёх направлений.",
     "formats": [
         ("globe", "Английский язык", "От 2 лет до взрослых: игра и разговор для малышей, "
-                                     "школьная программа и экзамены — для школьников."),
+                                     "школьная программа и экзамены — для школьников.",
+         ("Попробовать", "Неделя знакомства — Английский язык")),
         ("globe", "Китайский язык", "Тоны и иероглифы без зубрёжки, мини-группы до 7 человек, "
-                                    "есть утренние группы для второй смены."),
+                                    "есть утренние группы для второй смены.",
+         ("Попробовать", "Неделя знакомства — Китайский язык")),
         ("globe", "Немецкий язык", "Второй иностранный для школьников — мягкий старт "
-                                   "после английского, с опорой на знакомую грамматику."),
+                                   "после английского, с опорой на знакомую грамматику.",
+         ("Попробовать", "Неделя знакомства — Немецкий язык")),
         ("cap", "Подготовка к школе", "Чтение, счёт, письмо и усидчивость для будущих "
-                                      "первоклассников 5–7 лет."),
+                                      "первоклассников 5–7 лет.",
+         ("Попробовать", "Неделя знакомства — Подготовка к школе")),
     ],
     "adv_kicker": "Пробное занятие",
     "adv_title": 'Что вы узнаете за <span class="fxb-accent">60 минут</span>',
