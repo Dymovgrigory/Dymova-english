@@ -390,5 +390,29 @@
   },
   "blog-vesennyaya-akademiya-2026-kak-eto-bylo": {
     "title": "Весенняя Академия 2026: как проходят каникулы"
+  },
+  "spotlight-2-klass": {
+    "title": "Английский по Spotlight 2 — курс для 2 класса",
+    "description": "Курс английского по школьному учебнику Spotlight 2 для 2 класса в Долгопрудном: все модули, чтение по правилам, мини-группы до 7 человек. 7 600 ₽ в месяц.",
+    "canonical": "https://dymova-english.ru/spotlight-2-klass",
+    "status": "ok"
+  },
+  "spotlight-3-klass": {
+    "title": "Английский по Spotlight 3 — курс для 3 класса",
+    "description": "Курс английского по школьному учебнику Spotlight 3 для 3 класса в Долгопрудном: все модули года, грамматика и чтение, мини-группы до 7 человек. 7 600 ₽ в месяц.",
+    "canonical": "https://dymova-english.ru/spotlight-3-klass",
+    "status": "ok"
+  },
+  "spotlight-4-klass": {
+    "title": "Английский по Spotlight 4 — курс для 4 класса",
+    "description": "Курс английского по школьному учебнику Spotlight 4 для 4 класса в Долгопрудном: программа года, подготовка к ВПР, мини-группы до 7 человек. 7 600 ₽ в месяц.",
+    "canonical": "https://dymova-english.ru/spotlight-4-klass",
+    "status": "ok"
+  },
+  "spotlight-5-klass": {
+    "title": "Английский по Spotlight 5 — курс для 5 класса",
+    "description": "Курс английского по школьному учебнику Spotlight 5 для 5 класса в Долгопрудном: все модули, переход в среднюю школу, мини-группы до 7 человек. 7 600 ₽ в месяц.",
+    "canonical": "https://dymova-english.ru/spotlight-5-klass",
+    "status": "ok"
   }
 }
