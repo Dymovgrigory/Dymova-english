@@ -70,3 +70,16 @@ def test_landing_repeats_the_offer_and_collects_leads():
     assert "data-fxb-zayavka" in html
     assert '"@type": "FAQPage"' in html
     assert '"@type": "BreadcrumbList"' in html
+
+
+def test_landing_has_a_try_button_on_every_direction():
+    """Лендинг — посадочная для рекламы: направление должно выбираться одним
+    кликом из карточки, а не только через выпадающий список в форме."""
+    html = B.render_page(B.PAGES["page_nedelya_znakomstva.html"])
+    for subject in SUBJECTS:
+        assert 'data-fxb-subject="%s"' % subject in html, "нет кнопки: " + subject
+
+    buttons = re.findall(r"<[^>]*data-fxb-zayavka[^>]*>", html)
+    subjects = [re.search(r'data-fxb-subject="([^"]+)"', b).group(1) for b in buttons]
+    assert all(s.startswith("Неделя знакомства") for s in subjects), subjects
+    assert len(set(subjects)) >= 5, "4 направления + общая кнопка заявки"
