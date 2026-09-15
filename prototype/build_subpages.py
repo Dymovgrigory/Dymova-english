@@ -739,6 +739,13 @@ def landing_page(p):
     return "\n".join(h)
 
 
+def strip_tags(s):
+    """Заголовок статьи может нести разметку подсветки (<span class="fxb-accent">).
+    Она уместна только в <h1>; в карточке списка, крошках и JSON-LD нужен
+    обычный текст, иначе теги видны читателю."""
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", s)).strip()
+
+
 def faq_jsonld(items):
     """FAQPage JSON-LD из того же списка вопросов, что и визуальный блок FAQ —
     разметка не расходится с контентом страницы."""
@@ -874,7 +881,7 @@ def article_jsonld(p):
     article = {
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": p["title"],
+        "headline": strip_tags(p["title"]),
         "description": p["description"],
         "datePublished": p["date"],
         "author": {"@type": "Organization", "name": "Языковая школа Фоксинбург"},
@@ -887,7 +894,7 @@ def article_jsonld(p):
         "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/"},
             {"@type": "ListItem", "position": 2, "name": feed_label, "item": SITE + "/" + feed_alias},
-            {"@type": "ListItem", "position": 3, "name": p["title"], "item": url},
+            {"@type": "ListItem", "position": 3, "name": strip_tags(p["title"]), "item": url},
         ],
     }
     return (
@@ -903,7 +910,7 @@ def news_card(p):
         '<div class="fxb-news-card-body">'
         '<div class="fxb-news-badges"><span class="fxb-news-badge">' + escape(p["category"]) + '</span>'
         '<span class="fxb-news-date">' + escape(format_date_ru(p["date"])) + ' · ' + escape(p["reading_time"]) + '</span></div>'
-        '<h2>' + escape(p["title"]) + '</h2>'
+        '<h2>' + escape(strip_tags(p["title"])) + '</h2>'
         '<p>' + escape(p["description"]) + '</p>'
         '<span class="fxb-news-link">Читать →</span>'
         '</div></a></article>'
@@ -956,7 +963,7 @@ def article_page(p):
     h.append('<div class="fxb-article-meta"><span>' + escape(format_date_ru(p["date"])) + '</span><span>' + escape(p["reading_time"]) + '</span></div>')
     h.append('</div></section>')
     h.append('<section class="fxb-section"><div class="fxb-wrap">')
-    h.append(crumbs_nav([("Главная", "/"), (p.get("feed_label", "Новости"), "/" + p.get("feed_alias", "novosti")), (p["title"], None)]))
+    h.append(crumbs_nav([("Главная", "/"), (p.get("feed_label", "Новости"), "/" + p.get("feed_alias", "novosti")), (strip_tags(p["title"]), None)]))
     pre_blocks, prose_html = render_article_body(p["body"])
     for block in pre_blocks:
         h.append(block)
