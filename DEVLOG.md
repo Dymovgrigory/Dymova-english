@@ -5781,12 +5781,23 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - `pytest -q` → 82; `npm test` → 10; `npm run build` → ok; Playwright API → 1 passed.
 - Живо: `/world` «Замок Фоксинбург», review/league/sprint/path 200, lesson start 32 items.
 
-**Деплой:** нет.
-**Осталось / следующий шаг:** commit/PR по команде владельца → DEPLOY.md (секрет + Postgres).
+**Деплой:** нет (см. сессию 99).
+**Осталось / следующий шаг:** PR + деплой на VM.
+
+### Сессия 99 (агент — Cursor, PR #223 + деплой World)
+
+**Дата:** 2026-09-16
+**PR:** #223 — feat(world): замок 2D, SRS, Meshy-карточки (`foxinburg-world-v1` → main)
+**Запрос владельца:** «нужен! и деплой!»
+
+**Что сделано:**
+- PR #223 открыт; push ветки.
+- `docker-compose.world.yml`, Dockerfiles, Caddy-блоки `world` / `world-api`, обновлён `docs/world/DEPLOY.md`.
+
+**Деплой:** https://world.dymova-english.ru + https://world-api.dymova-english.ru на VM (compose + Caddy reload).
 
 ## Текущий статус / Где остановились
 
-- World: план 6 фаз закрыт; смоук после рестарта API зелёный; prod build ок.
-- Тесты: backend 82, frontend 10, e2e API 1.
-- Следующий шаг: **commit/PR**, затем деплой-контур (`WORLD_PLAYER_SECRET`, Postgres, TTS).
+- World: PR #223; прод на `world` / `world-api` поддоменах.
+- Следующий шаг: дождаться CI/ревью и merge в `main`.
 

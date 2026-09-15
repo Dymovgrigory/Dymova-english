@@ -191,3 +191,14 @@ mcp.dymova-english.ru {
         reverse_proxy host.docker.internal:8766
     }
 }
+
+# Foxinburg World — Next :3002 + FastAPI :8010 (docker-compose.world.yml на хосте).
+world.dymova-english.ru {
+    encode zstd gzip
+    reverse_proxy host.docker.internal:3002
+}
+
+world-api.dymova-english.ru {
+    encode zstd gzip
+    reverse_proxy host.docker.internal:8010
+}
