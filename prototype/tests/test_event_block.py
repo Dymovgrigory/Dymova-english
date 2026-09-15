@@ -33,7 +33,9 @@ def test_event_section_present_on_main():
 
 
 def test_event_section_states_the_offer():
-    section = event_section()
+    # Суммы набраны с неразрывными пробелами (&nbsp;), чтобы «2 125 ₽» не
+    # разрывалось переносом — тест не должен зависеть от вида пробела.
+    section = re.sub(r"&nbsp;|\s+", " ", event_section())
     assert "2 125" in section, "нет суммарной выгоды"
     assert "1 125" in section, "нет старой цены пробного"
     assert "1 000" in section or "1000" in section, "нет бонусов"

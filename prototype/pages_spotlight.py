@@ -48,7 +48,7 @@ def _modules_section(deck):
     """Программа года: все модули учебника по порядку — таблицей-списком."""
     rows = []
     for num, name, topic, detail, is_starter in deck["modules"]:
-        badge = "★" if is_starter else num
+        badge = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.5l2.5 5.6 6.1.7-4.6 4.1 1.3 6-5.3-3.1-5.3 3.1 1.3-6L3.4 9.8l6.1-.7z"/></svg>' if is_starter else num
         mod = " fxb-sp-mod--starter" if is_starter else ""
         rows.append(
             '<div class="fxb-sp-mod' + mod + '">'
@@ -122,6 +122,7 @@ SPOTLIGHT_CSS = """
 #fxb-page .fxb-sp-mod{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1.5px solid rgba(102,45,146,.08);border-radius:18px;padding:22px 24px}
 #fxb-page .fxb-sp-mod--starter{border-color:var(--yellow);background:linear-gradient(135deg,#fffdf0,#fff)}
 #fxb-page .fxb-sp-mod-n{flex:0 0 auto;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:16px;color:#fff;background:var(--purple-2)}
+#fxb-page .fxb-sp-mod-n svg{width:19px;height:19px}
 #fxb-page .fxb-sp-mod--starter .fxb-sp-mod-n{background:var(--orange)}
 #fxb-page .fxb-sp-mod-txt b{display:block;font-size:17px;color:var(--ink);margin-bottom:2px}
 #fxb-page .fxb-sp-mod-topic{display:block;font-size:13px;font-weight:700;color:var(--purple-2);margin-bottom:8px}
