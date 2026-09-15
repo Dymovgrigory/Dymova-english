@@ -113,3 +113,33 @@ def test_preset_can_only_return_values_that_exist_in_the_select():
         options = set(re.findall(r'<option value="([^"]+)"', src))
         missing = sorted(v for v in returned if v not in options)
         assert not missing, "%s: preset вернёт значения, которых нет в списке: %s" % (name, missing)
+
+
+def test_pdf_button_is_visible_on_the_light_section():
+    """Кнопка скачивания стоит на светлой секции. Класс fxb-btn-sec рассчитан
+    на тёмный hero (белый текст на полупрозрачном белом) — на светлом фоне
+    она сливается и выглядит прозрачной."""
+    for grade in GRADES:
+        html = B.render_page(B.PAGES["page_spotlight_%d_klass.html" % grade])
+        link = re.search(r'<a[^>]*fxb-sp-pdf[^>]*>', html)
+        assert link, "нет кнопки скачивания презентации на Spotlight %d" % grade
+        assert "fxb-btn-sec" not in link.group(0), \
+            "кнопка PDF использует стиль тёмного hero и невидима на светлом фоне"
+
+    css = read("pages_spotlight.py")
+    rule = re.search(r"\.fxb-sp-pdf\{(.*?)\}", css, re.S)
+    assert rule, "у кнопки PDF нет собственного стиля"
+    assert "color:#fff" in rule.group(1).replace(" ", ""), "текст кнопки не задан"
+    assert "var(--purple-2)" in rule.group(1), "нет заливки фирменным цветом"
+
+
+def test_pdf_button_sits_next_to_the_textbook_cover():
+    """«Слишком низко и не видно»: кнопка была в самом низу текстовой колонки
+    после статистики. Место ей — сразу под обложкой учебника."""
+    for grade in GRADES:
+        html = B.render_page(B.PAGES["page_spotlight_%d_klass.html" % grade])
+        cover = html.find("fxb-sp-cover")
+        pdf = html.find("fxb-sp-pdf")
+        stats = html.find("fxb-sp-stats")
+        assert cover < pdf < stats, \
+            "кнопка PDF должна идти после обложки и до блока цифр (Spotlight %d)" % grade
