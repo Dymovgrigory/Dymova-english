@@ -1645,6 +1645,166 @@ function fluidSimulation(canvas, opts) {
 </script>
 
 
+<!-- ===== 1.5. Неделя знакомства (акция 21–26 сентября 2026) =====
+     Временный блок. Скрывается сам после даты в data-fxb-event-until.
+     Чтобы убрать совсем — удалить этот блок целиком вместе с его <style> и <script>. -->
+<section id="fxb-event" data-fxb-event-until="2026-09-26T23:59:59+03:00">
+  <div class="fxb-ev-bg" aria-hidden="true">
+    <img class="fxb-ev-decor" src="/assets/brand/fox-head-yellow.webp" alt="" loading="lazy">
+  </div>
+  <div class="fxb-ev-wrap">
+    <div class="fxb-ev-top">
+      <span class="fxb-ev-kicker">🦊 Неделя знакомства с Фоксинбург · 21–26 сентября</span>
+      <div class="fxb-ev-timer" id="fxbEventTimer" aria-live="polite"></div>
+    </div>
+
+    <h2 class="fxb-ev-title">Выгода до <span class="fxb-ev-sum">2 125 &#8381;</span></h2>
+    <p class="fxb-ev-lead">Не выбирайте школу вслепую. Приходите на бесплатное пробное занятие,
+      познакомьтесь с педагогом и форматом — и только потом решайте.</p>
+
+    <div class="fxb-ev-gifts">
+      <div class="fxb-ev-gift">
+        <span class="fxb-ev-gift-ic">🎁</span>
+        <div>
+          <b>Пробное занятие <span class="fxb-ev-free">0 &#8381;</span> <s>1 125 &#8381;</s></b>
+          <p>Любое направление на выбор, 60 минут, без обязательств.</p>
+        </div>
+      </div>
+      <div class="fxb-ev-gift">
+        <span class="fxb-ev-gift-ic">⭐</span>
+        <div>
+          <b>+ 1 000 &#8381; бонусов</b>
+          <p>На оплату первого абонемента, если решите продолжить обучение.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fxb-ev-dirs">
+      <article class="fxb-ev-dir">
+        <span class="fxb-ev-flag">🇬🇧</span>
+        <h3>Английский язык</h3>
+        <p>От 2 лет до взрослых — игра, разговор и школьная программа.</p>
+        <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Английский язык" data-fxb-window="Неделя знакомства">Попробовать</button>
+      </article>
+      <article class="fxb-ev-dir">
+        <span class="fxb-ev-flag">🇨🇳</span>
+        <h3>Китайский язык</h3>
+        <p>Тоны и иероглифы без зубрёжки, мини-группы и утренние потоки.</p>
+        <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Китайский язык" data-fxb-window="Неделя знакомства">Попробовать</button>
+      </article>
+      <article class="fxb-ev-dir">
+        <span class="fxb-ev-flag">🇩🇪</span>
+        <h3>Немецкий язык</h3>
+        <p>Второй иностранный для школьников — мягкий старт после английского.</p>
+        <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Немецкий язык" data-fxb-window="Неделя знакомства">Попробовать</button>
+      </article>
+      <article class="fxb-ev-dir">
+        <span class="fxb-ev-flag">🎒</span>
+        <h3>Подготовка к школе</h3>
+        <p>Чтение, счёт и письмо для будущих первоклассников 5–7 лет.</p>
+        <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Подготовка к школе" data-fxb-window="Неделя знакомства">Попробовать</button>
+      </article>
+    </div>
+
+    <div class="fxb-ev-foot">
+      <ul class="fxb-ev-check">
+        <li>Подходит ли ребёнку выбранное направление</li>
+        <li>Получается ли найти контакт с педагогом</li>
+        <li>Комфортно ли ребёнку в нашем формате</li>
+        <li>Насколько ему интересны занятия</li>
+        <li>Какой формат обучения подойдёт именно ему</li>
+      </ul>
+      <div class="fxb-ev-cta">
+        <button class="fxb-ev-btn fxb-ev-btn--main" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — пробное занятие 0 ₽" data-fxb-window="Неделя знакомства">Попробовать бесплатно</button>
+        <a class="fxb-ev-more" href="/nedelya-znakomstva">Подробнее об акции</a>
+        <p class="fxb-ev-note">Количество мест на пробные занятия ограничено.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+#fxb-event{--purple:#392852;--purple-2:#662d92;--orange:#c24712;--yellow:#fcf951;
+  font-family:'Montserrat',Arial,sans-serif;-webkit-font-smoothing:antialiased;position:relative;overflow:hidden;
+  background:radial-gradient(900px 520px at 12% 0%,rgba(194,71,18,.55),transparent 60%),linear-gradient(135deg,#241540 0%,#5f2a8c 58%,#3a1c5e 100%);
+  padding:76px 24px}
+#fxb-event *{box-sizing:border-box;margin:0;padding:0}
+#fxb-event .fxb-ev-bg{position:absolute;inset:0;pointer-events:none}
+#fxb-event .fxb-ev-decor{position:absolute;right:-70px;top:-50px;width:420px;opacity:.06;transform:rotate(14deg)}
+#fxb-event .fxb-ev-wrap{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+#fxb-event .fxb-ev-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+#fxb-event .fxb-ev-kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);color:#fff;font-weight:800;font-size:13px;letter-spacing:.04em;padding:9px 18px;border-radius:100px}
+#fxb-event .fxb-ev-timer{display:flex;gap:10px;color:#fff;font-weight:800;font-size:13px}
+#fxb-event .fxb-ev-timer b{display:block;font-size:22px;line-height:1.1;color:var(--yellow)}
+#fxb-event .fxb-ev-timer span{display:inline-block;text-align:center;background:rgba(255,255,255,.1);border-radius:12px;padding:8px 14px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+#fxb-event .fxb-ev-title{font-size:clamp(32px,5.4vw,68px);font-weight:900;color:#fff;line-height:1.02;letter-spacing:-.02em;margin-bottom:14px}
+#fxb-event .fxb-ev-sum{color:var(--yellow)}
+#fxb-event .fxb-ev-lead{max-width:640px;font-size:17px;line-height:1.6;color:rgba(255,255,255,.82);font-weight:500;margin-bottom:38px}
+#fxb-event .fxb-ev-gifts{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:40px}
+#fxb-event .fxb-ev-gift{display:flex;gap:18px;align-items:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:24px 26px;backdrop-filter:blur(8px)}
+#fxb-event .fxb-ev-gift-ic{font-size:30px;line-height:1}
+#fxb-event .fxb-ev-gift b{display:block;font-size:20px;color:#fff;margin-bottom:6px;font-weight:800}
+#fxb-event .fxb-ev-free{color:var(--yellow)}
+#fxb-event .fxb-ev-gift s{color:rgba(255,255,255,.5);font-weight:600;font-size:16px}
+#fxb-event .fxb-ev-gift p{font-size:14px;color:rgba(255,255,255,.72);line-height:1.55;font-weight:500}
+#fxb-event .fxb-ev-dirs{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:44px}
+#fxb-event .fxb-ev-dir{background:#fff;border-radius:20px;padding:26px 24px;display:flex;flex-direction:column;gap:10px;transition:transform .25s,box-shadow .25s}
+#fxb-event .fxb-ev-dir:hover{transform:translateY(-4px);box-shadow:0 22px 48px -18px rgba(0,0,0,.45)}
+#fxb-event .fxb-ev-flag{font-size:28px;line-height:1}
+#fxb-event .fxb-ev-dir h3{font-size:18px;font-weight:800;color:var(--purple)}
+#fxb-event .fxb-ev-dir p{font-size:13.5px;color:#6f6280;line-height:1.55;font-weight:500;flex:1}
+#fxb-event .fxb-ev-btn{width:100%;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:14px;padding:13px 18px;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--purple-2),#7a3db0);transition:transform .18s,box-shadow .18s}
+#fxb-event .fxb-ev-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px -10px rgba(0,0,0,.5)}
+#fxb-event .fxb-ev-foot{display:grid;grid-template-columns:1fr 360px;gap:44px;align-items:center}
+#fxb-event .fxb-ev-check{list-style:none}
+#fxb-event .fxb-ev-check li{position:relative;padding:9px 0 9px 30px;color:rgba(255,255,255,.86);font-size:15px;font-weight:500}
+#fxb-event .fxb-ev-check li::before{content:"✓";position:absolute;left:0;top:9px;color:var(--yellow);font-weight:900}
+#fxb-event .fxb-ev-cta{text-align:center}
+#fxb-event .fxb-ev-btn--main{background:linear-gradient(135deg,var(--orange),#e8594f);font-size:16px;padding:17px 26px}
+#fxb-event .fxb-ev-more{display:inline-block;margin-top:14px;color:var(--yellow);font-weight:700;font-size:14px;text-decoration:none;border-bottom:1px solid rgba(252,249,81,.4)}
+#fxb-event .fxb-ev-note{margin-top:12px;font-size:12.5px;color:rgba(255,255,255,.6);font-weight:500}
+@media(max-width:1000px){
+  #fxb-event .fxb-ev-dirs{grid-template-columns:repeat(2,1fr)}
+  #fxb-event .fxb-ev-foot{grid-template-columns:1fr;gap:28px}
+}
+@media(max-width:640px){
+  #fxb-event{padding:56px 20px}
+  #fxb-event .fxb-ev-gifts,#fxb-event .fxb-ev-dirs{grid-template-columns:1fr}
+  #fxb-event .fxb-ev-top{flex-direction:column;align-items:flex-start}
+}
+</style>
+
+<script>
+(function(){
+  /* Акция живёт до даты в data-fxb-event-until. После неё блок прячется сам,
+     чтобы сайт не пришлось срочно править в день окончания. */
+  var ev=document.getElementById('fxb-event');
+  if(!ev)return;
+  var until=new Date(ev.getAttribute('data-fxb-event-until')).getTime();
+  var timer=document.getElementById('fxbEventTimer');
+  var plural=function(n,forms){
+    var n10=n%10,n100=n%100;
+    if(n10===1&&n100!==11)return forms[0];
+    if(n10>=2&&n10<=4&&(n100<10||n100>=20))return forms[1];
+    return forms[2];
+  };
+  var tick=function(){
+    var left=until-Date.now();
+    if(left<=0){ev.hidden=true;return;}
+    var d=Math.floor(left/86400000);
+    var h=Math.floor(left%86400000/3600000);
+    var m=Math.floor(left%3600000/60000);
+    if(timer){
+      timer.innerHTML='<span><b>'+d+'</b>'+plural(d,['день','дня','дней'])+'</span>'
+        +'<span><b>'+h+'</b>'+plural(h,['час','часа','часов'])+'</span>'
+        +'<span><b>'+m+'</b>'+plural(m,['минута','минуты','минут'])+'</span>';
+    }
+  };
+  tick();
+  setInterval(tick,30000);
+})();
+</script>
+
 <!-- ===== 2. Запись на новый учебный год (CTA) (block_cta_enrollment.html) ===== -->
 
 
