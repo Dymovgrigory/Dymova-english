@@ -1,4 +1,4 @@
-/** Английская озвучка: сначала сервер (Mac say), потом Web Speech. */
+/** Английская озвучка: сервер (edge-tts / say) → Web Speech только если API молчит. */
 
 const API = (process.env.NEXT_PUBLIC_WORLD_API || "").replace(/\/$/, "");
 
@@ -32,6 +32,15 @@ function pickEnglishVoice(): SpeechSynthesisVoice | undefined {
 
 let currentAudio: HTMLAudioElement | null = null;
 
+function sniffAudioType(buf: Uint8Array, headerType: string | null): string | null {
+  if (buf.length > 3 && buf[0] === 82 && buf[1] === 73 && buf[2] === 70 && buf[3] === 70) return "audio/wav";
+  if (buf.length > 2 && buf[0] === 0xff && (buf[1] & 0xe0) === 0xe0) return "audio/mpeg";
+  if (buf.length > 2 && buf[0] === 0x49 && buf[1] === 0x44 && buf[2] === 0x33) return "audio/mpeg";
+  if (headerType?.includes("mpeg") || headerType?.includes("mp3")) return "audio/mpeg";
+  if (headerType?.includes("wav")) return "audio/wav";
+  return null;
+}
+
 export async function speakEnglish(text: string): Promise<void> {
   const phrase = (text || "").trim();
   if (!phrase) return;
@@ -41,14 +50,14 @@ export async function speakEnglish(text: string): Promise<void> {
   const url = `${API}/api/world/tts?q=${encodeURIComponent(phrase.slice(0, 80))}`;
   try {
     const ctrl = new AbortController();
-    const kill = window.setTimeout(() => ctrl.abort(), 4000);
-    const res = await fetch(url, { signal: ctrl.signal, cache: "no-store" });
+    const kill = window.setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(url, { signal: ctrl.signal, cache: "force-cache" });
     window.clearTimeout(kill);
     if (res.ok) {
       const buf = new Uint8Array(await res.arrayBuffer());
-      const riff = buf.length > 8000 && buf[0] === 82 && buf[1] === 73 && buf[2] === 70 && buf[3] === 70;
-      if (riff) {
-        const src = URL.createObjectURL(new Blob([buf], { type: "audio/wav" }));
+      const mime = sniffAudioType(buf, res.headers.get("content-type"));
+      if (mime && buf.length > 1500) {
+        const src = URL.createObjectURL(new Blob([buf], { type: mime }));
         const audio = new Audio(src);
         currentAudio = audio;
         await new Promise<void>((resolve, reject) => {
@@ -58,7 +67,7 @@ export async function speakEnglish(text: string): Promise<void> {
           };
           audio.addEventListener("ended", done, { once: true });
           audio.addEventListener("error", () => reject(new Error("play")), { once: true });
-          window.setTimeout(done, 8000);
+          window.setTimeout(done, 12000);
           void audio.play().catch(reject);
         });
         return;
@@ -74,7 +83,7 @@ export async function speakEnglish(text: string): Promise<void> {
     const utter = new SpeechSynthesisUtterance(phrase);
     utter.lang = "en-US";
     utter.rate = 0.9;
-    utter.pitch = 1.18;
+    utter.pitch = 1.05;
     const voice = pickEnglishVoice();
     if (voice) utter.voice = voice;
     utter.onend = () => resolve();

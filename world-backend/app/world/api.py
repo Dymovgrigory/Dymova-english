@@ -234,5 +234,9 @@ def tts_speak(q: str = "hello"):
     path = synth_english(q)
     if path is None:
         return JSONResponse({"ok": False, "reason": "no-voice"}, status_code=503)
-    media = "audio/wav" if path.suffix == ".wav" else "audio/aiff"
-    return FileResponse(path, media_type=media, filename="speak.wav")
+    media = {
+        ".mp3": "audio/mpeg",
+        ".wav": "audio/wav",
+        ".aiff": "audio/aiff",
+    }.get(path.suffix.lower(), "application/octet-stream")
+    return FileResponse(path, media_type=media, filename=f"speak{path.suffix}")

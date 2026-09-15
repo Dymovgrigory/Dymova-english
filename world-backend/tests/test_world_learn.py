@@ -83,7 +83,8 @@ def test_tts_english_audio(client):
     r = client.get("/api/world/tts", params={"q": "Hello"})
     assert r.status_code in (200, 503)
     if r.status_code == 200:
-        assert len(r.content) > 8000
+        assert len(r.content) > 1500
+        assert r.headers.get("content-type", "").startswith("audio/")
 
 
 def test_sprint_and_shop_cape(client):

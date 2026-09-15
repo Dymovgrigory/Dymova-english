@@ -151,7 +151,7 @@ export function CastleHub() {
               <img
                 src={artOk[active.art] === false ? CASTLE_MAP : active.art}
                 alt=""
-                className="h-full w-full object-contain"
+                className="h-full w-full object-cover object-center"
                 onError={() => setArtOk((m) => ({ ...m, [active.art]: false }))}
                 onLoad={() => setArtOk((m) => ({ ...m, [active.art]: true }))}
               />
