@@ -110,9 +110,14 @@ def test_event_section_blends_into_the_hero():
 
     veil = re.search(r"#fxb-event::before\{(.*?)\}", section, re.S)
     assert veil, "нет слоя высветления"
-    veil = veil.group(1)
-    assert "rgba(255,255,255,0)" in veil.replace(" ", ""), \
+    veil = veil.group(1).replace(" ", "")
+    assert "rgba(255,255,255,0)" in veil, \
         "края слоя должны уходить в ноль, иначе шов остаётся"
+
+    # Переход должен быть растянутым: двух-трёх стопов мало, граница читается
+    # полосой. Набираем кривую промежуточными стопами.
+    stops = re.findall(r"rgba\(255,255,255,[\d.]+\)\d+%", veil)
+    assert len(stops) >= 8, "переход задан %d стопами — мало для плавной кривой" % len(stops)
 
 
 def test_landing_offers_five_directions():
