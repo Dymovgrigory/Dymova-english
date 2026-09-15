@@ -306,9 +306,11 @@
   radial-gradient(120% 90% at 20% 20%,rgba(107,77,230,.55),transparent 60%),
   radial-gradient(110% 90% at 85% 30%,rgba(36,198,160,.35),transparent 62%),
   linear-gradient(160deg,#0b0a1a,#04050c)}
+/* Чернила мешали читать текст — приглушаем оба холста. */
 #fxb-cinema .fxb-cinema-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#fxb-fluid{opacity:.42}
 /* След чернил за курсором: поверх контента, ниже шапки (9000) и модалок (9999+) */
-#fxb-fluid-trail{position:fixed;inset:0;width:100%;height:100%;z-index:900;pointer-events:none}
+#fxb-fluid-trail{position:fixed;inset:0;width:100%;height:100%;z-index:900;pointer-events:none;opacity:.3}
 #fxb-cinema .fxb-cinema-veil{position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
     radial-gradient(120% 60% at 50% 30%,rgba(4,5,12,.6) 0%,rgba(4,5,12,.35) 45%,rgba(4,5,12,0) 75%),
@@ -335,12 +337,18 @@
 @keyframes fxbMark{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .fxb-anim{opacity:0;animation:fxbFadeUp .8s cubic-bezier(.16,1,.3,1) forwards}
 .fxb-anim-fade{opacity:0;animation:fxbFadeIn 1s cubic-bezier(.16,1,.3,1) forwards}
+/* Фоновые чернила мешали читать текст. Статическая opacity тут не работает:
+   у .fxb-anim-fade animation-fill-mode:forwards фиксирует конечный кадр (1),
+   поэтому холсту нужны свои ключевые кадры с приглушённым финалом. */
+@keyframes fxbFadeInDim{from{opacity:0}to{opacity:.42}}
+#fxb-fluid.fxb-anim-fade{animation-name:fxbFadeInDim}
 .fxb-btn-cut{clip-path:polygon(12px 0%,calc(100% - 12px) 0%,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0% calc(100% - 12px),0% 12px)}
 /* у лисы своя float-анимация — совмещаем: сначала вход, потом парение */
 #fxb-hero .fxb-slogan-fox.fxb-anim{animation:fxbFadeUp .8s cubic-bezier(.16,1,.3,1) forwards,fxbFoxFloat 4s ease-in-out .9s infinite}
 @media (prefers-reduced-motion: reduce){
   #fxb-cinema .fxb-cinema-video{display:none}
   .fxb-anim,.fxb-anim-fade{opacity:1;animation:none}
+  #fxb-fluid{opacity:.42}
   #fxb-hero .fxb-life::after{animation:none}
 }
 </style>
@@ -1654,29 +1662,33 @@ function fluidSimulation(canvas, opts) {
   </div>
   <div class="fxb-ev-wrap">
     <div class="fxb-ev-top">
-      <span class="fxb-ev-kicker">🦊 Неделя знакомства с Фоксинбург · 21–26 сентября</span>
+      <div class="fxb-ev-head">
+        <p class="fxb-ev-dates">21&ndash;26 сентября</p>
+        <h2 class="fxb-ev-title">Неделя знакомства</h2>
+        <p class="fxb-ev-offer">Пробное занятие бесплатно и&nbsp;1 000 бонусов на обучение &mdash;
+          выгода до <b>2&nbsp;125&nbsp;&#8381;</b></p>
+      </div>
       <div class="fxb-ev-countdown">
         <span class="fxb-ev-cd-label" id="fxbEventLabel">До старта акции</span>
         <div class="fxb-ev-timer" id="fxbEventTimer" aria-live="polite"></div>
       </div>
     </div>
 
-    <h2 class="fxb-ev-title">Выгода до <span class="fxb-ev-sum">2 125 &#8381;</span></h2>
     <p class="fxb-ev-lead">Не выбирайте школу вслепую. Приходите на бесплатное пробное занятие,
-      познакомьтесь с педагогом и форматом — и только потом решайте.</p>
+      познакомьтесь с педагогом и форматом &mdash; и только потом решайте.</p>
 
     <div class="fxb-ev-gifts">
       <div class="fxb-ev-gift">
-        <span class="fxb-ev-gift-ic">🎁</span>
+        <span class="fxb-ev-gift-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
         <div>
-          <b>Пробное занятие <span class="fxb-ev-free">0 &#8381;</span> <s>1 125 &#8381;</s></b>
+          <b>Пробное занятие <span class="fxb-ev-free">0&nbsp;&#8381;</span> <s>1 125&nbsp;&#8381;</s></b>
           <p>Любое направление на выбор, 60 минут, без обязательств.</p>
         </div>
       </div>
       <div class="fxb-ev-gift">
-        <span class="fxb-ev-gift-ic">⭐</span>
+        <span class="fxb-ev-gift-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.8 6.4.7-4.8 4.3 1.4 6.2-5.6-3.2-5.6 3.2 1.4-6.2L3 9.5l6.4-.7z"/></svg></span>
         <div>
-          <b>+ 1 000 &#8381; бонусов</b>
+          <b>+ 1 000&nbsp;&#8381; бонусов</b>
           <p>На оплату первого абонемента, если решите продолжить обучение.</p>
         </div>
       </div>
@@ -1684,31 +1696,31 @@ function fluidSimulation(canvas, opts) {
 
     <div class="fxb-ev-dirs">
       <article class="fxb-ev-dir">
-        <span class="fxb-ev-flag">🇬🇧</span>
+        <span class="fxb-ev-code">EN</span>
         <h3>Английский язык</h3>
         <p>От 2 лет до взрослых — игра, разговор и школьная программа.</p>
         <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Английский язык" data-fxb-window="Неделя знакомства">Попробовать</button>
       </article>
       <article class="fxb-ev-dir">
-        <span class="fxb-ev-flag">🇨🇳</span>
+        <span class="fxb-ev-code">ZH</span>
         <h3>Китайский язык</h3>
         <p>Тоны и иероглифы без зубрёжки, мини-группы и утренние потоки.</p>
         <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Китайский язык" data-fxb-window="Неделя знакомства">Попробовать</button>
       </article>
       <article class="fxb-ev-dir">
-        <span class="fxb-ev-flag">🇩🇪</span>
+        <span class="fxb-ev-code">DE</span>
         <h3>Немецкий язык</h3>
         <p>Второй иностранный для школьников — мягкий старт после английского.</p>
         <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Немецкий язык" data-fxb-window="Неделя знакомства">Попробовать</button>
       </article>
       <article class="fxb-ev-dir">
-        <span class="fxb-ev-flag">🇪🇸</span>
+        <span class="fxb-ev-code">ES</span>
         <h3>Испанский язык</h3>
         <p>Фонетика близка к русской — заговорить получается быстрее всего.</p>
         <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Испанский язык" data-fxb-window="Неделя знакомства">Попробовать</button>
       </article>
       <article class="fxb-ev-dir">
-        <span class="fxb-ev-flag">🎒</span>
+        <span class="fxb-ev-code fxb-ev-code--ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-4.5"/></svg></span>
         <h3>Подготовка к школе</h3>
         <p>Чтение, счёт и письмо для будущих первоклассников 5–7 лет.</p>
         <button class="fxb-ev-btn" type="button" data-fxb-zayavka data-fxb-subject="Неделя знакомства — Подготовка к школе" data-fxb-window="Неделя знакомства">Попробовать</button>
@@ -1748,19 +1760,22 @@ function fluidSimulation(canvas, opts) {
 #fxb-event .fxb-ev-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 #fxb-event .fxb-ev-decor{position:absolute;right:-70px;top:-50px;width:420px;opacity:.06;transform:rotate(14deg)}
 #fxb-event .fxb-ev-wrap{max-width:1240px;margin:0 auto;position:relative;z-index:1}
-#fxb-event .fxb-ev-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px}
-#fxb-event .fxb-ev-kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);color:#fff;font-weight:800;font-size:13px;letter-spacing:.04em;padding:9px 18px;border-radius:100px}
+#fxb-event .fxb-ev-top{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-bottom:22px}
+#fxb-event .fxb-ev-head{max-width:760px}
+#fxb-event .fxb-ev-dates{font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:10px}
+#fxb-event .fxb-ev-offer{font-size:19px;line-height:1.45;font-weight:500;color:rgba(255,255,255,.88);margin-top:14px}
+#fxb-event .fxb-ev-offer b{font-weight:800;color:var(--yellow)}
 #fxb-event .fxb-ev-countdown{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
-#fxb-event .fxb-ev-cd-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+#fxb-event .fxb-ev-cd-label{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.6)}
 #fxb-event .fxb-ev-timer{display:flex;gap:10px;color:#fff;font-weight:800;font-size:13px}
 #fxb-event .fxb-ev-timer b{display:block;font-size:22px;line-height:1.1;color:var(--yellow)}
 #fxb-event .fxb-ev-timer span{display:inline-block;text-align:center;background:rgba(255,255,255,.1);border-radius:12px;padding:8px 14px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
-#fxb-event .fxb-ev-title{font-size:clamp(32px,5.4vw,68px);font-weight:900;color:#fff;line-height:1.02;letter-spacing:-.02em;margin-bottom:14px}
-#fxb-event .fxb-ev-sum{color:var(--yellow)}
-#fxb-event .fxb-ev-lead{max-width:640px;font-size:17px;line-height:1.6;color:rgba(255,255,255,.82);font-weight:500;margin-bottom:38px}
+#fxb-event .fxb-ev-title{font-size:clamp(42px,7.4vw,96px);font-weight:900;color:#fff;line-height:.96;letter-spacing:-.035em}
+#fxb-event .fxb-ev-lead{max-width:600px;font-size:16px;line-height:1.6;color:rgba(255,255,255,.7);font-weight:500;margin-bottom:38px}
 #fxb-event .fxb-ev-gifts{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:40px}
 #fxb-event .fxb-ev-gift{display:flex;gap:18px;align-items:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:24px 26px;backdrop-filter:blur(8px)}
-#fxb-event .fxb-ev-gift-ic{font-size:30px;line-height:1}
+#fxb-event .fxb-ev-gift-ic{flex:0 0 auto;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(252,249,81,.14);color:var(--yellow)}
+#fxb-event .fxb-ev-gift-ic svg{width:23px;height:23px}
 #fxb-event .fxb-ev-gift b{display:block;font-size:20px;color:#fff;margin-bottom:6px;font-weight:800}
 #fxb-event .fxb-ev-free{color:var(--yellow)}
 #fxb-event .fxb-ev-gift s{color:rgba(255,255,255,.5);font-weight:600;font-size:16px}
@@ -1768,7 +1783,8 @@ function fluidSimulation(canvas, opts) {
 #fxb-event .fxb-ev-dirs{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:44px}
 #fxb-event .fxb-ev-dir{background:#fff;border-radius:20px;padding:24px 20px;display:flex;flex-direction:column;gap:10px;transition:transform .25s,box-shadow .25s}
 #fxb-event .fxb-ev-dir:hover{transform:translateY(-4px);box-shadow:0 22px 48px -18px rgba(0,0,0,.45)}
-#fxb-event .fxb-ev-flag{font-size:28px;line-height:1}
+#fxb-event .fxb-ev-code{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,rgba(102,45,146,.12),rgba(102,45,146,.05));color:var(--purple-2);font-weight:900;font-size:15px;letter-spacing:.04em}
+#fxb-event .fxb-ev-code--ic svg{width:22px;height:22px}
 #fxb-event .fxb-ev-dir h3{font-size:18px;font-weight:800;color:var(--purple)}
 #fxb-event .fxb-ev-dir p{font-size:13.5px;color:#6f6280;line-height:1.55;font-weight:500;flex:1}
 #fxb-event .fxb-ev-btn{width:100%;cursor:pointer;border:0;font-family:inherit;font-weight:800;font-size:14px;padding:13px 18px;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--purple-2),#7a3db0);transition:transform .18s,box-shadow .18s}
@@ -1776,7 +1792,7 @@ function fluidSimulation(canvas, opts) {
 #fxb-event .fxb-ev-foot{display:grid;grid-template-columns:1fr 360px;gap:44px;align-items:center}
 #fxb-event .fxb-ev-check{list-style:none}
 #fxb-event .fxb-ev-check li{position:relative;padding:9px 0 9px 30px;color:rgba(255,255,255,.86);font-size:15px;font-weight:500}
-#fxb-event .fxb-ev-check li::before{content:"✓";position:absolute;left:0;top:9px;color:var(--yellow);font-weight:900}
+#fxb-event .fxb-ev-check li::before{content:"";position:absolute;left:0;top:13px;width:15px;height:11px;background:var(--yellow);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14'%3E%3Cpath d='M1 7l6 6L19 1' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14'%3E%3Cpath d='M1 7l6 6L19 1' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
 #fxb-event .fxb-ev-cta{text-align:center}
 #fxb-event .fxb-ev-btn--main{background:linear-gradient(135deg,var(--orange),#e8594f);font-size:16px;padding:17px 26px}
 #fxb-event .fxb-ev-more{display:inline-block;margin-top:14px;color:var(--yellow);font-weight:700;font-size:14px;text-decoration:none;border-bottom:1px solid rgba(252,249,81,.4)}
@@ -1882,36 +1898,49 @@ function fluidSimulation(canvas, opts) {
           <h3 class="fxb-form-title">Оставьте заявку</h3>
           <p class="fxb-form-sub">Мы свяжемся и подберём удобное расписание</p>
           <form class="fxb-form" id="fxbEnrollForm">
-            <input type="text" name="name" placeholder="Имя родителя" required class="fxb-input">
-            <input type="text" name="child" placeholder="Имя ребёнка" required class="fxb-input">
-            <label class="fxb-datelabel">Дата рождения ребёнка<input type="date" name="birth" required class="fxb-input" min="2007-01-01" max="2025-12-31"></label>
-            <input type="tel" name="phone" placeholder="Телефон" required class="fxb-input">
-            <select name="course" class="fxb-input fxb-select" aria-label="Выбор курса">
-              <option value="Пока не определился" selected>Курс: пока не определился</option>
-              <option value="Английский язык">Английский язык</option>
-              <option value="Немецкий язык">Немецкий язык</option>
-              <option value="Китайский язык">Китайский язык</option>
-              <option value="Испанский язык">Испанский язык</option>
-              <option value="Подготовка к школе">Подготовка к школе</option>
-              <option value="Spotlight 2 — английский для 2 класса">Spotlight 2 — английский для 2 класса</option>
-              <option value="Spotlight 3 — английский для 3 класса">Spotlight 3 — английский для 3 класса</option>
-              <option value="Spotlight 4 — английский для 4 класса">Spotlight 4 — английский для 4 класса</option>
-              <option value="Spotlight 5 — английский для 5 класса">Spotlight 5 — английский для 5 класса</option>
-              <option value="Интенсивы">Интенсивы</option>
-              <option value="Репетиторские услуги (1–4 класс)">Репетиторские услуги (1–4 класс)</option>
-            </select>
-            <select name="experience" class="fxb-input fxb-select" required aria-label="Опыт занятий">
-              <option value="" disabled selected>Опыт занятий — выберите вариант</option>
-              <option value="Никогда не занимались">Никогда не занимались</option>
-              <option value="Занимались в школе">Занимались в школе</option>
-              <option value="Занимались дополнительно английским">Занимались дополнительно английским</option>
-            </select>
-            <select name="format" class="fxb-input fxb-select" aria-label="Формат занятий">
-              <option value="" disabled selected>Формат занятий</option>
-              <option value="offline-likh">Офлайн — Лихачевский</option>
-              <option value="offline-rak">Офлайн — Ракетостроителей</option>
-              <option value="online">Онлайн</option>
-            </select>
+            <div class="fxb-field-row">
+              <label class="fxb-field"><span class="fxb-field-l">Имя ребёнка</span>
+                <input type="text" name="child" required class="fxb-input" placeholder="Как зовут"></label>
+              <label class="fxb-field"><span class="fxb-field-l">Дата рождения</span>
+                <input type="date" name="birth" required class="fxb-input" min="2007-01-01" max="2025-12-31"></label>
+            </div>
+            <label class="fxb-field"><span class="fxb-field-l">Какой курс интересует</span>
+              <select name="course" class="fxb-input fxb-select">
+                <option value="Пока не определился" selected>Пока не определился</option>
+                <option value="Английский язык">Английский язык</option>
+                <option value="Немецкий язык">Немецкий язык</option>
+                <option value="Китайский язык">Китайский язык</option>
+                <option value="Испанский язык">Испанский язык</option>
+                <option value="Подготовка к школе">Подготовка к школе</option>
+                <option value="Spotlight 2 — английский для 2 класса">Spotlight 2 — английский для 2 класса</option>
+                <option value="Spotlight 3 — английский для 3 класса">Spotlight 3 — английский для 3 класса</option>
+                <option value="Spotlight 4 — английский для 4 класса">Spotlight 4 — английский для 4 класса</option>
+                <option value="Spotlight 5 — английский для 5 класса">Spotlight 5 — английский для 5 класса</option>
+                <option value="Интенсивы">Интенсивы</option>
+                <option value="Репетиторские услуги (1–4 класс)">Репетиторские услуги (1–4 класс)</option>
+              </select></label>
+            <div class="fxb-field-row">
+              <label class="fxb-field"><span class="fxb-field-l">Опыт занятий</span>
+                <select name="experience" class="fxb-input fxb-select" required>
+                  <option value="" disabled selected>Выберите вариант</option>
+                  <option value="Никогда не занимались">Никогда не занимались</option>
+                  <option value="Занимались в школе">Занимались в школе</option>
+                  <option value="Занимались дополнительно английским">Занимались дополнительно английским</option>
+                </select></label>
+              <label class="fxb-field"><span class="fxb-field-l">Формат занятий</span>
+                <select name="format" class="fxb-input fxb-select">
+                  <option value="" disabled selected>Выберите вариант</option>
+                  <option value="offline-likh">Офлайн — Лихачевский</option>
+                  <option value="offline-rak">Офлайн — Ракетостроителей</option>
+                  <option value="online">Онлайн</option>
+                </select></label>
+            </div>
+            <div class="fxb-field-row">
+              <label class="fxb-field"><span class="fxb-field-l">Ваше имя</span>
+                <input type="text" name="name" required class="fxb-input" placeholder="Как к вам обращаться"></label>
+              <label class="fxb-field"><span class="fxb-field-l">Телефон</span>
+                <input type="tel" name="phone" required class="fxb-input" placeholder="+7 (___) ___-__-__"></label>
+            </div>
             <p class="fxb-form-err" style="display:none;color:#e0526a;font-size:13px;font-weight:600"></p>
             <button type="submit" class="fxb-submit fxb-btn-cut">Забронировать место</button>
           </form>
@@ -1951,6 +1980,10 @@ function fluidSimulation(canvas, opts) {
 #fxb-enrollment .fxb-form-title{font-size:20px;font-weight:800;color:var(--purple);margin-bottom:6px}
 #fxb-enrollment .fxb-form-sub{font-size:13px;color:#6f6280;font-weight:500;margin-bottom:20px}
 #fxb-enrollment .fxb-form{display:flex;flex-direction:column;gap:12px}
+#fxb-enrollment .fxb-field{display:grid;gap:6px;min-width:0}
+#fxb-enrollment .fxb-field-l{font-size:13px;font-weight:600;color:#6f6280}
+#fxb-enrollment .fxb-field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){#fxb-enrollment .fxb-field-row{grid-template-columns:1fr}}
 #fxb-enrollment .fxb-input{width:100%;padding:13px 16px;border:1.5px solid rgba(102,45,146,.12);border-radius:12px;font-family:inherit;font-size:14px;font-weight:500;color:var(--purple);background:#faf8fd;transition:border-color .2s,box-shadow .2s;outline:none}
 #fxb-enrollment .fxb-input:focus{border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.1)}
 #fxb-enrollment .fxb-input::placeholder{color:#6e6780}
@@ -1979,6 +2012,12 @@ function fluidSimulation(canvas, opts) {
 #fxb-enrollment .fxb-form-title{color:#fff}
 #fxb-enrollment .fxb-form-sub{color:rgba(255,255,255,.72)}
 #fxb-enrollment .fxb-input{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.24);color:#fff}
+#fxb-enrollment .fxb-field-l{color:rgba(255,255,255,.72)}
+#fxb-enrollment .fxb-input::placeholder{color:rgba(255,255,255,.45)}
+/* Стрелка селекта — светлая, иначе фиолетовая на тёмном не видна; справа
+   место под неё, иначе длинный вариант заезжает под стрелку. */
+#fxb-enrollment .fxb-select{padding-right:40px;text-overflow:ellipsis;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-opacity='.7' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")}
+#fxb-enrollment .fxb-select option{color:var(--purple);background:#fff}
 #fxb-enrollment .fxb-input:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(252,249,81,.15);background:rgba(255,255,255,.18)}
 #fxb-enrollment .fxb-input::placeholder{color:rgba(255,255,255,.55)}
 #fxb-enrollment .fxb-datelabel{display:grid;gap:6px;font-size:12px;font-weight:700;color:rgba(255,255,255,.72)}
@@ -4611,7 +4650,7 @@ fxbGalleryInit();
 
 
 <div id="fxb-page">
-<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal" hidden><div class="fxb-modal__ov" data-fxb-close></div><div class="fxb-modal__box fxb-zbox" role="dialog" aria-modal="true" aria-label="Заявка"><button type="button" class="fxb-modal__x" data-fxb-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="fxb-zview fxb-zview--form"><h3 class="fxb-ztitle">Оставить заявку</h3><p class="fxb-zsub">Оставьте имя и телефон — перезвоним, расскажем расписание и подберём удобный формат.</p><form class="fxb-zform" id="fxbZform" name="fxbZform" role="form"><input type="hidden" name="formname" value=""><input type="hidden" name="Предмет" value=""><input type="hidden" name="Раздел" value=""><input type="hidden" name="Страница" value=""><label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" required aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label><label class="fxb-zfield"><span>Имя ребёнка</span><input type="text" name="ChildName" required aria-required="true" placeholder="Как зовут ребёнка"></label><label class="fxb-zfield"><span>Дата рождения ребёнка</span><input type="date" name="BirthDate" required aria-required="true" min="2007-01-01" max="2025-12-31"></label><label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" required aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label><label class="fxb-zfield"><span>Какой курс интересует</span><select name="Course" class="fxb-zselect"><option value="Пока не определился" selected>Пока не определился</option><option value="Английский язык">Английский язык</option><option value="Немецкий язык">Немецкий язык</option><option value="Китайский язык">Китайский язык</option><option value="Испанский язык">Испанский язык</option><option value="Подготовка к школе">Подготовка к школе</option><option value="Spotlight 2 — английский для 2 класса">Spotlight 2 — английский для 2 класса</option><option value="Spotlight 3 — английский для 3 класса">Spotlight 3 — английский для 3 класса</option><option value="Spotlight 4 — английский для 4 класса">Spotlight 4 — английский для 4 класса</option><option value="Spotlight 5 — английский для 5 класса">Spotlight 5 — английский для 5 класса</option><option value="Интенсивы">Интенсивы</option><option value="Репетиторские услуги (1–4 класс)">Репетиторские услуги (1–4 класс)</option></select></label><label class="fxb-zfield"><span>Опыт занятий</span><select name="Experience" class="fxb-zselect" required aria-required="true"><option value="" disabled selected>Выберите вариант</option><option value="Никогда не занимались">Никогда не занимались</option><option value="Занимались в школе">Занимались в школе</option><option value="Занимались дополнительно английским" data-fxb-exp-extra>Занимались дополнительно английским</option></select></label><button type="submit" class="fxb-btn-main fxb-zsubmit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Отправить заявку</button><p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p><div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-top:6px"></div></div></form><div class="fxb-zalt"><span class="fxb-zalt-l">Или свяжитесь напрямую</span><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div><div class="fxb-zview fxb-zview--thanks" hidden><div class="fxb-zok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3 class="fxb-ztitle">Заявка сформирована!</h3><p class="fxb-zsub">Спасибо! Заявка отправлена — мы свяжемся с вами. Можно также написать нам:</p><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div></div>
+<div class="fxb-modal fxb-zmodal" id="fxb-zayavka-modal" hidden><div class="fxb-modal__ov" data-fxb-close></div><div class="fxb-modal__box fxb-zbox" role="dialog" aria-modal="true" aria-label="Заявка"><button type="button" class="fxb-modal__x" data-fxb-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="fxb-zview fxb-zview--form"><div class="fxb-zhead"><h3 class="fxb-ztitle">Оставить заявку</h3><p class="fxb-zsub">Перезвоним, расскажем расписание и подберём удобный формат.</p></div><form class="fxb-zform" id="fxbZform" name="fxbZform" role="form"><input type="hidden" name="formname" value=""><input type="hidden" name="Предмет" value=""><input type="hidden" name="Раздел" value=""><input type="hidden" name="Страница" value=""><div class="fxb-zscroll"><div class="fxb-zgroup"><p class="fxb-zgroup-l">О ребёнке</p><div class="fxb-zrow"><label class="fxb-zfield"><span>Имя ребёнка</span><input type="text" name="ChildName" required aria-required="true" placeholder="Как зовут"></label><label class="fxb-zfield"><span>Дата рождения</span><input type="date" name="BirthDate" required aria-required="true" min="2007-01-01" max="2025-12-31"></label></div><label class="fxb-zfield"><span>Какой курс интересует</span><select name="Course" class="fxb-zselect"><option value="Пока не определился" selected>Пока не определился</option><option value="Английский язык">Английский язык</option><option value="Немецкий язык">Немецкий язык</option><option value="Китайский язык">Китайский язык</option><option value="Испанский язык">Испанский язык</option><option value="Подготовка к школе">Подготовка к школе</option><option value="Spotlight 2 — английский для 2 класса">Spotlight 2 — английский для 2 класса</option><option value="Spotlight 3 — английский для 3 класса">Spotlight 3 — английский для 3 класса</option><option value="Spotlight 4 — английский для 4 класса">Spotlight 4 — английский для 4 класса</option><option value="Spotlight 5 — английский для 5 класса">Spotlight 5 — английский для 5 класса</option><option value="Интенсивы">Интенсивы</option><option value="Репетиторские услуги (1–4 класс)">Репетиторские услуги (1–4 класс)</option></select></label><label class="fxb-zfield"><span>Опыт занятий</span><select name="Experience" class="fxb-zselect" required aria-required="true"><option value="" disabled selected>Выберите вариант</option><option value="Никогда не занимались">Никогда не занимались</option><option value="Занимались в школе">Занимались в школе</option><option value="Занимались дополнительно английским" data-fxb-exp-extra>Занимались дополнительно английским</option></select></label></div><div class="fxb-zgroup"><p class="fxb-zgroup-l">Как с вами связаться</p><div class="fxb-zrow"><label class="fxb-zfield"><span>Ваше имя</span><input type="text" name="Name" required aria-required="true" autocomplete="name" placeholder="Как к вам обращаться"></label><label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" required aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label></div></div><div class="fxb-zalt"><span class="fxb-zalt-l">Удобнее написать или позвонить?</span><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div><div class="fxb-zfoot"><div class="js-errorbox-all" style="display:none"><div class="t-form__errorbox-text js-rule-error js-rule-error-all" style="color:#e0526a;font-size:13px;font-weight:600;margin-bottom:8px"></div></div><button type="submit" class="fxb-btn-main fxb-zsubmit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Отправить заявку</button><p class="fxb-znote">Нажимая кнопку, вы соглашаетесь с <a href="/policy" target="_blank" rel="noopener">политикой конфиденциальности</a>.</p></div></form></div><div class="fxb-zview fxb-zview--thanks" hidden><div class="fxb-zok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3 class="fxb-ztitle">Заявка отправлена</h3><p class="fxb-zsub">Спасибо! Мы свяжемся с вами. Можно также написать нам:</p><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div></div><div class="fxb-zview fxb-zview--thanks" hidden><div class="fxb-zok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3 class="fxb-ztitle">Заявка сформирована!</h3><p class="fxb-zsub">Спасибо! Заявка отправлена — мы свяжемся с вами. Можно также написать нам:</p><div class="fxb-zalt-btns"><a class="fxb-zchip" target="_blank" rel="noopener" href="https://max.ru/id611904726658_bot">Max</a><a class="fxb-zchip" href="tel:+79939232309">Позвонить</a></div></div></div></div>
 </div>
 <style>
 /* ===== FXB-ZAYAVKA: попап-форма заявки ===== */
@@ -4620,33 +4659,53 @@ fxbGalleryInit();
 #fxb-page .fxb-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
 #fxb-page .fxb-modal[hidden]{display:none}
 #fxb-page .fxb-modal__ov{position:absolute;inset:0;background:rgba(20,12,36,.72);backdrop-filter:blur(4px)}
-#fxb-page .fxb-modal__box{position:relative;z-index:1;width:min(900px,100%);background:#fff;border-radius:20px;padding:14px 14px 10px;box-shadow:0 40px 90px -30px rgba(0,0,0,.6);animation:fxbpop .3s ease}
-#fxb-page .fxb-modal__x{position:absolute;top:-16px;right:-16px;width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;background:#fff;color:var(--ink);display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(0,0,0,.4)}
+#fxb-page .fxb-modal__box{position:relative;z-index:1;width:min(900px,100%);background:#fff;border-radius:22px;box-shadow:0 40px 90px -30px rgba(0,0,0,.6);animation:fxbpop .3s ease}
+#fxb-page .fxb-modal__x{position:absolute;top:14px;right:14px;z-index:2;width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;background:rgba(57,40,82,.06);color:var(--ink);display:grid;place-items:center;transition:background .2s}
+#fxb-page .fxb-modal__x:hover{background:rgba(57,40,82,.12)}
 #fxb-page .fxb-modal__x svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.2}
 @keyframes fxbpop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
-#fxb-page .fxb-zbox{width:min(460px,100%);padding:34px 30px 30px;text-align:left}
-#fxb-page .fxb-ztitle{font-size:22px;font-weight:900;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink)}
-#fxb-page .fxb-zsub{font-size:14px;font-weight:500;color:var(--muted);line-height:1.55;margin-bottom:22px}
-#fxb-page .fxb-zform{display:grid;gap:14px}
+#fxb-page .fxb-zbox{width:min(560px,100%);max-height:min(88vh,780px);display:flex;flex-direction:column;overflow:hidden;text-align:left}
+#fxb-page .fxb-zview--form{display:flex;flex-direction:column;min-height:0;flex:1}
+#fxb-page .fxb-zhead{padding:30px 32px 18px;flex:0 0 auto}
+#fxb-page .fxb-zform{display:flex;flex-direction:column;min-height:0;flex:1}
+#fxb-page .fxb-zscroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding:0 32px 8px;display:grid;gap:22px;align-content:start;-webkit-mask:linear-gradient(180deg,#000 calc(100% - 26px),transparent 100%);mask:linear-gradient(180deg,#000 calc(100% - 26px),transparent 100%)}
+#fxb-page .fxb-zfoot{flex:0 0 auto;padding:16px 32px 24px;border-top:1px solid rgba(57,40,82,.09);background:#fff}
+#fxb-page .fxb-zgroup{display:grid;gap:14px}
+#fxb-page .fxb-zgroup-l{font-size:15px;font-weight:800;color:var(--ink);margin:0}
+#fxb-page .fxb-zrow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#fxb-page .fxb-ztitle{font-size:23px;font-weight:900;letter-spacing:-.015em;margin-bottom:6px;color:var(--ink);padding-right:44px}
+#fxb-page .fxb-zsub{font-size:14px;font-weight:500;color:var(--muted);line-height:1.55}
 #fxb-page .fxb-zfield{display:grid;gap:6px}
-#fxb-page .fxb-zfield span{font-size:12.5px;font-weight:700;color:var(--purple-2);letter-spacing:.02em}
-#fxb-page .fxb-zfield input,#fxb-page .fxb-zfield select{font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 16px;border:1.6px solid rgba(57,40,82,.14);border-radius:13px;background:#faf8fe;transition:border-color .2s,box-shadow .2s;width:100%}
+#fxb-page .fxb-zfield span{font-size:13px;font-weight:600;color:var(--muted)}
+#fxb-page .fxb-zfield input,#fxb-page .fxb-zfield select{box-sizing:border-box;width:100%;min-width:0;font-family:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:13px 15px;border:1.5px solid rgba(57,40,82,.13);border-radius:12px;background:#faf8fe;transition:border-color .18s,box-shadow .18s,background .18s}
+#fxb-page .fxb-zfield input:hover,#fxb-page .fxb-zfield select:hover{background:#f6f2fd}
+#fxb-page .fxb-zfield input::-webkit-calendar-picker-indicator{opacity:.5;cursor:pointer}
 #fxb-page .fxb-zfield select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23662d92' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;cursor:pointer}
 #fxb-page .fxb-zfield input:focus,#fxb-page .fxb-zfield select:focus{outline:0;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(102,45,146,.12)}
 #fxb-page .fxb-zfield.fxb-zerr input,#fxb-page .fxb-zfield.fxb-zerr select{border-color:#e0526a;background:#fdf2f4}
+/* Кнопка формы: определение живёт только на главной — в ZAYAVKA_CSS его нет,
+   у подстраниц .fxb-btn-main приходит из общего CSS страницы. */
 #fxb-page .fxb-btn-main,#fxb-page .fxb-zsubmit{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:6px;padding:16px 28px;border:0;cursor:pointer;font-family:inherit;font-weight:800;font-size:15.5px;color:#fff;border-radius:100px;background:linear-gradient(135deg,var(--purple-2),var(--purple-3));box-shadow:0 16px 34px -12px rgba(102,45,146,.8);transition:transform .25s,box-shadow .25s}
 #fxb-page .fxb-btn-main:hover,#fxb-page .fxb-zsubmit:hover{transform:translateY(-2px);box-shadow:0 22px 44px -12px rgba(102,45,146,.95)}
-#fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:#fff}
-#fxb-page .fxb-znote{font-size:11px;color:#a89fbd;font-weight:500;line-height:1.45;margin-top:2px;text-align:center}
+#fxb-page .fxb-zsubmit{width:100%;justify-content:center;border:0;cursor:pointer;font-family:inherit}
+#fxb-page .fxb-zsubmit svg{width:18px;height:18px;stroke:currentColor}
+#fxb-page .fxb-znote{font-size:11.5px;color:#a89fbd;font-weight:500;line-height:1.45;margin-top:10px;text-align:center}
 #fxb-page .fxb-znote a{color:var(--purple-2);text-decoration:underline}
-#fxb-page .fxb-zalt{margin-top:22px;padding-top:20px;border-top:1px solid rgba(57,40,82,.1)}
-#fxb-page .fxb-zalt-l{display:block;text-align:center;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+#fxb-page .fxb-zalt{padding-top:18px;border-top:1px solid rgba(57,40,82,.09)}
+#fxb-page .fxb-zalt-l{display:block;text-align:center;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:12px}
 #fxb-page .fxb-zalt-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 #fxb-page .fxb-zchip{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:100px;font-weight:800;font-size:13.5px;border:1.6px solid rgba(102,45,146,.2);color:var(--purple-2);background:#fff;transition:transform .2s,border-color .2s,background .2s;cursor:pointer}
 #fxb-page .fxb-zchip:hover{transform:translateY(-2px);border-color:var(--purple-2);background:rgba(102,45,146,.05)}
 #fxb-page .fxb-zchip--wa{border-color:rgba(43,182,115,.45);color:#1f9d63}
 #fxb-page .fxb-zchip--wa:hover{border-color:#1f9d63;background:rgba(43,182,115,.07)}
-#fxb-page .fxb-zview--thanks{text-align:center}
+#fxb-page .fxb-zview--thanks{text-align:center;padding:38px 32px 34px}
+@media(max-width:560px){
+  #fxb-page .fxb-zrow{grid-template-columns:1fr}
+  #fxb-page .fxb-zhead{padding:26px 22px 14px}
+  #fxb-page .fxb-zscroll{padding:0 22px 8px}
+  #fxb-page .fxb-zfoot{padding:14px 22px 20px}
+  #fxb-page .fxb-zbox{max-height:92vh}
+}
 #fxb-page .fxb-zok{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;background:linear-gradient(135deg,#2bb673,#7ed957);box-shadow:0 14px 30px -12px rgba(43,182,115,.7)}
 #fxb-page .fxb-zok svg{width:32px;height:32px;stroke:#fff;stroke-width:2.6}
 #fxb-page .fxb-zview--thanks .fxb-zalt-btns{margin-top:20px}
