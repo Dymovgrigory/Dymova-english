@@ -1648,14 +1648,17 @@ function fluidSimulation(canvas, opts) {
 <!-- ===== 1.5. Неделя знакомства (акция 21–26 сентября 2026) =====
      Временный блок. Скрывается сам после даты в data-fxb-event-until.
      Чтобы убрать совсем — удалить этот блок целиком вместе с его <style> и <script>. -->
-<section id="fxb-event" data-fxb-event-until="2026-09-26T23:59:59+03:00">
+<section id="fxb-event" data-fxb-event-from="2026-09-21T00:00:00+03:00" data-fxb-event-until="2026-09-26T23:59:59+03:00">
   <div class="fxb-ev-bg" aria-hidden="true">
     <img class="fxb-ev-decor" src="/assets/brand/fox-head-yellow.webp" alt="" loading="lazy">
   </div>
   <div class="fxb-ev-wrap">
     <div class="fxb-ev-top">
       <span class="fxb-ev-kicker">🦊 Неделя знакомства с Фоксинбург · 21–26 сентября</span>
-      <div class="fxb-ev-timer" id="fxbEventTimer" aria-live="polite"></div>
+      <div class="fxb-ev-countdown">
+        <span class="fxb-ev-cd-label" id="fxbEventLabel">До старта акции</span>
+        <div class="fxb-ev-timer" id="fxbEventTimer" aria-live="polite"></div>
+      </div>
     </div>
 
     <h2 class="fxb-ev-title">Выгода до <span class="fxb-ev-sum">2 125 &#8381;</span></h2>
@@ -1734,6 +1737,8 @@ function fluidSimulation(canvas, opts) {
 #fxb-event .fxb-ev-wrap{max-width:1200px;margin:0 auto;position:relative;z-index:1}
 #fxb-event .fxb-ev-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px}
 #fxb-event .fxb-ev-kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);color:#fff;font-weight:800;font-size:13px;letter-spacing:.04em;padding:9px 18px;border-radius:100px}
+#fxb-event .fxb-ev-countdown{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+#fxb-event .fxb-ev-cd-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62)}
 #fxb-event .fxb-ev-timer{display:flex;gap:10px;color:#fff;font-weight:800;font-size:13px}
 #fxb-event .fxb-ev-timer b{display:block;font-size:22px;line-height:1.1;color:var(--yellow)}
 #fxb-event .fxb-ev-timer span{display:inline-block;text-align:center;background:rgba(255,255,255,.1);border-radius:12px;padding:8px 14px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
@@ -1771,6 +1776,7 @@ function fluidSimulation(canvas, opts) {
   #fxb-event{padding:56px 20px}
   #fxb-event .fxb-ev-gifts,#fxb-event .fxb-ev-dirs{grid-template-columns:1fr}
   #fxb-event .fxb-ev-top{flex-direction:column;align-items:flex-start}
+  #fxb-event .fxb-ev-countdown{align-items:flex-start}
 }
 </style>
 
@@ -1780,8 +1786,10 @@ function fluidSimulation(canvas, opts) {
      чтобы сайт не пришлось срочно править в день окончания. */
   var ev=document.getElementById('fxb-event');
   if(!ev)return;
+  var from=new Date(ev.getAttribute('data-fxb-event-from')).getTime();
   var until=new Date(ev.getAttribute('data-fxb-event-until')).getTime();
   var timer=document.getElementById('fxbEventTimer');
+  var label=document.getElementById('fxbEventLabel');
   var plural=function(n,forms){
     var n10=n%10,n100=n%100;
     if(n10===1&&n100!==11)return forms[0];
@@ -1789,8 +1797,13 @@ function fluidSimulation(canvas, opts) {
     return forms[2];
   };
   var tick=function(){
-    var left=until-Date.now();
-    if(left<=0){ev.hidden=true;return;}
+    var now=Date.now();
+    if(now>=until){ev.hidden=true;return;}
+    /* До 21 сентября блок работает как анонс: считаем до старта, а не до конца,
+       иначе таймер показывает остаток по акции, которая ещё не началась. */
+    var started=now>=from;
+    var left=(started?until:from)-now;
+    if(label)label.textContent=started?'До конца акции':'До старта акции';
     var d=Math.floor(left/86400000);
     var h=Math.floor(left%86400000/3600000);
     var m=Math.floor(left%3600000/60000);

@@ -51,6 +51,15 @@ def test_every_try_button_opens_a_lead_with_a_subject():
         assert 'data-fxb-subject="%s"' % subject in section
 
 
+def test_event_section_knows_when_the_promo_starts():
+    """Акция идёт 21–26 сентября, а блок выложен раньше: до старта таймер
+    обязан считать до начала, иначе он показывает «11 дней» по акции,
+    которая ещё не началась."""
+    section = event_section()
+    assert 'data-fxb-event-from="2026-09-21T00:00:00+03:00"' in section
+    assert "до старта" in section.lower() or "До старта" in section
+
+
 def test_event_section_hides_itself_after_the_promo():
     section = event_section()
     assert "data-fxb-event-until" in section
