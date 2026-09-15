@@ -334,9 +334,16 @@ def zayavka_modal():
             '<label class="fxb-zfield"><span>Телефон</span><input type="tel" name="Phone" required aria-required="true" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__"></label>'
             '<label class="fxb-zfield"><span>Какой курс интересует</span><select name="Course" class="fxb-zselect">'
             '<option value="Пока не определился" selected>Пока не определился</option>'
-            '<option value="Языки (английский, немецкий, китайский)">Языки (английский, немецкий, китайский)</option>'
-            '<option value="Интенсивы">Интенсивы</option>'
+            '<option value="Английский язык">Английский язык</option>'
+            '<option value="Немецкий язык">Немецкий язык</option>'
+            '<option value="Китайский язык">Китайский язык</option>'
+            '<option value="Испанский язык">Испанский язык</option>'
             '<option value="Подготовка к школе">Подготовка к школе</option>'
+            '<option value="Spotlight 2 — английский для 2 класса">Spotlight 2 — английский для 2 класса</option>'
+            '<option value="Spotlight 3 — английский для 3 класса">Spotlight 3 — английский для 3 класса</option>'
+            '<option value="Spotlight 4 — английский для 4 класса">Spotlight 4 — английский для 4 класса</option>'
+            '<option value="Spotlight 5 — английский для 5 класса">Spotlight 5 — английский для 5 класса</option>'
+            '<option value="Интенсивы">Интенсивы</option>'
             '<option value="Репетиторские услуги (1–4 класс)">Репетиторские услуги (1–4 класс)</option>'
             '</select></label>'
             '<label class="fxb-zfield"><span>Опыт занятий</span><select name="Experience" class="fxb-zselect" required aria-required="true">'
@@ -421,10 +428,15 @@ ZAYAVKA_JS = """
       return 'английским';
     };
     var fxbZcoursePreset=function(subject){
+      var sp=subject.match(/Spotlight\s*([2-5])/i);
+      if(sp)return 'Spotlight '+sp[1]+' — английский для '+sp[1]+' класса';
       if(/интенсив/i.test(subject))return 'Интенсивы';
-      if(/подготовк/i.test(subject))return 'Подготовка к школе';
+      if(/подготовк\S*\s+к\s+школе/i.test(subject))return 'Подготовка к школе';
       if(/репетитор/i.test(subject))return 'Репетиторские услуги (1–4 класс)';
-      if(/английск|немецк|китайск|язык/i.test(subject))return 'Языки (английский, немецкий, китайский)';
+      if(/немецк/i.test(subject))return 'Немецкий язык';
+      if(/китайск/i.test(subject))return 'Китайский язык';
+      if(/испанск/i.test(subject))return 'Испанский язык';
+      if(/английск|чтени|граммат|разговорн|язык/i.test(subject))return 'Английский язык';
       return '';
     };
     var fxbZopen=function(z){

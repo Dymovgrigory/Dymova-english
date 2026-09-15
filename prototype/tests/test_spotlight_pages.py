@@ -93,3 +93,23 @@ def test_course_options_in_every_lead_form():
     main = read("main_combined_v7.html")
     assert main.count("Spotlight 2 — английский для 2 класса") >= 2, \
         "нужны обе формы главной: модалка заявки и #fxbEnrollForm"
+
+
+def test_preset_can_only_return_values_that_exist_in_the_select():
+    """fxbZcoursePreset подставляет значение в <select name="Course">.
+    Если функция вернёт строку, которой нет среди <option>, браузер молча
+    сбросит выбор — заявка уедет без курса. Проверяем обе копии формы."""
+    for name in ("build_course_pages.py", "main_combined_v7.html"):
+        src = read(name)
+        preset = re.search(r"var fxbZcoursePreset=function\(subject\)\{(.*?)\n\s{4}\};", src, re.S)
+        assert preset, "%s: не найдена функция fxbZcoursePreset" % name
+
+        returned = set(re.findall(r"return '([^']+)';", preset.group(1)))
+        # Spotlight собирается конкатенацией — проверяем его отдельно
+        returned.discard("Spotlight ")
+        for grade in GRADES:
+            assert "Spotlight %d — английский для %d класса" % (grade, grade) in src
+
+        options = set(re.findall(r'<option value="([^"]+)"', src))
+        missing = sorted(v for v in returned if v not in options)
+        assert not missing, "%s: preset вернёт значения, которых нет в списке: %s" % (name, missing)
