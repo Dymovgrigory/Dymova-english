@@ -77,6 +77,7 @@ PAGE_ALIASES = {
     "page_kontakty.html": "kontakty",
     "page_raspisanie.html": "raspisanie",
     "page_diagnostika.html": "diagnostika",
+    "page_nedelya_znakomstva.html": "nedelya-znakomstva",
     "page_policy.html": "policy",
     "page_novosti.html": "novosti",
     "page_vakansii.html": "vakansii",
