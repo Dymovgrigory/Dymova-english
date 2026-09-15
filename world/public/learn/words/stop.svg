@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 480">
+  <rect width="408" height="480" rx="36" fill="#fffaf0"/>
+  <rect x="18" y="18" width="372" height="300" rx="28" fill="#3a2953"/>
+  <g transform="translate(0,8)"><g transform="translate(84,44) scale(2.2)"><path fill="#DD2E44" d="M12 3l-9 8.985V24l9 9h12l9-9V11.985L24 3z"/><path fill="#CCD6DD" d="M24.827 1H11.173L1 11.156v13.672L11.172 35h13.657L35 24.828V11.156L24.827 1zM33 24l-9 9H12l-9-9V11.985L12 3h12l9 8.985V24z"/></g></g>
+  <text x="204" y="360" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="42" font-weight="800" fill="#3a2953">stop</text>
+  <text x="204" y="408" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="26" fill="#241a30" opacity="0.55">стоп</text>
+</svg>

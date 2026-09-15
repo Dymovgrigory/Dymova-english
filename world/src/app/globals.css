@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-nunito), ui-rounded, "Trebuchet MS", sans-serif;
+}
+
+:root {
+  --world-purple: #3a2953;
+  --world-purple-dark: #241a30;
+  --world-yellow: #f5ed75;
+  --world-teal: #7fd8c9;
+  --world-ink: #ffffff;
+}
+
+html,
+body {
+  background: var(--world-purple-dark);
+  color: var(--world-ink);
+  font-family: var(--font-nunito), "Nunito", ui-rounded, sans-serif;
+}
+
+@keyframes fx-eq {
+  0%,
+  100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+
+@keyframes fx-spark {
+  0% { opacity: 1; transform: rotate(var(--rot, 0deg)) translateY(0) scale(1); }
+  100% { opacity: 0; transform: rotate(var(--rot, 0deg)) translateY(-120px) scale(0.3); }
+}
+
+.fx-bar { animation: fx-eq 0.7s ease-in-out infinite; transform-origin: bottom; }
+.fx-bar-2 { animation-delay: 0.12s; }
+.fx-bar-3 { animation-delay: 0.24s; }
+@keyframes fx-heart {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.fx-heart { animation: fx-heart 0.35s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-bar,
+  .fx-spark,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), "Montserrat", var(--font-nunito), sans-serif;
+}

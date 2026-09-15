@@ -90,7 +90,7 @@ app = FastAPI(title="Foxinburg MAX Bot", version=APP_VERSION)
 
 # Форма заявки на статическом сайте шлёт POST с другого
 # origin (dymova-english.ru / new.dymova-english.ru) — без этого браузер
-# заблокирует запрос.
+# заблокирует запрос. Игровой мир живёт в отдельном процессе world-backend.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.site_cors_origins,

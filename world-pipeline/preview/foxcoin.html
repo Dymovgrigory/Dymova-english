@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#241a30}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+</head><body><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';
+const r=new THREE.WebGLRenderer({antialias:true});r.setSize(800,600);document.body.appendChild(r.domElement);
+const s=new THREE.Scene();s.background=new THREE.Color(0x241a30);
+const c=new THREE.PerspectiveCamera(35,800/600,.1,100);c.position.set(0,1.2,3.2);c.lookAt(0,0,0);
+s.add(new THREE.AmbientLight(0xffffff,.7));
+const d=new THREE.DirectionalLight(0xfff2cc,2.2);d.position.set(2,3,4);s.add(d);
+const dl=new DRACOLoader().setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/gltf/');
+new GLTFLoader().setDRACOLoader(dl).load('../assets/foxcoin/foxcoin-v1.glb',g=>{
+ const b=new THREE.Box3().setFromObject(g.scene),sz=b.getSize(new THREE.Vector3()),ct=b.getCenter(new THREE.Vector3());
+ const m=1.6/Math.max(sz.x,sz.y,sz.z);g.scene.scale.setScalar(m);g.scene.position.sub(ct.multiplyScalar(m));
+ s.add(g.scene);let t=0;(function a(){t+=.02;g.scene.rotation.y=t;r.render(s,c);requestAnimationFrame(a)})();
+ window.READY=true;
+});
+</script></body></html>
