@@ -100,6 +100,11 @@ async def handle_signed(file_id: int) -> dict:
                        file_id)
         return {"verified": False}
 
+    if not podpislon.is_signed(doc):
+        logger.warning("podpislon: документ %s в статусе %r, а не «Подписан» — пропускаем",
+                       file_id, doc.get("status_text") or doc.get("status"))
+        return {"verified": True, "signed": False}
+
     contact_id = podpislon.contact_id_of(doc)
     if not contact_id:
         logger.warning("podpislon: у документа %s нет контакта", file_id)

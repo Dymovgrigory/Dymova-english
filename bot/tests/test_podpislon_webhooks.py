@@ -49,6 +49,11 @@ class FakePodpislon:
         return contact_id_of(doc)
 
     @staticmethod
+    def is_signed(doc):
+        from app.platform.podpislon import is_signed
+        return is_signed(doc)
+
+    @staticmethod
     def to_crm_fields(contact):
         from app.platform.podpislon import to_crm_fields
         return to_crm_fields(contact)
@@ -99,7 +104,7 @@ class TestHandleSigned:
     @pytest.mark.asyncio
     async def test_uploads_pdf_and_fills_empty_fields(self, wired):
         crm = FakeCrm(students=[student()])
-        pod = FakePodpislon(doc={"id": 1, "contacts": [{"id": 456}]},
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "contacts": [{"sid": "NDU2"}]},
                             contact=contact())
         wired(crm, pod)
 
@@ -111,6 +116,18 @@ class TestHandleSigned:
         assert student_id == 42
         assert fields["passport"] == "40 64 543333"
         assert fields["parentname"] == "Кузнецова Мария Ивановна"
+
+    @pytest.mark.asyncio
+    async def test_document_that_is_not_signed_yet_is_skipped(self, wired):
+        crm = FakeCrm(students=[student()])
+        pod = FakePodpislon(doc={"id": 1, "status": "20", "contacts": [{"sid": "NDU2"}]},
+                            contact=contact())
+        wired(crm, pod)
+
+        out = await hooks.handle_signed(1)
+
+        assert out == {"verified": True, "signed": False}
+        assert crm.uploaded == [] and crm.updated == []
 
     @pytest.mark.asyncio
     async def test_unverified_document_is_dropped(self, wired):
@@ -125,7 +142,7 @@ class TestHandleSigned:
     @pytest.mark.asyncio
     async def test_no_match_touches_nothing(self, wired):
         crm = FakeCrm(students=[student(fio="Другой Ребёнок")])
-        pod = FakePodpislon(doc={"id": 1, "contacts": [{"id": 456}]},
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "contacts": [{"sid": "NDU2"}]},
                             contact=contact())
         wired(crm, pod)
 
@@ -137,7 +154,7 @@ class TestHandleSigned:
     @pytest.mark.asyncio
     async def test_ambiguous_match_touches_nothing(self, wired):
         crm = FakeCrm(students=[student(id=1), student(id=2)])
-        pod = FakePodpislon(doc={"id": 1, "contacts": [{"id": 456}]},
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "contacts": [{"sid": "NDU2"}]},
                             contact=contact())
         wired(crm, pod)
 
@@ -148,7 +165,7 @@ class TestHandleSigned:
     async def test_same_contract_is_not_uploaded_twice(self, wired):
         crm = FakeCrm(students=[student()],
                       files=[{"name": "Кузнецов Никита 26_27.pdf"}])
-        pod = FakePodpislon(doc={"id": 1, "contacts": [{"id": 456}]},
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "contacts": [{"sid": "NDU2"}]},
                             contact=contact())
         wired(crm, pod)
 
@@ -160,7 +177,7 @@ class TestHandleSigned:
     @pytest.mark.asyncio
     async def test_filled_field_is_never_overwritten(self, wired):
         crm = FakeCrm(students=[student(home_address="Адрес от администратора")])
-        pod = FakePodpislon(doc={"id": 1, "contacts": [{"id": 456}]},
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "contacts": [{"sid": "NDU2"}]},
                             contact=contact())
         wired(crm, pod)
 

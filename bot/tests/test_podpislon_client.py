@@ -1,5 +1,5 @@
 """Разбор контакта Подпислона в поля карточки ученика."""
-from app.platform.podpislon import CUSTOM_FIELDS, contact_id_of, crm_date, to_crm_fields
+from app.platform.podpislon import CUSTOM_FIELDS, contact_id_of, crm_date, is_signed, to_crm_fields
 
 
 def contact(**kw):
@@ -74,14 +74,40 @@ class TestToCrmFields:
 
 
 class TestContactIdOf:
-    def test_reads_from_contacts_array(self):
-        assert contact_id_of({"contacts": [{"id": 77}], "contact": {"id": 99}}) == 77
+    # Так документ реально приходит из POST / (договор Ворожеевой, 2026-09-16):
+    # поля id у клиента нет, id зашит в sid (base64) и в ссылку на подпись.
+    REAL = {
+        "id": 2111187, "status": "30", "status_text": "Подписан",
+        "contacts": [{"name": "Юлия", "last_name": "Ворожеева",
+                      "phone": "89265775281", "sid": "NTA0MTUy",
+                      "link": "https://podpislon.ru/sign/pack/504152/aa54a1901792"}],
+    }
 
-    def test_falls_back_to_legacy_contact_object(self):
-        assert contact_id_of({"contacts": [], "contact": {"id": 99}}) == 99
+    def test_real_document_gives_contact_id_from_sid(self):
+        assert contact_id_of(self.REAL) == 504152
+
+    def test_falls_back_to_link_when_sid_is_broken(self):
+        doc = {"contacts": [{"sid": "!!", "link": "https://podpislon.ru/sign/pack/735255/aa598"}]}
+        assert contact_id_of(doc) == 735255
+
+    def test_uses_legacy_contact_object(self):
+        assert contact_id_of({"contacts": [], "contact": {"sid": "NTA0MTUy"}}) == 504152
+
+    def test_explicit_id_still_works(self):
+        assert contact_id_of({"contacts": [{"id": 77}]}) == 77
 
     def test_none_when_document_has_no_contact(self):
         assert contact_id_of({"contacts": [], "contact": {}}) is None
+
+
+class TestIsSigned:
+    def test_status_30_is_signed(self):
+        assert is_signed({"status": "30"})
+
+    def test_viewed_and_sent_are_not_signed(self):
+        assert not is_signed({"status": "20"})
+        assert not is_signed({"status": "15"})
+        assert not is_signed({})
 
 
 class TestCrmDate:

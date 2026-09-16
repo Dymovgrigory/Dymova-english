@@ -59,7 +59,7 @@ async def signed_documents() -> dict[int, int]:
         if not isinstance(docs, list) or not docs:
             break
         for doc in docs:
-            if int(doc.get("status") or 0) != podpislon.STATUS_SIGNED:
+            if not podpislon.is_signed(doc):
                 continue
             contact_id = podpislon.contact_id_of(doc)
             if contact_id and contact_id not in out:

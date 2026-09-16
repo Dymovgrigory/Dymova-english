@@ -20,7 +20,9 @@ COMPANY_ID, SIGNATURE и специфичными для события. Алг�
 from __future__ import annotations
 
 import base64
+import binascii
 import logging
+import re
 
 import httpx
 
@@ -38,8 +40,8 @@ CUSTOM_FIELDS = {
     "email": "ufc_132716916fda978041",
 }
 
-# Статус «подписан» в списке документов.
-STATUS_SIGNED = 20
+# Статусы документа: 15 «Отправлен», 20 «Просмотрен», 30 «Подписан».
+STATUS_SIGNED = 30
 
 
 class PodpislonError(Exception):
@@ -102,13 +104,30 @@ async def download_pdf(file_id: int) -> bytes:
         raise PodpislonError(f"битый base64: {exc}") from exc
 
 
+def is_signed(doc: dict) -> bool:
+    return str(doc.get("status") or "") == str(STATUS_SIGNED)
+
+
 def contact_id_of(doc: dict) -> int | None:
-    """Id клиента, которому отправлен документ."""
+    """Id клиента, которому отправлен документ.
+
+    В списке документов у клиента нет поля id: он зашит в `sid` (base64 от
+    числа) и в ссылку на подпись `.../sign/pack/<id>/<код>`.
+    """
     contacts = doc.get("contacts") or []
-    if contacts and isinstance(contacts, list):
-        return contacts[0].get("id")
-    contact = doc.get("contact") or {}
-    return contact.get("id") if isinstance(contact, dict) else None
+    person = contacts[0] if contacts and isinstance(contacts, list) else doc.get("contact")
+    if not isinstance(person, dict):
+        return None
+    if str(person.get("id") or "").isdigit():
+        return int(person["id"])
+    try:
+        decoded = base64.b64decode(str(person.get("sid") or ""), validate=True).decode()
+        if decoded.isdigit():
+            return int(decoded)
+    except (binascii.Error, UnicodeDecodeError):
+        pass
+    link = re.search(r"/sign/pack/(\d+)/", str(person.get("link") or ""))
+    return int(link.group(1)) if link else None
 
 
 def _custom(contact: dict, key: str) -> str:
