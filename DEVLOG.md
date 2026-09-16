@@ -5810,9 +5810,29 @@ tgapp-экран «Мои занятия», страница /schedule на са
 
 **Как проверить:** https://new.dymova-english.ru/world — новая карта; Сокровищница — картинки; урок — голос AriaNeural.
 
+### Сессия — World Journey A→B→C + cinematic gold standard (2026-09-16)
+
+**Запрос:** полный игровой путь эмоций + «прорисовка как на этих фото» (3 cinematic stills: gates / establishing / library courtyard). Автопилот A→B→C, Meshy только при нужде.
+
+**Что сделано:**
+- Wave 1 spine: `journey.ts` (+tests), cinematic `/`, mission-first `/learn`, finish→`/world?pulse=`, CSS arrive/reward.
+- Gold stills в `world/public/world/cinematic/{establishing,gates-foxi,library-courtyard}.jpg`; art bible → PREMIUM CINEMATIC формула.
+- Wave 2: reward routing (school first / stickers / nest level-up / glory каждые 3 / yard practice), `castleNudgeLine` до первого урока, teal pulse glow.
+- Wave 3 chrome: dark glass WorldBar/Castle HUD, album+sprint cinematic, FoxiGuide `tone=dark`, embers, lesson SkyWash на gates still.
+- Meshy не тратили (рефы уже от владельца; remesh карты замка отложен — сломает калиброванные полигоны).
+
+**Проверено:** `cd world && npm test -- --run` → 22 passed; `npm run build` → ok.
+
+**Осталось:** при желании — новая Meshy-карта замка в стиле stills + перекалибровка hitbox.
+
+**Проверка и доводка (запрос: «продолжай и проверь что все работает!»):**
+- lint: 3 ошибки `set-state-in-effect` → однократная гидрация из localStorage/URL с обоснованием; `/learn` больше не читает journey во время рендера (риск hydration mismatch).
+- Урок: серый текст на тёмно-туманном SkyWash плохо читался → светлая вуаль (кремовая), фото ворот остаётся фактурой сверху.
+- `missionFor`: новичку «Первый урок» вместо «Продолжить урок» (+тест).
+- Проверено: vitest 23, tsc, lint 0 errors, `next build`, pytest 82, Playwright (`WORLD_E2E_UI=1`) 2 passed; прогон пути новичок→/learn→урок→/world?pulse=school→возврат, album, sprint на 1440 и 390px — 0 ошибок консоли, 0 ответов 4xx/5xx.
+
 ## Текущий статус / Где остановились
 
-- World: PR #223 + коммиты после; превью на `new.dymova-english.ru`.
-- Нужны A-записи `world` / `world-api` в reg.ru.
-- Следующее: интерьеры зданий новой волной Meshy / полировка хитбоксов по скрину.
+- World Journey Wave 1–3 + cinematic UI закоммичены в `foxinburg-world-v1` (PR #223), превью `new.dymova-english.ru` обновлено.
+- Следующее: A-записи `world`/`world-api`; опционально Meshy remesh `castle/map.png` под cinematic bar (~9 cr) + polygons.
 

@@ -5,10 +5,14 @@
 
 ## 1. Визуальная формула (§36)
 
-**PREMIUM CARTOON × CINEMATIC × FUTURISTIC EDUCATIONAL WORLD** на
-фирменной палитре Фоксинбурга. Не Pixar-клон, не low-poly, не Roblox/Fortnite,
-не AI-хаос. Ориентир по ощущению: Nintendo (читаемость, дружелюбие) +
-cinematic lighting (глубина, объём) + Apple (чистота материалов).
+**PREMIUM CINEMATIC FANTASY × FOXINBURG BRAND** — ориентир качества:
+кадры в `world/public/world/cinematic/` (`establishing.jpg`, `gates-foxi.jpg`,
+`library-courtyard.jpg`) и hub-карта `world/public/world/castle/map.png`
+(cinematic v2, layout-preserving). Это «дорогой фильм / AAA fantasy»: объёмный
+камень, golden-hour + lantern light, teal/purple dual tone, туман, единая сцена
+без «картинка поверх картинки». Не flat cartoon, не generic AI purple dashboard.
+
+Формула: cinematic lighting + stylized PBR + educational clarity.
 
 ## 2. Цвет (§106)
 

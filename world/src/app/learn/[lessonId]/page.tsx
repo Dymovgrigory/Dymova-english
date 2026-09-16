@@ -19,6 +19,7 @@ import { speakEnglish, playClip } from "@/lib/speak";
 import { needsEchoFor } from "@/lib/echo";
 import { playCorrect, playHeart, playWrong } from "@/lib/sfx";
 import { Burst, SkyWash } from "@/ui/Fx";
+import { loadJourney, recordLessonFinish } from "@/lib/journey";
 
 const STAGE_RU: Record<string, string> = {
   warmup: "Приветствие",
@@ -121,11 +122,13 @@ export default function LessonPage() {
       setPicked(null);
       setBuilt([]);
       setEchoOk(false);
-      if (nxt.kind === "listen" && nxt.speak) void speakEnglish(nxt.speak);
-      if (nxt.kind === "word_card" && nxt.speak) void speakEnglish(nxt.speak);
-      if (nxt.kind === "phrase_card" && nxt.speak) void speakEnglish(nxt.speak);
-      if (nxt.kind === "type_en" && nxt.speak) void speakEnglish(nxt.speak);
-      if (nxt.kind === "tap_build" && nxt.speak) void speakEnglish(nxt.speak);
+      const autoSpeak =
+        nxt.kind === "listen" ||
+        nxt.kind === "word_card" ||
+        nxt.kind === "phrase_card" ||
+        nxt.kind === "type_en" ||
+        nxt.kind === "tap_build";
+      if (autoSpeak && nxt.speak) void speakEnglish(nxt.speak);
       if (nxt.speak_sound) playClip(nxt.audio, nxt.speak_sound);
       return "next";
     }
@@ -159,7 +162,15 @@ export default function LessonPage() {
     if (step !== "finish") return;
     setBusy(true);
     try {
-      setFinish(await worldApi.finishLesson(session.session_id));
+      const done = await worldApi.finishLesson(session.session_id);
+      recordLessonFinish({
+        practice: Boolean(done.practice),
+        itemsGranted: (done.items_granted?.length ?? 0) > 0,
+        dueAfter: 0,
+        level: done.player?.level,
+        streakDays: done.player?.streak_days,
+      });
+      setFinish(done);
     } catch {
       setError("Не вышло закрыть урок.");
     } finally {
@@ -179,43 +190,50 @@ export default function LessonPage() {
   }, [item]);
 
   if (finish) {
+    const pulse = loadJourney().lastRewardBuilding || "lexicon";
     return (
-      <main className="relative grid min-h-dvh place-items-center overflow-hidden bg-[#f7f1e4] p-6 text-[#241a30]">
-        <SkyWash />
+      <main className="relative grid min-h-dvh place-items-center overflow-hidden bg-[#241a30] p-6 text-white">
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center opacity-70"
+          style={{ backgroundImage: "url(/world/cinematic/gates-foxi.jpg)" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#241a30] via-[#241a30]/75 to-[#241a30]/35" />
+        <div aria-hidden className="world-embers absolute inset-0" />
         <Burst show />
-        <div className="relative z-10 w-full max-w-md text-center">
-          <Stars count={finish.stars} />
-          <img src="/world/foxi/cheer.png" alt="Foxy" className="mx-auto mt-4 h-48 w-auto object-contain object-bottom" />
+        <div className="world-reward-pop relative z-10 w-full max-w-md text-center">
+          <Stars count={finish.stars} onDark />
+          <img src="/world/foxi/cheer.png" alt="Foxy" className="mx-auto mt-4 h-48 w-auto object-contain object-bottom drop-shadow-xl" />
           <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-extrabold">
             {finish.practice ? "Двор закрыт" : "Урок закрыт"}
           </h1>
-          <p className="mt-3 text-lg font-semibold">
+          <p className="mt-3 text-lg font-semibold text-white/90">
             {finish.score} из {finish.total} · +{finish.xp_delta} XP · +{finish.coins_delta} FoxCoins
           </p>
-          <div className="mx-auto mt-4 h-3 w-56 overflow-hidden rounded-full bg-[#3a2953]/15" aria-hidden>
+          <div className="mx-auto mt-4 h-3 w-56 overflow-hidden rounded-full bg-white/15" aria-hidden>
             <div
               className="h-full rounded-full bg-[#7fd8c9] transition-[width] duration-500"
               style={{ width: `${Math.min(100, Math.round((finish.score / Math.max(1, finish.total)) * 100))}%` }}
             />
           </div>
           {finish.daily_xp != null ? (
-            <p className="mt-3 text-sm font-bold text-[#3a2953]/70">
+            <p className="mt-3 text-sm font-bold text-[#f5ed75]/90">
               Сегодня {finish.daily_xp} из {finish.daily_goal ?? 50} XP
             </p>
           ) : null}
           {(finish.items_granted?.length ?? 0) > 0 ? (
-            <p className="mt-2 text-sm font-bold text-[#3a2953]">Новые стикеры в альбоме!</p>
+            <p className="mt-2 text-sm font-bold text-[#f5ed75]">Новые стикеры в альбоме!</p>
           ) : null}
           <div className="mt-8 grid gap-3">
             <button
-              onClick={() => router.push("/world")}
-              className="w-full rounded-2xl bg-[#3a2953] py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#f5ed75] shadow-[0_5px_0_#241a30]"
+              onClick={() => router.push(`/world?pulse=${pulse}`)}
+              className="w-full rounded-2xl bg-[#f5ed75] py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#241a30] shadow-[0_5px_0_rgba(0,0,0,0.35)]"
             >
-              В замок
+              В замок за наградой
             </button>
             <button
               onClick={() => router.push("/learn")}
-              className="w-full rounded-2xl border-2 border-[#3a2953] bg-white py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#3a2953]"
+              className="w-full rounded-2xl border border-white/25 bg-white/5 py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-white"
             >
               На карту уроков
             </button>
@@ -231,33 +249,30 @@ export default function LessonPage() {
       : "bg-[#ee7349] text-white"
     : "bg-white";
   const nextItem = session?.items[index + 1];
-  const continueLabel = result?.failed
-    ? "На карту"
-    : !nextItem
-      ? "Закрыть урок"
-      : nextItem.kind === "explain"
-        ? nextItem.stage === "wrap"
-          ? "Итог"
-          : "Дальше"
-        : nextItem.kind === "listen"
-          ? "Слушаем"
-          : item?.kind === "listen"
-            ? "К тренировке"
-            : "Дальше";
-  const checkLabel =
-    needsEcho && !echoOk
-      ? "Сначала повтори вслух"
-      : item?.kind === "explain" || item?.kind === "word_card" || item?.kind === "phrase_card"
-        ? nextItem?.kind === "explain" || nextItem?.kind === "word_card" || nextItem?.kind === "phrase_card"
-          ? "Дальше"
-          : nextItem?.kind === "listen"
-            ? "Слушаем"
-            : "К упражнениям"
-        : "Проверить";
+
+  let continueLabel = "Дальше";
+  if (result?.failed) continueLabel = "На карту";
+  else if (!nextItem) continueLabel = "Закрыть урок";
+  else if (nextItem.kind === "explain") continueLabel = nextItem.stage === "wrap" ? "Итог" : "Дальше";
+  else if (nextItem.kind === "listen") continueLabel = "Слушаем";
+  else if (item?.kind === "listen") continueLabel = "К тренировке";
+
+  let checkLabel = "Проверить";
+  if (needsEcho && !echoOk) {
+    checkLabel = "Сначала повтори вслух";
+  } else if (item?.kind === "explain" || item?.kind === "word_card" || item?.kind === "phrase_card") {
+    if (nextItem?.kind === "explain" || nextItem?.kind === "word_card" || nextItem?.kind === "phrase_card") {
+      checkLabel = "Дальше";
+    } else if (nextItem?.kind === "listen") {
+      checkLabel = "Слушаем";
+    } else {
+      checkLabel = "К упражнениям";
+    }
+  }
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-hidden bg-[#f7f1e4] text-[#241a30]">
-      <SkyWash />
+      <SkyWash image="/world/cinematic/gates-foxi.jpg" />
       <Burst show={Boolean(result?.correct)} />
       <header className="relative z-10 flex items-center gap-3 px-4 pt-4">
         <button
@@ -432,22 +447,18 @@ export default function LessonPage() {
                 item.kind === "fill_blank") &&
                 item.options?.map((option, i) => {
                   const selected = choice === i;
-                  const good = result && i === result.correct_index;
-                  const bad = result && selected && !result.correct;
+                  const good = Boolean(result && i === result.correct_index);
+                  const bad = Boolean(result && selected && !result.correct);
+                  let tone = "border-[#241a30]/12 bg-white";
+                  if (good) tone = "border-[#3a2953] bg-[#f5ed75]/40";
+                  else if (bad) tone = "border-[#ee7349] bg-[#ee7349]/10";
+                  else if (selected) tone = "border-[#3a2953] bg-[#f5ed75]/30";
                   return (
                     <button
                       key={`${option}-${i}`}
                       disabled={Boolean(result)}
                       onClick={() => setChoice(i)}
-                      className={`rounded-2xl border-2 px-4 py-4 text-left text-lg font-semibold ${
-                        good
-                          ? "border-[#3a2953] bg-[#f5ed75]/40"
-                            : bad
-                            ? "border-[#ee7349] bg-[#ee7349]/10"
-                            : selected
-                              ? "border-[#3a2953] bg-[#f5ed75]/30"
-                              : "border-[#241a30]/12 bg-white"
-                      }`}
+                      className={`rounded-2xl border-2 px-4 py-4 text-left text-lg font-semibold ${tone}`}
                     >
                       {option}
                     </button>
