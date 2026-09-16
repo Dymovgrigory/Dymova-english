@@ -77,6 +77,7 @@ case "$cmd" in
     free_port "$API_PORT"
     free_port "$WEB_PORT"
     mkdir -p "$ROOT/world-backend/data"
+    export WORLD_UNLOCK_ALL="${WORLD_UNLOCK_ALL:-1}"
     daemon "$ROOT/world-backend" "$ROOT/world-backend/data/uvicorn.log" \
       "$UVICORN" -m uvicorn main:app --host "$API_HOST" --port "$API_PORT"
     daemon "$ROOT/world" "$ROOT/world-backend/data/next-dev.log" \

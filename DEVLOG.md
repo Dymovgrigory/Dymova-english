@@ -1,3 +1,114 @@
+
+### Сессия 118 (агент — Auto, Duo/Puzzle reference research) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** «Референсы как DUO и Puzzle English! … не только дизайна но и логики…» — expand RESEARCH per PROMT_WORLD §2; matrix; gaps vs live code; no feature rewrite; no Meshy; no commit
+
+**Что сделано:**
+- Expanded `RESEARCH/DUOLINGO_PATTERNS.md`, `PUZZLE_ENGLISH_PATTERNS.md`, `EDTECH_PATTERNS.md`, `GAME_UX_PATTERNS.md`, `FOXINBURG_DIFFERENTIATORS.md` (PATTERN → WHY → RISK → ADAPTATION → IMPLEMENTATION)
+- New `RESEARCH/REFERENCE_MATRIX.md` — Duo | Puzzle | now | target | priority + Top 10 + shipped/fake/missing vs `world-backend` + `world`
+- PRODUCT pointers: `MASTER_PRODUCT_SPECIFICATION.md` §11b; brief notes in `LEARNING_ENGINE.md`, `FOX_BRAIN.md`
+- Code not rewritten (research + product truth only); UI left for parallel chrome agent
+
+**Как проверено:** mapped against live `api.py` routes, `brain.py`/`learn.py`/`engine.py`/`srs.py`, castle/learn UI; no pytest this pass (docs only)
+
+**Решения и нюансы:** §2 forbids UI/brand clone; steal loops only. Chests/`STREAK_BONUSES`/league cohorts/placement/parent UI called out as fake or missing so next build doesn’t polish art over economy truth.
+
+**Деплой:** нет (no commit)
+
+**Осталось / следующий шаг:** code P0 from matrix — streak milestones, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry
+
+---
+
+### Сессия 117 (агент — Auto, Meshy asset wiring) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** wire NEW Meshy assets into frontend where code still points at old/missing paths; interiors already match; no commit
+
+**Что сделано:**
+- Quest plaque: `Chrome.FantasyDock` + `CastleHub` → `/world/ui/frames/quest-plaque.png`
+- Chrome icons: `ChromeIcon` helper; `LockMark`→lock; `SpeakButton`→audio; `EchoMic`→mic/check/warning; lesson back→back
+- Foxi: `foxiPoses` routes guide poses to `/foxi/poses/`; `cheer`→`celebrate`; wave/cheer copies + `*-prev.png` backups
+- Cinematic aliases: `establishing/gates-foxi/library-courtyard.png` from `*-v1`; jpg→`*-prev.jpg`; learn hero→`/world/learn-ui-hero.png`
+- Finish screen: `foxiSrc("cheer")` + `rewards/chest-open.png`
+- Interiors verified live at `buildings.ts` paths (yard/shop/lexicon/stickers/quests)
+
+**Как проверено:** `cd world && npx vitest run` → **25 passed**
+
+**Осталось (unused intentionally):** rewards chest-idle/glow, xp/coin/levelup bursts, podium, lantern, bookmark, quest-scroll; chrome settings/forward/info; cinematic locked-zone/portal/workshop/gates-night/english-street; atlases ornaments/stickers extras; sticker-chalice-legendary / quest-envelope
+
+**Деплой:** нет (no commit)
+
+
+### Сессия 116 (агент — Auto, Meshy ~50 world art batch) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** launch ~50 Meshy nano-banana-pro generations NOW (cost accepted); brand in-world; no map hitbox overwrite; no commit
+
+**Что сделано:**
+- **52 SUCCEEDED** Meshy tasks (i2i interiors + t2i UI/cinematic/Foxi); balance 3044 → **2552** (~492 cr)
+- Interiors logo i2i: `yard/shop/lexicon/stickers/quests.png` (+ learn/gates/library/establishing); school/glory/nest skipped
+- UI: frames/buttons/ornaments/nav/chrome AD06 atlas + 9 chrome icons; chests/bursts/plaque; Foxi poses; cinematic variants
+- Manifest: `world/public/world/_gen/meshy-manifest-2026-09-16.json`; backups `*-prev.png`; **map.png untouched**
+- Updated `PRODUCT/ASSET_PIPELINE.md`
+
+**Осталось / следующий шаг:**
+- Wire new chrome icons + atlases into Fantasy* components / BrandIcon
+- Optional compress oversized scene PNGs; visual QA of logo banners in rooms
+- Do not swap `map.png` without hitbox re-trace
+
+
+### Сессия 115 (агент — Auto, World Identity + Brain v1 + sprint SoT) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** большой code-slice по PROMT_WORLD (Identity gaps, journey SoT, sprint anti-abuse, Fox Brain v1, DEVLOG); Meshy — параллельно другим агентом
+
+**Что сделано:**
+- Identity: `POST /api/world/session/logout` + `auth.revoke_session` (`revoked_at`); public signup child-only; `get_or_create_player` first-write-wins по role
+- TTS: лёгкий rate-limit 30/мин на игрока (429)
+- Sprint: серверная сессия (`session_id` + `/answer`); finish без ответов → `cosmetic_only`, XP=0; награда по server score
+- Fox Brain v1: `weak_words` в hint/why review NBA; `lessons_starred` в `/learn/home`
+- Frontend: `rememberPlayerToken` / reuse wses / `logout`; `syncProgressFromServer` на Learn+Castle; sprint шлёт ответы на сервер
+- PRODUCT §4: все перечисленные файлы уже на месте — новых пустых не добавлял
+
+**Как проверено:**
+- `WORLD_UNLOCK_ALL=1 pytest -q` → **101 passed**
+- `vitest` journey → 14 passed
+
+**Осталось / следующий шаг:**
+- Parent/teacher provisioning API (не public signup)
+- Economy/progression engines глубже (quests beyond daily, shop SoT polish)
+- Не доверять localStorage для chrome дальше (streak/hearts уже с home)
+- Meshy art batch — у другого агента
+
+
+### Сессия 114 (агент — Auto, World Phase0 + fantasy claim UI) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** полный автомат ~2ч — Phase 0 harden + fantasy UI/assets без остановок
+
+**Что сделано:**
+
+- LearnTrail fantasy plaques (no emoji nodes)
+- WorldBar / FoxiGuide / finish+learn CTAs hex metal
+- Sprint WorldBar; daily_xp day-rollover on get_player
+- Daily quest claim API уже был; UI CastleHub: claimable/claimed («Забрать» / «Получено»)
+- `learn.daily_quests` отдаёт `claimed`/`claimable` по ledger `DAILY_QUEST`
+- `core.award` синхронизирует `daily_xp` (единый путь); `engine.finish` больше не дублирует
+- Fantasy chrome: atlas wash на NavChip / Panel / Button; BrandIcon fallback
+- Тесты: claim daily quest + claimed flags; suite **84 passed**
+- world-dev поднят: UI :3002, API :8010
+
+**Как проверено:**
+- `WORLD_UNLOCK_ALL=1 pytest -q` → 84 passed
+- curl health + /learn → 200
+
+**Осталось / следующий шаг:**
+- докачать Meshy quest plaque ornament + вставить в chrome
+- дальше polish interiors / micro-icons без ломки hitbox карты
+- PRODUCT/RESEARCH углубить по мере слотов
+
+
 # Журнал разработки — Сайт «Фоксинбург» (dymova-english.ru)
 
 > Этот журнал ведется для бесшовной передачи работы между агентами. Содержит полную историю общения, решений, кодов и текущий статус.
@@ -1073,39 +1184,8 @@ bot/
 
 ## Текущий статус / Где остановились
 
-**Обновлено в Сессии 56 (2026-08-16, после деплоя):** Control Center задеплоен на прод (main, `dc984b7`): постоянная CRM (crm_* таблицы в state.json/sqlite), omnichannel inbox, карточки клиентов, рассылки с историей и retry, kanban-воронка, аналитика, KB из БД, версии AI-промпта, RBAC (5 ролей). Миграция прода: 115 диалогов → 105 клиентов, 984 сообщения. Данные на абсолютном пути `/opt/foxinburg/data` (BOT_DATA_DIR), ежедневный бэкап в cron (04:00). 947 тестов зелёные. Следующий шаг: владельцу войти в /admin (admin + пароль из лога контейнера, сменить), при желании — SSE, вложения, сбор отзывов.
+**World 2026-09-16 (сессия 118):** Reference matrix + expanded RESEARCH (Duo/Puzzle mechanics only). Path: `RESEARCH/REFERENCE_MATRIX.md`. P0 code next: streak milestones, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry. Parallel: Meshy/chrome wiring (сессии 116–117). Identity/Brain/learn loop already shipped (сессия 115).
 
-**Последние влитые PR:** **#191** (бот: approach-1 — идентификация по номеру, CRM-контекст, ночное самообучение с откатом; прод переразвёрнут 2026-09-11, флаги IDENTIFICATION_REQUIRED/LEARNING_LOOP_ENABLED включены) и **#192** (сайт: SEO-волна 5, 6 статей; прод обновлён). Следующий шаг: живой тест идентификации владельцем в Telegram (кнопка «Поделиться номером») и MAX (номер текстом); наблюдать `/admin/learning_log`.
-
-**Telegram:** @foxinburg_bot работает через long-polling + SOCKS5-прокси (РКН блокирует и inbound, и outbound к api.telegram.org). `TELEGRAM_POLLING=true`, `TELEGRAM_PROXY_URL` в прод `.env`.
-
-**Прод:** бот «Фоксинбург» на ВМ Yandex Cloud (`yc-user@89.169.132.104`), из `main` (commit 2842ed5). LLM: ProxyAPI (gpt-4o-mini) + OpenRouter fallback. Вебхук MAX `https://bot.dymova-english.ru/webhook` активен. Чат-виджет на сайте (`foxi.js`). SSH-ключ `~/.ssh/foxinburg_vps` (секрет `VPS_SSH_PRIVATE_KEY_OWNER`). Nginx `foxinburg-frontend` проксирует bot.dymova-english.ru → `bot-bot-1:8000`.
-
-**Каналы бота (все работают на одном ядре):**
-- MAX — webhook (`/webhook`)
-- Telegram — long-polling через прокси
-- Виджет на сайте — `/api/chat` + `foxi.js`
-
-**Незакрытые хвосты:**
-- Следить за сроком платного SOCKS5-прокси (истечёт — Telegram замолчит).
-- При пересоздании контейнера `bot-bot-1` — заново подключить к сети `foxinburg_foxinburg` (`docker network connect foxinburg_foxinburg bot-bot-1`).
-
-**План фич от владельца (по приоритету, из переписки):**
-1. ✅ №12 — чат-виджет на сайте (PR #94).
-2. ✅ №13 — Telegram (PR #95, #96, #98).
-3. ✅ Возврат «недозаявок» — тёплые напоминания (PR #99).
-4. ✅ Обязательная регистрация перед доступом к боту (PR #100).
-5. ✅ Телефон + ссылка на чат в уведомлениях админу (PR #101).
-6. ✅ Скрыть кнопки до регистрации + reset endpoint (PR #102).
-7. ✅ Обновление страницы дошкольников — возраст 2–6, цены, расписание (PR #104).
-8. ✅ Обновление дорожных карт + 3 новых дошкольных карточки (PR #105).
-9. ✅ Ссылка ЛК → members/login + исправление маршрутов адресов на Яндекс Картах (PR #107).
-10. Сбор отзывов после первых занятий (довольных — на Яндекс/2ГИС, недовольных — админу в личку).
-11. Голосовые сообщения (распознавание голоса клиента).
-
-> **Журналирование:** перед каждым PR добавляй сюда подробную запись по шаблону из `.agents/skills/session-journal/SKILL.md` (skill `session-journal`). Это требование владельца — журнал ведётся по каждому PR автоматически.
-
----
 
 ## Технические заметки
 
@@ -5848,7 +5928,6 @@ tgapp-экран «Мои занятия», страница /schedule на са
 
 ## Текущий статус / Где остановились
 
-- World Journey Wave 1–3 + cinematic UI закоммичены в `foxinburg-world-v1` (PR #223), превью `new.dymova-english.ru` обновлено.
-- **2026-09-16 (продолжение):** hub-карта перерисована Meshy (−18 cr: text + i2i layout-preserving) → `map.png` + `map-dusk.png`; CastleHub = full-bleed одна сцена (без establishing «поверх»); learn trail/panel dark-glass; Meshy остаток **215**.
-- Следующее: деплой обновлённой карты; при кривых кликах — `?debugHotspots=1` и тонкая правка полигонов; интерьеры зданий следующей волной Meshy.
-
+- World Journey Wave 1–3 + cinematic UI закоммичены в `foxinburg-world-v1` (PR #223).
+- **2026-09-16:** Phase 0–1 + Fox Brain + learn loop shipped; Meshy batches 116–117; **сессия 118** — `RESEARCH/REFERENCE_MATRIX.md` + expanded Duo/Puzzle research (logic only).
+- **Следующее (code P0):** streak `STREAK_BONUSES`, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry. Visual chrome — parallel agent.

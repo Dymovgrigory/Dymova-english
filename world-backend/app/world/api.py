@@ -5,6 +5,9 @@ X-World-Player (external_key игрока мира). Не CRM и не miniapp ш
 """
 from __future__ import annotations
 
+import time
+from collections import defaultdict
+
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
@@ -12,12 +15,19 @@ from . import activities, auth, core, engine, learn
 
 router = APIRouter(prefix="/api/world", tags=["world"])
 
+# Light TTS burn protection (per external_key, rolling 60s window).
+TTS_RATE_LIMIT = 30
+_tts_hits: dict[str, list[float]] = defaultdict(list)
+
 
 def _player_key(x_world_player: str | None, *, signed: bool = True) -> str:
-    if signed:
-        return auth.verify(x_world_player)
     if not x_world_player:
         raise HTTPException(401, "X-World-Player header required")
+    # Opaque sessions always resolve (bootstrap + API).
+    if x_world_player.startswith(auth.SESSION_PREFIX):
+        return auth.verify(x_world_player)
+    if signed:
+        return auth.verify(x_world_player)
     if auth.player_secret() and "." in x_world_player:
         return auth.verify(x_world_player)
     return x_world_player
@@ -32,6 +42,18 @@ def _guard(fn, *a, **kw):
         raise HTTPException(409, str(e))
 
 
+def _tts_allow(external_key: str) -> bool:
+    now = time.monotonic()
+    window = list(_tts_hits.get(external_key) or [])
+    window = [t for t in window if now - t < 60.0]
+    if len(window) >= TTS_RATE_LIMIT:
+        _tts_hits[external_key] = window
+        return False
+    window.append(now)
+    _tts_hits[external_key] = window
+    return True
+
+
 class PlayerCreate(BaseModel):
     display_name: str = "Explorer"
     role: str = "child"
@@ -39,11 +61,26 @@ class PlayerCreate(BaseModel):
 
 @router.post("/players")
 def create_player(body: PlayerCreate, x_world_player: str | None = Header(None)):
+    """Public bootstrap: child only + opaque session token (Phase 1)."""
     key = _player_key(x_world_player, signed=False)
-    if body.role not in ("child", "parent", "teacher", "admin"):
-        raise HTTPException(422, "invalid role")
-    player = _guard(core.get_or_create_player, key, body.display_name, body.role)
-    return {**player, "token": auth.sign(key)}
+    role = (body.role or "child").strip().lower()
+    if role != "child":
+        raise HTTPException(403, "public signup is child-only; elevated roles require staff provisioning")
+    player = _guard(core.get_or_create_player, key, body.display_name, "child")
+    token = auth.issue_session(player["id"])
+    return {**player, "token": token}
+
+
+@router.post("/session/logout")
+def session_logout(x_world_player: str | None = Header(None)):
+    """Revoke current opaque session. Legacy HMAC keys are a no-op ok."""
+    if not x_world_player:
+        raise HTTPException(401, "X-World-Player header required")
+    if x_world_player.startswith(auth.SESSION_PREFIX):
+        # Resolve first so bad tokens 401; then revoke.
+        auth.verify(x_world_player)
+        auth.revoke_session(x_world_player)
+    return {"ok": True}
 
 
 @router.get("/player")
@@ -202,19 +239,48 @@ def learn_sprint(x_world_player: str | None = Header(None)):
     return _guard(learn.sprint, _player_key(x_world_player))
 
 
+class SprintAnswerBody(BaseModel):
+    en: str
+    choice: str
+
+
+@router.post("/learn/sprint/sessions/{session_id}/answer")
+def learn_sprint_answer(session_id: str, body: SprintAnswerBody,
+                        x_world_player: str | None = Header(None)):
+    return _guard(
+        learn.sprint_answer, _player_key(x_world_player), session_id, body.en, body.choice,
+    )
+
+
 class SprintFinishBody(BaseModel):
-    score: int
-    total: int
+    session_id: str | None = None
+    score: int | None = None
+    total: int | None = None
 
 
 @router.post("/learn/sprint/finish")
 def learn_sprint_finish(body: SprintFinishBody, x_world_player: str | None = Header(None)):
-    return _guard(learn.finish_sprint, _player_key(x_world_player), body.score, body.total)
+    return _guard(
+        learn.finish_sprint,
+        _player_key(x_world_player),
+        body.session_id,
+        body.score,
+        body.total,
+    )
 
 
 @router.get("/learn/quests")
 def learn_quests(x_world_player: str | None = Header(None)):
     return {"quests": _guard(learn.daily_quests, _player_key(x_world_player))}
+
+
+class DailyClaimBody(BaseModel):
+    quest_id: str
+
+
+@router.post("/learn/quests/claim")
+def learn_quest_claim(body: DailyClaimBody, x_world_player: str | None = Header(None)):
+    return _guard(learn.claim_daily_quest, _player_key(x_world_player), body.quest_id)
 
 
 @router.get("/learn/stickers")
@@ -228,7 +294,10 @@ def learn_league(x_world_player: str | None = Header(None)):
 
 
 @router.get("/tts")
-def tts_speak(q: str = "hello"):
+def tts_speak(q: str = "hello", x_world_player: str | None = Header(None)):
+    key = _player_key(x_world_player)  # require identity — no anonymous TTS burn
+    if not _tts_allow(key):
+        raise HTTPException(429, "tts rate limit")
     from fastapi.responses import FileResponse, JSONResponse
     from .tts import synth_english
     path = synth_english(q)

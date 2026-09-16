@@ -109,7 +109,20 @@ export function greetingLine(
   return `${who}, снова здесь — продолжим путь.`;
 }
 
-export function missionFor(input: { due: number; nextLessonId: string | null; lessonsFinished?: number }): Mission {
+export function missionFor(input: {
+  due: number;
+  nextLessonId: string | null;
+  lessonsFinished?: number;
+  claimable?: number;
+}): Mission {
+  if ((input.claimable ?? 0) > 0) {
+    return {
+      kind: "castle",
+      href: "/world?pulse=quests",
+      title: "Награда дня готова",
+      hint: "Забери поручение в беседке — XP уже ждёт",
+    };
+  }
   if (input.due > 0) {
     return {
       kind: "practice",
@@ -167,6 +180,21 @@ export function recordLessonFinish(input: {
     lastFinishAt: new Date().toISOString(),
     lastRewardBuilding: pickRewardBuilding(input, { firstTriumph, leveledUp, nextCount }),
     lastKnownLevel: level,
+  });
+}
+
+/** Server SoT for progress chrome — never shrink local count below server stars. */
+export function syncProgressFromServer(input: {
+  lessonsStarred: number;
+  name?: string;
+  level?: number;
+}): JourneyState {
+  const prev = loadJourney();
+  const lessonsFinished = Math.max(prev.lessonsFinished, Math.max(0, input.lessonsStarred | 0));
+  return saveJourney({
+    lessonsFinished,
+    name: input.name?.trim() ? input.name.trim() : prev.name,
+    lastKnownLevel: input.level ?? prev.lastKnownLevel,
   });
 }
 

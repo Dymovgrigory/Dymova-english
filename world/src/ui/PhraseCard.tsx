@@ -13,7 +13,10 @@ type Props = {
 
 export function PhraseCard({ en, speak, onEchoPass, onEchoBlocked }: Props) {
   return (
-    <article className="mt-2 overflow-hidden rounded-[28px] bg-white px-5 py-8 text-center shadow-[0_10px_0_rgba(58,41,83,0.08)]">
+    <article
+      className="mt-2 overflow-hidden border border-[#3a2953]/10 bg-white px-5 py-8 text-center shadow-[0_10px_0_rgba(58,41,83,0.08)]"
+      style={{ clipPath: "polygon(3% 0, 97% 0, 100% 6%, 100% 94%, 97% 100%, 3% 100%, 0 94%, 0 6%)" }}
+    >
       <p className="text-sm font-bold text-[#3a2953]/45">Фраза урока</p>
       <p className="mt-3 font-[family-name:var(--font-display)] text-4xl font-extrabold leading-tight text-[#3a2953]">
         {en}

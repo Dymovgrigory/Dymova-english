@@ -142,9 +142,14 @@ def test_mcq_and_type_and_match_answers():
     built = payload["items"]
 
     mcq = next(i for i, it in enumerate(built) if it["kind"] == "mcq_en_ru")
-    r = engine.answer("child-1", sid, mcq, _solve(built[mcq]))
+    r = engine.answer("child-1", sid, mcq, {**_solve(built[mcq]), "latency_ms": 1400})
     assert r["correct"] is True
     assert r["hearts"] == 5
+    stored = json.loads(
+        get_conn().execute("SELECT answers FROM activity_sessions WHERE id=?", (sid,)).fetchone()[0]
+    )
+    assert stored[str(mcq)]["latency_ms"] == 1400
+    assert stored[str(mcq)]["attempt_n"] == 1
 
     typed = next(i for i, it in enumerate(built) if it["kind"] == "type_en")
     wrong = engine.answer("child-1", sid, typed, {"text": "zzzz"})

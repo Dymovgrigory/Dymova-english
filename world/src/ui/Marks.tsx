@@ -10,11 +10,19 @@ export function HeartMark({ on, onDark = false }: { on: boolean; onDark?: boolea
 export function Hearts({ count, max = 5, onDark = false }: { count: number; max?: number; onDark?: boolean }) {
   return (
     <span className="flex items-center gap-0.5" aria-label={`${count} из ${max} сердец`}>
-      {Array.from({ length: max }, (_, i) => (
-        <span key={i} className={i < count ? "fx-heart" : undefined}>
-          <HeartMark on={i < count} onDark={onDark} />
-        </span>
-      ))}
+      {Array.from({ length: max }, (_, i) =>
+        i < count ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={i}
+            src="/world/ui/icons/heart.png"
+            alt=""
+            className="fx-heart h-5 w-5 object-contain drop-shadow"
+          />
+        ) : (
+          <HeartMark key={i} on={false} onDark={onDark} />
+        ),
+      )}
     </span>
   );
 }
@@ -34,10 +42,13 @@ export function Stars({ count, onDark = false }: { count: number; onDark?: boole
 
 export function LockMark() {
   return (
-    <svg viewBox="0 0 24 24" className="h-8 w-8 fill-none stroke-[#f5ed75]/55" strokeWidth="2" aria-hidden>
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/world/ui/icons/chrome/lock.png"
+      alt=""
+      className="h-8 w-8 object-contain opacity-90 drop-shadow"
+      aria-hidden
+    />
   );
 }
 

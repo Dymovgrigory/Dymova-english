@@ -2,6 +2,7 @@
 
 import { echoPass, echoScore } from "@/lib/echo";
 import { stopSpeaking } from "@/lib/speak";
+import { ChromeIcon } from "@/ui/fantasy/Chrome";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -195,18 +196,25 @@ export function EchoMic({ target, onPass, onBlocked }: Props) {
         type="button"
         onClick={() => void listen()}
         disabled={state === "listen"}
-        className={`relative overflow-hidden rounded-full px-6 py-3.5 text-sm font-extrabold shadow-[0_4px_0_rgba(36,26,48,0.18)] ${
+        className={`relative min-h-[48px] overflow-hidden border px-6 py-3.5 text-sm font-extrabold ${
           state === "ok"
-            ? "bg-[#7fd8c9] text-[#13332c]"
+            ? "border-[#7fd8c9]/70 bg-[linear-gradient(180deg,#b8fff2,#7fd8c9)] text-[#13332c] shadow-[0_4px_0_#1f6a5c]"
             : state === "listen"
-              ? "bg-[#3a2953] text-[#f5ed75]"
+              ? "border-[#f5ed75]/45 bg-[linear-gradient(180deg,#3a2953,#241a30)] text-[#f5ed75] shadow-[0_4px_0_#1a1230]"
               : state === "retry"
-                ? "bg-[#ee7349] text-white"
-                : "bg-[#f5ed75] text-[#241a30]"
+                ? "border-[#ee7349]/55 bg-[linear-gradient(180deg,#ee7349,#c45a38)] text-white shadow-[0_4px_0_#7a2e1c]"
+                : "border-[#fff6a8]/70 bg-[linear-gradient(180deg,#fff6a8,#f5ed75_35%,#e8b93e)] text-[#241a30] shadow-[0_4px_0_#9a7a18]"
         }`}
+        style={{ clipPath: "polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%)" }}
       >
-        {state === "listen" ? <span className="absolute inset-0 animate-pulse rounded-full bg-[#f5ed75]/20" /> : null}
-        <span className="relative">🎙️ {label}</span>
+        {state === "listen" ? <span className="absolute inset-0 animate-pulse bg-[#f5ed75]/20" /> : null}
+        <span className="relative inline-flex items-center gap-2">
+          <ChromeIcon
+            name={state === "ok" ? "check" : state === "retry" ? "warning" : "mic"}
+            className="h-5 w-5"
+          />
+          {label}
+        </span>
       </button>
       {state === "listen" ? (
         <span className="flex h-3 w-36 overflow-hidden rounded-full bg-[#3a2953]/15">

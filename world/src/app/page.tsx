@@ -5,8 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { GameButton } from "@/ui/Button";
 import { greetingLine, isFirstSession, loadJourney, saveJourney } from "@/lib/journey";
 
-const HERO = "/world/cinematic/establishing.jpg";
-const GATE = "/world/cinematic/gates-foxi.jpg";
+const HERO = "/world/cinematic/establishing.png";
+const GATE = "/world/cinematic/gates-foxi.png";
 
 export default function Home() {
   const router = useRouter();
@@ -63,7 +63,8 @@ export default function Home() {
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Как тебя зовут?"
-              className="w-full rounded-2xl border border-white/20 bg-[#241a30]/55 px-5 py-4 text-center text-lg font-bold text-white outline-none backdrop-blur-md placeholder:text-white/45 focus:border-[#f5ed75]"
+              className="w-full border border-[#f5ed75]/35 bg-[#241a30]/70 px-5 py-4 text-center text-lg font-bold text-white outline-none backdrop-blur-md placeholder:text-white/45 focus:border-[#f5ed75]"
+              style={{ clipPath: "polygon(4% 0, 96% 0, 100% 18%, 100% 82%, 96% 100%, 4% 100%, 0 82%, 0 18%)" }}
               autoComplete="nickname"
             />
           </label>
@@ -76,7 +77,8 @@ export default function Home() {
           <button
             type="button"
             onClick={() => enter("/world")}
-            className="rounded-2xl border border-white/25 bg-white/5 py-3 text-sm font-extrabold text-[#f5ed75] backdrop-blur-sm transition hover:bg-white/10"
+            className="border border-[#f5ed75]/35 bg-[linear-gradient(180deg,rgba(58,41,83,0.85),rgba(36,26,48,0.92))] py-3 text-sm font-extrabold text-[#f5ed75] backdrop-blur-sm transition hover:border-[#f5ed75]/60"
+            style={{ clipPath: "polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%)" }}
           >
             {returning ? "Открыть замок" : "Сначала взглянуть на замок"}
           </button>

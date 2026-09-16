@@ -112,7 +112,8 @@ def test_every_unit_has_a_checkpoint_exam():
     assert nodes[-1]["id"] == "family-C1"
 
 
-def test_checkpoint_is_a_drill_only_exam_over_the_whole_unit():
+def test_checkpoint_is_a_drill_only_exam_over_the_whole_unit(monkeypatch):
+    monkeypatch.setattr(config, "UNLOCK_ALL", True)
     built = items.build_lesson_items("family", 7, checkpoint=True, seed=3)
     assert len(built) == config.CHECKPOINT_ITEMS
     assert not any(it["kind"] in ("explain", "word_card", "phrase_card") for it in built)

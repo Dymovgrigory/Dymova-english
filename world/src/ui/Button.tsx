@@ -11,7 +11,9 @@ type Props = {
 export function GameButton({ children, onClick, disabled }: Props) {
   return (
     <button
-      className="rounded-full bg-[#f5ed75] px-6 py-3 font-[family-name:var(--font-display)] text-sm font-extrabold uppercase tracking-wide text-[#241a30] transition-transform duration-150 hover:brightness-110 active:scale-[0.96] disabled:opacity-40"
+      type="button"
+      className="relative w-full overflow-hidden border border-[#fff6a8]/70 bg-[linear-gradient(180deg,#fff6a8,#f5ed75_35%,#e8b93e)] px-6 py-3.5 font-[family-name:var(--font-display)] text-base font-extrabold tracking-wide text-[#241a30] shadow-[0_5px_0_#9a7a18] transition active:translate-y-0.5 active:shadow-none disabled:opacity-40"
+      style={{ clipPath: "polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%)" }}
       onClick={onClick}
       disabled={disabled}
     >

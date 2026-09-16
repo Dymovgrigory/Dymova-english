@@ -1,10 +1,9 @@
 """Домашний экран курса, магазин, лига, ежедневные квесты."""
 from __future__ import annotations
 
-import uuid
 from datetime import datetime, timedelta, timezone
 
-from . import catalog, config, core, engine, srs
+from . import brain, catalog, config, core, engine, srs
 from .db import get_conn
 
 
@@ -36,29 +35,65 @@ def daily_quests(external_key: str) -> list[dict]:
         "SELECT COUNT(*) AS n FROM lesson_progress WHERE player_id=? AND stars=3 AND date(updated_at)=?",
         (player["id"], today),
     ).fetchone()["n"]
+    claimed_rows = get_conn().execute(
+        "SELECT idempotency_key FROM xp_transactions"
+        " WHERE player_id=? AND type='DAILY_QUEST'"
+        " AND idempotency_key LIKE ?",
+        (player["id"], f"daily-quest:{player['id']}:{today}:%"),
+    ).fetchall()
+    claimed: set[str] = set()
+    prefix = f"daily-quest:{player['id']}:{today}:"
+    for r in claimed_rows:
+        key = str(r["idempotency_key"])
+        if key.startswith(prefix):
+            rest = key[len(prefix):]
+            # ledger stores `{idem}:xp`
+            if rest.endswith(":xp"):
+                rest = rest[:-3]
+            claimed.add(rest)
+
+    def pack(qid: str, title: str, progress: int, target: int) -> dict:
+        done = progress >= target
+        return {
+            "id": qid,
+            "title_ru": title,
+            "progress": min(progress, target),
+            "target": target,
+            "done": done,
+            "claimed": qid in claimed,
+            "claimable": done and qid not in claimed,
+        }
+
     return [
-        {
-            "id": "xp-goal",
-            "title_ru": f"Набери {config.DAILY_XP_GOAL} XP",
-            "progress": min(xp_today, config.DAILY_XP_GOAL),
-            "target": config.DAILY_XP_GOAL,
-            "done": xp_today >= config.DAILY_XP_GOAL,
-        },
-        {
-            "id": "lesson-1",
-            "title_ru": "Пройди 1 урок",
-            "progress": min(int(lessons_today), 1),
-            "target": 1,
-            "done": lessons_today >= 1,
-        },
-        {
-            "id": "perfect-1",
-            "title_ru": "Урок без ошибок",
-            "progress": min(int(perfect), 1),
-            "target": 1,
-            "done": perfect >= 1,
-        },
+        pack("xp-goal", f"Набери {config.DAILY_XP_GOAL} XP", xp_today, config.DAILY_XP_GOAL),
+        pack("lesson-1", "Пройди 1 урок", int(lessons_today), 1),
+        pack("perfect-1", "Урок без ошибок", int(perfect), 1),
     ]
+
+
+def claim_daily_quest(external_key: str, quest_id: str) -> dict:
+    """Grant daily quest XP once per day when progress is done."""
+    quests = {q["id"]: q for q in daily_quests(external_key)}
+    q = quests.get(quest_id)
+    if q is None:
+        raise core.NotFound(f"daily quest {quest_id!r}")
+    if not q["done"]:
+        raise core.Conflict("quest not complete")
+    if q.get("claimed"):
+        # Idempotent success for double-tap
+        player = core.get_player(external_key)
+        return {"quest_id": quest_id, "ok": True, "xp_delta": 0, "coins_delta": 0, "player": player}
+    player = core.get_player(external_key)
+    day = engine._day()
+    xp = int(config.XP_REWARDS.get("daily_quest", 15))
+    result = core.award(
+        external_key,
+        xp=xp,
+        source=f"daily:{quest_id}",
+        type_="DAILY_QUEST",
+        idempotency_key=f"daily-quest:{player['id']}:{day}:{quest_id}",
+    )
+    return {"quest_id": quest_id, "ok": True, **result}
 
 
 LEAGUE_TIERS = ((500, "gold"), (150, "silver"), (0, "bronze"))
@@ -106,9 +141,14 @@ def league(external_key: str) -> dict:
 
 
 def restore_hearts(external_key: str) -> dict:
-    player = core.get_player(external_key)
-    engine.set_hearts(player["id"], config.HEARTS_MAX)
-    return {"hearts": config.HEARTS_MAX, "hearts_max": config.HEARTS_MAX}
+    """Hearts refill is a shop purchase — never free."""
+    bought = buy(external_key, "hearts_refill")
+    return {
+        "hearts": config.HEARTS_MAX,
+        "hearts_max": config.HEARTS_MAX,
+        "coins_delta": bought.get("coins_delta", 0),
+        "player": bought.get("player"),
+    }
 
 
 def shop() -> list[dict]:
@@ -123,12 +163,35 @@ def buy(external_key: str, sku: str) -> dict:
     if spec is None:
         raise core.NotFound(f"sku {sku!r} not found")
     player = core.get_player(external_key)
+    conn = get_conn()
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        n = conn.execute(
+            "SELECT COUNT(*) AS c FROM coin_transactions"
+            " WHERE player_id=? AND type=? AND source=?",
+            (player["id"], "SHOP_BUY", sku),
+        ).fetchone()["c"]
+        spend_key = f"shop:{player['id']}:{sku}:{n}"
+        conn.execute("COMMIT")
+    except Exception:
+        conn.execute("ROLLBACK")
+        raise
     spent = core.spend(
         external_key, coins=spec["coins"], source=sku, type_="SHOP_BUY",
-        idempotency_key=f"shop:{player['id']}:{sku}:{uuid.uuid4()}",
+        idempotency_key=spend_key,
     )
+    if not spent.get("applied"):
+        return {
+            "sku": sku,
+            "ok": True,
+            "player": core.get_player(external_key),
+            "coins_delta": 0,
+            "items_granted": [],
+        }
+    hearts_out = None
     if sku == "hearts_refill":
         engine.set_hearts(player["id"], config.HEARTS_MAX)
+        hearts_out = config.HEARTS_MAX
     elif sku == "streak_freeze":
         get_conn().execute(
             "UPDATE players SET streak_freeze=streak_freeze+1 WHERE id=?",
@@ -142,8 +205,12 @@ def buy(external_key: str, sku: str) -> dict:
             idempotency_key=f"shop-item:{player['id']}:{sku}",
         )
         granted = extra.get("items_granted") or []
-    return {"sku": sku, "ok": True, "player": core.get_player(external_key),
-            "coins_delta": spent["coins_delta"], "items_granted": granted}
+    out = {"sku": sku, "ok": True, "player": core.get_player(external_key),
+           "coins_delta": spent["coins_delta"], "items_granted": granted}
+    if hearts_out is not None:
+        out["hearts"] = hearts_out
+        out["hearts_max"] = config.HEARTS_MAX
+    return out
 
 
 def album(external_key: str) -> dict:
@@ -168,6 +235,7 @@ def home(external_key: str) -> dict:
     path = engine.get_path(external_key)
     current = current_lesson_id(external_key)
     unit = next((u for u in path["units"] if any(n["id"] == current for n in u["lessons"])), path["units"][0])
+    model = brain.learner_model(external_key)
     return {
         "player": core.get_player(external_key),
         "hearts": {"current": hearts["hearts"], "max": config.HEARTS_MAX,
@@ -181,6 +249,8 @@ def home(external_key: str) -> dict:
         "stickers": album(external_key),
         "current_lesson_id": current,
         "current_unit": unit,
+        "next_best_action": brain.next_best_action(external_key),
+        "lessons_starred": model["lessons_starred"],
         "course": {
             "language": "en",
             "from": "ru",
@@ -215,7 +285,10 @@ def review(external_key: str) -> dict:
 
 
 def sprint(external_key: str) -> dict:
-    """Слова с картинками для мини-игры «слово против картинки»."""
+    """Слова с картинками + серверная сессия (анти-накрутка награды)."""
+    import json
+    import uuid
+
     player = core.get_player(external_key)
     current = current_lesson_id(external_key) or "family-L1"
     try:
@@ -229,22 +302,130 @@ def sprint(external_key: str) -> dict:
     ]
     if len(cards) < 4:
         cards = [{"en": w["en"], "ru": w["ru"], "image": w.get("image") or ""} for w in unit["words"]]
-    return {"unit_id": unit_id, "title_ru": unit["place_ru"], "words": cards[:12],
-            "player_id": player["id"]}
-
-
-def finish_sprint(external_key: str, score: int, total: int) -> dict:
-    player = core.get_player(external_key)
-    score = max(0, min(int(score), int(total) or 0))
-    xp = 5 if score > 0 else 0
-    coins = 2 if score == total and total else 0
-    result = core.award(
-        external_key, xp=xp, coins=coins, source="sprint", type_="SPRINT_REWARD",
-        idempotency_key=f"sprint:{player['id']}:{engine._day()}",
+    words = cards[:12]
+    session_id = str(uuid.uuid4())
+    payload = {"kind": "sprint", "unit_id": unit_id, "words": [w["en"] for w in words]}
+    get_conn().execute(
+        "INSERT INTO activity_sessions (id, player_id, activity_id, payload, answers, status, score)"
+        " VALUES (?,?,?,?,?,?,?)",
+        (session_id, player["id"], f"sprint:{unit_id}", json.dumps(payload), "{}", "active", 0),
     )
-    return {"score": score, "total": total, "xp_delta": result["xp_delta"],
-            "coins_delta": result["coins_delta"], "player": result["player"]}
+    return {
+        "session_id": session_id,
+        "unit_id": unit_id,
+        "title_ru": unit["place_ru"],
+        "words": words,
+        "player_id": player["id"],
+    }
 
+
+def sprint_answer(external_key: str, session_id: str, en: str, choice: str) -> dict:
+    """Засчитать ответ спринта на сервере. Клиентский score не доверяем."""
+    import json
+
+    player = core.get_player(external_key)
+    row = get_conn().execute(
+        "SELECT * FROM activity_sessions WHERE id=? AND player_id=?",
+        (session_id, player["id"]),
+    ).fetchone()
+    if row is None:
+        raise core.NotFound(f"sprint session {session_id!r}")
+    if row["status"] != "active":
+        raise core.Conflict("sprint session already finished")
+    payload = json.loads(row["payload"] or "{}")
+    if payload.get("kind") != "sprint":
+        raise core.NotFound(f"sprint session {session_id!r}")
+    answers = json.loads(row["answers"] or "{}")
+    want = (en or "").strip().lower()
+    got = (choice or "").strip().lower()
+    if want not in {w.lower() for w in payload.get("words") or []}:
+        raise core.NotFound(f"word {en!r} not in sprint")
+    # One scored attempt per prompt word.
+    if want in answers:
+        return {
+            "en": en,
+            "correct": bool(answers[want].get("correct")),
+            "score": int(row["score"] or 0),
+            "answered": len(answers),
+            "total": len(payload.get("words") or []),
+        }
+    correct = want == got and want != ""
+    answers[want] = {"choice": choice, "correct": correct}
+    score = int(row["score"] or 0) + (1 if correct else 0)
+    get_conn().execute(
+        "UPDATE activity_sessions SET answers=?, score=? WHERE id=?",
+        (json.dumps(answers), score, session_id),
+    )
+    return {
+        "en": en,
+        "correct": correct,
+        "score": score,
+        "answered": len(answers),
+        "total": len(payload.get("words") or []),
+    }
+
+
+def finish_sprint(external_key: str, session_id: str | None = None,
+                  score: int | None = None, total: int | None = None) -> dict:
+    """Награда только по серверному score сессии. Без ответов — cosmetic_only."""
+    import json
+
+    player = core.get_player(external_key)
+    if not session_id:
+        # Legacy body without session: treat as cosmetic (no XP).
+        return {
+            "score": max(0, int(score or 0)),
+            "total": max(0, int(total or 0)),
+            "xp_delta": 0,
+            "coins_delta": 0,
+            "player": player,
+            "daily_xp": int(player.get("daily_xp") or 0),
+            "daily_goal": config.DAILY_XP_GOAL,
+            "cosmetic_only": True,
+        }
+    row = get_conn().execute(
+        "SELECT * FROM activity_sessions WHERE id=? AND player_id=?",
+        (session_id, player["id"]),
+    ).fetchone()
+    if row is None:
+        raise core.NotFound(f"sprint session {session_id!r}")
+    payload = json.loads(row["payload"] or "{}")
+    if payload.get("kind") != "sprint":
+        raise core.NotFound(f"sprint session {session_id!r}")
+    words_n = len(payload.get("words") or [])
+    server_score = int(row["score"] or 0)
+    already = row["status"] == "completed"
+    if not already:
+        get_conn().execute(
+            "UPDATE activity_sessions SET status='completed', completed_at=datetime('now') WHERE id=?",
+            (session_id,),
+        )
+
+    cosmetic = server_score <= 0
+    xp = 0 if cosmetic or already else (5 if server_score > 0 else 0)
+    coins = 0 if cosmetic or already else (2 if server_score == words_n and words_n else 0)
+    if xp or coins:
+        result = core.award(
+            external_key, xp=xp, coins=coins, source="sprint", type_="SPRINT_REWARD",
+            idempotency_key=f"sprint:{player['id']}:{engine._day()}:{session_id}",
+        )
+    else:
+        result = {
+            "xp_delta": 0,
+            "coins_delta": 0,
+            "player": core.get_player(external_key),
+        }
+    return {
+        "session_id": session_id,
+        "score": server_score,
+        "total": words_n,
+        "xp_delta": result["xp_delta"],
+        "coins_delta": result["coins_delta"],
+        "player": result["player"],
+        "daily_xp": int(result["player"].get("daily_xp") or 0),
+        "daily_goal": config.DAILY_XP_GOAL,
+        "cosmetic_only": cosmetic,
+    }
 
 def words(external_key: str, unit_id: str) -> dict:
     try:

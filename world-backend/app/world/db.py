@@ -170,6 +170,7 @@ _PLAYER_EXTRAS = {
 _TABLE_EXTRAS = {
     "players": _PLAYER_EXTRAS,
     "word_stats": {"due_at": "TEXT"},
+    "auth_sessions": {"revoked_at": "TEXT"},
 }
 
 
@@ -320,5 +321,22 @@ CREATE TABLE IF NOT EXISTS mistakes (
     item       TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     cleared    INTEGER NOT NULL DEFAULT 0
+);
+
+-- Phase 1 Identity: opaque sessions (revocable) + family links.
+CREATE TABLE IF NOT EXISTS auth_sessions (
+    id          TEXT PRIMARY KEY,
+    player_id   INTEGER NOT NULL REFERENCES players(id),
+    token_hash  TEXT NOT NULL UNIQUE,
+    expires_at  TEXT NOT NULL,
+    revoked_at  TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS guardianship (
+    parent_player_id INTEGER NOT NULL REFERENCES players(id),
+    child_player_id  INTEGER NOT NULL REFERENCES players(id),
+    created_at       TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (parent_player_id, child_player_id)
 );
 """

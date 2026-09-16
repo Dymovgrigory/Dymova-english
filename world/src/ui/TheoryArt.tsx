@@ -6,7 +6,10 @@ type Props = { id?: string };
 
 function Frame({ children, label }: { children: ReactNode; label?: string }) {
   return (
-    <figure className="my-4 overflow-hidden rounded-3xl border border-[#241a30]/10 bg-white p-4">
+    <figure
+      className="my-4 overflow-hidden border border-[#241a30]/10 bg-white p-4"
+      style={{ clipPath: "polygon(3% 0, 97% 0, 100% 6%, 100% 94%, 97% 100%, 3% 100%, 0 94%, 0 6%)" }}
+    >
       <div className="grid min-h-40 place-items-center">{children}</div>
       {label ? <figcaption className="mt-3 text-center text-sm text-[#241a30]/55">{label}</figcaption> : null}
     </figure>
@@ -163,9 +166,9 @@ export function TheoryArt({ id }: Props) {
     return (
       <Frame label="Просьба — please. Спасибо — thank you. Отказ — no, thank you.">
         <div className="flex flex-wrap justify-center gap-3 text-sm font-bold">
-          <span className="rounded-full bg-[#f5ed75] px-3 py-2">please</span>
-          <span className="rounded-full bg-[#7fd8c9] px-3 py-2">thank you</span>
-          <span className="rounded-full bg-white px-3 py-2">sorry</span>
+          <span className="border border-[#9a7a18]/30 bg-[#f5ed75] px-3 py-2" style={{ clipPath: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)" }}>please</span>
+          <span className="border border-[#1f6a5c]/30 bg-[#7fd8c9] px-3 py-2" style={{ clipPath: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)" }}>thank you</span>
+          <span className="border border-[#241a30]/15 bg-white px-3 py-2" style={{ clipPath: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)" }}>sorry</span>
         </div>
       </Frame>
     );

@@ -67,8 +67,8 @@ PRACTICE_ITEMS = 12
 PRACTICE_ITEMS_MIN = 6
 HEART_REGEN_SEC = 4 * 60 * 60
 DAILY_XP_GOAL = 50
-# Пока строим продукт — все уроки открыты. WORLD_UNLOCK_ALL=0 вернёт линейные замки.
-UNLOCK_ALL = os.environ.get("WORLD_UNLOCK_ALL", "1").strip().lower() not in {"0", "false", "no"}
+# Prod default: linear locks. Local/dev can set WORLD_UNLOCK_ALL=1.
+UNLOCK_ALL = os.environ.get("WORLD_UNLOCK_ALL", "0").strip().lower() not in {"0", "false", "no"}
 SHOP = {
     "hearts_refill": {"coins": 350, "title_ru": "Полные сердца"},
     "streak_freeze": {"coins": 200, "title_ru": "Заморозка серии"},

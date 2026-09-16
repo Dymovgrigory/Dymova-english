@@ -1,3 +1,17 @@
+import { clearPlayerToken, readPlayerToken, rememberPlayerToken } from "@/lib/token";
+
+export type NextBestAction = {
+  kind: "quest" | "review" | "lesson";
+  href: string;
+  title: string;
+  hint: string;
+  why: string;
+  analytic_id: string;
+  lesson_id?: string;
+  due?: number;
+  weak_words?: { word_en: string; unit_id?: string; strength?: number; wrong_count?: number }[];
+};
+
 export type Player = {
   id: number;
   external_key: string;
@@ -244,8 +258,8 @@ export class ApiError extends Error {
 export function playerKey(): string {
   if (typeof window === "undefined") return "guest";
   try {
-    const token = window.localStorage.getItem("world.playerToken");
-    if (token) return token;
+    const token = readPlayerToken();
+    if (token && token !== "guest") return token;
     let key = window.localStorage.getItem("world.playerKey");
     if (!key) {
       key = `explorer-${crypto.randomUUID()}`;
@@ -285,14 +299,31 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const worldApi = {
   ensurePlayer: async (name: string) => {
+    const existing = readPlayerToken();
+    if (existing.startsWith("wses.")) {
+      try {
+        return await call<Player>("/api/world/player");
+      } catch (err) {
+        if (!(err instanceof ApiError) || err.status !== 401) throw err;
+        clearPlayerToken();
+      }
+    }
     const player = await call<Player & { token?: string }>("/api/world/players", {
       method: "POST",
       body: JSON.stringify({ display_name: name }),
     });
-    if (player.token && typeof window !== "undefined") {
-      window.localStorage.setItem("world.playerToken", player.token);
+    if (player.token) {
+      rememberPlayerToken(player.token, player.external_key);
     }
     return player;
+  },
+  logout: async () => {
+    try {
+      await call<{ ok: boolean }>("/api/world/session/logout", { method: "POST" });
+    } catch {
+      /* already dead session */
+    }
+    clearPlayerToken();
   },
   getPlayer: () => call<Player>("/api/world/player"),
   getQuests: () => call<Quest[]>("/api/world/quests"),
@@ -330,10 +361,20 @@ export const worldApi = {
     player: Player;
     hearts: { current: number };
     streak: { days: number };
-    quests: { id: string; title_ru: string; progress: number; target: number; done: boolean }[];
+    quests: {
+      id: string;
+      title_ru: string;
+      progress: number;
+      target: number;
+      done: boolean;
+      claimed?: boolean;
+      claimable?: boolean;
+    }[];
     stickers: { owned: number; total: number; items: { id: string; title_ru: string; emoji: string; owned: boolean }[] };
     current_lesson_id: string;
     league?: League;
+    next_best_action?: NextBestAction;
+    lessons_starred?: number;
   }>("/api/world/learn/home"),
   getLeague: () => call<League>("/api/world/learn/league"),
   getReview: () => call<ReviewQueue>("/api/world/learn/review"),
@@ -341,17 +382,22 @@ export const worldApi = {
     call<{ unit_id: string; words: { en: string; ru: string; ipa: string; image?: string; strength: number }[] }>(
       `/api/world/learn/words/${unitId}`,
     ),
+  claimDailyQuest: (questId: string) =>
+    call<{ quest_id: string; ok: boolean; xp_delta?: number }>("/api/world/learn/quests/claim", {
+      method: "POST",
+      body: JSON.stringify({ quest_id: questId }),
+    }),
   getStickers: () =>
     call<{ owned: number; total: number; items: { id: string; title_ru: string; emoji: string; owned: boolean }[] }>(
       "/api/world/learn/stickers",
     ),
   getShop: () => call<{ items: { sku: string; coins: number; title_ru: string }[] }>("/api/world/learn/shop"),
   buyShop: (sku: string) =>
-    call<{ ok: boolean; player: Player; items_granted?: string[] }>("/api/world/learn/shop/buy", {
+    call<{ ok: boolean; player: Player; items_granted?: string[]; hearts?: number; hearts_max?: number }>("/api/world/learn/shop/buy", {
       method: "POST",
       body: JSON.stringify({ sku }),
     }),
-    startLesson: (lessonId: string) =>
+  startLesson: (lessonId: string) =>
     call<LessonSession>("/api/world/learn/lessons/start", {
       method: "POST",
       body: JSON.stringify({ lesson_id: lessonId }),
@@ -366,14 +412,35 @@ export const worldApi = {
       body: JSON.stringify({ index, value }),
     }),
   getSprint: () =>
-    call<{ unit_id: string; title_ru: string; words: { en: string; ru: string; image: string }[] }>(
-      "/api/world/learn/sprint",
+    call<{
+      session_id: string;
+      unit_id: string;
+      title_ru: string;
+      words: { en: string; ru: string; image: string }[];
+    }>("/api/world/learn/sprint"),
+  answerSprint: (sessionId: string, en: string, choice: string) =>
+    call<{ en: string; correct: boolean; score: number; answered: number; total: number }>(
+      `/api/world/learn/sprint/sessions/${sessionId}/answer`,
+      {
+        method: "POST",
+        body: JSON.stringify({ en, choice }),
+      },
     ),
-  finishSprint: (score: number, total: number) =>
-    call<{ score: number; total: number; xp_delta: number; coins_delta: number; player: Player }>(
-      "/api/world/learn/sprint/finish",
-      { method: "POST", body: JSON.stringify({ score, total }) },
-    ),
+  finishSprint: (sessionId: string, score?: number, total?: number) =>
+    call<{
+      score: number;
+      total: number;
+      xp_delta: number;
+      coins_delta: number;
+      player: Player;
+      daily_xp?: number;
+      daily_goal?: number;
+      cosmetic_only?: boolean;
+      session_id?: string;
+    }>("/api/world/learn/sprint/finish", {
+      method: "POST",
+      body: JSON.stringify({ session_id: sessionId, score, total }),
+    }),
   finishLesson: (sessionId: string) =>
     call<LessonFinish>(`/api/world/learn/sessions/${sessionId}/finish`, { method: "POST" }),
 };

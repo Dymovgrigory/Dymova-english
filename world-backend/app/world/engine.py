@@ -330,7 +330,18 @@ def answer(external_key: str, session_id: str, index: int, value: dict) -> dict:
         _clear_mistake(player["id"], item)
     set_hearts(player["id"], hearts)
     _touch_word(player["id"], payload.get("unit_id") or "", item, correct)
-    answers[str(index)] = {"correct": correct, "value": value}
+    answers[str(index)] = {
+        "correct": correct,
+        "value": value,
+        "attempt_n": len(answers) + 1,
+    }
+    if isinstance(value, dict):
+        lat = value.get("latency_ms")
+        if isinstance(lat, (int, float)) and 0 <= lat < 24 * 60 * 60 * 1000:
+            answers[str(index)]["latency_ms"] = int(lat)
+        hints = value.get("hints")
+        if isinstance(hints, int) and 0 <= hints < 100:
+            answers[str(index)]["hints"] = hints
     payload["hearts"] = hearts
     failed = hearts <= 0
     if failed:
@@ -474,7 +485,9 @@ def finish(external_key: str, session_id: str) -> dict:
                 idempotency_key=f"sticker-streak:{player['id']}",
             )
             result["items_granted"] = list(result.get("items_granted") or []) + list(extra.get("items_granted") or [])
-    daily = _add_daily_xp(player["id"], result["xp_delta"])
+    # daily_xp already bumped inside core.award
+    fresh_player = core.get_player(external_key)
+    daily = int(fresh_player.get("daily_xp") or 0)
     completion = {
         "session_id": session_id,
         "lesson_id": session["activity_id"],

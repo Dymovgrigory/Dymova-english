@@ -15,10 +15,12 @@ import { WordCard } from "@/ui/WordCard";
 import { PhraseCard } from "@/ui/PhraseCard";
 import { SpeakButton } from "@/ui/SpeakButton";
 import { EchoMic } from "@/ui/EchoMic";
+import { ChromeIcon } from "@/ui/fantasy/Chrome";
 import { speakEnglish, playClip } from "@/lib/speak";
 import { needsEchoFor } from "@/lib/echo";
 import { playCorrect, playHeart, playWrong } from "@/lib/sfx";
 import { Burst, SkyWash } from "@/ui/Fx";
+import { foxiSrc } from "@/lib/foxiPoses";
 import { loadJourney, recordLessonFinish } from "@/lib/journey";
 
 const STAGE_RU: Record<string, string> = {
@@ -48,6 +50,7 @@ export default function LessonPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [echoOk, setEchoOk] = useState(false);
+  const [shownAt, setShownAt] = useState(() => Date.now());
   const homeHref = lessonId === "practice" ? "/world" : "/learn";
 
   useEffect(() => {
@@ -63,9 +66,8 @@ export default function LessonPage() {
       .then(() => begin())
       .catch(async (err) => {
         const msg = err instanceof Error ? err.message : "";
-        if (msg.includes("409") || msg.includes("no hearts")) {
-          await worldApi.restoreHearts();
-          return begin();
+        if (msg.includes("409") || msg.includes("no hearts") || msg.includes("hearts")) {
+          throw new Error("Нет сердец. Купи пополнение в Лавке Фокси (350 монет).");
         }
         throw err;
       })
@@ -82,6 +84,10 @@ export default function LessonPage() {
   const result = item ? results[item.index] : undefined;
   const hearts = result?.hearts ?? session?.hearts ?? 5;
   const progress = session ? ((index + (result ? 1 : 0)) / session.total) * 100 : 0;
+
+  useEffect(() => {
+    setShownAt(Date.now());
+  }, [index, item?.index]);
 
   const needsEcho = needsEchoFor(item?.kind);
 
@@ -100,11 +106,14 @@ export default function LessonPage() {
 
   const payload = (): Record<string, unknown> => {
     if (!item) return {};
-    if (item.kind === "explain" || item.kind === "word_card" || item.kind === "phrase_card") return {};
-    if (item.kind === "type_en") return { text: typed };
-    if (item.kind === "match") return { matches };
-    if (item.kind === "tap_build") return { tokens: built };
-    return { choice };
+    const latency_ms = Math.max(0, Date.now() - shownAt);
+    if (item.kind === "explain" || item.kind === "word_card" || item.kind === "phrase_card") {
+      return { latency_ms };
+    }
+    if (item.kind === "type_en") return { text: typed, latency_ms };
+    if (item.kind === "match") return { matches, latency_ms };
+    if (item.kind === "tap_build") return { tokens: built, latency_ms };
+    return { choice, latency_ms };
   };
 
   const goNext = (from: number, failed?: boolean) => {
@@ -196,14 +205,26 @@ export default function LessonPage() {
         <div
           aria-hidden
           className="absolute inset-0 bg-cover bg-center opacity-70"
-          style={{ backgroundImage: "url(/world/cinematic/gates-foxi.jpg)" }}
+          style={{ backgroundImage: "url(/world/cinematic/gates-foxi.png)" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#241a30] via-[#241a30]/75 to-[#241a30]/35" />
         <div aria-hidden className="world-embers absolute inset-0" />
         <Burst show />
         <div className="world-reward-pop relative z-10 w-full max-w-md text-center">
           <Stars count={finish.stars} onDark />
-          <img src="/world/foxi/cheer.png" alt="Foxy" className="mx-auto mt-4 h-48 w-auto object-contain object-bottom drop-shadow-xl" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={foxiSrc("cheer")}
+            alt="Foxy"
+            className="mx-auto mt-4 h-48 w-auto object-contain object-bottom drop-shadow-xl"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/world/ui/rewards/chest-open.png"
+            alt=""
+            className="mx-auto mt-2 h-20 w-auto object-contain drop-shadow-lg"
+            aria-hidden
+          />
           <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-extrabold">
             {finish.practice ? "Двор закрыт" : "Урок закрыт"}
           </h1>
@@ -226,14 +247,24 @@ export default function LessonPage() {
           ) : null}
           <div className="mt-8 grid gap-3">
             <button
-              onClick={() => router.push(`/world?pulse=${pulse}`)}
-              className="w-full rounded-2xl bg-[#f5ed75] py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#241a30] shadow-[0_5px_0_rgba(0,0,0,0.35)]"
+              onClick={() =>
+                router.push(
+                  finish.daily_xp != null && finish.daily_goal != null && finish.daily_xp >= finish.daily_goal
+                    ? "/world?pulse=quests"
+                    : `/world?pulse=${pulse}`,
+                )
+              }
+              className="w-full border border-[#fff6a8]/70 bg-[linear-gradient(180deg,#fff6a8,#f5ed75_35%,#e8b93e)] py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#241a30] shadow-[0_5px_0_#9a7a18]"
+              style={{ clipPath: "polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%)" }}
             >
-              В замок за наградой
+              {finish.daily_xp != null && finish.daily_goal != null && finish.daily_xp >= finish.daily_goal
+                ? "Забрать награду дня"
+                : "В замок за наградой"}
             </button>
             <button
               onClick={() => router.push("/learn")}
-              className="w-full rounded-2xl border border-white/25 bg-white/5 py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-white"
+              className="w-full border border-[#7fd8c9]/35 bg-[linear-gradient(180deg,rgba(58,41,83,0.95),rgba(36,26,48,0.98))] py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#f5ed75]"
+              style={{ clipPath: "polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%)" }}
             >
               На карту уроков
             </button>
@@ -272,19 +303,26 @@ export default function LessonPage() {
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-hidden bg-[#f7f1e4] text-[#241a30]">
-      <SkyWash image="/world/cinematic/gates-foxi.jpg" />
+      <SkyWash image="/world/cinematic/gates-foxi.png" />
       <Burst show={Boolean(result?.correct)} />
       <header className="relative z-10 flex items-center gap-3 px-4 pt-4">
         <button
           type="button"
           onClick={() => router.push(homeHref)}
-          className="grid h-10 w-10 place-items-center rounded-full bg-white text-2xl leading-none text-[#3a2953] shadow-[0_3px_0_rgba(36,26,48,0.12)]"
+          className="relative grid h-10 w-10 place-items-center overflow-hidden border border-[#f5ed75]/45 bg-[#3a2953] shadow-[0_3px_0_rgba(36,26,48,0.25)]"
+          style={{ clipPath: "polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%)" }}
           aria-label="Закрыть"
         >
-          ×
+          <ChromeIcon name="back" className="h-5 w-5" />
         </button>
-        <div className="h-4 flex-1 overflow-hidden rounded-full bg-[#3a2953]/15">
-          <div className="h-full rounded-full bg-[#f5ed75] transition-[width] duration-300" style={{ width: `${progress}%` }} />
+        <div
+          className="h-4 flex-1 overflow-hidden border border-[#3a2953]/20 bg-[#3a2953]/15"
+          style={{ clipPath: "polygon(2% 0, 98% 0, 100% 50%, 98% 100%, 2% 100%, 0 50%)" }}
+        >
+          <div
+            className="h-full bg-[linear-gradient(90deg,#f5ed75,#e8b93e)] transition-[width] duration-300"
+            style={{ width: `${progress}%` }}
+          />
         </div>
         <Hearts count={hearts} />
       </header>
@@ -319,7 +357,8 @@ export default function LessonPage() {
                   <button
                     type="button"
                     onClick={() => playClip(item.audio, item.speak_sound || item.speak)}
-                    className="flex w-full items-center justify-between rounded-[28px] border-2 border-[#e5e5e5] bg-[#f7f1e4] px-5 py-4 text-left shadow-[0_4px_0_#e5e5e5]"
+                    className="flex w-full items-center justify-between border-2 border-[#e5e5e5] bg-[#f7f1e4] px-5 py-4 text-left shadow-[0_4px_0_#e5e5e5]"
+                    style={{ clipPath: "polygon(3% 0, 97% 0, 100% 10%, 100% 90%, 97% 100%, 3% 100%, 0 90%, 0 10%)" }}
                   >
                     <span>
                       <span className="block text-xs font-bold text-[#afafaf]">Нажми и повтори звук</span>
@@ -328,7 +367,12 @@ export default function LessonPage() {
                       </span>
                       <span className="text-[#ee7349]">{item.sound}</span>
                     </span>
-                    <span className="grid h-16 w-16 place-items-center rounded-full bg-[#3a2953] text-2xl text-[#f5ed75]">▶</span>
+                    <span
+                      className="grid h-16 w-16 place-items-center border border-[#f5ed75]/40 bg-[#3a2953] text-2xl text-[#f5ed75]"
+                      style={{ clipPath: "polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%)" }}
+                    >
+                      ▶
+                    </span>
                   </button>
                 ) : null}
                 {item.image ? (
@@ -349,9 +393,13 @@ export default function LessonPage() {
                     {item.steps?.map((step, i) => (
                       <li
                         key={`${i}-${step}`}
-                        className="flex items-start gap-3 rounded-2xl border-2 border-[#e5e5e5] bg-white px-4 py-3 text-sm font-semibold"
+                        className="flex items-start gap-3 border-2 border-[#e5e5e5] bg-white px-4 py-3 text-sm font-semibold"
+                        style={{ clipPath: "polygon(4% 0, 96% 0, 100% 14%, 100% 86%, 96% 100%, 4% 100%, 0 86%, 0 14%)" }}
                       >
-                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#3a2953] text-[#f5ed75]">
+                        <span
+                          className="grid h-8 w-8 shrink-0 place-items-center bg-[#3a2953] text-[#f5ed75]"
+                          style={{ clipPath: "polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%)" }}
+                        >
                           {i + 1}
                         </span>
                         {step}
@@ -437,7 +485,8 @@ export default function LessonPage() {
                   disabled={Boolean(result)}
                   onChange={(e) => setTyped(e.target.value)}
                   placeholder="cat"
-                  className="rounded-2xl border-2 border-[#241a30]/15 px-4 py-4 text-xl outline-none focus:border-[#3a2953]"
+                  className="border-2 border-[#241a30]/15 px-4 py-4 text-xl outline-none focus:border-[#3a2953]"
+                  style={{ clipPath: "polygon(4% 0, 96% 0, 100% 16%, 100% 84%, 96% 100%, 4% 100%, 0 84%, 0 16%)" }}
                 />
               ) : null}
 
@@ -458,7 +507,8 @@ export default function LessonPage() {
                       key={`${option}-${i}`}
                       disabled={Boolean(result)}
                       onClick={() => setChoice(i)}
-                      className={`rounded-2xl border-2 px-4 py-4 text-left text-lg font-semibold ${tone}`}
+                      className={`border-2 px-4 py-4 text-left text-lg font-semibold ${tone}`}
+                      style={{ clipPath: "polygon(4% 0, 96% 0, 100% 16%, 100% 84%, 96% 100%, 4% 100%, 0 84%, 0 16%)" }}
                     >
                       {option}
                     </button>
@@ -476,9 +526,10 @@ export default function LessonPage() {
                           setPicked(en);
                           void speakEnglish(en);
                         }}
-                        className={`rounded-2xl border-2 px-3 py-3 font-bold ${
+                        className={`border-2 px-3 py-3 font-bold ${
                           picked === en ? "border-[#ee7349] bg-[#ee7349]/10" : "border-[#241a30]/12"
                         }`}
+                        style={{ clipPath: "polygon(6% 0, 94% 0, 100% 18%, 100% 82%, 94% 100%, 6% 100%, 0 82%, 0 18%)" }}
                       >
                         {en}
                       </button>
@@ -496,7 +547,8 @@ export default function LessonPage() {
                             setMatches((m) => ({ ...m, [picked]: ru }));
                             setPicked(null);
                           }}
-                          className="rounded-2xl border-2 border-[#241a30]/12 px-3 py-3 disabled:opacity-30"
+                          className="border-2 border-[#241a30]/12 px-3 py-3 disabled:opacity-30"
+                          style={{ clipPath: "polygon(6% 0, 94% 0, 100% 18%, 100% 82%, 94% 100%, 6% 100%, 0 82%, 0 18%)" }}
                         >
                           {ru}
                         </button>
@@ -508,7 +560,10 @@ export default function LessonPage() {
 
               {item.kind === "tap_build" ? (
                 <div className="flex flex-col gap-4">
-                  <div className="flex min-h-16 flex-wrap gap-2 rounded-2xl border-2 border-dashed border-[#241a30]/15 p-3">
+                  <div
+                    className="flex min-h-16 flex-wrap gap-2 border-2 border-dashed border-[#241a30]/15 p-3"
+                    style={{ clipPath: "polygon(4% 0, 96% 0, 100% 12%, 100% 88%, 96% 100%, 4% 100%, 0 88%, 0 12%)" }}
+                  >
                     {built.length === 0 ? (
                       <span className="text-[#241a30]/30">Нажми слова внизу</span>
                     ) : (
@@ -517,7 +572,8 @@ export default function LessonPage() {
                           key={`built-${i}-${token}`}
                           disabled={Boolean(result)}
                           onClick={() => setBuilt((row) => row.filter((_, j) => j !== i))}
-                          className="rounded-xl border-2 border-[#3a2953] bg-[#f5ed75]/40 px-3 py-2 font-bold"
+                          className="border-2 border-[#3a2953] bg-[#f5ed75]/40 px-3 py-2 font-bold"
+                          style={{ clipPath: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)" }}
                         >
                           {token}
                         </button>
@@ -534,7 +590,8 @@ export default function LessonPage() {
                           key={`bank-${i}-${token}`}
                           disabled={Boolean(result)}
                           onClick={() => setBuilt((row) => [...row, token])}
-                          className="rounded-xl border-2 border-[#241a30]/12 bg-white px-3 py-2 font-bold"
+                          className="border-2 border-[#241a30]/12 bg-white px-3 py-2 font-bold"
+                          style={{ clipPath: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)" }}
                         >
                           {token}
                         </button>
@@ -565,7 +622,8 @@ export default function LessonPage() {
               <button
                 onClick={() => void cont()}
                 disabled={busy}
-                className="shrink-0 rounded-2xl bg-[#241a30] px-6 py-3 font-[family-name:var(--font-display)] text-sm font-extrabold text-white"
+                className="shrink-0 border border-[#f5ed75]/55 bg-[linear-gradient(180deg,rgba(58,41,83,0.98),rgba(36,26,48,1))] px-6 py-3 font-[family-name:var(--font-display)] text-sm font-extrabold text-[#f5ed75] shadow-[0_4px_0_#1a1230]"
+                style={{ clipPath: "polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%)" }}
               >
                 {continueLabel}
               </button>
@@ -574,7 +632,8 @@ export default function LessonPage() {
             <button
               onClick={() => void check()}
               disabled={!canCheck || busy}
-              className="w-full rounded-2xl bg-[#3a2953] py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#f5ed75] shadow-[0_5px_0_#241a30] disabled:bg-[#241a30]/15 disabled:text-[#241a30]/30 disabled:shadow-none"
+              className="w-full border border-[#fff6a8]/70 bg-[linear-gradient(180deg,#fff6a8,#f5ed75_35%,#e8b93e)] py-4 font-[family-name:var(--font-display)] text-lg font-extrabold text-[#241a30] shadow-[0_5px_0_#9a7a18] disabled:border-transparent disabled:bg-[#241a30]/15 disabled:text-[#241a30]/30 disabled:shadow-none"
+              style={{ clipPath: "polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%)" }}
             >
               {checkLabel}
             </button>

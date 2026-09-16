@@ -1,4 +1,4 @@
-/** Подписанный ключ игрока: сервер отдаёт token, клиент кладёт его в X-World-Player. */
+/** Opaque wses.* session token: сервер отдаёт token, клиент кладёт его в X-World-Player. */
 
 const KEY = "world.playerKey";
 const TOKEN = "world.playerToken";
@@ -17,6 +17,15 @@ export function rememberPlayerToken(token: string, externalKey?: string) {
   try {
     if (token) window.localStorage.setItem(TOKEN, token);
     if (externalKey) window.localStorage.setItem(KEY, externalKey);
+  } catch {
+    /* private mode */
+  }
+}
+
+export function clearPlayerToken() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(TOKEN);
   } catch {
     /* private mode */
   }

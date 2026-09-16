@@ -1,14 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { WorldBar } from "@/ui/WorldBar";
 import { useEffect, useState } from "react";
-import { worldApi } from "@/lib/api";
+import { worldApi, type Player } from "@/lib/api";
 import { FoxiGuide } from "@/ui/FoxiGuide";
+import { RoomKicker, RoomLead, RoomTitle } from "@/ui/RoomChrome";
+import { StickerCollection, stickerArt } from "@/ui/fantasy/StickerDrawer";
 
 export default function AlbumPage() {
   const [items, setItems] = useState<{ id: string; title_ru: string; emoji: string; owned: boolean }[]>([]);
   const [owned, setOwned] = useState(0);
   const [total, setTotal] = useState(0);
+  const [player, setPlayer] = useState<Player | null>(null);
+  const [hearts, setHearts] = useState(5);
 
   useEffect(() => {
     let name = "Исследователь";
@@ -17,29 +22,41 @@ export default function AlbumPage() {
     } catch {
       /* private mode */
     }
-    void worldApi.ensurePlayer(name).then(() => worldApi.getStickers()).then((data) => {
-      setItems(data.items);
-      setOwned(data.owned);
-      setTotal(data.total);
-    });
+    void worldApi
+      .ensurePlayer(name)
+      .then(() => Promise.all([worldApi.getStickers(), worldApi.getLearnHome().catch(() => null)]))
+      .then(([data, home]) => {
+        setItems(data.items);
+        setOwned(data.owned);
+        setTotal(data.total);
+        if (home) {
+          setPlayer(home.player);
+          setHearts(home.hearts?.current ?? 5);
+        }
+      });
   }, []);
 
   return (
     <main className="relative min-h-dvh overflow-hidden bg-[#241a30] px-4 py-6 text-white">
+      <header className="relative z-20 mb-2">
+        <WorldBar stickers={owned} player={player} hearts={hearts} xp={player?.xp} coins={player?.coins} />
+      </header>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-50"
-        style={{ backgroundImage: "url(/world/cinematic/library-courtyard.jpg)" }}
+        style={{ backgroundImage: "url(/world/cinematic/library-courtyard.png)" }}
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#241a30]/45 via-[#241a30]/75 to-[#241a30]" />
       <div aria-hidden className="world-embers pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 mx-auto max-w-2xl">
-        <Link
-          href="/learn"
-          className="inline-flex rounded-full border border-white/15 bg-[#241a30]/70 px-3 py-1.5 text-sm font-extrabold text-[#f5ed75] backdrop-blur"
-        >
-          ← К урокам
+        <Link href="/learn">
+          <span
+            className="inline-flex min-h-[44px] items-center border border-[#f5ed75]/45 bg-[linear-gradient(180deg,rgba(58,41,83,0.95),rgba(36,26,48,0.98))] px-4 py-2 text-sm font-extrabold text-[#f5ed75]"
+            style={{ clipPath: "polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%)" }}
+          >
+            ← К урокам
+          </span>
         </Link>
         <div className="mt-4">
           <FoxiGuide
@@ -49,25 +66,26 @@ export default function AlbumPage() {
             line={`У тебя ${owned} из ${total} стикеров. Закрой урок — получишь новый.`}
           />
         </div>
-        <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.28em] text-[#7fd8c9]">Foxinburg</p>
-        <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-extrabold text-[#f5ed75]">
-          Стикеры замка
-        </h1>
-        <ul className="mt-6 grid grid-cols-3 gap-3">
-          {items.map((it) => (
-            <li
-              key={it.id}
-              className={`rounded-3xl border p-4 text-center backdrop-blur-md ${
-                it.owned
-                  ? "border-[#f5ed75]/60 bg-[#f5ed75]/15 shadow-[0_8px_0_rgba(0,0,0,0.25)]"
-                  : "border-white/10 bg-[#241a30]/55 opacity-45 grayscale"
-              }`}
-            >
-              <p className="text-4xl">{it.emoji}</p>
-              <p className="mt-2 text-xs font-extrabold text-white">{it.title_ru}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-6 text-center">
+          <RoomKicker>Башня стикеров</RoomKicker>
+          <RoomTitle>Стикеры замка</RoomTitle>
+          <RoomLead>Каждый стикер — след слова, сказанного вслух.</RoomLead>
+        </div>
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <div className="flex justify-center gap-2">
+            {items
+              .filter((i) => i.owned)
+              .slice(0, 4)
+              .map((it) => {
+                const art = stickerArt(it.id);
+                return art ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={it.id} src={art} alt="" className="h-16 w-16 object-contain drop-shadow" />
+                ) : null;
+              })}
+          </div>
+          <StickerCollection stickers={items} ownedCount={owned} />
+        </div>
       </div>
     </main>
   );

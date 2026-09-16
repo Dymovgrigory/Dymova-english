@@ -6,6 +6,7 @@ import {
   recordLessonFinish,
   resetJourneyForTests,
   saveJourney,
+  syncProgressFromServer,
   type JourneyState,
 } from "./journey";
 
@@ -33,6 +34,15 @@ describe("journey", () => {
       href: "/learn/practice",
       title: "Повторить слова",
       hint: "Foxy отложил 4 слова на сегодня",
+    });
+  });
+
+  it("sends claimable dailies to the quest gazebo first", () => {
+    expect(missionFor({ due: 4, nextLessonId: "family-L1", claimable: 1 })).toEqual({
+      kind: "castle",
+      href: "/world?pulse=quests",
+      title: "Награда дня готова",
+      hint: "Забери поручение в беседке — XP уже ждёт",
     });
   });
 
@@ -96,5 +106,14 @@ describe("journey", () => {
     const empty: JourneyState = loadJourney();
     expect(empty.seenCastleIntro).toBe(false);
     expect(empty.lessonsFinished).toBe(0);
+  });
+
+  it("syncs lessonsFinished from server stars without shrinking", () => {
+    saveJourney({ name: "Мира", lessonsFinished: 2 });
+    const up = syncProgressFromServer({ lessonsStarred: 5, name: "Мира", level: 2 });
+    expect(up.lessonsFinished).toBe(5);
+    expect(up.lastKnownLevel).toBe(2);
+    const keep = syncProgressFromServer({ lessonsStarred: 1 });
+    expect(keep.lessonsFinished).toBe(5);
   });
 });

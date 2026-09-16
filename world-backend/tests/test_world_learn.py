@@ -3,14 +3,16 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app.world import catalog, core, engine
+from app.world import catalog, config, core, engine
 from app.world.db import reset_for_tests
 
 HEADERS = {"X-World-Player": "child-learn"}
 
 
 @pytest.fixture()
-def client(tmp_path):
+def client(tmp_path, monkeypatch):
+    # Content tests open mid-course lessons; prod locks stay covered in engine/srs gate tests.
+    monkeypatch.setattr(config, "UNLOCK_ALL", True)
     reset_for_tests(str(tmp_path / "world.sqlite"))
     core.seed_quests()
     app = FastAPI()
@@ -80,7 +82,8 @@ def test_shop_refill_hearts(client):
 
 
 def test_tts_english_audio(client):
-    r = client.get("/api/world/tts", params={"q": "Hello"})
+    assert client.get("/api/world/tts", params={"q": "Hello"}).status_code == 401
+    r = client.get("/api/world/tts", params={"q": "Hello"}, headers=HEADERS)
     assert r.status_code in (200, 503)
     if r.status_code == 200:
         assert len(r.content) > 1500
@@ -93,13 +96,62 @@ def test_sprint_and_shop_cape(client):
     pack = learn.sprint("child-learn")
     assert pack["words"]
     assert pack["unit_id"]
-    fin = client.post("/api/world/learn/sprint/finish", json={"score": 3, "total": 8}, headers=HEADERS)
+    assert pack["session_id"]
+    # Client-claimed score without server answers → cosmetic (no XP).
+    fin = client.post(
+        "/api/world/learn/sprint/finish",
+        json={"session_id": pack["session_id"], "score": 3, "total": 8},
+        headers=HEADERS,
+    )
     assert fin.status_code == 200
-    assert fin.json()["score"] == 3
+    body = fin.json()
+    assert body["score"] == 0
+    assert body["xp_delta"] == 0
+    assert body.get("cosmetic_only") is True
     core.award("child-learn", xp=0, coins=200, source="test", type_="TEST", idempotency_key="cape-coins")
     cape = client.post("/api/world/learn/shop/buy", json={"sku": "foxi_cape"}, headers=HEADERS)
     assert cape.status_code == 200
     assert "foxi-cape" in cape.json()["items_granted"]
+
+
+def test_sprint_reward_requires_server_answers(client):
+    pack = client.get("/api/world/learn/sprint", headers=HEADERS).json()
+    sid = pack["session_id"]
+    words = pack["words"]
+    assert len(words) >= 2
+    # Answer first two correctly via server.
+    for w in words[:2]:
+        r = client.post(
+            f"/api/world/learn/sprint/sessions/{sid}/answer",
+            json={"en": w["en"], "choice": w["en"]},
+            headers=HEADERS,
+        )
+        assert r.status_code == 200
+        assert r.json()["correct"] is True
+    # Wrong answer ignored for score.
+    client.post(
+        f"/api/world/learn/sprint/sessions/{sid}/answer",
+        json={"en": words[0]["en"], "choice": "nope"},
+        headers=HEADERS,
+    )
+    fin = client.post(
+        "/api/world/learn/sprint/finish",
+        json={"session_id": sid},
+        headers=HEADERS,
+    )
+    assert fin.status_code == 200
+    body = fin.json()
+    assert body["score"] == 2
+    assert body["xp_delta"] == 5
+    assert body.get("cosmetic_only") is False
+    # Second finish same session → no double reward.
+    again = client.post(
+        "/api/world/learn/sprint/finish",
+        json={"session_id": sid},
+        headers=HEADERS,
+    )
+    assert again.status_code == 200
+    assert again.json()["xp_delta"] == 0
 
 
 def test_practice_starts(client):
@@ -228,6 +280,10 @@ def test_cannot_start_without_hearts(client):
         headers=HEADERS,
     )
     assert r.status_code == 409
+    broke = client.post("/api/world/learn/hearts/restore", headers=HEADERS)
+    assert broke.status_code == 409
+    core.award("child-learn", xp=0, coins=400, source="test", type_="TEST",
+               idempotency_key="hearts-restore-coins")
     restored = client.post("/api/world/learn/hearts/restore", headers=HEADERS)
     assert restored.status_code == 200
     assert restored.json()["hearts"] == 5
@@ -286,3 +342,51 @@ def test_starter_word_photos_are_not_wikimedia_junk(client):
     assert r.status_code == 200
     six = next(it for it in r.json()["items"] if it.get("kind") == "word_card" and it.get("en") == "six")
     assert not six.get("image")
+
+
+def test_claim_daily_quest_once(client):
+    from app.world import learn
+    core.award("child-learn", xp=80, coins=0, source="t", type_="TEST", idempotency_key="daily-xp-fill")
+    qs = learn.daily_quests("child-learn")
+    done = next(q for q in qs if q["id"] == "xp-goal")
+    assert done["done"] is True
+    r1 = client.post("/api/world/learn/quests/claim", json={"quest_id": "xp-goal"}, headers=HEADERS)
+    assert r1.status_code == 200
+    assert r1.json().get("xp_delta", 0) >= 15
+    r2 = client.post("/api/world/learn/quests/claim", json={"quest_id": "xp-goal"}, headers=HEADERS)
+    assert r2.status_code == 200
+    assert r2.json().get("xp_delta", 0) == 0  # idempotent
+    qs2 = learn.daily_quests("child-learn")
+    asserted = next(q for q in qs2 if q["id"] == "xp-goal")
+    assert asserted["claimed"] is True
+    assert asserted["claimable"] is False
+
+
+def test_home_quests_include_claim_flags(client):
+    r = client.get("/api/world/learn/home", headers=HEADERS)
+    assert r.status_code == 200
+    quests = r.json()["quests"]
+    assert quests
+    for q in quests:
+        assert "claimable" in q and "claimed" in q and "done" in q
+
+
+def test_sprint_finish_reports_daily_xp(client):
+    pack = client.get("/api/world/learn/sprint", headers=HEADERS).json()
+    sid = pack["session_id"]
+    w = pack["words"][0]
+    client.post(
+        f"/api/world/learn/sprint/sessions/{sid}/answer",
+        json={"en": w["en"], "choice": w["en"]},
+        headers=HEADERS,
+    )
+    r = client.post(
+        "/api/world/learn/sprint/finish",
+        json={"session_id": sid},
+        headers=HEADERS,
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert "daily_xp" in body and "daily_goal" in body
+    assert body["daily_goal"] == 50
+    assert body["daily_xp"] >= 0

@@ -17,6 +17,15 @@ def fresh_db(tmp_path):
     reset_for_tests(str(tmp_path / "world2.sqlite"))
 
 
+
+def _finish_story_quest(key: str, quest_id: str = "first-day-at-foxinburg"):
+    """Advance all story steps then complete (Phase 0 gate)."""
+    core.start_quest(key, quest_id)
+    core.advance_quest_step(key, quest_id, "visit", "school-hub")
+    core.advance_quest_step(key, quest_id, "talk", "foxi")
+    core.advance_quest_step(key, quest_id, "activity", "vocabulary-challenge-1")
+    return core.complete_quest(key, quest_id)
+
 def test_player_create_and_snapshot():
     p = core.get_or_create_player("child-1", "Мария")
     assert p["xp"] == 0 and p["coins"] == 0 and p["level"] == 1
@@ -49,8 +58,7 @@ def test_level_up_thresholds():
 
 def test_quest_flow_start_complete_rewards_inventory_unlock():
     core.get_or_create_player("child-1")
-    core.start_quest("child-1", "first-day-at-foxinburg")
-    r = core.complete_quest("child-1", "first-day-at-foxinburg")
+    r = _finish_story_quest("child-1")
     assert r["xp_delta"] == 60 and r["coins_delta"] == 30
     assert r["items_granted"] == ["fox-badge-first"]
     assert r["unlocks_granted"] == ["library-courtyard"]
@@ -62,8 +70,7 @@ def test_quest_flow_start_complete_rewards_inventory_unlock():
 
 def test_quest_complete_twice_conflict_and_no_double_rewards():
     core.get_or_create_player("child-1")
-    core.start_quest("child-1", "first-day-at-foxinburg")
-    core.complete_quest("child-1", "first-day-at-foxinburg")
+    _finish_story_quest("child-1")
     with pytest.raises(core.Conflict):
         core.complete_quest("child-1", "first-day-at-foxinburg")
     p = core.get_player("child-1")
@@ -148,8 +155,11 @@ def test_complete_quest_client_idempotency_key_cannot_steal_another_players_rewa
     и B получает свою награду полностью (§84, §160)."""
     core.get_or_create_player("player-a")
     core.get_or_create_player("player-b")
-    core.start_quest("player-a", "first-day-at-foxinburg")
-    core.start_quest("player-b", "first-day-at-foxinburg")
+    for key in ("player-a", "player-b"):
+        core.start_quest(key, "first-day-at-foxinburg")
+        core.advance_quest_step(key, "first-day-at-foxinburg", "visit", "school-hub")
+        core.advance_quest_step(key, "first-day-at-foxinburg", "talk", "foxi")
+        core.advance_quest_step(key, "first-day-at-foxinburg", "activity", "vocabulary-challenge-1")
 
     b_player = core.get_player("player-b")
     key_server_would_build_for_b = f"quest-complete:{b_player['id']}:first-day-at-foxinburg"
@@ -163,3 +173,10 @@ def test_complete_quest_client_idempotency_key_cannot_steal_another_players_rewa
     assert r_b["xp_delta"] == 60 and r_b["coins_delta"] == 30
     p_b = core.get_player("player-b")
     assert p_b["xp"] == 60 and p_b["coins"] == 30
+
+
+def test_quest_complete_requires_all_steps():
+    core.get_or_create_player("child-steps-gate")
+    core.start_quest("child-steps-gate", "first-day-at-foxinburg")
+    with pytest.raises(core.Conflict):
+        core.complete_quest("child-steps-gate", "first-day-at-foxinburg")

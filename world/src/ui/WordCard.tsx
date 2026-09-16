@@ -117,7 +117,10 @@ export function WordCard({ en, ipa, image, speak, exampleEn, teachRu, onEchoPass
   const wash = WASH[key];
   const phrase = exampleEn && !same(exampleEn, en) ? exampleEn : "";
   return (
-    <article className="mt-2 overflow-hidden rounded-[28px] bg-white shadow-[0_10px_0_rgba(58,41,83,0.08)]">
+    <article
+      className="mt-2 overflow-hidden border border-[#3a2953]/10 bg-white shadow-[0_10px_0_rgba(58,41,83,0.08)]"
+      style={{ clipPath: "polygon(3% 0, 97% 0, 100% 6%, 100% 94%, 97% 100%, 3% 100%, 0 94%, 0 6%)" }}
+    >
       {photo ? (
         <div className={FRAME} style={wash ? { background: wash } : undefined}>
           <img src={photo} alt={en || ""} className="absolute inset-0 h-full w-full object-contain object-center" />
@@ -136,7 +139,12 @@ export function WordCard({ en, ipa, image, speak, exampleEn, teachRu, onEchoPass
           {en}
         </p>
         {ipa ? (
-          <p className="rounded-full bg-[#3a2953] px-4 py-1 text-base font-bold text-[#f5ed75]">[{ipa}]</p>
+          <p
+            className="border border-[#f5ed75]/50 bg-[#3a2953] px-4 py-1 text-base font-bold text-[#f5ed75]"
+            style={{ clipPath: "polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%)" }}
+          >
+            [{ipa}]
+          </p>
         ) : null}
         {teachRu ? (
           <p className="max-w-[18rem] text-sm font-semibold leading-snug text-[#3a2953]/80">{teachRu}</p>
@@ -146,7 +154,10 @@ export function WordCard({ en, ipa, image, speak, exampleEn, teachRu, onEchoPass
           <EchoMic key={speak || en} target={speak || en} onPass={onEchoPass} onBlocked={onEchoBlocked} />
         </div>
         {phrase ? (
-          <div className="mt-2 w-full rounded-2xl bg-[#f4ecd8] px-4 py-3">
+          <div
+            className="mt-2 w-full border border-[#3a2953]/15 bg-[#f4ecd8] px-4 py-3"
+            style={{ clipPath: "polygon(4% 0, 96% 0, 100% 12%, 100% 88%, 96% 100%, 4% 100%, 0 88%, 0 12%)" }}
+          >
             <p className="font-extrabold text-[#3a2953]">{phrase}</p>
             <div className="mt-3">
               <SpeakButton text={phrase} label="Слушать фразу" tone="orange" />

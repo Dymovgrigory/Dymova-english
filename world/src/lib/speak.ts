@@ -51,7 +51,20 @@ export async function speakEnglish(text: string): Promise<void> {
   try {
     const ctrl = new AbortController();
     const kill = window.setTimeout(() => ctrl.abort(), 8000);
-    const res = await fetch(url, { signal: ctrl.signal, cache: "force-cache" });
+    let player = "guest";
+    try {
+      player =
+        window.localStorage.getItem("world.playerToken") ||
+        window.localStorage.getItem("world.playerKey") ||
+        "guest";
+    } catch {
+      /* private mode */
+    }
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      cache: "no-store",
+      headers: { "X-World-Player": player },
+    });
     window.clearTimeout(kill);
     if (res.ok) {
       const buf = new Uint8Array(await res.arrayBuffer());
