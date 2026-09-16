@@ -76,11 +76,28 @@ def surname_stem(value: object) -> str:
     return surname
 
 
+def _same_person(crm_fio: object, child: str) -> bool:
+    """Фамилия и имя совпали в любом порядке: «Тимур Бондарь» = «Бондарь Тимур»."""
+    return set(_first_two_words(crm_fio).split()) == set(child.split())
+
+
+def _compact(value: object) -> str:
+    return normalize_name(value).replace(" ", "")
+
+
+def _named_in(crm_fio: object, title: str) -> bool:
+    """Фамилия и имя из карточки есть в названии договора («СмелыйРусланЛето.pdf»)."""
+    words = _first_two_words(crm_fio).split()
+    return len(words) == 2 and all(w in title for w in words)
+
+
 def match_student(contact: dict, students: list[dict]) -> dict | None:
     """Карточка, у которой совпали и ребёнок, и телефон. Иначе None.
 
-    Если ФИО ребёнка в анкете нет, подходит единственная карточка на этот
-    телефон с фамилией родителя (в мужском или женском роде).
+    Если ФИО ребёнка не подошло, ищем среди карточек на этот телефон ту,
+    чьи фамилия и имя есть в названии договора. Если ФИО ребёнка в анкете нет
+    вовсе, подходит и единственная карточка на телефон с фамилией родителя
+    (в мужском или женском роде).
 
     None возвращается и когда подходящих карточек несколько: угадывать между
     ними нельзя, такой случай разбирает администратор.
@@ -95,14 +112,36 @@ def match_student(contact: dict, students: list[dict]) -> dict | None:
         if any(normalize_phone(st.get(f)) == phone for f in PHONE_FIELDS)
     ]
     if child:
-        hits = [st for st in by_phone if _first_two_words(st.get("fio")) == child]
-        return hits[0] if len(hits) == 1 else None
+        hits = [st for st in by_phone if _same_person(st.get("fio"), child)]
+        if hits:
+            return hits[0] if len(hits) == 1 else None
+
+    # Анкету мог заполнить другой родственник: ребёнок назван в имени договора.
+    title = _compact(contact.get("doc_name"))
+    if title:
+        hits = [st for st in by_phone if _named_in(st.get("fio"), title)]
+        if len(hits) == 1:
+            return hits[0]
+    if child:
+        return None
 
     parent = surname_stem(contact.get("parent_last_name"))
     if not parent or len(by_phone) != 1:
         return None
     only = by_phone[0]
     return only if surname_stem(only.get("fio")) == parent else None
+
+
+def child_fields_for(fields: dict, student: dict) -> dict:
+    """Поля ребёнка из анкеты — только если карточка найдена по этому ребёнку.
+
+    Нашли по названию договора или фамилии родителя — анкета могла быть про
+    другого ребёнка семьи, его дату рождения в эту карточку писать нельзя.
+    """
+    child = _first_two_words(fields.get("fio"))
+    if child and _same_person(student.get("fio"), child):
+        return fields
+    return {**fields, "fio": "", "birthday": ""}
 
 
 def missing_fields(student: dict, data: dict) -> tuple[dict, dict]:

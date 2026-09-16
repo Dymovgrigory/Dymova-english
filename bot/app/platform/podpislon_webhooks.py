@@ -100,15 +100,17 @@ async def upload_contract(student: dict, doc: dict, child_fio: str, *,
     return {"uploaded": True, "filename": filename}
 
 
-async def _resolve(contact_id: int) -> tuple[dict, dict, dict | None]:
+async def _resolve(contact_id: int, doc_name: str = "") -> tuple[dict, dict, dict | None]:
     """Контакт Подпислона, его поля для CRM и найденная карточка ученика."""
     contact = await podpislon.get_contact(contact_id)
     fields = podpislon.to_crm_fields(contact)
     candidates = await crm.find_students_by_phone(fields["parent_phone"])
     student = podpislon_sync.match_student(
         {"child_fio": fields["fio"], "phone": fields["parent_phone"],
-         "parent_last_name": fields["parent_last_name"]},
+         "parent_last_name": fields["parent_last_name"], "doc_name": doc_name},
         candidates)
+    if student:
+        fields = podpislon_sync.child_fields_for(fields, student)
     return contact, fields, student
 
 
@@ -161,7 +163,7 @@ async def handle_signed(file_id: int) -> dict:
         logger.warning("podpislon: у документа %s нет контакта", file_id)
         return {"verified": True, "matched": False}
 
-    _, fields, student = await _resolve(contact_id)
+    _, fields, student = await _resolve(contact_id, str(doc.get("name") or ""))
     if not student:
         logger.warning("podpislon: карточка не найдена по договору %s "
                        "(ребёнок %r, телефон %r) — нужен разбор вручную",

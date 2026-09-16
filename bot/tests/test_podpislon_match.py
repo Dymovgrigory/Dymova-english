@@ -3,7 +3,7 @@
 Правило задано школой: совпасть должны И фамилия с именем ребёнка, И телефон.
 Одно совпадение — работаем, ноль или несколько — не трогаем ничего.
 """
-from app.platform.podpislon_sync import match_student, missing_fields
+from app.platform.podpislon_sync import child_fields_for, match_student, missing_fields
 
 
 def student(**kw):
@@ -185,3 +185,56 @@ class TestMissingFieldsPlaceholders:
             student(parentname="Мама Дарья Александровна"),
             {"parentname": "Волынец Дарья Александровна"})
         assert (upd, conflicts) == ({}, {})
+
+
+class TestMatchByDocumentName:
+    """Анкету заполнил другой родственник — ребёнок назван в имени договора.
+
+    Живые случаи из сверки 2026-09-16.
+    """
+
+    def test_child_named_in_contract_title(self):
+        c = contact(child_fio="", parent_last_name="Колпакова",
+                    doc_name="Шестакова Милана 26-27 уч год.pdf")
+        assert match_student(c, [student(fio="Шестакова Милана")])["id"] == 1
+
+    def test_title_picks_one_of_two_children_on_phone(self):
+        c = contact(child_fio="", parent_last_name="Карасева",
+                    doc_name="Договор Карасев Владимир.pdf")
+        students = [student(id=1, fio="Карасев Владимир"), student(id=2, fio="Карасева Анисия")]
+        assert match_student(c, students)["id"] == 1
+
+    def test_title_without_spaces(self):
+        c = contact(child_fio="", parent_last_name="Смелая", doc_name="СмелыйРусланЛето.pdf")
+        assert match_student(c, [student(fio="Смелый Руслан")])["id"] == 1
+
+    def test_title_used_when_anketa_child_differs(self):
+        c = contact(child_fio="Иванова Мария", doc_name="Иванов Владислав договор.pdf")
+        assert match_student(c, [student(fio="Иванов Владислав")])["id"] == 1
+
+    def test_title_naming_nobody_is_not_a_match(self):
+        c = contact(child_fio="", parent_last_name="Прохорова",
+                    doc_name="Прохоров Михаил новый уч. год. 2026.pdf")
+        students = [student(id=1, fio="Прохоров Миша"), student(id=2, fio="Прохорова Алиса")]
+        assert match_student(c, students) is None
+
+    def test_title_still_requires_the_phone(self):
+        c = contact(child_fio="", doc_name="Шестакова Милана.pdf")
+        assert match_student(c, [student(fio="Шестакова Милана", parent_phone="79990000000")]) is None
+
+
+class TestNameOrder:
+    def test_name_before_surname_in_crm(self):
+        c = contact(child_fio="Бондарь Тимур Антонович")
+        assert match_student(c, [student(fio="Тимур Бондарь")])["id"] == 1
+
+
+class TestChildFieldsFor:
+    def test_kept_when_card_is_that_child(self):
+        fields = {"fio": "Иванов Владислав", "birthday": "2019-08-11", "passport": "40"}
+        assert child_fields_for(fields, student(fio="Иванов Владислав Петрович")) == fields
+
+    def test_dropped_when_card_found_by_title_or_parent(self):
+        fields = {"fio": "Иванова Мария", "birthday": "2019-08-11", "passport": "40"}
+        assert child_fields_for(fields, student(fio="Иванов Владислав")) == {
+            "fio": "", "birthday": "", "passport": "40"}
