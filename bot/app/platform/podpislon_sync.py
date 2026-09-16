@@ -121,6 +121,8 @@ def missing_fields(student: dict, data: dict) -> tuple[dict, dict]:
         current = str(student.get(field) or "").strip()
         if field in DATE_FIELDS and not crm_date(current):
             current = ""
+        if current.strip("-—– ") == "":
+            current = ""  # «-» в CRM ставят вместо пустого значения
         if not current:
             updates[field] = incoming
         elif not _same_value(field, current, incoming):
@@ -136,6 +138,9 @@ def _same_value(field: str, current: str, incoming: str) -> bool:
         # В CRM ребёнок часто без отчества, в анкете — с ним.
         return _first_two_words(current) == _first_two_words(incoming)
     if field == "parentname":
-        # В CRM у родителя часто только имя, в анкете — полное ФИО.
-        return set(normalize_name(current).split()) <= set(normalize_name(incoming).split())
+        # В CRM у родителя часто только имя («мама Анастасия»), в анкете — полное ФИО.
+        noted = set(normalize_name(current).split()) - {"мама", "папа"}
+        return noted <= set(normalize_name(incoming).split())
+    if field in PHONE_FIELDS:
+        return normalize_phone(current) == normalize_phone(incoming)
     return normalize_name(current) == normalize_name(incoming)

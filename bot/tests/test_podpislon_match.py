@@ -165,3 +165,23 @@ class TestMissingFieldsEquivalence:
         _, conflicts = missing_fields(
             student(parentname="Ольга"), {"parentname": "Луговой Андрей Петрович"})
         assert "parentname" in conflicts
+
+
+class TestMissingFieldsPlaceholders:
+    def test_dash_in_crm_counts_as_empty(self):
+        upd, conflicts = missing_fields(
+            student(passport="-", home_address=" — "),
+            {"passport": "4611 537169", "home_address": "Долгопрудный"})
+        assert upd == {"passport": "4611 537169", "home_address": "Долгопрудный"}
+        assert conflicts == {}
+
+    def test_same_phone_in_different_formats(self):
+        upd, conflicts = missing_fields(
+            student(parent_phone="9151415181"), {"parent_phone": "89151415181"})
+        assert (upd, conflicts) == ({}, {})
+
+    def test_mama_papa_notes_in_parentname(self):
+        upd, conflicts = missing_fields(
+            student(parentname="Мама Дарья Александровна"),
+            {"parentname": "Волынец Дарья Александровна"})
+        assert (upd, conflicts) == ({}, {})

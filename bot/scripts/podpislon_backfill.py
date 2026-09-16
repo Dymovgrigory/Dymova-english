@@ -50,8 +50,10 @@ async def fetch_contacts(limit: int | None) -> list[dict]:
     return out
 
 
-# Договоры текущего сезона: так они и называются в Подпислоне и в CRM.
-SEASON = "26_27"
+# Договоры сезона 26_27. Названия в Подпислоне свободные («26-27 уч год»,
+# «Лобунцова Настя»), поэтому сезон определяем по дате создания документа:
+# прошлогодние договоры созданы летом 2025.
+SEASON_STARTS = "2026-06-01"
 
 
 async def fetch_documents_page(page: int) -> list:
@@ -84,7 +86,8 @@ async def signed_documents(fetch=fetch_documents_page, *,
             break
         for doc in fresh:
             seen.add(int(doc.get("id") or 0))
-            if not podpislon.is_signed(doc) or SEASON not in str(doc.get("name") or ""):
+            if (not podpislon.is_signed(doc)
+                    or str(doc.get("date_create") or "") < SEASON_STARTS):
                 continue
             contact_id = podpislon.contact_id_of(doc)
             if contact_id and contact_id not in out:
