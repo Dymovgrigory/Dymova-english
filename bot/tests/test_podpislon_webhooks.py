@@ -232,6 +232,26 @@ class TestDedup:
         assert hooks._dedup("DOCUMENT_SIGNED:2") is False
 
 
+class TestFillFailure:
+    @pytest.mark.asyncio
+    async def test_contract_is_uploaded_even_if_crm_rejects_fields(self, wired):
+        from app.platform.bigben_internal import BigBenInternalError
+
+        class RejectingCrm(FakeCrm):
+            async def update_student(self, student_id, fields):
+                raise BigBenInternalError("422: Ошибка валидации")
+
+        crm = RejectingCrm(students=[student()])
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "contacts": [{"sid": "NDU2"}]},
+                            contact=contact())
+        wired(crm, pod)
+
+        out = await hooks.handle_signed(1)
+
+        assert out["uploaded"] is True
+        assert out["fill_error"].startswith("422")
+
+
 class TestAlreadyUploaded:
     """Договор уже в карточке — второй раз не кладём.
 

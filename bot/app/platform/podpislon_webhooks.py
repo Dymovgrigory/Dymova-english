@@ -25,6 +25,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 from app.platform import bigben_internal as crm
+from app.platform.bigben_internal import BigBenInternalError
 from app.platform import podpislon, podpislon_sync
 
 logger = logging.getLogger(__name__)
@@ -115,7 +116,13 @@ async def _fill_card(student: dict, fields: dict) -> dict:
     """Дозаполняет пустые поля карточки. Возвращает что обновили и что разошлось."""
     updates, conflicts = podpislon_sync.missing_fields(student, fields)
     if updates:
-        await crm.update_student(student["id"], updates)
+        try:
+            await crm.update_student(student["id"], updates)
+        except BigBenInternalError as exc:
+            # Поля не приняли — договор всё равно кладём, ошибку в лог.
+            logger.warning("podpislon: карточка %s не дозаполнена: %s",
+                           student["id"], exc)
+            return {"updates": {}, "conflicts": conflicts, "fill_error": str(exc)}
         logger.info("podpislon: карточка %s дозаполнена: %s",
                     student["id"], ", ".join(updates))
     if conflicts:

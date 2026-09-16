@@ -62,6 +62,12 @@ class TestToCrmFields:
         out = to_crm_fields(contact())
         assert out["home_address"] == "Долгопрудный, Лихачевское шоссе, 1 кв 1"
 
+    def test_invalid_email_is_not_sent_to_crm(self):
+        # CRM отвечает 422 на кривой адрес и не сохраняет всю карточку.
+        assert to_crm_fields(contact(email="julia@mail"))["email"] == ""
+        assert to_crm_fields(contact(email="julia mail.ru"))["email"] == ""
+        assert to_crm_fields(contact(email=" Julia@Mail.ru "))["email"] == "Julia@Mail.ru"
+
     def test_email_falls_back_to_custom_field(self):
         c = contact(email="")
         c["custom_fields"].append(

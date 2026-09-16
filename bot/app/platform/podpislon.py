@@ -158,6 +158,12 @@ def _child_birthday(value: object) -> str:
     return iso
 
 
+def _valid_email(value: str) -> str:
+    """Адрес, который примет CRM: на кривой она отвечает 422 на всю карточку."""
+    value = value.strip()
+    return value if re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", value) else ""
+
+
 def to_crm_fields(contact: dict) -> dict:
     """Контакт Подпислона → поля карточки ученика BigBen.
 
@@ -187,6 +193,6 @@ def to_crm_fields(contact: dict) -> dict:
         "parent_last_name": str(contact.get("last_name") or "").strip(),
         "passport": ", ".join(p for p in parts if p),
         "home_address": str(passport.get("address") or "").strip(),
-        "email": (str(contact.get("email") or "").strip()
-                  or _custom(contact, "email")),
+        "email": _valid_email(str(contact.get("email") or "").strip()
+                              or _custom(contact, "email")),
     }

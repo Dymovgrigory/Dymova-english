@@ -128,6 +128,7 @@ async def main() -> int:
     filled = uploaded = 0
     unmatched: list[str] = []
     conflicted: list[str] = []
+    failed: list[str] = []
 
     for contact in contacts:
         fields = podpislon.to_crm_fields(contact)
@@ -149,7 +150,10 @@ async def main() -> int:
             filled += 1
             print(f"  {child}: дозаполнить {', '.join(updates)}")
             if args.apply:
-                await crm.update_student(student["id"], updates)
+                try:
+                    await crm.update_student(student["id"], updates)
+                except crm.BigBenInternalError as exc:
+                    failed.append(f"  {child}: карточка не сохранилась — {exc}")
         if conflicts:
             conflicted.append(f"  {child}: " + "; ".join(
                 f"{k}: в CRM {old!r}, в анкете {new!r}"
@@ -157,13 +161,20 @@ async def main() -> int:
 
         doc = docs.get(contact.get("id"))
         if doc and not args.contacts_only:
-            result = await upload_contract(student, doc, child, apply=args.apply)
+            try:
+                result = await upload_contract(student, doc, child, apply=args.apply)
+            except (crm.BigBenInternalError, podpislon.PodpislonError) as exc:
+                failed.append(f"  {child}: договор не загрузился — {exc}")
+                continue
             await asyncio.sleep(PAUSE)
             if result["uploaded"]:
                 uploaded += 1
                 print(f"  {child}: загрузить {result['filename']}")
 
     print(f"\nИтого: дозаполнить карточек {filled}, загрузить договоров {uploaded}")
+    if failed:
+        print(f"\nОшибки — карточка пропущена, остальные обработаны ({len(failed)}):")
+        print("\n".join(failed))
     if conflicted:
         print(f"\nРасхождения — не трогали, проверьте руками ({len(conflicted)}):")
         print("\n".join(conflicted))
