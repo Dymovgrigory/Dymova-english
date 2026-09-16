@@ -10,12 +10,18 @@ CRM, как найти нужную карточку и что в ней мож�
 """
 from __future__ import annotations
 
+import re
+from datetime import date
+
 # Поля карточки ученика, куда складываем данные анкеты.
 # Ключ — поле CRM, значение — как достаётся из контакта Подпислона.
 CRM_FIELDS = (
     "fio", "birthday", "parentname", "parent_phone", "parent_birthday",
     "passport", "home_address", "email",
 )
+
+# Поля-даты: карточка BigBen хранит и отдаёт их как ГГГГ-ММ-ДД.
+DATE_FIELDS = ("birthday", "parent_birthday")
 
 # Телефон ученика может лежать в любом из этих полей карточки.
 PHONE_FIELDS = ("parent_phone", "phone", "phone1", "main_phone")
@@ -25,6 +31,27 @@ def normalize_phone(value: object) -> str:
     """Последние 10 цифр: +7 (925) 880-33-33, 8 925…, 7925… дают одно и то же."""
     digits = "".join(c for c in str(value or "") if c.isdigit())
     return digits[-10:] if len(digits) >= 10 else ""
+
+
+def crm_date(value: object) -> str:
+    """Любая запись даты → ГГГГ-ММ-ДД, как в карточке CRM. Не дата — пустая строка.
+
+    Анкету заполняют руками: встречается «23.05. 2019», «3.5.2019», «09/04/2019».
+    «0000-00-00» — так CRM показывает незаполненную дату.
+    """
+    text = str(value or "").strip()
+    iso = re.match(r"^(\d{4})-(\d{2})-(\d{2})", text)
+    if iso:
+        year, month, day = iso.groups()
+    else:
+        ru = re.fullmatch(r"(\d{1,2})\s*[./-]\s*(\d{1,2})\s*[./-]\s*(\d{4})", text)
+        if not ru:
+            return ""
+        day, month, year = ru.groups()
+    try:
+        return date(int(year), int(month), int(day)).isoformat()
+    except ValueError:
+        return ""
 
 
 def normalize_name(value: object) -> str:
@@ -70,8 +97,23 @@ def missing_fields(student: dict, data: dict) -> tuple[dict, dict]:
         if not incoming:
             continue
         current = str(student.get(field) or "").strip()
+        if field in DATE_FIELDS and not crm_date(current):
+            current = ""
         if not current:
             updates[field] = incoming
-        elif current != incoming:
+        elif not _same_value(field, current, incoming):
             conflicts[field] = (current, incoming)
     return updates, conflicts
+
+
+def _same_value(field: str, current: str, incoming: str) -> bool:
+    """Одно и то же, записанное по-разному, расхождением не считаем."""
+    if field in DATE_FIELDS:
+        return crm_date(current) == crm_date(incoming)
+    if field == "fio":
+        # В CRM ребёнок часто без отчества, в анкете — с ним.
+        return _first_two_words(current) == _first_two_words(incoming)
+    if field == "parentname":
+        # В CRM у родителя часто только имя, в анкете — полное ФИО.
+        return set(normalize_name(current).split()) <= set(normalize_name(incoming).split())
+    return normalize_name(current) == normalize_name(incoming)

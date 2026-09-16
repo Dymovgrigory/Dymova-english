@@ -25,6 +25,7 @@ import logging
 import httpx
 
 from app.config import settings
+from app.platform.podpislon_sync import crm_date
 
 logger = logging.getLogger(__name__)
 
@@ -119,11 +120,10 @@ def _custom(contact: dict, key: str) -> str:
     return ""
 
 
-def _date(value: object) -> str:
-    """ISO 8601 из Подпислона → ДД.ММ.ГГГГ, как принято в карточке CRM."""
-    text = str(value or "")[:10]
-    parts = text.split("-")
-    return f"{parts[2]}.{parts[1]}.{parts[0]}" if len(parts) == 3 else ""
+def _passport_date(value: object) -> str:
+    """Дата выдачи внутри текстовой строки паспорта — по-русски, ДД.ММ.ГГГГ."""
+    iso = crm_date(value)
+    return ".".join(reversed(iso.split("-"))) if iso else ""
 
 
 def to_crm_fields(contact: dict) -> dict:
@@ -137,7 +137,7 @@ def to_crm_fields(contact: dict) -> dict:
         str(passport.get("number") or "").strip(),
         f"выдан {str(passport.get('issued_by') or '').strip()}"
         if passport.get("issued_by") else "",
-        _date(passport.get("issued_at")),
+        _passport_date(passport.get("issued_at")),
         f"код подразделения {str(passport.get('issuer_code') or '').strip()}"
         if passport.get("issuer_code") else "",
     ]
@@ -147,10 +147,10 @@ def to_crm_fields(contact: dict) -> dict:
 
     return {
         "fio": _custom(contact, "child_fio"),
-        "birthday": _custom(contact, "child_birthday"),
+        "birthday": crm_date(_custom(contact, "child_birthday")),
         "parentname": parent_fio.strip(),
         "parent_phone": str(contact.get("phone") or "").strip(),
-        "parent_birthday": _date(passport.get("birth_date")),
+        "parent_birthday": crm_date(passport.get("birth_date")),
         "passport": ", ".join(p for p in parts if p),
         "home_address": str(passport.get("address") or "").strip(),
         "email": (str(contact.get("email") or "").strip()

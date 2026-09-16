@@ -1,5 +1,5 @@
 """Разбор контакта Подпислона в поля карточки ученика."""
-from app.platform.podpislon import CUSTOM_FIELDS, contact_id_of, to_crm_fields
+from app.platform.podpislon import CUSTOM_FIELDS, contact_id_of, crm_date, to_crm_fields
 
 
 def contact(**kw):
@@ -29,7 +29,7 @@ class TestToCrmFields:
     def test_child_comes_from_custom_fields(self):
         out = to_crm_fields(contact())
         assert out["fio"] == "Иванов Владислав"
-        assert out["birthday"] == "11.08.2019"
+        assert out["birthday"] == "2019-08-11"
 
     def test_parent_fio_is_assembled_in_russian_order(self):
         assert to_crm_fields(contact())["parentname"] == "Иванова Юлия Евгеньевна"
@@ -40,8 +40,14 @@ class TestToCrmFields:
             "40 64 543333, выдан ГУ МВД России по Московской обл., "
             "02.04.2020, код подразделения 770-001")
 
-    def test_dates_are_converted_from_iso(self):
-        assert to_crm_fields(contact())["parent_birthday"] == "18.01.1978"
+    def test_dates_go_to_crm_in_its_own_iso_format(self):
+        # Карточка BigBen хранит и отдаёт даты как ГГГГ-ММ-ДД.
+        assert to_crm_fields(contact())["parent_birthday"] == "1978-01-18"
+
+    def test_unparseable_child_birthday_is_not_written(self):
+        c = contact()
+        c["custom_fields"][1]["value"] = "весной 2019"
+        assert to_crm_fields(c)["birthday"] == ""
 
     def test_address_comes_from_passport(self):
         out = to_crm_fields(contact())
@@ -76,3 +82,25 @@ class TestContactIdOf:
 
     def test_none_when_document_has_no_contact(self):
         assert contact_id_of({"contacts": [], "contact": {}}) is None
+
+
+class TestCrmDate:
+    def test_iso_datetime(self):
+        assert crm_date("1978-01-18T00:00:00+03:00") == "1978-01-18"
+
+    def test_russian_format(self):
+        assert crm_date("28.05.2018") == "2018-05-28"
+
+    def test_stray_spaces_and_short_day_month(self):
+        assert crm_date("23.05. 2019") == "2019-05-23"
+        assert crm_date("3.5.2019") == "2019-05-03"
+
+    def test_slashes_and_dashes(self):
+        assert crm_date("09/04/2019") == "2019-04-09"
+        assert crm_date("09-04-2019") == "2019-04-09"
+
+    def test_crm_empty_date_and_garbage(self):
+        assert crm_date("0000-00-00") == ""
+        assert crm_date("31.02.2019") == ""
+        assert crm_date("весной") == ""
+        assert crm_date(None) == ""

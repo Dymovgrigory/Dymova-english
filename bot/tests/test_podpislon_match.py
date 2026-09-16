@@ -90,3 +90,41 @@ class TestMissingFields:
     def test_whitespace_only_crm_value_counts_as_empty(self):
         upd, _ = missing_fields(student(email="   "), {"email": "a@b.ru"})
         assert upd == {"email": "a@b.ru"}
+
+
+class TestMissingFieldsEquivalence:
+    """Одно и то же, записанное по-разному, — не расхождение."""
+
+    def test_same_date_in_different_formats(self):
+        upd, conflicts = missing_fields(
+            student(birthday="2018-05-28"), {"birthday": "2018-05-28"})
+        assert (upd, conflicts) == ({}, {})
+        upd, conflicts = missing_fields(
+            student(parent_birthday="1992-06-21"), {"parent_birthday": "21.06.1992"})
+        assert (upd, conflicts) == ({}, {})
+
+    def test_crm_zero_date_counts_as_empty(self):
+        upd, conflicts = missing_fields(
+            student(parent_birthday="0000-00-00"), {"parent_birthday": "1991-09-20"})
+        assert upd == {"parent_birthday": "1991-09-20"}
+        assert conflicts == {}
+
+    def test_really_different_date_is_a_conflict(self):
+        _, conflicts = missing_fields(
+            student(birthday="2018-05-28"), {"birthday": "2018-05-29"})
+        assert conflicts == {"birthday": ("2018-05-28", "2018-05-29")}
+
+    def test_child_fio_without_patronymic_in_crm(self):
+        upd, conflicts = missing_fields(
+            student(fio="Пузырев Степан"), {"fio": "Пузырёв Степан Иванович"})
+        assert (upd, conflicts) == ({}, {})
+
+    def test_parent_first_name_only_in_crm(self):
+        upd, conflicts = missing_fields(
+            student(parentname="Алена"), {"parentname": "Пузырёва Алёна Сергеевна"})
+        assert (upd, conflicts) == ({}, {})
+
+    def test_different_parent_is_a_conflict(self):
+        _, conflicts = missing_fields(
+            student(parentname="Ольга"), {"parentname": "Луговой Андрей Петрович"})
+        assert "parentname" in conflicts
