@@ -1,0 +1,8 @@
+{
+  "books": [
+    {"id": "sp1", "title": "Spotlight 1", "grade": 1, "cefr": "Pre-A1", "band": "starter"},
+    {"id": "sp2", "title": "Spotlight 2", "grade": 2, "cefr": "Pre-A1", "band": "starter"},
+    {"id": "sp3", "title": "Spotlight 3", "grade": 3, "cefr": "A1", "band": "junior"},
+    {"id": "sp4", "title": "Spotlight 4", "grade": 4, "cefr": "A1", "band": "junior"}
+  ]
+}
