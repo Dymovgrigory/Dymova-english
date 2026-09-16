@@ -13,7 +13,7 @@ export type Building = {
   title: string;
   hint: string;
   art: string;
-  /** Percent of the map image, object-contain box. */
+  /** Percent of the map image box. */
   box: { left: number; top: number; width: number; height: number };
 };
 
@@ -29,62 +29,63 @@ export function castleMapSrc(): string {
   return CASTLE_MAP;
 }
 
+/** Хитбоксы под Meshy map v2 (изометрия 16:9, floating island). */
 export const BUILDINGS: Building[] = [
   {
     id: "school",
     title: "Школа Foxy",
     hint: "Уроки 1 класса",
     art: "/world/castle/school.png",
-    box: { left: 31, top: 16, width: 9, height: 26 },
+    box: { left: 27, top: 14, width: 12, height: 30 },
   },
   {
     id: "shop",
     title: "Лавка Фокси",
     hint: "Монетки на сердца и стикеры",
     art: "/world/castle/shop.png",
-    box: { left: 38, top: 26, width: 9, height: 16 },
+    box: { left: 35, top: 32, width: 11, height: 16 },
   },
   {
     id: "glory",
     title: "Башня Славы",
     hint: "Лига и рейтинг недели",
     art: "/world/castle/glory.png",
-    box: { left: 46, top: 10, width: 10, height: 22 },
+    box: { left: 44, top: 18, width: 12, height: 22 },
   },
   {
     id: "lexicon",
     title: "Сокровищница слов",
     hint: "Всё, что уже звучало на уроке",
     art: "/world/castle/lexicon.png",
-    box: { left: 54, top: 24, width: 11, height: 20 },
+    box: { left: 54, top: 24, width: 13, height: 28 },
   },
   {
     id: "stickers",
     title: "Башня стикеров",
     hint: "Альбом наклеек",
     art: "/world/castle/stickers.png",
-    box: { left: 61, top: 36, width: 9, height: 14 },
+    box: { left: 62, top: 36, width: 10, height: 16 },
   },
   {
     id: "yard",
     title: "Двор тренировки",
     hint: "Повторить слова без нового урока",
     art: "/world/castle/yard.png",
-    box: { left: 24, top: 58, width: 14, height: 18 },
+    box: { left: 18, top: 60, width: 16, height: 22 },
   },
   {
     id: "nest",
     title: "Гнездо Foxy",
     hint: "Твой уровень, сердца, серия",
     art: "/world/castle/nest.png",
-    box: { left: 66, top: 46, width: 14, height: 18 },
+    box: { left: 70, top: 50, width: 16, height: 22 },
   },
   {
     id: "quests",
     title: "Беседка поручений",
     hint: "Задания на сегодня",
     art: "/world/castle/quests.png",
-    box: { left: 55, top: 50, width: 10, height: 14 },
+    box: { left: 40, top: 55, width: 12, height: 16 },
   },
 ];
 

@@ -338,7 +338,7 @@ export const worldApi = {
   getLeague: () => call<League>("/api/world/learn/league"),
   getReview: () => call<ReviewQueue>("/api/world/learn/review"),
   getWords: (unitId: string) =>
-    call<{ unit_id: string; words: { en: string; ru: string; ipa: string; strength: number }[] }>(
+    call<{ unit_id: string; words: { en: string; ru: string; ipa: string; image?: string; strength: number }[] }>(
       `/api/world/learn/words/${unitId}`,
     ),
   getStickers: () =>

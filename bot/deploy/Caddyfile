@@ -142,20 +142,6 @@ dymova-english.ru {
     file_server
 }
 
-# Стейджинг/предпросмотр (тот же контент). Оставлен как отдельный alias
-# после переключения DNS — canonical-теги на страницах указывают на apex,
-# так что риска дублей в индексации нет.
-new.dymova-english.ru {
-    root * /srv/foxinburg-site
-    try_files {path} {path}/index.html
-    # стейджинг не должен индексироваться — дублируем noindex заголовком
-    # (на страницах стейджинг-сборки уже есть meta robots, но бинарные
-    # ассеты и старые копии заголовок надёжнее)
-    header X-Robots-Tag "noindex, nofollow"
-    encode zstd gzip
-    file_server
-}
-
 # LMS (личный кабинет + админка): Next.js frontend + FastAPI backend из
 # репозитория Dymovgrigory/LMS. Контейнеры lms-frontend/lms-backend живут
 # в docker-сети foxinburg_foxinburg — Caddy подключён к ней (см. networks
@@ -192,13 +178,28 @@ mcp.dymova-english.ru {
     }
 }
 
-# Foxinburg World — Next :3002 + FastAPI :8010 (docker-compose.world.yml на хосте).
+# Foxinburg World — Next + FastAPI (docker-compose.world.yml → сеть bot_default).
 world.dymova-english.ru {
     encode zstd gzip
-    reverse_proxy host.docker.internal:3002
+    reverse_proxy world-web:3002
 }
 
 world-api.dymova-english.ru {
     encode zstd gzip
-    reverse_proxy host.docker.internal:8010
+    reverse_proxy world-api:8010
+}
+
+# Временное превью World, пока нет A-записей world / world-api.
+new.dymova-english.ru {
+    header X-Robots-Tag "noindex, nofollow"
+    encode zstd gzip
+    handle /api/world/* {
+        reverse_proxy world-api:8010
+    }
+    handle /health {
+        reverse_proxy world-api:8010
+    }
+    handle {
+        reverse_proxy world-web:3002
+    }
 }

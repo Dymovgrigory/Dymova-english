@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BUILDINGS, CASTLE_MAP, TIER_RU, isCastleDusk, type BuildingId } from "@/castle/buildings";
 import { worldApi, type League, type Player, type ReviewQueue } from "@/lib/api";
 
-type WordRow = { en: string; ru: string; ipa: string; strength: number; unit: string };
+type WordRow = { en: string; ru: string; ipa: string; image?: string; strength: number; unit: string };
 type ShopItem = { sku: string; coins: number; title_ru: string };
 type Quest = { id?: string; title_ru: string; progress: number; target: number; done: boolean };
 type Sticker = { id: string; title_ru: string; emoji: string; owned: boolean };
@@ -272,13 +272,24 @@ export function CastleHub() {
                     {showWords.map((w) => (
                       <li
                         key={`${w.unit}-${w.en}`}
-                        className={`rounded-2xl p-3 text-center ${due.has(w.en) ? "bg-[#f5ed75]" : "bg-white"}`}
+                        className={`overflow-hidden rounded-2xl text-center ${due.has(w.en) ? "bg-[#f5ed75]" : "bg-white"}`}
                       >
-                        <p className="font-[family-name:var(--font-display)] text-lg font-extrabold text-[#3a2953]">{w.en}</p>
-                        {w.ipa ? <p className="text-xs font-bold text-[#3a2953]/50">{w.ipa}</p> : null}
-                        <p className="mt-1 text-[11px] font-semibold text-[#241a30]/45">
-                          {due.has(w.en) ? "пора повторить" : w.strength ? `сила ${w.strength} из 5` : "ещё впереди"}
-                        </p>
+                        {w.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={w.image}
+                            alt={w.en}
+                            className="mx-auto mt-2 h-20 w-20 object-contain"
+                            loading="lazy"
+                          />
+                        ) : null}
+                        <div className="p-3 pt-1">
+                          <p className="font-[family-name:var(--font-display)] text-lg font-extrabold text-[#3a2953]">{w.en}</p>
+                          {w.ipa ? <p className="text-xs font-bold text-[#3a2953]/50">{w.ipa}</p> : null}
+                          <p className="mt-1 text-[11px] font-semibold text-[#241a30]/45">
+                            {due.has(w.en) ? "пора повторить" : w.strength ? `сила ${w.strength} из 5` : "ещё впереди"}
+                          </p>
+                        </div>
                       </li>
                     ))}
                   </ul>

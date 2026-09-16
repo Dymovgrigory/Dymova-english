@@ -263,6 +263,7 @@ def words(external_key: str, unit_id: str) -> dict:
         "words": [
             {
                 "en": w["en"], "ru": w["ru"], "ipa": w["ipa"],
+                "image": w.get("image") or "",
                 "strength": int(stats.get(w["en"], {}).get("strength") or 0),
             }
             for w in unit["words"]
