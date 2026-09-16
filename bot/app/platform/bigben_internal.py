@@ -193,3 +193,74 @@ async def settle_payment_full(*, payment_id: int, paydate: str) -> dict:
 async def delete_payment(*, payment_id: int) -> dict:
     """Отменяет счёт. ВНИМАНИЕ: каскадно отменяет и связанный доход."""
     return await _request("DELETE", f"/user/payments/{payment_id}")
+
+
+# --- Карточка ученика: дозаполнение и файлы ---
+#
+# Маршруты подтверждены разведкой бандла пульта 2026-09-16
+# (assets/students-api.service-*.js, EntityFilesTab-*.js):
+#   PUT    /user/students/{id}         — обновление полей карточки;
+#   GET    /user/students/{id}/files   — список файлов;
+#   POST   /user/students/{id}/files   — загрузка (multipart, поле "file").
+
+async def search_students(query: str, *, limit: int = 20) -> list[dict]:
+    """Карточки по строке поиска (ФИО, телефон). Пустой запрос — пустой список."""
+    if not (query or "").strip():
+        return []
+    data = await _request(
+        "GET", f"/user/students?search={query}&per_page={limit}")
+    found = data.get("data")
+    return found if isinstance(found, list) else []
+
+
+async def find_students_by_phone(phone: str) -> list[dict]:
+    """Все карточки с этим телефоном — в семье несколько детей на один номер."""
+    digits = _digits(phone)
+    if not digits:
+        return []
+    return [
+        st for st in await search_students(digits)
+        if any(_digits(str(st.get(f) or "")) == digits
+               for f in ("phone", "parent_phone", "main_phone", "phone1"))
+    ]
+
+
+async def update_student(student_id: int, fields: dict) -> dict:
+    """Обновляет только переданные поля карточки. Пустой словарь — не ходим в сеть."""
+    if not fields:
+        return {}
+    return await _request("PUT", f"/user/students/{student_id}",
+                          json_body=fields)
+
+
+async def list_student_files(student_id: int) -> list[dict]:
+    """Файлы в карточке — чтобы не загружать один и тот же договор дважды."""
+    data = await _request("GET", f"/user/students/{student_id}/files")
+    payload = data.get("data")
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict) and isinstance(payload.get("files"), list):
+        return payload["files"]
+    return []
+
+
+async def upload_student_file(student_id: int, filename: str,
+                              content: bytes) -> dict:
+    """Кладёт файл во вкладку «Файлы» карточки (multipart, поле "file")."""
+    if not configured():
+        raise BigBenInternalError("BIGBEN_INTERNAL_TOKEN не задан")
+    try:
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(
+                f"{BASE}/user/students/{student_id}/files",
+                files={"file": (filename, content, "application/pdf")},
+                headers={
+                    "Authorization": f"Bearer {settings.BIGBEN_INTERNAL_TOKEN}",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                })
+    except httpx.HTTPError as exc:
+        raise BigBenInternalError(f"сеть: {exc}") from exc
+    if resp.status_code >= 400:
+        raise BigBenInternalError(f"{resp.status_code}: {resp.text[:200]}")
+    return resp.json()

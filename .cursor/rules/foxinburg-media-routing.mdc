@@ -1,0 +1,17 @@
+---
+description: Proxy only for stills (Nano Banana 2); Meshy for 3D; this agent does the rest
+alwaysApply: true
+---
+
+# Foxinburg media routing
+
+Chat/code never go through ApiCodex. Do not run Cursor installers (`/icrm`, `/icrw`).
+
+| Job | Use |
+|-----|-----|
+| Text, code, plans, this conversation | Current Cursor agent (you) |
+| Production stills / cinematic frames | **Meshy `meshy_text_to_image`** with **`nano-banana-pro`** (9 credits, 16:9). Fallback: Meshy `nano-banana-2` (6) or `gpt-image-2` (9). CheapVibeCode `imagine.py` only if Meshy image is down. |
+| 3D (GLB, remesh, texture, rig) | Meshy MCP — preview first, refine after approval. Prefer image-to-3d from a Banana still. |
+| One quick mock in chat | Cursor `GenerateImage` only if they asked to see a preview |
+
+Rules: `n=1` unless they ask for variants. Confirm before extra images, Meshy refine, or video. Never print API keys.

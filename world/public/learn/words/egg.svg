@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 480">
+  <rect width="408" height="480" rx="36" fill="#fffaf0"/>
+  <rect x="18" y="18" width="372" height="300" rx="28" fill="#3a2953"/>
+  <g transform="translate(0,8)"><g transform="translate(84,44) scale(2.2)"><path fill="#F7DECE" d="M23.142 3.403C21.492 1.899 19.712 1 18 1 12.375 1 6 10.611 6 20c0 .975.079 1.899.202 2.791C7.261 30.484 12.623 35 18 35c6 0 12-5.611 12-15 0-6.531-3.086-13.161-6.858-16.597z"/><path fill="#E0AA94" d="M23.142 3.403c2.908 3.519 5.108 9.018 5.108 14.453 0 9.009-5.672 14.393-11.344 14.393-4.541 0-9.075-3.459-10.705-9.459C7.261 30.484 12.623 35 18 35c6 0 12-5.611 12-15 0-6.531-3.086-13.161-6.858-16.597z"/></g></g>
+  <text x="204" y="360" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="42" font-weight="800" fill="#3a2953">egg</text>
+  <text x="204" y="408" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="26" fill="#241a30" opacity="0.55">яйцо</text>
+</svg>
