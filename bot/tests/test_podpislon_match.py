@@ -3,7 +3,7 @@
 Правило задано школой: совпасть должны И фамилия с именем ребёнка, И телефон.
 Одно совпадение — работаем, ноль или несколько — не трогаем ничего.
 """
-from app.platform.podpislon_sync import child_fields_for, match_student, missing_fields
+from app.platform.podpislon_sync import child_fields_for, match_student, missing_fields, same_first_name
 
 
 def student(**kw):
@@ -214,7 +214,7 @@ class TestMatchByDocumentName:
 
     def test_title_naming_nobody_is_not_a_match(self):
         c = contact(child_fio="", parent_last_name="Прохорова",
-                    doc_name="Прохоров Михаил новый уч. год. 2026.pdf")
+                    doc_name="Прохоров Максим новый уч. год. 2026.pdf")
         students = [student(id=1, fio="Прохоров Миша"), student(id=2, fio="Прохорова Алиса")]
         assert match_student(c, students) is None
 
@@ -238,3 +238,44 @@ class TestChildFieldsFor:
         fields = {"fio": "Иванова Мария", "birthday": "2019-08-11", "passport": "40"}
         assert child_fields_for(fields, student(fio="Иванов Владислав")) == {
             "fio": "", "birthday": "", "passport": "40"}
+
+
+class TestShortNames:
+    """Полное и уменьшительное имя — один клиент (сверка 2026-09-16)."""
+
+    def test_pairs(self):
+        assert same_first_name("Миша", "Михаил")
+        assert same_first_name("Таня", "Татьяна")
+        assert same_first_name("Настя", "Анастасия")
+        assert same_first_name("Саша", "Александра")
+        assert same_first_name("Наталья", "Наталия")
+        assert same_first_name("Софья", "Соня")
+        assert same_first_name("Алёша", "Алексей")
+
+    def test_different_names(self):
+        assert not same_first_name("Аня", "Таня")
+        assert not same_first_name("Миша", "Максим")
+
+    def test_title_with_full_name_card_with_short(self):
+        c = contact(child_fio="", parent_last_name="Прохорова",
+                    doc_name="Прохоров Михаил новый уч. год. 2026.pdf")
+        students = [student(id=1, fio="Прохоров Миша"), student(id=2, fio="Прохорова Алиса")]
+        assert match_student(c, students)["id"] == 1
+
+    def test_title_with_short_name_card_with_full(self):
+        c = contact(child_fio="", parent_last_name="Кузнецова",
+                    doc_name="Погорелова Таня договор.pdf")
+        assert match_student(c, [student(fio="Погорелова Татьяна")])["id"] == 1
+
+    def test_anketa_short_name(self):
+        c = contact(child_fio="Иванов Влад")
+        assert match_student(c, [student(fio="Иванов Владислав")])["id"] == 1
+
+    def test_short_form_inside_other_word_is_not_a_match(self):
+        # «аня» есть внутри «Таня» — это не Анна.
+        c = contact(child_fio="", parent_last_name="Сидорова", doc_name="Петрова Таня.pdf")
+        assert match_student(c, [student(fio="Петрова Анна")]) is None
+
+    def test_fio_with_short_name_is_not_a_conflict(self):
+        upd, conflicts = missing_fields(student(fio="Прохоров Миша"), {"fio": "Прохоров Михаил Олегович"})
+        assert (upd, conflicts) == ({}, {})

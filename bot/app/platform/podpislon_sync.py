@@ -13,6 +13,8 @@ from __future__ import annotations
 import re
 from datetime import date
 
+from app.platform.russian_names import all_forms, canonical_names
+
 # Поля карточки ученика, куда складываем данные анкеты.
 # Ключ — поле CRM, значение — как достаётся из контакта Подпислона.
 CRM_FIELDS = (
@@ -76,19 +78,46 @@ def surname_stem(value: object) -> str:
     return surname
 
 
+def same_first_name(a: object, b: object) -> bool:
+    """«Миша» и «Михаил», «Наталья» и «Наталия» — одно имя."""
+    a, b = normalize_name(a), normalize_name(b)
+    return a == b or bool(canonical_names(a) & canonical_names(b))
+
+
 def _same_person(crm_fio: object, child: str) -> bool:
-    """Фамилия и имя совпали в любом порядке: «Тимур Бондарь» = «Бондарь Тимур»."""
-    return set(_first_two_words(crm_fio).split()) == set(child.split())
+    """Фамилия и имя совпали в любом порядке и с учётом уменьшительных имён.
 
-
-def _compact(value: object) -> str:
-    return normalize_name(value).replace(" ", "")
+    «Тимур Бондарь» = «Бондарь Тимур», «Прохоров Миша» = «Прохоров Михаил».
+    """
+    left = _first_two_words(crm_fio).split()
+    right = child.split()
+    if len(left) != 2 or len(right) != 2:
+        return left == right
+    (a1, a2), (b1, b2) = left, right
+    return ((a1 == b1 and same_first_name(a2, b2))
+            or (a1 == b2 and same_first_name(a2, b1)))
 
 
 def _named_in(crm_fio: object, title: str) -> bool:
-    """Фамилия и имя из карточки есть в названии договора («СмелыйРусланЛето.pdf»)."""
+    """Фамилия и имя из карточки есть в названии договора.
+
+    Имя — в любой форме («Миша» в карточке, «Михаил» в договоре). Слово ищется
+    целиком; внутри слитного названия («СмелыйРусланЛето.pdf») — только
+    длинные формы, чтобы «аня» не нашлась внутри «Таня».
+    """
     words = _first_two_words(crm_fio).split()
-    return len(words) == 2 and all(w in title for w in words)
+    if len(words) != 2:
+        return False
+    tokens = set(re.findall(r"[а-яa-z]+", title))
+    compact = "".join(title.split())
+
+    def present(form: str) -> bool:
+        return form in tokens or (len(form) >= 5 and form in compact)
+
+    surname, name = words
+    first, second = (surname, name)
+    return ((present(first) and any(present(f) for f in all_forms(second)))
+            or (present(second) and any(present(f) for f in all_forms(first))))
 
 
 def match_student(contact: dict, students: list[dict]) -> dict | None:
@@ -117,7 +146,7 @@ def match_student(contact: dict, students: list[dict]) -> dict | None:
             return hits[0] if len(hits) == 1 else None
 
     # Анкету мог заполнить другой родственник: ребёнок назван в имени договора.
-    title = _compact(contact.get("doc_name"))
+    title = normalize_name(contact.get("doc_name"))
     if title:
         hits = [st for st in by_phone if _named_in(st.get("fio"), title)]
         if len(hits) == 1:
@@ -175,7 +204,7 @@ def _same_value(field: str, current: str, incoming: str) -> bool:
         return crm_date(current) == crm_date(incoming)
     if field == "fio":
         # В CRM ребёнок часто без отчества, в анкете — с ним.
-        return _first_two_words(current) == _first_two_words(incoming)
+        return _same_person(current, _first_two_words(incoming))
     if field == "parentname":
         # В CRM у родителя часто только имя («мама Анастасия»), в анкете — полное ФИО.
         noted = set(normalize_name(current).split()) - {"мама", "папа"}
