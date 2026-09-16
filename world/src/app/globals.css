@@ -2,6 +2,30 @@
 
 @theme inline {
   --font-sans: var(--font-nunito), ui-rounded, "Trebuchet MS", sans-serif;
+  --font-heading: var(--font-display), var(--font-nunito), sans-serif;
+}
+
+/* Тренажёр Spotlight: «тетрадь в клетку, королевские печати». */
+@theme {
+  --color-paper: #fbfaff;
+  --color-grid: #e9e4f5;
+  --color-line: #dcd5ea;
+  --color-ink: #2a1f3d;
+  --color-ink-soft: #675b7c;
+  --color-royal: #3a2953;
+  --color-royal-deep: #241a30;
+  --color-royal-edge: #1d1428;
+  --color-crown: #f5ed75;
+  --color-crown-edge: #d8b72c;
+  --color-mint: #7fd8c9;
+  --color-mint-edge: #4fb3a2;
+  --color-mint-ink: #17685b;
+  --color-mint-wash: #e2f6f2;
+  --color-coral: #ff6b5e;
+  --color-coral-edge: #d9483c;
+  --color-coral-ink: #a82f25;
+  --color-coral-wash: #ffe9e6;
+  --color-sky: #cfe3ff;
 }
 
 :root {
@@ -112,4 +136,41 @@ h3 {
 @keyframes dockUp {
   from { transform: translateY(18px); opacity: 0.55; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+/* ---------- Тренажёр ---------- */
+.study {
+  min-height: 100dvh;
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+}
+
+.study-plain {
+  min-height: 100dvh;
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+
+.press {
+  transition: transform 90ms ease, box-shadow 90ms ease, background-color 120ms ease;
+}
+.press:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 0 transparent !important;
+}
+
+@keyframes seal-pulse {
+  0%, 100% { box-shadow: 0 6px 0 var(--color-crown-edge), 0 0 0 0 rgb(245 237 117 / 0.75); }
+  50% { box-shadow: 0 6px 0 var(--color-crown-edge), 0 0 0 14px rgb(245 237 117 / 0); }
+}
+.seal-current { animation: seal-pulse 2.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .seal-current { animation: none; }
+  .press { transition: none; }
 }
