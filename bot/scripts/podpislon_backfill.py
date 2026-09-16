@@ -50,22 +50,47 @@ async def fetch_contacts(limit: int | None) -> list[dict]:
     return out
 
 
-async def signed_documents() -> dict[int, int]:
-    """{contact_id: file_id} по подписанным договорам, новейший на контакт."""
+# Договоры текущего сезона: так они и называются в Подпислоне и в CRM.
+SEASON = "26_27"
+
+
+async def fetch_documents_page(page: int) -> list:
+    """Страница списка документов (по 20, новые сверху). 429 пережидаем."""
+    for attempt in range(6):
+        try:
+            docs = await podpislon._request("POST", f"/?page={page}", json_body={})
+            return docs if isinstance(docs, list) else []
+        except podpislon.PodpislonError as exc:
+            if "429" not in str(exc):
+                raise
+            await asyncio.sleep(1 + attempt)
+    raise podpislon.PodpislonError("429: лимит не отпустил за 6 попыток")
+
+
+async def signed_documents(fetch=fetch_documents_page, *,
+                           pause: float = PAUSE) -> dict[int, int]:
+    """{contact_id: file_id} по подписанным договорам сезона, новейший на контакт.
+
+    Страницы кончаются не пустым ответом: API бесконечно повторяет последнюю.
+    Поэтому останавливаемся, как только страница не принесла новых документов.
+    """
     out: dict[int, int] = {}
+    seen: set[int] = set()
     page = 1
     while True:
-        docs = await podpislon._request("POST", f"/?page={page}", json_body={})
-        if not isinstance(docs, list) or not docs:
+        docs = await fetch(page)
+        fresh = [d for d in docs if int(d.get("id") or 0) not in seen]
+        if not fresh:
             break
-        for doc in docs:
-            if not podpislon.is_signed(doc):
+        for doc in fresh:
+            seen.add(int(doc.get("id") or 0))
+            if not podpislon.is_signed(doc) or SEASON not in str(doc.get("name") or ""):
                 continue
             contact_id = podpislon.contact_id_of(doc)
             if contact_id and contact_id not in out:
                 out[contact_id] = int(doc["id"])
         page += 1
-        await asyncio.sleep(PAUSE)
+        await asyncio.sleep(pause)
     return out
 
 
