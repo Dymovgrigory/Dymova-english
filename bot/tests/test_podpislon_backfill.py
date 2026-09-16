@@ -29,7 +29,7 @@ class FakePages:
 async def test_stops_when_api_repeats_the_last_page():
     fetch = FakePages([[doc(3, 30), doc(2, 20)], [doc(1, 10)]])
     out = await backfill.signed_documents(fetch, pause=0)
-    assert out == {30: 3, 20: 2, 10: 1}
+    assert {k: d["id"] for k, d in out.items()} == {30: 3, 20: 2, 10: 1}
     assert fetch.calls == 3
 
 
@@ -38,16 +38,18 @@ async def test_takes_only_signed_contracts_of_this_season():
     # Названия свободные («26-27 уч год», «Лобунцова Настя») — сезон по дате.
     fetch = FakePages([[
         doc(5, 50, status="20"),
-        doc(4, 40, name="Сазыкин 26_27.pdf", created="2025-07-21 20:15:17"),
-        doc(3, 30, name="Лобунцова Настя.pdf"),
+        doc(4, 40, name="Сазыкин 26_27.pdf", created="2026-03-31 20:15:17"),
+        doc(3, 30, name="Лобунцова Настя.pdf", created="2026-04-01 09:00:00"),
     ]])
-    assert await backfill.signed_documents(fetch, pause=0) == {30: 3}
+    out = await backfill.signed_documents(fetch, pause=0)
+    assert {k: d["id"] for k, d in out.items()} == {30: 3}
 
 
 @pytest.mark.asyncio
 async def test_newest_contract_wins_per_contact():
     fetch = FakePages([[doc(9, 10), doc(8, 10)]])
-    assert await backfill.signed_documents(fetch, pause=0) == {10: 9}
+    out = await backfill.signed_documents(fetch, pause=0)
+    assert {k: d["id"] for k, d in out.items()} == {10: 9}
 
 
 @pytest.mark.asyncio

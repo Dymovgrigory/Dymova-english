@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.platform import bigben_internal as crm  # noqa: E402
 from app.platform import podpislon, podpislon_sync  # noqa: E402
-from app.platform.podpislon_webhooks import contract_filename  # noqa: E402
+from app.platform.podpislon_webhooks import upload_contract  # noqa: E402
 
 # Подпислон ограничивает 4 запросами в секунду на ключ.
 PAUSE = 0.3
@@ -52,8 +52,8 @@ async def fetch_contacts(limit: int | None) -> list[dict]:
 
 # Договоры сезона 26_27. Названия в Подпислоне свободные («26-27 уч год»,
 # «Лобунцова Настя»), поэтому сезон определяем по дате создания документа:
-# прошлогодние договоры созданы летом 2025.
-SEASON_STARTS = "2026-06-01"
+# переносим всё, что создано с апреля 2026.
+SEASON_STARTS = "2026-04-01"
 
 
 async def fetch_documents_page(page: int) -> list:
@@ -70,13 +70,13 @@ async def fetch_documents_page(page: int) -> list:
 
 
 async def signed_documents(fetch=fetch_documents_page, *,
-                           pause: float = PAUSE) -> dict[int, int]:
-    """{contact_id: file_id} по подписанным договорам сезона, новейший на контакт.
+                           pause: float = PAUSE) -> dict[int, dict]:
+    """{contact_id: документ} по подписанным договорам сезона, новейший на контакт.
 
     Страницы кончаются не пустым ответом: API бесконечно повторяет последнюю.
     Поэтому останавливаемся, как только страница не принесла новых документов.
     """
-    out: dict[int, int] = {}
+    out: dict[int, dict] = {}
     seen: set[int] = set()
     page = 1
     while True:
@@ -91,7 +91,7 @@ async def signed_documents(fetch=fetch_documents_page, *,
                 continue
             contact_id = podpislon.contact_id_of(doc)
             if contact_id and contact_id not in out:
-                out[contact_id] = int(doc["id"])
+                out[contact_id] = doc
         page += 1
         await asyncio.sleep(pause)
     return out
@@ -155,18 +155,13 @@ async def main() -> int:
                 f"{k}: в CRM {old!r}, в анкете {new!r}"
                 for k, (old, new) in conflicts.items()))
 
-        file_id = docs.get(contact.get("id"))
-        if file_id and not args.contacts_only:
-            filename = contract_filename(child or student.get("fio"))
-            existing = {str(f.get("name") or "")
-                        for f in await crm.list_student_files(student["id"])}
-            if filename not in existing:
+        doc = docs.get(contact.get("id"))
+        if doc and not args.contacts_only:
+            result = await upload_contract(student, doc, child, apply=args.apply)
+            await asyncio.sleep(PAUSE)
+            if result["uploaded"]:
                 uploaded += 1
-                print(f"  {child}: загрузить {filename}")
-                if args.apply:
-                    pdf = await podpislon.download_pdf(file_id)
-                    await crm.upload_student_file(student["id"], filename, pdf)
-                    await asyncio.sleep(PAUSE)
+                print(f"  {child}: загрузить {result['filename']}")
 
     print(f"\nИтого: дозаполнить карточек {filled}, загрузить договоров {uploaded}")
     if conflicted:

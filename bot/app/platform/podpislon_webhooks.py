@@ -56,6 +56,49 @@ def contract_filename(student_fio: str, year: str = "26_27") -> str:
     return f"{' '.join(clean.split())} {year}.pdf"
 
 
+def already_uploaded(files: list[dict], *, filename: str, doc_name: str,
+                     pdf_size: int | None) -> bool:
+    """Есть ли этот договор в карточке.
+
+    Совпадение по нашему имени, по названию документа в Подпислоне (так
+    договоры грузят руками администраторы) или по размеру — тот же PDF под
+    любым именем. Прошлогодний договор другого размера дублем не считается.
+    """
+    names = {str(f.get("name") or "").strip().lower() for f in files}
+    if filename.lower() in names or (doc_name and doc_name.strip().lower() in names):
+        return True
+    if pdf_size is None:
+        return False
+    return any(str(f.get("size") or "") == str(pdf_size) for f in files)
+
+
+async def upload_contract(student: dict, doc: dict, child_fio: str, *,
+                          apply: bool = True) -> dict:
+    """Кладёт подписанный договор в «Файлы» карточки, если его там ещё нет.
+
+    apply=False — только проверка (для отчёта переноса), без записи в CRM.
+    """
+    filename = contract_filename(child_fio)
+    doc_name = str(doc.get("name") or "")
+    files = await crm.list_student_files(student["id"])
+    if already_uploaded(files, filename=filename, doc_name=doc_name, pdf_size=None):
+        logger.info("podpislon: договор %s уже есть в карточке %s — пропускаем",
+                    doc.get("id"), student["id"])
+        return {"uploaded": False}
+
+    pdf = await podpislon.download_pdf(int(doc["id"]))
+    if already_uploaded(files, filename=filename, doc_name=doc_name, pdf_size=len(pdf)):
+        logger.info("podpislon: тот же PDF уже есть в карточке %s — пропускаем",
+                    student["id"])
+        return {"uploaded": False}
+
+    if apply:
+        await crm.upload_student_file(student["id"], filename, pdf)
+        logger.info("podpislon: %s загружен в карточку %s (%d байт)",
+                    filename, student["id"], len(pdf))
+    return {"uploaded": True, "filename": filename}
+
+
 async def _resolve(contact_id: int) -> tuple[dict, dict, dict | None]:
     """Контакт Подпислона, его поля для CRM и найденная карточка ученика."""
     contact = await podpislon.get_contact(contact_id)
@@ -121,19 +164,9 @@ async def handle_signed(file_id: int) -> dict:
     result = {"verified": True, "matched": True, "student_id": student["id"],
               **await _fill_card(student, fields)}
 
-    filename = contract_filename(fields["fio"] or student.get("fio"))
-    existing = {str(f.get("name") or "") for f in
-                await crm.list_student_files(student["id"])}
-    if filename in existing:
-        logger.info("podpislon: %s уже есть в карточке %s — пропускаем",
-                    filename, student["id"])
-        return {**result, "uploaded": False}
-
-    pdf = await podpislon.download_pdf(file_id)
-    await crm.upload_student_file(student["id"], filename, pdf)
-    logger.info("podpislon: %s загружен в карточку %s (%d байт)",
-                filename, student["id"], len(pdf))
-    return {**result, "uploaded": True, "filename": filename}
+    upload = await upload_contract(student, doc,
+                                   fields["fio"] or student.get("fio"))
+    return {**result, **upload}
 
 
 async def _process(event: str, payload: dict) -> None:

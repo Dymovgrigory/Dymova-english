@@ -230,3 +230,48 @@ class TestDedup:
         hooks._seen.clear()
         assert hooks._dedup("DOCUMENT_SIGNED:1") is False
         assert hooks._dedup("DOCUMENT_SIGNED:2") is False
+
+
+class TestAlreadyUploaded:
+    """Договор уже в карточке — второй раз не кладём.
+
+    Администраторы грузят договоры и руками — под названием из Подпислона
+    (Ворожеева, 2026-09-16: «Ежемесячный ракета 26_27.pdf»).
+    """
+
+    def test_our_filename(self):
+        files = [{"name": "Кузнецов Никита 26_27.pdf", "size": 1}]
+        assert hooks.already_uploaded(files, filename="Кузнецов Никита 26_27.pdf",
+                                      doc_name="Договор.pdf", pdf_size=999)
+
+    def test_uploaded_by_hand_under_podpislon_name(self):
+        files = [{"name": "Ежемесячный ракета 26_27.pdf", "size": 5}]
+        assert hooks.already_uploaded(files, filename="Ворожеева Есения 26_27.pdf",
+                                      doc_name="Ежемесячный ракета 26_27.pdf", pdf_size=999)
+
+    def test_same_pdf_under_any_name(self):
+        files = [{"name": "скан.pdf", "size": "136697"}]
+        assert hooks.already_uploaded(files, filename="Ворожеева Есения 26_27.pdf",
+                                      doc_name="Договор.pdf", pdf_size=136697)
+
+    def test_last_season_contract_does_not_count(self):
+        files = [{"name": "Договор Ворожеева Есения.pdf", "size": 236427}]
+        assert not hooks.already_uploaded(files, filename="Ворожеева Есения 26_27.pdf",
+                                          doc_name="Ежемесячный ракета 26_27.pdf",
+                                          pdf_size=136697)
+
+
+class TestHandleSignedDedup:
+    @pytest.mark.asyncio
+    async def test_skips_contract_uploaded_by_hand(self, wired):
+        crm = FakeCrm(students=[student()],
+                      files=[{"name": "Договор ракета.pdf", "size": 0}])
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "name": "Договор ракета.pdf",
+                                 "contacts": [{"sid": "NDU2"}]},
+                            contact=contact())
+        wired(crm, pod)
+
+        out = await hooks.handle_signed(1)
+
+        assert out["uploaded"] is False
+        assert crm.uploaded == []
