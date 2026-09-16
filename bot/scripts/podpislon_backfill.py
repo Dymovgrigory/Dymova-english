@@ -106,7 +106,8 @@ async def main() -> int:
         child, phone = fields["fio"], fields["parent_phone"]
         candidates = await crm.find_students_by_phone(phone)
         student = podpislon_sync.match_student(
-            {"child_fio": child, "phone": phone}, candidates)
+            {"child_fio": child, "phone": phone,
+             "parent_last_name": fields["parent_last_name"]}, candidates)
         await asyncio.sleep(PAUSE)
 
         if not student:
@@ -114,6 +115,7 @@ async def main() -> int:
             unmatched.append(f"  {child or '(без ФИО)'} / {phone or '(без тел.)'} — {why}")
             continue
 
+        child = child or str(student.get("fio") or "")
         updates, conflicts = podpislon_sync.missing_fields(student, fields)
         if updates:
             filled += 1

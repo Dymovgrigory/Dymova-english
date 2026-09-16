@@ -118,6 +118,20 @@ class TestHandleSigned:
         assert fields["parentname"] == "Кузнецова Мария Ивановна"
 
     @pytest.mark.asyncio
+    async def test_anketa_without_child_name_uses_parent_surname(self, wired):
+        crm = FakeCrm(students=[student()])
+        c = contact()
+        c["custom_fields"] = []  # мама не заполнила ФИО ребёнка
+        pod = FakePodpislon(doc={"id": 1, "status": "30", "contacts": [{"sid": "NDU2"}]},
+                            contact=c)
+        wired(crm, pod)
+
+        out = await hooks.handle_signed(1)
+
+        assert out["matched"] and out["uploaded"]
+        assert crm.uploaded == [(42, "Кузнецов Никита 26_27.pdf", b"%PDF-signed")]
+
+    @pytest.mark.asyncio
     async def test_document_that_is_not_signed_yet_is_skipped(self, wired):
         crm = FakeCrm(students=[student()])
         pod = FakePodpislon(doc={"id": 1, "status": "20", "contacts": [{"sid": "NDU2"}]},

@@ -64,23 +64,45 @@ def _first_two_words(name: str) -> str:
     return " ".join(normalize_name(name).split()[:2])
 
 
+def surname_stem(value: object) -> str:
+    """Фамилия без родового окончания: Ворожеева/Ворожеев, Троицкая/Троицкий."""
+    word = normalize_name(value).split()[:1]
+    if not word:
+        return ""
+    surname = word[0]
+    for ending in ("ская", "ский", "цкая", "цкий", "ая", "ий", "ой", "а"):
+        if surname.endswith(ending) and len(surname) > len(ending) + 2:
+            return surname[: -len(ending)]
+    return surname
+
+
 def match_student(contact: dict, students: list[dict]) -> dict | None:
     """Карточка, у которой совпали и ребёнок, и телефон. Иначе None.
+
+    Если ФИО ребёнка в анкете нет, подходит единственная карточка на этот
+    телефон с фамилией родителя (в мужском или женском роде).
 
     None возвращается и когда подходящих карточек несколько: угадывать между
     ними нельзя, такой случай разбирает администратор.
     """
     child = _first_two_words(contact.get("child_fio"))
     phone = normalize_phone(contact.get("phone"))
-    if not child or not phone:
+    if not phone:
         return None
 
-    hits = [
+    by_phone = [
         st for st in students
-        if _first_two_words(st.get("fio")) == child
-        and any(normalize_phone(st.get(f)) == phone for f in PHONE_FIELDS)
+        if any(normalize_phone(st.get(f)) == phone for f in PHONE_FIELDS)
     ]
-    return hits[0] if len(hits) == 1 else None
+    if child:
+        hits = [st for st in by_phone if _first_two_words(st.get("fio")) == child]
+        return hits[0] if len(hits) == 1 else None
+
+    parent = surname_stem(contact.get("parent_last_name"))
+    if not parent or len(by_phone) != 1:
+        return None
+    only = by_phone[0]
+    return only if surname_stem(only.get("fio")) == parent else None
 
 
 def missing_fields(student: dict, data: dict) -> tuple[dict, dict]:

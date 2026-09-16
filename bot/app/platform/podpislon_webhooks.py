@@ -62,7 +62,8 @@ async def _resolve(contact_id: int) -> tuple[dict, dict, dict | None]:
     fields = podpislon.to_crm_fields(contact)
     candidates = await crm.find_students_by_phone(fields["parent_phone"])
     student = podpislon_sync.match_student(
-        {"child_fio": fields["fio"], "phone": fields["parent_phone"]},
+        {"child_fio": fields["fio"], "phone": fields["parent_phone"],
+         "parent_last_name": fields["parent_last_name"]},
         candidates)
     return contact, fields, student
 

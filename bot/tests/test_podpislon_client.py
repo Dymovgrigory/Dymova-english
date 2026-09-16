@@ -44,6 +44,15 @@ class TestToCrmFields:
         # Карточка BigBen хранит и отдаёт даты как ГГГГ-ММ-ДД.
         assert to_crm_fields(contact())["parent_birthday"] == "1978-01-18"
 
+    def test_adult_date_in_child_birthday_is_dropped(self):
+        # Родитель вписал свою дату в поле ребёнка (Ворожеева: 16.03.1986).
+        c = contact()
+        c["custom_fields"][1]["value"] = "16.03.1986"
+        assert to_crm_fields(c)["birthday"] == ""
+
+    def test_parent_last_name_is_exposed_for_matching(self):
+        assert to_crm_fields(contact())["parent_last_name"] == "Иванова"
+
     def test_unparseable_child_birthday_is_not_written(self):
         c = contact()
         c["custom_fields"][1]["value"] = "весной 2019"

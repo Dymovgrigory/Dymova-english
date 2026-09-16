@@ -20,6 +20,7 @@ COMPANY_ID, SIGNATURE и специфичными для события. Алг�
 from __future__ import annotations
 
 import base64
+from datetime import date
 import binascii
 import logging
 import re
@@ -145,6 +146,18 @@ def _passport_date(value: object) -> str:
     return ".".join(reversed(iso.split("-"))) if iso else ""
 
 
+# Ученики школы — дети: дата старше этого возраста в поле ребёнка — ошибка анкеты.
+MAX_CHILD_AGE = 20
+
+
+def _child_birthday(value: object) -> str:
+    """Дата рождения ребёнка. Взрослую дату (родитель вписал свою) отбрасываем."""
+    iso = crm_date(value)
+    if iso and int(iso[:4]) < date.today().year - MAX_CHILD_AGE:
+        return ""
+    return iso
+
+
 def to_crm_fields(contact: dict) -> dict:
     """Контакт Подпислона → поля карточки ученика BigBen.
 
@@ -166,10 +179,12 @@ def to_crm_fields(contact: dict) -> dict:
 
     return {
         "fio": _custom(contact, "child_fio"),
-        "birthday": crm_date(_custom(contact, "child_birthday")),
+        "birthday": _child_birthday(_custom(contact, "child_birthday")),
         "parentname": parent_fio.strip(),
         "parent_phone": str(contact.get("phone") or "").strip(),
         "parent_birthday": crm_date(passport.get("birth_date")),
+        # Не поле CRM: нужна для поиска карточки, когда ФИО ребёнка не заполнено.
+        "parent_last_name": str(contact.get("last_name") or "").strip(),
         "passport": ", ".join(p for p in parts if p),
         "home_address": str(passport.get("address") or "").strip(),
         "email": (str(contact.get("email") or "").strip()

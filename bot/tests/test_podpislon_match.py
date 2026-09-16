@@ -62,8 +62,45 @@ class TestMatchStudent:
     def test_no_students_at_all(self):
         assert match_student(contact(), []) is None
 
-    def test_contact_without_child_name_is_never_matched(self):
+    def test_contact_without_child_name_and_parent_surname_is_not_matched(self):
         assert match_student(contact(child_fio=""), [student()]) is None
+
+
+class TestMatchWithoutChildName:
+    """Анкета без ФИО ребёнка: одна карточка на телефон + фамилия родителя.
+
+    Случай Ворожеевой (2026-09-16): мама не заполнила ФИО ребёнка.
+    """
+
+    def test_single_card_with_parent_surname(self):
+        students = [student(fio="Ворожеева Есения")]
+        c = contact(child_fio="", parent_last_name="Ворожеева")
+        assert match_student(c, students)["id"] == 1
+
+    def test_mother_and_son_surname_forms(self):
+        c = contact(child_fio="", parent_last_name="Ворожеева")
+        assert match_student(c, [student(fio="Ворожеев Иван")])["id"] == 1
+        c = contact(child_fio="", parent_last_name="Пузырёва")
+        assert match_student(c, [student(fio="Пузырев Степан")])["id"] == 1
+        c = contact(child_fio="", parent_last_name="Троицкая")
+        assert match_student(c, [student(fio="Троицкий Олег")])["id"] == 1
+
+    def test_father_and_daughter_surname_forms(self):
+        c = contact(child_fio="", parent_last_name="Иванов")
+        assert match_student(c, [student(fio="Иванова Мария")])["id"] == 1
+
+    def test_different_surname_is_not_a_match(self):
+        c = contact(child_fio="", parent_last_name="Петрова")
+        assert match_student(c, [student(fio="Ворожеева Есения")]) is None
+
+    def test_two_children_on_one_phone_are_ambiguous(self):
+        c = contact(child_fio="", parent_last_name="Иванова")
+        students = [student(id=1, fio="Иванов Владислав"), student(id=2, fio="Иванова Мария")]
+        assert match_student(c, students) is None
+
+    def test_wrong_phone_is_not_a_match(self):
+        c = contact(child_fio="", parent_last_name="Иванова")
+        assert match_student(c, [student(parent_phone="79990000000")]) is None
 
     def test_contact_without_phone_is_never_matched(self):
         assert match_student(contact(phone=""), [student()]) is None
