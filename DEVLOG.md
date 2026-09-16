@@ -5794,10 +5794,25 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - PR #223 открыт; push ветки.
 - `docker-compose.world.yml`, Dockerfiles, Caddy-блоки `world` / `world-api`, обновлён `docs/world/DEPLOY.md`.
 
-**Деплой:** https://world.dymova-english.ru + https://world-api.dymova-english.ru на VM (compose + Caddy reload).
+**Деплой:** превью на https://new.dymova-english.ru (DNS world.* ещё нет).
+
+### Сессия 100 (агент — Cursor, видимый замок + lexicon + сеть)
+
+**Дата:** 2026-09-16
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** «продолжай строить проект по плану!» (после жалобы: замок тот же, озвучка плохая, Meshy не видно).
+
+**Что сделано:**
+- Новая карта замка Meshy `nano-banana-pro` (−9 кредитов) → `map.png` (бэкап `map-v1-backup.png`), хитбоксы пересчитаны.
+- Сокровищница показывает jpg слов из Meshy.
+- `docker-compose.world.yml` в сети `bot_default`; Caddy → `world-web` / `world-api` по имени; `new.` — превью World.
+- edge-tts уже в проде; pregen core vocabulary локально.
+
+**Как проверить:** https://new.dymova-english.ru/world — новая карта; Сокровищница — картинки; урок — голос AriaNeural.
 
 ## Текущий статус / Где остановились
 
-- World: PR #223; прод на `world` / `world-api` поддоменах.
-- Следующий шаг: дождаться CI/ревью и merge в `main`.
+- World: PR #223 + коммиты после; превью на `new.dymova-english.ru`.
+- Нужны A-записи `world` / `world-api` в reg.ru.
+- Следующее: интерьеры зданий новой волной Meshy / полировка хитбоксов по скрину.
 
