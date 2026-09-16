@@ -89,6 +89,10 @@ class Settings(BaseSettings):
     BIGBEN_WEBHOOK_SECRET: str = ""
     # Периодичность инкрементальной синхронизации read-model (минуты).
     BIGBEN_SYNC_INTERVAL_MIN: int = 15
+    # Ключ API Подпислона (ЛК → Настройки → Интеграции). Нужен, чтобы забирать
+    # подписанные договоры и анкетные данные клиента. Пустой ключ выключает
+    # приём вебхуков Подпислона целиком.
+    PODPISLON_API_KEY: str = ""
     # Полная сверка (reconciliation) раз в N часов.
     BIGBEN_FULL_SYNC_HOURS: int = 6
     # Окно расписания уроков для синхронизации (дней вперёд).
@@ -318,6 +322,7 @@ class Settings(BaseSettings):
         "TELEGRAM_BOT_TOKEN",
         "MAX_WEBHOOK_SECRET",
         "TELEGRAM_WEBHOOK_SECRET",
+        "PODPISLON_API_KEY",
         mode="before",
     )
     @classmethod

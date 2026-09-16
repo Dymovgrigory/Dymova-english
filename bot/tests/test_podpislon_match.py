@@ -1,0 +1,92 @@
+"""Сопоставление контакта Подпислона с карточкой ученика в CRM.
+
+Правило задано школой: совпасть должны И фамилия с именем ребёнка, И телефон.
+Одно совпадение — работаем, ноль или несколько — не трогаем ничего.
+"""
+from app.platform.podpislon_sync import match_student, missing_fields
+
+
+def student(**kw):
+    base = {
+        "id": 1, "fio": "Иванов Владислав", "parent_phone": "+7 (925) 880-33-33",
+        "phone": "", "phone1": "", "main_phone": "",
+        "birthday": "", "parentname": "", "parent_birthday": "",
+        "passport": "", "home_address": "", "email": "",
+    }
+    base.update(kw)
+    return base
+
+
+def contact(**kw):
+    base = {
+        "child_fio": "Иванов Владислав",
+        "phone": "79258803333",
+    }
+    base.update(kw)
+    return base
+
+
+class TestMatchStudent:
+    def test_matches_on_child_name_and_phone(self):
+        assert match_student(contact(), [student()])["id"] == 1
+
+    def test_phone_formats_are_normalised(self):
+        students = [student(parent_phone="8 925 880 33 33")]
+        assert match_student(contact(phone="+7-925-880-33-33"), students)["id"] == 1
+
+    def test_phone_found_in_any_phone_field(self):
+        students = [student(parent_phone="", phone1="79258803333")]
+        assert match_student(contact(), students)["id"] == 1
+
+    def test_name_case_and_yo_are_ignored(self):
+        students = [student(fio="СЕМЁНОВА  АЛЁНА")]
+        assert match_student(contact(child_fio="семенова алена"), students)["id"] == 1
+
+    def test_patronymic_in_crm_does_not_block_match(self):
+        students = [student(fio="Иванов Владислав Петрович")]
+        assert match_student(contact(), students)["id"] == 1
+
+    def test_right_phone_wrong_child_is_not_a_match(self):
+        # Второй ребёнок в той же семье: телефон общий, имя другое.
+        students = [student(fio="Иванова Мария")]
+        assert match_student(contact(), students) is None
+
+    def test_right_child_wrong_phone_is_not_a_match(self):
+        students = [student(parent_phone="79990000000")]
+        assert match_student(contact(), students) is None
+
+    def test_two_candidates_are_rejected_as_ambiguous(self):
+        students = [student(id=1), student(id=2)]
+        assert match_student(contact(), students) is None
+
+    def test_no_students_at_all(self):
+        assert match_student(contact(), []) is None
+
+    def test_contact_without_child_name_is_never_matched(self):
+        assert match_student(contact(child_fio=""), [student()]) is None
+
+    def test_contact_without_phone_is_never_matched(self):
+        assert match_student(contact(phone=""), [student()]) is None
+
+
+class TestMissingFields:
+    def test_fills_only_empty_fields(self):
+        data = {"passport": "40 64 543333", "home_address": "г. Долгопрудный"}
+        upd, conflicts = missing_fields(student(home_address="Старый адрес"), data)
+        assert upd == {"passport": "40 64 543333"}
+        assert conflicts == {"home_address": ("Старый адрес", "г. Долгопрудный")}
+
+    def test_identical_value_is_neither_update_nor_conflict(self):
+        data = {"home_address": "г. Долгопрудный"}
+        upd, conflicts = missing_fields(student(home_address="г. Долгопрудный"), data)
+        assert upd == {}
+        assert conflicts == {}
+
+    def test_blank_incoming_values_are_skipped(self):
+        upd, conflicts = missing_fields(student(), {"passport": "", "email": None})
+        assert upd == {}
+        assert conflicts == {}
+
+    def test_whitespace_only_crm_value_counts_as_empty(self):
+        upd, _ = missing_fields(student(email="   "), {"email": "a@b.ru"})
+        assert upd == {"email": "a@b.ru"}

@@ -1983,11 +1983,13 @@ async def admin_set_webhook(request: Request, data: dict) -> dict:
 from app import admin_api
 from app.platform import account_api as platform_account_api
 from app.platform import billing_api as platform_billing_api
+from app.platform import podpislon_webhooks as platform_podpislon_webhooks
 from app.platform import public_api as platform_public_api
 from app.platform import webhooks as platform_webhooks
 
 app.include_router(admin_api.router)
 app.include_router(platform_webhooks.router)
+app.include_router(platform_podpislon_webhooks.router)
 app.include_router(platform_account_api.router)
 app.include_router(platform_billing_api.router)
 app.include_router(platform_public_api.router)
