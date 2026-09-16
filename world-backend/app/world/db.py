@@ -339,4 +339,70 @@ CREATE TABLE IF NOT EXISTS guardianship (
     created_at       TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (parent_player_id, child_player_id)
 );
+-- World v2: тренажёр Spotlight (app/learning).
+CREATE TABLE IF NOT EXISTS learner_profile (
+    player_id     INTEGER PRIMARY KEY REFERENCES players(id),
+    book_id       TEXT NOT NULL,
+    module_id     TEXT NOT NULL,
+    daily_goal_xp INTEGER NOT NULL DEFAULT 20,
+    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS node_progress (
+    player_id     INTEGER NOT NULL REFERENCES players(id),
+    node_id       TEXT NOT NULL,
+    stars         INTEGER NOT NULL DEFAULT 0,
+    best_accuracy REAL NOT NULL DEFAULT 0,
+    completed_at  TEXT NOT NULL,
+    PRIMARY KEY (player_id, node_id)
+);
+
+CREATE TABLE IF NOT EXISTS learn_sessions (
+    id          TEXT PRIMARY KEY,
+    player_id   INTEGER NOT NULL REFERENCES players(id),
+    node_id     TEXT NOT NULL,
+    kind        TEXT NOT NULL,
+    payload     TEXT NOT NULL,
+    pending     TEXT NOT NULL,
+    state       TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'active',
+    started_at  TEXT NOT NULL,
+    finished_at TEXT,
+    result      TEXT
+);
+
+CREATE TABLE IF NOT EXISTS attempts (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id      INTEGER NOT NULL REFERENCES players(id),
+    session_id     TEXT NOT NULL,
+    node_id        TEXT NOT NULL,
+    challenge_type TEXT NOT NULL,
+    atom_id        TEXT NOT NULL,
+    answer         TEXT NOT NULL,
+    correct        INTEGER NOT NULL,
+    typo           INTEGER NOT NULL DEFAULT 0,
+    response_ms    INTEGER,
+    attempt_no     INTEGER NOT NULL,
+    created_at     TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS atom_mastery (
+    player_id     INTEGER NOT NULL REFERENCES players(id),
+    atom_id       TEXT NOT NULL,
+    strength      INTEGER NOT NULL DEFAULT 0,
+    correct_count INTEGER NOT NULL DEFAULT 0,
+    wrong_count   INTEGER NOT NULL DEFAULT 0,
+    due_at        TEXT NOT NULL,
+    updated_at    TEXT NOT NULL,
+    PRIMARY KEY (player_id, atom_id)
+);
+
+CREATE TABLE IF NOT EXISTS daily_activity (
+    player_id INTEGER NOT NULL REFERENCES players(id),
+    day       TEXT NOT NULL,
+    xp        INTEGER NOT NULL DEFAULT 0,
+    sessions  INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (player_id, day)
+);
 """
