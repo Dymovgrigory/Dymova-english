@@ -72,11 +72,10 @@ CEFR: SP1 — Pre-A1, SP2 — Pre-A1, SP3 — A1, SP4 — A1.
 | 4. Буквосочетания | sh, ch, th, ee, oo, ck, … (SP2) | `letter_sound`, `blend_sounds` |
 | 5. Чтение фраз | читает фразу из 2–4 слов без звука | `read_phrase_pick_image` |
 
-Порядок звуков хранится в `content/spotlight/phonics_sequence.json` (SP1:
-одиночные буквы в порядке satpin-подобной последовательности; SP2: алфавит
-учебника + буквосочетания). Инвариант: слово попадает в задание на чтение,
-только если все его графемы уже введены (кроме «trick words» — список на
-модуль, вводятся отдельной карточкой `teach_word`).
+Графемы объявляются в поле `graphemes` модуля, порядок введения = порядок
+модулей и узлов `phonics`. Инвариант: слово попадает в задание на чтение, только
+если все его графемы уже введены; слова с `trick: true` в фразах для чтения
+считаются знакомыми после урока, где они введены.
 
 Возрастные «полосы» определяют набор типов заданий:
 - `starter` (SP1–2): **учим читать.** Задания идут от звука и картинки к
@@ -242,9 +241,9 @@ POST /api/v2/sessions/{id}/finish                  → {xp, accuracy, duration_s
 ### 6.6 Новые таблицы
 
 ```sql
-learner_profile(player_id PK, book_id, module_id, daily_goal_xp, band, created_at, updated_at)
+learner_profile(player_id PK, book_id, module_id, daily_goal_xp, created_at, updated_at)
 node_progress(player_id, node_id, status, stars, best_accuracy, completed_at, PK(player_id,node_id))
-learn_sessions(id PK, player_id, node_id, payload, queue, answers, status, started_at, finished_at, result)
+learn_sessions(id PK, player_id, node_id, kind, payload, pending, state, status, started_at, finished_at, result)
 attempts(id PK, player_id, session_id, node_id, challenge_type, atom_id, answer,
          correct, typo, response_ms, attempt_no, created_at)
 atom_mastery(player_id, atom_id, strength, correct_count, wrong_count, due_at, updated_at, PK(player_id,atom_id))
