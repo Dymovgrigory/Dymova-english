@@ -73,6 +73,17 @@ export const SPOTS: Spot[] = INFO.map((info) => {
   return { ...info, index: zone.index, area: zone.area, labelTop: zone.labelTop, mask: `/content/castle/masks/${info.id}.png` };
 });
 
+/** Замок на картинке (доли 0..1): все здания с небольшим запасом — его сцена вписывает в экран целиком. */
+export const CASTLE_FOCUS = (() => {
+  const left = Math.min(...SPOTS.map((s) => s.area.left)) - 2;
+  const top = Math.min(...SPOTS.map((s) => s.area.top)) - 3;
+  const right = Math.max(...SPOTS.map((s) => s.area.left + s.area.width)) + 2;
+  const bottom = Math.max(...SPOTS.map((s) => s.area.top + s.area.height)) + 4;
+  return { left: left / 100, top: top / 100, width: (right - left) / 100, height: (bottom - top) / 100 };
+})();
+
+export const CASTLE_SCENE_SIZE = { width: 1536, height: 864 } as const;
+
 export type BuildingId = SpotId;
 
 /** Карта зон: номер здания на каждый пиксель (0 — пусто), строками сверху вниз. */

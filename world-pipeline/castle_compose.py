@@ -29,7 +29,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 from scipy import ndimage
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -42,26 +42,43 @@ WORK = ROOT / "world-pipeline" / "word-art" / "castle"
 API = "https://api.meshy.ai/openapi/v1/image-to-image"
 PLATE = CASTLE / "castle-grounds.webp"
 SIZE = (1536, 864)
-# Плашка уменьшена и опущена: сверху нужно небо, иначе задние башни классов не влезают в кадр.
-PLATE_SCALE = 0.8
-PLATE_OFFSET = (154, 172)
+SCENE = ROOT / "world" / "public" / "content" / "scenes" / "scene-forest-wide.webp"
+# Плашка уменьшена и стоит по центру леса: вокруг замка нужен пейзаж, чтобы сцена
+# растягивалась на весь экран, а сверху — место для башен классов.
+PLATE_SCALE = 0.64
+PLATE_OFFSET = (276, 250)
 
-# Площадки измерены по castle-grounds.webp (px): центр основания и ширина мшистой базы здания.
-# Порядок = порядок отрисовки (сзади вперёд).
+# Каменные угловые башни плашки (px плашки) — стираем: их место занимают башни классов.
+TURRETS = [(228, 60, 362, 205), (1172, 60, 1308, 215), (82, 292, 214, 512), (1298, 312, 1448, 520)]
+
+# Площадки измерены по castle-grounds.webp (px): центр основания и ширина основания здания.
+# Порядок = порядок отрисовки (сзади вперёд). Башни классов стоят от земли в углах стен.
 SLOTS: list[tuple[str, int, int, int]] = [
-    ("tower-sp3", 295, 112, 118),   # угловая башня сзади слева
-    ("tower-sp4", 1238, 108, 118),  # угловая башня сзади справа
+    ("tower-sp3", 295, 205, 150),   # угол сзади слева — вместо каменной башни
+    ("tower-sp4", 1240, 215, 150),  # угол сзади справа
     ("glory", 650, 222, 120),       # у задней стены, левее купола Сокровищницы
     ("shop", 985, 250, 150),        # трава во дворе справа сзади
     ("school", 445, 342, 190),      # левая площадка
     ("lexicon", 790, 358, 195),     # центральная площадка
     ("stickers", 1108, 344, 150),   # правая площадка
-    ("tower-sp1", 145, 385, 125),   # угловая башня спереди слева
-    ("tower-sp2", 1373, 385, 125),  # угловая башня спереди справа
+    ("tower-sp1", 148, 512, 170),   # угол спереди слева
+    ("tower-sp2", 1373, 520, 175),  # угол спереди справа
     ("nest", 220, 660, 185),        # холм снаружи слева
     ("quests", 530, 712, 190),      # площадка у подхода к воротам
     ("yard", 1348, 752, 250),       # загон за ручьём справа
 ]
+
+
+def erase(image: Image.Image, boxes: list[tuple[int, int, int, int]]) -> Image.Image:
+    """Грубо закрашивает области окружением (нормированное размытие) — flare перерисует начисто."""
+    pixels = np.asarray(image.convert("RGB"), dtype=np.float32)
+    known = np.ones(pixels.shape[:2], dtype=np.float32)
+    for x0, y0, x1, y1 in boxes:
+        known[y0:y1, x0:x1] = 0
+    weight = ndimage.gaussian_filter(known, 40) + 1e-6
+    fill = np.stack([ndimage.gaussian_filter(pixels[..., c] * known, 40) for c in range(3)], axis=2) / weight[..., None]
+    result = np.where(known[..., None] > 0, pixels, fill)
+    return Image.fromarray(result.clip(0, 255).astype(np.uint8))
 
 
 def sprite_base(alpha: np.ndarray) -> tuple[float, int, int]:
@@ -75,6 +92,19 @@ def sprite_base(alpha: np.ndarray) -> tuple[float, int, int]:
     return (cols[0] + cols[-1]) / 2, bottom, int(cols[-1] - cols[0])
 
 
+def fade_plinth(sprite: Image.Image) -> Image.Image:
+    """Растворяет круглую подставку снизу спрайта: здание должно стоять на земле, а не на диске."""
+    alpha = np.asarray(sprite.getchannel("A"), dtype=np.float32)
+    rows = np.where((alpha > 128).any(axis=1))[0]
+    fade = max(1, int((rows[-1] - rows[0]) * 0.1))
+    ramp = np.ones(alpha.shape[0], dtype=np.float32)
+    ramp[rows[-1] - fade: rows[-1] + 1] = np.linspace(1, 0.15, fade + 1)
+    ramp[rows[-1] + 1:] = 0
+    sprite = sprite.copy()
+    sprite.putalpha(Image.fromarray((alpha * ramp[:, None]).astype(np.uint8)))
+    return sprite
+
+
 def placed_sprites() -> list[dict]:
     items = []
     for spot, plate_x, plate_y, plate_w in SLOTS:
@@ -86,6 +116,7 @@ def placed_sprites() -> list[dict]:
         sx, sy, sw = sprite_base(np.array(sprite.getchannel("A")))
         scale = base_w / sw
         sprite = sprite.resize((round(sprite.width * scale), round(sprite.height * scale)), Image.LANCZOS)
+        sprite = fade_plinth(sprite)
         left, top = round(cx - sx * scale), round(by - sy * scale)
         items.append({"id": spot, "image": sprite, "left": left, "top": top})
     return items
@@ -93,12 +124,12 @@ def placed_sprites() -> list[dict]:
 
 def compose() -> None:
     WORK.mkdir(parents=True, exist_ok=True)
-    plate = Image.open(PLATE).convert("RGBA").resize(SIZE, Image.LANCZOS)
-    collage = plate.filter(ImageFilter.GaussianBlur(24))
+    plate = erase(Image.open(PLATE).convert("RGB").resize(SIZE, Image.LANCZOS), TURRETS).convert("RGBA")
+    collage = Image.open(SCENE).convert("RGBA").resize(SIZE, Image.LANCZOS)
     small = plate.resize((round(SIZE[0] * PLATE_SCALE), round(SIZE[1] * PLATE_SCALE)), Image.LANCZOS)
     feather = Image.new("L", small.size, 0)
-    feather.paste(255, (24, 24, small.width - 24, small.height))
-    small.putalpha(feather.filter(ImageFilter.GaussianBlur(14)))
+    feather.paste(255, (40, 70, small.width - 40, small.height - 30))
+    small.putalpha(feather.filter(ImageFilter.GaussianBlur(28)))
     collage.alpha_composite(small, PLATE_OFFSET)
     labels = np.zeros((SIZE[1], SIZE[0]), dtype=np.uint8)
     layout = []
@@ -118,18 +149,35 @@ def compose() -> None:
 
 
 FUSE_PROMPT = (
-    "Re-photograph this exact layout as ONE single continuous handcrafted miniature diorama of Foxinburg Castle. "
-    "Keep the camera, the framing, the castle walls, the gate, the bridge, the stream and the mountains exactly as in "
-    "the reference. Keep EVERY building exactly where it stands in the reference, with the same size, silhouette, "
-    "roof colours and character: the observatory tower on the back-left corner, the lighthouse tower with a balloon "
-    "on the back-right corner, the ivy tower on the front-left corner, the water-wheel workshop tower on the "
-    "front-right corner, the slim trophy tower at the back wall, the shop with a striped awning, the schoolhouse "
-    "with a bell on the left pad, the round treasury vault with an open round door in the center, the tower covered "
-    "in colourful badges on the right pad, the fox burrow in a mossy hill outside on the left, the gazebo with a "
-    "notice board in front of the wall, the fenced training paddock beyond the stream. "
-    "Re-light and re-seat every building so it is truly built into the model: the same elevated three-quarter "
-    "perspective as the walls, bases merged into the moss and cobblestones, contact shadows, no floating cutouts, "
-    "no halos, no pasted edges, no collage look. Do not add new big buildings, do not remove any building. "
+    "Re-photograph this exact layout as ONE single continuous handcrafted miniature diorama of Foxinburg Castle "
+    "standing on a mossy hill in a misty forest valley, pine trees and rocks in the soft blurred foreground, "
+    "plum mountains and warm sunset sky behind — the landscape fills the whole frame around the castle. "
+    "Keep the camera, the framing, the castle walls, the gate, the bridge, the stream and every building exactly "
+    "where they are in the reference, with the same size, silhouette, roof colours and character. "
+    "The FOUR CORNER TOWERS OF THE CASTLE ARE these four distinctive towers, rising straight from the ground as the "
+    "real corner towers of the fortress, the curtain walls run directly into their stone bodies: back-left — the "
+    "observatory tower with a brass telescope dome; back-right — the lighthouse tower with a hot-air balloon; "
+    "front-left — the slim ivy tower with a spiral stair and a yellow flag; front-right — the workshop tower with a "
+    "water wheel. There are NO other round stone turrets at the corners and no tower standing on top of another tower. "
+    "Inside the walls: the slim trophy tower at the back wall, the shop with a striped awning, the schoolhouse with a "
+    "bell, the round treasury vault with an open round door, the tower covered in colourful badges. Outside: the fox "
+    "burrow in a mossy hill, the gazebo with a notice board, the fenced training paddock beyond the stream. "
+    "Every building stands directly on the same ground as the courtyard — no display plinths, no round wooden "
+    "bases, no discs, no raised platforms; the paddock fence and yard are level with the surrounding meadow and "
+    "follow the same perspective as the castle walls. Bases merge into moss and cobblestones with contact shadows. "
+    "No floating cutouts, no halos, no pasted edges, no collage look. Do not add or remove buildings. "
+    "No text, no letters, no people."
+)
+
+
+REFINE_PROMPT = (
+    "Edit this photo of a miniature castle diorama. Keep EVERYTHING exactly the same — camera, framing, landscape, "
+    "walls, gate, every building, colours and light — except the two BACK corner towers. "
+    "Back-left: the observatory tower with the brass telescope dome must rise straight from the ground as the real "
+    "corner tower of the fortress, its stone body continuing down to the ground behind the wall, both walls running "
+    "directly into its body. Back-right: the same for the lighthouse tower with the hot-air balloon. "
+    "Remove the round mossy platforms and discs under these two towers — no tower standing on a platform, no "
+    "floating island. Same for the front-right water-wheel tower: it grows from the ground at the wall corner. "
     "No text, no letters, no people."
 )
 
@@ -140,25 +188,36 @@ def data_uri(path: Path) -> str:
     return "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode()
 
 
-def fuse_once(key: str, reference: str, index: int) -> str:
-    payload = {"ai_model": MODEL, "prompt": CORE + FUSE_PROMPT, "reference_image_urls": [reference], "aspect_ratio": "16:9"}
+def fuse_once(key: str, reference: str, index: int, prompt: str = FUSE_PROMPT) -> str:
+    payload = {"ai_model": MODEL, "prompt": CORE + prompt, "reference_image_urls": [reference], "aspect_ratio": "16:9"}
     task = api("POST", API, key, payload)["result"]
     while True:
-        status = api("GET", f"{API}/{task}", key)
+        try:
+            status = api("GET", f"{API}/{task}", key)
+        except OSError:  # сетевой сбой при опросе — задача на стороне Meshy продолжается
+            time.sleep(10)
+            continue
         if status["status"] == "SUCCEEDED":
             out = WORK / f"fused-{task[-12:]}.png"
-            urllib.request.urlretrieve(status["image_urls"][0], out)
+            for attempt in range(4):
+                try:
+                    urllib.request.urlretrieve(status["image_urls"][0], out)
+                    break
+                except OSError:
+                    time.sleep(10)
             return f"вариант {index}: {out}"
         if status["status"] in ("FAILED", "CANCELED"):
             return f"вариант {index}: ОШИБКА {status.get('task_error')}"
         time.sleep(8)
 
 
-def fuse(variants: int) -> None:
+def fuse(variants: int, source: Path | None = None) -> None:
+    """Без --pick — сплавить коллаж; с --pick — точечная правка готовой диорамы (REFINE_PROMPT)."""
     key = load_key()
-    reference = data_uri(WORK / "collage.png")
+    reference = data_uri(source or WORK / "collage.png")
+    prompt = REFINE_PROMPT if source else FUSE_PROMPT
     with ThreadPoolExecutor(max_workers=variants) as pool:
-        for line in pool.map(lambda i: fuse_once(key, reference, i), range(1, variants + 1)):
+        for line in pool.map(lambda i: fuse_once(key, reference, i, prompt), range(1, variants + 1)):
             print(line)
 
 
@@ -168,23 +227,63 @@ def edges(image: Image.Image) -> np.ndarray:
     return ndimage.gaussian_filter(magnitude, 2)
 
 
-def best_offset(fused_edges: np.ndarray, sprite: Image.Image, left: int, top: int, reach: int = 28) -> tuple[int, int, float]:
-    """Сдвиг здания на итоговом кадре: максимум корреляции контуров внутри маски спрайта."""
-    alpha = np.asarray(sprite.getchannel("A")) > 128
-    template = edges(sprite.convert("RGB"))
-    template = np.where(alpha, template - template[alpha].mean(), 0)
-    best = (0, 0, -1.0)
-    height, width = alpha.shape
-    for dy in range(-reach, reach + 1, 2):
-        for dx in range(-reach, reach + 1, 2):
-            y0, x0 = top + dy, left + dx
-            if y0 < 0 or x0 < 0 or y0 + height > SIZE[1] or x0 + width > SIZE[0]:
-                continue
-            window = fused_edges[y0:y0 + height, x0:x0 + width]
-            window = np.where(alpha, window - window[alpha].mean(), 0)
-            score = float((window * template).sum() / (np.linalg.norm(window) * np.linalg.norm(template) + 1e-6))
-            if score > best[2]:
-                best = (dx, dy, score)
+def correlation(a: np.ndarray, b: np.ndarray, where: np.ndarray) -> float:
+    a = np.where(where, a - a[where].mean(), 0)
+    b = np.where(where, b - b[where].mean(), 0)
+    return float((a * b).sum() / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-6))
+
+
+def warp(image: Image.Image, scale: float, dx: float, dy: float) -> Image.Image:
+    """Масштаб относительно центра кадра + сдвиг (px полного размера)."""
+    cx, cy = SIZE[0] / 2, SIZE[1] / 2
+    inverse = 1 / scale
+    return image.transform(SIZE, Image.AFFINE, (inverse, 0, cx - (cx + dx) * inverse, 0, inverse, cy - (cy + dy) * inverse),
+                           Image.BILINEAR)
+
+
+def global_fit(collage: Image.Image, fused_edges: np.ndarray) -> tuple[float, int, int]:
+    """Flare слегка сдвигает и масштабирует весь кадр — находим это по контурам всей сцены (в 1/4)."""
+    small = lambda array: array[::4, ::4]  # noqa: E731
+    target = small(fused_edges)
+    center = np.zeros_like(target, dtype=bool)
+    center[target.shape[0] // 6:, target.shape[1] // 6: -target.shape[1] // 6] = True
+    best = (1.0, 0, 0, -1.0)
+    for scale in np.arange(0.9, 1.101, 0.02):
+        for dy in range(-60, 61, 8):
+            for dx in range(-60, 61, 8):
+                score = correlation(small(edges(warp(collage, scale, dx, dy))), target, center)
+                if score > best[3]:
+                    best = (float(scale), dx, dy, score)
+    scale, dx, dy, _ = best
+    for fine_scale in np.arange(scale - 0.015, scale + 0.016, 0.005):
+        for fine_dy in range(dy - 6, dy + 7, 2):
+            for fine_dx in range(dx - 6, dx + 7, 2):
+                score = correlation(small(edges(warp(collage, fine_scale, fine_dx, fine_dy))), target, center)
+                if score > best[3]:
+                    best = (float(fine_scale), fine_dx, fine_dy, score)
+    print(f"кадр: масштаб {best[0]:.3f}, сдвиг ({best[1]:+d},{best[2]:+d}), совпадение {best[3]:.2f}")
+    return best[0], best[1], best[2]
+
+
+def best_placement(fused_edges: np.ndarray, sprite: Image.Image, left: float, top: float) -> tuple[Image.Image, int, int, float]:
+    """Точное место здания: перебор масштаба и сдвига вокруг ожидаемой позиции."""
+    best = (sprite, round(left), round(top), -1.0)
+    for scale in (0.94, 0.97, 1.0, 1.03, 1.06):
+        size = (max(1, round(sprite.width * scale)), max(1, round(sprite.height * scale)))
+        candidate = sprite.resize(size, Image.LANCZOS)
+        alpha = np.asarray(candidate.getchannel("A")) > 128
+        template = edges(candidate.convert("RGB"))
+        # масштаб — от низа-центра, чтобы основание оставалось на месте
+        base_left = left + (sprite.width - size[0]) / 2
+        base_top = top + sprite.height - size[1]
+        for dy in range(-20, 21, 2):
+            for dx in range(-20, 21, 2):
+                x0, y0 = round(base_left + dx), round(base_top + dy)
+                if y0 < 0 or x0 < 0 or y0 + size[1] > SIZE[1] or x0 + size[0] > SIZE[0]:
+                    continue
+                score = correlation(fused_edges[y0:y0 + size[1], x0:x0 + size[0]], template, alpha)
+                if score > best[3]:
+                    best = (candidate, x0, y0, score)
     return best
 
 
@@ -212,6 +311,28 @@ def refined_region(fused: Image.Image, sprite: Image.Image, left: int, top: int)
     return region
 
 
+# Башни, которые flare перерисовал иначе, чем спрайт (до земли, без подставки): их силуэт на
+# выбранном кадре обведён вручную (px кадра 1536×864). Относится к fused-6f040bfc622f.png —
+# после новой генерации проверить hotspots-preview.png и обвести заново.
+MANUAL_SILHOUETTES: dict[str, list[tuple[int, int]]] = {
+    "tower-sp3": [(412, 112), (430, 112), (452, 125), (462, 130), (462, 165), (460, 182), (450, 190), (452, 300),
+                  (458, 330), (455, 345), (385, 345), (388, 300), (395, 190), (383, 182), (382, 165), (392, 150),
+                  (395, 125)],
+    "tower-sp4": [(1105, 125), (1115, 125), (1130, 140), (1132, 178), (1140, 165), (1165, 165), (1165, 215),
+                  (1152, 222), (1138, 215), (1135, 230), (1140, 245), (1140, 280), (1145, 320), (1152, 345),
+                  (1150, 365), (1075, 365), (1080, 320), (1078, 262), (1085, 245), (1090, 180), (1088, 140)],
+    "tower-sp2": [(1210, 370), (1222, 372), (1250, 430), (1250, 445), (1245, 480), (1242, 505), (1262, 510),
+                  (1275, 545), (1275, 585), (1240, 592), (1190, 592), (1172, 560), (1180, 480), (1175, 445),
+                  (1172, 432), (1205, 385)],
+}
+
+
+def polygon_region(points: list[tuple[int, int]]) -> np.ndarray:
+    canvas = Image.new("L", SIZE)
+    ImageDraw.Draw(canvas).polygon(points, fill=255)
+    return np.asarray(canvas) > 128
+
+
 LABEL_STEP = 20  # индекс здания × 20 в карте зон — переживает любое сглаживание цвета при декодировании
 
 
@@ -219,14 +340,23 @@ def masks(pick: Path) -> None:
     fused = Image.open(pick).convert("RGB").resize(SIZE, Image.LANCZOS)
     fused_edges = edges(fused)
     layout = json.loads((WORK / "layout.json").read_text())
+    scale, shift_x, shift_y = global_fit(Image.open(WORK / "collage.png").convert("RGB"), fused_edges)
+    cx, cy = SIZE[0] / 2, SIZE[1] / 2
     labels = np.zeros((SIZE[1], SIZE[0]), dtype=np.uint8)
     for index, entry in enumerate(layout, start=1):
-        sprite = Image.open(WORK / f"placed-{entry['id']}.png")
-        dx, dy, score = best_offset(fused_edges, sprite, entry["left"], entry["top"])
-        entry.update(left=entry["left"] + dx, top=entry["top"] + dy, index=index)
-        region = refined_region(fused, sprite, entry["left"], entry["top"])
+        placed = Image.open(WORK / f"placed-{entry['id']}.png")
+        placed = placed.resize((round(placed.width * scale), round(placed.height * scale)), Image.LANCZOS)
+        left = cx + (entry["left"] - cx) * scale + shift_x
+        top = cy + (entry["top"] - cy) * scale + shift_y
+        entry.update(index=index)
+        if entry["id"] in MANUAL_SILHOUETTES:
+            labels[polygon_region(MANUAL_SILHOUETTES[entry["id"]])] = index
+            print(f"{entry['id']:10s} силуэт обведён вручную")
+            continue
+        sprite, left, top, score = best_placement(fused_edges, placed, left, top)
+        region = refined_region(fused, sprite, left, top)
         labels[region] = index  # передние (позже в списке) перекрывают задние
-        print(f"{entry['id']:10s} сдвиг ({dx:+d},{dy:+d}) совпадение {score:.2f}")
+        print(f"{entry['id']:10s} ({left},{top}) {sprite.size} совпадение {score:.2f}")
 
     (CASTLE / "masks").mkdir(exist_ok=True)
     spots = []
@@ -273,7 +403,7 @@ def main() -> None:
     if args.step == "compose":
         compose()
     elif args.step == "fuse":
-        fuse(args.variants)
+        fuse(args.variants, args.pick)
     else:
         masks(args.pick)
 

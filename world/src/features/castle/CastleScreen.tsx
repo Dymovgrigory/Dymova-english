@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import {
+  CASTLE_FOCUS,
   CASTLE_HOTSPOTS,
   CASTLE_LABEL_STEP,
   CASTLE_SCENE,
+  CASTLE_SCENE_SIZE,
   SPOTS,
   TIER_RU,
   spotAt,
@@ -15,6 +17,7 @@ import {
   type Spot,
   type SpotId,
 } from "@/castle/buildings";
+import { fitScene } from "@/castle/scene";
 import { Button } from "@/design/Button";
 import { ContentImage } from "@/design/ContentImage";
 import { Foxy } from "@/design/Foxy";
@@ -66,7 +69,7 @@ function useHotspotMap(): HotspotMap | null {
   return map;
 }
 
-/** Подсветка здания: вырез той же диорамы по маске силуэта, приподнят и в золотом свечении. */
+/** Подсветка здания: вырез той же диорамы по маске силуэта — на месте, только свечение и подпись. */
 function SpotHighlight({ spot, active, pulse }: { spot: Spot; active: boolean; pulse: boolean }) {
   const { left, top, width, height } = spot.area;
   const shown = active || pulse;
@@ -74,7 +77,7 @@ function SpotHighlight({ spot, active, pulse }: { spot: Spot; active: boolean; p
     <div
       aria-hidden
       className={[
-        "pointer-events-none absolute origin-bottom transition duration-200 ease-out motion-reduce:transition-none",
+        "pointer-events-none absolute transition-opacity duration-200 ease-out motion-reduce:transition-none",
         pulse ? "castle-pulse" : "",
       ].join(" ")}
       style={{
@@ -84,7 +87,6 @@ function SpotHighlight({ spot, active, pulse }: { spot: Spot; active: boolean; p
         height: `${height}%`,
         zIndex: 10 + spot.index,
         opacity: shown ? 1 : 0,
-        transform: shown ? "translateY(-2%) scale(1.06)" : "none",
         filter: "drop-shadow(0 0 6px rgb(255 211 110 / 0.9)) drop-shadow(0 10px 12px rgb(20 10 30 / 0.45))",
       }}
     >
@@ -111,77 +113,133 @@ function SpotHighlight({ spot, active, pulse }: { spot: Spot; active: boolean; p
   );
 }
 
-/** Сцена замка: одна картинка, здание под курсором/пальцем — по карте зон. */
+/** Где на экране лежит диорама: замок вписан в свободную область `freeArea`, пейзаж — на весь экран. */
+function useSceneFit(freeArea: HTMLElement | null) {
+  const [fit, setFit] = useState<{ scale: number; left: number; top: number } | null>(null);
+  useLayoutEffect(() => {
+    const update = () => {
+      const free = freeArea?.getBoundingClientRect();
+      if (!free) return;
+      setFit(
+        fitScene(
+          { width: window.innerWidth, height: window.innerHeight },
+          { left: free.left, top: free.top, width: free.width, height: free.height },
+          CASTLE_SCENE_SIZE,
+          CASTLE_FOCUS,
+        ),
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    if (freeArea) observer.observe(freeArea);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [freeArea]);
+  return fit;
+}
+
+/** Если диорама не закрывает экран по высоте — края растворяются в размытой подложке, без резкой границы. */
+const EDGE_FADE = "linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent)";
+
+/** Сцена замка на весь экран: одна картинка, здание под курсором/пальцем — по карте зон. */
 function CastleStage({
+  freeArea,
   openId,
   pulsing,
   onOpen,
 }: {
+  freeArea: HTMLElement | null;
   openId: SpotId | null;
   pulsing: SpotId[];
   onOpen: (id: SpotId) => void;
 }) {
   const map = useHotspotMap();
-  const stageRef = useRef<HTMLDivElement>(null);
+  const fit = useSceneFit(freeArea);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState<SpotId | null>(null);
   const [focused, setFocused] = useState<SpotId | null>(null);
 
+  const covers =
+    !!fit &&
+    typeof window !== "undefined" &&
+    fit.top <= 0 &&
+    fit.top + CASTLE_SCENE_SIZE.height * fit.scale >= window.innerHeight;
+
   const pointAt = (clientX: number, clientY: number): SpotId | null => {
-    const rect = stageRef.current?.getBoundingClientRect();
+    const rect = sceneRef.current?.getBoundingClientRect();
     if (!map || !rect) return null;
     return spotAt(map, (clientX - rect.left) / rect.width, (clientY - rect.top) / rect.height);
   };
 
   return (
-    <div
-      ref={stageRef}
-      className="castle-stage relative max-w-6xl touch-manipulation select-none"
-      style={{
-        aspectRatio: "16 / 9",
-        width: "min(100%, calc(min(68dvh, 100dvh - 10rem) * 16 / 9))",
-        cursor: hovered ? "pointer" : "default",
-      }}
-      onPointerMove={(event) => {
-        if (event.pointerType === "mouse") setHovered(pointAt(event.clientX, event.clientY));
-      }}
-      onPointerLeave={() => setHovered(null)}
-      onClick={(event) => {
-        const id = pointAt(event.clientX, event.clientY);
-        if (id) onOpen(id);
-      }}
-    >
+    <div className="fixed inset-0 z-0 overflow-hidden bg-[#1a1230]">
+      {/* Подложка на случай узкого экрана, где картинка не закрывает всё */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={CASTLE_SCENE}
-        alt="Замок Фоксинбург"
-        draggable={false}
-        className="absolute inset-0 h-full w-full rounded-[22px] object-cover ring-1 ring-[#ffd36e]/20"
-      />
-      {SPOTS.map((spot) => (
-        <SpotHighlight
-          key={spot.id}
-          spot={spot}
-          active={hovered === spot.id || focused === spot.id || openId === spot.id}
-          pulse={pulsing.includes(spot.id)}
-        />
-      ))}
-      {/* Клавиатура и скринридеры: кнопки по областям зданий, мышь их не перехватывает. */}
-      {SPOTS.map((spot) => (
-        <button
-          key={spot.id}
-          type="button"
-          aria-label={`${spot.title} — ${spot.hint}`}
-          data-spot={spot.id}
-          className="pointer-events-none absolute rounded-xl opacity-0 focus-visible:outline-none"
-          style={{ left: `${spot.area.left}%`, top: `${spot.area.top}%`, width: `${spot.area.width}%`, height: `${spot.area.height}%` }}
-          onFocus={() => setFocused(spot.id)}
-          onBlur={() => setFocused(null)}
-          onClick={(event) => {
-            event.stopPropagation();
-            onOpen(spot.id);
+      <img src={CASTLE_SCENE} alt="" aria-hidden className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl" />
+      {fit ? (
+        <div
+          ref={sceneRef}
+          className="absolute touch-manipulation select-none"
+          style={{
+            left: fit.left,
+            top: fit.top,
+            width: CASTLE_SCENE_SIZE.width * fit.scale,
+            height: CASTLE_SCENE_SIZE.height * fit.scale,
+            cursor: hovered ? "pointer" : "default",
           }}
-        />
-      ))}
+          onPointerMove={(event) => {
+            if (event.pointerType === "mouse") setHovered(pointAt(event.clientX, event.clientY));
+          }}
+          onPointerLeave={() => setHovered(null)}
+          onClick={(event) => {
+            const id = pointAt(event.clientX, event.clientY);
+            if (id) onOpen(id);
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={CASTLE_SCENE}
+            alt="Замок Фоксинбург"
+            draggable={false}
+            className="absolute inset-0 h-full w-full"
+            style={covers ? undefined : { WebkitMaskImage: EDGE_FADE, maskImage: EDGE_FADE }}
+          />
+          {SPOTS.map((spot) => (
+            <SpotHighlight
+              key={spot.id}
+              spot={spot}
+              active={hovered === spot.id || focused === spot.id || openId === spot.id}
+              pulse={pulsing.includes(spot.id)}
+            />
+          ))}
+          {/* Клавиатура и скринридеры: кнопки по областям зданий, мышь их не перехватывает. */}
+          {SPOTS.map((spot) => (
+            <button
+              key={spot.id}
+              type="button"
+              aria-label={`${spot.title} — ${spot.hint}`}
+              data-spot={spot.id}
+              className="pointer-events-none absolute rounded-xl opacity-0 focus-visible:outline-none"
+              style={{ left: `${spot.area.left}%`, top: `${spot.area.top}%`, width: `${spot.area.width}%`, height: `${spot.area.height}%` }}
+              onFocus={() => setFocused(spot.id)}
+              onBlur={() => setFocused(null)}
+              onClick={(event) => {
+                event.stopPropagation();
+                onOpen(spot.id);
+              }}
+            />
+          ))}
+        </div>
+      ) : null}
+      {/* Мягкое затемнение краёв под заголовком и лентой */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{ background: "linear-gradient(to bottom, rgb(26 18 48 / 0.55), transparent 22%, transparent 72%, rgb(26 18 48 / 0.6))" }}
+      />
     </div>
   );
 }
@@ -229,7 +287,7 @@ function RoomPanel({
 
       <header className="relative z-10 flex items-start justify-between gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
         <div>
-          <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-[#7fd8c9]">Замок · награда</p>
+          <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-[#7fd8c9]">Замок Фоксинбург</p>
           <h2 className="font-fairy text-[32px] font-black leading-tight text-[#ffd36e]">{spot.title}</h2>
           <p className="mt-1 text-[15px] font-semibold text-[#c9bfd8]">{spot.hint}</p>
         </div>
@@ -259,7 +317,7 @@ function RoomPanel({
           {room === "school" && (
             <div className="flex flex-col items-center gap-4 text-center">
               <Foxy pose="wave" size={120} />
-              <p className="text-[20px] font-extrabold text-ink">Уроки — главная дорога. Замок — праздник после них.</p>
+              <p className="text-[20px] font-extrabold text-ink">Здесь начинается путь по твоему учебнику.</p>
               <p className="text-[15px] font-semibold text-ink-soft">
                 Сейчас: {studyLabel} · цель дня {home.today_xp}/{home.daily_goal_xp} XP
               </p>
@@ -514,6 +572,7 @@ export function CastleScreen() {
     }
   }, []);
 
+  const [freeArea, setFreeArea] = useState<HTMLDivElement | null>(null);
   const claimable = useMemo(() => data?.quests.filter((q) => q.claimable).length ?? 0, [data]);
   const openSpot = SPOTS.find((s) => s.id === openId) ?? null;
 
@@ -532,18 +591,23 @@ export function CastleScreen() {
 
   return (
     <Shell>
-      <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
-        {/* Фон только в рабочей колонке — не под боковым меню */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={CASTLE_SCENE} alt="" className="h-full w-full scale-110 object-cover opacity-35 blur-md" />
-          <div className="absolute inset-0 bg-[#241a30]/55" />
-        </div>
+      <CastleStage
+        freeArea={freeArea}
+        openId={openId}
+        pulsing={[...(pulse ? [pulse] : []), ...(claimable > 0 ? (["quests"] as const) : [])]}
+        onOpen={setOpenId}
+      />
 
-        <header className="relative z-20 flex shrink-0 items-center justify-between gap-3 px-3 pt-3 lg:px-5">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#7fd8c9]">Награда за учёбу</p>
-            <h1 className="font-fairy text-[24px] font-black text-[#ffd36e] lg:text-[30px]">Замок Фоксинбург</h1>
+      {/* Интерфейс поверх сцены; пустая середина пропускает клики к зданиям */}
+      <div className="pointer-events-none relative z-10 flex h-[calc(100dvh-6rem)] flex-col lg:h-dvh">
+        <header className="pointer-events-auto flex shrink-0 flex-wrap items-start justify-between gap-3 px-4 pt-4 lg:px-8 lg:pt-6">
+          <div className="max-w-xl">
+            <h1 className="font-fairy text-[28px] font-black leading-tight text-[#ffd36e] drop-shadow-[0_2px_10px_rgb(0_0_0/0.6)] lg:text-[40px]">
+              Замок Фоксинбург
+            </h1>
+            <p className="mt-1 text-[14px] font-bold text-[#f6efe2] drop-shadow-[0_1px_6px_rgb(0_0_0/0.8)] lg:text-[16px]">
+              Загляни в здания: рейтинг, стикеры, лавка, словарь и задания дня.
+            </p>
           </div>
           {data ? (
             <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
@@ -555,16 +619,14 @@ export function CastleScreen() {
         </header>
 
         {error ? (
-          <p className="relative z-20 px-4 text-center text-[15px] font-extrabold text-[#ffb3a6]" role="alert">
+          <p className="pointer-events-auto px-4 text-center text-[15px] font-extrabold text-[#ffb3a6]" role="alert">
             {error}
           </p>
         ) : null}
 
         {needsSetup ? (
-          <div className="relative z-20 mx-auto flex max-w-xl flex-wrap items-center justify-center gap-3 px-4 py-2">
-            <p className="text-center text-[15px] font-extrabold text-[#f6efe2]">
-              Сначала выбери класс — откроем учебник и награды.
-            </p>
+          <div className="glass-dusk pointer-events-auto mx-auto mt-2 flex max-w-xl flex-wrap items-center justify-center gap-3 rounded-2xl px-4 py-2">
+            <p className="text-center text-[15px] font-extrabold text-[#f6efe2]">Сначала выбери класс и учебник.</p>
             <Link
               href="/onboarding"
               className="mat-brass inline-flex min-h-11 items-center justify-center rounded-2xl px-5 text-[15px] font-extrabold"
@@ -574,45 +636,29 @@ export function CastleScreen() {
           </div>
         ) : null}
 
-        {/* Сцена 16:9 целиком в рабочей колонке */}
-        <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center px-2 py-1 lg:px-4">
-          <CastleStage
-            openId={openId}
-            pulsing={[...(pulse ? [pulse] : []), ...(claimable > 0 ? (["quests"] as const) : [])]}
-            onOpen={setOpenId}
-          />
-        </div>
+        {/* Свободная область: сюда вписывается замок */}
+        <div ref={setFreeArea} className="min-h-0 flex-1" aria-hidden />
 
-        <nav aria-label="Локации замка" className="relative z-20 shrink-0 px-2 pb-2 lg:px-4 lg:pb-3">
-          <ul className="mx-auto grid max-w-6xl grid-cols-4 gap-1 sm:grid-cols-6 lg:grid-cols-12">
+        <nav aria-label="Локации замка" className="pointer-events-auto shrink-0 px-3 pb-3 lg:px-8 lg:pb-5">
+          <ul className="glass-dusk mx-auto grid max-w-5xl grid-cols-6 gap-1 rounded-2xl p-1.5 ring-1 ring-white/10 lg:grid-cols-12">
             {SPOTS.map((spot) => (
               <li key={spot.id}>
                 <button
                   type="button"
                   onClick={() => setOpenId(spot.id)}
                   className={[
-                    "flex w-full flex-col items-center gap-0.5 rounded-xl px-1 py-1.5 text-center",
+                    "flex w-full flex-col items-center gap-0.5 rounded-xl px-0.5 py-1 text-center",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36e]/70",
-                    openId === spot.id || pulse === spot.id
-                      ? "mat-brass"
-                      : "glass-dusk text-[#f6efe2] ring-1 ring-white/10",
+                    openId === spot.id || pulse === spot.id ? "mat-brass" : "text-[#f6efe2] hover:bg-white/10",
                   ].join(" ")}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={spot.art} alt="" className="h-7 w-7 object-contain sm:h-8 sm:w-8" draggable={false} />
-                  <span className="text-[10px] font-extrabold leading-tight sm:text-[11px]">{spot.short}</span>
+                  <img src={spot.art} alt="" className="h-7 w-7 object-contain lg:h-9 lg:w-9" draggable={false} />
+                  <span className="text-[10px] font-extrabold leading-tight lg:text-[11px]">{spot.short}</span>
                 </button>
               </li>
             ))}
           </ul>
-          <div className="mt-2 flex justify-center">
-            <Link
-              href="/learn"
-              className="mat-brass inline-flex min-h-11 items-center justify-center rounded-2xl px-6 text-[15px] font-extrabold"
-            >
-              Вернуться к учёбе
-            </Link>
-          </div>
         </nav>
       </div>
 
