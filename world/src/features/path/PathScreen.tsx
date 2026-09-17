@@ -83,20 +83,20 @@ export function PathScreen() {
 
   const home = data?.home;
   const top = (
-    <header className="sticky top-0 z-20 border-b-2 border-line bg-paper/95 backdrop-blur">
+    <header className="glass-dusk sticky top-0 z-20">
       <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
         <div className="relative">
           <button
             type="button"
             onClick={() => setBookMenu((open) => !open)}
             aria-expanded={bookMenu}
-            className="flex items-center gap-2 rounded-xl border-2 border-line bg-white px-3 py-2 text-[16px] font-extrabold text-royal focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30"
+            className="mat-brass press flex items-center gap-2 rounded-xl px-3 py-2 font-fairy text-[17px] font-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]"
           >
             {data ? data.path.book.title : "Spotlight"}
-            <span aria-hidden className="text-ink-soft">▾</span>
+            <span aria-hidden>▾</span>
           </button>
           {bookMenu && data && (
-            <ul className="absolute left-0 top-12 z-30 w-60 overflow-hidden rounded-2xl border-2 border-line bg-white shadow-lg">
+            <ul className="mat-parchment absolute left-0 top-14 z-30 w-60 overflow-hidden rounded-2xl">
               {data.courses.books.map((book) => (
                 <li key={book.id}>
                   <button
@@ -105,12 +105,12 @@ export function PathScreen() {
                       setBookMenu(false);
                       apply(await loadAll(book.id));
                     }}
-                    className={`flex w-full items-center justify-between px-4 py-3 text-left text-[16px] font-bold hover:bg-grid/60 ${
-                      book.id === data.path.book.id ? "text-royal" : "text-ink"
+                    className={`flex w-full items-center justify-between px-4 py-3 text-left text-[16px] font-bold hover:bg-black/5 ${
+                      book.id === data.path.book.id ? "text-[#7a3d06]" : "text-[#3b2a1e]"
                     }`}
                   >
                     <span>{book.title}</span>
-                    <span className="text-[13px] text-ink-soft">{book.grade} класс</span>
+                    <span className="text-[13px] opacity-70">{book.grade} класс</span>
                   </button>
                 </li>
               ))}
@@ -130,32 +130,32 @@ export function PathScreen() {
 
   return (
     <Shell top={top}>
-      <div className="min-h-dvh bg-[linear-gradient(180deg,#cdbfee_0%,#e6def8_50%,#f4f0fc_100%)] bg-fixed"><div className="mx-auto max-w-[560px] px-4 pb-16 pt-6">
+      <div><div className="mx-auto max-w-[560px] px-4 pb-16 pt-0 sm:pt-6">
         {problem && (
           <div className="flex flex-col items-center gap-4 py-16 text-center">
             <Foxy pose="think" size={140} />
-            <p className="text-[18px] font-extrabold text-ink">{problem}</p>
+            <p className="text-[18px] font-extrabold text-[#f6efe2]">{problem}</p>
             <Button onClick={async () => apply(await loadAll())}>Обновить</Button>
           </div>
         )}
-        {!data && !problem && <p className="py-20 text-center text-[18px] font-extrabold text-ink-soft" role="status">Открываем учебник…</p>}
+        {!data && !problem && <p className="py-20 text-center text-[18px] font-extrabold text-[#c9bfd8]" role="status">Открываем учебник…</p>}
 
         {data && home && home.due_count > 0 && (
           <button
             type="button"
             onClick={() => router.push("/lesson/practice")}
-            className="press mb-8 flex w-full items-center justify-between gap-3 rounded-3xl border-2 border-mint-edge/50 bg-mint-wash px-5 py-4 text-left shadow-[0_4px_0_var(--color-mint-edge)]"
+            className="press mat-parchment mb-6 mt-4 flex w-full items-center justify-between gap-3 rounded-3xl px-5 py-4 text-left"
           >
             <span>
-              <span className="block text-[18px] font-extrabold text-mint-ink">Пора повторить: {home.due_count}</span>
-              <span className="block text-[15px] font-semibold text-mint-ink/80">Слова начинают забываться — 3 минуты, и они снова твои</span>
+              <span className="block text-[18px] font-extrabold">Пора повторить: {home.due_count}</span>
+              <span className="block text-[15px] font-semibold opacity-75">Слова начинают забываться — 3 минуты, и они снова твои</span>
             </span>
-            <span className="text-[16px] font-extrabold text-mint-ink">Повторить</span>
+            <span className="mat-brass rounded-xl px-3 py-2 text-[15px] font-extrabold">Повторить</span>
           </button>
         )}
 
         {data && !data.path.modules.length && (
-          <p className="rounded-3xl border-2 border-line bg-white p-6 text-center text-[18px] font-bold text-ink-soft">
+          <p className="mat-parchment rounded-3xl p-6 text-center text-[18px] font-bold">
             Уроки для {data.path.book.title} скоро появятся.
           </p>
         )}
@@ -168,7 +168,7 @@ export function PathScreen() {
             type="button"
             role="status"
             onClick={() => setHint(null)}
-            className="fixed bottom-28 left-1/2 z-30 -translate-x-1/2 rounded-2xl bg-royal-deep px-5 py-3 text-[15px] font-extrabold text-white shadow-lg lg:bottom-10 lg:ml-30"
+            className="mat-parchment fixed bottom-28 left-1/2 z-30 -translate-x-1/2 rounded-2xl px-5 py-3 text-[15px] font-extrabold lg:bottom-10 lg:ml-30"
           >
             {hint.text}
           </button>

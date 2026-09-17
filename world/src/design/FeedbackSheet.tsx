@@ -42,23 +42,23 @@ export function FeedbackSheet({ reply, onContinue, footer }: FeedbackSheetProps)
             animate={{ y: 0, opacity: 1 }}
             exit={reduce ? undefined : { y: 40, opacity: 0 }}
             transition={{ type: "spring", stiffness: 420, damping: 34 }}
-            className={`border-t-2 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 ${
-              good ? "border-mint-edge/40 bg-mint-wash" : "border-coral-edge/40 bg-coral-wash"
+            className={`mat-wood rounded-t-[28px] px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 ${
+              good ? "shadow-[inset_0_3px_0_#3fae98,0_-10px_40px_-6px_rgb(63_174_152/0.45)]" : "shadow-[inset_0_3px_0_#d9483c,0_-10px_40px_-6px_rgb(217_72_60/0.4)]"
             }`}
           >
             <div className="mx-auto flex max-w-2xl flex-col gap-4 sm:flex-row sm:items-center">
               <div className="flex flex-1 items-start gap-3">
                 <span
-                  className={`flex size-11 shrink-0 items-center justify-center rounded-full bg-white ${
-                    good ? "text-mint-ink" : "text-coral-ink"
+                  className={`flex size-12 shrink-0 items-center justify-center rounded-full shadow-[inset_0_1px_0_rgb(255_255_255/0.7),0_4px_0_rgb(0_0_0/0.35)] ${
+                    good ? "bg-[radial-gradient(circle_at_35%_30%,#c9fbee,#3fae98)] text-[#07302a]" : "bg-[radial-gradient(circle_at_35%_30%,#ffc1b6,#c73c30)] text-[#fff3ef]"
                   }`}
                 >
                   <Icon name={good ? "check" : "close"} size={26} />
                 </span>
-                <div className={good ? "text-mint-ink" : "text-coral-ink"}>
-                  <p className="text-[21px] font-extrabold leading-7">{title}</p>
+                <div className={good ? "text-[#9ff0dd]" : "text-[#ffb3a6]"}>
+                  <p className="font-fairy text-[23px] font-black leading-7">{title}</p>
                   {reply.solution && (!good || reply.typo) && (
-                    <p className="mt-0.5 text-[18px] font-bold leading-6">{reply.solution}</p>
+                    <p className="mt-0.5 text-[19px] font-extrabold leading-6 text-[#fff6e3]">{reply.solution}</p>
                   )}
                 </div>
               </div>
@@ -68,7 +68,7 @@ export function FeedbackSheet({ reply, onContinue, footer }: FeedbackSheetProps)
             </div>
           </motion.section>
         ) : (
-          <motion.div key="footer" className="border-t-2 border-line bg-paper/95 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 backdrop-blur">
+          <motion.div key="footer" className="glass-dusk px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
             <div className="mx-auto max-w-2xl">{footer}</div>
           </motion.div>
         )}

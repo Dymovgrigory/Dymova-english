@@ -203,14 +203,14 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
         {load.status === "error" ? (
           <>
             <Foxy pose="think" size={150} />
-            <p className="max-w-sm text-[20px] font-extrabold text-ink">{load.message}</p>
+            <p className="max-w-sm text-[20px] font-extrabold text-[#f6efe2]">{load.message}</p>
             <div className="flex gap-3">
               <Button variant="paper" onClick={() => router.push("/learn")}>К пути</Button>
               <Button onClick={restart}>Попробовать снова</Button>
             </div>
           </>
         ) : (
-          <p className="text-[18px] font-extrabold text-ink-soft" role="status">
+          <p className="text-[18px] font-extrabold text-[#c9bfd8]" role="status">
             {lessonState.phase === "done" && session ? "Сохраняем результат…" : "Готовим урок…"}
           </p>
         )}
@@ -224,7 +224,7 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
     <div className="flex flex-col gap-2">
       {lessonState.error && <p className="text-center text-[15px] font-bold text-coral-ink" role="alert">{lessonState.error}</p>}
       {challenge.type === "speak" ? (
-        <p className="text-center text-[15px] font-bold text-ink-soft">Нажми на микрофон и прочитай фразу вслух</p>
+        <p className="text-center text-[15px] font-bold text-[#c9bfd8]">Нажми на микрофон и прочитай фразу вслух</p>
       ) : (
         <Button
           block
@@ -237,21 +237,30 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
     </div>
   );
 
+  const sceneModule = nodeId.split(".").slice(0, 2).join("-");
   return (
-    <div className="study flex min-h-dvh flex-col">
-      <header className="mx-auto flex w-full max-w-2xl items-center gap-4 px-4 pt-5">
+    <div className="study relative flex min-h-dvh flex-col">
+      {nodeId !== "practice" && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element -- размытая диорама этажа как атмосфера урока */}
+          <img src={`/content/modules/${sceneModule}.webp`} alt="" className="h-full w-full scale-110 object-cover opacity-80 blur-[10px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgb(21_15_31/0.25)_0%,rgb(21_15_31/0.8)_75%)]" />
+        </div>
+      )}
+      <header className="relative z-10 mx-auto flex w-full max-w-2xl items-center gap-4 px-4 pt-5">
         <button
           type="button"
           aria-label="Выйти из урока"
           onClick={() => setConfirmExit(true)}
-          className="flex size-11 items-center justify-center rounded-xl text-ink-soft hover:bg-grid focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30"
+          className="flex size-11 items-center justify-center rounded-full text-[#f6efe2] hover:bg-white/10 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]/60"
         >
           <Icon name="close" size={28} />
         </button>
         <ProgressBar value={progressOf(lessonState)} label="Прогресс урока" />
       </header>
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-8 pt-8">
+      <main className="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 pb-8 pt-6">
+        <div className="mat-parchment rounded-[28px] px-5 py-6 sm:px-8 sm:py-8">
         <ChallengeView
           key={`${challenge.index}-${attempt}`}
           challenge={challenge}
@@ -265,13 +274,14 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
           }}
           onHeard={(transcript) => void submit({ transcript })}
         />
+        </div>
       </main>
 
-      <FeedbackSheet reply={lessonState.phase === "feedback" ? lessonState.feedback : null} onContinue={next} footer={footer} />
+      <div className="sticky bottom-0 z-20"><FeedbackSheet reply={lessonState.phase === "feedback" ? lessonState.feedback : null} onContinue={next} footer={footer} /></div>
 
       {confirmExit && (
-        <div role="dialog" aria-modal="true" aria-labelledby="exit-title" className="fixed inset-0 z-40 flex items-end justify-center bg-royal-deep/40 p-4 sm:items-center">
-          <div className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-xl">
+        <div role="dialog" aria-modal="true" aria-labelledby="exit-title" className="fixed inset-0 z-40 flex items-end justify-center bg-[#0c0812]/70 p-4 backdrop-blur-sm sm:items-center">
+          <div className="mat-parchment w-full max-w-sm rounded-3xl p-6 text-center">
             <Foxy pose="oops" size={110} className="mx-auto" />
             <h2 id="exit-title" className="mt-3 text-[22px] font-extrabold text-ink">Выйти из урока?</h2>
             <p className="mt-1 text-[16px] font-semibold text-ink-soft">Прогресс этого урока не сохранится.</p>

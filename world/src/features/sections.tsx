@@ -40,15 +40,15 @@ function useSection<T>(load: () => Promise<T>): Status<T> {
 function SectionTitle({ title, line }: { title: string; line: string }) {
   return (
     <div className="mb-6">
-      <h1 className="font-heading text-[32px] font-extrabold leading-10 text-royal">{title}</h1>
-      <p className="mt-1 text-[17px] font-semibold text-ink-soft">{line}</p>
+      <h1 className="font-fairy text-[36px] font-black leading-10 text-[#ffd36e]">{title}</h1>
+      <p className="mt-1 text-[17px] font-semibold text-[#c9bfd8]">{line}</p>
     </div>
   );
 }
 
 function Pending<T>({ status }: { status: Status<T> }) {
-  if (status.state === "loading") return <p className="py-16 text-center text-[18px] font-extrabold text-ink-soft" role="status">Загружаем…</p>;
-  if (status.state === "error") return <p className="py-16 text-center text-[18px] font-extrabold text-coral-ink" role="alert">{status.message}</p>;
+  if (status.state === "loading") return <p className="py-16 text-center text-[18px] font-extrabold text-[#c9bfd8]" role="status">Загружаем…</p>;
+  if (status.state === "error") return <p className="py-16 text-center text-[18px] font-extrabold text-[#ffb3a6]" role="alert">{status.message}</p>;
   return null;
 }
 
@@ -63,7 +63,7 @@ export function PracticeScreen() {
         <SectionTitle title="Тренировка" line="Foxy собирает слова, которые начали забываться, и слова с ошибками." />
         <Pending status={status} />
         {status.state === "ready" && (
-          <section className="flex flex-col items-center gap-5 rounded-3xl border-2 border-line bg-white px-6 py-8 text-center shadow-[0_6px_0_var(--color-line)]">
+          <section className="mat-parchment flex flex-col items-center gap-5 rounded-3xl px-6 py-8 text-center">
             <Foxy pose="think" size={140} />
             <p className="text-[22px] font-extrabold text-ink">
               {status.data.due_count > 0 ? `Ждут повторения: ${status.data.due_count}` : "Всё свежее в памяти"}
@@ -92,7 +92,7 @@ export function WordsScreen() {
         <SectionTitle title="Мой словарь" line="Слова из пройденных модулей учебника и то, насколько крепко ты их помнишь." />
         <Pending status={status} />
         {status.state === "ready" && !status.data.words.modules.length && (
-          <div className="flex flex-col items-center gap-3 rounded-3xl border-2 border-line bg-white px-6 py-10 text-center">
+          <div className="mat-parchment flex flex-col items-center gap-3 rounded-3xl px-6 py-10 text-center">
             <Icon name="book" size={40} className="text-royal" />
             <p className="text-[18px] font-extrabold text-ink">Словарь пока пуст</p>
             <p className="text-[16px] font-semibold text-ink-soft">Пройди первый урок — слова появятся здесь.</p>
@@ -101,12 +101,12 @@ export function WordsScreen() {
         {status.state === "ready" &&
           status.data.words.modules.map((module) => (
             <section key={module.id} className="mb-8">
-              <h2 className="mb-3 text-[20px] font-extrabold text-royal">
-                {module.title_en} <span className="text-[16px] font-semibold text-ink-soft">{module.title_ru}</span>
+              <h2 className="mb-3 font-fairy text-[22px] font-black text-[#ffd36e]">
+                {module.title_en} <span className="text-[16px] font-semibold text-[#c9bfd8]">{module.title_ru}</span>
               </h2>
-              <ul className="overflow-hidden rounded-3xl border-2 border-line bg-white">
+              <ul className="mat-parchment overflow-hidden rounded-3xl">
                 {module.words.map((word) => (
-                  <li key={word.id} className="flex items-center gap-4 border-b-2 border-grid px-4 py-3 last:border-b-0">
+                  <li key={word.id} className="flex items-center gap-4 border-b border-[#cdb58a]/60 px-4 py-3 last:border-b-0">
                     <ContentImage path={word.image} alt={word.en} className="size-12 shrink-0 rounded-xl text-[12px]" fallback="" />
                     <span className="flex-1">
                       <span className="block text-[19px] font-extrabold text-ink">{word.en}</span>
@@ -143,12 +143,12 @@ export function ProfileScreen() {
         {ready && (
           <>
             <div className="mb-8 flex items-center gap-4">
-              <span className="flex size-20 items-center justify-center rounded-full bg-royal font-heading text-[34px] font-extrabold text-crown">
+              <span className="mat-brass flex size-20 items-center justify-center rounded-full font-fairy text-[34px] font-black">
                 {ready.home.player.display_name.slice(0, 1).toUpperCase()}
               </span>
               <div>
-                <h1 className="font-heading text-[30px] font-extrabold text-royal">{ready.home.player.display_name}</h1>
-                <p className="text-[16px] font-semibold text-ink-soft">
+                <h1 className="font-fairy text-[32px] font-black text-[#ffd36e]">{ready.home.player.display_name}</h1>
+                <p className="text-[16px] font-semibold text-[#c9bfd8]">
                   {book ? `${book.grade} класс · ${book.title}` : ""}
                 </p>
               </div>
@@ -159,14 +159,14 @@ export function ProfileScreen() {
                 { icon: "bolt" as const, value: ready.home.player.xp, label: "опыта всего", tone: "text-[#c9a400]" },
                 { icon: "coin" as const, value: ready.home.player.coins, label: "монет", tone: "text-[#d69e00]" },
               ].map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center gap-1 rounded-2xl border-2 border-line bg-white py-4">
+                <div key={stat.label} className="mat-enamel flex flex-col items-center gap-1 rounded-2xl py-4">
                   <Icon name={stat.icon} size={26} filled={stat.icon !== "coin"} className={stat.tone} />
                   <span className="text-[24px] font-extrabold tabular-nums text-ink">{stat.value}</span>
                   <span className="text-[13px] font-bold text-ink-soft">{stat.label}</span>
                 </div>
               ))}
             </div>
-            <section className="rounded-3xl border-2 border-line bg-white p-5">
+            <section className="mat-parchment rounded-3xl p-5">
               <h2 className="text-[18px] font-extrabold text-ink">Мой класс</h2>
               <p className="mt-1 text-[16px] font-semibold text-ink-soft">
                 Сейчас в школе: {schoolModule ? `${schoolModule.title_en} (${schoolModule.title_ru})` : "—"}. Цель дня: {ready.home.daily_goal_xp} опыта.

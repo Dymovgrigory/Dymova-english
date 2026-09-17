@@ -84,7 +84,7 @@ export function Onboarding() {
           onClick={back}
           disabled={position <= firstStep}
           aria-label="Назад"
-          className="flex size-11 items-center justify-center rounded-xl text-ink-soft hover:bg-grid disabled:invisible"
+          className="flex size-11 items-center justify-center rounded-full text-[#f6efe2] hover:bg-white/10 disabled:invisible"
         >
           <Icon name="back" size={28} />
         </button>
@@ -94,7 +94,7 @@ export function Onboarding() {
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-6 px-4 pb-6 pt-6">
         <div className="flex items-end gap-3">
           <Foxy pose="wave" size={112} className="-mb-2 shrink-0" />
-          <p className="relative mb-4 rounded-3xl rounded-bl-md border-2 border-line bg-white px-4 py-3 text-[18px] font-bold leading-6 text-ink">
+          <p className="mat-parchment relative mb-4 rounded-3xl rounded-bl-md px-4 py-3 text-[18px] font-bold leading-6">
             {FOXY_LINES[step]}
           </p>
         </div>
@@ -110,7 +110,7 @@ export function Onboarding() {
           >
             {step === "name" && (
               <label className="flex flex-col gap-2">
-                <span className="text-[16px] font-extrabold text-ink-soft">Как тебя зовут?</span>
+                <span className="text-[16px] font-extrabold text-[#f6efe2]">Как тебя зовут?</span>
                 <input
                   autoFocus
                   value={name}
@@ -118,7 +118,7 @@ export function Onboarding() {
                   onChange={(e) => setName(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("grade")}
                   placeholder="Имя"
-                  className="h-16 rounded-2xl border-2 border-line bg-white px-5 text-[22px] font-bold text-ink outline-none focus:border-royal"
+                  className="h-16 rounded-2xl bg-[#fffaf0] px-5 text-[22px] font-bold text-ink shadow-[inset_0_3px_6px_rgb(92_60_30/0.25),0_0_0_2px_#c9a86a] outline-none focus:shadow-[inset_0_3px_6px_rgb(92_60_30/0.25),0_0_0_3px_#3fae98]"
                 />
               </label>
             )}
@@ -133,7 +133,7 @@ export function Onboarding() {
                     setModuleId(null);
                   }}
                 >
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-royal font-heading text-[24px] font-extrabold text-crown">
+                  <span className="mat-brass flex size-12 shrink-0 items-center justify-center rounded-full font-fairy text-[24px] font-black">
                     {item.grade}
                   </span>
                   <span className="flex flex-col">
@@ -157,7 +157,7 @@ export function Onboarding() {
                   </Choice>
                 ))
               ) : (
-                <p className="rounded-2xl border-2 border-line bg-white p-4 text-[17px] font-bold text-ink-soft">
+                <p className="mat-parchment rounded-2xl p-4 text-[17px] font-bold">
                   Уроки для {book.title} скоро появятся. Выбери другой класс.
                 </p>
               )
@@ -174,10 +174,10 @@ export function Onboarding() {
               ))}
           </motion.section>
         </AnimatePresence>
-        {problem && <p role="alert" className="text-[16px] font-bold text-coral-ink">{problem}</p>}
+        {problem && <p role="alert" className="text-[16px] font-bold text-[#ffb3a6]">{problem}</p>}
       </main>
 
-      <footer className="sticky bottom-0 border-t-2 border-line bg-paper/95 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 backdrop-blur">
+      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
         <div className="mx-auto max-w-xl">
           {step === "name" && <Button block disabled={!name.trim()} onClick={() => setStep("grade")}>Дальше</Button>}
           {step === "grade" && <Button block disabled={!book} onClick={() => setStep("module")}>Дальше</Button>}

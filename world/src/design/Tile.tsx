@@ -6,11 +6,15 @@ type TileProps = {
   size?: "word" | "letter";
 };
 
-/** Плитка слова или буквы для «Пазла». Использованная плитка оставляет пустое место. */
+/** Плитка слова или буквы для «Пазла» — эмалевый брусочек; использованная оставляет углубление. */
 export function Tile({ label, used = false, onPress, disabled, size = "word" }: TileProps) {
   const sizing = size === "letter" ? "min-w-12 h-14 text-[24px] lowercase" : "h-12 px-4 text-[18px]";
   if (used) {
-    return <span aria-hidden className={`${sizing} inline-block rounded-xl bg-grid`} >&nbsp;</span>;
+    return (
+      <span aria-hidden className={`${sizing} inline-block rounded-xl bg-[#d9c59c] shadow-[inset_0_3px_6px_rgb(92_60_30/0.35)]`}>
+        &nbsp;
+      </span>
+    );
   }
   return (
     <button
@@ -18,9 +22,8 @@ export function Tile({ label, used = false, onPress, disabled, size = "word" }: 
       disabled={disabled}
       onClick={onPress}
       className={[
-        "press inline-flex items-center justify-center rounded-xl border-2 border-line bg-white font-bold text-ink",
-        "shadow-[0_3px_0_var(--color-line)] hover:bg-[#f7f4fd]",
-        "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30",
+        "press mat-enamel inline-flex items-center justify-center rounded-xl font-bold",
+        "hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]/70",
         sizing,
       ].join(" ")}
     >

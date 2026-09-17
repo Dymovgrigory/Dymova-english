@@ -7,7 +7,7 @@ import { Icon, type IconName } from "@/design/Icon";
 import { NODE_LABELS } from "@/lib/v2/pathLayout";
 import type { LearningPath, NodeKind, PathModule, PathNode } from "@/lib/v2/types";
 
-/* Башня учебника: крыша со знаменем сверху, этажи-модули, ворота внизу. */
+/* Башня учебника в стиле «живой миниатюры»: башня-герой, этажи-диорамы, окна-уроки. */
 
 const KIND_ICON: Record<NodeKind, IconName> = {
   words: "star",
@@ -18,86 +18,74 @@ const KIND_ICON: Record<NodeKind, IconName> = {
   module_test: "crown",
 };
 
-const STONE =
-  "bg-[#b8a6dc] [background-image:repeating-linear-gradient(0deg,transparent_0_26px,rgb(58_41_83/0.10)_26px_28px),repeating-linear-gradient(90deg,transparent_0_52px,rgb(58_41_83/0.07)_52px_54px)]";
-
 type PressNode = (node: PathNode) => void;
 
-function moduleImage(moduleId: string): string {
-  return `/content/modules/${moduleId.replace(".", "-")}.webp`;
+const floorImage = (moduleId: string) => `/content/modules/${moduleId.replace(".", "-")}.webp`;
+
+function windowSprite(node: PathNode): string {
+  if (node.kind === "chest") return "/content/ui/window-chest.webp";
+  if (node.status === "locked") return "/content/ui/window-shutters.webp";
+  if (node.status === "open") return "/content/ui/window-dark.webp";
+  return "/content/ui/window-lit.webp";
+}
+
+function Medallion({ icon, tone }: { icon: IconName; tone: "brass" | "done" | "muted" }) {
+  const look =
+    tone === "done"
+      ? "bg-[radial-gradient(circle_at_35%_30%,#b9f5e8,#3fae98_70%)] text-[#0d3b33]"
+      : tone === "muted"
+        ? "bg-[radial-gradient(circle_at_35%_30%,#8a8096,#4a4156_75%)] text-[#d9d2e3]"
+        : "bg-[radial-gradient(circle_at_35%_30%,#fff2b8,#e3a93a_65%,#9a6414)] text-[#3a2208]";
+  return (
+    <span
+      className={`absolute -bottom-2 left-1/2 flex size-8 -translate-x-1/2 items-center justify-center rounded-full ring-2 ring-[#2a1c10]/60 shadow-[0_3px_6px_rgb(0_0_0/0.5),inset_0_1px_0_rgb(255_255_255/0.6)] ${look}`}
+    >
+      <Icon name={icon} size={16} filled={icon === "star" || icon === "crown"} />
+    </span>
+  );
 }
 
 function WindowSlot({ node, onPress, currentRef }: { node: PathNode; onPress: PressNode; currentRef?: Ref<HTMLDivElement> }) {
   const reduce = useReducedMotion();
   const label = NODE_LABELS[node.kind];
   const { status } = node;
-  const glass =
-    status === "completed"
-      ? "bg-[radial-gradient(circle_at_50%_35%,#fff7c2,#f5d64a_60%,#d8a92c)] text-royal-deep shadow-[0_0_22px_rgb(245_214_74/0.65)]"
-      : status === "current"
-        ? "bg-[radial-gradient(circle_at_50%_30%,#fffbe0,#f5ed75_55%,#e8b93e)] text-royal-deep shadow-[0_0_0_4px_#fff,0_0_30px_rgb(245_237_117/0.9)]"
-        : status === "open"
-          ? "bg-[linear-gradient(160deg,#4a3a6b,#2a1f3d)] text-mint"
-          : "bg-[#6b4a2e]";
-
+  const current = status === "current";
   return (
-    <div ref={currentRef} className="relative flex flex-col items-center gap-1.5">
-      {status === "current" && (
-        // eslint-disable-next-line @next/next/no-img-element -- маленький прозрачный Foxy над окном
+    <div ref={currentRef} className="relative flex flex-col items-center">
+      {current && (
+        // eslint-disable-next-line @next/next/no-img-element -- прозрачный Foxy над окном текущего урока
         <motion.img
           src="/content/foxy/wave.webp"
           alt=""
-          className="pointer-events-none absolute -top-11 left-1/2 z-10 h-12 w-12 -translate-x-1/2 object-contain drop-shadow"
+          className="pointer-events-none absolute -top-10 left-1/2 z-10 h-12 w-12 -translate-x-1/2 object-contain drop-shadow-[0_4px_6px_rgb(0_0_0/0.6)]"
           animate={reduce ? undefined : { y: [0, -4, 0] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         />
       )}
-      {node.kind === "chest" ? (
-        <button
-          type="button"
-          onClick={() => onPress(node)}
-          aria-label={`Сундук${status === "locked" ? ", закрыто" : status === "completed" ? ", открыт" : ", открыть"}`}
+      <button
+        type="button"
+        onClick={() => onPress(node)}
+        aria-label={`${label}${status === "locked" ? ", закрыто" : status === "completed" ? ", пройдено" : current ? ", начать" : ""}`}
+        className="press group relative block h-[118px] w-[92px] rounded-t-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- спрайт окна из конвейера миниатюр */}
+        <img
+          src={windowSprite(node)}
+          alt=""
+          draggable={false}
           className={[
-            "press flex h-[84px] w-[64px] items-end justify-center rounded-2xl border-[5px] border-[#5b4580] pb-2",
-            "bg-[linear-gradient(180deg,#2a1f3d,#4a3a6b)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-crown",
-            status === "current" || status === "open" ? "seal-current" : "",
+            "h-full w-full object-contain transition duration-200 group-hover:-translate-y-0.5",
+            current ? "window-current" : "",
+            status === "completed" ? "drop-shadow-[0_0_14px_rgb(255_190_90/0.6)]" : "drop-shadow-[0_8px_8px_rgb(0_0_0/0.55)]",
+            status === "locked" ? "brightness-[0.8] saturate-[0.8]" : "",
           ].join(" ")}
-        >
-          <Icon
-            name="chest"
-            size={36}
-            filled={status === "completed"}
-            className={status === "locked" ? "text-[#8f7bb8]" : status === "completed" ? "text-crown/60" : "text-crown"}
-          />
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={() => onPress(node)}
-          aria-label={`${label}${status === "locked" ? ", закрыто" : status === "completed" ? ", пройдено" : status === "current" ? ", начать" : ""}`}
-          className={[
-            "press relative flex h-[84px] w-[64px] items-center justify-center overflow-hidden rounded-t-full rounded-b-lg",
-            "border-[5px] border-[#5b4580] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-crown",
-            glass,
-            status === "current" ? "seal-current" : "",
-          ].join(" ")}
-        >
-          {status === "locked" ? (
-            <>
-              <span className="absolute inset-y-0 left-0 w-1/2 border-r-2 border-[#4b321e] bg-[repeating-linear-gradient(90deg,#7a5536_0_7px,#6b4a2e_7px_9px)]" />
-              <span className="absolute inset-y-0 right-0 w-1/2 bg-[repeating-linear-gradient(90deg,#7a5536_0_7px,#6b4a2e_7px_9px)]" />
-              <Icon name="lock" size={20} className="relative text-[#f3d9a8]" />
-            </>
-          ) : (
-            <>
-              <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 bg-[#5b4580]/35" aria-hidden />
-              <span className="absolute inset-y-0 left-1/2 w-[3px] -translate-x-1/2 bg-[#5b4580]/35" aria-hidden />
-              <Icon name={status === "completed" ? "check" : KIND_ICON[node.kind]} size={24} filled={status !== "completed" && node.kind === "words"} className="relative" />
-            </>
-          )}
-        </button>
-      )}
-      <span className={`text-center text-[12px] font-extrabold leading-4 ${status === "locked" ? "text-royal-deep/55" : "text-royal-deep"}`}>
+        />
+        <Medallion
+          icon={status === "completed" ? "check" : status === "locked" ? "lock" : KIND_ICON[node.kind]}
+          tone={status === "completed" ? "done" : status === "locked" ? "muted" : "brass"}
+        />
+      </button>
+      <span className={`mt-4 rounded-full bg-black/55 px-2.5 py-0.5 text-center text-[12px] font-extrabold leading-4 ring-1 ring-white/10 ${status === "locked" ? "text-[#c9bfd8]/75" : "text-[#fff6e3]"}`}>
         {label}
       </span>
     </div>
@@ -108,37 +96,30 @@ function Balcony({ node, onPress, currentRef }: { node: PathNode; onPress: Press
   const locked = node.status === "locked";
   const done = node.status === "completed";
   return (
-    <div ref={currentRef} className="mt-4 flex justify-center">
+    <div ref={currentRef} className="mt-6">
       <button
         type="button"
         onClick={() => onPress(node)}
-        aria-label={`Контрольная модуля${locked ? ", закрыто" : done ? `, пройдено, звёзд ${node.stars}` : ""}`}
+        aria-label={`Контрольная этажа${locked ? ", закрыто" : done ? `, пройдено, звёзд ${node.stars}` : ""}`}
         className={[
-          "press flex w-full max-w-[320px] items-center gap-3 rounded-2xl border-4 px-4 py-2.5 text-left",
-          "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-crown",
-          done
-            ? "border-crown-edge bg-crown text-royal-deep shadow-[0_5px_0_var(--color-crown-edge)]"
-            : node.status === "current"
-              ? "seal-current border-crown-edge bg-[#fff6b8] text-royal-deep shadow-[0_5px_0_var(--color-crown-edge)]"
-              : locked
-                ? "border-[#5b4580] bg-[#8d78b5] text-white/70 shadow-[0_5px_0_#5b4580]"
-                : "border-[#5b4580] bg-royal text-white shadow-[0_5px_0_var(--color-royal-edge)]",
+          "press relative flex w-full items-center gap-3 rounded-2xl py-2 pl-2 pr-4 text-left",
+          "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]",
+          locked ? "bg-[#120c1a]/80 text-[#d9d2e3] ring-1 ring-[#ffd36e]/25" : "mat-brass",
+          node.status === "current" ? "window-current" : "",
         ].join(" ")}
       >
-        <svg width="34" height="40" viewBox="0 0 34 40" aria-hidden className="shrink-0">
-          <path d="M4 2v38" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-          <path d={done ? "M5 4h24l-6 7 6 7H5z" : "M5 20h24l-6 7 6 7H5z"} fill={done ? "#3a2953" : "#ff6b5e"} />
-        </svg>
+        {/* eslint-disable-next-line @next/next/no-img-element -- спрайт балкона */}
+        <img src="/content/ui/window-balcony.webp" alt="" className={`h-20 w-20 object-contain ${locked ? "opacity-75 grayscale-[30%]" : ""}`} />
         <span className="flex-1">
-          <span className="block text-[16px] font-extrabold">Контрольная модуля</span>
+          <span className="block font-fairy text-[18px] font-extrabold leading-6">Контрольная этажа</span>
           <span className="block text-[13px] font-bold opacity-80">
-            {locked ? "Откроется после уроков этажа" : done ? "Флаг поднят" : "Подними флаг этажа"}
+            {locked ? "Откроется после всех окон этажа" : done ? "Знамя поднято" : "Подними знамя этажа"}
           </span>
         </span>
         {done ? (
           <span className="flex gap-0.5" aria-hidden>
             {[1, 2, 3].map((n) => (
-              <Icon key={n} name="star" size={18} filled={n <= node.stars} className={n <= node.stars ? "text-royal" : "text-royal/25"} />
+              <Icon key={n} name="star" size={18} filled={n <= node.stars} className={n <= node.stars ? "text-[#7a3d06]" : "text-[#7a3d06]/25"} />
             ))}
           </span>
         ) : (
@@ -158,37 +139,30 @@ function Floor({ module, onPress, currentRef }: { module: PathModule; onPress: P
   const firstCurrent = module.nodes.find((n) => n.status === "current")?.id;
 
   return (
-    <section aria-labelledby={`${module.id}-title`} className={`relative overflow-hidden rounded-[28px] border-[6px] border-[#8f7bb8] shadow-[0_10px_0_#6f5a99] ${STONE}`}>
-      <div className="relative aspect-[16/8] w-full overflow-hidden bg-royal">
+    <section aria-labelledby={`${module.id}-title`} className="mat-stone relative rounded-[30px] p-2.5">
+      <div className="relative aspect-[16/9] overflow-hidden rounded-[22px] bg-[#221833] shadow-[inset_0_0_0_1px_rgb(0_0_0/0.4)]">
         {!imageBroken && (
-          // eslint-disable-next-line @next/next/no-img-element -- иллюстрация этажа, webp из конвейера
-          <img
-            src={moduleImage(module.id)}
-            alt=""
-            className="h-full w-full object-cover"
-            loading="lazy"
-            onError={() => setImageBroken(true)}
-          />
+          // eslint-disable-next-line @next/next/no-img-element -- диорама этажа из конвейера
+          <img src={floorImage(module.id)} alt="" className="h-full w-full object-cover" loading="lazy" onError={() => setImageBroken(true)} />
         )}
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-royal-deep/85 to-transparent" />
-        <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-3 text-white">
+        <div className="absolute inset-0 shadow-[inset_0_0_40px_rgb(0_0_0/0.55)]" />
+        <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-[#120c1a]/95 via-[#120c1a]/55 to-transparent" />
+        <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-3">
           <div>
-            <p className="text-[13px] font-extrabold text-crown">{module.label ?? `Модуль ${module.order}`}</p>
-            <h2 id={`${module.id}-title`} className="font-heading text-[24px] font-extrabold leading-7 drop-shadow">
+            <p className="text-[12px] font-extrabold tracking-wide text-[#ffd36e]">{module.label ?? `Модуль ${module.order}`}</p>
+            <h2 id={`${module.id}-title`} className="font-fairy text-[27px] font-black leading-8 text-[#fff6e3] drop-shadow-[0_2px_4px_rgb(0_0_0/0.8)]">
               {module.title_en}
             </h2>
-            <p className="text-[14px] font-semibold text-white/85">{module.title_ru}</p>
+            <p className="text-[14px] font-semibold text-[#f6efe2]/85">{module.title_ru}</p>
           </div>
-          <span
-            className={`shrink-0 rounded-full px-3 py-1 text-[13px] font-extrabold ${complete ? "bg-crown text-royal-deep" : "bg-white/20 text-white"}`}
-          >
-            {complete ? "Этаж пройден" : `${done}/${module.nodes.length}`}
+          <span className={`shrink-0 rounded-full px-3 py-1 text-[12px] font-extrabold ${complete ? "mat-brass" : "bg-black/45 text-[#f6efe2] ring-1 ring-white/15"}`}>
+            {complete ? "Этаж пройден" : `${done} из ${module.nodes.length}`}
           </span>
         </div>
       </div>
 
-      <div className="px-3 pb-5 pt-12">
-        <div className="grid grid-cols-4 justify-items-center gap-x-2 gap-y-9">
+      <div className="px-2 pb-4 pt-12">
+        <div className="grid grid-cols-3 justify-items-center gap-x-2 gap-y-10">
           {windows.map((node) => (
             <WindowSlot key={node.id} node={node} onPress={onPress} currentRef={node.id === firstCurrent ? currentRef : undefined} />
           ))}
@@ -200,53 +174,38 @@ function Floor({ module, onPress, currentRef }: { module: PathModule; onPress: P
 }
 
 function Stairs({ progress }: { progress: number }) {
-  const steps = 5;
+  const steps = 4;
   return (
-    <div className="flex flex-col-reverse items-center gap-[3px] py-2" aria-hidden>
-      {Array.from({ length: steps }, (_, i) => (
-        <span
-          key={i}
-          className={`h-[7px] rounded-sm ${i < Math.round(progress * steps) ? "bg-crown shadow-[0_2px_0_var(--color-crown-edge)]" : "bg-[#8f7bb8] shadow-[0_2px_0_#6f5a99]"}`}
-          style={{ width: 70 - i * 6, marginLeft: i % 2 ? 18 : -18 }}
-        />
-      ))}
+    <div className="flex flex-col items-center gap-1 py-3" aria-hidden>
+      {Array.from({ length: steps }, (_, i) => {
+        const lit = steps - i <= Math.round(progress * steps);
+        return (
+          <span
+            key={i}
+            className={`h-3 rounded-[4px] ${lit ? "mat-brass" : "mat-stone"}`}
+            style={{ width: 54 + i * 10, marginLeft: i % 2 ? 22 : -22 }}
+          />
+        );
+      })}
     </div>
   );
 }
 
-function Roof({ title, grade, raised }: { title: string; grade: number; raised: boolean }) {
-  const reduce = useReducedMotion();
+function Hero({ bookId, title, grade, raised }: { bookId: string; title: string; grade: number; raised: boolean }) {
+  const [broken, setBroken] = useState(false);
   return (
-    <div className="relative mx-auto flex w-full max-w-[420px] flex-col items-center">
-      <svg viewBox="0 0 300 150" className="w-[78%]" aria-hidden>
-        <path d="M150 34 L270 146 H30 Z" fill="#3a2953" />
-        <path d="M150 34 L270 146 H150 Z" fill="#2c1f41" />
-        <path d="M150 34 V4" stroke="#241a30" strokeWidth="4" strokeLinecap="round" />
-        <motion.path
-          d="M152 6 h46 l-12 11 12 11 h-46 z"
-          fill={raised ? "#f5ed75" : "#b8a6dc"}
-          initial={false}
-          animate={reduce ? undefined : { skewY: [0, 3, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <circle cx="150" cy="96" r="18" fill="#f5ed75" stroke="#d8b72c" strokeWidth="4" />
-      </svg>
-      <div className="-mt-2 rounded-2xl bg-royal px-5 py-2 text-center text-white shadow-[0_5px_0_var(--color-royal-edge)]">
-        <p className="font-heading text-[20px] font-extrabold leading-6">{title}</p>
-        <p className="text-[13px] font-bold text-crown">{raised ? "Башня покорена!" : `${grade} класс · поднимайся на вершину`}</p>
+    <div className="relative -mx-4 mb-2 h-[62vh] min-h-[420px] overflow-hidden sm:mx-0 sm:rounded-[30px]">
+      {!broken && (
+        // eslint-disable-next-line @next/next/no-img-element -- башня-герой учебника
+        <img src={`/content/towers/${bookId}.webp`} alt="" className="h-full w-full object-cover object-top" onError={() => setBroken(true)} />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#150f1f]/10 via-transparent to-[#150f1f]" />
+      <div className="absolute inset-x-0 bottom-6 flex justify-center px-6">
+        <div className="mat-brass rounded-2xl px-6 py-3 text-center">
+          <p className="font-fairy text-[26px] font-black leading-7">{title}</p>
+          <p className="text-[13px] font-extrabold opacity-80">{raised ? "Башня покорена!" : `${grade} класс · поднимайся к знамени`}</p>
+        </div>
       </div>
-    </div>
-  );
-}
-
-function Gates() {
-  return (
-    <div className="flex flex-col items-center pt-2">
-      <div className={`flex h-24 w-40 items-end justify-center rounded-t-full border-[6px] border-[#8f7bb8] ${STONE}`}>
-        <div className="h-16 w-16 rounded-t-full border-4 border-[#4b321e] bg-[repeating-linear-gradient(90deg,#7a5536_0_8px,#6b4a2e_8px_10px)]" />
-      </div>
-      <div className="h-3 w-64 rounded-full bg-[#8f7bb8]/60" />
-      <p className="mt-2 text-[13px] font-extrabold text-ink-soft">Вход в башню</p>
     </div>
   );
 }
@@ -258,19 +217,18 @@ export function Tower({ path, onPress, currentRef }: { path: LearningPath; onPre
 
   return (
     <div className="flex flex-col items-stretch">
-      <Roof title={path.book.title} grade={path.book.grade} raised={raised} />
+      <Hero bookId={path.book.id} title={path.book.title} grade={path.book.grade} raised={raised} />
       {floors.map((module, index) => {
         const below = floors[index + 1];
         const progress = below ? below.nodes.filter((n) => n.status === "completed").length / below.nodes.length : 0;
         return (
           <div key={module.id} className="flex flex-col items-stretch">
-            {index === 0 && <div className="h-3" />}
             <Floor module={module} onPress={onPress} currentRef={currentRef} />
             {below && <Stairs progress={progress} />}
           </div>
         );
       })}
-      <Gates />
+      <p className="mt-6 text-center text-[13px] font-extrabold text-[#c9bfd8]/70">Вход в башню · начало учебника</p>
     </div>
   );
 }

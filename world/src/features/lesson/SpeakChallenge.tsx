@@ -34,10 +34,10 @@ export function SpeakChallenge({ challenge, locked, onSkip, onHeard }: SpeakProp
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-[23px] font-extrabold leading-8 text-ink sm:text-[26px]">{challenge.instruction_ru}</h1>
-      <div className="flex items-center gap-4 rounded-3xl border-2 border-line bg-white px-5 py-4">
+      <h1 className="font-fairy text-[25px] font-black leading-8 text-ink sm:text-[28px]">{challenge.instruction_ru}</h1>
+      <div className="flex items-center gap-4 mat-enamel rounded-3xl px-5 py-4">
         <Sound text={challenge.audio ?? challenge.text ?? ""} />
-        <p className="text-[28px] font-extrabold leading-9 text-royal">{challenge.text}</p>
+        <p className="font-fairy text-[30px] font-black leading-9 text-[#4a2a66]">{challenge.text}</p>
       </div>
       <button
         type="button"
@@ -45,7 +45,7 @@ export function SpeakChallenge({ challenge, locked, onSkip, onHeard }: SpeakProp
         disabled={locked || listening}
         aria-live="polite"
         className={`press mx-auto flex h-20 w-full max-w-sm items-center justify-center gap-3 rounded-3xl text-[19px] font-extrabold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30 ${
-          listening ? "bg-coral text-white shadow-[0_5px_0_var(--color-coral-edge)]" : "bg-sky text-royal shadow-[0_5px_0_#9dbfe8]"
+          listening ? "bg-coral text-white shadow-[0_5px_0_var(--color-coral-edge)]" : "mat-brass"
         }`}
       >
         <Icon name="mic" size={30} />

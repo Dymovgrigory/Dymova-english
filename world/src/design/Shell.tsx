@@ -21,11 +21,11 @@ export function Shell({ children, top }: { children: ReactNode; top?: ReactNode 
     <div className="study flex min-h-dvh">
       <nav
         aria-label="Разделы"
-        className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:inset-y-0 lg:left-0 lg:right-auto lg:w-60 lg:border-r-2 lg:border-t-0 lg:pb-0"
+        className="glass-dusk fixed inset-x-0 bottom-0 z-30 pb-[env(safe-area-inset-bottom)] lg:inset-y-0 lg:left-0 lg:right-auto lg:w-60 lg:pb-0"
       >
         <div className="hidden px-6 pb-4 pt-7 lg:block">
-          <span className="font-heading text-[26px] font-extrabold tracking-tight text-royal">Фоксинбург</span>
-          <p className="mt-0.5 text-[13px] font-bold text-ink-soft">Тренажёр к учебнику Spotlight</p>
+          <span className="font-fairy text-[28px] font-black tracking-tight text-[#ffd36e]">Фоксинбург</span>
+          <p className="mt-0.5 text-[13px] font-bold text-[#c9bfd8]">Тренажёр к учебнику Spotlight</p>
         </div>
         <ul className="mx-auto flex max-w-lg justify-between px-2 lg:max-w-none lg:flex-col lg:gap-1 lg:px-3">
           {TABS.map((tab) => {
@@ -37,8 +37,8 @@ export function Shell({ children, top }: { children: ReactNode; top?: ReactNode 
                   aria-current={active ? "page" : undefined}
                   className={[
                     "flex flex-col items-center gap-0.5 rounded-2xl py-2 text-[11px] font-extrabold lg:flex-row lg:gap-3 lg:px-4 lg:py-3 lg:text-[16px]",
-                    "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30",
-                    active ? "text-royal lg:border-2 lg:border-royal/20 lg:bg-[#efe9fb]" : "text-ink-soft hover:text-royal",
+                    "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]/60",
+                    active ? "text-[#ffd36e] lg:bg-white/10 lg:ring-1 lg:ring-[#ffd36e]/40" : "text-[#c9bfd8] hover:text-[#f6efe2]",
                   ].join(" ")}
                 >
                   <Icon name={tab.icon} size={26} />

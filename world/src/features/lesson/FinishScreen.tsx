@@ -28,7 +28,7 @@ function headline(result: SessionResult): { title: string; line: string } {
 
 function Stat({ icon, value, label, tone }: { icon: IconName; value: string; label: string; tone: string }) {
   return (
-    <div className={`flex flex-1 flex-col items-center gap-1 rounded-2xl border-2 bg-white px-3 py-3 ${tone}`}>
+    <div className={`mat-enamel flex flex-1 flex-col items-center gap-1 rounded-2xl px-3 py-3 ${tone}`}>
       <Icon name={icon} size={24} filled={icon === "bolt"} />
       <span className="text-[24px] font-extrabold tabular-nums text-ink">{value}</span>
       <span className="text-[13px] font-bold text-ink-soft">{label}</span>
@@ -42,7 +42,7 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
   const failedTest = result.kind === "module_test" && !result.passed;
   return (
     <div className="study flex min-h-dvh flex-col">
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center gap-6 px-4 pb-8 pt-10 text-center">
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center gap-6 px-4 pb-8 pt-10 text-center"><div className="mat-parchment flex w-full flex-col items-center gap-6 rounded-[28px] px-5 pb-6 pt-4">
         <motion.div
           initial={reduce ? false : { scale: 0.6, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
           <Foxy pose={failedTest ? "think" : "cheer"} size={190} />
         </motion.div>
         <div>
-          <h1 className="font-heading text-[34px] font-extrabold leading-10 text-royal">{title}</h1>
+          <h1 className="font-fairy text-[36px] font-black leading-10 text-[#4a2a66]">{title}</h1>
           <p className="mt-2 text-[18px] font-semibold text-ink-soft">{line}</p>
         </div>
 
@@ -71,12 +71,12 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
         )}
 
         <div className="flex w-full gap-3">
-          <Stat icon="bolt" value={`+${result.xp}`} label="опыт" tone="border-crown-edge/40 text-[#c9a400]" />
-          <Stat icon="target" value={`${Math.round(result.accuracy * 100)}%`} label="точность" tone="border-mint-edge/40 text-mint-ink" />
-          <Stat icon="clock" value={formatDuration(result.duration_sec)} label="время" tone="border-line text-royal" />
+          <Stat icon="bolt" value={`+${result.xp}`} label="опыт" tone="text-[#b7791f]" />
+          <Stat icon="target" value={`${Math.round(result.accuracy * 100)}%`} label="точность" tone="text-[#1f6f60]" />
+          <Stat icon="clock" value={formatDuration(result.duration_sec)} label="время" tone="text-[#4a2a66]" />
         </div>
 
-        <section className="w-full rounded-3xl border-2 border-line bg-white px-5 py-4 text-left">
+        <section className="mat-enamel w-full rounded-3xl px-5 py-4 text-left">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-[18px] font-extrabold text-ink">
               <Icon name="flame" size={24} filled className="text-[#ff8a3d]" />
@@ -96,8 +96,8 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
             <ProgressBar value={result.today_xp / result.daily_goal_xp} label="Цель дня" />
           </div>
         </section>
-      </main>
-      <footer className="sticky bottom-0 border-t-2 border-line bg-paper/95 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 backdrop-blur">
+      </div></main>
+      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
         <div className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row-reverse">
           <Button block onClick={failedTest ? onRetry : onContinue} autoFocus>
             {failedTest ? "Пройти ещё раз" : "Продолжить"}

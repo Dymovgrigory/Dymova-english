@@ -25,10 +25,10 @@ export function Sound({ text, size = "sm", label = "Послушать" }: Sound
         }
       }}
       className={[
-        "press inline-flex shrink-0 items-center justify-center rounded-2xl bg-sky text-royal",
-        "shadow-[0_4px_0_#9dbfe8] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30",
+        "press mat-brass inline-flex shrink-0 items-center justify-center rounded-full",
+        "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]/70",
         big ? "size-24" : "size-12",
-        playing ? "ring-4 ring-sky/70" : "",
+        playing ? "window-current" : "",
       ].join(" ")}
     >
       <Icon name="speaker" size={big ? 44 : 24} />
