@@ -1945,7 +1945,7 @@ test("мастерская облика: покупка и применение"
   // data-spot-кнопки клавиатурные (pointer-events: none), поэтому идём через ленту локаций
   await page.getByRole("button", { name: "Лавка" }).click();
 
-  await page.getByRole("button", { name: "Мастерская облика" }).click();
+  await page.getByRole("tab", { name: "Мастерская облика" }).click();
   const night = page.getByRole("button", { name: /Ночь/ });
   await expect(night).toBeVisible();
 
@@ -1958,8 +1958,8 @@ test("закрытая вещь показывает условие", async ({ p
   await page.goto("/world");
   await page.waitForTimeout(1200);
   await page.getByRole("button", { name: "Лавка" }).click();
-  await page.getByRole("button", { name: "Мастерская облика" }).click();
-  await expect(page.getByText(/Словесник/)).toBeVisible();
+  await page.getByRole("tab", { name: "Мастерская облика" }).click();
+  await expect(page.getByText(/Словесник/).first()).toBeVisible();
 });
 ```
 
