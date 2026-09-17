@@ -379,7 +379,6 @@ from app.learning import clock, progress
 from app.world.db import get_conn
 
 WORD_LEARNED_STRENGTH = 2  # шкала силы слова 0..5; 2 — слово пережило пару верных ответов
-PRACTICE_REWARD_TYPE = "PRACTICE_REWARD"
 
 
 def _scalar(sql: str, params: tuple) -> int:
@@ -394,8 +393,11 @@ def counters(player_id: int) -> dict[str, int]:
             (player_id, WORD_LEARNED_STRENGTH),
         ),
         "yard": _scalar(
-            "SELECT COUNT(*) AS value FROM coin_transactions WHERE player_id=? AND type=?",
-            (player_id, PRACTICE_REWARD_TYPE),
+            # Считаем сами тренировки, а не выплаты: после дневного потолка монет нет,
+            # но тренировка всё равно должна расти в ветку Тренера.
+            "SELECT COUNT(*) AS value FROM learn_sessions"
+            " WHERE player_id=? AND kind='practice' AND status='completed'",
+            (player_id,),
         ),
         "nest": progress.streak_days(player_id, now=clock.now()),
         "glory": _scalar(
