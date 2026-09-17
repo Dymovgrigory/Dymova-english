@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import {
   CASTLE_FOCUS,
@@ -17,6 +17,8 @@ import {
   type Spot,
   type SpotId,
 } from "@/castle/buildings";
+import { effectiveAppearance, lightLayer } from "@/castle/appearance";
+import { Weather } from "@/castle/Weather";
 import { fitScene } from "@/castle/scene";
 import { Button } from "@/design/Button";
 import { ContentImage } from "@/design/ContentImage";
@@ -26,6 +28,7 @@ import { Shell } from "@/design/Shell";
 import { StatPill } from "@/design/StatPill";
 import { worldApi, type League, type Player } from "@/lib/api";
 import { isProfileMissing, isUnauthorized, v2 } from "@/lib/v2/client";
+import { castleApi, type Appearance, type CastleView } from "@/lib/v2/castle";
 import type { Courses, Home, WordsBook } from "@/lib/v2/types";
 import { stickerArt } from "@/ui/fantasy/StickerDrawer";
 
@@ -149,11 +152,13 @@ function CastleStage({
   freeArea,
   openId,
   pulsing,
+  appearance,
   onOpen,
 }: {
   freeArea: HTMLElement | null;
   openId: SpotId | null;
   pulsing: SpotId[];
+  appearance: Appearance | null;
   onOpen: (id: SpotId) => void;
 }) {
   const map = useHotspotMap();
@@ -207,6 +212,16 @@ function CastleStage({
             className="absolute inset-0 h-full w-full"
             style={covers ? undefined : { WebkitMaskImage: EDGE_FADE, maskImage: EDGE_FADE }}
           />
+          {appearance ? (
+            <>
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={lightLayer(effectiveAppearance(appearance, new Date()).time) as CSSProperties}
+              />
+              <Weather kind={effectiveAppearance(appearance, new Date()).weather} />
+            </>
+          ) : null}
           {SPOTS.map((spot) => (
             <SpotHighlight
               key={spot.id}
@@ -559,21 +574,24 @@ export function CastleScreen() {
   const [pulse, setPulse] = useState<SpotId | null>(null);
   const [shopMsg, setShopMsg] = useState<string | null>(null);
   const [questMsg, setQuestMsg] = useState<string | null>(null);
+  const [castle, setCastle] = useState<CastleView | null>(null);
 
   const load = () => {
     void worldApi
       .ensurePlayer(typeof window !== "undefined" ? window.localStorage.getItem("world.name") || "Исследователь" : "Исследователь")
       .then(() => Promise.all([v2.home(), v2.courses()]))
       .then(async ([home, courses]) => {
-        const [words, learnHome, shopBody, league, review] = await Promise.all([
+        const [words, learnHome, shopBody, league, review, castleBody] = await Promise.all([
           v2.words(home.profile.book_id).catch(() => null),
           worldApi.getLearnHome().catch(() => null),
           worldApi.getShop().catch(() => ({ items: [] as ShopItem[] })),
           worldApi.getLeague().catch(() => null),
           worldApi.getReview().catch(() => null),
+          castleApi.get().catch(() => null),
         ]);
         setError(null);
         setNeedsSetup(false);
+        if (castleBody) setCastle(castleBody);
         setData({
           home,
           courses,
@@ -601,7 +619,6 @@ export function CastleScreen() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -639,6 +656,7 @@ export function CastleScreen() {
         freeArea={freeArea}
         openId={openId}
         pulsing={[...(pulse ? [pulse] : []), ...(claimable > 0 ? (["quests"] as const) : [])]}
+        appearance={castle?.appearance ?? null}
         onOpen={setOpenId}
       />
 
