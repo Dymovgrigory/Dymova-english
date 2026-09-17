@@ -1942,7 +1942,8 @@ import { expect, test } from "@playwright/test";
 test("мастерская облика: покупка и применение", async ({ page }) => {
   await page.goto("/world");
   await page.waitForTimeout(1200);
-  await page.locator('[data-spot="shop"]').click();
+  // data-spot-кнопки клавиатурные (pointer-events: none), поэтому идём через ленту локаций
+  await page.getByRole("button", { name: "Лавка" }).click();
 
   await page.getByRole("button", { name: "Мастерская облика" }).click();
   const night = page.getByRole("button", { name: /Ночь/ });
@@ -1956,7 +1957,7 @@ test("мастерская облика: покупка и применение"
 test("закрытая вещь показывает условие", async ({ page }) => {
   await page.goto("/world");
   await page.waitForTimeout(1200);
-  await page.locator('[data-spot="shop"]').click();
+  await page.getByRole("button", { name: "Лавка" }).click();
   await page.getByRole("button", { name: "Мастерская облика" }).click();
   await expect(page.getByText(/Словесник/)).toBeVisible();
 });
@@ -2117,7 +2118,7 @@ import { expect, test } from "@playwright/test";
 test("в Гнезде видно пять веток званий и прогресс", async ({ page }) => {
   await page.goto("/world");
   await page.waitForTimeout(1200);
-  await page.locator('[data-spot="nest"]').click();
+  await page.getByRole("button", { name: "Гнездо" }).click();
 
   for (const track of ["Словесник", "Тренер", "Хранитель огня", "Чемпион", "Собиратель"]) {
     await expect(page.getByText(track, { exact: false })).toBeVisible();
@@ -2127,7 +2128,7 @@ test("в Гнезде видно пять веток званий и прогр�
 test("звание без уровня надеть нельзя", async ({ page }) => {
   await page.goto("/world");
   await page.waitForTimeout(1200);
-  await page.locator('[data-spot="nest"]').click();
+  await page.getByRole("button", { name: "Гнездо" }).click();
   const wear = page.getByRole("button", { name: /Носить/ }).first();
   await expect(wear).toBeDisabled();
 });
