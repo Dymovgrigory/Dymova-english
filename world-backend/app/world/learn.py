@@ -109,6 +109,9 @@ def tier_for(weekly_xp: int) -> str:
 
 def league(external_key: str) -> dict:
     """Недельный рейтинг по всем игрокам: тир, место, размер лиги и таблица лидеров."""
+    from app.castle import league_weeks
+
+    league_weeks.close_previous_week()
     player = core.get_player(external_key)
     since = (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d")
     rows = get_conn().execute(
