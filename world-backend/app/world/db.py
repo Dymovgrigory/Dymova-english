@@ -405,4 +405,42 @@ CREATE TABLE IF NOT EXISTS daily_activity (
     sessions  INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (player_id, day)
 );
+
+CREATE TABLE IF NOT EXISTS castle_appearance (
+    player_id     INTEGER PRIMARY KEY REFERENCES players(id),
+    season        TEXT,                       -- spring|summer|autumn|winter, NULL = по календарю
+    time_of_day   TEXT,                       -- dawn|day|dusk|night, NULL = как за окном
+    weather       TEXT,                       -- snow|rain|fireflies|fog|aurora|petals, NULL = без эффекта
+    banner_color  TEXT NOT NULL DEFAULT 'plum',
+    banner_emblem TEXT NOT NULL DEFAULT 'fox',
+    updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS castle_owned (
+    player_id   INTEGER NOT NULL REFERENCES players(id),
+    item_id     TEXT NOT NULL,
+    anchor      TEXT,                          -- точка на замке для украшений
+    source      TEXT NOT NULL,                 -- shop|title|gift
+    acquired_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (player_id, item_id)
+);
+
+CREATE TABLE IF NOT EXISTS titles (
+    player_id  INTEGER NOT NULL REFERENCES players(id),
+    track      TEXT NOT NULL,                  -- lexicon|yard|nest|glory|stickers
+    level      INTEGER NOT NULL DEFAULT 0,
+    awarded_at TEXT NOT NULL DEFAULT (datetime('now')),
+    worn       INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (player_id, track)
+);
+
+CREATE TABLE IF NOT EXISTS league_weeks (
+    player_id     INTEGER NOT NULL REFERENCES players(id),
+    week_start    TEXT NOT NULL,               -- понедельник недели, YYYY-MM-DD
+    rank          INTEGER NOT NULL,
+    weekly_xp     INTEGER NOT NULL,
+    coins_awarded INTEGER NOT NULL DEFAULT 0,
+    closed_at     TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (player_id, week_start)
+);
 """
