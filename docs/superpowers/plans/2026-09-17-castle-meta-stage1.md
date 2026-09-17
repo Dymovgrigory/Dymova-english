@@ -15,7 +15,7 @@
 - Клиент ничего не решает: цена, доступность по званию и начисление — только на сервере.
 - Любое списание и начисление монет идёт через `core.spend` / `core.award` с ключом идемпотентности — повтор запроса не должен списать дважды.
 - TypeScript strict, `any` запрещён. Комментарии и тексты интерфейса — по-русски.
-- Тесты: `cd world-backend && python3 -m pytest -q`, `cd world && npm test`, `npx tsc --noEmit -p .`, `npx eslint`.
+- Тесты: `cd world-backend && .venv/bin/python -m pytest -q`, `cd world && npm test`, `npx tsc --noEmit -p .`, `npx eslint`.
 - Коммиты — Conventional Commits, каждый шаг «Commit» делает отдельный коммит.
 
 ---
@@ -64,7 +64,7 @@ def test_owned_item_is_unique_per_player(learn_db):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_schema.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_schema.py -q`
 Expected: FAIL — таблиц нет, `len(rows) == 0`.
 
 - [ ] **Step 3: Add tables to SCHEMA**
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS league_weeks (
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_schema.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_schema.py -q`
 Expected: PASS (3 теста).
 
 - [ ] **Step 5: Commit**
@@ -183,7 +183,7 @@ def test_track_view_at_max_has_no_next_goal():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_tracks.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_tracks.py -q`
 Expected: FAIL — `ModuleNotFoundError: No module named 'app.castle'`.
 
 - [ ] **Step 3: Write the implementation**
@@ -274,7 +274,7 @@ def track_view(track_id: str, value: int) -> dict:
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_tracks.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_tracks.py -q`
 Expected: PASS (все параметры).
 
 - [ ] **Step 5: Commit**
@@ -361,7 +361,7 @@ def test_streak_comes_from_learning_progress(learner):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_counters.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_counters.py -q`
 Expected: FAIL — нет модуля `app.castle.counters`.
 
 - [ ] **Step 3: Write the implementation**
@@ -411,7 +411,7 @@ def counters(player_id: int) -> dict[str, int]:
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_counters.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_counters.py -q`
 Expected: PASS. Если `clock.now()` называется иначе — открыть `app/learning/clock.py` и взять имеющуюся функцию текущего момента, тест не менять.
 
 - [ ] **Step 5: Commit**
@@ -506,7 +506,7 @@ def test_cannot_wear_title_without_level(learner):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_titles.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_titles.py -q`
 Expected: FAIL — нет модуля `app.castle.titles`.
 
 - [ ] **Step 3: Write the implementation**
@@ -599,7 +599,7 @@ def wear(player_id: int, track_id: str) -> list[dict]:
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_titles.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_titles.py -q`
 Expected: PASS (5 тестов).
 
 - [ ] **Step 5: Commit**
@@ -632,7 +632,7 @@ git commit -m "feat(castle): выдача званий и носимое зва�
 `get_conn`) в новый файл `world-backend/tests/lesson_helpers.py`, а в `test_learning_sessions.py`
 заменить определения на `from tests.lesson_helpers import right_answer, stored, wrong_answer`.
 
-Проверка переезда: `cd world-backend && python3 -m pytest tests/test_learning_sessions.py -q` — PASS.
+Проверка переезда: `cd world-backend && .venv/bin/python -m pytest tests/test_learning_sessions.py -q` — PASS.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -703,7 +703,7 @@ def test_practice_pays_three_coins_twice_a_day(learner, learn_course):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_economy.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_economy.py -q`
 Expected: FAIL — в ответе нет `coins_breakdown`.
 
 - [ ] **Step 3: Write the implementation**
@@ -775,7 +775,7 @@ PRACTICE_PAID_PER_DAY = 2  # дальше тренировка бесплатн�
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_economy.py tests/test_learning_sessions.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_economy.py tests/test_learning_sessions.py -q`
 Expected: PASS. Если старые тесты ждут прежние суммы монет — обновить в них ожидания по спеке (урок 5, без ошибок +3), это осознанное изменение баланса.
 
 - [ ] **Step 5: Commit**
@@ -850,7 +850,7 @@ def test_player_without_lessons_is_not_recorded(learn_db):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_league_weeks.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_league_weeks.py -q`
 Expected: FAIL — нет модуля `app.castle.league_weeks`.
 
 - [ ] **Step 3: Write the implementation**
@@ -930,7 +930,7 @@ def league(external_key: str) -> dict:
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_league_weeks.py tests/test_world_learn.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_league_weeks.py tests/test_world_learn.py -q`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -1011,7 +1011,7 @@ def test_set_appearance_saves_and_validates(learner):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_state.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_state.py -q`
 Expected: FAIL — нет модулей `catalog` и `state`.
 
 - [ ] **Step 3: Write the implementation**
@@ -1159,7 +1159,7 @@ def owned(player_id: int) -> list[str]:
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_state.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_state.py -q`
 Expected: PASS (5 тестов).
 
 - [ ] **Step 5: Commit**
@@ -1273,7 +1273,7 @@ def test_free_variants_apply_without_purchase(learner):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_service.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_service.py -q`
 Expected: FAIL — нет модуля `app.castle.service`.
 
 - [ ] **Step 3: Write the implementation**
@@ -1385,7 +1385,7 @@ def apply(external_key: str, **fields) -> dict:
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_service.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_service.py -q`
 Expected: PASS (8 тестов).
 
 - [ ] **Step 5: Commit**
@@ -1464,7 +1464,7 @@ def test_unknown_item_returns_404(client):
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_api.py -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_api.py -q`
 Expected: FAIL — 404 на `/api/v2/castle`.
 
 - [ ] **Step 3: Write the implementation**
@@ -1544,7 +1544,7 @@ app.include_router(castle_api.router)
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd world-backend && python3 -m pytest tests/test_castle_api.py -q && python3 -m pytest -q`
+Run: `cd world-backend && .venv/bin/python -m pytest tests/test_castle_api.py -q && .venv/bin/python -m pytest -q`
 Expected: PASS, весь набор тестов зелёный.
 
 - [ ] **Step 5: Commit**
@@ -2291,7 +2291,7 @@ git commit -m "feat(castle): поздравление с новым звание
 - [ ] **Step 1: Прогнать всё**
 
 ```bash
-cd world-backend && python3 -m pytest -q
+cd world-backend && .venv/bin/python -m pytest -q
 cd ../world && npm test && npx tsc --noEmit -p . && npx eslint && npm run build
 ```
 
