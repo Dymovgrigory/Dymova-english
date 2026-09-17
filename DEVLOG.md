@@ -5931,3 +5931,19 @@ tgapp-экран «Мои занятия», страница /schedule на са
 - World Journey Wave 1–3 + cinematic UI закоммичены в `foxinburg-world-v1` (PR #223).
 - **2026-09-16:** Phase 0–1 + Fox Brain + learn loop shipped; Meshy batches 116–117; **сессия 118** — `RESEARCH/REFERENCE_MATRIX.md` + expanded Duo/Puzzle research (logic only).
 - **Следующее (code P0):** streak `STREAK_BONUSES`, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry. Visual chrome — parallel agent.
+
+### Сессия — World v2: тренажёр Spotlight 1–4 в стиле Duolingo (2026-09-17)
+
+**Ветка:** `world-v2` (от снимка `backup/world-agent-0916`)
+**Запрос владельца:** прошлый агент «сотворил херню»; логика, движок и структура обучения как у Duolingo и Puzzle English, программа строго по учебникам Spotlight (начать с 1–4, в 1–2 классе учить читать), замок — развлекательное дополнение, арт через Meshy.
+
+**Что сделано:**
+- Спека `docs/superpowers/specs/2026-09-17-foxinburg-world-v2-spotlight-engine-design.md`, планы `docs/superpowers/plans/2026-09-17-world-v2-plan{1,2}-*.md`.
+- Backend `world-backend/app/learning/` + `/api/v2`: контент атомами (схемы + инварианты), 18 типов заданий, сборка урока по узлу/полосе/SRS, проверка (сокращения, опечатки), очередь ошибок, награды, серия по Москве, дневная цель, статусы пути «Мой класс», сундук, тренировка, словарь.
+- Контент `world-backend/content/spotlight/sp1–sp4`: 30 модулей, 589 слов, 190 фраз, 33 грамматики — лексика по тематическому планированию книг для учителя (eng4school), фразы свои. Линия чтения (phonics) в SP1–2. Чек-лист сверки — `content/spotlight/REVIEW.md` (преподавателем ещё не сверено).
+- Frontend `world/`: дизайн-система «тетрадь в клетку + королевские печати» (`src/design`), онбординг, путь, урок, финиш, тренировка, словарь, профиль; замок остаётся на `/world`. Старые экраны урока v1 удалены.
+- Арт: `world-pipeline/word_art.py` (Meshy nano-banana-pro листами 3×3 → `world/public/content/words/*.webp`, цифры и цвета программно), `world-pipeline/foxy_poses.py` (позы Foxy по маскоту из брендбука, прозрачный фон).
+
+**Как проверено:** `pytest` 205 passed; `vitest` 35 passed; `tsc`, `eslint` (0 ошибок), `next build`; Playwright UI+API на iPhone 13 и 1440 px — 4 passed; ручной прогон онбординга и урока в браузере.
+
+**Осталось:** сверка контента преподавателем; иллюстрации модулей; лиги/сундуки с лутом; режим Teens (SP5–11); связка наград с замком.
