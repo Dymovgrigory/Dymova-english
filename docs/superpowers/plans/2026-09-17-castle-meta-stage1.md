@@ -1942,9 +1942,9 @@ test("мастерская облика: покупка и применение"
   const night = page.getByRole("button", { name: /Ночь/ });
   await expect(night).toBeVisible();
 
-  // Без монет покупка недоступна и об этом написано
+  // Без монет покупка недоступна, и сервер говорит почему
   await night.click();
-  await expect(page.getByText(/не хватает монет|Ночь/i)).toBeVisible();
+  await expect(page.getByText("Не хватает монет")).toBeVisible();
 });
 
 test("закрытая вещь показывает условие", async ({ page }) => {
