@@ -87,6 +87,20 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
               <Icon name="coin" size={20} className="text-[#d69e00]" />+{result.coins}
             </span>
           </div>
+          {Object.keys(result.coins_breakdown).length > 1 ? (
+            <p className="mt-2 text-[13px] font-bold text-ink-soft">
+              {[
+                ["lesson", "урок"],
+                ["perfect", "без ошибок"],
+                ["daily_goal", "цель дня"],
+                ["practice", "тренировка"],
+                ["module_test", "контрольная"],
+              ]
+                .filter(([key]) => (result.coins_breakdown[key] ?? 0) > 0)
+                .map(([key, label]) => `${label} +${result.coins_breakdown[key]}`)
+                .join(" · ")}
+            </p>
+          ) : null}
           <div className="mt-4">
             <div className="mb-2 flex justify-between text-[15px] font-bold text-ink-soft">
               <span>{result.goal_reached ? "Цель дня выполнена" : "Цель дня"}</span>
@@ -97,6 +111,17 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
             <ProgressBar value={result.today_xp / result.daily_goal_xp} label="Цель дня" />
           </div>
         </section>
+
+        {result.titles_gained.length > 0 ? (
+          <div className="mat-brass mx-auto w-full max-w-sm rounded-2xl px-4 py-3 text-center">
+            <p className="text-[12px] font-bold uppercase tracking-[0.24em] text-[#5a3d12]">Новое звание</p>
+            {result.titles_gained.map((title) => (
+              <p key={title.track} className="text-[18px] font-extrabold text-ink">
+                {title.title_ru} · +{title.coins}
+              </p>
+            ))}
+          </div>
+        ) : null}
       </div></main>
       <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
         <div className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row-reverse">

@@ -140,6 +140,8 @@ export type SessionResult = {
   node_completed: boolean;
   next_node_id: string | null;
   player: { xp: number; coins: number; level: number };
+  coins_breakdown: Record<string, number>;
+  titles_gained: { track: string; level: number; title_ru: string; coins: number }[];
 };
 
 export type WordEntry = { id: string; en: string; ru: string; image: string | null; strength: number };
