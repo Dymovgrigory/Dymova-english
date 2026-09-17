@@ -28,8 +28,9 @@ MODEL = "nano-banana-pro"
 STYLE = (
     "Wide cozy cutaway illustration of one room inside a fairy-tale castle tower, like a dollhouse cross-section, "
     "walls of soft purple stone, warm golden lanterns, teal magical accents, premium soft 3D cartoon render for "
-    "children, gentle lighting, rich but calm colours, empty space in the lower third for UI, no people in the "
-    "foreground, absolutely no text, letters or numbers. The room is themed: "
+    "children, gentle lighting, rich but calm colours. The room fills the whole frame edge to edge with the "
+    "floor visible at the bottom; no empty panels, plaques, frames or blank areas. No people in the foreground, "
+    "absolutely no text, letters or numbers. The room is themed: "
 )
 
 SCENES = {
