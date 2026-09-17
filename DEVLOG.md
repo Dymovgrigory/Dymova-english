@@ -1205,6 +1205,8 @@ bot/
 - Тексты: просто «Замок Фоксинбург» + «Загляни в здания: рейтинг, стикеры, лавка, словарь и задания дня»; без «награды за учёбу».
 - Проверено: vitest 39, tsc, eslint 0 ошибок, `next build`; Playwright 390/1024/1280/1440/1920 — hover/клик/клавиатура открывают нужные комнаты.
 
+**Замок зафиксирован владельцем (STYLE_LOCK). Комнаты зданий:** плашка опущена вниз и сделана из пергамента-вуали `mat-parchment-veil` (интерьер просвечивает), затемнение слабее; в Башне стикеров старая кривая FantasyButton заменена альбомом из эмалевых карточек (не полученные — «?»); Escape закрывает здание. Проверено: vitest 39, tsc, eslint 0 ошибок, `next build`, Playwright 8 комнат на 1440 и 390 px.
+
 ## Текущий статус / Где остановились
 
 **World 2026-09-16 (сессия 118):** Reference matrix + expanded RESEARCH (Duo/Puzzle mechanics only). Path: `RESEARCH/REFERENCE_MATRIX.md`. P0 code next: streak milestones, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry. Parallel: Meshy/chrome wiring (сессии 116–117). Identity/Brain/learn loop already shipped (сессия 115).

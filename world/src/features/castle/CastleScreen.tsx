@@ -27,7 +27,7 @@ import { StatPill } from "@/design/StatPill";
 import { worldApi, type League, type Player } from "@/lib/api";
 import { isProfileMissing, isUnauthorized, v2 } from "@/lib/v2/client";
 import type { Courses, Home, WordsBook } from "@/lib/v2/types";
-import { StickerCollection, StickerPreviewRow } from "@/ui/fantasy/StickerDrawer";
+import { stickerArt } from "@/ui/fantasy/StickerDrawer";
 
 type ShopItem = { sku: string; coins: number; title_ru: string };
 type Quest = { id?: string; title_ru: string; progress: number; target: number; done: boolean; claimed?: boolean; claimable?: boolean };
@@ -272,6 +272,14 @@ function RoomPanel({
   const showWords = (learned.length ? learned : wordRows).slice(0, 24);
   const studyLabel = home.current_node?.module_title_ru ?? "твой класс";
 
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[#241a30]" role="dialog" aria-modal="true" aria-label={spot.title}>
       <div className="absolute inset-0">
@@ -280,9 +288,9 @@ function RoomPanel({
           <img src={spot.room} alt="" className="h-full w-full object-cover object-center" />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={spot.art} alt="" className="h-full w-full object-contain object-center bg-[#1a1230] p-10" />
+          <img src={spot.art} alt="" className="h-full w-full bg-[#1a1230] object-contain object-center px-10 pb-40 pt-28" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#241a30]/92 via-[#241a30]/35 to-[#241a30]/45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#241a30]/70 via-transparent via-30% to-[#241a30]/55" />
       </div>
 
       <header className="relative z-10 flex items-start justify-between gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
@@ -301,11 +309,12 @@ function RoomPanel({
         </button>
       </header>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 overflow-y-auto px-4 pb-8">
-        <div className="mat-parchment rounded-[28px] px-5 py-5">
+      {/* Плашка внизу: интерьер в центре остаётся открытым и просвечивает сквозь пергамент */}
+      <div className="relative z-10 mx-auto mt-auto flex w-full max-w-xl flex-col px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="mat-parchment-veil max-h-[52dvh] overflow-y-auto rounded-[28px] px-5 py-4">
           {spot.kind === "tower" && spot.bookId && (
             <div className="flex flex-col items-center gap-4 text-center">
-              <Foxy pose="wave" size={120} />
+              <Foxy pose="wave" size={84} />
               <p className="text-[20px] font-extrabold text-ink">Это башня твоего учебника на карте замка.</p>
               <p className="text-[15px] font-semibold text-ink-soft">Открой путь Spotlight {spot.bookId.replace("sp", "")} класса.</p>
               <Button block onClick={() => onOpenBook(spot.bookId!)}>
@@ -316,7 +325,7 @@ function RoomPanel({
 
           {room === "school" && (
             <div className="flex flex-col items-center gap-4 text-center">
-              <Foxy pose="wave" size={120} />
+              <Foxy pose="wave" size={84} />
               <p className="text-[20px] font-extrabold text-ink">Здесь начинается путь по твоему учебнику.</p>
               <p className="text-[15px] font-semibold text-ink-soft">
                 Сейчас: {studyLabel} · цель дня {home.today_xp}/{home.daily_goal_xp} XP
@@ -329,7 +338,7 @@ function RoomPanel({
 
           {room === "yard" && (
             <div className="flex flex-col gap-3 text-center">
-              <Foxy pose="think" size={110} />
+              <Foxy pose="think" size={84} />
               <p className="text-[18px] font-extrabold text-ink">
                 {dueCount > 0 ? `Ждут повторения: ${dueCount}` : "Слова свежие — можно потренироваться всё равно"}
               </p>
@@ -429,16 +438,51 @@ function RoomPanel({
           )}
 
           {room === "stickers" && (
-            <div className="space-y-4">
-              <StickerPreviewRow stickers={stickers} />
-              <StickerCollection stickers={stickers} ownedCount={stickerOwned} />
+            <div className="space-y-3">
+              <p className="text-[17px] font-extrabold text-ink">
+                В альбоме: {stickerOwned} из {stickers.length}
+              </p>
+              {stickers.length === 0 ? (
+                <p className="text-[15px] font-semibold text-ink-soft">Проходи уроки — наклейки появятся здесь.</p>
+              ) : (
+                <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                  {stickers.map((sticker) => {
+                    const art = stickerArt(sticker.id);
+                    return (
+                      <li
+                        key={sticker.id}
+                        className={[
+                          "rounded-2xl px-1.5 py-2 text-center",
+                          sticker.owned ? "mat-enamel" : "bg-[#3b2a1e]/10 ring-1 ring-[#3b2a1e]/15",
+                        ].join(" ")}
+                      >
+                        {/* Не полученная наклейка — сюрприз: только знак вопроса */}
+                        {sticker.owned && art ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={art} alt="" className="mx-auto h-14 w-14 object-contain" />
+                        ) : (
+                          <span className="mx-auto grid h-14 w-14 place-items-center font-fairy text-[28px] font-black text-[#3b2a1e]/45">
+                            {sticker.owned ? sticker.emoji || "★" : "?"}
+                          </span>
+                        )}
+                        <p className={`mt-1 text-[11px] font-extrabold leading-tight ${sticker.owned ? "text-ink" : "text-ink-soft"}`}>
+                          {sticker.title_ru}
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              <Button block variant="paper" onClick={() => onGo("/learn")}>
+                К урокам за новыми наклейками
+              </Button>
             </div>
           )}
 
           {room === "nest" && (
             <div className="space-y-3">
               <div className="flex items-center gap-4">
-                <Foxy pose="cheer" size={100} />
+                <Foxy pose="cheer" size={84} />
                 <div>
                   <p className="font-fairy text-[24px] font-black text-[#4a2a66]">
                     {player?.display_name || home.player.display_name}
