@@ -311,6 +311,10 @@ def main() -> None:
 
 # Отвлечённые слова: как показать смысл миниатюрой (для слов, у которых пока нет картинки).
 ABSTRACT = {
+    "bored": "a cute little child figurine sitting on a tiny stool with chin in hands, looking bored",
+    "angry": "a cute little child figurine with arms crossed, stamping one foot, a small cartoon frown and red cheeks, full body",
+    "scared": "a cute little child figurine peeking out from behind a small pillow, a little scared, full body",
+    "tired": "a cute little child figurine in pyjamas yawning and rubbing one eye, holding a teddy bear, full body",
     "colour": "a wooden artist palette with dabs of many bright paints and a brush",
     "old": "an old grandfather figurine with a walking stick next to a birthday cake with many candles",
     "yummy": "a child figurine licking lips in front of a delicious cupcake",
