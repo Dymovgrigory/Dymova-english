@@ -142,7 +142,7 @@
         "известный"
       ],
       "kind": "adj",
-      "image": "words/famous.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -174,7 +174,7 @@
         "положить"
       ],
       "kind": "verb",
-      "image": "words/put.webp",
+      "image": null,
       "trick": false
     },
     {

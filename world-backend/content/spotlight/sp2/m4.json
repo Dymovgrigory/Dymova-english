@@ -166,7 +166,7 @@
         "забавный"
       ],
       "kind": "adj",
-      "image": "words/funny.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -176,7 +176,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": "words/clever.webp",
+      "image": null,
       "trick": false
     }
   ],

@@ -274,7 +274,7 @@
         "брать"
       ],
       "kind": "verb",
-      "image": "words/get.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -298,7 +298,7 @@
         "идти"
       ],
       "kind": "verb",
-      "image": "words/come.webp",
+      "image": null,
       "trick": false
     }
   ],

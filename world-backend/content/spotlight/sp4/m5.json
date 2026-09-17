@@ -68,7 +68,7 @@
         "восхитительный"
       ],
       "kind": "adj",
-      "image": "words/delicious.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -158,7 +158,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": "words/interesting.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -170,7 +170,7 @@
         "сон"
       ],
       "kind": "verb",
-      "image": "words/dream.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -182,7 +182,7 @@
         "желать"
       ],
       "kind": "verb",
-      "image": "words/wish.webp",
+      "image": null,
       "trick": false
     },
     {

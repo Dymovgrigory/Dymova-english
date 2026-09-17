@@ -41,7 +41,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/name.webp",
       "trick": false
     },
     {
@@ -248,7 +248,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/yes.webp",
       "trick": false
     },
     {
@@ -258,7 +258,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/no.webp",
       "trick": false
     },
     {
@@ -312,7 +312,7 @@
         "любить"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/like.webp",
       "trick": false
     }
   ],

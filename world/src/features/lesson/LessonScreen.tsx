@@ -277,7 +277,7 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
         </div>
       </main>
 
-      <div className="sticky bottom-0 z-20"><FeedbackSheet reply={lessonState.phase === "feedback" ? lessonState.feedback : null} onContinue={next} footer={footer} /></div>
+      <div className="sticky bottom-0 z-20 lg:bottom-10 lg:px-4"><FeedbackSheet reply={lessonState.phase === "feedback" ? lessonState.feedback : null} onContinue={next} footer={footer} /></div>
 
       {confirmExit && (
         <div role="dialog" aria-modal="true" aria-labelledby="exit-title" className="fixed inset-0 z-40 flex items-end justify-center bg-[#0c0812]/70 p-4 backdrop-blur-sm sm:items-center">

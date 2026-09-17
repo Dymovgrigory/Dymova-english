@@ -95,8 +95,8 @@
       "accept_ru": [
         "обед"
       ],
-      "kind": "noun",
-      "image": "words/lunchtime.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -135,8 +135,8 @@
       "ru": "январь",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/january.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -145,8 +145,8 @@
       "ru": "февраль",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/february.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -155,8 +155,8 @@
       "ru": "март",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/march.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -165,8 +165,8 @@
       "ru": "апрель",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/april.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -175,8 +175,8 @@
       "ru": "май",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/may.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -185,8 +185,8 @@
       "ru": "июнь",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/june.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -195,8 +195,8 @@
       "ru": "июль",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/july.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -205,8 +205,8 @@
       "ru": "август",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/august.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -215,8 +215,8 @@
       "ru": "сентябрь",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/september.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -225,8 +225,8 @@
       "ru": "октябрь",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/october.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -235,8 +235,8 @@
       "ru": "ноябрь",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/november.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -245,8 +245,8 @@
       "ru": "декабрь",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/december.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -258,7 +258,7 @@
         "потрясающий"
       ],
       "kind": "adj",
-      "image": "words/amazing.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -269,8 +269,8 @@
       "accept_ru": [
         "поездка"
       ],
-      "kind": "noun",
-      "image": "words/journey.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {

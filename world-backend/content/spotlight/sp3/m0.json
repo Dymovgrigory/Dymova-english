@@ -48,7 +48,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": "words/think.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -57,8 +57,8 @@
       "ru": "день",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/day.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -67,8 +67,8 @@
       "ru": "номер телефона",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/phone-number.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     }
   ],

@@ -177,7 +177,7 @@ export function Onboarding() {
         {problem && <p role="alert" className="text-[16px] font-bold text-[#ffb3a6]">{problem}</p>}
       </main>
 
-      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
+      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
         <div className="mx-auto max-w-xl">
           {step === "name" && <Button block disabled={!name.trim()} onClick={() => setStep("grade")}>Дальше</Button>}
           {step === "grade" && <Button block disabled={!book} onClick={() => setStep("module")}>Дальше</Button>}

@@ -13,8 +13,8 @@
       "ru": "еда",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/food.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {

@@ -42,7 +42,7 @@ export function FeedbackSheet({ reply, onContinue, footer }: FeedbackSheetProps)
             animate={{ y: 0, opacity: 1 }}
             exit={reduce ? undefined : { y: 40, opacity: 0 }}
             transition={{ type: "spring", stiffness: 420, damping: 34 }}
-            className={`mat-wood rounded-t-[28px] px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 ${
+            className={`mat-wood rounded-t-[28px] px-4 lg:mx-auto lg:max-w-2xl lg:rounded-[28px] lg:px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 ${
               good ? "shadow-[inset_0_3px_0_#3fae98,0_-10px_40px_-6px_rgb(63_174_152/0.45)]" : "shadow-[inset_0_3px_0_#d9483c,0_-10px_40px_-6px_rgb(217_72_60/0.4)]"
             }`}
           >
@@ -68,7 +68,7 @@ export function FeedbackSheet({ reply, onContinue, footer }: FeedbackSheetProps)
             </div>
           </motion.section>
         ) : (
-          <motion.div key="footer" className="glass-dusk px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
+          <motion.div key="footer" className="glass-dusk px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:mx-auto lg:max-w-2xl lg:rounded-[28px] lg:px-6 lg:pb-4">
             <div className="mx-auto max-w-2xl">{footer}</div>
           </motion.div>
         )}

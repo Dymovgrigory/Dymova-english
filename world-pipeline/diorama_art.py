@@ -43,9 +43,15 @@ PEOPLE = {
     "king": "a jolly fairy-tale king with a golden crown and a velvet cloak",
     "queen": "a gentle fairy-tale queen with a small crown and a flowing gown",
     "chimp": "a cheerful little chimpanzee",
+    "hello": "a smiling child happily waving hello with one raised hand",
+    "goodbye": "a child walking away down a tiny mossy path, looking back and waving goodbye, backpack on",
+    "yes": "a happy child nodding and giving a big thumbs up",
+    "no": "a child gently shaking the head with crossed arms",
+    "like": "a smiling child hugging a big red velvet heart",
 }
 COLOURS = {"red", "blue", "green", "yellow", "pink", "purple", "orange", "black", "white", "brown"}
 OBJECTS = {
+    "name": "single blank wooden name tag badge on a purple ribbon with a tiny brass pin, lying alone on the pedestal, nothing written on it, no house, no building, no roof",
     "cup": "simple round white porcelain teacup with a golden rim on a saucer, an ordinary cup shape, no house or roof details", "cake": "layered cake with cream and a strawberry on top",
     "tea": "porcelain teapot pouring steaming tea into a cup", "milk": "glass bottle of milk with a paper cap",
     "jam": "jar of strawberry jam with a gingham cloth lid", "lemon": "fresh lemon with a slice cut open",
@@ -116,6 +122,19 @@ def assets_for(module_id: str) -> list[dict]:
     return items
 
 
+def floor_assets(module_ids: list[str]) -> list[dict]:
+    """Этажи башни: комната «в разрезе» по теме модуля, как эталонный этаж Spotlight 1 · Module 1."""
+    from module_art import SCENES
+
+    return [{
+        "name": f"floor-{mid}", "aspect": "16:9", "bg": False, "size": (1536, 864),
+        "out": PUBLIC / "modules" / f"{mid.replace('.', '-')}.webp",
+        "prompt": f"Cutaway of one cosy round room inside a fairy-tale castle tower: {SCENES[mid]}. Plum tiled roof edge "
+                  "above, hand-carved stone wall with ivy around the opening, glowing small arched windows on the outer "
+                  "wall, misty dusk forest bokeh behind. No people.",
+    } for mid in module_ids]
+
+
 def generate(asset: dict, key: str) -> str:
     payload = {"ai_model": MODEL, "prompt": CORE + asset["prompt"], "aspect_ratio": asset["aspect"]}
     if asset["bg"]:
@@ -152,7 +171,11 @@ def main() -> None:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--only", nargs="*")
     args = parser.parse_args()
-    assets = assets_for(args.module)
+    if args.module == "floors":
+        ids = [json.loads(p.read_text(encoding="utf-8"))["id"] for p in sorted(CONTENT.glob("sp*/*.json"))]
+        assets = floor_assets([m for m in ids if m != "sp1.m1"])
+    else:
+        assets = assets_for(args.module)
     if args.only:
         assets = [a for a in assets if a["name"] in args.only]
     marker = RAW / "done.json"

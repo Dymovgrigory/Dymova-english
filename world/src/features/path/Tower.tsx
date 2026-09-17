@@ -96,7 +96,7 @@ function Balcony({ node, onPress, currentRef }: { node: PathNode; onPress: Press
   const locked = node.status === "locked";
   const done = node.status === "completed";
   return (
-    <div ref={currentRef} className="mt-6">
+    <div ref={currentRef}>
       <button
         type="button"
         onClick={() => onPress(node)}
@@ -130,6 +130,13 @@ function Balcony({ node, onPress, currentRef }: { node: PathNode; onPress: Press
   );
 }
 
+/** Окна этажа рядами по 3; ряды снизу вверх, чтобы первый урок стоял внизу. */
+function rowsBottomUp(nodes: PathNode[]): PathNode[][] {
+  const rows: PathNode[][] = [];
+  for (let i = 0; i < nodes.length; i += 3) rows.push(nodes.slice(i, i + 3));
+  return rows.reverse();
+}
+
 function Floor({ module, onPress, currentRef }: { module: PathModule; onPress: PressNode; currentRef: Ref<HTMLDivElement> }) {
   const [imageBroken, setImageBroken] = useState(false);
   const windows = module.nodes.filter((n) => n.kind !== "module_test");
@@ -161,13 +168,18 @@ function Floor({ module, onPress, currentRef }: { module: PathModule; onPress: P
         </div>
       </div>
 
-      <div className="px-2 pb-4 pt-12">
-        <div className="grid grid-cols-3 justify-items-center gap-x-2 gap-y-10">
-          {windows.map((node) => (
-            <WindowSlot key={node.id} node={node} onPress={onPress} currentRef={node.id === firstCurrent ? currentRef : undefined} />
+      <div className="px-2 pb-4 pt-6">
+        {/* Подъём снизу вверх: контрольная — над окнами, первый урок — в нижнем ряду. */}
+        {test && <Balcony node={test} onPress={onPress} currentRef={test.id === firstCurrent ? currentRef : undefined} />}
+        <div className="mt-12 flex flex-col gap-y-10">
+          {rowsBottomUp(windows).map((row) => (
+            <div key={row[0].id} className="grid grid-cols-3 justify-items-center gap-x-2">
+              {row.map((node) => (
+                <WindowSlot key={node.id} node={node} onPress={onPress} currentRef={node.id === firstCurrent ? currentRef : undefined} />
+              ))}
+            </div>
           ))}
         </div>
-        {test && <Balcony node={test} onPress={onPress} currentRef={test.id === firstCurrent ? currentRef : undefined} />}
       </div>
     </section>
   );
@@ -200,7 +212,7 @@ function Hero({ bookId, title, grade, raised }: { bookId: string; title: string;
         <img
           src={`/content/towers/${bookId}.webp`}
           alt=""
-          className="hero-fade h-full w-full object-cover object-[50%_24%] lg:object-contain lg:object-bottom"
+          className="hero-fade h-full w-full object-cover object-[50%_8%] lg:object-contain lg:object-bottom"
           onError={() => setBroken(true)}
         />
       )}

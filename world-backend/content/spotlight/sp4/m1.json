@@ -26,7 +26,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": "words/kind.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -36,7 +36,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": "words/friendly.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -80,7 +80,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": "words/watch.webp",
+      "image": "words/wristwatch.webp",
       "trick": false
     },
     {

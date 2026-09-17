@@ -106,7 +106,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": "words/travel.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -118,7 +118,7 @@
         "расслабляться"
       ],
       "kind": "verb",
-      "image": "words/relax.webp",
+      "image": null,
       "trick": false
     },
     {
@@ -237,8 +237,8 @@
       "ru": "ошибка",
       "accept_en": [],
       "accept_ru": [],
-      "kind": "noun",
-      "image": "words/mistake.webp",
+      "kind": "other",
+      "image": null,
       "trick": false
     },
     {
@@ -262,7 +262,7 @@
         "прохладно"
       ],
       "kind": "adj",
-      "image": "words/cool.webp",
+      "image": null,
       "trick": false
     }
   ],
