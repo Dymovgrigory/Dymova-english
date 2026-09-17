@@ -14,7 +14,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/food.webp",
       "trick": false
     },
     {
@@ -240,7 +240,7 @@
         "любить"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/love.webp",
       "trick": false
     }
   ],

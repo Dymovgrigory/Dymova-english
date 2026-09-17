@@ -51,6 +51,13 @@ PEOPLE = {
 }
 COLOURS = {"red", "blue", "green", "yellow", "pink", "purple", "orange", "black", "white", "brown"}
 OBJECTS = {
+    "new": "shiny brand-new red school backpack with a gift ribbon and a tiny price-free tag",
+    "under": "red ball lying under a small wooden chair",
+    "big": "giant oversized red apple towering over a tiny figurine child standing beside it",
+    "small": "tiny little kitten sitting inside a porcelain teacup",
+    "food": "wooden table full of different tiny foods: bread, cheese, fruit and a pie",
+    "love": "child figurine hugging a puppy with little red hearts floating above",
+    "can": "strong child figurine proudly lifting a small dumbbell above the head",
     "name": "single blank wooden name tag badge on a purple ribbon with a tiny brass pin, lying alone on the pedestal, nothing written on it, no house, no building, no roof",
     "cup": "simple round white porcelain teacup with a golden rim on a saucer, an ordinary cup shape, no house or roof details", "cake": "layered cake with cream and a strawberry on top",
     "tea": "porcelain teapot pouring steaming tea into a cup", "milk": "glass bottle of milk with a paper cap",
@@ -122,6 +129,74 @@ def assets_for(module_id: str) -> list[dict]:
     return items
 
 
+# Ядро стиля тянет модель к сказочным домикам; предмет-слово должен остаться самим собой.
+NOT_A_HOUSE = (
+    "The object keeps its own real shape and is NOT turned into a house or building: no windows, no doors, no roofs, "
+    "no chimneys, no lanterns attached to it. Only this one object on the pedestal."
+)
+
+
+def word_assets(module_id: str) -> list[dict]:
+    """Картинки всех слов модуля в стиле «живой миниатюры» (заменяют старые плоские)."""
+    from word_art import DESCRIBE, NUMBERS
+
+    book, key = module_id.split(".")
+    module = json.loads((CONTENT / book / f"{key}.json").read_text(encoding="utf-8"))
+    items = []
+    for word in module["words"]:
+        if not word.get("image"):
+            continue
+        en = word["en"]
+        if en in PEOPLE:
+            subject = f"A handcrafted miniature figurine of {PEOPLE[en]}, painted resin"
+        elif en in COLOURS:
+            subject = f"A tiny hand-blown glass jar filled with vivid {en} paint, a little wooden brush beside it"
+        elif en in NUMBERS:
+            subject = (f"A hand-carved wooden plaque in the shape of the single number {NUMBERS[en]}, painted warm gold "
+                       f"(the only allowed characters in the image are the digits {NUMBERS[en]})")
+        elif en in OBJECTS:
+            subject = f"A single {OBJECTS[en]} as a handcrafted miniature"
+        elif en in ABSTRACT:
+            subject = f"A handcrafted miniature diorama of {ABSTRACT[en]}"
+        elif DESCRIBE.get(en) or DESCRIBE.get(Path(word["image"]).stem):
+            subject = f"A handcrafted miniature diorama of {DESCRIBE.get(Path(word['image']).stem) or DESCRIBE[en]}"
+        else:
+            subject = f"A single {en} as a handcrafted miniature"
+        items.append({
+            "name": f"word-{Path(word['image']).stem}", "aspect": "1:1", "bg": False, "size": (768, 768),
+            "out": PUBLIC / "words" / Path(word["image"]).name,
+            "prompt": f"{subject}, centered, standing on a small round mossy stone pedestal, whole object in frame, soft warm dusk bokeh background. "
+                      f"{NOT_A_HOUSE}",
+        })
+    return items
+
+
+TOWER_THEMES = {
+    "sp1": "A tall slender fairy-tale castle tower as a miniature diorama: stacked round floors with glowing arched windows, "
+           "an outer spiral stone staircase, ivy, tiny brass lanterns, a plum tiled conical roof with a golden flag, "
+           "standing on a mossy rock base with a winding stone path to a small wooden door; misty evening forest bokeh.",
+    "sp2": "The Masters' Tower of the same fairy-tale kingdom as a miniature diorama: a wide sturdy round stone tower with "
+           "a turning wooden waterwheel, a craftsman's workshop with open shutters and tiny tools, a small stone bridge "
+           "over a sparkling creek, glowing arched windows, ivy, brass lanterns, a plum tiled roof with a weathervane and "
+           "a golden flag, mossy rocks; misty evening forest bokeh.",
+    "sp3": "The Stargazers' Tower of the same fairy-tale kingdom as a miniature diorama: a tall round stone observatory tower "
+           "with a copper-and-brass dome opened to the sky and a large brass telescope, tiny glowing star lanterns, balconies "
+           "with star charts, glowing arched windows, ivy, a plum tiled lower roof with a golden flag, perched on a mossy hill "
+           "under a deep twilight sky with the first stars; misty evening forest bokeh.",
+    "sp4": "The Travellers' Tower of the same fairy-tale kingdom as a miniature diorama: a lighthouse-like round stone tower "
+           "on a mossy sea cliff with a glowing lantern room at the top, a tiny harbour with sailing ships below, a striped "
+           "hot-air balloon tethered to a balcony, wooden piers, ivy, brass lanterns, plum tiled roof accents and a golden "
+           "flag; misty evening sea and distant mountains bokeh.",
+}
+
+
+def tower_asset(book: str) -> dict:
+    return {
+        "name": f"tower-{book}", "aspect": "9:16", "bg": False, "out": PUBLIC / "towers" / f"{book}.webp", "size": (900, 1600),
+        "prompt": TOWER_THEMES[book],
+    }
+
+
 def floor_assets(module_ids: list[str]) -> list[dict]:
     """Этажи башни: комната «в разрезе» по теме модуля, как эталонный этаж Spotlight 1 · Module 1."""
     from module_art import SCENES
@@ -171,7 +246,11 @@ def main() -> None:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--only", nargs="*")
     args = parser.parse_args()
-    if args.module == "floors":
+    if args.module.startswith("towers:"):
+        assets = [tower_asset(b) for b in args.module.split(":", 1)[1].split(",")]
+    elif args.module.startswith("words:"):
+        assets = [a for mid in args.module.split(":", 1)[1].split(",") for a in word_assets(mid)]
+    elif args.module == "floors":
         ids = [json.loads(p.read_text(encoding="utf-8"))["id"] for p in sorted(CONTENT.glob("sp*/*.json"))]
         assets = floor_assets([m for m in ids if m != "sp1.m1"])
     else:
@@ -190,6 +269,148 @@ def main() -> None:
                 done.add(asset["name"])
                 RAW.mkdir(parents=True, exist_ok=True)
                 marker.write_text(json.dumps(sorted(done)))
+
+
+
+# Отвлечённые слова: как показать смысл миниатюрой (для слов, у которых пока нет картинки).
+ABSTRACT = {
+    "colour": "a wooden artist palette with dabs of many bright paints and a brush",
+    "old": "an old grandfather figurine with a walking stick next to a birthday cake with many candles",
+    "yummy": "a child figurine licking lips in front of a delicious cupcake",
+    "favourite": "a child figurine hugging a favourite teddy bear tightly with a gold star above",
+    "funny": "a clown figurine juggling and laughing children around",
+    "clever": "an owl wearing tiny glasses sitting on a stack of books",
+    "dark": "a child figurine with dark brown hair",
+    "fair": "a child figurine with light blond hair",
+    "holiday": "a suitcase with a beach hat, sunglasses and a seashell",
+    "raining": "a small rain cloud raining over a tiny umbrella",
+    "again": "a child figurine rebuilding a toppled tower of blocks one more time",
+    "everyone": "a crowd of many different small figurines waving together",
+    "today": "a small tear-off calendar with a glowing sun on the top page",
+    "think": "a child figurine thinking with a finger on the chin and a glowing thought bubble",
+    "day": "a bright sunny day scene with a sun above a meadow",
+    "phone number": "an old-fashioned rotary telephone",
+    "subject": "a stack of school textbooks of different colours",
+    "get": "a child figurine taking a book from a shelf",
+    "late": "a child figurine running late holding a big alarm clock",
+    "come": "a child figurine running towards open arms of a mother",
+    "great": "a child figurine jumping for joy holding a gold trophy",
+    "little": "a very little mouse figurine next to a big boot",
+    "live": "a cosy little house with a family visible in the window",
+    "need": "a child figurine pointing at an empty shopping basket",
+    "silly": "a child figurine pulling a silly face with a pot on the head",
+    "careful": "a child figurine carefully carrying a full glass of water",
+    "whose": "a lost teddy bear sitting alone with a question-mark-shaped ribbon",
+    "short": "a short stubby pencil next to a long pencil",
+    "long": "a very long snake stretched out across the pedestal",
+    "next to": "a cat sitting right next to a dog",
+    "in front of": "a small dog standing in front of a doghouse",
+    "behind": "a cat hiding behind a flower pot with only its tail visible",
+    "famous": "a star figurine on a tiny red carpet with camera flashes",
+    "put": "a hand putting an apple into a basket",
+    "make": "a child figurine making a clay pot",
+    "finish": "a runner figurine crossing a finish ribbon",
+    "Monday": "a school backpack by the door on a fresh morning",
+    "Tuesday": "a child figurine at a music lesson with a flute",
+    "Wednesday": "a child figurine swimming in a small pool",
+    "Thursday": "a child figurine painting at an easel",
+    "Friday": "a child figurine happily closing a school book",
+    "Saturday": "a family picnic on a sunny lawn",
+    "Sunday": "a child figurine sleeping in late in a cosy bed with sunlight",
+    "quiz": "a small quiz board with a buzzer bell",
+    "morning": "a sunrise over hills with a rooster",
+    "afternoon": "a bright midday sun above a playground",
+    "evening": "a sunset with a lit lantern on a porch",
+    "o'clock": "a round wall clock with both hands pointing straight",
+    "visit": "a child figurine knocking on grandma's door with flowers",
+    "video": "a small video camera on a tripod",
+    "join": "children figurines holding hands in a circle",
+    "hope": "a child figurine looking up at a shooting star",
+    "feel": "a child figurine hugging itself with a warm smile and hearts",
+    "remember": "a child figurine looking at an old photo album",
+    "surname": "a small brass door plate on a wooden front door, nothing written on it",
+    "kind": "a child figurine giving an umbrella to a friend in the rain",
+    "friendly": "two child figurines shaking hands and smiling",
+    "always": "a sun that is always shining above a small house",
+    "usually": "a child figurine brushing teeth at a sink",
+    "sometimes": "a sky half sunny half cloudy",
+    "never": "a cat avoiding a bath tub full of water",
+    "often": "a child figurine watering plants with a watering can",
+    "quarter": "a round clock with one quarter of the face highlighted in gold",
+    "half": "an apple cut exactly in half",
+    "past": "a clock with the minute hand just past twelve",
+    "polite": "a child figurine bowing and holding a door open",
+    "pass": "one hand passing a salt shaker to another hand",
+    "hate": "a child figurine pushing away a plate of broccoli with a frown",
+    "tasty": "a steaming delicious pie with a child sniffing it",
+    "lunchtime": "a lunch table with a clock showing noon",
+    "January": "a snowy winter scene with a snowman",
+    "February": "a frosty scene with a sledge on snow",
+    "March": "first spring snowdrops melting through snow",
+    "April": "a spring rain with blossoming tree",
+    "May": "a meadow full of blooming flowers",
+    "June": "a sunny beach with a sandcastle",
+    "July": "a summer picnic with watermelon",
+    "August": "a field of sunflowers under hot sun",
+    "September": "a school backpack with autumn leaves",
+    "October": "orange pumpkins and falling leaves",
+    "November": "bare trees in grey autumn rain",
+    "December": "a decorated New Year tree with gifts",
+    "amazing": "a child figurine amazed with open mouth at glowing fireworks",
+    "journey": "a tiny train travelling across a bridge through mountains",
+    "first": "a gold medal on a first-place podium",
+    "second": "a silver medal on a second-place podium",
+    "third": "a bronze medal on a third-place podium",
+    "fourth": "four little ducks in a row with the fourth one highlighted",
+    "fifth": "five little ducks in a row with the last one highlighted",
+    "delicious": "a beautifully decorated cake with cream and berries",
+    "yesterday": "a tear-off calendar with yesterday's page torn off lying beside",
+    "ago": "an old dusty hourglass with sand run out",
+    "last": "the last cookie left on a plate",
+    "interesting": "a child figurine looking through a magnifying glass at a beetle",
+    "dream": "a child figurine sleeping with a dream cloud of a castle above",
+    "wish": "a child figurine blowing a dandelion",
+    "soon": "a child figurine waiting by a window for a train arriving",
+    "rest": "a tired traveller figurine resting under a tree",
+    "cross": "a child figurine crossing a tiny road on a zebra crossing",
+    "busy": "a busy postman figurine carrying many parcels",
+    "follow": "ducklings following their mother duck in a line",
+    "weekend": "a family figurines relaxing in a garden hammock",
+    "pretty": "a pretty princess figurine with flowers in her hair",
+    "young": "a baby figurine in a cradle",
+    "celebrate": "children figurines celebrating with confetti and balloons",
+    "went": "a child figurine walking away along a path to a castle",
+    "saw": "a child figurine looking through binoculars at a deer",
+    "ate": "an empty plate with crumbs and a happy child figurine",
+    "had": "a child figurine holding a puppy",
+    "took": "a hand taking a cookie from a jar",
+    "made": "a child figurine proudly showing a finished birdhouse",
+    "travel": "a suitcase with travel stickers and a globe",
+    "relax": "a child figurine lying in a hammock between two trees",
+    "tomorrow": "a calendar page turning to the next day with a sunrise",
+    "mistake": "a spilled glass of milk on a table",
+    "sorry": "a child figurine apologising with a flower to a sad friend",
+    "cool": "a light breeze with falling leaves and a child figurine in a light jacket",
+    "raining ": "",
+}
+ABSTRACT.pop("raining ", None)
+
+
+def assign_missing_images(module_ids: list[str]) -> int:
+    """Проставляет пути картинок словам, у которых их нет и есть описание в ABSTRACT."""
+    import re as _re
+
+    changed = 0
+    for mid in module_ids:
+        book, key = mid.split(".")
+        path = CONTENT / book / f"{key}.json"
+        module = json.loads(path.read_text(encoding="utf-8"))
+        for word in module["words"]:
+            if not word.get("image") and word["en"] in ABSTRACT:
+                word["image"] = "words/" + _re.sub(r"[^a-z0-9]+", "-", word["en"].lower()).strip("-") + ".webp"
+                changed += 1
+        path.write_text(json.dumps(module, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return changed
 
 
 if __name__ == "__main__":
