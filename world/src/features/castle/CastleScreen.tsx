@@ -493,6 +493,11 @@ function RoomPanel({
                     >
                       <span>
                         {row.rank}. {row.display_name}
+                        {row.is_me && castle?.titles.find((t) => t.worn)?.title_ru ? (
+                          <span className="block text-[11px] font-bold text-ink-soft">
+                            {castle.titles.find((t) => t.worn)?.title_ru}
+                          </span>
+                        ) : null}
                       </span>
                       <span>{row.weekly_xp} XP</span>
                     </li>
@@ -576,6 +581,34 @@ function RoomPanel({
                   <p className="text-[11px] font-bold text-ink-soft">сердца</p>
                 </div>
               </div>
+              {castle ? (
+                <div className="space-y-2">
+                  <h3 className="text-[15px] font-extrabold text-ink">Звания</h3>
+                  <ul className="space-y-1.5">
+                    {castle.titles.map((row) => (
+                      <li key={row.track} className="mat-enamel flex items-center justify-between gap-2 rounded-2xl px-3 py-2">
+                        <span className="min-w-0">
+                          <span className="block truncate text-[15px] font-extrabold text-ink">
+                            {row.title_ru ?? row.track_title_ru}
+                          </span>
+                          <span className="block text-[12px] font-bold text-ink-soft">
+                            {row.value} {row.unit_ru}
+                            {row.next_threshold ? ` · до следующего ${row.next_threshold - row.value}` : " · максимум"}
+                          </span>
+                        </span>
+                        <button
+                          type="button"
+                          disabled={row.level === 0 || row.worn}
+                          onClick={() => void castleApi.wear(row.track).then(onCastleChange)}
+                          className="shrink-0 rounded-xl px-3 py-1.5 text-[13px] font-extrabold text-ink ring-1 ring-[#3b2a1e]/25 disabled:opacity-45"
+                        >
+                          {row.worn ? "Надето" : "Носить"}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
               <Button block variant="paper" onClick={() => onGo("/profile")}>
                 Профиль ученика
               </Button>
