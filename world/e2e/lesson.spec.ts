@@ -3,8 +3,11 @@ import { expect, test } from "@playwright/test";
 const API = process.env.WORLD_API || "http://127.0.0.1:8010";
 
 test("API: профиль, путь и старт урока тренажёра", async ({ request }) => {
-  const headers = { "X-World-Player": `e2e-${Date.now()}`, "Content-Type": "application/json" };
-  expect((await request.post(`${API}/api/world/players`, { headers, data: { display_name: "Ева" } })).ok()).toBeTruthy();
+  const bootstrap = { "X-World-Player": `e2e-${Date.now()}`, "Content-Type": "application/json" };
+  const created = await request.post(`${API}/api/world/players`, { headers: bootstrap, data: { display_name: "Ева" } });
+  expect(created.ok()).toBeTruthy();
+  // Дальше — как настоящий клиент: с выданным сервером токеном сессии.
+  const headers = { ...bootstrap, "X-World-Player": (await created.json()).token };
 
   const courses = await (await request.get(`${API}/api/v2/courses`)).json();
   const book = courses.books[0];
