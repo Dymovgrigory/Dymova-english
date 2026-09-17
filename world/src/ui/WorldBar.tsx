@@ -39,7 +39,7 @@ export function WorldBar({ hearts = 5, coins = 0, xp = 0, streak = 0, stickers =
         <FantasyHudChip icon={<BrandIcon name="coin" className="!h-6 !w-6" />} value={showCoins} gold />
         <FantasyHudChip icon={<BrandIcon name="xp" className="!h-6 !w-6" />} value={showXp} />
         <FantasyHudChip icon={<BrandIcon name="streak" className="!h-6 !w-6" />} value={showStreak} />
-        <FantasyHudChip icon={<BrandIcon name="star" className="!h-6 !w-6" />} value={stickers} href="/learn/album" />
+        <FantasyHudChip icon={<BrandIcon name="star" className="!h-6 !w-6" />} value={stickers} href="/world" />
       </div>
     </div>
   );

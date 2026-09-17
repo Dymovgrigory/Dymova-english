@@ -87,6 +87,9 @@ def test_full_lesson_with_mistake_requeues_and_rewards(learner):
     assert sum(1 for r in replies if r["requeued"]) == 1
     wrong = next(r for r in replies if not r["correct"])
     assert wrong["solution"]
+    wrong_challenge = next(c for c in stored(started["session_id"]) if c["graded"])
+    if wrong_challenge["solution"]["kind"] == "choice":
+        assert wrong["solution_index"] == wrong_challenge["solution"]["index"]
     result = sessions.finish(key, started["session_id"])
     assert result["xp"] == 10 and result["coins"] == 5
     assert result["accuracy"] == pytest.approx(0.9)

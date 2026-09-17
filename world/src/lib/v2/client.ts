@@ -1,7 +1,7 @@
 /** Клиент API тренажёра (/api/v2). Авторизация — тот же токен игрока, что и в замке. */
 
 import { ApiError, playerKey, worldApi } from "@/lib/api";
-import { readPlayerToken } from "@/lib/token";
+import { clearPlayerToken, readPlayerToken } from "@/lib/token";
 
 import type {
   Answer,
@@ -54,6 +54,21 @@ const post = <T>(path: string, body?: unknown) =>
 
 export function hasPlayer(): boolean {
   return readPlayerToken().startsWith("wses.");
+}
+
+/** Токен есть и сервер его принимает. Протухший токен стираем. */
+export async function verifiedPlayer(): Promise<boolean> {
+  if (!hasPlayer()) return false;
+  try {
+    await worldApi.getPlayer();
+    return true;
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 401) {
+      clearPlayerToken();
+      return false;
+    }
+    return true;
+  }
 }
 
 export function isProfileMissing(err: unknown): boolean {

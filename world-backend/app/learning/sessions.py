@@ -108,7 +108,7 @@ def answer(external_key: str, session_id: str, index: int, payload: dict, *, res
         if skipped:
             state["skipped"].append(index)
         _save(session)
-        return {"correct": True, "typo": False, "skipped": skipped, "solution": None,
+        return {"correct": True, "typo": False, "skipped": skipped, "solution": None, "solution_index": None,
                 "requeued": False, "remaining": len(session["pending"])}
 
     verdict = challenges.grade(challenge, payload)
@@ -137,6 +137,7 @@ def answer(external_key: str, session_id: str, index: int, payload: dict, *, res
         "typo": verdict.typo,
         "skipped": False,
         "solution": challenge.solution.get("display"),
+        "solution_index": challenge.solution.get("index"),
         "requeued": requeued,
         "remaining": len(session["pending"]),
     }

@@ -242,7 +242,7 @@ export function CastleHub() {
           </p>
           {!pulseNote ? (
             <Link
-              href={nba?.href || `/learn/${lessonId}`}
+              href="/learn"
               data-analytic-id={nba?.analytic_id ?? "world.school.startLesson"}
               className="pointer-events-auto mt-3 inline-flex min-h-[44px] items-center rounded-none border border-[#fff6a8]/55 bg-[linear-gradient(180deg,#f5ed75,#e8b93e)] px-5 py-2 text-sm font-extrabold text-[#241a30] shadow-[0_4px_0_#9a7a18]"
               style={{ clipPath: "polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%)" }}
@@ -295,7 +295,7 @@ export function CastleHub() {
                 <RoomKicker>Школа · врата знаний</RoomKicker>
                 <RoomTitle>{nba?.kind === "lesson" ? nba.title : "Урок с Foxy"}</RoomTitle>
                 {nba?.kind === "lesson" && nba.why ? <RoomLead>{nba.why}</RoomLead> : null}
-                <RoomCta href={nba?.kind === "lesson" ? nba.href : `/learn/${lessonId}`}>Войти в урок</RoomCta>
+                <RoomCta href="/learn">Войти в урок</RoomCta>
                 <RoomCta href="/learn" tone="ghost">
                   Карта всех уроков
                 </RoomCta>
@@ -462,7 +462,7 @@ export function CastleHub() {
                   />
                 ))}
                 {questMsg ? <p className="text-center text-sm font-bold text-[#f5ed75]">{questMsg}</p> : null}
-                <RoomCta href={`/learn/${lessonId}`}>Выполнить поручение</RoomCta>
+                <RoomCta href="/learn">Выполнить поручение</RoomCta>
               </>
             ) : null}
 
@@ -471,10 +471,10 @@ export function CastleHub() {
                 <RoomKicker>Двор тренировки</RoomKicker>
                 <RoomTitle>Поле смелости</RoomTitle>
                 <RoomCta href="/learn/practice">{dueCount > 0 ? `Повторить ${dueCount}` : "Тренировка"}</RoomCta>
-                <RoomCta href="/learn/sprint" tone="teal">
+                <RoomCta href="/lesson/practice" tone="teal">
                   Игра на скорость
                 </RoomCta>
-                <RoomCta href={`/learn/${lessonId}`} tone="ghost">
+                <RoomCta href="/learn" tone="ghost">
                   Открыть текущий урок
                 </RoomCta>
               </>

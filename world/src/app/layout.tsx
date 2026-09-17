@@ -15,9 +15,9 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Фоксинбург — мир английского",
+  title: "Фоксинбург — тренажёр английского по Spotlight",
   description:
-    "Замок Фоксинбург: кликабельные здания, уроки с Foxy, стикеры и лавка.",
+    "Короткие уроки по учебнику Spotlight: слова, чтение, грамматика и говорение. Замок Фоксинбурга — награда за учёбу.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

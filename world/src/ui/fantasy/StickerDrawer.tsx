@@ -40,11 +40,7 @@ export function StickerCollection({
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
-    if (!open) {
-      setEntered(false);
-      return;
-    }
-    const id = window.requestAnimationFrame(() => setEntered(true));
+    const id = window.requestAnimationFrame(() => setEntered(open));
     return () => window.cancelAnimationFrame(id);
   }, [open]);
 

@@ -11,6 +11,7 @@ const reply = (patch: Partial<AnswerReply>): AnswerReply => ({
   typo: false,
   skipped: false,
   solution: "cat",
+  solution_index: null,
   requeued: false,
   remaining: 0,
   ...patch,

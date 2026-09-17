@@ -118,6 +118,7 @@ export type AnswerReply = {
   typo: boolean;
   skipped: boolean;
   solution: string | null;
+  solution_index: number | null;
   requeued: boolean;
   remaining: number;
 };
