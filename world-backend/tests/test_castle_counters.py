@@ -12,6 +12,15 @@ def _word(player_id: int, word: str, strength: int) -> None:
     )
 
 
+def _practice_session(player_id: int, session_id: str, status: str) -> None:
+    """Сессия практики (`kind='practice'`), как её кладёт `builder.py` / завершает `sessions.finish`."""
+    get_conn().execute(
+        "INSERT INTO learn_sessions (id, player_id, node_id, kind, payload, pending, state, status, started_at)"
+        " VALUES (?,?,?,?,?,?,?,?,datetime('now'))",
+        (session_id, player_id, "sp1.m1", "practice", "{}", "[]", "{}", status),
+    )
+
+
 def test_counts_only_learned_words(learner):
     _, player_id = learner
     _word(player_id, "cat", 2)
@@ -23,12 +32,24 @@ def test_counts_only_learned_words(learner):
 def test_counts_practice_sessions(learner):
     _, player_id = learner
     for n in range(3):
-        get_conn().execute(
-            "INSERT INTO coin_transactions (player_id, type, amount, source, idempotency_key)"
-            " VALUES (?,?,?,?,?)",
-            (player_id, "PRACTICE_REWARD", 3, "practice", f"practice:{n}"),
-        )
+        _practice_session(player_id, f"practice-{n}", "completed")
     assert counters.counters(player_id)["yard"] == 3
+
+
+def test_counts_practice_without_coin_reward(learner):
+    """Третья и последующие тренировки за день не начисляют монеты (§task-5), но в ветку идут."""
+    _, player_id = learner
+    _practice_session(player_id, "practice-no-coins", "completed")
+    assert get_conn().execute(
+        "SELECT COUNT(*) AS n FROM coin_transactions WHERE player_id=?", (player_id,)
+    ).fetchone()["n"] == 0
+    assert counters.counters(player_id)["yard"] == 1
+
+
+def test_active_practice_session_not_counted(learner):
+    _, player_id = learner
+    _practice_session(player_id, "practice-active", "active")
+    assert counters.counters(player_id)["yard"] == 0
 
 
 def test_counts_top3_weeks_and_stickers(learner):
