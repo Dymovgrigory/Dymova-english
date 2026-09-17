@@ -196,6 +196,9 @@ new.dymova-english.ru {
     handle /api/world/* {
         reverse_proxy world-api:8010
     }
+    handle /api/v2/* {
+        reverse_proxy world-api:8010
+    }
     handle /health {
         reverse_proxy world-api:8010
     }
