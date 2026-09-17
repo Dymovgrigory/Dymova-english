@@ -26,7 +26,7 @@ FUNCTION_WORDS = frozenset(
     """a an the i am is are you he she it we they my your his her its our their
     this that these those and or but in on at to of for with from up down yes no not
     what where who how when why can have has got do does me him us them there here
-    let us will""".split()
+    let us will foxy""".split()
 )
 
 

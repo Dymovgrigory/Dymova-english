@@ -124,3 +124,20 @@ def test_validate_requires_two_phrases_per_grammar(tmp_path):
 def test_real_content_dir_loads():
     course = content.load_course(content.DEFAULT_DIR)
     assert [b.id for b in course.books] == ["sp1", "sp2", "sp3", "sp4"]
+
+
+def test_real_course_builds_every_session():
+    """Каждый узел реального курса собирается в урок, соблюдая раскладку."""
+    from app.learning import builder
+    from tests.test_learning_builder import _assert_layout
+
+    course = content.load_course(content.DEFAULT_DIR)
+    for book in course.books:
+        for _, node in course.nodes_of(book.id):
+            if node.kind == "chest":
+                continue
+            for seed in range(6):
+                plan = builder.build_session(course, node.id, player_id=None, seed=seed, allow_speak=True)
+                graded = [c for c in plan.challenges if c.graded]
+                assert len(graded) >= 8, (node.id, seed, len(graded))
+                _assert_layout(plan)

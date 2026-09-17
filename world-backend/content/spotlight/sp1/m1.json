@@ -1,0 +1,679 @@
+{
+  "id": "sp1.m1",
+  "book": "sp1",
+  "order": 1,
+  "title_en": "My Family!",
+  "title_ru": "Моя семья",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp1.m1.hello",
+      "en": "hello",
+      "ru": "привет",
+      "accept_en": [],
+      "accept_ru": [
+        "здравствуй",
+        "здравствуйте"
+      ],
+      "kind": "other",
+      "image": "words/hello.webp",
+      "trick": true
+    },
+    {
+      "id": "sp1.m1.goodbye",
+      "en": "goodbye",
+      "ru": "пока",
+      "accept_en": [
+        "bye"
+      ],
+      "accept_ru": [
+        "до свидания"
+      ],
+      "kind": "other",
+      "image": "words/goodbye.webp",
+      "trick": true
+    },
+    {
+      "id": "sp1.m1.name",
+      "en": "name",
+      "ru": "имя",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.boy",
+      "en": "boy",
+      "ru": "мальчик",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/boy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.girl",
+      "en": "girl",
+      "ru": "девочка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/girl.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.family",
+      "en": "family",
+      "ru": "семья",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/family.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.mummy",
+      "en": "mummy",
+      "ru": "мама",
+      "accept_en": [
+        "mum",
+        "mommy"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mummy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.daddy",
+      "en": "daddy",
+      "ru": "папа",
+      "accept_en": [
+        "dad"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/daddy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.king",
+      "en": "king",
+      "ru": "король",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/king.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.queen",
+      "en": "queen",
+      "ru": "королева",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/queen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.chimp",
+      "en": "chimp",
+      "ru": "шимпанзе",
+      "accept_en": [],
+      "accept_ru": [
+        "обезьяна"
+      ],
+      "kind": "noun",
+      "image": "words/chimp.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.red",
+      "en": "red",
+      "ru": "красный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/red.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.blue",
+      "en": "blue",
+      "ru": "синий",
+      "accept_en": [],
+      "accept_ru": [
+        "голубой"
+      ],
+      "kind": "adj",
+      "image": "words/blue.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.green",
+      "en": "green",
+      "ru": "зелёный",
+      "accept_en": [],
+      "accept_ru": [
+        "зеленый"
+      ],
+      "kind": "adj",
+      "image": "words/green.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.yellow",
+      "en": "yellow",
+      "ru": "жёлтый",
+      "accept_en": [],
+      "accept_ru": [
+        "желтый"
+      ],
+      "kind": "adj",
+      "image": "words/yellow.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.pink",
+      "en": "pink",
+      "ru": "розовый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/pink.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.purple",
+      "en": "purple",
+      "ru": "фиолетовый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/purple.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.orange",
+      "en": "orange",
+      "ru": "оранжевый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/orange.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.black",
+      "en": "black",
+      "ru": "чёрный",
+      "accept_en": [],
+      "accept_ru": [
+        "черный"
+      ],
+      "kind": "adj",
+      "image": "words/black.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.cup",
+      "en": "cup",
+      "ru": "чашка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cup.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.cake",
+      "en": "cake",
+      "ru": "торт",
+      "accept_en": [],
+      "accept_ru": [
+        "пирожное"
+      ],
+      "kind": "noun",
+      "image": "words/cake.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.yes",
+      "en": "yes",
+      "ru": "да",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.no",
+      "en": "no",
+      "ru": "нет",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.tea",
+      "en": "tea",
+      "ru": "чай",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tea.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.milk",
+      "en": "milk",
+      "ru": "молоко",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/milk.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.jam",
+      "en": "jam",
+      "ru": "джем",
+      "accept_en": [],
+      "accept_ru": [
+        "варенье"
+      ],
+      "kind": "noun",
+      "image": "words/jam.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.lemon",
+      "en": "lemon",
+      "ru": "лимон",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/lemon.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m1.like",
+      "en": "like",
+      "ru": "нравиться",
+      "accept_en": [],
+      "accept_ru": [
+        "любить"
+      ],
+      "kind": "verb",
+      "image": null,
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp1.m1.p1",
+      "en": "I am a boy.",
+      "ru": "Я мальчик.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.boy"
+      ],
+      "grammar_id": "sp1.m1.g-be"
+    },
+    {
+      "id": "sp1.m1.p2",
+      "en": "I'm a girl.",
+      "ru": "Я девочка.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.girl"
+      ],
+      "grammar_id": "sp1.m1.g-be"
+    },
+    {
+      "id": "sp1.m1.p3",
+      "en": "My cup is red.",
+      "ru": "Моя чашка красная.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.cup",
+        "sp1.m1.red"
+      ],
+      "grammar_id": "sp1.m1.g-be"
+    },
+    {
+      "id": "sp1.m1.p4",
+      "en": "It's a pink cake.",
+      "ru": "Это розовый торт.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.cake",
+        "sp1.m1.pink"
+      ],
+      "grammar_id": "sp1.m1.g-be"
+    },
+    {
+      "id": "sp1.m1.p5",
+      "en": "Hello, Mummy!",
+      "ru": "Привет, мама!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.hello",
+        "sp1.m1.mummy"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m1.p6",
+      "en": "Goodbye, Daddy!",
+      "ru": "Пока, папа!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.goodbye",
+        "sp1.m1.daddy"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m1.p7",
+      "en": "My name is Foxy.",
+      "ru": "Меня зовут Фокси.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.name"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m1.p8",
+      "en": "This is my family.",
+      "ru": "Это моя семья.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.family"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m1.p9",
+      "en": "I like tea with milk.",
+      "ru": "Я люблю чай с молоком.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.like",
+        "sp1.m1.tea",
+        "sp1.m1.milk"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m1.p10",
+      "en": "It is a green cup.",
+      "ru": "Это зелёная чашка.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m1.green",
+        "sp1.m1.cup"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp1.m1.g-be",
+      "title_ru": "I am / It is — я, это",
+      "rule_ru": "Про себя говорим I am или коротко I'm. Про предмет — it is или коротко it's.",
+      "examples": [
+        {
+          "en": "I'm a girl.",
+          "ru": "Я девочка."
+        },
+        {
+          "en": "It's a red cup.",
+          "ru": "Это красная чашка."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp1.m1.g-be.1",
+          "prompt_en": "I ___ a boy.",
+          "options": [
+            "am",
+            "is"
+          ],
+          "answer": 0,
+          "ru": "Я мальчик."
+        },
+        {
+          "id": "sp1.m1.g-be.2",
+          "prompt_en": "My cup ___ red.",
+          "options": [
+            "am",
+            "is"
+          ],
+          "answer": 1,
+          "ru": "Моя чашка красная."
+        },
+        {
+          "id": "sp1.m1.g-be.3",
+          "prompt_en": "It ___ a pink cake.",
+          "options": [
+            "is",
+            "am"
+          ],
+          "answer": 0,
+          "ru": "Это розовый торт."
+        },
+        {
+          "id": "sp1.m1.g-be.4",
+          "prompt_en": "I ___ a girl.",
+          "options": [
+            "is",
+            "am"
+          ],
+          "answer": 1,
+          "ru": "Я девочка."
+        },
+        {
+          "id": "sp1.m1.g-be.5",
+          "prompt_en": "My name ___ Foxy.",
+          "options": [
+            "is",
+            "am"
+          ],
+          "answer": 0,
+          "ru": "Меня зовут Фокси."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp1.m1.gr-s",
+      "grapheme": "s",
+      "sound_word": "sun"
+    },
+    {
+      "id": "sp1.m1.gr-a",
+      "grapheme": "a",
+      "sound_word": "apple"
+    },
+    {
+      "id": "sp1.m1.gr-t",
+      "grapheme": "t",
+      "sound_word": "tea"
+    },
+    {
+      "id": "sp1.m1.gr-i",
+      "grapheme": "i",
+      "sound_word": "in"
+    },
+    {
+      "id": "sp1.m1.gr-p",
+      "grapheme": "p",
+      "sound_word": "pen"
+    },
+    {
+      "id": "sp1.m1.gr-n",
+      "grapheme": "n",
+      "sound_word": "nose"
+    },
+    {
+      "id": "sp1.m1.gr-c",
+      "grapheme": "c",
+      "sound_word": "cat"
+    },
+    {
+      "id": "sp1.m1.gr-k",
+      "grapheme": "k",
+      "sound_word": "king"
+    },
+    {
+      "id": "sp1.m1.gr-e",
+      "grapheme": "e",
+      "sound_word": "egg"
+    },
+    {
+      "id": "sp1.m1.gr-h",
+      "grapheme": "h",
+      "sound_word": "hello"
+    },
+    {
+      "id": "sp1.m1.gr-r",
+      "grapheme": "r",
+      "sound_word": "red"
+    },
+    {
+      "id": "sp1.m1.gr-m",
+      "grapheme": "m",
+      "sound_word": "milk"
+    },
+    {
+      "id": "sp1.m1.gr-d",
+      "grapheme": "d",
+      "sound_word": "dog"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp1.m1.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m1.hello",
+        "sp1.m1.goodbye",
+        "sp1.m1.name",
+        "sp1.m1.boy",
+        "sp1.m1.girl",
+        "sp1.m1.family"
+      ]
+    },
+    {
+      "id": "sp1.m1.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m1.mummy",
+        "sp1.m1.daddy",
+        "sp1.m1.king",
+        "sp1.m1.queen",
+        "sp1.m1.chimp"
+      ]
+    },
+    {
+      "id": "sp1.m1.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m1.gr-s",
+        "sp1.m1.gr-a",
+        "sp1.m1.gr-t",
+        "sp1.m1.gr-i",
+        "sp1.m1.gr-p",
+        "sp1.m1.gr-n"
+      ]
+    },
+    {
+      "id": "sp1.m1.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m1.red",
+        "sp1.m1.blue",
+        "sp1.m1.green",
+        "sp1.m1.yellow",
+        "sp1.m1.pink",
+        "sp1.m1.purple"
+      ]
+    },
+    {
+      "id": "sp1.m1.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m1.orange",
+        "sp1.m1.black",
+        "sp1.m1.cup",
+        "sp1.m1.cake",
+        "sp1.m1.yes",
+        "sp1.m1.no"
+      ]
+    },
+    {
+      "id": "sp1.m1.n6",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m1.tea",
+        "sp1.m1.milk",
+        "sp1.m1.jam",
+        "sp1.m1.lemon",
+        "sp1.m1.like"
+      ]
+    },
+    {
+      "id": "sp1.m1.n7",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m1.gr-c",
+        "sp1.m1.gr-k",
+        "sp1.m1.gr-e",
+        "sp1.m1.gr-h",
+        "sp1.m1.gr-r",
+        "sp1.m1.gr-m",
+        "sp1.m1.gr-d"
+      ]
+    },
+    {
+      "id": "sp1.m1.n8",
+      "kind": "grammar",
+      "grammar_id": "sp1.m1.g-be"
+    },
+    {
+      "id": "sp1.m1.n9",
+      "kind": "chest"
+    },
+    {
+      "id": "sp1.m1.n10",
+      "kind": "review"
+    },
+    {
+      "id": "sp1.m1.n11",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
+    "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ]
+}

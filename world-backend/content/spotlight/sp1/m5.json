@@ -1,0 +1,489 @@
+{
+  "id": "sp1.m5",
+  "book": "sp1",
+  "order": 5,
+  "title_en": "My Food!",
+  "title_ru": "Моя еда",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp1.m5.food",
+      "en": "food",
+      "ru": "еда",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/food.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.apple",
+      "en": "apple",
+      "ru": "яблоко",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/apple.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.banana",
+      "en": "banana",
+      "ru": "банан",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/banana.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.orange-juice",
+      "en": "orange juice",
+      "ru": "апельсиновый сок",
+      "accept_en": [],
+      "accept_ru": [
+        "сок"
+      ],
+      "kind": "noun",
+      "image": "words/orange-juice.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.biscuit",
+      "en": "biscuit",
+      "ru": "печенье",
+      "accept_en": [
+        "cookie"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/biscuit.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.basket",
+      "en": "basket",
+      "ru": "корзинка",
+      "accept_en": [],
+      "accept_ru": [
+        "корзина"
+      ],
+      "kind": "noun",
+      "image": "words/basket.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.bread",
+      "en": "bread",
+      "ru": "хлеб",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bread.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.egg",
+      "en": "egg",
+      "ru": "яйцо",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/egg.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.cheese",
+      "en": "cheese",
+      "ru": "сыр",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cheese.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.chocolate",
+      "en": "chocolate",
+      "ru": "шоколад",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/chocolate.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.sandwich",
+      "en": "sandwich",
+      "ru": "бутерброд",
+      "accept_en": [],
+      "accept_ru": [
+        "сэндвич"
+      ],
+      "kind": "noun",
+      "image": "words/sandwich.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.pizza",
+      "en": "pizza",
+      "ru": "пицца",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pizza.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.hot-dog",
+      "en": "hot dog",
+      "ru": "хот-дог",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/hot-dog.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.sausage",
+      "en": "sausage",
+      "ru": "сосиска",
+      "accept_en": [],
+      "accept_ru": [
+        "колбаска"
+      ],
+      "kind": "noun",
+      "image": "words/sausage.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.ice-cream",
+      "en": "ice cream",
+      "ru": "мороженое",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ice-cream.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.plate",
+      "en": "plate",
+      "ru": "тарелка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/plate.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.eat",
+      "en": "eat",
+      "ru": "есть",
+      "accept_en": [],
+      "accept_ru": [
+        "кушать"
+      ],
+      "kind": "verb",
+      "image": "words/eat.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.drink",
+      "en": "drink",
+      "ru": "пить",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/drink.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.play",
+      "en": "play",
+      "ru": "играть",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/play.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.sand",
+      "en": "sand",
+      "ru": "песок",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sand.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.seaside",
+      "en": "seaside",
+      "ru": "море",
+      "accept_en": [],
+      "accept_ru": [
+        "берег моря"
+      ],
+      "kind": "noun",
+      "image": "words/seaside.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m5.love",
+      "en": "love",
+      "ru": "обожать",
+      "accept_en": [],
+      "accept_ru": [
+        "любить"
+      ],
+      "kind": "verb",
+      "image": null,
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp1.m5.p1",
+      "en": "I like bananas.",
+      "ru": "Я люблю бананы.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m5.banana"
+      ],
+      "grammar_id": "sp1.m5.g-like"
+    },
+    {
+      "id": "sp1.m5.p2",
+      "en": "I don't like cheese.",
+      "ru": "Я не люблю сыр.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m5.cheese"
+      ],
+      "grammar_id": "sp1.m5.g-like"
+    },
+    {
+      "id": "sp1.m5.p3",
+      "en": "I love ice cream.",
+      "ru": "Я обожаю мороженое.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m5.love",
+        "sp1.m5.ice-cream"
+      ],
+      "grammar_id": "sp1.m5.g-like"
+    },
+    {
+      "id": "sp1.m5.p4",
+      "en": "Let's eat pizza!",
+      "ru": "Давай есть пиццу!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m5.eat",
+        "sp1.m5.pizza"
+      ],
+      "grammar_id": "sp1.m5.g-like"
+    },
+    {
+      "id": "sp1.m5.p5",
+      "en": "Drink your milk.",
+      "ru": "Пей молоко.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m5.drink"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m5.p6",
+      "en": "An apple in my basket.",
+      "ru": "Яблоко в моей корзинке.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m5.apple",
+        "sp1.m5.basket"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m5.p7",
+      "en": "Let's play in the sand!",
+      "ru": "Давай играть в песке!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m5.play",
+        "sp1.m5.sand"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp1.m5.g-like",
+      "title_ru": "I like / I don't like — люблю, не люблю",
+      "rule_ru": "I like — мне нравится. I don't like — не нравится. I love — очень люблю.",
+      "examples": [
+        {
+          "en": "I like bananas.",
+          "ru": "Я люблю бананы."
+        },
+        {
+          "en": "I don't like cheese.",
+          "ru": "Я не люблю сыр."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp1.m5.g-like.1",
+          "prompt_en": "I ___ chocolate.",
+          "options": [
+            "like",
+            "likes"
+          ],
+          "answer": 0,
+          "ru": "Я люблю шоколад."
+        },
+        {
+          "id": "sp1.m5.g-like.2",
+          "prompt_en": "I ___ like eggs.",
+          "options": [
+            "doesn't",
+            "don't"
+          ],
+          "answer": 1,
+          "ru": "Я не люблю яйца."
+        },
+        {
+          "id": "sp1.m5.g-like.3",
+          "prompt_en": "I ___ ice cream.",
+          "options": [
+            "love",
+            "loves"
+          ],
+          "answer": 0,
+          "ru": "Я обожаю мороженое."
+        },
+        {
+          "id": "sp1.m5.g-like.4",
+          "prompt_en": "___ eat pizza!",
+          "options": [
+            "Let",
+            "Let's"
+          ],
+          "answer": 1,
+          "ru": "Давай есть пиццу!"
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp1.m5.gr-ea",
+      "grapheme": "ea",
+      "sound_word": "eat"
+    },
+    {
+      "id": "sp1.m5.gr-ow",
+      "grapheme": "ow",
+      "sound_word": "cow"
+    },
+    {
+      "id": "sp1.m5.gr-igh",
+      "grapheme": "igh",
+      "sound_word": "night"
+    },
+    {
+      "id": "sp1.m5.gr-bb",
+      "grapheme": "bb",
+      "sound_word": "rabbit"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp1.m5.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m5.food",
+        "sp1.m5.apple",
+        "sp1.m5.banana",
+        "sp1.m5.orange-juice",
+        "sp1.m5.biscuit",
+        "sp1.m5.basket"
+      ]
+    },
+    {
+      "id": "sp1.m5.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m5.bread",
+        "sp1.m5.egg",
+        "sp1.m5.cheese",
+        "sp1.m5.chocolate",
+        "sp1.m5.sandwich"
+      ]
+    },
+    {
+      "id": "sp1.m5.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m5.gr-ea",
+        "sp1.m5.gr-ow",
+        "sp1.m5.gr-igh",
+        "sp1.m5.gr-bb"
+      ]
+    },
+    {
+      "id": "sp1.m5.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m5.pizza",
+        "sp1.m5.hot-dog",
+        "sp1.m5.sausage",
+        "sp1.m5.ice-cream",
+        "sp1.m5.plate"
+      ]
+    },
+    {
+      "id": "sp1.m5.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m5.eat",
+        "sp1.m5.drink",
+        "sp1.m5.play",
+        "sp1.m5.sand",
+        "sp1.m5.seaside",
+        "sp1.m5.love"
+      ]
+    },
+    {
+      "id": "sp1.m5.n6",
+      "kind": "grammar",
+      "grammar_id": "sp1.m5.g-like"
+    },
+    {
+      "id": "sp1.m5.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp1.m5.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp1.m5.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
+    "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ]
+}
