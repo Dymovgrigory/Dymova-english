@@ -61,10 +61,14 @@ def state(player_id: int) -> list[dict]:
     rows = []
     for track_id in tracks.TRACKS:
         view = tracks.track_view(track_id, values[track_id])
-        view["level"] = levels.get(track_id, view["level"])
-        view["title_ru"] = (
-            tracks.TRACKS[track_id].level_titles[view["level"] - 1] if view["level"] else None
-        )
+        # Уровень не отбирается, даже если значение упало (оборвалась серия дней), поэтому
+        # берём максимум из сохранённого и посчитанного уровня и от него же считаем
+        # следующую цель — иначе рядом со званием 3 уровня будет прогресс «0 из 3».
+        level = max(levels.get(track_id, 0), view["level"])
+        thresholds = tracks.TRACKS[track_id].thresholds
+        view["level"] = level
+        view["title_ru"] = tracks.TRACKS[track_id].level_titles[level - 1] if level else None
+        view["next_threshold"] = thresholds[level] if level < len(thresholds) else None
         view["worn"] = track_id == worn_track
         rows.append(view)
     return rows

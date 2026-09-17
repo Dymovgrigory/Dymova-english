@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.castle import titles
+from app.castle import titles, tracks
 from app.world import core
 from app.world.db import get_conn
 from app.world.core import Conflict
@@ -63,3 +63,31 @@ def test_cannot_wear_title_without_level(learner):
     _, player_id = learner
     with pytest.raises(Conflict):
         titles.wear(player_id, "glory")
+
+
+def test_state_keeps_level_when_value_drops(learner):
+    """Оборвалась серия дней (nest) — звание 3 уровня не отбирается,
+    а следующая цель считается от него, а не от нулевого сырого значения."""
+    _, player_id = learner
+    get_conn().execute(
+        "INSERT INTO titles (player_id, track, level) VALUES (?,?,?)",
+        (player_id, "nest", 3),
+    )
+    state = titles.state(player_id)
+    nest = next(row for row in state if row["track"] == "nest")
+    assert nest["level"] == 3
+    assert nest["value"] == 0
+    assert nest["next_threshold"] == tracks.TRACKS["nest"].thresholds[3]
+
+
+def test_state_next_threshold_none_at_max_level(learner):
+    """На пятом уровне следующей цели уже нет."""
+    _, player_id = learner
+    get_conn().execute(
+        "INSERT INTO titles (player_id, track, level) VALUES (?,?,?)",
+        (player_id, "nest", 5),
+    )
+    state = titles.state(player_id)
+    nest = next(row for row in state if row["track"] == "nest")
+    assert nest["level"] == 5
+    assert nest["next_threshold"] is None
