@@ -16,7 +16,9 @@ CONTRACTIONS = {
     "isn't": "is not", "aren't": "are not", "don't": "do not", "doesn't": "does not",
     "can't": "can not", "cannot": "can not", "haven't": "have not", "hasn't": "has not",
     "i've": "i have", "you've": "you have", "we've": "we have", "they've": "they have",
-    "i'll": "i will", "let's": "let us",
+    "i'll": "i will", "let's": "let us", "didn't": "did not", "mustn't": "must not",
+    "won't": "will not", "wasn't": "was not", "weren't": "were not", "it'll": "it will",
+    "she'll": "she will", "we'll": "we will", "they'll": "they will",
 }
 TYPO_MIN_LENGTH = 5
 SPEECH_THRESHOLD = 0.75

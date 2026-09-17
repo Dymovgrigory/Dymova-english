@@ -1,0 +1,474 @@
+{
+  "id": "sp2.m3",
+  "book": "sp2",
+  "order": 3,
+  "label": "Module 2",
+  "title_en": "My Birthday!",
+  "title_ru": "Мой день рождения",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp2.m3.birthday",
+      "en": "birthday",
+      "ru": "день рождения",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/birthday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.party",
+      "en": "party",
+      "ru": "праздник",
+      "accept_en": [],
+      "accept_ru": [
+        "вечеринка"
+      ],
+      "kind": "noun",
+      "image": "words/party.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.candle",
+      "en": "candle",
+      "ru": "свеча",
+      "accept_en": [],
+      "accept_ru": [
+        "свечка"
+      ],
+      "kind": "noun",
+      "image": "words/candle.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.happy",
+      "en": "happy",
+      "ru": "счастливый",
+      "accept_en": [],
+      "accept_ru": [
+        "радостный"
+      ],
+      "kind": "adj",
+      "image": "words/happy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.sad",
+      "en": "sad",
+      "ru": "грустный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/sad.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.old",
+      "en": "old",
+      "ru": "старый",
+      "accept_en": [],
+      "accept_ru": [
+        "лет"
+      ],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.burger",
+      "en": "burger",
+      "ru": "бургер",
+      "accept_en": [],
+      "accept_ru": [
+        "гамбургер"
+      ],
+      "kind": "noun",
+      "image": "words/burger.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.chips",
+      "en": "chips",
+      "ru": "картофель фри",
+      "accept_en": [],
+      "accept_ru": [
+        "чипсы"
+      ],
+      "kind": "noun",
+      "image": "words/chips.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.sandwich",
+      "en": "sandwich",
+      "ru": "бутерброд",
+      "accept_en": [],
+      "accept_ru": [
+        "сэндвич"
+      ],
+      "kind": "noun",
+      "image": "words/sandwich.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.chocolate",
+      "en": "chocolate",
+      "ru": "шоколад",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/chocolate.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.yummy",
+      "en": "yummy",
+      "ru": "вкусный",
+      "accept_en": [],
+      "accept_ru": [
+        "вкуснятина"
+      ],
+      "kind": "adj",
+      "image": "words/yummy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.cake",
+      "en": "cake",
+      "ru": "торт",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cake.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.biscuit",
+      "en": "biscuit",
+      "ru": "печенье",
+      "accept_en": [
+        "cookie"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/biscuit.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.ice-cream",
+      "en": "ice cream",
+      "ru": "мороженое",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ice-cream.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.pizza",
+      "en": "pizza",
+      "ru": "пицца",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pizza.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.chocolate-cake",
+      "en": "chocolate cake",
+      "ru": "шоколадный торт",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/chocolate-cake.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.bread",
+      "en": "bread",
+      "ru": "хлеб",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bread.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.meat",
+      "en": "meat",
+      "ru": "мясо",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/meat.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.milk",
+      "en": "milk",
+      "ru": "молоко",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/milk.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.orange-juice",
+      "en": "orange juice",
+      "ru": "апельсиновый сок",
+      "accept_en": [],
+      "accept_ru": [
+        "сок"
+      ],
+      "kind": "adj",
+      "image": "words/orange-juice.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m3.favourite",
+      "en": "favourite",
+      "ru": "любимый",
+      "accept_en": [
+        "favorite"
+      ],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": null,
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp2.m3.p1",
+      "en": "How old are you?",
+      "ru": "Сколько тебе лет?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m3.old"
+      ],
+      "grammar_id": "sp2.m3.g-like"
+    },
+    {
+      "id": "sp2.m3.p2",
+      "en": "My favourite food is pizza.",
+      "ru": "Моя любимая еда — пицца.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m3.favourite",
+        "sp2.m3.pizza"
+      ],
+      "grammar_id": "sp2.m3.g-like"
+    },
+    {
+      "id": "sp2.m3.p3",
+      "en": "I don't like chips.",
+      "ru": "Я не люблю картофель фри.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m3.chips"
+      ],
+      "grammar_id": "sp2.m3.g-like"
+    },
+    {
+      "id": "sp2.m3.p4",
+      "en": "Happy birthday!",
+      "ru": "С днём рождения!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m3.happy",
+        "sp2.m3.birthday"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m3.p5",
+      "en": "Yummy chocolate!",
+      "ru": "Вкусный шоколад!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m3.yummy",
+        "sp2.m3.chocolate"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m3.p6",
+      "en": "Seven candles on the cake.",
+      "ru": "Семь свечей на торте.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m3.candle",
+        "sp2.m3.cake"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp2.m3.g-like",
+      "title_ru": "I like… / My favourite food is… — люблю",
+      "rule_ru": "I like — мне нравится, I don't like — не нравится. My favourite food is… — моя любимая еда…",
+      "examples": [
+        {
+          "en": "I like burgers.",
+          "ru": "Я люблю бургеры."
+        },
+        {
+          "en": "My favourite food is pizza.",
+          "ru": "Моя любимая еда — пицца."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp2.m3.g-like.1",
+          "prompt_en": "I ___ like chips.",
+          "options": [
+            "am",
+            "don't"
+          ],
+          "answer": 1,
+          "ru": "Я не люблю картофель фри."
+        },
+        {
+          "id": "sp2.m3.g-like.2",
+          "prompt_en": "How ___ are you? I'm eight.",
+          "options": [
+            "old",
+            "many"
+          ],
+          "answer": 0,
+          "ru": "Сколько тебе лет? Мне восемь."
+        },
+        {
+          "id": "sp2.m3.g-like.3",
+          "prompt_en": "My favourite food ___ pizza.",
+          "options": [
+            "is",
+            "are"
+          ],
+          "answer": 0,
+          "ru": "Моя любимая еда — пицца."
+        },
+        {
+          "id": "sp2.m3.g-like.4",
+          "prompt_en": "I ___ chocolate cake.",
+          "options": [
+            "like",
+            "likes"
+          ],
+          "answer": 0,
+          "ru": "Я люблю шоколадный торт."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp2.m3.gr-er",
+      "grapheme": "er",
+      "sound_word": "sister"
+    },
+    {
+      "id": "sp2.m3.gr-ir",
+      "grapheme": "ir",
+      "sound_word": "bird"
+    },
+    {
+      "id": "sp2.m3.gr-ur",
+      "grapheme": "ur",
+      "sound_word": "purple"
+    },
+    {
+      "id": "sp2.m3.gr-ou",
+      "grapheme": "ou",
+      "sound_word": "mouse"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp2.m3.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m3.birthday",
+        "sp2.m3.party",
+        "sp2.m3.candle",
+        "sp2.m3.happy",
+        "sp2.m3.sad",
+        "sp2.m3.old"
+      ]
+    },
+    {
+      "id": "sp2.m3.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m3.burger",
+        "sp2.m3.chips",
+        "sp2.m3.sandwich",
+        "sp2.m3.chocolate",
+        "sp2.m3.yummy"
+      ]
+    },
+    {
+      "id": "sp2.m3.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m3.gr-er",
+        "sp2.m3.gr-ir",
+        "sp2.m3.gr-ur",
+        "sp2.m3.gr-ou"
+      ]
+    },
+    {
+      "id": "sp2.m3.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m3.cake",
+        "sp2.m3.biscuit",
+        "sp2.m3.ice-cream",
+        "sp2.m3.pizza",
+        "sp2.m3.chocolate-cake"
+      ]
+    },
+    {
+      "id": "sp2.m3.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m3.bread",
+        "sp2.m3.meat",
+        "sp2.m3.milk",
+        "sp2.m3.orange-juice",
+        "sp2.m3.favourite"
+      ]
+    },
+    {
+      "id": "sp2.m3.n6",
+      "kind": "grammar",
+      "grammar_id": "sp2.m3.g-like"
+    },
+    {
+      "id": "sp2.m3.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp2.m3.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp2.m3.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ]
+}

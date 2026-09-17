@@ -26,8 +26,32 @@ FUNCTION_WORDS = frozenset(
     """a an the i am is are you he she it we they my your his her its our their
     this that these those and or but in on at to of for with from up down yes no not
     what where who how when why can have has got do does me him us them there here
-    let us will foxy""".split()
+    let us will foxy go was were did must be than lot some any very too so all many much may by""".split()
 )
+
+_VOWELS = "aeiou"
+
+
+def _stems(token: str) -> set[str]:
+    """Возможные исходные формы слова: мн. число, -ing, -ed, степени сравнения, 's."""
+    stems = {token}
+    if token.endswith("'s"):
+        stems.add(token[:-2])
+    for suffix in ("ing", "ed", "est", "er", "es", "s"):
+        if not token.endswith(suffix) or len(token) - len(suffix) < 2:
+            continue
+        stem = token[: -len(suffix)]
+        stems.update({stem, stem + "e"})
+        if len(stem) > 2 and stem[-1] == stem[-2] and stem[-1] not in _VOWELS:
+            stems.add(stem[:-1])  # running → run, bigger → big
+        if stem.endswith("i"):
+            stems.add(stem[:-1] + "y")  # studied → study, prettiest → pretty
+    return stems
+
+
+def is_taught(token: str, known: set[str]) -> bool:
+    """Слово фразы изучено: служебное или одна из форм уже введённого слова."""
+    return any(stem in known or stem in FUNCTION_WORDS for stem in _stems(token))
 
 
 class Book(BaseModel):
@@ -107,6 +131,7 @@ class Module(BaseModel):
     id: str
     book: str
     order: int
+    label: str | None = None  # подпись как в учебнике: «Starter», «Module 1»
     title_en: str
     title_ru: str
     band: Band
@@ -290,8 +315,7 @@ def validate(course: Course) -> list[str]:
             if phrase.grammar_id and phrase.grammar_id not in grammar_ids:
                 errors.append(f"{phrase.id}: unknown grammar {phrase.grammar_id}")
             for token in tokens(phrase.en):
-                singular = token[:-1] if token.endswith("s") else token
-                if token in FUNCTION_WORDS or token in known_vocabulary or singular in known_vocabulary:
+                if is_taught(token, known_vocabulary):
                     continue
                 errors.append(f"{phrase.id}: word '{token}' not taught yet")
     return errors

@@ -1,0 +1,473 @@
+{
+  "id": "sp2.m6",
+  "book": "sp2",
+  "order": 6,
+  "label": "Module 5",
+  "title_en": "My Holidays!",
+  "title_ru": "Мои каникулы",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp2.m6.jacket",
+      "en": "jacket",
+      "ru": "куртка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/jacket.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.coat",
+      "en": "coat",
+      "ru": "пальто",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/coat.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.shorts",
+      "en": "shorts",
+      "ru": "шорты",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/shorts.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.hat",
+      "en": "hat",
+      "ru": "шляпа",
+      "accept_en": [],
+      "accept_ru": [
+        "шапка"
+      ],
+      "kind": "noun",
+      "image": "words/hat.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.holiday",
+      "en": "holiday",
+      "ru": "каникулы",
+      "accept_en": [],
+      "accept_ru": [
+        "отпуск"
+      ],
+      "kind": "noun",
+      "image": "words/holiday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.socks",
+      "en": "socks",
+      "ru": "носки",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/socks.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.jeans",
+      "en": "jeans",
+      "ru": "джинсы",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/jeans.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.t-shirt",
+      "en": "T-shirt",
+      "ru": "футболка",
+      "accept_en": [],
+      "accept_ru": [
+        "майка"
+      ],
+      "kind": "noun",
+      "image": "words/t-shirt.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.shoes",
+      "en": "shoes",
+      "ru": "туфли",
+      "accept_en": [],
+      "accept_ru": [
+        "ботинки"
+      ],
+      "kind": "noun",
+      "image": "words/shoes.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.skirt",
+      "en": "skirt",
+      "ru": "юбка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/skirt.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.summer",
+      "en": "summer",
+      "ru": "лето",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/summer.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.autumn",
+      "en": "autumn",
+      "ru": "осень",
+      "accept_en": [
+        "fall"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/autumn.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.winter",
+      "en": "winter",
+      "ru": "зима",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/winter.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.spring",
+      "en": "spring",
+      "ru": "весна",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/spring.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.sun",
+      "en": "sun",
+      "ru": "солнце",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sun.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.sunny",
+      "en": "sunny",
+      "ru": "солнечный",
+      "accept_en": [],
+      "accept_ru": [
+        "солнечно"
+      ],
+      "kind": "adj",
+      "image": "words/sunny.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.hot",
+      "en": "hot",
+      "ru": "жаркий",
+      "accept_en": [],
+      "accept_ru": [
+        "жарко"
+      ],
+      "kind": "adj",
+      "image": "words/hot.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.cold",
+      "en": "cold",
+      "ru": "холодный",
+      "accept_en": [],
+      "accept_ru": [
+        "холодно"
+      ],
+      "kind": "adj",
+      "image": "words/cold.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.windy",
+      "en": "windy",
+      "ru": "ветреный",
+      "accept_en": [],
+      "accept_ru": [
+        "ветрено"
+      ],
+      "kind": "adj",
+      "image": "words/windy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.raining",
+      "en": "raining",
+      "ru": "идёт дождь",
+      "accept_en": [],
+      "accept_ru": [
+        "дождь"
+      ],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp2.m6.beach",
+      "en": "beach",
+      "ru": "пляж",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/beach.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp2.m6.p1",
+      "en": "It's sunny and hot.",
+      "ru": "Солнечно и жарко.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m6.sunny",
+        "sp2.m6.hot"
+      ],
+      "grammar_id": "sp2.m6.g-weather"
+    },
+    {
+      "id": "sp2.m6.p2",
+      "en": "It's cold in winter.",
+      "ru": "Зимой холодно.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m6.cold",
+        "sp2.m6.winter"
+      ],
+      "grammar_id": "sp2.m6.g-weather"
+    },
+    {
+      "id": "sp2.m6.p3",
+      "en": "It's raining.",
+      "ru": "Идёт дождь.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m6.raining"
+      ],
+      "grammar_id": "sp2.m6.g-weather"
+    },
+    {
+      "id": "sp2.m6.p4",
+      "en": "My new jacket is blue.",
+      "ru": "Моя новая куртка синяя.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m6.jacket"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m6.p5",
+      "en": "Summer holiday on the beach.",
+      "ru": "Летние каникулы на пляже.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m6.summer",
+        "sp2.m6.holiday",
+        "sp2.m6.beach"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m6.p6",
+      "en": "A red T-shirt and jeans.",
+      "ru": "Красная футболка и джинсы.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m6.t-shirt",
+        "sp2.m6.jeans"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp2.m6.g-weather",
+      "title_ru": "It's sunny! — погода",
+      "rule_ru": "Про погоду начинаем с It's: It's sunny — солнечно, It's cold — холодно, It's raining — идёт дождь.",
+      "examples": [
+        {
+          "en": "It's hot and sunny.",
+          "ru": "Жарко и солнечно."
+        },
+        {
+          "en": "It's raining!",
+          "ru": "Идёт дождь!"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp2.m6.g-weather.1",
+          "prompt_en": "What's the weather ___?",
+          "options": [
+            "like",
+            "likes"
+          ],
+          "answer": 0,
+          "ru": "Какая погода?"
+        },
+        {
+          "id": "sp2.m6.g-weather.2",
+          "prompt_en": "It's ___ today.",
+          "options": [
+            "sunny",
+            "sun"
+          ],
+          "answer": 0,
+          "ru": "Сегодня солнечно."
+        },
+        {
+          "id": "sp2.m6.g-weather.3",
+          "prompt_en": "It's cold ___ winter.",
+          "options": [
+            "in",
+            "on"
+          ],
+          "answer": 0,
+          "ru": "Зимой холодно."
+        },
+        {
+          "id": "sp2.m6.g-weather.4",
+          "prompt_en": "It ___ windy.",
+          "options": [
+            "is",
+            "are"
+          ],
+          "answer": 0,
+          "ru": "Ветрено."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp2.m6.gr-wh",
+      "grapheme": "wh",
+      "sound_word": "whale"
+    },
+    {
+      "id": "sp2.m6.gr-ph",
+      "grapheme": "ph",
+      "sound_word": "phone"
+    },
+    {
+      "id": "sp2.m6.gr-kn",
+      "grapheme": "kn",
+      "sound_word": "knee"
+    },
+    {
+      "id": "sp2.m6.gr-wr",
+      "grapheme": "wr",
+      "sound_word": "write"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp2.m6.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m6.jacket",
+        "sp2.m6.coat",
+        "sp2.m6.shorts",
+        "sp2.m6.hat",
+        "sp2.m6.holiday"
+      ]
+    },
+    {
+      "id": "sp2.m6.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m6.socks",
+        "sp2.m6.jeans",
+        "sp2.m6.t-shirt",
+        "sp2.m6.shoes",
+        "sp2.m6.skirt"
+      ]
+    },
+    {
+      "id": "sp2.m6.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m6.gr-wh",
+        "sp2.m6.gr-ph",
+        "sp2.m6.gr-kn",
+        "sp2.m6.gr-wr"
+      ]
+    },
+    {
+      "id": "sp2.m6.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m6.summer",
+        "sp2.m6.autumn",
+        "sp2.m6.winter",
+        "sp2.m6.spring",
+        "sp2.m6.sun"
+      ]
+    },
+    {
+      "id": "sp2.m6.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m6.sunny",
+        "sp2.m6.hot",
+        "sp2.m6.cold",
+        "sp2.m6.windy",
+        "sp2.m6.raining",
+        "sp2.m6.beach"
+      ]
+    },
+    {
+      "id": "sp2.m6.n6",
+      "kind": "grammar",
+      "grammar_id": "sp2.m6.g-weather"
+    },
+    {
+      "id": "sp2.m6.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp2.m6.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp2.m6.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ]
+}

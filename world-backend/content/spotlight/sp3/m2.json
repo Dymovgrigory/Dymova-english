@@ -1,0 +1,325 @@
+{
+  "id": "sp3.m2",
+  "book": "sp3",
+  "order": 2,
+  "label": "Module 2",
+  "title_en": "Family moments!",
+  "title_ru": "Семейные моменты",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m2.family-tree",
+      "en": "family tree",
+      "ru": "генеалогическое древо",
+      "accept_en": [],
+      "accept_ru": [
+        "семейное древо"
+      ],
+      "kind": "noun",
+      "image": "words/family-tree.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.mother",
+      "en": "mother",
+      "ru": "мама",
+      "accept_en": [],
+      "accept_ru": [
+        "мать"
+      ],
+      "kind": "noun",
+      "image": "words/mother.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.father",
+      "en": "father",
+      "ru": "папа",
+      "accept_en": [],
+      "accept_ru": [
+        "отец"
+      ],
+      "kind": "noun",
+      "image": "words/father.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.grandmother",
+      "en": "grandmother",
+      "ru": "бабушка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/grandmother.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.grandfather",
+      "en": "grandfather",
+      "ru": "дедушка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/grandfather.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.great",
+      "en": "great",
+      "ru": "отличный",
+      "accept_en": [],
+      "accept_ru": [
+        "замечательный"
+      ],
+      "kind": "adj",
+      "image": "words/great.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.aunt",
+      "en": "aunt",
+      "ru": "тётя",
+      "accept_en": [],
+      "accept_ru": [
+        "тетя"
+      ],
+      "kind": "noun",
+      "image": "words/aunt.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.uncle",
+      "en": "uncle",
+      "ru": "дядя",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/uncle.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.cousin",
+      "en": "cousin",
+      "ru": "двоюродный брат",
+      "accept_en": [],
+      "accept_ru": [
+        "двоюродная сестра"
+      ],
+      "kind": "noun",
+      "image": "words/cousin.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.little",
+      "en": "little",
+      "ru": "маленький",
+      "accept_en": [],
+      "accept_ru": [
+        "младший"
+      ],
+      "kind": "adj",
+      "image": "words/little.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.live",
+      "en": "live",
+      "ru": "жить",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/live.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m2.tall",
+      "en": "tall",
+      "ru": "высокий",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/tall.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m2.p1",
+      "en": "His mother is tall.",
+      "ru": "Его мама высокая.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m2.mother",
+        "sp3.m2.tall"
+      ],
+      "grammar_id": "sp3.m2.g-possessive"
+    },
+    {
+      "id": "sp3.m2.p2",
+      "en": "Her uncle is great.",
+      "ru": "Её дядя замечательный.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m2.uncle",
+        "sp3.m2.great"
+      ],
+      "grammar_id": "sp3.m2.g-possessive"
+    },
+    {
+      "id": "sp3.m2.p3",
+      "en": "Their cousin is little.",
+      "ru": "Их двоюродный брат маленький.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m2.cousin",
+        "sp3.m2.little"
+      ],
+      "grammar_id": "sp3.m2.g-possessive"
+    },
+    {
+      "id": "sp3.m2.p4",
+      "en": "Our family tree is big.",
+      "ru": "Наше семейное древо большое.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m2.family-tree"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m2.p5",
+      "en": "My aunt lives in the house.",
+      "ru": "Моя тётя живёт в доме.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m2.aunt",
+        "sp3.m2.live"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m2.p6",
+      "en": "My grandfather and grandmother are happy.",
+      "ru": "Мои дедушка и бабушка счастливы.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m2.grandfather",
+        "sp3.m2.grandmother"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m2.g-possessive",
+      "title_ru": "His, her, our, their — чей?",
+      "rule_ru": "His — его, her — её, our — наш, their — их. Tom's sister = his sister. Ann's brother = her brother.",
+      "examples": [
+        {
+          "en": "This is Tom. His sister is little.",
+          "ru": "Это Том. Его сестра маленькая."
+        },
+        {
+          "en": "Their uncle is tall.",
+          "ru": "Их дядя высокий."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m2.g-possessive.1",
+          "prompt_en": "This is Tom. ___ sister is Ann.",
+          "options": [
+            "His",
+            "Her"
+          ],
+          "answer": 0,
+          "ru": "Это Том. Его сестра — Аня."
+        },
+        {
+          "id": "sp3.m2.g-possessive.2",
+          "prompt_en": "This is Ann. ___ brother is tall.",
+          "options": [
+            "His",
+            "Her"
+          ],
+          "answer": 1,
+          "ru": "Это Аня. Её брат высокий."
+        },
+        {
+          "id": "sp3.m2.g-possessive.3",
+          "prompt_en": "We are a family. ___ house is big.",
+          "options": [
+            "Our",
+            "Their"
+          ],
+          "answer": 0,
+          "ru": "Мы семья. Наш дом большой."
+        },
+        {
+          "id": "sp3.m2.g-possessive.4",
+          "prompt_en": "They are cousins. ___ uncle is funny.",
+          "options": [
+            "Their",
+            "Our"
+          ],
+          "answer": 0,
+          "ru": "Они двоюродные братья. Их дядя смешной."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m2.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m2.family-tree",
+        "sp3.m2.mother",
+        "sp3.m2.father",
+        "sp3.m2.grandmother",
+        "sp3.m2.grandfather",
+        "sp3.m2.great"
+      ]
+    },
+    {
+      "id": "sp3.m2.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m2.aunt",
+        "sp3.m2.uncle",
+        "sp3.m2.cousin",
+        "sp3.m2.little",
+        "sp3.m2.live",
+        "sp3.m2.tall"
+      ]
+    },
+    {
+      "id": "sp3.m2.n3",
+      "kind": "grammar",
+      "grammar_id": "sp3.m2.g-possessive"
+    },
+    {
+      "id": "sp3.m2.n4",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m2.n5",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m2.n6",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

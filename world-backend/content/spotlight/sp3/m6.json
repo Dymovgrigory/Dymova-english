@@ -1,0 +1,381 @@
+{
+  "id": "sp3.m6",
+  "book": "sp3",
+  "order": 6,
+  "label": "Module 6",
+  "title_en": "Home, sweet home!",
+  "title_ru": "Дом, милый дом",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m6.next-to",
+      "en": "next to",
+      "ru": "рядом с",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.in-front-of",
+      "en": "in front of",
+      "ru": "перед",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.behind",
+      "en": "behind",
+      "ru": "за",
+      "accept_en": [],
+      "accept_ru": [
+        "позади"
+      ],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.cupboard",
+      "en": "cupboard",
+      "ru": "шкаф",
+      "accept_en": [],
+      "accept_ru": [
+        "буфет"
+      ],
+      "kind": "noun",
+      "image": "words/cupboard.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.mirror",
+      "en": "mirror",
+      "ru": "зеркало",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mirror.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.fridge",
+      "en": "fridge",
+      "ru": "холодильник",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/fridge.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.sofa",
+      "en": "sofa",
+      "ru": "диван",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sofa.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.cooker",
+      "en": "cooker",
+      "ru": "плита",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cooker.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.dish",
+      "en": "dish",
+      "ru": "тарелка",
+      "accept_en": [],
+      "accept_ru": [
+        "блюдо"
+      ],
+      "kind": "noun",
+      "image": "words/dish.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.glass",
+      "en": "glass",
+      "ru": "стакан",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/glass.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.shelf",
+      "en": "shelf",
+      "ru": "полка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/shelf.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.castle",
+      "en": "castle",
+      "ru": "замок",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/castle.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.famous",
+      "en": "famous",
+      "ru": "знаменитый",
+      "accept_en": [],
+      "accept_ru": [
+        "известный"
+      ],
+      "kind": "adj",
+      "image": "words/famous.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.prize",
+      "en": "prize",
+      "ru": "приз",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/prize.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.winner",
+      "en": "winner",
+      "ru": "победитель",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/winner.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.put",
+      "en": "put",
+      "ru": "класть",
+      "accept_en": [],
+      "accept_ru": [
+        "положить"
+      ],
+      "kind": "verb",
+      "image": "words/put.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m6.sky",
+      "en": "sky",
+      "ru": "небо",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sky.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m6.p1",
+      "en": "There is a fridge in the kitchen.",
+      "ru": "На кухне есть холодильник.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m6.fridge"
+      ],
+      "grammar_id": "sp3.m6.g-there-is"
+    },
+    {
+      "id": "sp3.m6.p2",
+      "en": "There are two sofas.",
+      "ru": "Там два дивана.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m6.sofa"
+      ],
+      "grammar_id": "sp3.m6.g-there-is"
+    },
+    {
+      "id": "sp3.m6.p3",
+      "en": "How many cupboards are there?",
+      "ru": "Сколько там шкафов?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m6.cupboard"
+      ],
+      "grammar_id": "sp3.m6.g-there-is"
+    },
+    {
+      "id": "sp3.m6.p4",
+      "en": "The mirror is next to the cupboard.",
+      "ru": "Зеркало рядом со шкафом.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m6.mirror",
+        "sp3.m6.next-to",
+        "sp3.m6.cupboard"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m6.p5",
+      "en": "Foxy is behind the sofa.",
+      "ru": "Фокси за диваном.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m6.behind",
+        "sp3.m6.sofa"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m6.p6",
+      "en": "A famous castle.",
+      "ru": "Знаменитый замок.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m6.famous",
+        "sp3.m6.castle"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m6.g-there-is",
+      "title_ru": "There is / there are — есть, находится",
+      "rule_ru": "There is — про один предмет: There is a sofa. There are — про несколько: There are two mirrors. Сколько? — How many… are there?",
+      "examples": [
+        {
+          "en": "There is a fridge in the kitchen.",
+          "ru": "На кухне есть холодильник."
+        },
+        {
+          "en": "There are two sofas.",
+          "ru": "Там два дивана."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m6.g-there-is.1",
+          "prompt_en": "There ___ a sofa in the living room.",
+          "options": [
+            "is",
+            "are"
+          ],
+          "answer": 0,
+          "ru": "В гостиной есть диван."
+        },
+        {
+          "id": "sp3.m6.g-there-is.2",
+          "prompt_en": "There ___ two mirrors.",
+          "options": [
+            "is",
+            "are"
+          ],
+          "answer": 1,
+          "ru": "Там два зеркала."
+        },
+        {
+          "id": "sp3.m6.g-there-is.3",
+          "prompt_en": "How many ___ are there?",
+          "options": [
+            "cupboard",
+            "cupboards"
+          ],
+          "answer": 1,
+          "ru": "Сколько там шкафов?"
+        },
+        {
+          "id": "sp3.m6.g-there-is.4",
+          "prompt_en": "The cat is ___ the sofa.",
+          "options": [
+            "behind",
+            "next"
+          ],
+          "answer": 0,
+          "ru": "Кошка за диваном."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m6.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m6.next-to",
+        "sp3.m6.in-front-of",
+        "sp3.m6.behind",
+        "sp3.m6.cupboard",
+        "sp3.m6.mirror"
+      ]
+    },
+    {
+      "id": "sp3.m6.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m6.fridge",
+        "sp3.m6.sofa",
+        "sp3.m6.cooker",
+        "sp3.m6.dish",
+        "sp3.m6.glass",
+        "sp3.m6.shelf"
+      ]
+    },
+    {
+      "id": "sp3.m6.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m6.castle",
+        "sp3.m6.famous",
+        "sp3.m6.prize",
+        "sp3.m6.winner",
+        "sp3.m6.put",
+        "sp3.m6.sky"
+      ]
+    },
+    {
+      "id": "sp3.m6.n4",
+      "kind": "grammar",
+      "grammar_id": "sp3.m6.g-there-is"
+    },
+    {
+      "id": "sp3.m6.n5",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m6.n6",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m6.n7",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

@@ -1,0 +1,354 @@
+{
+  "id": "sp2.m1",
+  "book": "sp2",
+  "order": 1,
+  "label": "Starter",
+  "title_en": "Hello! My Family!",
+  "title_ru": "Привет! Моя семья",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp2.m1.sister",
+      "en": "sister",
+      "ru": "сестра",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sister.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.brother",
+      "en": "brother",
+      "ru": "брат",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/brother.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.grandma",
+      "en": "grandma",
+      "ru": "бабушка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/grandma.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.grandpa",
+      "en": "grandpa",
+      "ru": "дедушка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/grandpa.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.children",
+      "en": "children",
+      "ru": "дети",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/children.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.friend",
+      "en": "friend",
+      "ru": "друг",
+      "accept_en": [],
+      "accept_ru": [
+        "подруга"
+      ],
+      "kind": "noun",
+      "image": "words/friend.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.white",
+      "en": "white",
+      "ru": "белый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/white.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.colour",
+      "en": "colour",
+      "ru": "цвет",
+      "accept_en": [
+        "color"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/colour.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.red",
+      "en": "red",
+      "ru": "красный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/red.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.yellow",
+      "en": "yellow",
+      "ru": "жёлтый",
+      "accept_en": [],
+      "accept_ru": [
+        "желтый"
+      ],
+      "kind": "adj",
+      "image": "words/yellow.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.green",
+      "en": "green",
+      "ru": "зелёный",
+      "accept_en": [],
+      "accept_ru": [
+        "зеленый"
+      ],
+      "kind": "adj",
+      "image": "words/green.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m1.blue",
+      "en": "blue",
+      "ru": "синий",
+      "accept_en": [],
+      "accept_ru": [
+        "голубой"
+      ],
+      "kind": "adj",
+      "image": "words/blue.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp2.m1.p1",
+      "en": "This is my sister.",
+      "ru": "Это моя сестра.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m1.sister"
+      ],
+      "grammar_id": "sp2.m1.g-this-is"
+    },
+    {
+      "id": "sp2.m1.p2",
+      "en": "This is my big brother.",
+      "ru": "Это мой старший брат.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m1.brother"
+      ],
+      "grammar_id": "sp2.m1.g-this-is"
+    },
+    {
+      "id": "sp2.m1.p3",
+      "en": "What colour is it?",
+      "ru": "Какого это цвета?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m1.colour"
+      ],
+      "grammar_id": "sp2.m1.g-this-is"
+    },
+    {
+      "id": "sp2.m1.p4",
+      "en": "Hello, Grandma!",
+      "ru": "Привет, бабушка!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m1.grandma"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m1.p5",
+      "en": "Grandpa is my friend.",
+      "ru": "Дедушка — мой друг.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m1.grandpa",
+        "sp2.m1.friend"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m1.p6",
+      "en": "It is white.",
+      "ru": "Он белый.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m1.white"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp2.m1.g-this-is",
+      "title_ru": "This is… / I'm… — Это… / Я…",
+      "rule_ru": "Показываем и знакомим: This is my sister — это моя сестра. О себе: I'm Foxy — я Фокси.",
+      "examples": [
+        {
+          "en": "This is my brother.",
+          "ru": "Это мой брат."
+        },
+        {
+          "en": "I'm Foxy.",
+          "ru": "Я Фокси."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp2.m1.g-this-is.1",
+          "prompt_en": "___ is my grandma.",
+          "options": [
+            "This",
+            "I"
+          ],
+          "answer": 0,
+          "ru": "Это моя бабушка."
+        },
+        {
+          "id": "sp2.m1.g-this-is.2",
+          "prompt_en": "I ___ Foxy.",
+          "options": [
+            "is",
+            "am"
+          ],
+          "answer": 1,
+          "ru": "Я Фокси."
+        },
+        {
+          "id": "sp2.m1.g-this-is.3",
+          "prompt_en": "This ___ my friend.",
+          "options": [
+            "is",
+            "am"
+          ],
+          "answer": 0,
+          "ru": "Это мой друг."
+        },
+        {
+          "id": "sp2.m1.g-this-is.4",
+          "prompt_en": "What colour ___ it?",
+          "options": [
+            "is",
+            "am"
+          ],
+          "answer": 0,
+          "ru": "Какого это цвета?"
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp2.m1.gr-a",
+      "grapheme": "a",
+      "sound_word": "apple"
+    },
+    {
+      "id": "sp2.m1.gr-e",
+      "grapheme": "e",
+      "sound_word": "egg"
+    },
+    {
+      "id": "sp2.m1.gr-i",
+      "grapheme": "i",
+      "sound_word": "ink"
+    },
+    {
+      "id": "sp2.m1.gr-o",
+      "grapheme": "o",
+      "sound_word": "orange"
+    },
+    {
+      "id": "sp2.m1.gr-u",
+      "grapheme": "u",
+      "sound_word": "umbrella"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp2.m1.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m1.sister",
+        "sp2.m1.brother",
+        "sp2.m1.grandma",
+        "sp2.m1.grandpa",
+        "sp2.m1.children",
+        "sp2.m1.friend"
+      ]
+    },
+    {
+      "id": "sp2.m1.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m1.white",
+        "sp2.m1.colour",
+        "sp2.m1.red",
+        "sp2.m1.yellow",
+        "sp2.m1.green",
+        "sp2.m1.blue"
+      ]
+    },
+    {
+      "id": "sp2.m1.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m1.gr-a",
+        "sp2.m1.gr-e",
+        "sp2.m1.gr-i",
+        "sp2.m1.gr-o",
+        "sp2.m1.gr-u"
+      ]
+    },
+    {
+      "id": "sp2.m1.n4",
+      "kind": "grammar",
+      "grammar_id": "sp2.m1.g-this-is"
+    },
+    {
+      "id": "sp2.m1.n5",
+      "kind": "chest"
+    },
+    {
+      "id": "sp2.m1.n6",
+      "kind": "review"
+    },
+    {
+      "id": "sp2.m1.n7",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ]
+}

@@ -166,7 +166,7 @@ export function PathScreen() {
           return (
             <section key={module.id} className="mb-14" aria-labelledby={`${module.id}-title`}>
               <div className="sticky top-[70px] z-10 mb-10 rounded-3xl bg-royal px-5 py-4 text-white shadow-[0_6px_0_var(--color-royal-edge)]">
-                <p className="text-[14px] font-bold text-crown">Модуль {module.order}</p>
+                <p className="text-[14px] font-bold text-crown">{module.label ?? `Модуль ${module.order}`}</p>
                 <h2 id={`${module.id}-title`} className="font-heading text-[26px] font-extrabold leading-8">{module.title_en}</h2>
                 <p className="text-[16px] font-semibold text-white/75">{module.title_ru}</p>
               </div>

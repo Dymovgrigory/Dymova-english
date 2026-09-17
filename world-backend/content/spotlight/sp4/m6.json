@@ -1,0 +1,401 @@
+{
+  "id": "sp4.m6",
+  "book": "sp4",
+  "order": 6,
+  "label": "Module 6",
+  "title_en": "Tell the tale!",
+  "title_ru": "Расскажи сказку",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m6.hare",
+      "en": "hare",
+      "ru": "заяц",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/hare.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.slow",
+      "en": "slow",
+      "ru": "медленный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/slow.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.race",
+      "en": "race",
+      "ru": "гонка",
+      "accept_en": [],
+      "accept_ru": [
+        "забег"
+      ],
+      "kind": "noun",
+      "image": "words/race.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.soon",
+      "en": "soon",
+      "ru": "скоро",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.rest",
+      "en": "rest",
+      "ru": "отдыхать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/rest.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.laugh",
+      "en": "laugh",
+      "ru": "смеяться",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/laugh.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.finish-line",
+      "en": "finish line",
+      "ru": "финиш",
+      "accept_en": [],
+      "accept_ru": [
+        "финишная черта"
+      ],
+      "kind": "verb",
+      "image": "words/finish-line.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.cross",
+      "en": "cross",
+      "ru": "пересечь",
+      "accept_en": [],
+      "accept_ru": [
+        "пересекать"
+      ],
+      "kind": "verb",
+      "image": "words/cross.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.porridge",
+      "en": "porridge",
+      "ru": "каша",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/porridge.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.study",
+      "en": "study",
+      "ru": "учиться",
+      "accept_en": [],
+      "accept_ru": [
+        "заниматься"
+      ],
+      "kind": "verb",
+      "image": "words/study.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.bark",
+      "en": "bark",
+      "ru": "лаять",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/bark.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.busy",
+      "en": "busy",
+      "ru": "занятой",
+      "accept_en": [],
+      "accept_ru": [
+        "занятый"
+      ],
+      "kind": "adj",
+      "image": "words/busy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.kitten",
+      "en": "kitten",
+      "ru": "котёнок",
+      "accept_en": [],
+      "accept_ru": [
+        "котенок"
+      ],
+      "kind": "noun",
+      "image": "words/kitten.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.lamb",
+      "en": "lamb",
+      "ru": "ягнёнок",
+      "accept_en": [],
+      "accept_ru": [
+        "ягненок",
+        "барашек"
+      ],
+      "kind": "noun",
+      "image": "words/lamb.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.follow",
+      "en": "follow",
+      "ru": "следовать",
+      "accept_en": [],
+      "accept_ru": [
+        "идти за"
+      ],
+      "kind": "verb",
+      "image": "words/follow.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.river",
+      "en": "river",
+      "ru": "река",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/river.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.daughter",
+      "en": "daughter",
+      "ru": "дочь",
+      "accept_en": [],
+      "accept_ru": [
+        "дочка"
+      ],
+      "kind": "noun",
+      "image": "words/daughter.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m6.son",
+      "en": "son",
+      "ru": "сын",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/son.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m6.p1",
+      "en": "The hare laughed at the tortoise.",
+      "ru": "Заяц смеялся над черепахой.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m6.hare",
+        "sp4.m6.laugh"
+      ],
+      "grammar_id": "sp4.m6.g-past"
+    },
+    {
+      "id": "sp4.m6.p2",
+      "en": "The dog barked.",
+      "ru": "Собака лаяла.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m6.bark"
+      ],
+      "grammar_id": "sp4.m6.g-past"
+    },
+    {
+      "id": "sp4.m6.p3",
+      "en": "Did you study yesterday?",
+      "ru": "Ты вчера занимался?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m6.study"
+      ],
+      "grammar_id": "sp4.m6.g-past"
+    },
+    {
+      "id": "sp4.m6.p4",
+      "en": "The lamb followed the girl.",
+      "ru": "Ягнёнок шёл за девочкой.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m6.lamb",
+        "sp4.m6.follow"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m6.p5",
+      "en": "A kitten by the river.",
+      "ru": "Котёнок у реки.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m6.kitten",
+        "sp4.m6.river"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m6.p6",
+      "en": "My son is busy.",
+      "ru": "Мой сын занят.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m6.son",
+        "sp4.m6.busy"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m6.g-past",
+      "title_ru": "Past Simple: played, laughed — что случилось",
+      "rule_ru": "О прошлом к правильным глаголам добавляем -ed: play — played, laugh — laughed. Вопрос: Did you…? Отрицание: didn't + глагол.",
+      "examples": [
+        {
+          "en": "The hare laughed at the tortoise.",
+          "ru": "Заяц смеялся над черепахой."
+        },
+        {
+          "en": "Did you study yesterday?",
+          "ru": "Ты вчера занимался?"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m6.g-past.1",
+          "prompt_en": "Yesterday I ___ football.",
+          "options": [
+            "played",
+            "play"
+          ],
+          "answer": 0,
+          "ru": "Вчера я играл в футбол."
+        },
+        {
+          "id": "sp4.m6.g-past.2",
+          "prompt_en": "The hare ___ at the tortoise.",
+          "options": [
+            "laughed",
+            "laughs"
+          ],
+          "answer": 0,
+          "ru": "Заяц смеялся над черепахой."
+        },
+        {
+          "id": "sp4.m6.g-past.3",
+          "prompt_en": "___ you study yesterday?",
+          "options": [
+            "Did",
+            "Does"
+          ],
+          "answer": 0,
+          "ru": "Ты вчера занимался?"
+        },
+        {
+          "id": "sp4.m6.g-past.4",
+          "prompt_en": "They ___ watch a film last night.",
+          "options": [
+            "didn't",
+            "don't"
+          ],
+          "answer": 0,
+          "ru": "Вчера вечером они не смотрели фильм."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m6.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m6.hare",
+        "sp4.m6.slow",
+        "sp4.m6.race",
+        "sp4.m6.soon",
+        "sp4.m6.rest",
+        "sp4.m6.laugh"
+      ]
+    },
+    {
+      "id": "sp4.m6.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m6.finish-line",
+        "sp4.m6.cross",
+        "sp4.m6.porridge",
+        "sp4.m6.study",
+        "sp4.m6.bark",
+        "sp4.m6.busy"
+      ]
+    },
+    {
+      "id": "sp4.m6.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m6.kitten",
+        "sp4.m6.lamb",
+        "sp4.m6.follow",
+        "sp4.m6.river",
+        "sp4.m6.daughter",
+        "sp4.m6.son"
+      ]
+    },
+    {
+      "id": "sp4.m6.n4",
+      "kind": "grammar",
+      "grammar_id": "sp4.m6.g-past"
+    },
+    {
+      "id": "sp4.m6.n5",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m6.n6",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m6.n7",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

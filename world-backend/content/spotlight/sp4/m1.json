@@ -1,0 +1,471 @@
+{
+  "id": "sp4.m1",
+  "book": "sp4",
+  "order": 1,
+  "label": "Module 1",
+  "title_en": "Family & friends!",
+  "title_ru": "Семья и друзья",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m1.slim",
+      "en": "slim",
+      "ru": "стройный",
+      "accept_en": [],
+      "accept_ru": [
+        "худощавый"
+      ],
+      "kind": "adj",
+      "image": "words/slim.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.kind",
+      "en": "kind",
+      "ru": "добрый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/kind.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.friendly",
+      "en": "friendly",
+      "ru": "дружелюбный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/friendly.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.vet",
+      "en": "vet",
+      "ru": "ветеринар",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/vet.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.plump",
+      "en": "plump",
+      "ru": "полный",
+      "accept_en": [],
+      "accept_ru": [
+        "пухлый"
+      ],
+      "kind": "adj",
+      "image": "words/plump.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.best-friend",
+      "en": "best friend",
+      "ru": "лучший друг",
+      "accept_en": [],
+      "accept_ru": [
+        "лучшая подруга"
+      ],
+      "kind": "noun",
+      "image": "words/best-friend.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.watch",
+      "en": "watch",
+      "ru": "часы",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/watch.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.hairbrush",
+      "en": "hairbrush",
+      "ru": "расчёска",
+      "accept_en": [],
+      "accept_ru": [
+        "щётка для волос"
+      ],
+      "kind": "noun",
+      "image": "words/hairbrush.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.roller-blades",
+      "en": "roller blades",
+      "ru": "роликовые коньки",
+      "accept_en": [
+        "rollerblades"
+      ],
+      "accept_ru": [
+        "ролики"
+      ],
+      "kind": "noun",
+      "image": "words/roller-blades.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.gloves",
+      "en": "gloves",
+      "ru": "перчатки",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/gloves.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.keys",
+      "en": "keys",
+      "ru": "ключи",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/keys.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.mobile-phone",
+      "en": "mobile phone",
+      "ru": "мобильный телефон",
+      "accept_en": [
+        "phone"
+      ],
+      "accept_ru": [
+        "телефон"
+      ],
+      "kind": "noun",
+      "image": "words/mobile-phone.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.camera",
+      "en": "camera",
+      "ru": "фотоаппарат",
+      "accept_en": [],
+      "accept_ru": [
+        "камера"
+      ],
+      "kind": "noun",
+      "image": "words/camera.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.guitar",
+      "en": "guitar",
+      "ru": "гитара",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/guitar.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.violin",
+      "en": "violin",
+      "ru": "скрипка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/violin.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.sixty",
+      "en": "sixty",
+      "ru": "шестьдесят",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sixty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.seventy",
+      "en": "seventy",
+      "ru": "семьдесят",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/seventy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.eighty",
+      "en": "eighty",
+      "ru": "восемьдесят",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/eighty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.ninety",
+      "en": "ninety",
+      "ru": "девяносто",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ninety.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.hundred",
+      "en": "hundred",
+      "ru": "сто",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/hundred.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.ski",
+      "en": "ski",
+      "ru": "кататься на лыжах",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/ski.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.sail",
+      "en": "sail",
+      "ru": "ходить под парусом",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/sail.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.skate",
+      "en": "skate",
+      "ru": "кататься на коньках",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/skate.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m1.surf",
+      "en": "surf",
+      "ru": "заниматься сёрфингом",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/surf.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m1.p1",
+      "en": "My best friend is kind.",
+      "ru": "Мой лучший друг добрый.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m1.best-friend",
+        "sp4.m1.kind"
+      ],
+      "grammar_id": "sp4.m1.g-look-like"
+    },
+    {
+      "id": "sp4.m1.p2",
+      "en": "He is slim and friendly.",
+      "ru": "Он стройный и дружелюбный.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m1.slim",
+        "sp4.m1.friendly"
+      ],
+      "grammar_id": "sp4.m1.g-look-like"
+    },
+    {
+      "id": "sp4.m1.p3",
+      "en": "She is skating.",
+      "ru": "Она катается на коньках.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m1.skate"
+      ],
+      "grammar_id": "sp4.m1.g-look-like"
+    },
+    {
+      "id": "sp4.m1.p4",
+      "en": "My uncle is a vet.",
+      "ru": "Мой дядя — ветеринар.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m1.vet"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m1.p5",
+      "en": "My camera is next to the guitar.",
+      "ru": "Мой фотоаппарат рядом с гитарой.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m1.camera",
+        "sp4.m1.guitar"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m1.p6",
+      "en": "Where are my gloves?",
+      "ru": "Где мои перчатки?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m1.gloves"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m1.g-look-like",
+      "title_ru": "What does he look like? — как он выглядит?",
+      "rule_ru": "Внешность: He's tall and slim. He's got fair hair. Что делает сейчас: What's he doing? He's skiing.",
+      "examples": [
+        {
+          "en": "He's tall and slim.",
+          "ru": "Он высокий и стройный."
+        },
+        {
+          "en": "What's William doing? He's skiing.",
+          "ru": "Что делает Уильям? Катается на лыжах."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m1.g-look-like.1",
+          "prompt_en": "What ___ he look like?",
+          "options": [
+            "does",
+            "do"
+          ],
+          "answer": 0,
+          "ru": "Как он выглядит?"
+        },
+        {
+          "id": "sp4.m1.g-look-like.2",
+          "prompt_en": "She ___ got fair hair.",
+          "options": [
+            "has",
+            "have"
+          ],
+          "answer": 0,
+          "ru": "У неё светлые волосы."
+        },
+        {
+          "id": "sp4.m1.g-look-like.3",
+          "prompt_en": "What's William ___? He's skiing.",
+          "options": [
+            "doing",
+            "do"
+          ],
+          "answer": 0,
+          "ru": "Что делает Уильям? Катается на лыжах."
+        },
+        {
+          "id": "sp4.m1.g-look-like.4",
+          "prompt_en": "My keys are ___ the table.",
+          "options": [
+            "on",
+            "at"
+          ],
+          "answer": 0,
+          "ru": "Мои ключи на столе."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m1.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m1.slim",
+        "sp4.m1.kind",
+        "sp4.m1.friendly",
+        "sp4.m1.vet",
+        "sp4.m1.plump",
+        "sp4.m1.best-friend"
+      ]
+    },
+    {
+      "id": "sp4.m1.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m1.watch",
+        "sp4.m1.hairbrush",
+        "sp4.m1.roller-blades",
+        "sp4.m1.gloves",
+        "sp4.m1.keys",
+        "sp4.m1.mobile-phone"
+      ]
+    },
+    {
+      "id": "sp4.m1.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m1.camera",
+        "sp4.m1.guitar",
+        "sp4.m1.violin",
+        "sp4.m1.sixty",
+        "sp4.m1.seventy",
+        "sp4.m1.eighty"
+      ]
+    },
+    {
+      "id": "sp4.m1.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m1.ninety",
+        "sp4.m1.hundred",
+        "sp4.m1.ski",
+        "sp4.m1.sail",
+        "sp4.m1.skate",
+        "sp4.m1.surf"
+      ]
+    },
+    {
+      "id": "sp4.m1.n5",
+      "kind": "grammar",
+      "grammar_id": "sp4.m1.g-look-like"
+    },
+    {
+      "id": "sp4.m1.n6",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m1.n7",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m1.n8",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

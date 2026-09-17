@@ -13,7 +13,7 @@ def courses(course: Course) -> dict:
             {
                 "id": book.id, "title": book.title, "grade": book.grade, "cefr": book.cefr, "band": book.band,
                 "modules": [
-                    {"id": m.id, "order": m.order, "title_en": m.title_en, "title_ru": m.title_ru}
+                    {"id": m.id, "order": m.order, "label": m.label, "title_en": m.title_en, "title_ru": m.title_ru}
                     for m in course.modules_of(book.id)
                 ],
             }
@@ -32,7 +32,7 @@ def path(external_key: str, course: Course, book_id: str) -> dict:
         "book": {"id": book.id, "title": book.title, "grade": book.grade, "cefr": book.cefr, "band": book.band},
         "modules": [
             {
-                "id": m.id, "order": m.order, "title_en": m.title_en, "title_ru": m.title_ru,
+                "id": m.id, "order": m.order, "label": m.label, "title_en": m.title_en, "title_ru": m.title_ru,
                 "nodes": [
                     {"id": n.id, "kind": n.kind, "status": statuses[n.id], "stars": done.get(n.id, {}).get("stars", 0)}
                     for n in m.nodes

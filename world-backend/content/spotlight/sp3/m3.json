@@ -1,0 +1,470 @@
+{
+  "id": "sp3.m3",
+  "book": "sp3",
+  "order": 3,
+  "label": "Module 3",
+  "title_en": "All the things I like!",
+  "title_ru": "Всё, что я люблю",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m3.jelly",
+      "en": "jelly",
+      "ru": "желе",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/jelly.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.vegetables",
+      "en": "vegetables",
+      "ru": "овощи",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/vegetables.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.water",
+      "en": "water",
+      "ru": "вода",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/water.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.lemonade",
+      "en": "lemonade",
+      "ru": "лимонад",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/lemonade.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.chicken",
+      "en": "chicken",
+      "ru": "курица",
+      "accept_en": [],
+      "accept_ru": [
+        "курятина"
+      ],
+      "kind": "noun",
+      "image": "words/chicken.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.lunch-box",
+      "en": "lunch box",
+      "ru": "ланч-бокс",
+      "accept_en": [],
+      "accept_ru": [
+        "коробка для завтрака"
+      ],
+      "kind": "noun",
+      "image": "words/lunch-box.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.potatoes",
+      "en": "potatoes",
+      "ru": "картофель",
+      "accept_en": [],
+      "accept_ru": [
+        "картошка"
+      ],
+      "kind": "noun",
+      "image": "words/potatoes.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.pasta",
+      "en": "pasta",
+      "ru": "макароны",
+      "accept_en": [],
+      "accept_ru": [
+        "паста"
+      ],
+      "kind": "noun",
+      "image": "words/pasta.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.carrots",
+      "en": "carrots",
+      "ru": "морковь",
+      "accept_en": [],
+      "accept_ru": [
+        "морковка"
+      ],
+      "kind": "noun",
+      "image": "words/carrots.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.rice",
+      "en": "rice",
+      "ru": "рис",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/rice.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.popcorn",
+      "en": "popcorn",
+      "ru": "попкорн",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/popcorn.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.menu",
+      "en": "menu",
+      "ru": "меню",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/menu.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.shopping-list",
+      "en": "shopping list",
+      "ru": "список покупок",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/shopping-list.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.need",
+      "en": "need",
+      "ru": "нуждаться",
+      "accept_en": [],
+      "accept_ru": [
+        "нужно"
+      ],
+      "kind": "verb",
+      "image": "words/need.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.fruit",
+      "en": "fruit",
+      "ru": "фрукты",
+      "accept_en": [],
+      "accept_ru": [
+        "фрукт"
+      ],
+      "kind": "noun",
+      "image": "words/fruit.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.breakfast",
+      "en": "breakfast",
+      "ru": "завтрак",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/breakfast.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m3.toast",
+      "en": "toast",
+      "ru": "тост",
+      "accept_en": [],
+      "accept_ru": [
+        "поджаренный хлеб"
+      ],
+      "kind": "noun",
+      "image": "words/toast.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m3.p1",
+      "en": "Do you like chicken?",
+      "ru": "Ты любишь курицу?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.chicken"
+      ],
+      "grammar_id": "sp3.m3.g-does"
+    },
+    {
+      "id": "sp3.m3.p2",
+      "en": "He likes jelly.",
+      "ru": "Он любит желе.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.jelly"
+      ],
+      "grammar_id": "sp3.m3.g-does"
+    },
+    {
+      "id": "sp3.m3.p3",
+      "en": "She doesn't like carrots.",
+      "ru": "Она не любит морковь.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.carrots"
+      ],
+      "grammar_id": "sp3.m3.g-does"
+    },
+    {
+      "id": "sp3.m3.p4",
+      "en": "Can I have some rice?",
+      "ru": "Можно мне риса?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.rice"
+      ],
+      "grammar_id": "sp3.m3.g-some"
+    },
+    {
+      "id": "sp3.m3.p5",
+      "en": "We need some potatoes.",
+      "ru": "Нам нужна картошка.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.need",
+        "sp3.m3.potatoes"
+      ],
+      "grammar_id": "sp3.m3.g-some"
+    },
+    {
+      "id": "sp3.m3.p6",
+      "en": "I haven't got any water.",
+      "ru": "У меня нет воды.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.water"
+      ],
+      "grammar_id": "sp3.m3.g-some"
+    },
+    {
+      "id": "sp3.m3.p7",
+      "en": "Toast for breakfast.",
+      "ru": "Тост на завтрак.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.toast",
+        "sp3.m3.breakfast"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m3.p8",
+      "en": "Fruit in my lunch box.",
+      "ru": "Фрукты в моём ланч-боксе.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m3.fruit",
+        "sp3.m3.lunch-box"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m3.g-does",
+      "title_ru": "Do you like…? Does he like…? — любишь ли?",
+      "rule_ru": "Про тебя, нас, них спрашиваем Do: Do you like rice? Про него или неё — Does, а в ответе he likes: He likes jelly.",
+      "examples": [
+        {
+          "en": "Do you like chicken? Yes, I do.",
+          "ru": "Ты любишь курицу? Да."
+        },
+        {
+          "en": "He likes jelly.",
+          "ru": "Он любит желе."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m3.g-does.1",
+          "prompt_en": "___ you like chicken?",
+          "options": [
+            "Do",
+            "Does"
+          ],
+          "answer": 0,
+          "ru": "Ты любишь курицу?"
+        },
+        {
+          "id": "sp3.m3.g-does.2",
+          "prompt_en": "___ he like eggs?",
+          "options": [
+            "Do",
+            "Does"
+          ],
+          "answer": 1,
+          "ru": "Он любит яйца?"
+        },
+        {
+          "id": "sp3.m3.g-does.3",
+          "prompt_en": "He ___ jelly.",
+          "options": [
+            "like",
+            "likes"
+          ],
+          "answer": 1,
+          "ru": "Он любит желе."
+        },
+        {
+          "id": "sp3.m3.g-does.4",
+          "prompt_en": "No, he ___.",
+          "options": [
+            "don't",
+            "doesn't"
+          ],
+          "answer": 1,
+          "ru": "Нет, не любит."
+        }
+      ]
+    },
+    {
+      "id": "sp3.m3.g-some",
+      "title_ru": "Some / any — немного, нисколько",
+      "rule_ru": "Some — в утверждениях и просьбах: some rice. Any — в вопросах и отрицаниях: I haven't got any water.",
+      "examples": [
+        {
+          "en": "Can I have some pasta?",
+          "ru": "Можно мне пасты?"
+        },
+        {
+          "en": "I haven't got any water.",
+          "ru": "У меня нет воды."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m3.g-some.1",
+          "prompt_en": "Can I have ___ pasta?",
+          "options": [
+            "some",
+            "any"
+          ],
+          "answer": 0,
+          "ru": "Можно мне пасты?"
+        },
+        {
+          "id": "sp3.m3.g-some.2",
+          "prompt_en": "I haven't got ___ rice.",
+          "options": [
+            "some",
+            "any"
+          ],
+          "answer": 1,
+          "ru": "У меня нет риса."
+        },
+        {
+          "id": "sp3.m3.g-some.3",
+          "prompt_en": "We need ___ carrots.",
+          "options": [
+            "some",
+            "any"
+          ],
+          "answer": 0,
+          "ru": "Нам нужна морковь."
+        },
+        {
+          "id": "sp3.m3.g-some.4",
+          "prompt_en": "Have you got ___ popcorn?",
+          "options": [
+            "any",
+            "some"
+          ],
+          "answer": 0,
+          "ru": "У тебя есть попкорн?"
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m3.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m3.jelly",
+        "sp3.m3.vegetables",
+        "sp3.m3.water",
+        "sp3.m3.lemonade",
+        "sp3.m3.chicken"
+      ]
+    },
+    {
+      "id": "sp3.m3.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m3.lunch-box",
+        "sp3.m3.potatoes",
+        "sp3.m3.pasta",
+        "sp3.m3.carrots",
+        "sp3.m3.rice",
+        "sp3.m3.popcorn"
+      ]
+    },
+    {
+      "id": "sp3.m3.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m3.menu",
+        "sp3.m3.shopping-list",
+        "sp3.m3.need",
+        "sp3.m3.fruit",
+        "sp3.m3.breakfast",
+        "sp3.m3.toast"
+      ]
+    },
+    {
+      "id": "sp3.m3.n4",
+      "kind": "grammar",
+      "grammar_id": "sp3.m3.g-does"
+    },
+    {
+      "id": "sp3.m3.n5",
+      "kind": "grammar",
+      "grammar_id": "sp3.m3.g-some"
+    },
+    {
+      "id": "sp3.m3.n6",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m3.n7",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m3.n8",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

@@ -24,7 +24,7 @@ def test_courses_are_public(client):
     body = client.get("/api/v2/courses").json()
     assert [b["id"] for b in body["books"]] == ["sp1", "sp3"]
     assert body["books"][0]["modules"][0] == {
-        "id": "sp1.m1", "order": 1, "title_en": "My Family!", "title_ru": "Моя семья",
+        "id": "sp1.m1", "order": 1, "label": None, "title_en": "My Family!", "title_ru": "Моя семья",
     }
 
 

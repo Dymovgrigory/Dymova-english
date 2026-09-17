@@ -1,0 +1,643 @@
+{
+  "id": "sp4.m2",
+  "book": "sp4",
+  "order": 2,
+  "label": "Module 2",
+  "title_en": "A working day!",
+  "title_ru": "Рабочий день",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m2.station",
+      "en": "station",
+      "ru": "станция",
+      "accept_en": [],
+      "accept_ru": [
+        "вокзал"
+      ],
+      "kind": "noun",
+      "image": "words/station.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.garage",
+      "en": "garage",
+      "ru": "гараж",
+      "accept_en": [],
+      "accept_ru": [
+        "автомастерская"
+      ],
+      "kind": "noun",
+      "image": "words/garage.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.cafe",
+      "en": "cafe",
+      "ru": "кафе",
+      "accept_en": [
+        "café"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cafe.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.theatre",
+      "en": "theatre",
+      "ru": "театр",
+      "accept_en": [
+        "theater"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/theatre.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.hospital",
+      "en": "hospital",
+      "ru": "больница",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/hospital.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.baker-s",
+      "en": "baker's",
+      "ru": "булочная",
+      "accept_en": [],
+      "accept_ru": [
+        "пекарня"
+      ],
+      "kind": "noun",
+      "image": "words/baker-s.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.mechanic",
+      "en": "mechanic",
+      "ru": "механик",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mechanic.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.postman",
+      "en": "postman",
+      "ru": "почтальон",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/postman.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.post-office",
+      "en": "post office",
+      "ru": "почта",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/post-office.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.waiter",
+      "en": "waiter",
+      "ru": "официант",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/waiter.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.nurse",
+      "en": "nurse",
+      "ru": "медсестра",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/nurse.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.uniform",
+      "en": "uniform",
+      "ru": "форма",
+      "accept_en": [],
+      "accept_ru": [
+        "униформа"
+      ],
+      "kind": "noun",
+      "image": "words/uniform.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.wear",
+      "en": "wear",
+      "ru": "носить",
+      "accept_en": [],
+      "accept_ru": [
+        "надевать"
+      ],
+      "kind": "verb",
+      "image": "words/wear.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.always",
+      "en": "always",
+      "ru": "всегда",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.usually",
+      "en": "usually",
+      "ru": "обычно",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.sometimes",
+      "en": "sometimes",
+      "ru": "иногда",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.never",
+      "en": "never",
+      "ru": "никогда",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.often",
+      "en": "often",
+      "ru": "часто",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.wash",
+      "en": "wash",
+      "ru": "мыть",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/wash.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.sports-centre",
+      "en": "sports centre",
+      "ru": "спортивный центр",
+      "accept_en": [
+        "sports center"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sports-centre.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.volleyball",
+      "en": "volleyball",
+      "ru": "волейбол",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/volleyball.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.badminton",
+      "en": "badminton",
+      "ru": "бадминтон",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/badminton.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.tennis",
+      "en": "tennis",
+      "ru": "теннис",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tennis.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.baseball",
+      "en": "baseball",
+      "ru": "бейсбол",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/baseball.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.hockey",
+      "en": "hockey",
+      "ru": "хоккей",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/hockey.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.quarter",
+      "en": "quarter",
+      "ru": "четверть",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.half",
+      "en": "half",
+      "ru": "половина",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.past",
+      "en": "past",
+      "ru": "после",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.police-officer",
+      "en": "police officer",
+      "ru": "полицейский",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/police-officer.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.doctor",
+      "en": "doctor",
+      "ru": "врач",
+      "accept_en": [],
+      "accept_ru": [
+        "доктор"
+      ],
+      "kind": "noun",
+      "image": "words/doctor.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m2.polite",
+      "en": "polite",
+      "ru": "вежливый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/polite.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m2.p1",
+      "en": "I always wash the dishes.",
+      "ru": "Я всегда мою посуду.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.always",
+        "sp4.m2.wash"
+      ],
+      "grammar_id": "sp4.m2.g-often"
+    },
+    {
+      "id": "sp4.m2.p2",
+      "en": "He never plays hockey.",
+      "ru": "Он никогда не играет в хоккей.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.never",
+        "sp4.m2.hockey"
+      ],
+      "grammar_id": "sp4.m2.g-often"
+    },
+    {
+      "id": "sp4.m2.p3",
+      "en": "It's half past three.",
+      "ru": "Половина четвёртого.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.half",
+        "sp4.m2.past"
+      ],
+      "grammar_id": "sp4.m2.g-often"
+    },
+    {
+      "id": "sp4.m2.p4",
+      "en": "A nurse has to wear a uniform.",
+      "ru": "Медсестре нужно носить форму.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.nurse",
+        "sp4.m2.uniform",
+        "sp4.m2.wear"
+      ],
+      "grammar_id": "sp4.m2.g-have-to"
+    },
+    {
+      "id": "sp4.m2.p5",
+      "en": "I have to go to the post office.",
+      "ru": "Мне нужно сходить на почту.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.post-office"
+      ],
+      "grammar_id": "sp4.m2.g-have-to"
+    },
+    {
+      "id": "sp4.m2.p6",
+      "en": "The postman is polite.",
+      "ru": "Почтальон вежливый.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.postman",
+        "sp4.m2.polite"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m2.p7",
+      "en": "My mother is a doctor at the hospital.",
+      "ru": "Моя мама — врач в больнице.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.doctor",
+        "sp4.m2.hospital"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m2.p8",
+      "en": "We sometimes play tennis.",
+      "ru": "Мы иногда играем в теннис.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m2.sometimes",
+        "sp4.m2.tennis"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m2.g-often",
+      "title_ru": "Always, sometimes, never — как часто?",
+      "rule_ru": "Как часто: always — всегда, usually — обычно, sometimes — иногда, never — никогда. Ставим перед глаголом: I always wash the dishes.",
+      "examples": [
+        {
+          "en": "I always wash the dishes.",
+          "ru": "Я всегда мою посуду."
+        },
+        {
+          "en": "It's half past three.",
+          "ru": "Половина четвёртого."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m2.g-often.1",
+          "prompt_en": "I ___ play hockey. I don't like it.",
+          "options": [
+            "never",
+            "always"
+          ],
+          "answer": 0,
+          "ru": "Я никогда не играю в хоккей."
+        },
+        {
+          "id": "sp4.m2.g-often.2",
+          "prompt_en": "She ___ to school every day.",
+          "options": [
+            "goes",
+            "go"
+          ],
+          "answer": 0,
+          "ru": "Она ходит в школу каждый день."
+        },
+        {
+          "id": "sp4.m2.g-often.3",
+          "prompt_en": "It's half ___ five.",
+          "options": [
+            "past",
+            "to"
+          ],
+          "answer": 0,
+          "ru": "Половина шестого."
+        },
+        {
+          "id": "sp4.m2.g-often.4",
+          "prompt_en": "What ___ he do? He's a mechanic.",
+          "options": [
+            "does",
+            "do"
+          ],
+          "answer": 0,
+          "ru": "Кем он работает? Механиком."
+        }
+      ]
+    },
+    {
+      "id": "sp4.m2.g-have-to",
+      "title_ru": "Have to — нужно, приходится",
+      "rule_ru": "Have to — нужно, должен: I have to wash the dishes. Про него или неё — has to: A nurse has to wear a uniform.",
+      "examples": [
+        {
+          "en": "I have to go to the post office.",
+          "ru": "Мне нужно сходить на почту."
+        },
+        {
+          "en": "A nurse has to wear a uniform.",
+          "ru": "Медсестре нужно носить форму."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m2.g-have-to.1",
+          "prompt_en": "I ___ to clean my room.",
+          "options": [
+            "have",
+            "has"
+          ],
+          "answer": 0,
+          "ru": "Мне нужно убрать комнату."
+        },
+        {
+          "id": "sp4.m2.g-have-to.2",
+          "prompt_en": "She ___ to wear a uniform.",
+          "options": [
+            "has",
+            "have"
+          ],
+          "answer": 0,
+          "ru": "Ей нужно носить форму."
+        },
+        {
+          "id": "sp4.m2.g-have-to.3",
+          "prompt_en": "Do you have ___ go?",
+          "options": [
+            "to",
+            "at"
+          ],
+          "answer": 0,
+          "ru": "Тебе нужно идти?"
+        },
+        {
+          "id": "sp4.m2.g-have-to.4",
+          "prompt_en": "He doesn't ___ to wash the dishes.",
+          "options": [
+            "have",
+            "has"
+          ],
+          "answer": 0,
+          "ru": "Ему не нужно мыть посуду."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m2.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m2.station",
+        "sp4.m2.garage",
+        "sp4.m2.cafe",
+        "sp4.m2.theatre",
+        "sp4.m2.hospital",
+        "sp4.m2.baker-s"
+      ]
+    },
+    {
+      "id": "sp4.m2.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m2.mechanic",
+        "sp4.m2.postman",
+        "sp4.m2.post-office",
+        "sp4.m2.waiter",
+        "sp4.m2.nurse",
+        "sp4.m2.uniform",
+        "sp4.m2.wear"
+      ]
+    },
+    {
+      "id": "sp4.m2.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m2.always",
+        "sp4.m2.usually",
+        "sp4.m2.sometimes",
+        "sp4.m2.never",
+        "sp4.m2.often",
+        "sp4.m2.wash"
+      ]
+    },
+    {
+      "id": "sp4.m2.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m2.sports-centre",
+        "sp4.m2.volleyball",
+        "sp4.m2.badminton",
+        "sp4.m2.tennis",
+        "sp4.m2.baseball",
+        "sp4.m2.hockey"
+      ]
+    },
+    {
+      "id": "sp4.m2.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m2.quarter",
+        "sp4.m2.half",
+        "sp4.m2.past",
+        "sp4.m2.police-officer",
+        "sp4.m2.doctor",
+        "sp4.m2.polite"
+      ]
+    },
+    {
+      "id": "sp4.m2.n6",
+      "kind": "grammar",
+      "grammar_id": "sp4.m2.g-often"
+    },
+    {
+      "id": "sp4.m2.n7",
+      "kind": "grammar",
+      "grammar_id": "sp4.m2.g-have-to"
+    },
+    {
+      "id": "sp4.m2.n8",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m2.n9",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m2.n10",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

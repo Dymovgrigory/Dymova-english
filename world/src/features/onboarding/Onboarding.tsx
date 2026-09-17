@@ -150,6 +150,7 @@ export function Onboarding() {
                 book.modules.map((module) => (
                   <Choice key={module.id} state={moduleId === module.id ? "selected" : "idle"} onPick={() => setModuleId(module.id)}>
                     <span className="flex flex-col">
+                      <span className="text-[13px] font-bold text-ink-soft">{module.label ?? `Модуль ${module.order}`}</span>
                       <span className="text-[20px] font-extrabold">{module.title_en}</span>
                       <span className="text-[15px] font-semibold text-ink-soft">{module.title_ru}</span>
                     </span>

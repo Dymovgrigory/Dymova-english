@@ -1,0 +1,369 @@
+{
+  "id": "sp3.m4",
+  "book": "sp3",
+  "order": 4,
+  "label": "Module 4",
+  "title_en": "Come in and play!",
+  "title_ru": "Заходи поиграть!",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m4.musical-box",
+      "en": "musical box",
+      "ru": "музыкальная шкатулка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/musical-box.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.tea-set",
+      "en": "tea set",
+      "ru": "чайный сервиз",
+      "accept_en": [],
+      "accept_ru": [
+        "чайный набор"
+      ],
+      "kind": "noun",
+      "image": "words/tea-set.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.elephant",
+      "en": "elephant",
+      "ru": "слон",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/elephant.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.rocking-horse",
+      "en": "rocking horse",
+      "ru": "лошадка-качалка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/rocking-horse.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.aeroplane",
+      "en": "aeroplane",
+      "ru": "самолёт",
+      "accept_en": [
+        "airplane"
+      ],
+      "accept_ru": [
+        "самолет"
+      ],
+      "kind": "noun",
+      "image": "words/aeroplane.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.computer",
+      "en": "computer",
+      "ru": "компьютер",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/computer.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.armchair",
+      "en": "armchair",
+      "ru": "кресло",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/armchair.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.playroom",
+      "en": "playroom",
+      "ru": "игровая комната",
+      "accept_en": [],
+      "accept_ru": [
+        "игровая"
+      ],
+      "kind": "noun",
+      "image": "words/playroom.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.lamp",
+      "en": "lamp",
+      "ru": "лампа",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/lamp.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.game",
+      "en": "game",
+      "ru": "игра",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/game.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.present",
+      "en": "present",
+      "ru": "подарок",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/present.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.fairy-tale",
+      "en": "fairy tale",
+      "ru": "сказка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/fairy-tale.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.silly",
+      "en": "silly",
+      "ru": "глупый",
+      "accept_en": [],
+      "accept_ru": [
+        "глупенький"
+      ],
+      "kind": "adj",
+      "image": "words/silly.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.shout",
+      "en": "shout",
+      "ru": "кричать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/shout.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.careful",
+      "en": "careful",
+      "ru": "осторожный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/careful.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m4.whose",
+      "en": "whose",
+      "ru": "чей",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m4.p1",
+      "en": "Whose is this lamp?",
+      "ru": "Чья это лампа?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m4.whose",
+        "sp3.m4.lamp"
+      ],
+      "grammar_id": "sp3.m4.g-whose"
+    },
+    {
+      "id": "sp3.m4.p2",
+      "en": "It's an elephant.",
+      "ru": "Это слон.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m4.elephant"
+      ],
+      "grammar_id": "sp3.m4.g-whose"
+    },
+    {
+      "id": "sp3.m4.p3",
+      "en": "These are my presents.",
+      "ru": "Это мои подарки.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m4.present"
+      ],
+      "grammar_id": "sp3.m4.g-whose"
+    },
+    {
+      "id": "sp3.m4.p4",
+      "en": "Be careful!",
+      "ru": "Будь осторожен!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m4.careful"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m4.p5",
+      "en": "A computer in the playroom.",
+      "ru": "Компьютер в игровой комнате.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m4.computer",
+        "sp3.m4.playroom"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m4.p6",
+      "en": "That is a silly game.",
+      "ru": "Это глупая игра.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m4.silly",
+        "sp3.m4.game"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m4.g-whose",
+      "title_ru": "Whose? a / an — чей? артикли",
+      "rule_ru": "Whose is it? — чьё это? It's Mum's — мамино. Перед гласным звуком ставим an: an elephant, перед согласным — a: a lamp.",
+      "examples": [
+        {
+          "en": "Whose is this musical box? It's Mum's.",
+          "ru": "Чья это шкатулка? Мамина."
+        },
+        {
+          "en": "It's an elephant.",
+          "ru": "Это слон."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m4.g-whose.1",
+          "prompt_en": "___ is this musical box?",
+          "options": [
+            "Whose",
+            "Who"
+          ],
+          "answer": 0,
+          "ru": "Чья это музыкальная шкатулка?"
+        },
+        {
+          "id": "sp3.m4.g-whose.2",
+          "prompt_en": "This is ___ elephant.",
+          "options": [
+            "a",
+            "an"
+          ],
+          "answer": 1,
+          "ru": "Это слон."
+        },
+        {
+          "id": "sp3.m4.g-whose.3",
+          "prompt_en": "It's ___ lamp.",
+          "options": [
+            "a",
+            "an"
+          ],
+          "answer": 0,
+          "ru": "Это лампа."
+        },
+        {
+          "id": "sp3.m4.g-whose.4",
+          "prompt_en": "These ___ my toys.",
+          "options": [
+            "is",
+            "are"
+          ],
+          "answer": 1,
+          "ru": "Это мои игрушки."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m4.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m4.musical-box",
+        "sp3.m4.tea-set",
+        "sp3.m4.elephant",
+        "sp3.m4.rocking-horse",
+        "sp3.m4.aeroplane"
+      ]
+    },
+    {
+      "id": "sp3.m4.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m4.computer",
+        "sp3.m4.armchair",
+        "sp3.m4.playroom",
+        "sp3.m4.lamp",
+        "sp3.m4.game",
+        "sp3.m4.present"
+      ]
+    },
+    {
+      "id": "sp3.m4.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m4.fairy-tale",
+        "sp3.m4.silly",
+        "sp3.m4.shout",
+        "sp3.m4.careful",
+        "sp3.m4.whose"
+      ]
+    },
+    {
+      "id": "sp3.m4.n4",
+      "kind": "grammar",
+      "grammar_id": "sp3.m4.g-whose"
+    },
+    {
+      "id": "sp3.m4.n5",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m4.n6",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m4.n7",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

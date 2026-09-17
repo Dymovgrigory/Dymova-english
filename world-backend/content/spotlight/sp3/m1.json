@@ -1,0 +1,517 @@
+{
+  "id": "sp3.m1",
+  "book": "sp3",
+  "order": 1,
+  "label": "Module 1",
+  "title_en": "School days!",
+  "title_ru": "Школьные дни",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m1.school-bag",
+      "en": "school bag",
+      "ru": "портфель",
+      "accept_en": [
+        "schoolbag"
+      ],
+      "accept_ru": [
+        "рюкзак"
+      ],
+      "kind": "noun",
+      "image": "words/school-bag.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.ruler",
+      "en": "ruler",
+      "ru": "линейка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ruler.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.pencil-case",
+      "en": "pencil case",
+      "ru": "пенал",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pencil-case.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.rubber",
+      "en": "rubber",
+      "ru": "ластик",
+      "accept_en": [
+        "eraser"
+      ],
+      "accept_ru": [
+        "резинка"
+      ],
+      "kind": "noun",
+      "image": "words/rubber.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.book",
+      "en": "book",
+      "ru": "книга",
+      "accept_en": [],
+      "accept_ru": [
+        "учебник"
+      ],
+      "kind": "noun",
+      "image": "words/book.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.eleven",
+      "en": "eleven",
+      "ru": "одиннадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/eleven.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.twelve",
+      "en": "twelve",
+      "ru": "двенадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/twelve.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.thirteen",
+      "en": "thirteen",
+      "ru": "тринадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/thirteen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.fourteen",
+      "en": "fourteen",
+      "ru": "четырнадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/fourteen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.fifteen",
+      "en": "fifteen",
+      "ru": "пятнадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/fifteen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.sixteen",
+      "en": "sixteen",
+      "ru": "шестнадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sixteen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.seventeen",
+      "en": "seventeen",
+      "ru": "семнадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/seventeen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.eighteen",
+      "en": "eighteen",
+      "ru": "восемнадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/eighteen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.nineteen",
+      "en": "nineteen",
+      "ru": "девятнадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/nineteen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.twenty",
+      "en": "twenty",
+      "ru": "двадцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/twenty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.english",
+      "en": "English",
+      "ru": "английский язык",
+      "accept_en": [],
+      "accept_ru": [
+        "английский"
+      ],
+      "kind": "noun",
+      "image": "words/english.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.maths",
+      "en": "Maths",
+      "ru": "математика",
+      "accept_en": [
+        "math"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/maths.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.art",
+      "en": "Art",
+      "ru": "рисование",
+      "accept_en": [],
+      "accept_ru": [
+        "изо"
+      ],
+      "kind": "noun",
+      "image": "words/art.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.music",
+      "en": "Music",
+      "ru": "музыка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/music.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.pe",
+      "en": "PE",
+      "ru": "физкультура",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pe.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.science",
+      "en": "Science",
+      "ru": "естествознание",
+      "accept_en": [],
+      "accept_ru": [
+        "окружающий мир"
+      ],
+      "kind": "noun",
+      "image": "words/science.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.history",
+      "en": "History",
+      "ru": "история",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/history.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.geography",
+      "en": "Geography",
+      "ru": "география",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/geography.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.subject",
+      "en": "subject",
+      "ru": "предмет",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.get",
+      "en": "get",
+      "ru": "взять",
+      "accept_en": [],
+      "accept_ru": [
+        "брать"
+      ],
+      "kind": "verb",
+      "image": "words/get.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.late",
+      "en": "late",
+      "ru": "поздно",
+      "accept_en": [],
+      "accept_ru": [
+        "опаздывать"
+      ],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m1.come",
+      "en": "come",
+      "ru": "приходить",
+      "accept_en": [],
+      "accept_ru": [
+        "идти"
+      ],
+      "kind": "verb",
+      "image": "words/come.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m1.p1",
+      "en": "Get your ruler!",
+      "ru": "Возьми линейку!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m1.get",
+        "sp3.m1.ruler"
+      ],
+      "grammar_id": "sp3.m1.g-orders"
+    },
+    {
+      "id": "sp3.m1.p2",
+      "en": "Don't be late!",
+      "ru": "Не опаздывай!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m1.late"
+      ],
+      "grammar_id": "sp3.m1.g-orders"
+    },
+    {
+      "id": "sp3.m1.p3",
+      "en": "Come to school!",
+      "ru": "Приходи в школу!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m1.come"
+      ],
+      "grammar_id": "sp3.m1.g-orders"
+    },
+    {
+      "id": "sp3.m1.p4",
+      "en": "My favourite subject is Art.",
+      "ru": "Мой любимый предмет — рисование.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m1.subject",
+        "sp3.m1.art"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m1.p5",
+      "en": "Twelve pencils in my pencil case.",
+      "ru": "Двенадцать карандашей в моём пенале.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m1.twelve",
+        "sp3.m1.pencil-case"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m1.p6",
+      "en": "I like English and Music.",
+      "ru": "Я люблю английский и музыку.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m1.english",
+        "sp3.m1.music"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m1.g-orders",
+      "title_ru": "Get your book! Don't be late! — просьбы и команды",
+      "rule_ru": "Когда просим или командуем, начинаем с глагола: Get your ruler! Если нельзя — Don't: Don't be late!",
+      "examples": [
+        {
+          "en": "Get your school bag!",
+          "ru": "Возьми портфель!"
+        },
+        {
+          "en": "Don't be late!",
+          "ru": "Не опаздывай!"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m1.g-orders.1",
+          "prompt_en": "___ your school bag!",
+          "options": [
+            "Get",
+            "Gets"
+          ],
+          "answer": 0,
+          "ru": "Возьми портфель!"
+        },
+        {
+          "id": "sp3.m1.g-orders.2",
+          "prompt_en": "Don't ___ late!",
+          "options": [
+            "be",
+            "is"
+          ],
+          "answer": 0,
+          "ru": "Не опаздывай!"
+        },
+        {
+          "id": "sp3.m1.g-orders.3",
+          "prompt_en": "___ to school!",
+          "options": [
+            "Come",
+            "Comes"
+          ],
+          "answer": 0,
+          "ru": "Приходи в школу!"
+        },
+        {
+          "id": "sp3.m1.g-orders.4",
+          "prompt_en": "What's ___ favourite subject?",
+          "options": [
+            "your",
+            "you"
+          ],
+          "answer": 0,
+          "ru": "Какой твой любимый предмет?"
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m1.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m1.school-bag",
+        "sp3.m1.ruler",
+        "sp3.m1.pencil-case",
+        "sp3.m1.rubber",
+        "sp3.m1.book"
+      ]
+    },
+    {
+      "id": "sp3.m1.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m1.eleven",
+        "sp3.m1.twelve",
+        "sp3.m1.thirteen",
+        "sp3.m1.fourteen",
+        "sp3.m1.fifteen"
+      ]
+    },
+    {
+      "id": "sp3.m1.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m1.sixteen",
+        "sp3.m1.seventeen",
+        "sp3.m1.eighteen",
+        "sp3.m1.nineteen",
+        "sp3.m1.twenty"
+      ]
+    },
+    {
+      "id": "sp3.m1.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m1.english",
+        "sp3.m1.maths",
+        "sp3.m1.art",
+        "sp3.m1.music",
+        "sp3.m1.pe",
+        "sp3.m1.science"
+      ]
+    },
+    {
+      "id": "sp3.m1.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m1.history",
+        "sp3.m1.geography",
+        "sp3.m1.subject",
+        "sp3.m1.get",
+        "sp3.m1.late",
+        "sp3.m1.come"
+      ]
+    },
+    {
+      "id": "sp3.m1.n6",
+      "kind": "grammar",
+      "grammar_id": "sp3.m1.g-orders"
+    },
+    {
+      "id": "sp3.m1.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m1.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m1.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

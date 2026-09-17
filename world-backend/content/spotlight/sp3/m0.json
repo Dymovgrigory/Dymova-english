@@ -1,0 +1,145 @@
+{
+  "id": "sp3.m0",
+  "book": "sp3",
+  "order": 0,
+  "label": "Starter",
+  "title_en": "Welcome back!",
+  "title_ru": "С возвращением!",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m0.again",
+      "en": "again",
+      "ru": "снова",
+      "accept_en": [],
+      "accept_ru": [
+        "опять"
+      ],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m0.everyone",
+      "en": "everyone",
+      "ru": "все",
+      "accept_en": [],
+      "accept_ru": [
+        "каждый"
+      ],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m0.today",
+      "en": "today",
+      "ru": "сегодня",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": null,
+      "trick": false
+    },
+    {
+      "id": "sp3.m0.think",
+      "en": "think",
+      "ru": "думать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/think.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m0.day",
+      "en": "day",
+      "ru": "день",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/day.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m0.phone-number",
+      "en": "phone number",
+      "ru": "номер телефона",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/phone-number.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m0.p1",
+      "en": "Hello again, everyone!",
+      "ru": "Снова привет всем!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m0.again",
+        "sp3.m0.everyone"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m0.p2",
+      "en": "Today is a happy day.",
+      "ru": "Сегодня счастливый день.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m0.today",
+        "sp3.m0.day"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m0.p3",
+      "en": "I think it's my phone number.",
+      "ru": "Думаю, это мой номер телефона.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m0.think",
+        "sp3.m0.phone-number"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m0.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m0.again",
+        "sp3.m0.everyone",
+        "sp3.m0.today",
+        "sp3.m0.think",
+        "sp3.m0.day",
+        "sp3.m0.phone-number"
+      ]
+    },
+    {
+      "id": "sp3.m0.n2",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m0.n3",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m0.n4",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

@@ -4,7 +4,7 @@ export type Band = "starter" | "junior";
 export type NodeKind = "words" | "phonics" | "grammar" | "chest" | "review" | "module_test";
 export type NodeStatus = "completed" | "current" | "open" | "locked";
 
-export type ModuleSummary = { id: string; order: number; title_en: string; title_ru: string };
+export type ModuleSummary = { id: string; order: number; label: string | null; title_en: string; title_ru: string };
 
 export type BookSummary = {
   id: string;

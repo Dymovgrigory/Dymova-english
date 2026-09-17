@@ -141,3 +141,20 @@ def test_real_course_builds_every_session():
                 graded = [c for c in plan.challenges if c.graded]
                 assert len(graded) >= 8, (node.id, seed, len(graded))
                 _assert_layout(plan)
+
+
+@pytest.mark.parametrize(
+    "token,known",
+    [
+        ("books", "book"), ("tomatoes", "tomato"), ("cities", "city"), ("playing", "play"),
+        ("skating", "skate"), ("running", "run"), ("laughed", "laugh"), ("liked", "like"),
+        ("studied", "study"), ("bigger", "big"), ("taller", "tall"), ("strongest", "strong"),
+        ("mum's", "mum"), ("prettiest", "pretty"),
+    ],
+)
+def test_word_forms_count_as_taught(token, known):
+    assert content.is_taught(token, {known})
+
+
+def test_unrelated_word_is_not_taught():
+    assert not content.is_taught("granny", {"grandma"})

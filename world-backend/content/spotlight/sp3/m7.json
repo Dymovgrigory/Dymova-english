@@ -1,0 +1,400 @@
+{
+  "id": "sp3.m7",
+  "book": "sp3",
+  "order": 7,
+  "label": "Module 7",
+  "title_en": "A day off!",
+  "title_ru": "Выходной день",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m7.drive",
+      "en": "drive",
+      "ru": "водить",
+      "accept_en": [],
+      "accept_ru": [
+        "вести машину"
+      ],
+      "kind": "verb",
+      "image": "words/drive.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.make",
+      "en": "make",
+      "ru": "делать",
+      "accept_en": [],
+      "accept_ru": [
+        "строить"
+      ],
+      "kind": "verb",
+      "image": "words/make.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.sandcastle",
+      "en": "sandcastle",
+      "ru": "замок из песка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sandcastle.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.watch",
+      "en": "watch",
+      "ru": "смотреть",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/watch.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.paint",
+      "en": "paint",
+      "ru": "рисовать красками",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/paint.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.picture",
+      "en": "picture",
+      "ru": "картина",
+      "accept_en": [],
+      "accept_ru": [
+        "рисунок"
+      ],
+      "kind": "noun",
+      "image": "words/picture.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.piano",
+      "en": "piano",
+      "ru": "пианино",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/piano.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.soccer",
+      "en": "soccer",
+      "ru": "футбол",
+      "accept_en": [
+        "football"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/soccer.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.basketball",
+      "en": "basketball",
+      "ru": "баскетбол",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/basketball.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.sleep",
+      "en": "sleep",
+      "ru": "спать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/sleep.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.ride",
+      "en": "ride",
+      "ru": "кататься",
+      "accept_en": [],
+      "accept_ru": [
+        "ездить"
+      ],
+      "kind": "verb",
+      "image": "words/ride.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.bike",
+      "en": "bike",
+      "ru": "велосипед",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bike.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.park",
+      "en": "park",
+      "ru": "парк",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/park.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.picnic",
+      "en": "picnic",
+      "ru": "пикник",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/picnic.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.bell",
+      "en": "bell",
+      "ru": "звонок",
+      "accept_en": [],
+      "accept_ru": [
+        "колокольчик"
+      ],
+      "kind": "noun",
+      "image": "words/bell.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.ring",
+      "en": "ring",
+      "ru": "звонить",
+      "accept_en": [],
+      "accept_ru": [
+        "звенеть"
+      ],
+      "kind": "verb",
+      "image": "words/ring.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.mac",
+      "en": "mac",
+      "ru": "плащ",
+      "accept_en": [],
+      "accept_ru": [
+        "дождевик"
+      ],
+      "kind": "noun",
+      "image": "words/mac.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m7.finish",
+      "en": "finish",
+      "ru": "финишировать",
+      "accept_en": [],
+      "accept_ru": [
+        "заканчивать"
+      ],
+      "kind": "verb",
+      "image": "words/finish.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m7.p1",
+      "en": "I'm making a sandcastle.",
+      "ru": "Я строю замок из песка.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m7.make",
+        "sp3.m7.sandcastle"
+      ],
+      "grammar_id": "sp3.m7.g-continuous"
+    },
+    {
+      "id": "sp3.m7.p2",
+      "en": "She is playing the piano.",
+      "ru": "Она играет на пианино.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m7.piano"
+      ],
+      "grammar_id": "sp3.m7.g-continuous"
+    },
+    {
+      "id": "sp3.m7.p3",
+      "en": "They are riding bikes.",
+      "ru": "Они катаются на велосипедах.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m7.ride",
+        "sp3.m7.bike"
+      ],
+      "grammar_id": "sp3.m7.g-continuous"
+    },
+    {
+      "id": "sp3.m7.p4",
+      "en": "We are having a picnic in the park.",
+      "ru": "У нас пикник в парке.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m7.picnic",
+        "sp3.m7.park"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m7.p5",
+      "en": "Daddy is driving a car.",
+      "ru": "Папа ведёт машину.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m7.drive"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m7.p6",
+      "en": "I watch TV and sleep.",
+      "ru": "Я смотрю телевизор и сплю.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m7.watch",
+        "sp3.m7.sleep"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m7.g-continuous",
+      "title_ru": "I'm making… — делаю прямо сейчас",
+      "rule_ru": "Что происходит сейчас: am / is / are + глагол с -ing. I'm making a sandcastle. She is playing the piano.",
+      "examples": [
+        {
+          "en": "I'm making a sandcastle.",
+          "ru": "Я строю замок из песка."
+        },
+        {
+          "en": "What are you doing?",
+          "ru": "Что ты делаешь?"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m7.g-continuous.1",
+          "prompt_en": "I ___ making a sandcastle.",
+          "options": [
+            "am",
+            "is"
+          ],
+          "answer": 0,
+          "ru": "Я строю замок из песка."
+        },
+        {
+          "id": "sp3.m7.g-continuous.2",
+          "prompt_en": "She ___ playing the piano.",
+          "options": [
+            "is",
+            "are"
+          ],
+          "answer": 0,
+          "ru": "Она играет на пианино."
+        },
+        {
+          "id": "sp3.m7.g-continuous.3",
+          "prompt_en": "They ___ riding bikes.",
+          "options": [
+            "is",
+            "are"
+          ],
+          "answer": 1,
+          "ru": "Они катаются на велосипедах."
+        },
+        {
+          "id": "sp3.m7.g-continuous.4",
+          "prompt_en": "He's ___ a kite.",
+          "options": [
+            "flying",
+            "fly"
+          ],
+          "answer": 0,
+          "ru": "Он запускает воздушного змея."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m7.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m7.drive",
+        "sp3.m7.make",
+        "sp3.m7.sandcastle",
+        "sp3.m7.watch",
+        "sp3.m7.paint",
+        "sp3.m7.picture"
+      ]
+    },
+    {
+      "id": "sp3.m7.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m7.piano",
+        "sp3.m7.soccer",
+        "sp3.m7.basketball",
+        "sp3.m7.sleep",
+        "sp3.m7.ride",
+        "sp3.m7.bike"
+      ]
+    },
+    {
+      "id": "sp3.m7.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m7.park",
+        "sp3.m7.picnic",
+        "sp3.m7.bell",
+        "sp3.m7.ring",
+        "sp3.m7.mac",
+        "sp3.m7.finish"
+      ]
+    },
+    {
+      "id": "sp3.m7.n4",
+      "kind": "grammar",
+      "grammar_id": "sp3.m7.g-continuous"
+    },
+    {
+      "id": "sp3.m7.n5",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m7.n6",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m7.n7",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}
