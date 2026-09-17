@@ -1,0 +1,455 @@
+{
+  "id": "sp1.m3",
+  "book": "sp1",
+  "order": 3,
+  "label": "Module 3",
+  "title_en": "My Room!",
+  "title_ru": "Моя комната",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp1.m3.room",
+      "en": "room",
+      "ru": "комната",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/room.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.chair",
+      "en": "chair",
+      "ru": "стул",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/chair.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.table",
+      "en": "table",
+      "ru": "стол",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/table.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.bed",
+      "en": "bed",
+      "ru": "кровать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bed.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.tv",
+      "en": "TV",
+      "ru": "телевизор",
+      "accept_en": [
+        "television"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tv.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.under",
+      "en": "under",
+      "ru": "под",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/under.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.kite",
+      "en": "kite",
+      "ru": "воздушный змей",
+      "accept_en": [],
+      "accept_ru": [
+        "змей"
+      ],
+      "kind": "noun",
+      "image": "words/kite.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.ball",
+      "en": "ball",
+      "ru": "мяч",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ball.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.teddy-bear",
+      "en": "teddy bear",
+      "ru": "плюшевый мишка",
+      "accept_en": [],
+      "accept_ru": [
+        "мишка"
+      ],
+      "kind": "noun",
+      "image": "words/teddy-bear.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.boat",
+      "en": "boat",
+      "ru": "лодка",
+      "accept_en": [],
+      "accept_ru": [
+        "кораблик"
+      ],
+      "kind": "noun",
+      "image": "words/boat.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.doll",
+      "en": "doll",
+      "ru": "кукла",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/doll.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.toy",
+      "en": "toy",
+      "ru": "игрушка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/toy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.car",
+      "en": "car",
+      "ru": "машина",
+      "accept_en": [],
+      "accept_ru": [
+        "машинка"
+      ],
+      "kind": "noun",
+      "image": "words/car.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.train",
+      "en": "train",
+      "ru": "поезд",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/train.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.plane",
+      "en": "plane",
+      "ru": "самолёт",
+      "accept_en": [],
+      "accept_ru": [
+        "самолет"
+      ],
+      "kind": "noun",
+      "image": "words/plane.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.big",
+      "en": "big",
+      "ru": "большой",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/big.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m3.small",
+      "en": "small",
+      "ru": "маленький",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/small.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp1.m3.p1",
+      "en": "I've got a kite.",
+      "ru": "У меня есть воздушный змей.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m3.kite"
+      ],
+      "grammar_id": "sp1.m3.g-have-got"
+    },
+    {
+      "id": "sp1.m3.p2",
+      "en": "I haven't got a boat.",
+      "ru": "У меня нет лодки.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m3.boat"
+      ],
+      "grammar_id": "sp1.m3.g-have-got"
+    },
+    {
+      "id": "sp1.m3.p3",
+      "en": "Foxy has got a big train.",
+      "ru": "У Фокси есть большой поезд.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m3.big",
+        "sp1.m3.train"
+      ],
+      "grammar_id": "sp1.m3.g-have-got"
+    },
+    {
+      "id": "sp1.m3.p4",
+      "en": "The ball is under the bed.",
+      "ru": "Мяч под кроватью.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m3.ball",
+        "sp1.m3.under",
+        "sp1.m3.bed"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m3.p5",
+      "en": "My teddy bear is small.",
+      "ru": "Мой плюшевый мишка маленький.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m3.teddy-bear",
+        "sp1.m3.small"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m3.p6",
+      "en": "A doll on the chair.",
+      "ru": "Кукла на стуле.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m3.doll",
+        "sp1.m3.chair"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp1.m3.g-have-got",
+      "title_ru": "I've got — у меня есть",
+      "rule_ru": "I have got (I've got) — у меня есть. I haven't got — у меня нет. Про Фокси: Foxy has got.",
+      "examples": [
+        {
+          "en": "I've got a kite.",
+          "ru": "У меня есть воздушный змей."
+        },
+        {
+          "en": "I haven't got a boat.",
+          "ru": "У меня нет лодки."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp1.m3.g-have-got.1",
+          "prompt_en": "I ___ got a ball.",
+          "options": [
+            "have",
+            "has"
+          ],
+          "answer": 0,
+          "ru": "У меня есть мяч."
+        },
+        {
+          "id": "sp1.m3.g-have-got.2",
+          "prompt_en": "Foxy ___ got a boat.",
+          "options": [
+            "have",
+            "has"
+          ],
+          "answer": 1,
+          "ru": "У Фокси есть лодка."
+        },
+        {
+          "id": "sp1.m3.g-have-got.3",
+          "prompt_en": "I ___ got a car.",
+          "options": [
+            "haven't",
+            "hasn't"
+          ],
+          "answer": 0,
+          "ru": "У меня нет машины."
+        },
+        {
+          "id": "sp1.m3.g-have-got.4",
+          "prompt_en": "The ball is ___ the bed.",
+          "options": [
+            "on",
+            "under"
+          ],
+          "answer": 1,
+          "ru": "Мяч под кроватью."
+        },
+        {
+          "id": "sp1.m3.g-have-got.5",
+          "prompt_en": "I ___ got a big bed.",
+          "options": [
+            "has",
+            "have"
+          ],
+          "answer": 1,
+          "ru": "У меня большая кровать."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp1.m3.gr-ll",
+      "grapheme": "ll",
+      "sound_word": "doll"
+    },
+    {
+      "id": "sp1.m3.gr-ss",
+      "grapheme": "ss",
+      "sound_word": "dress"
+    },
+    {
+      "id": "sp1.m3.gr-ff",
+      "grapheme": "ff",
+      "sound_word": "off"
+    },
+    {
+      "id": "sp1.m3.gr-ck",
+      "grapheme": "ck",
+      "sound_word": "duck"
+    },
+    {
+      "id": "sp1.m3.gr-ee",
+      "grapheme": "ee",
+      "sound_word": "tree"
+    },
+    {
+      "id": "sp1.m3.gr-oo",
+      "grapheme": "oo",
+      "sound_word": "moon"
+    },
+    {
+      "id": "sp1.m3.gr-ng",
+      "grapheme": "ng",
+      "sound_word": "king"
+    },
+    {
+      "id": "sp1.m3.gr-ch",
+      "grapheme": "ch",
+      "sound_word": "chair"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp1.m3.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m3.room",
+        "sp1.m3.chair",
+        "sp1.m3.table",
+        "sp1.m3.bed",
+        "sp1.m3.tv",
+        "sp1.m3.under"
+      ]
+    },
+    {
+      "id": "sp1.m3.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m3.kite",
+        "sp1.m3.ball",
+        "sp1.m3.teddy-bear",
+        "sp1.m3.boat",
+        "sp1.m3.doll"
+      ]
+    },
+    {
+      "id": "sp1.m3.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m3.gr-ll",
+        "sp1.m3.gr-ss",
+        "sp1.m3.gr-ff",
+        "sp1.m3.gr-ck"
+      ]
+    },
+    {
+      "id": "sp1.m3.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m3.toy",
+        "sp1.m3.car",
+        "sp1.m3.train",
+        "sp1.m3.plane",
+        "sp1.m3.big",
+        "sp1.m3.small"
+      ]
+    },
+    {
+      "id": "sp1.m3.n5",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m3.gr-ee",
+        "sp1.m3.gr-oo",
+        "sp1.m3.gr-ng",
+        "sp1.m3.gr-ch"
+      ]
+    },
+    {
+      "id": "sp1.m3.n6",
+      "kind": "grammar",
+      "grammar_id": "sp1.m3.g-have-got"
+    },
+    {
+      "id": "sp1.m3.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp1.m3.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp1.m3.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
+    "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ]
+}

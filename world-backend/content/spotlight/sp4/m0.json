@@ -1,0 +1,144 @@
+{
+  "id": "sp4.m0",
+  "book": "sp4",
+  "order": 0,
+  "label": "Starter",
+  "title_en": "Back together!",
+  "title_ru": "Снова вместе!",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m0.join",
+      "en": "join",
+      "ru": "присоединиться",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/join.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m0.hope",
+      "en": "hope",
+      "ru": "надеяться",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/hope.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m0.feel",
+      "en": "feel",
+      "ru": "чувствовать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/feel.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m0.remember",
+      "en": "remember",
+      "ru": "помнить",
+      "accept_en": [],
+      "accept_ru": [
+        "вспоминать"
+      ],
+      "kind": "verb",
+      "image": "words/remember.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m0.cd",
+      "en": "CD",
+      "ru": "диск",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cd.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m0.surname",
+      "en": "surname",
+      "ru": "фамилия",
+      "accept_en": [
+        "last name"
+      ],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/surname.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m0.p1",
+      "en": "I hope you feel happy.",
+      "ru": "Надеюсь, ты счастлив.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m0.hope",
+        "sp4.m0.feel"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m0.p2",
+      "en": "Remember my surname!",
+      "ru": "Запомни мою фамилию!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m0.remember",
+        "sp4.m0.surname"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m0.p3",
+      "en": "Join us!",
+      "ru": "Присоединяйся к нам!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m0.join"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m0.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m0.join",
+        "sp4.m0.hope",
+        "sp4.m0.feel",
+        "sp4.m0.remember",
+        "sp4.m0.cd",
+        "sp4.m0.surname"
+      ]
+    },
+    {
+      "id": "sp4.m0.n2",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m0.n3",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m0.n4",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

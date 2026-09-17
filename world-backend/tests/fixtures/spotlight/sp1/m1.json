@@ -1,0 +1,33 @@
+{
+  "id": "sp1.m1", "book": "sp1", "order": 1,
+  "title_en": "My Family!", "title_ru": "Моя семья", "band": "starter",
+  "words": [
+    {"id": "sp1.m1.cat", "en": "cat", "ru": "кошка", "image": "words/cat.webp"},
+    {"id": "sp1.m1.dad", "en": "dad", "ru": "папа", "image": "words/dad.webp"},
+    {"id": "sp1.m1.mum", "en": "mum", "ru": "мама", "image": "words/mum.webp"},
+    {"id": "sp1.m1.dog", "en": "dog", "ru": "собака", "image": "words/dog.webp"},
+    {"id": "sp1.m1.sun", "en": "sun", "ru": "солнце", "image": "words/sun.webp"},
+    {"id": "sp1.m1.hello", "en": "hello", "ru": "привет", "accept_ru": ["здравствуй"], "kind": "other", "trick": true}
+  ],
+  "phrases": [
+    {"id": "sp1.m1.p1", "en": "Hello, Mum!", "ru": "Привет, мама!", "word_ids": ["sp1.m1.hello", "sp1.m1.mum"]},
+    {"id": "sp1.m1.p2", "en": "I am Dad.", "ru": "Я папа.", "word_ids": ["sp1.m1.dad"], "image": "phrases/i-am-dad.webp"},
+    {"id": "sp1.m1.p3", "en": "It is a cat.", "ru": "Это кошка.", "word_ids": ["sp1.m1.cat"], "image": "phrases/it-is-a-cat.webp"}
+  ],
+  "graphemes": [
+    {"id": "sp1.m1.gr-a", "grapheme": "a", "sound_word": "ant"},
+    {"id": "sp1.m1.gr-t", "grapheme": "t", "sound_word": "ten"},
+    {"id": "sp1.m1.gr-c", "grapheme": "c", "sound_word": "cup"},
+    {"id": "sp1.m1.gr-d", "grapheme": "d", "sound_word": "duck"},
+    {"id": "sp1.m1.gr-m", "grapheme": "m", "sound_word": "milk"}
+  ],
+  "nodes": [
+    {"id": "sp1.m1.n1", "kind": "words", "word_ids": ["sp1.m1.cat", "sp1.m1.dad", "sp1.m1.mum"]},
+    {"id": "sp1.m1.n2", "kind": "words", "word_ids": ["sp1.m1.dog", "sp1.m1.sun", "sp1.m1.hello"]},
+    {"id": "sp1.m1.n3", "kind": "phonics", "grapheme_ids": ["sp1.m1.gr-a", "sp1.m1.gr-t", "sp1.m1.gr-c", "sp1.m1.gr-d", "sp1.m1.gr-m"]},
+    {"id": "sp1.m1.n4", "kind": "chest"},
+    {"id": "sp1.m1.n5", "kind": "review"},
+    {"id": "sp1.m1.n6", "kind": "module_test"}
+  ],
+  "sources": ["test fixture"]
+}

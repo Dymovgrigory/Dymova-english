@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 480">
+  <rect width="408" height="480" rx="36" fill="#fffaf0"/>
+  <rect x="18" y="18" width="372" height="300" rx="28" fill="#3a2953"/>
+  <g transform="translate(0,8)"><g transform="translate(84,44) scale(2.2)"><path fill="#3B88C3" d="M36 32c0 2.209-1.791 4-4 4H4c-2.209 0-4-1.791-4-4V4c0-2.209 1.791-4 4-4h28c2.209 0 4 1.791 4 4v28z"/><path fill="#FFF" d="M16.462 11.175h-1.829c-1.488 0-2.108-1.085-2.108-2.139 0-1.085.775-2.14 2.108-2.14h4.402c1.334 0 2.078.961 2.078 2.201V26.74c0 1.551-.992 2.418-2.326 2.418-1.333 0-2.325-.867-2.325-2.418V11.175z"/></g></g>
+  <text x="204" y="360" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="42" font-weight="800" fill="#3a2953">one</text>
+  <text x="204" y="408" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="26" fill="#241a30" opacity="0.55">один</text>
+</svg>

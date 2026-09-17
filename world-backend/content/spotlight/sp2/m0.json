@@ -1,0 +1,574 @@
+{
+  "id": "sp2.m0",
+  "book": "sp2",
+  "order": 0,
+  "label": "My Letters",
+  "title_en": "My Letters!",
+  "title_ru": "Мои буквы",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp2.m0.ant",
+      "en": "ant",
+      "ru": "муравей",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ant.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.bed",
+      "en": "bed",
+      "ru": "кровать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bed.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.egg",
+      "en": "egg",
+      "ru": "яйцо",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/egg.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.flag",
+      "en": "flag",
+      "ru": "флаг",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/flag.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.glass",
+      "en": "glass",
+      "ru": "стакан",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/glass.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.horse",
+      "en": "horse",
+      "ru": "лошадь",
+      "accept_en": [],
+      "accept_ru": [
+        "конь"
+      ],
+      "kind": "noun",
+      "image": "words/horse.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.ink",
+      "en": "ink",
+      "ru": "чернила",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ink.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.jug",
+      "en": "jug",
+      "ru": "кувшин",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/jug.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.kangaroo",
+      "en": "kangaroo",
+      "ru": "кенгуру",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/kangaroo.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.lamp",
+      "en": "lamp",
+      "ru": "лампа",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/lamp.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.nest",
+      "en": "nest",
+      "ru": "гнездо",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/nest.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.pin",
+      "en": "pin",
+      "ru": "булавка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pin.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.snake",
+      "en": "snake",
+      "ru": "змея",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/snake.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.umbrella",
+      "en": "umbrella",
+      "ru": "зонт",
+      "accept_en": [],
+      "accept_ru": [
+        "зонтик"
+      ],
+      "kind": "noun",
+      "image": "words/umbrella.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.vest",
+      "en": "vest",
+      "ru": "майка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/vest.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.yacht",
+      "en": "yacht",
+      "ru": "яхта",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/yacht.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.zip",
+      "en": "zip",
+      "ru": "молния",
+      "accept_en": [],
+      "accept_ru": [
+        "застёжка"
+      ],
+      "kind": "noun",
+      "image": "words/zip.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.box",
+      "en": "box",
+      "ru": "коробка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/box.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.sheep",
+      "en": "sheep",
+      "ru": "овца",
+      "accept_en": [],
+      "accept_ru": [
+        "барашек"
+      ],
+      "kind": "noun",
+      "image": "words/sheep.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.fish",
+      "en": "fish",
+      "ru": "рыба",
+      "accept_en": [],
+      "accept_ru": [
+        "рыбка"
+      ],
+      "kind": "noun",
+      "image": "words/fish.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.ship",
+      "en": "ship",
+      "ru": "корабль",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ship.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.chick",
+      "en": "chick",
+      "ru": "цыплёнок",
+      "accept_en": [],
+      "accept_ru": [
+        "цыпленок"
+      ],
+      "kind": "noun",
+      "image": "words/chick.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.cheese",
+      "en": "cheese",
+      "ru": "сыр",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cheese.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m0.thumb",
+      "en": "thumb",
+      "ru": "большой палец",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/thumb.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp2.m0.p1",
+      "en": "A fish in a glass.",
+      "ru": "Рыбка в стакане.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m0.fish",
+        "sp2.m0.glass"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m0.p2",
+      "en": "An ant on a flag.",
+      "ru": "Муравей на флаге.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m0.ant",
+        "sp2.m0.flag"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m0.p3",
+      "en": "A chick in the nest.",
+      "ru": "Цыплёнок в гнезде.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m0.chick",
+        "sp2.m0.nest"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [],
+  "graphemes": [
+    {
+      "id": "sp2.m0.gr-a",
+      "grapheme": "a",
+      "sound_word": "ant"
+    },
+    {
+      "id": "sp2.m0.gr-b",
+      "grapheme": "b",
+      "sound_word": "bed"
+    },
+    {
+      "id": "sp2.m0.gr-c",
+      "grapheme": "c",
+      "sound_word": "cat"
+    },
+    {
+      "id": "sp2.m0.gr-d",
+      "grapheme": "d",
+      "sound_word": "dog"
+    },
+    {
+      "id": "sp2.m0.gr-e",
+      "grapheme": "e",
+      "sound_word": "egg"
+    },
+    {
+      "id": "sp2.m0.gr-f",
+      "grapheme": "f",
+      "sound_word": "flag"
+    },
+    {
+      "id": "sp2.m0.gr-g",
+      "grapheme": "g",
+      "sound_word": "glass"
+    },
+    {
+      "id": "sp2.m0.gr-h",
+      "grapheme": "h",
+      "sound_word": "horse"
+    },
+    {
+      "id": "sp2.m0.gr-i",
+      "grapheme": "i",
+      "sound_word": "ink"
+    },
+    {
+      "id": "sp2.m0.gr-j",
+      "grapheme": "j",
+      "sound_word": "jug"
+    },
+    {
+      "id": "sp2.m0.gr-k",
+      "grapheme": "k",
+      "sound_word": "kangaroo"
+    },
+    {
+      "id": "sp2.m0.gr-l",
+      "grapheme": "l",
+      "sound_word": "lamp"
+    },
+    {
+      "id": "sp2.m0.gr-m",
+      "grapheme": "m",
+      "sound_word": "mouse"
+    },
+    {
+      "id": "sp2.m0.gr-n",
+      "grapheme": "n",
+      "sound_word": "nest"
+    },
+    {
+      "id": "sp2.m0.gr-o",
+      "grapheme": "o",
+      "sound_word": "orange"
+    },
+    {
+      "id": "sp2.m0.gr-p",
+      "grapheme": "p",
+      "sound_word": "pin"
+    },
+    {
+      "id": "sp2.m0.gr-qu",
+      "grapheme": "qu",
+      "sound_word": "queen"
+    },
+    {
+      "id": "sp2.m0.gr-r",
+      "grapheme": "r",
+      "sound_word": "rabbit"
+    },
+    {
+      "id": "sp2.m0.gr-s",
+      "grapheme": "s",
+      "sound_word": "snake"
+    },
+    {
+      "id": "sp2.m0.gr-t",
+      "grapheme": "t",
+      "sound_word": "tree"
+    },
+    {
+      "id": "sp2.m0.gr-u",
+      "grapheme": "u",
+      "sound_word": "umbrella"
+    },
+    {
+      "id": "sp2.m0.gr-v",
+      "grapheme": "v",
+      "sound_word": "vest"
+    },
+    {
+      "id": "sp2.m0.gr-w",
+      "grapheme": "w",
+      "sound_word": "window"
+    },
+    {
+      "id": "sp2.m0.gr-x",
+      "grapheme": "x",
+      "sound_word": "box"
+    },
+    {
+      "id": "sp2.m0.gr-y",
+      "grapheme": "y",
+      "sound_word": "yacht"
+    },
+    {
+      "id": "sp2.m0.gr-z",
+      "grapheme": "z",
+      "sound_word": "zip"
+    },
+    {
+      "id": "sp2.m0.gr-sh",
+      "grapheme": "sh",
+      "sound_word": "sheep"
+    },
+    {
+      "id": "sp2.m0.gr-ch",
+      "grapheme": "ch",
+      "sound_word": "chick"
+    },
+    {
+      "id": "sp2.m0.gr-th",
+      "grapheme": "th",
+      "sound_word": "thumb"
+    },
+    {
+      "id": "sp2.m0.gr-ph",
+      "grapheme": "ph",
+      "sound_word": "phone"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp2.m0.n1",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m0.gr-a",
+        "sp2.m0.gr-b",
+        "sp2.m0.gr-c",
+        "sp2.m0.gr-d",
+        "sp2.m0.gr-e",
+        "sp2.m0.gr-f",
+        "sp2.m0.gr-g",
+        "sp2.m0.gr-h"
+      ]
+    },
+    {
+      "id": "sp2.m0.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m0.ant",
+        "sp2.m0.bed",
+        "sp2.m0.egg",
+        "sp2.m0.flag",
+        "sp2.m0.glass",
+        "sp2.m0.horse"
+      ]
+    },
+    {
+      "id": "sp2.m0.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m0.gr-i",
+        "sp2.m0.gr-j",
+        "sp2.m0.gr-k",
+        "sp2.m0.gr-l",
+        "sp2.m0.gr-m",
+        "sp2.m0.gr-n",
+        "sp2.m0.gr-o",
+        "sp2.m0.gr-p",
+        "sp2.m0.gr-qu"
+      ]
+    },
+    {
+      "id": "sp2.m0.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m0.ink",
+        "sp2.m0.jug",
+        "sp2.m0.kangaroo",
+        "sp2.m0.lamp",
+        "sp2.m0.nest",
+        "sp2.m0.pin"
+      ]
+    },
+    {
+      "id": "sp2.m0.n5",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m0.gr-r",
+        "sp2.m0.gr-s",
+        "sp2.m0.gr-t",
+        "sp2.m0.gr-u",
+        "sp2.m0.gr-v",
+        "sp2.m0.gr-w",
+        "sp2.m0.gr-x",
+        "sp2.m0.gr-y",
+        "sp2.m0.gr-z"
+      ]
+    },
+    {
+      "id": "sp2.m0.n6",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m0.snake",
+        "sp2.m0.umbrella",
+        "sp2.m0.vest",
+        "sp2.m0.yacht",
+        "sp2.m0.zip",
+        "sp2.m0.box"
+      ]
+    },
+    {
+      "id": "sp2.m0.n7",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m0.gr-sh",
+        "sp2.m0.gr-ch",
+        "sp2.m0.gr-th",
+        "sp2.m0.gr-ph"
+      ]
+    },
+    {
+      "id": "sp2.m0.n8",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m0.sheep",
+        "sp2.m0.fish",
+        "sp2.m0.ship",
+        "sp2.m0.chick",
+        "sp2.m0.cheese",
+        "sp2.m0.thumb"
+      ]
+    },
+    {
+      "id": "sp2.m0.n9",
+      "kind": "chest"
+    },
+    {
+      "id": "sp2.m0.n10",
+      "kind": "review"
+    },
+    {
+      "id": "sp2.m0.n11",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ]
+}

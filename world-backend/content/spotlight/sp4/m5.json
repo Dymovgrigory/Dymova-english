@@ -1,0 +1,401 @@
+{
+  "id": "sp4.m5",
+  "book": "sp4",
+  "order": 5,
+  "label": "Module 5",
+  "title_en": "Where were you yesterday?",
+  "title_ru": "Где ты был вчера?",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m5.first",
+      "en": "first",
+      "ru": "первый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/first.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.second",
+      "en": "second",
+      "ru": "второй",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/second.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.third",
+      "en": "third",
+      "ru": "третий",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/third.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.fourth",
+      "en": "fourth",
+      "ru": "четвёртый",
+      "accept_en": [],
+      "accept_ru": [
+        "четвертый"
+      ],
+      "kind": "other",
+      "image": "words/fourth.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.fifth",
+      "en": "fifth",
+      "ru": "пятый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/fifth.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.delicious",
+      "en": "delicious",
+      "ru": "очень вкусный",
+      "accept_en": [],
+      "accept_ru": [
+        "восхитительный"
+      ],
+      "kind": "adj",
+      "image": "words/delicious.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.yesterday",
+      "en": "yesterday",
+      "ru": "вчера",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/yesterday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.ago",
+      "en": "ago",
+      "ru": "назад",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/ago.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.last",
+      "en": "last",
+      "ru": "прошлый",
+      "accept_en": [],
+      "accept_ru": [
+        "последний"
+      ],
+      "kind": "other",
+      "image": "words/last.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.bored",
+      "en": "bored",
+      "ru": "скучающий",
+      "accept_en": [],
+      "accept_ru": [
+        "скучно"
+      ],
+      "kind": "adj",
+      "image": "words/bored.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.angry",
+      "en": "angry",
+      "ru": "сердитый",
+      "accept_en": [],
+      "accept_ru": [
+        "злой"
+      ],
+      "kind": "adj",
+      "image": "words/angry.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.scared",
+      "en": "scared",
+      "ru": "испуганный",
+      "accept_en": [],
+      "accept_ru": [
+        "напуганный"
+      ],
+      "kind": "adj",
+      "image": "words/scared.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.tired",
+      "en": "tired",
+      "ru": "уставший",
+      "accept_en": [],
+      "accept_ru": [
+        "усталый"
+      ],
+      "kind": "adj",
+      "image": "words/tired.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.interesting",
+      "en": "interesting",
+      "ru": "интересный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/interesting.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.dream",
+      "en": "dream",
+      "ru": "мечтать",
+      "accept_en": [],
+      "accept_ru": [
+        "сон"
+      ],
+      "kind": "verb",
+      "image": "words/dream.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.wish",
+      "en": "wish",
+      "ru": "желание",
+      "accept_en": [],
+      "accept_ru": [
+        "желать"
+      ],
+      "kind": "verb",
+      "image": "words/wish.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.balloon",
+      "en": "balloon",
+      "ru": "воздушный шарик",
+      "accept_en": [],
+      "accept_ru": [
+        "шарик"
+      ],
+      "kind": "noun",
+      "image": "words/balloon.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m5.card",
+      "en": "card",
+      "ru": "открытка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/card.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m5.p1",
+      "en": "I was tired yesterday.",
+      "ru": "Вчера я устал.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m5.tired",
+        "sp4.m5.yesterday"
+      ],
+      "grammar_id": "sp4.m5.g-was-were"
+    },
+    {
+      "id": "sp4.m5.p2",
+      "en": "We were bored last Sunday.",
+      "ru": "В прошлое воскресенье нам было скучно.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m5.bored",
+        "sp4.m5.last"
+      ],
+      "grammar_id": "sp4.m5.g-was-were"
+    },
+    {
+      "id": "sp4.m5.p3",
+      "en": "Where were you two days ago?",
+      "ru": "Где ты был два дня назад?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m5.ago"
+      ],
+      "grammar_id": "sp4.m5.g-was-were"
+    },
+    {
+      "id": "sp4.m5.p4",
+      "en": "The cake is delicious!",
+      "ru": "Торт очень вкусный!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m5.delicious"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m5.p5",
+      "en": "A birthday card and a balloon.",
+      "ru": "Открытка ко дню рождения и шарик.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m5.card",
+        "sp4.m5.balloon"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m5.p6",
+      "en": "Make a wish!",
+      "ru": "Загадай желание!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m5.wish"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m5.g-was-were",
+      "title_ru": "Was / were — был, были",
+      "rule_ru": "О прошлом: I was, he was, she was, it was — был(а). We were, you were, they were — были. Where were you yesterday?",
+      "examples": [
+        {
+          "en": "I was at home yesterday.",
+          "ru": "Вчера я был дома."
+        },
+        {
+          "en": "Where were you yesterday?",
+          "ru": "Где ты был вчера?"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m5.g-was-were.1",
+          "prompt_en": "I ___ at home yesterday.",
+          "options": [
+            "was",
+            "were"
+          ],
+          "answer": 0,
+          "ru": "Вчера я был дома."
+        },
+        {
+          "id": "sp4.m5.g-was-were.2",
+          "prompt_en": "They ___ at the party.",
+          "options": [
+            "was",
+            "were"
+          ],
+          "answer": 1,
+          "ru": "Они были на празднике."
+        },
+        {
+          "id": "sp4.m5.g-was-were.3",
+          "prompt_en": "Where ___ you yesterday?",
+          "options": [
+            "were",
+            "was"
+          ],
+          "answer": 0,
+          "ru": "Где ты был вчера?"
+        },
+        {
+          "id": "sp4.m5.g-was-were.4",
+          "prompt_en": "She ___ tired last night.",
+          "options": [
+            "was",
+            "were"
+          ],
+          "answer": 0,
+          "ru": "Вчера вечером она устала."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m5.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m5.first",
+        "sp4.m5.second",
+        "sp4.m5.third",
+        "sp4.m5.fourth",
+        "sp4.m5.fifth",
+        "sp4.m5.delicious"
+      ]
+    },
+    {
+      "id": "sp4.m5.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m5.yesterday",
+        "sp4.m5.ago",
+        "sp4.m5.last",
+        "sp4.m5.bored",
+        "sp4.m5.angry",
+        "sp4.m5.scared"
+      ]
+    },
+    {
+      "id": "sp4.m5.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m5.tired",
+        "sp4.m5.interesting",
+        "sp4.m5.dream",
+        "sp4.m5.wish",
+        "sp4.m5.balloon",
+        "sp4.m5.card"
+      ]
+    },
+    {
+      "id": "sp4.m5.n4",
+      "kind": "grammar",
+      "grammar_id": "sp4.m5.g-was-were"
+    },
+    {
+      "id": "sp4.m5.n5",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m5.n6",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m5.n7",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

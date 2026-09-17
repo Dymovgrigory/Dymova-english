@@ -1,0 +1,537 @@
+{
+  "id": "sp3.m5",
+  "book": "sp3",
+  "order": 5,
+  "label": "Module 5",
+  "title_en": "Furry friends!",
+  "title_ru": "Пушистые друзья",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m5.head",
+      "en": "head",
+      "ru": "голова",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/head.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.legs",
+      "en": "legs",
+      "ru": "ноги",
+      "accept_en": [],
+      "accept_ru": [
+        "лапы"
+      ],
+      "kind": "noun",
+      "image": "words/legs.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.body",
+      "en": "body",
+      "ru": "тело",
+      "accept_en": [],
+      "accept_ru": [
+        "туловище"
+      ],
+      "kind": "noun",
+      "image": "words/body.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.tail",
+      "en": "tail",
+      "ru": "хвост",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tail.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.neck",
+      "en": "neck",
+      "ru": "шея",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/neck.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.thin",
+      "en": "thin",
+      "ru": "худой",
+      "accept_en": [],
+      "accept_ru": [
+        "тонкий"
+      ],
+      "kind": "adj",
+      "image": "words/thin.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.fat",
+      "en": "fat",
+      "ru": "толстый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/fat.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.short",
+      "en": "short",
+      "ru": "короткий",
+      "accept_en": [],
+      "accept_ru": [
+        "низкий"
+      ],
+      "kind": "adj",
+      "image": "words/short.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.long",
+      "en": "long",
+      "ru": "длинный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/long.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.cow",
+      "en": "cow",
+      "ru": "корова",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/cow.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.sheep",
+      "en": "sheep",
+      "ru": "овца",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sheep.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.men",
+      "en": "men",
+      "ru": "мужчины",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/men.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.women",
+      "en": "women",
+      "ru": "женщины",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/women.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.teeth",
+      "en": "teeth",
+      "ru": "зубы",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/teeth.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.feet",
+      "en": "feet",
+      "ru": "ступни",
+      "accept_en": [],
+      "accept_ru": [
+        "ноги"
+      ],
+      "kind": "noun",
+      "image": "words/feet.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.mice",
+      "en": "mice",
+      "ru": "мыши",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mice.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.children",
+      "en": "children",
+      "ru": "дети",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/children.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.crawl",
+      "en": "crawl",
+      "ru": "ползать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/crawl.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.spider",
+      "en": "spider",
+      "ru": "паук",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/spider.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.sea-horse",
+      "en": "sea horse",
+      "ru": "морской конёк",
+      "accept_en": [],
+      "accept_ru": [
+        "морской конек"
+      ],
+      "kind": "noun",
+      "image": "words/sea-horse.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.walk",
+      "en": "walk",
+      "ru": "ходить",
+      "accept_en": [],
+      "accept_ru": [
+        "гулять"
+      ],
+      "kind": "verb",
+      "image": "words/walk.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.talk",
+      "en": "talk",
+      "ru": "говорить",
+      "accept_en": [],
+      "accept_ru": [
+        "разговаривать"
+      ],
+      "kind": "verb",
+      "image": "words/talk.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.parrot",
+      "en": "parrot",
+      "ru": "попугай",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/parrot.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.thirty",
+      "en": "thirty",
+      "ru": "тридцать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/thirty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.forty",
+      "en": "forty",
+      "ru": "сорок",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/forty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.fifty",
+      "en": "fifty",
+      "ru": "пятьдесят",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/fifty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.farm",
+      "en": "farm",
+      "ru": "ферма",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/farm.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.fast",
+      "en": "fast",
+      "ru": "быстрый",
+      "accept_en": [],
+      "accept_ru": [
+        "быстро"
+      ],
+      "kind": "adj",
+      "image": "words/fast.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m5.cute",
+      "en": "cute",
+      "ru": "милый",
+      "accept_en": [],
+      "accept_ru": [
+        "симпатичный"
+      ],
+      "kind": "adj",
+      "image": "words/cute.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m5.p1",
+      "en": "It's got a long tail.",
+      "ru": "У него длинный хвост.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m5.long",
+        "sp3.m5.tail"
+      ],
+      "grammar_id": "sp3.m5.g-has-got"
+    },
+    {
+      "id": "sp3.m5.p2",
+      "en": "A cow has got four legs.",
+      "ru": "У коровы четыре ноги.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m5.cow",
+        "sp3.m5.legs"
+      ],
+      "grammar_id": "sp3.m5.g-has-got"
+    },
+    {
+      "id": "sp3.m5.p3",
+      "en": "Mice are small.",
+      "ru": "Мыши маленькие.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m5.mice"
+      ],
+      "grammar_id": "sp3.m5.g-has-got"
+    },
+    {
+      "id": "sp3.m5.p4",
+      "en": "A spider can crawl.",
+      "ru": "Паук умеет ползать.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m5.spider",
+        "sp3.m5.crawl"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m5.p5",
+      "en": "My parrot can talk.",
+      "ru": "Мой попугай умеет говорить.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m5.parrot",
+        "sp3.m5.talk"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m5.p6",
+      "en": "A cute sheep on the farm.",
+      "ru": "Милая овечка на ферме.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m5.cute",
+        "sp3.m5.sheep",
+        "sp3.m5.farm"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m5.g-has-got",
+      "title_ru": "It has got… — у него есть",
+      "rule_ru": "Про животное говорим it has got (it's got): It's got a long tail. Некоторые слова во множественном числе особенные: man — men, foot — feet, mouse — mice.",
+      "examples": [
+        {
+          "en": "It's got a long tail.",
+          "ru": "У него длинный хвост."
+        },
+        {
+          "en": "Two mice are small.",
+          "ru": "Две мышки маленькие."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m5.g-has-got.1",
+          "prompt_en": "A cow ___ got a long tail.",
+          "options": [
+            "has",
+            "have"
+          ],
+          "answer": 0,
+          "ru": "У коровы длинный хвост."
+        },
+        {
+          "id": "sp3.m5.g-has-got.2",
+          "prompt_en": "I've got two ___.",
+          "options": [
+            "foot",
+            "feet"
+          ],
+          "answer": 1,
+          "ru": "У меня две ступни."
+        },
+        {
+          "id": "sp3.m5.g-has-got.3",
+          "prompt_en": "Three ___ are on the farm.",
+          "options": [
+            "man",
+            "men"
+          ],
+          "answer": 1,
+          "ru": "На ферме трое мужчин."
+        },
+        {
+          "id": "sp3.m5.g-has-got.4",
+          "prompt_en": "A parrot ___ talk.",
+          "options": [
+            "can",
+            "cans"
+          ],
+          "answer": 0,
+          "ru": "Попугай умеет говорить."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m5.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m5.head",
+        "sp3.m5.legs",
+        "sp3.m5.body",
+        "sp3.m5.tail",
+        "sp3.m5.neck"
+      ]
+    },
+    {
+      "id": "sp3.m5.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m5.thin",
+        "sp3.m5.fat",
+        "sp3.m5.short",
+        "sp3.m5.long",
+        "sp3.m5.cow",
+        "sp3.m5.sheep"
+      ]
+    },
+    {
+      "id": "sp3.m5.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m5.men",
+        "sp3.m5.women",
+        "sp3.m5.teeth",
+        "sp3.m5.feet",
+        "sp3.m5.mice",
+        "sp3.m5.children"
+      ]
+    },
+    {
+      "id": "sp3.m5.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m5.crawl",
+        "sp3.m5.spider",
+        "sp3.m5.sea-horse",
+        "sp3.m5.walk",
+        "sp3.m5.talk",
+        "sp3.m5.parrot"
+      ]
+    },
+    {
+      "id": "sp3.m5.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m5.thirty",
+        "sp3.m5.forty",
+        "sp3.m5.fifty",
+        "sp3.m5.farm",
+        "sp3.m5.fast",
+        "sp3.m5.cute"
+      ]
+    },
+    {
+      "id": "sp3.m5.n6",
+      "kind": "grammar",
+      "grammar_id": "sp3.m5.g-has-got"
+    },
+    {
+      "id": "sp3.m5.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m5.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m5.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

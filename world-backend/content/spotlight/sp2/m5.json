@@ -1,0 +1,393 @@
+{
+  "id": "sp2.m5",
+  "book": "sp2",
+  "order": 5,
+  "label": "Module 4",
+  "title_en": "My Toys!",
+  "title_ru": "Мои игрушки",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp2.m5.toy-soldier",
+      "en": "toy soldier",
+      "ru": "игрушечный солдатик",
+      "accept_en": [],
+      "accept_ru": [
+        "солдатик"
+      ],
+      "kind": "noun",
+      "image": "words/toy-soldier.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.ballerina",
+      "en": "ballerina",
+      "ru": "балерина",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ballerina.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.shelf",
+      "en": "shelf",
+      "ru": "полка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/shelf.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.toy-box",
+      "en": "toy box",
+      "ru": "коробка для игрушек",
+      "accept_en": [],
+      "accept_ru": [
+        "ящик для игрушек"
+      ],
+      "kind": "noun",
+      "image": "words/toy-box.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.doll",
+      "en": "doll",
+      "ru": "кукла",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/doll.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.puppet",
+      "en": "puppet",
+      "ru": "кукла-марионетка",
+      "accept_en": [],
+      "accept_ru": [
+        "марионетка"
+      ],
+      "kind": "noun",
+      "image": "words/puppet.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.jack-in-the-box",
+      "en": "jack-in-the-box",
+      "ru": "попрыгунчик",
+      "accept_en": [],
+      "accept_ru": [
+        "чёртик из табакерки"
+      ],
+      "kind": "noun",
+      "image": "words/jack-in-the-box.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.hair",
+      "en": "hair",
+      "ru": "волосы",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/hair.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.dark",
+      "en": "dark",
+      "ru": "тёмный",
+      "accept_en": [],
+      "accept_ru": [
+        "темный"
+      ],
+      "kind": "adj",
+      "image": "words/dark.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.fair",
+      "en": "fair",
+      "ru": "светлый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/fair.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.eyes",
+      "en": "eyes",
+      "ru": "глаза",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/eyes.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.ears",
+      "en": "ears",
+      "ru": "уши",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ears.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.nose",
+      "en": "nose",
+      "ru": "нос",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/nose.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.mouth",
+      "en": "mouth",
+      "ru": "рот",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mouth.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m5.teddy-bear",
+      "en": "teddy bear",
+      "ru": "плюшевый мишка",
+      "accept_en": [],
+      "accept_ru": [
+        "мишка"
+      ],
+      "kind": "noun",
+      "image": "words/teddy-bear.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp2.m5.p1",
+      "en": "She's got blue eyes.",
+      "ru": "У неё голубые глаза.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m5.eyes"
+      ],
+      "grammar_id": "sp2.m5.g-got"
+    },
+    {
+      "id": "sp2.m5.p2",
+      "en": "He hasn't got dark hair.",
+      "ru": "У него не тёмные волосы.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m5.dark",
+        "sp2.m5.hair"
+      ],
+      "grammar_id": "sp2.m5.g-got"
+    },
+    {
+      "id": "sp2.m5.p3",
+      "en": "My puppet has got a big nose.",
+      "ru": "У моей марионетки большой нос.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m5.puppet",
+        "sp2.m5.nose"
+      ],
+      "grammar_id": "sp2.m5.g-got"
+    },
+    {
+      "id": "sp2.m5.p4",
+      "en": "The ballerina is on the shelf.",
+      "ru": "Балерина на полке.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m5.ballerina",
+        "sp2.m5.shelf"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m5.p5",
+      "en": "A toy soldier in the toy box.",
+      "ru": "Солдатик в коробке для игрушек.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m5.toy-soldier",
+        "sp2.m5.toy-box"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m5.p6",
+      "en": "My teddy bear has got a small mouth.",
+      "ru": "У моего мишки маленький рот.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m5.teddy-bear",
+        "sp2.m5.mouth"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp2.m5.g-got",
+      "title_ru": "She's got / He hasn't got — у неё есть / у него нет",
+      "rule_ru": "Про него или про неё говорим has got: She's got blue eyes. Нет — hasn't got. Где? — on, in, under.",
+      "examples": [
+        {
+          "en": "She's got blue eyes.",
+          "ru": "У неё голубые глаза."
+        },
+        {
+          "en": "He hasn't got dark hair.",
+          "ru": "У него не тёмные волосы."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp2.m5.g-got.1",
+          "prompt_en": "She ___ got blue eyes.",
+          "options": [
+            "has",
+            "have"
+          ],
+          "answer": 0,
+          "ru": "У неё голубые глаза."
+        },
+        {
+          "id": "sp2.m5.g-got.2",
+          "prompt_en": "He ___ got fair hair.",
+          "options": [
+            "hasn't",
+            "haven't"
+          ],
+          "answer": 0,
+          "ru": "У него не светлые волосы."
+        },
+        {
+          "id": "sp2.m5.g-got.3",
+          "prompt_en": "The doll is ___ the shelf.",
+          "options": [
+            "under",
+            "on"
+          ],
+          "answer": 1,
+          "ru": "Кукла на полке."
+        },
+        {
+          "id": "sp2.m5.g-got.4",
+          "prompt_en": "It ___ got big ears.",
+          "options": [
+            "have",
+            "has"
+          ],
+          "answer": 1,
+          "ru": "У него большие уши."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp2.m5.gr-igh",
+      "grapheme": "igh",
+      "sound_word": "night"
+    },
+    {
+      "id": "sp2.m5.gr-ow",
+      "grapheme": "ow",
+      "sound_word": "snow"
+    },
+    {
+      "id": "sp2.m5.gr-ew",
+      "grapheme": "ew",
+      "sound_word": "new"
+    },
+    {
+      "id": "sp2.m5.gr-aw",
+      "grapheme": "aw",
+      "sound_word": "draw"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp2.m5.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m5.toy-soldier",
+        "sp2.m5.ballerina",
+        "sp2.m5.shelf",
+        "sp2.m5.toy-box",
+        "sp2.m5.doll"
+      ]
+    },
+    {
+      "id": "sp2.m5.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m5.puppet",
+        "sp2.m5.jack-in-the-box",
+        "sp2.m5.hair",
+        "sp2.m5.dark",
+        "sp2.m5.fair"
+      ]
+    },
+    {
+      "id": "sp2.m5.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m5.gr-igh",
+        "sp2.m5.gr-ow",
+        "sp2.m5.gr-ew",
+        "sp2.m5.gr-aw"
+      ]
+    },
+    {
+      "id": "sp2.m5.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m5.eyes",
+        "sp2.m5.ears",
+        "sp2.m5.nose",
+        "sp2.m5.mouth",
+        "sp2.m5.teddy-bear"
+      ]
+    },
+    {
+      "id": "sp2.m5.n5",
+      "kind": "grammar",
+      "grammar_id": "sp2.m5.g-got"
+    },
+    {
+      "id": "sp2.m5.n6",
+      "kind": "chest"
+    },
+    {
+      "id": "sp2.m5.n7",
+      "kind": "review"
+    },
+    {
+      "id": "sp2.m5.n8",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ]
+}

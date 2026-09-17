@@ -1,0 +1,29 @@
+{
+  "id": "sp1.m2", "book": "sp1", "order": 2,
+  "title_en": "My Toys!", "title_ru": "Мои игрушки", "band": "starter",
+  "words": [
+    {"id": "sp1.m2.ball", "en": "ball", "ru": "мяч", "image": "words/ball.webp"},
+    {"id": "sp1.m2.car", "en": "car", "ru": "машина", "image": "words/car.webp"},
+    {"id": "sp1.m2.doll", "en": "doll", "ru": "кукла", "image": "words/doll.webp"},
+    {"id": "sp1.m2.teddy", "en": "teddy", "ru": "мишка", "image": "words/teddy.webp"}
+  ],
+  "phrases": [
+    {"id": "sp1.m2.p1", "en": "My ball.", "ru": "Мой мяч.", "word_ids": ["sp1.m2.ball"]},
+    {"id": "sp1.m2.p2", "en": "It is my car.", "ru": "Это моя машина.", "word_ids": ["sp1.m2.car"], "image": "phrases/my-car.webp"}
+  ],
+  "graphemes": [
+    {"id": "sp1.m2.gr-o", "grapheme": "o", "sound_word": "orange"},
+    {"id": "sp1.m2.gr-g", "grapheme": "g", "sound_word": "goat"},
+    {"id": "sp1.m2.gr-u", "grapheme": "u", "sound_word": "up"},
+    {"id": "sp1.m2.gr-n", "grapheme": "n", "sound_word": "nose"},
+    {"id": "sp1.m2.gr-s", "grapheme": "s", "sound_word": "sock"}
+  ],
+  "nodes": [
+    {"id": "sp1.m2.n1", "kind": "words", "word_ids": ["sp1.m2.ball", "sp1.m2.car", "sp1.m2.doll", "sp1.m2.teddy"]},
+    {"id": "sp1.m2.n2", "kind": "phonics", "grapheme_ids": ["sp1.m2.gr-o", "sp1.m2.gr-g", "sp1.m2.gr-u", "sp1.m2.gr-n", "sp1.m2.gr-s"]},
+    {"id": "sp1.m2.n3", "kind": "chest"},
+    {"id": "sp1.m2.n4", "kind": "review"},
+    {"id": "sp1.m2.n5", "kind": "module_test"}
+  ],
+  "sources": ["test fixture"]
+}

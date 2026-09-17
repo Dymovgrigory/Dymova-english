@@ -1,0 +1,497 @@
+{
+  "id": "sp1.m4",
+  "book": "sp1",
+  "order": 4,
+  "label": "Module 4",
+  "title_en": "My Pets!",
+  "title_ru": "Мои питомцы",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp1.m4.pet",
+      "en": "pet",
+      "ru": "питомец",
+      "accept_en": [],
+      "accept_ru": [
+        "домашнее животное"
+      ],
+      "kind": "noun",
+      "image": "words/pet.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.cat",
+      "en": "cat",
+      "ru": "кошка",
+      "accept_en": [],
+      "accept_ru": [
+        "кот"
+      ],
+      "kind": "noun",
+      "image": "words/cat.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.dog",
+      "en": "dog",
+      "ru": "собака",
+      "accept_en": [],
+      "accept_ru": [
+        "пёс"
+      ],
+      "kind": "noun",
+      "image": "words/dog.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.rabbit",
+      "en": "rabbit",
+      "ru": "кролик",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/rabbit.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.mouse",
+      "en": "mouse",
+      "ru": "мышка",
+      "accept_en": [],
+      "accept_ru": [
+        "мышь"
+      ],
+      "kind": "noun",
+      "image": "words/mouse.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.duck",
+      "en": "duck",
+      "ru": "утка",
+      "accept_en": [],
+      "accept_ru": [
+        "утёнок"
+      ],
+      "kind": "noun",
+      "image": "words/duck.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.tortoise",
+      "en": "tortoise",
+      "ru": "черепаха",
+      "accept_en": [
+        "turtle"
+      ],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tortoise.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.bird",
+      "en": "bird",
+      "ru": "птица",
+      "accept_en": [],
+      "accept_ru": [
+        "птичка"
+      ],
+      "kind": "noun",
+      "image": "words/bird.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.monkey",
+      "en": "monkey",
+      "ru": "обезьяна",
+      "accept_en": [],
+      "accept_ru": [
+        "обезьянка"
+      ],
+      "kind": "noun",
+      "image": "words/monkey.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.house",
+      "en": "house",
+      "ru": "дом",
+      "accept_en": [],
+      "accept_ru": [
+        "домик"
+      ],
+      "kind": "noun",
+      "image": "words/house.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.eyes",
+      "en": "eyes",
+      "ru": "глаза",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/eyes.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.ears",
+      "en": "ears",
+      "ru": "уши",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ears.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.mouth",
+      "en": "mouth",
+      "ru": "рот",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mouth.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.nose",
+      "en": "nose",
+      "ru": "нос",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/nose.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.tree",
+      "en": "tree",
+      "ru": "дерево",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tree.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.run",
+      "en": "run",
+      "ru": "бегать",
+      "accept_en": [],
+      "accept_ru": [
+        "бежать"
+      ],
+      "kind": "verb",
+      "image": "words/run.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.jump",
+      "en": "jump",
+      "ru": "прыгать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/jump.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.climb",
+      "en": "climb",
+      "ru": "лазать",
+      "accept_en": [],
+      "accept_ru": [
+        "залезать"
+      ],
+      "kind": "verb",
+      "image": "words/climb.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m4.can",
+      "en": "can",
+      "ru": "уметь",
+      "accept_en": [],
+      "accept_ru": [
+        "мочь"
+      ],
+      "kind": "verb",
+      "image": "words/can.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp1.m4.p1",
+      "en": "I can run.",
+      "ru": "Я умею бегать.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m4.run",
+        "sp1.m4.can"
+      ],
+      "grammar_id": "sp1.m4.g-can"
+    },
+    {
+      "id": "sp1.m4.p2",
+      "en": "My cat can climb.",
+      "ru": "Моя кошка умеет лазать.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m4.cat",
+        "sp1.m4.climb",
+        "sp1.m4.can"
+      ],
+      "grammar_id": "sp1.m4.g-can"
+    },
+    {
+      "id": "sp1.m4.p3",
+      "en": "A tortoise can't jump.",
+      "ru": "Черепаха не умеет прыгать.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m4.tortoise",
+        "sp1.m4.jump",
+        "sp1.m4.can"
+      ],
+      "grammar_id": "sp1.m4.g-can"
+    },
+    {
+      "id": "sp1.m4.p4",
+      "en": "This is my dog.",
+      "ru": "Это моя собака.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m4.dog"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m4.p5",
+      "en": "That is a big mouse.",
+      "ru": "Это большая мышь.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m4.mouse"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m4.p6",
+      "en": "The monkey is in the tree.",
+      "ru": "Обезьяна на дереве.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m4.monkey",
+        "sp1.m4.tree"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m4.p7",
+      "en": "I have got two eyes.",
+      "ru": "У меня два глаза.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m4.eyes"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp1.m4.g-can",
+      "title_ru": "Can / can't — умею, не умею",
+      "rule_ru": "Can — умеет. Can't — не умеет. A rabbit can jump. A tortoise can't run.",
+      "examples": [
+        {
+          "en": "I can run.",
+          "ru": "Я умею бегать."
+        },
+        {
+          "en": "A tortoise can't jump.",
+          "ru": "Черепаха не умеет прыгать."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp1.m4.g-can.1",
+          "prompt_en": "A rabbit ___ jump.",
+          "options": [
+            "can",
+            "can't"
+          ],
+          "answer": 0,
+          "ru": "Кролик умеет прыгать."
+        },
+        {
+          "id": "sp1.m4.g-can.2",
+          "prompt_en": "A tortoise ___ run.",
+          "options": [
+            "can",
+            "can't"
+          ],
+          "answer": 1,
+          "ru": "Черепаха не умеет бегать."
+        },
+        {
+          "id": "sp1.m4.g-can.3",
+          "prompt_en": "A monkey ___ climb.",
+          "options": [
+            "can't",
+            "can"
+          ],
+          "answer": 1,
+          "ru": "Обезьяна умеет лазать."
+        },
+        {
+          "id": "sp1.m4.g-can.4",
+          "prompt_en": "A dog ___ climb.",
+          "options": [
+            "can't",
+            "can"
+          ],
+          "answer": 0,
+          "ru": "Собака не умеет лазать."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp1.m4.gr-sh",
+      "grapheme": "sh",
+      "sound_word": "sheep"
+    },
+    {
+      "id": "sp1.m4.gr-th",
+      "grapheme": "th",
+      "sound_word": "three"
+    },
+    {
+      "id": "sp1.m4.gr-qu",
+      "grapheme": "qu",
+      "sound_word": "queen"
+    },
+    {
+      "id": "sp1.m4.gr-ar",
+      "grapheme": "ar",
+      "sound_word": "car"
+    },
+    {
+      "id": "sp1.m4.gr-er",
+      "grapheme": "er",
+      "sound_word": "sister"
+    },
+    {
+      "id": "sp1.m4.gr-or",
+      "grapheme": "or",
+      "sound_word": "horse"
+    },
+    {
+      "id": "sp1.m4.gr-ai",
+      "grapheme": "ai",
+      "sound_word": "train"
+    },
+    {
+      "id": "sp1.m4.gr-oa",
+      "grapheme": "oa",
+      "sound_word": "boat"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp1.m4.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m4.pet",
+        "sp1.m4.cat",
+        "sp1.m4.dog",
+        "sp1.m4.rabbit",
+        "sp1.m4.mouse"
+      ]
+    },
+    {
+      "id": "sp1.m4.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m4.duck",
+        "sp1.m4.tortoise",
+        "sp1.m4.bird",
+        "sp1.m4.monkey",
+        "sp1.m4.house"
+      ]
+    },
+    {
+      "id": "sp1.m4.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m4.gr-sh",
+        "sp1.m4.gr-th",
+        "sp1.m4.gr-qu",
+        "sp1.m4.gr-ar"
+      ]
+    },
+    {
+      "id": "sp1.m4.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m4.eyes",
+        "sp1.m4.ears",
+        "sp1.m4.mouth",
+        "sp1.m4.nose",
+        "sp1.m4.tree"
+      ]
+    },
+    {
+      "id": "sp1.m4.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m4.run",
+        "sp1.m4.jump",
+        "sp1.m4.climb",
+        "sp1.m4.can"
+      ]
+    },
+    {
+      "id": "sp1.m4.n6",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m4.gr-er",
+        "sp1.m4.gr-or",
+        "sp1.m4.gr-ai",
+        "sp1.m4.gr-oa"
+      ]
+    },
+    {
+      "id": "sp1.m4.n7",
+      "kind": "grammar",
+      "grammar_id": "sp1.m4.g-can"
+    },
+    {
+      "id": "sp1.m4.n8",
+      "kind": "chest"
+    },
+    {
+      "id": "sp1.m4.n9",
+      "kind": "review"
+    },
+    {
+      "id": "sp1.m4.n10",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
+    "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ]
+}

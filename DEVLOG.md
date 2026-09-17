@@ -1,3 +1,114 @@
+
+### Сессия 118 (агент — Auto, Duo/Puzzle reference research) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** «Референсы как DUO и Puzzle English! … не только дизайна но и логики…» — expand RESEARCH per PROMT_WORLD §2; matrix; gaps vs live code; no feature rewrite; no Meshy; no commit
+
+**Что сделано:**
+- Expanded `RESEARCH/DUOLINGO_PATTERNS.md`, `PUZZLE_ENGLISH_PATTERNS.md`, `EDTECH_PATTERNS.md`, `GAME_UX_PATTERNS.md`, `FOXINBURG_DIFFERENTIATORS.md` (PATTERN → WHY → RISK → ADAPTATION → IMPLEMENTATION)
+- New `RESEARCH/REFERENCE_MATRIX.md` — Duo | Puzzle | now | target | priority + Top 10 + shipped/fake/missing vs `world-backend` + `world`
+- PRODUCT pointers: `MASTER_PRODUCT_SPECIFICATION.md` §11b; brief notes in `LEARNING_ENGINE.md`, `FOX_BRAIN.md`
+- Code not rewritten (research + product truth only); UI left for parallel chrome agent
+
+**Как проверено:** mapped against live `api.py` routes, `brain.py`/`learn.py`/`engine.py`/`srs.py`, castle/learn UI; no pytest this pass (docs only)
+
+**Решения и нюансы:** §2 forbids UI/brand clone; steal loops only. Chests/`STREAK_BONUSES`/league cohorts/placement/parent UI called out as fake or missing so next build doesn’t polish art over economy truth.
+
+**Деплой:** нет (no commit)
+
+**Осталось / следующий шаг:** code P0 from matrix — streak milestones, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry
+
+---
+
+### Сессия 117 (агент — Auto, Meshy asset wiring) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** wire NEW Meshy assets into frontend where code still points at old/missing paths; interiors already match; no commit
+
+**Что сделано:**
+- Quest plaque: `Chrome.FantasyDock` + `CastleHub` → `/world/ui/frames/quest-plaque.png`
+- Chrome icons: `ChromeIcon` helper; `LockMark`→lock; `SpeakButton`→audio; `EchoMic`→mic/check/warning; lesson back→back
+- Foxi: `foxiPoses` routes guide poses to `/foxi/poses/`; `cheer`→`celebrate`; wave/cheer copies + `*-prev.png` backups
+- Cinematic aliases: `establishing/gates-foxi/library-courtyard.png` from `*-v1`; jpg→`*-prev.jpg`; learn hero→`/world/learn-ui-hero.png`
+- Finish screen: `foxiSrc("cheer")` + `rewards/chest-open.png`
+- Interiors verified live at `buildings.ts` paths (yard/shop/lexicon/stickers/quests)
+
+**Как проверено:** `cd world && npx vitest run` → **25 passed**
+
+**Осталось (unused intentionally):** rewards chest-idle/glow, xp/coin/levelup bursts, podium, lantern, bookmark, quest-scroll; chrome settings/forward/info; cinematic locked-zone/portal/workshop/gates-night/english-street; atlases ornaments/stickers extras; sticker-chalice-legendary / quest-envelope
+
+**Деплой:** нет (no commit)
+
+
+### Сессия 116 (агент — Auto, Meshy ~50 world art batch) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** launch ~50 Meshy nano-banana-pro generations NOW (cost accepted); brand in-world; no map hitbox overwrite; no commit
+
+**Что сделано:**
+- **52 SUCCEEDED** Meshy tasks (i2i interiors + t2i UI/cinematic/Foxi); balance 3044 → **2552** (~492 cr)
+- Interiors logo i2i: `yard/shop/lexicon/stickers/quests.png` (+ learn/gates/library/establishing); school/glory/nest skipped
+- UI: frames/buttons/ornaments/nav/chrome AD06 atlas + 9 chrome icons; chests/bursts/plaque; Foxi poses; cinematic variants
+- Manifest: `world/public/world/_gen/meshy-manifest-2026-09-16.json`; backups `*-prev.png`; **map.png untouched**
+- Updated `PRODUCT/ASSET_PIPELINE.md`
+
+**Осталось / следующий шаг:**
+- Wire new chrome icons + atlases into Fantasy* components / BrandIcon
+- Optional compress oversized scene PNGs; visual QA of logo banners in rooms
+- Do not swap `map.png` without hitbox re-trace
+
+
+### Сессия 115 (агент — Auto, World Identity + Brain v1 + sprint SoT) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** большой code-slice по PROMT_WORLD (Identity gaps, journey SoT, sprint anti-abuse, Fox Brain v1, DEVLOG); Meshy — параллельно другим агентом
+
+**Что сделано:**
+- Identity: `POST /api/world/session/logout` + `auth.revoke_session` (`revoked_at`); public signup child-only; `get_or_create_player` first-write-wins по role
+- TTS: лёгкий rate-limit 30/мин на игрока (429)
+- Sprint: серверная сессия (`session_id` + `/answer`); finish без ответов → `cosmetic_only`, XP=0; награда по server score
+- Fox Brain v1: `weak_words` в hint/why review NBA; `lessons_starred` в `/learn/home`
+- Frontend: `rememberPlayerToken` / reuse wses / `logout`; `syncProgressFromServer` на Learn+Castle; sprint шлёт ответы на сервер
+- PRODUCT §4: все перечисленные файлы уже на месте — новых пустых не добавлял
+
+**Как проверено:**
+- `WORLD_UNLOCK_ALL=1 pytest -q` → **101 passed**
+- `vitest` journey → 14 passed
+
+**Осталось / следующий шаг:**
+- Parent/teacher provisioning API (не public signup)
+- Economy/progression engines глубже (quests beyond daily, shop SoT polish)
+- Не доверять localStorage для chrome дальше (streak/hearts уже с home)
+- Meshy art batch — у другого агента
+
+
+### Сессия 114 (агент — Auto, World Phase0 + fantasy claim UI) — WIP
+
+**Дата:** 2026-09-16
+**Запрос владельца:** полный автомат ~2ч — Phase 0 harden + fantasy UI/assets без остановок
+
+**Что сделано:**
+
+- LearnTrail fantasy plaques (no emoji nodes)
+- WorldBar / FoxiGuide / finish+learn CTAs hex metal
+- Sprint WorldBar; daily_xp day-rollover on get_player
+- Daily quest claim API уже был; UI CastleHub: claimable/claimed («Забрать» / «Получено»)
+- `learn.daily_quests` отдаёт `claimed`/`claimable` по ledger `DAILY_QUEST`
+- `core.award` синхронизирует `daily_xp` (единый путь); `engine.finish` больше не дублирует
+- Fantasy chrome: atlas wash на NavChip / Panel / Button; BrandIcon fallback
+- Тесты: claim daily quest + claimed flags; suite **84 passed**
+- world-dev поднят: UI :3002, API :8010
+
+**Как проверено:**
+- `WORLD_UNLOCK_ALL=1 pytest -q` → 84 passed
+- curl health + /learn → 200
+
+**Осталось / следующий шаг:**
+- докачать Meshy quest plaque ornament + вставить в chrome
+- дальше polish interiors / micro-icons без ломки hitbox карты
+- PRODUCT/RESEARCH углубить по мере слотов
+
+
 # Журнал разработки — Сайт «Фоксинбург» (dymova-english.ru)
 
 > Этот журнал ведется для бесшовной передачи работы между агентами. Содержит полную историю общения, решений, кодов и текущий статус.
@@ -1056,41 +1167,54 @@ bot/
 
 ---
 
+### Сессия — Подпислон → BigBen: перенос договоров и доводка вебхука (2026-09-16)
+
+**Запрос:** загрузить в CRM все договоры с апреля 2026 без дублей, дозаполнить карточки, автоматом при подписании.
+
+**Найдено и исправлено (живые данные):**
+- id клиента в списке документов — только в `sid` (base64) / ссылке `/sign/pack/<id>/`; «Подписан» = статус 30 (20 — «Просмотрен»).
+- Список документов после последней страницы бесконечно повторяет её — обход по новым id.
+- Даты CRM принимает/отдаёт `ГГГГ-ММ-ДД` (UI показывает ДД.ММ.ГГГГ); проверено записью на карточке 1077349.
+- Сопоставление: ФИО ребёнка + телефон (порядок слов не важен) → название договора среди карточек на телефон → фамилия родителя (с учётом рода) при одной карточке. Не по ребёнку из анкеты — ФИО/дату ребёнка не пишем.
+- Без дублей: наше имя, название из Подпислона (так грузят админы) или размер PDF. Кривой e-mail не отправляем (422 валит карточку).
+
+**Результат переноса (`scripts/podpislon_backfill.py --apply`, отчёты в `/app/data/podpislon_apply_2026-09-16*.txt`):** дозаполнено ~128 карточек, загружено 13 договоров; из 56 подписанных с 2026-04-01 в карточках 47. Ручной разбор 9: нет карточки с телефоном (Серенко, Шилкин, Аминова, Никифорова), дубли «Пономаренко Мира», «Прохоров Миша»/«Михаил», «Погорелова Таня»/«Татьяна», Гончарова Анастасия, тестовый «Дымова Аделина».
+
+**Проверено:** pytest 1238 passed; вебхук на проде (id 2264) на договоре Ворожеевой находит карточку.
+
+### Сессия 121 (Claude — Замок: цельная диорама вместо склейки спрайтов)
+
+**Дата:** 2026-09-17
+**Ветка:** `world-v2`
+**Запрос владельца:** после Cursor здания не встают на места — сделать замок чётко; арт — топовой моделью.
+
+**Причина проблемы (сессия 120):** на плашке `castle-grounds` 7 площадок + 4 верхушки башен, а зданий 12 (модель не соблюдает число площадок из промпта); спрайты в другой перспективе; у части webp здание в левой половине холста — ручные `ax/ay` не попадали.
+
+**Что сделано:**
+- `world-pipeline/castle_compose.py`: площадки измерены по плашке, точка посадки спрайта считается по альфе; коллаж → Meshy image-to-image `gpt-image-2-5-flare` (CORE) → одна диорама `castle-diorama.webp`, все 12 зданий на своих местах (12 кр.).
+- Маски: сдвиг каждого здания на итоговом кадре находится по контурам, силуэт уточняется по цвету; карта зон `castle-hotspots.png`, маски `masks/*.png`, `castle-hotspots.json`.
+- `CastleScreen`: сцена — одна картинка; hover/клик по силуэту (`spotAt`), подсветка — вырез той же диорамы по маске с золотым свечением и подписью; кнопки по областям для клавиатуры.
+
+**Как проверено:** vitest 34, tsc, eslint 0 ошибок, `next build`; Playwright на :3002 — hover попадает в здания, ворота/пустой двор не реагируют, клик открывает комнату (1440 и 390 px), без гориз. скролла.
+
+**Доработка сессии 121 по замечаниям владельца (тот же день):**
+- Основа перерисована: каменные угловые башни стёрты с плашки, башни классов SP1–4 стоят от земли как настоящие угловые башни (стены входят в них); круглые подставки у спрайтов растворены — двор тренировки и здания стоят на земле. Flare: сплавление 2 варианта + точечная правка задних углов 2 варианта (48 кр.), выбран `fused-6f040bfc622f`.
+- Маски: общий масштаб/сдвиг кадра + уточнение каждого здания; три перерисованные башни обведены вручную (`MANUAL_SILHOUETTES`).
+- Hover без подъёма/масштаба — только свечение и подпись (нет «шва»).
+- Экран на весь размер: диорама с лесом и горами под всем интерфейсом, замок вписан между заголовком и лентой (`world/src/castle/scene.ts`, `fitScene` + тесты).
+- Тексты: просто «Замок Фоксинбург» + «Загляни в здания: рейтинг, стикеры, лавка, словарь и задания дня»; без «награды за учёбу».
+- Проверено: vitest 39, tsc, eslint 0 ошибок, `next build`; Playwright 390/1024/1280/1440/1920 — hover/клик/клавиатура открывают нужные комнаты.
+
+**Замок зафиксирован владельцем (STYLE_LOCK). Комнаты зданий:** плашка опущена вниз и сделана из пергамента-вуали `mat-parchment-veil` (интерьер просвечивает), затемнение слабее; в Башне стикеров старая кривая FantasyButton заменена альбомом из эмалевых карточек (не полученные — «?»); Escape закрывает здание. Проверено: vitest 39, tsc, eslint 0 ошибок, `next build`, Playwright 8 комнат на 1440 и 390 px.
+
+**Интерьеры башен классов:** flare `room-tower-sp1..4.webp` (`diorama_art.py castle-tower-rooms`, 45 кр. с перерисовкой обсерватории из-за серого фона) — класс с лестницей и плющом, мастерская с водяным колесом, обсерватория, картографическая у маяка; подключены в комнаты башен.
+
+**Деплой замка (2026-09-17):** `world-v2` → `origin`, сервер `git reset --hard origin/world-v2` + пересборка `world-web`. Важно: без `NEXT_PUBLIC_WORLD_API=https://new.dymova-english.ru` образ собирается с `world-api.dymova-english.ru` (A-записи нет) — интерфейс рисуется, данные не грузятся; `WORLD_PLAYER_SECRET` передаётся заглушкой, т.к. `world-api` не пересоздаётся. Проверено на https://new.dymova-english.ru/world — 0 ошибок консоли, комнаты и башни открываются, 1440 и 390 px.
+
 ## Текущий статус / Где остановились
 
-**Обновлено в Сессии 56 (2026-08-16, после деплоя):** Control Center задеплоен на прод (main, `dc984b7`): постоянная CRM (crm_* таблицы в state.json/sqlite), omnichannel inbox, карточки клиентов, рассылки с историей и retry, kanban-воронка, аналитика, KB из БД, версии AI-промпта, RBAC (5 ролей). Миграция прода: 115 диалогов → 105 клиентов, 984 сообщения. Данные на абсолютном пути `/opt/foxinburg/data` (BOT_DATA_DIR), ежедневный бэкап в cron (04:00). 947 тестов зелёные. Следующий шаг: владельцу войти в /admin (admin + пароль из лога контейнера, сменить), при желании — SSE, вложения, сбор отзывов.
+**World 2026-09-16 (сессия 118):** Reference matrix + expanded RESEARCH (Duo/Puzzle mechanics only). Path: `RESEARCH/REFERENCE_MATRIX.md`. P0 code next: streak milestones, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry. Parallel: Meshy/chrome wiring (сессии 116–117). Identity/Brain/learn loop already shipped (сессия 115).
 
-**Последние влитые PR:** **#191** (бот: approach-1 — идентификация по номеру, CRM-контекст, ночное самообучение с откатом; прод переразвёрнут 2026-09-11, флаги IDENTIFICATION_REQUIRED/LEARNING_LOOP_ENABLED включены) и **#192** (сайт: SEO-волна 5, 6 статей; прод обновлён). Следующий шаг: живой тест идентификации владельцем в Telegram (кнопка «Поделиться номером») и MAX (номер текстом); наблюдать `/admin/learning_log`.
-
-**Telegram:** @foxinburg_bot работает через long-polling + SOCKS5-прокси (РКН блокирует и inbound, и outbound к api.telegram.org). `TELEGRAM_POLLING=true`, `TELEGRAM_PROXY_URL` в прод `.env`.
-
-**Прод:** бот «Фоксинбург» на ВМ Yandex Cloud (`yc-user@89.169.132.104`), из `main` (commit 2842ed5). LLM: ProxyAPI (gpt-4o-mini) + OpenRouter fallback. Вебхук MAX `https://bot.dymova-english.ru/webhook` активен. Чат-виджет на сайте (`foxi.js`). SSH-ключ `~/.ssh/foxinburg_vps` (секрет `VPS_SSH_PRIVATE_KEY_OWNER`). Nginx `foxinburg-frontend` проксирует bot.dymova-english.ru → `bot-bot-1:8000`.
-
-**Каналы бота (все работают на одном ядре):**
-- MAX — webhook (`/webhook`)
-- Telegram — long-polling через прокси
-- Виджет на сайте — `/api/chat` + `foxi.js`
-
-**Незакрытые хвосты:**
-- Следить за сроком платного SOCKS5-прокси (истечёт — Telegram замолчит).
-- При пересоздании контейнера `bot-bot-1` — заново подключить к сети `foxinburg_foxinburg` (`docker network connect foxinburg_foxinburg bot-bot-1`).
-
-**План фич от владельца (по приоритету, из переписки):**
-1. ✅ №12 — чат-виджет на сайте (PR #94).
-2. ✅ №13 — Telegram (PR #95, #96, #98).
-3. ✅ Возврат «недозаявок» — тёплые напоминания (PR #99).
-4. ✅ Обязательная регистрация перед доступом к боту (PR #100).
-5. ✅ Телефон + ссылка на чат в уведомлениях админу (PR #101).
-6. ✅ Скрыть кнопки до регистрации + reset endpoint (PR #102).
-7. ✅ Обновление страницы дошкольников — возраст 2–6, цены, расписание (PR #104).
-8. ✅ Обновление дорожных карт + 3 новых дошкольных карточки (PR #105).
-9. ✅ Ссылка ЛК → members/login + исправление маршрутов адресов на Яндекс Картах (PR #107).
-10. Сбор отзывов после первых занятий (довольных — на Яндекс/2ГИС, недовольных — админу в личку).
-11. Голосовые сообщения (распознавание голоса клиента).
-
-> **Журналирование:** перед каждым PR добавляй сюда подробную запись по шаблону из `.agents/skills/session-journal/SKILL.md` (skill `session-journal`). Это требование владельца — журнал ведётся по каждому PR автоматически.
-
----
 
 ## Технические заметки
 
@@ -5713,3 +5837,233 @@ tgapp-экран «Мои занятия», страница /schedule на са
 
 **Осталось / следующий шаг:** владельцу — продлить/заменить платный SOCKS5-прокси для Telegram (`TELEGRAM_PROXY_URL` в прод `.env`), без него Telegram будет отвечать рывками (MAX и виджет не затронуты); либо поднять relay api.telegram.org на Cloudflare Workers (workers.dev из РФ доступен). Живой тест идентификации в MAX/Telegram — продолжить.
 
+
+---
+
+### Сессия 94 (Kimi Code) — старт FOXINBURG WORLD: аудит, ключи, pipeline, backend-ядро vertical slice
+
+**Дата:** 2026-09-13
+**Запрос владельца:** «промт World в папке проекта! начинаем! используй нашу новую внешнюю модель + Meshy API; работай автономно». Бриф: `промт World .md` (5575 строк, 259 пунктов) — интерактивный 3D-мир для детей.
+
+**Что сделано:**
+- **Аудит (STEP 1–2 брифа):** Node-проектов нет; backend — FastAPI-бот с BigBen CRM; есть ригнутый Фокси `prototype/mascot/foxi-rigged.glb` (726 КБ, 6 клипов) и отработанный GLB-pipeline (Meshy→скиннинг-фикс→gltf-transform).
+- **Ключи:** Gemini-прокси (`sk-cvc-…`, модели gemini-3.1-pro / 3.8-flash — проверены) и Meshy API (`msy_…`, баланс 1286 кр — проверен). Лежат в `world-pipeline/.env` (gitignored). Зафиксировано в `docs/world/recommended-services.md`.
+- **Документы (STEP 3–4):** `docs/world/architecture.md` (выбор Three.js/R3F вместо PlayCanvas — обоснование; backend = модуль в FastAPI; Postgres для прода, SQLite для dev/тестов; server-authoritative экономика), `docs/world/world-art-bible.md` (бренд-палитра #3a2953/#f5ed75, Montserrat/DM Sans, масштаб, материалы, свет, зоны v1).
+- **Pipeline доказан end-to-end:** концепт School Hub через gpt-image-2 (`generated/world/school-hub-concept-v1.png` — в бренде); FoxCoin через Meshy API (preview 20 кр + refine 10 кр): золотая монета с лапкой, 6,07 МБ → 182 КБ draco+webp. Заскриптовано: `world-pipeline/meshy_asset.py` + `asset-registry.json` + README.
+- **Backend-ядро slice (§84/§160):** `bot/app/world/` — db.py (SQLite/PG по env), core.py (players, XP/coin ledger идемпотентный, levels/titles, data-driven квест «first-day-at-foxinburg», инвентарь, unlocks), api.py (`/api/world/*`: players, quests start/complete, inventory, unlocks; auth пока заголовок X-World-Player). Роутер подключён в `bot/app/main.py`.
+- **Фронтенд начат:** `world/` — create-next-app (Next 16.3.5, TS, Tailwind), deps + three/R3F/drei/postprocessing/zustand установлены; ассеты скопированы в `world/public/assets/`; написан `src/lib/api.ts` (клиент backend). НЕ написано: сцены/страницы (прервано).
+
+**Как проверено:**
+- `cd bot && .venv313/bin/pytest tests/test_world.py -q` → 8 passed; полный сьют → **1155 passed**.
+- Meshy: task SUCCEEDED, GLB скачан и оптимизирован; концепт-арт просмотрен.
+
+**Осталось / следующий шаг:**
+1. Фронтенд мира: `world/src/app/page.tsx` (Home Hub), `world/src/app/world/page.tsx` + `src/engine/*` (R3F сцена School Hub: свет, земля, школа, Фокси GLB, монета, частицы), `src/game/*` (HUD, VocabularyChallenge, RewardOverlay). Сборка `cd world && npm run build`, dev-верификация скриншотом.
+2. Auth: привязка X-World-Player → miniapp-auth/CRM child id.
+3. Postgres (prod) + psycopg-слой в `bot/app/world/db.py` (заглушка raise).
+4. Дальше по брифу: схема расширенная, CMS, parent dashboard, zones.
+- ВАЖНО: `world/AGENTS.md` — Next 16 имеет breaking changes, читать `node_modules/next/dist/docs` при сомнениях.
+
+### Сессия 95 — живая верификация игрового цикла School Hub + фикс CORS
+
+**Дата:** 2026-09-14. Ветка: `foxinburg-world-v1`. Задача 15 плана `docs/superpowers/plans/2026-09-13-foxinburg-world-game-loop.md`: не переписывать код, а честно проверить, что цикл, собранный в задачах 1–14, реально работает вживую в браузере, и записать результат.
+
+**Что сделано:**
+- Поднят бэкенд (`bot && .venv313/bin/python -m uvicorn app.main:app --port 8000`) и фронтенд (`world && npm run dev`, реально встал на порт 3002 — 3000 занят посторонним процессом другого проекта пользователя, `/Users/grigory/dashenka`, трогать его не стали).
+- HTTP-цикл по брифу curl'ом: создание игрока, старт квеста `first-day-at-foxinburg`, шаг `visit school-hub` → `{"quest_id":"first-day-at-foxinburg","step":1,"steps_total":3,"all_steps_done":false}` — как и ожидалось.
+- Живой цикл в браузере (Playwright MCP, т.к. расширение Claude in Chrome не подключилось к сессии): ввод имени → вход в мир → двор со светящейся школой → клик по школе → диалог с Фокси (3 реплики, кнопка «Погнали») → vocabulary-челлендж (cat/elephant/monkey/mouse/turtle, все 5 отвечены верно) → экран награды («Безошибочно! 5 из 5», +35 XP, +15 FoxCoins, открыт Библиотечный двор) → «Вернуться в Фоксинбург» → двор с обновлённым HUD (35 XP, 15 FoxCoins, квест «Поговори с Фокси»). Скриншоты всех фаз — в scratchpad сессии: `01-boot.png`, `02-yard.png`, `03-dialogue.png`, `03b-dialogue-after-reload.png`, `03c-dialogue-final.png`, `04-challenge-1.png`, `05-challenge-mid.png`, `05-reward.png`, `06-explore-after.png`.
+- Восстановление прогресса: перезагрузка страницы (`goto` того же `/world`) на фазе диалога с Фокси вернула именно в диалог (реплика 1 из 3), а не на экран входа или в начало — состояние квеста тянется с бэкенда по `X-World-Player`, не только из локального стора.
+- Финальные прогоны: `bot && .venv313/bin/python -m pytest -q` → **1185 passed**; `world && npm test` → **3 passed** (vitest); `world && npm run build` → успешно (Next 16 Turbopack, 3 статичных роута `/`, `/_not-found`, `/world`).
+
+**Найдена и исправлена реальная поломка (CORS):**
+- При первом заходе в браузер запросы `POST /api/world/players` падали с `CORS policy: No 'Access-Control-Allow-Origin' header`. Причина в двух слоях:
+  1. `bot/app/main.py` — `CORSMiddleware` был настроен только под форму заявки сайта: `allow_methods=["POST"]`, `allow_headers=["Content-Type"]`. World API использует `GET` (квесты, инвентарь) и кастомный заголовок `X-World-Player` (авторизация) — оба были не разрешены, и preflight падал с `400 Disallowed CORS headers`. Это блокировало браузерный цикл целиком, независимо от порта фронтенда — раньше это не всплывало, потому что весь предыдущий цикл проверялся только юнит-тестами (vitest/pytest), без реального CORS в браузере.
+  2. `SITE_CORS_ORIGINS` (env, дефолт в `app/config.py`) содержит только продовые домены сайта — никакого `localhost` там не было, то есть даже на «штатном» порту 3000 браузерный цикл упёрся бы в тот же CORS.
+- Правки: `bot/app/main.py` — `allow_methods=["GET", "POST"]`, `allow_headers=["Content-Type", "X-World-Player"]` (существующий сценарий формы заявки не тронут — POST и Content-Type остались). `bot/.env` (gitignored, локальный) — в `SITE_CORS_ORIGINS` добавлены `http://localhost:3000,http://localhost:3002` для локальной разработки; продовые origin'ы не убирались.
+- После фикса и рестарта бэкенда цикл в браузере прошёл с 0 ошибок в консоли (только безобидные deprecation-warning'и Three.js: `THREE.Clock`/`PCFSoftShadowMap`).
+
+**Нюансы:**
+- Порт 3000 был занят чужим процессом (`node_modules/.bin/next dev --turbopack` в `/Users/grigory/dashenka`, работает независимо от этой задачи 8+ дней) — фронтенд поднялся сам на 3002, это никак не связано с миром и трогать процесс не стали.
+- Claude in Chrome не подключился к этой сессии («Browser extension is not connected») — цикл пройден через Playwright MCP вместо него; это не влияет на достоверность проверки (реальный браузер Chromium, реальный fetch, реальный CORS).
+- `bot/.env` — gitignored и в коммит не входит; чтобы локальный dev-цикл фронтенда работал у следующего агента/разработчика, `SITE_CORS_ORIGINS` там должен включать используемый порт `world`-фронтенда (сейчас 3000 и 3002).
+
+**Осталось / следующий шаг:**
+1. Postgres в `world-backend` (свой инстанс, не bot.db).
+2. Здание школы — модель Meshy вместо плейсхолдера.
+3. Вторая зона — Library Courtyard.
+4. Звук.
+Связка с CRM / miniapp **не планируется** на этом этапе (решение владельца 2026-09-14).
+
+### Сессия 96 (агент — Cursor, World — отдельная платформа, не CRM)
+
+**Дата:** 2026-09-14
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** мир не должен быть CRM и не должен быть с ней связан; отдельная новая платформа в том же репозитории (вариант A).
+
+**Что сделано:**
+- Игровой API вынесен из `bot/app/world/` в `world-backend/` (свой FastAPI, порт 8010, своя SQLite `world-backend/data/world.sqlite`).
+- Из бота удалены монтирование `/api/world/*`, флаг `WORLD_API_ENABLED`, CORS под мир и world-тесты. Добавлен `bot/tests/test_world_absent.py`: пакета `app.world` нет, `/api/world/player` → 404.
+- Фронт `world/` по умолчанию ходит на `http://localhost:8010`.
+- Игрок — ник + `X-World-Player`. Импорты CRM/BigBen/miniapp_auth в `world-backend` запрещены тестом изоляции.
+- CI: `.github/workflows/world-ci.yml`. Spec: `docs/superpowers/specs/2026-09-14-foxinburg-world-separate-platform-design.md`.
+
+**Как проверено:** `cd world-backend && pytest -q` → **45 passed**; `cd bot && pytest tests/test_world_absent.py -q` → **2 passed**. Полный сьют бота и `npm test`/`npm run build` фронта в этой сессии после выноса не гонялись.
+
+**Деплой:** прод бота не трогали (мира на боте больше нет даже как флага). Прод мира не выкатывали.
+**Осталось / следующий шаг:** локально `uvicorn main:app --port 8010` + `cd world && npm run dev`; дальше контент мира (школа Meshy, Library Courtyard, звук), не CRM.
+
+### Сессия 97 (агент — Cursor, Master Prompt + шесть фаз World)
+
+**Дата:** 2026-09-16
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** профессиональный промт дальнейшей разработки + довести Foxinburg World до лидера рынка (логика как часы, Meshy-арт, методика, UX, фундамент, замок).
+
+**Что сделано:**
+- Главный промт: [docs/world/FOXINBURG_WORLD_MASTER_PROMPT.md](docs/world/FOXINBURG_WORLD_MASTER_PROMPT.md) (11 разделов, реестр 17 дефектов). Старый `промт World .md` помечен историческим.
+- Фаза 1: гашение `mistakes.cleared`, дедуп промахов, реальная лига (`rank`/`size`/`top`), эхо-гейт на `listen`, монеты за практику с суточным лимитом, удалены мёртвый 3D-код (`world/src/game`, `engine`, `FoxiAnim`) и 50 неотображаемых wiki-JPG.
+- Фаза 2: `app/world/srs.py` (Лейтнер + `due_at`), практика по срокам, чекпойнты юнитов включены, `GET /learn/review`, счётчик в замке.
+- Фаза 3: пилот + ~20 листов Meshy `nano-banana-pro` (3×3), скрипт `scripts/slice_word_sheet.py`, каталог `word_sheets.py`, `ATTRIBUTION.md`. Фирменные jpg ≈212; покрытие курса: фото/бренд для всех слов, где картинка нужна (служебные — глифы).
+- Фаза 4: звуки ответа (`sfx.ts`), прогресс на экране финиша, анимация сердец, зоны нажатия 44+, отказ микрофона с обходом после 5 попыток.
+- Фаза 5: HMAC-токен игрока (`auth.py` + `WORLD_PLAYER_SECRET`), Postgres-слой в `db.py`, TTS fallback `espeak-ng`, `scripts/pregen_tts.py`, CI фронта в `world-ci.yml`, Playwright e2e-скелет, [docs/world/DEPLOY.md](docs/world/DEPLOY.md).
+- Фаза 6: таблица лиги в Башне Славы, мини-игра `/learn/sprint`, товары магазина (плащ/знамя), вечерний фильтр карты + `map-dusk.png`.
+
+**Как проверено:**
+- `cd world-backend && pytest -q` → **82 passed**
+- `cd world && npm test` → **10 passed**
+- Пилотный лист Meshy визуально принят; неоднозначные ячейки (jug/sat/pat/…) выбрасывались, не оставлялись.
+
+**Решения и нюансы:**
+- Листы 3×3 вместо одиночных картинок: ~9 кредитов → 9 карточек в одном стиле.
+- Вечерняя карта не подменяет кликабельный `map.png` (хитбоксы), а даёт CSS-фильтр + отдельный арт `map-dusk.png` для интерьеров/фона.
+- Postgres: адаптер SQL (`?`→`%s`, `INSERT OR IGNORE`, `datetime('now')`); полный e2e на Postgres в этой сессии не гонялся.
+
+**Деплой:** прод не трогали.
+**Осталось / следующий шаг:**
+1. Commit/PR ветки `foxinburg-world-v1` (по запросу владельца).
+2. Поднять `WORLD_PLAYER_SECRET` и Postgres на сервере по `docs/world/DEPLOY.md`.
+3. Живой Playwright UI с `WORLD_E2E_UI=1` после `npx playwright install`.
+4. По желанию — доп. фонетические листы Meshy.
+
+### Сессия 98 (агент — Cursor, smoke после закрытия плана World)
+
+**Дата:** 2026-09-16
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** «как правильно так и делаем дальше» / «не тупи».
+
+**Что сделано:**
+- `npm run build` падал на e2e без `@playwright/test` в tsconfig → exclude `e2e` + `playwright.config.ts`; установлен `@playwright/test`.
+- Перезапущен API :8010 (старый процесс → ложный 404 на `/learn/review`).
+- e2e: API-смоук отвечает первые шаги урока + review/league; UI только при `WORLD_E2E_UI=1`.
+- Удалены мёртвые зависимости three/r3f/zustand из `world/package.json`.
+
+**Как проверено:**
+- `pytest -q` → 82; `npm test` → 10; `npm run build` → ok; Playwright API → 1 passed.
+- Живо: `/world` «Замок Фоксинбург», review/league/sprint/path 200, lesson start 32 items.
+
+**Деплой:** нет (см. сессию 99).
+**Осталось / следующий шаг:** PR + деплой на VM.
+
+### Сессия 99 (агент — Cursor, PR #223 + деплой World)
+
+**Дата:** 2026-09-16
+**PR:** #223 — feat(world): замок 2D, SRS, Meshy-карточки (`foxinburg-world-v1` → main)
+**Запрос владельца:** «нужен! и деплой!»
+
+**Что сделано:**
+- PR #223 открыт; push ветки.
+- `docker-compose.world.yml`, Dockerfiles, Caddy-блоки `world` / `world-api`, обновлён `docs/world/DEPLOY.md`.
+
+**Деплой:** превью на https://new.dymova-english.ru (DNS world.* ещё нет).
+
+### Сессия 100 (агент — Cursor, видимый замок + lexicon + сеть)
+
+**Дата:** 2026-09-16
+**Ветка:** `foxinburg-world-v1`
+**Запрос владельца:** «продолжай строить проект по плану!» (после жалобы: замок тот же, озвучка плохая, Meshy не видно).
+
+**Что сделано:**
+- Новая карта замка Meshy `nano-banana-pro` (−9 кредитов) → `map.png` (бэкап `map-v1-backup.png`), хитбоксы пересчитаны.
+- Сокровищница показывает jpg слов из Meshy.
+- `docker-compose.world.yml` в сети `bot_default`; Caddy → `world-web` / `world-api` по имени; `new.` — превью World.
+- edge-tts уже в проде; pregen core vocabulary локально.
+
+**Как проверить:** https://new.dymova-english.ru/world — новая карта; Сокровищница — картинки; урок — голос AriaNeural.
+
+### Сессия — World Journey A→B→C + cinematic gold standard (2026-09-16)
+
+**Запрос:** полный игровой путь эмоций + «прорисовка как на этих фото» (3 cinematic stills: gates / establishing / library courtyard). Автопилот A→B→C, Meshy только при нужде.
+
+**Что сделано:**
+- Wave 1 spine: `journey.ts` (+tests), cinematic `/`, mission-first `/learn`, finish→`/world?pulse=`, CSS arrive/reward.
+- Gold stills в `world/public/world/cinematic/{establishing,gates-foxi,library-courtyard}.jpg`; art bible → PREMIUM CINEMATIC формула.
+- Wave 2: reward routing (school first / stickers / nest level-up / glory каждые 3 / yard practice), `castleNudgeLine` до первого урока, teal pulse glow.
+- Wave 3 chrome: dark glass WorldBar/Castle HUD, album+sprint cinematic, FoxiGuide `tone=dark`, embers, lesson SkyWash на gates still.
+- Meshy не тратили (рефы уже от владельца; remesh карты замка отложен — сломает калиброванные полигоны).
+
+**Проверено:** `cd world && npm test -- --run` → 22 passed; `npm run build` → ok.
+
+**Осталось:** при желании — новая Meshy-карта замка в стиле stills + перекалибровка hitbox.
+
+**Проверка и доводка (запрос: «продолжай и проверь что все работает!»):**
+- lint: 3 ошибки `set-state-in-effect` → однократная гидрация из localStorage/URL с обоснованием; `/learn` больше не читает journey во время рендера (риск hydration mismatch).
+- Урок: серый текст на тёмно-туманном SkyWash плохо читался → светлая вуаль (кремовая), фото ворот остаётся фактурой сверху.
+- `missionFor`: новичку «Первый урок» вместо «Продолжить урок» (+тест).
+- Проверено: vitest 23, tsc, lint 0 errors, `next build`, pytest 82, Playwright (`WORLD_E2E_UI=1`) 2 passed; прогон пути новичок→/learn→урок→/world?pulse=school→возврат, album, sprint на 1440 и 390px — 0 ошибок консоли, 0 ответов 4xx/5xx.
+
+### Сессия 120 (агент — Auto, замок из спрайтов + hover) — WIP
+
+**Дата:** 2026-09-17
+**Ветка:** `world-v2`
+**Запрос владельца:** не нравится склейка/хитбоксы/масштаб; нужны свои спрайты, hover+подпись, башни классов кликабельны, лента без скролла, сцена contain в колонке (под сайдбаром только фон).
+
+**Что сделано:**
+- Конструкция Meshy flare (~54 кр.): `gate`, `wall-front`, `wall-corner`, `cottage-a/b`, `bridge`.
+- UI снова композиция спрайтов на `castle-plate-wide`: hover scale + подпись; 4 башни классов → смена book + `/learn`.
+- Сцена 16:9 `contain` в рабочей колонке; сетка 12 локаций без гориз. скролла.
+- `castle-realm` оставлен архивом, в UI не используется.
+
+**Как проверено:** vitest 34; Playwright hover «Школа Foxy»; mobile сетка 4×3.
+
+**Осталось:** живая калибровка позиций/масштаба владельцем (не спешим — до идеала).
+
+**Дата:** 2026-09-17
+**Ветка:** `world-v2`
+**Запрос владельца:** продолжить после остановки на Замке; flare; не отходить от референса Duo/Puzzle + Spotlight; замок — развлекательное дополнение.
+
+**Что сделано:**
+- Meshy `gpt-image-2-5-flare`: добиты 10 ассетов замка (lexicon/stickers/yard/quests/nest + интерьеры) → `world/public/content/castle/` (~90 кр.).
+- Новый UI `world/src/features/castle/CastleScreen.tsx` в Shell + «Живая миниатюра»: диорама-пластина, спрайты зданий, комнаты с room-*.webp.
+- Здания завязаны на учёбу: школа→`/learn`, двор→`/practice`, сокровищница→словарь v2, лавка тратит монеты уроков; на финише урока — «В замок» при +монетах.
+- Удалён старый `CastleHub` (полигоны map.png). Обновлены `buildings.ts`, QUEUE.md, тесты.
+
+**Как проверено:** vitest 34; `tsc`; `next build`; Playwright smoke `/world` + комната школы на :3002; ассеты 200.
+
+**Решения:** замок не перебивает путь — вкладка в Shell и CTA «Вернуться к учёбе»; арт только flare по STYLE_LOCK.
+
+**Осталось / следующий шаг:** сверка Spotlight преподавателем; лиги/лут сундуков; Teens SP5–11; по желанию подкрутить координаты зданий на пластине после живого просмотра владельцем.
+
+## Текущий статус / Где остановились
+
+- **World v2:** движок Spotlight 1–4 + башня-путь + арт слов/этажей — в ветке `world-v2`.
+- **Замок (сессия 121):** полноэкранная диорама flare, башни классов = угловые башни замка, клик/hover по силуэтам. Ждём просмотр владельцем.
+- **Следующее:** тонкая раскладка замка до идеала; сверка Spotlight; SP5–11 / лиги.
+
+### Сессия — World v2: тренажёр Spotlight 1–4 в стиле Duolingo (2026-09-17)
+
+**Ветка:** `world-v2` (от снимка `backup/world-agent-0916`)
+**Запрос владельца:** прошлый агент «сотворил херню»; логика, движок и структура обучения как у Duolingo и Puzzle English, программа строго по учебникам Spotlight (начать с 1–4, в 1–2 классе учить читать), замок — развлекательное дополнение, арт через Meshy.
+
+**Что сделано:**
+- Спека `docs/superpowers/specs/2026-09-17-foxinburg-world-v2-spotlight-engine-design.md`, планы `docs/superpowers/plans/2026-09-17-world-v2-plan{1,2}-*.md`.
+- Backend `world-backend/app/learning/` + `/api/v2`: контент атомами (схемы + инварианты), 18 типов заданий, сборка урока по узлу/полосе/SRS, проверка (сокращения, опечатки), очередь ошибок, награды, серия по Москве, дневная цель, статусы пути «Мой класс», сундук, тренировка, словарь.
+- Контент `world-backend/content/spotlight/sp1–sp4`: 30 модулей, 589 слов, 190 фраз, 33 грамматики — лексика по тематическому планированию книг для учителя (eng4school), фразы свои. Линия чтения (phonics) в SP1–2. Чек-лист сверки — `content/spotlight/REVIEW.md` (преподавателем ещё не сверено).
+- Frontend `world/`: дизайн-система «тетрадь в клетку + королевские печати» (`src/design`), онбординг, путь, урок, финиш, тренировка, словарь, профиль; замок остаётся на `/world`. Старые экраны урока v1 удалены.
+- Арт: `world-pipeline/word_art.py` (Meshy nano-banana-pro листами 3×3 → `world/public/content/words/*.webp`, цифры и цвета программно), `world-pipeline/foxy_poses.py` (позы Foxy по маскоту из брендбука, прозрачный фон).
+
+**Как проверено:** `pytest` 205 passed; `vitest` 35 passed; `tsc`, `eslint` (0 ошибок), `next build`; Playwright UI+API на iPhone 13 и 1440 px — 4 passed; ручной прогон онбординга и урока в браузере.
+
+**Осталось:** сверка контента преподавателем; иллюстрации модулей; лиги/сундуки с лутом; режим Teens (SP5–11); связка наград с замком.
+
+**Доработка того же дня — путь «Башня замка»:** владелец отметил, что змейка слишком похожа на Duolingo. Путь книги теперь башня: крыша со знаменем учебника, этажи-модули с иллюстрацией комнаты «в разрезе» (`world/public/content/modules`, `world-pipeline/module_art.py`, 30 шт.), уроки — арочные окна (горит / сияет с Foxy / тёмное стекло / ставни), сундук — ниша, контрольная — балкон с флагом и звёздами, лестницы прогресса, ворота. Проверено: tsc, vitest 33, eslint 0 ошибок, Playwright 4 passed локально и на превью; выкачено на new.dymova-english.ru.
+
+**Доработки 2026-09-17 (продолжение):** стиль «Живая миниатюра» зафиксирован (`docs/world/STYLE_LOCK.md`); все картинки слов Spotlight 1–4 перерисованы (flare для людей, nano-banana-2 + BUDGET_TUNE для предметов), NOT_A_HOUSE против «домиков»; 30 этажей в стиле башни; уроки на этаже снизу вверх, контрольная сверху; «Найди пары» — крупные картинки и мгновенная проверка пары (`POST /api/v2/sessions/{id}/pair`); свои башни классов SP2–4; фон-сцена лес и горы. Замок отложен владельцем — заготовки арта в `world/public/content/castle`, очередь в `world-pipeline/prompts/QUEUE.md`. Замок доведён в сессии 119.

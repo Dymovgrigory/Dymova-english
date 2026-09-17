@@ -1,0 +1,393 @@
+{
+  "id": "sp2.m2",
+  "book": "sp2",
+  "order": 2,
+  "label": "Module 1",
+  "title_en": "My Home!",
+  "title_ru": "Мой дом",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp2.m2.home",
+      "en": "home",
+      "ru": "дом",
+      "accept_en": [],
+      "accept_ru": [
+        "дома"
+      ],
+      "kind": "noun",
+      "image": "words/home.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.house",
+      "en": "house",
+      "ru": "дом",
+      "accept_en": [],
+      "accept_ru": [
+        "домик"
+      ],
+      "kind": "noun",
+      "image": "words/house.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.radio",
+      "en": "radio",
+      "ru": "радио",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/radio.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.garden",
+      "en": "garden",
+      "ru": "сад",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/garden.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.tree",
+      "en": "tree",
+      "ru": "дерево",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tree.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.kitchen",
+      "en": "kitchen",
+      "ru": "кухня",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/kitchen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.bedroom",
+      "en": "bedroom",
+      "ru": "спальня",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bedroom.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.bathroom",
+      "en": "bathroom",
+      "ru": "ванная",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bathroom.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.living-room",
+      "en": "living room",
+      "ru": "гостиная",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/living-room.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.bath",
+      "en": "bath",
+      "ru": "ванна",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bath.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.window",
+      "en": "window",
+      "ru": "окно",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/window.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.floor",
+      "en": "floor",
+      "ru": "пол",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/floor.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.door",
+      "en": "door",
+      "ru": "дверь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/door.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.brown",
+      "en": "brown",
+      "ru": "коричневый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/brown.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.chair",
+      "en": "chair",
+      "ru": "стул",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/chair.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m2.table",
+      "en": "table",
+      "ru": "стол",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/table.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp2.m2.p1",
+      "en": "Where is the radio?",
+      "ru": "Где радио?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m2.radio"
+      ],
+      "grammar_id": "sp2.m2.g-where"
+    },
+    {
+      "id": "sp2.m2.p2",
+      "en": "She is in the kitchen.",
+      "ru": "Она на кухне.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m2.kitchen"
+      ],
+      "grammar_id": "sp2.m2.g-where"
+    },
+    {
+      "id": "sp2.m2.p3",
+      "en": "Is he in the garden?",
+      "ru": "Он в саду?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m2.garden"
+      ],
+      "grammar_id": "sp2.m2.g-where"
+    },
+    {
+      "id": "sp2.m2.p4",
+      "en": "My house is big.",
+      "ru": "Мой дом большой.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m2.house"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m2.p5",
+      "en": "The door is brown.",
+      "ru": "Дверь коричневая.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m2.door",
+        "sp2.m2.brown"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m2.p6",
+      "en": "A bath in the bathroom.",
+      "ru": "Ванна в ванной комнате.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m2.bath",
+        "sp2.m2.bathroom"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp2.m2.g-where",
+      "title_ru": "Where's…? — Где…?",
+      "rule_ru": "Where's…? — где? Отвечаем: He's in the garden — он в саду. She's in the kitchen — она на кухне.",
+      "examples": [
+        {
+          "en": "Where's Grandpa?",
+          "ru": "Где дедушка?"
+        },
+        {
+          "en": "He's in the garden.",
+          "ru": "Он в саду."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp2.m2.g-where.1",
+          "prompt_en": "___ is Foxy?",
+          "options": [
+            "Where",
+            "What"
+          ],
+          "answer": 0,
+          "ru": "Где Фокси?"
+        },
+        {
+          "id": "sp2.m2.g-where.2",
+          "prompt_en": "She ___ in the kitchen.",
+          "options": [
+            "am",
+            "is"
+          ],
+          "answer": 1,
+          "ru": "Она на кухне."
+        },
+        {
+          "id": "sp2.m2.g-where.3",
+          "prompt_en": "___ is in the garden.",
+          "options": [
+            "He",
+            "His"
+          ],
+          "answer": 0,
+          "ru": "Он в саду."
+        },
+        {
+          "id": "sp2.m2.g-where.4",
+          "prompt_en": "Is he in the bedroom? No, he ___.",
+          "options": [
+            "isn't",
+            "is"
+          ],
+          "answer": 0,
+          "ru": "Он в спальне? Нет."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp2.m2.gr-ai",
+      "grapheme": "ai",
+      "sound_word": "rain"
+    },
+    {
+      "id": "sp2.m2.gr-oa",
+      "grapheme": "oa",
+      "sound_word": "boat"
+    },
+    {
+      "id": "sp2.m2.gr-ie",
+      "grapheme": "ie",
+      "sound_word": "pie"
+    },
+    {
+      "id": "sp2.m2.gr-ue",
+      "grapheme": "ue",
+      "sound_word": "blue"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp2.m2.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m2.home",
+        "sp2.m2.house",
+        "sp2.m2.radio",
+        "sp2.m2.garden",
+        "sp2.m2.tree"
+      ]
+    },
+    {
+      "id": "sp2.m2.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m2.kitchen",
+        "sp2.m2.bedroom",
+        "sp2.m2.bathroom",
+        "sp2.m2.living-room",
+        "sp2.m2.bath"
+      ]
+    },
+    {
+      "id": "sp2.m2.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m2.gr-ai",
+        "sp2.m2.gr-oa",
+        "sp2.m2.gr-ie",
+        "sp2.m2.gr-ue"
+      ]
+    },
+    {
+      "id": "sp2.m2.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m2.window",
+        "sp2.m2.floor",
+        "sp2.m2.door",
+        "sp2.m2.brown",
+        "sp2.m2.chair",
+        "sp2.m2.table"
+      ]
+    },
+    {
+      "id": "sp2.m2.n5",
+      "kind": "grammar",
+      "grammar_id": "sp2.m2.g-where"
+    },
+    {
+      "id": "sp2.m2.n6",
+      "kind": "chest"
+    },
+    {
+      "id": "sp2.m2.n7",
+      "kind": "review"
+    },
+    {
+      "id": "sp2.m2.n8",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ]
+}

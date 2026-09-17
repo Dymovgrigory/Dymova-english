@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 480">
+  <rect width="408" height="480" rx="36" fill="#fffaf0"/>
+  <rect x="18" y="18" width="372" height="300" rx="28" fill="#3a2953"/>
+  <g transform="translate(0,8)"><g transform="translate(84,44) scale(2.2)"><path fill="#FFAC33" d="M28 13c0 11 5 10 5 15 0 0 0 2-2 2H5c-2 0-2-2-2-2 0-5 5-4 5-15C8 7.478 12.477 3 18 3s10 4.478 10 10z"/><circle fill="#FFAC33" cx="18" cy="3" r="3"/><path fill="#FFAC33" d="M18 36c2.209 0 4-1.791 4-4h-8c0 2.209 1.791 4 4 4z"/></g></g>
+  <text x="204" y="360" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="42" font-weight="800" fill="#3a2953">bell</text>
+  <text x="204" y="408" text-anchor="middle" font-family="Nunito, Trebuchet MS, sans-serif"
+        font-size="26" fill="#241a30" opacity="0.55">колокол</text>
+</svg>

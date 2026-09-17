@@ -1,0 +1,403 @@
+{
+  "id": "sp2.m4",
+  "book": "sp2",
+  "order": 4,
+  "label": "Module 3",
+  "title_en": "My Animals!",
+  "title_ru": "Мои животные",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp2.m4.animal",
+      "en": "animal",
+      "ru": "животное",
+      "accept_en": [],
+      "accept_ru": [
+        "зверь"
+      ],
+      "kind": "noun",
+      "image": "words/animal.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.fish",
+      "en": "fish",
+      "ru": "рыба",
+      "accept_en": [],
+      "accept_ru": [
+        "рыбка"
+      ],
+      "kind": "noun",
+      "image": "words/fish.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.frog",
+      "en": "frog",
+      "ru": "лягушка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/frog.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.horse",
+      "en": "horse",
+      "ru": "лошадь",
+      "accept_en": [],
+      "accept_ru": [
+        "конь"
+      ],
+      "kind": "noun",
+      "image": "words/horse.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.bird",
+      "en": "bird",
+      "ru": "птица",
+      "accept_en": [],
+      "accept_ru": [
+        "птичка"
+      ],
+      "kind": "noun",
+      "image": "words/bird.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.swim",
+      "en": "swim",
+      "ru": "плавать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/swim.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.sing",
+      "en": "sing",
+      "ru": "петь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/sing.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.dance",
+      "en": "dance",
+      "ru": "танцевать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/dance.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.fly",
+      "en": "fly",
+      "ru": "летать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/fly.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.jump",
+      "en": "jump",
+      "ru": "прыгать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/jump.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.circus",
+      "en": "circus",
+      "ru": "цирк",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/circus.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.clown",
+      "en": "clown",
+      "ru": "клоун",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/clown.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.magician",
+      "en": "magician",
+      "ru": "фокусник",
+      "accept_en": [],
+      "accept_ru": [
+        "волшебник"
+      ],
+      "kind": "noun",
+      "image": "words/magician.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.swing",
+      "en": "swing",
+      "ru": "качели",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/swing.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.funny",
+      "en": "funny",
+      "ru": "смешной",
+      "accept_en": [],
+      "accept_ru": [
+        "забавный"
+      ],
+      "kind": "adj",
+      "image": "words/funny.webp",
+      "trick": false
+    },
+    {
+      "id": "sp2.m4.clever",
+      "en": "clever",
+      "ru": "умный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/clever.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp2.m4.p1",
+      "en": "Can you swim?",
+      "ru": "Ты умеешь плавать?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m4.swim"
+      ],
+      "grammar_id": "sp2.m4.g-can"
+    },
+    {
+      "id": "sp2.m4.p2",
+      "en": "A frog can jump.",
+      "ru": "Лягушка умеет прыгать.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m4.frog",
+        "sp2.m4.jump"
+      ],
+      "grammar_id": "sp2.m4.g-can"
+    },
+    {
+      "id": "sp2.m4.p3",
+      "en": "I can't fly.",
+      "ru": "Я не умею летать.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m4.fly"
+      ],
+      "grammar_id": "sp2.m4.g-can"
+    },
+    {
+      "id": "sp2.m4.p4",
+      "en": "The clown is funny.",
+      "ru": "Клоун смешной.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m4.clown",
+        "sp2.m4.funny"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m4.p5",
+      "en": "I can dance like a bird.",
+      "ru": "Я умею танцевать как птица.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m4.dance",
+        "sp2.m4.bird"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp2.m4.p6",
+      "en": "A clever animal.",
+      "ru": "Умное животное.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp2.m4.clever",
+        "sp2.m4.animal"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp2.m4.g-can",
+      "title_ru": "Can you…? — Ты умеешь…?",
+      "rule_ru": "Can — умеет, can't — не умеет. Спрашиваем: Can you swim? Отвечаем: Yes, I can. / No, I can't.",
+      "examples": [
+        {
+          "en": "Can you jump? Yes, I can.",
+          "ru": "Ты умеешь прыгать? Да."
+        },
+        {
+          "en": "A fish can't fly.",
+          "ru": "Рыба не умеет летать."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp2.m4.g-can.1",
+          "prompt_en": "A fish ___ swim.",
+          "options": [
+            "can",
+            "can't"
+          ],
+          "answer": 0,
+          "ru": "Рыба умеет плавать."
+        },
+        {
+          "id": "sp2.m4.g-can.2",
+          "prompt_en": "A horse ___ fly.",
+          "options": [
+            "can",
+            "can't"
+          ],
+          "answer": 1,
+          "ru": "Лошадь не умеет летать."
+        },
+        {
+          "id": "sp2.m4.g-can.3",
+          "prompt_en": "___ you jump? Yes, I can.",
+          "options": [
+            "Can",
+            "Do"
+          ],
+          "answer": 0,
+          "ru": "Ты умеешь прыгать? Да."
+        },
+        {
+          "id": "sp2.m4.g-can.4",
+          "prompt_en": "No, I ___.",
+          "options": [
+            "can't",
+            "don't"
+          ],
+          "answer": 0,
+          "ru": "Нет, не умею."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp2.m4.gr-oi",
+      "grapheme": "oi",
+      "sound_word": "coin"
+    },
+    {
+      "id": "sp2.m4.gr-oy",
+      "grapheme": "oy",
+      "sound_word": "toy"
+    },
+    {
+      "id": "sp2.m4.gr-ay",
+      "grapheme": "ay",
+      "sound_word": "play"
+    },
+    {
+      "id": "sp2.m4.gr-ea",
+      "grapheme": "ea",
+      "sound_word": "tea"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp2.m4.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m4.animal",
+        "sp2.m4.fish",
+        "sp2.m4.frog",
+        "sp2.m4.horse",
+        "sp2.m4.bird"
+      ]
+    },
+    {
+      "id": "sp2.m4.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m4.swim",
+        "sp2.m4.sing",
+        "sp2.m4.dance",
+        "sp2.m4.fly",
+        "sp2.m4.jump"
+      ]
+    },
+    {
+      "id": "sp2.m4.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp2.m4.gr-oi",
+        "sp2.m4.gr-oy",
+        "sp2.m4.gr-ay",
+        "sp2.m4.gr-ea"
+      ]
+    },
+    {
+      "id": "sp2.m4.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp2.m4.circus",
+        "sp2.m4.clown",
+        "sp2.m4.magician",
+        "sp2.m4.swing",
+        "sp2.m4.funny",
+        "sp2.m4.clever"
+      ]
+    },
+    {
+      "id": "sp2.m4.n5",
+      "kind": "grammar",
+      "grammar_id": "sp2.m4.g-can"
+    },
+    {
+      "id": "sp2.m4.n6",
+      "kind": "chest"
+    },
+    {
+      "id": "sp2.m4.n7",
+      "kind": "review"
+    },
+    {
+      "id": "sp2.m4.n8",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ]
+}

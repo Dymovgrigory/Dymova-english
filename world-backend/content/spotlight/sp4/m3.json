@@ -1,0 +1,570 @@
+{
+  "id": "sp4.m3",
+  "book": "sp4",
+  "order": 3,
+  "label": "Module 3",
+  "title_en": "Tasty treats!",
+  "title_ru": "Вкусные угощения",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m3.beans",
+      "en": "beans",
+      "ru": "фасоль",
+      "accept_en": [],
+      "accept_ru": [
+        "бобы"
+      ],
+      "kind": "noun",
+      "image": "words/beans.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.mango",
+      "en": "mango",
+      "ru": "манго",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mango.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.butter",
+      "en": "butter",
+      "ru": "сливочное масло",
+      "accept_en": [],
+      "accept_ru": [
+        "масло"
+      ],
+      "kind": "noun",
+      "image": "words/butter.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.coconut",
+      "en": "coconut",
+      "ru": "кокос",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/coconut.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.pineapple",
+      "en": "pineapple",
+      "ru": "ананас",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pineapple.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.tomato",
+      "en": "tomato",
+      "ru": "помидор",
+      "accept_en": [],
+      "accept_ru": [
+        "томат"
+      ],
+      "kind": "noun",
+      "image": "words/tomato.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.flour",
+      "en": "flour",
+      "ru": "мука",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/flour.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.olive-oil",
+      "en": "olive oil",
+      "ru": "оливковое масло",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/olive-oil.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.sugar",
+      "en": "sugar",
+      "ru": "сахар",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/sugar.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.salt",
+      "en": "salt",
+      "ru": "соль",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/salt.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.pepper",
+      "en": "pepper",
+      "ru": "перец",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pepper.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.pass",
+      "en": "pass",
+      "ru": "передать",
+      "accept_en": [],
+      "accept_ru": [
+        "передавать"
+      ],
+      "kind": "verb",
+      "image": "words/pass.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.packet",
+      "en": "packet",
+      "ru": "пакет",
+      "accept_en": [],
+      "accept_ru": [
+        "пачка"
+      ],
+      "kind": "noun",
+      "image": "words/packet.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.bar",
+      "en": "bar",
+      "ru": "плитка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bar.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.kilo",
+      "en": "kilo",
+      "ru": "килограмм",
+      "accept_en": [],
+      "accept_ru": [
+        "кило"
+      ],
+      "kind": "noun",
+      "image": "words/kilo.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.loaf",
+      "en": "loaf",
+      "ru": "буханка",
+      "accept_en": [],
+      "accept_ru": [
+        "батон"
+      ],
+      "kind": "noun",
+      "image": "words/loaf.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.jar",
+      "en": "jar",
+      "ru": "банка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/jar.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.carton",
+      "en": "carton",
+      "ru": "коробка",
+      "accept_en": [],
+      "accept_ru": [
+        "пакет"
+      ],
+      "kind": "noun",
+      "image": "words/carton.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.bottle",
+      "en": "bottle",
+      "ru": "бутылка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bottle.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.tin",
+      "en": "tin",
+      "ru": "консервная банка",
+      "accept_en": [
+        "can"
+      ],
+      "accept_ru": [
+        "жестяная банка"
+      ],
+      "kind": "noun",
+      "image": "words/tin.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.dairy",
+      "en": "dairy",
+      "ru": "молочные продукты",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/dairy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.hungry",
+      "en": "hungry",
+      "ru": "голодный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/hungry.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.hate",
+      "en": "hate",
+      "ru": "ненавидеть",
+      "accept_en": [],
+      "accept_ru": [
+        "терпеть не могу"
+      ],
+      "kind": "verb",
+      "image": "words/hate.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.tasty",
+      "en": "tasty",
+      "ru": "вкусный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/tasty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m3.dessert",
+      "en": "dessert",
+      "ru": "десерт",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/dessert.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m3.p1",
+      "en": "How much sugar do we need?",
+      "ru": "Сколько сахара нам нужно?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.sugar"
+      ],
+      "grammar_id": "sp4.m3.g-much-many"
+    },
+    {
+      "id": "sp4.m3.p2",
+      "en": "How many tomatoes have we got?",
+      "ru": "Сколько у нас помидоров?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.tomato"
+      ],
+      "grammar_id": "sp4.m3.g-much-many"
+    },
+    {
+      "id": "sp4.m3.p3",
+      "en": "We need a lot of flour.",
+      "ru": "Нам нужно много муки.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.flour"
+      ],
+      "grammar_id": "sp4.m3.g-much-many"
+    },
+    {
+      "id": "sp4.m3.p4",
+      "en": "May I have some beans?",
+      "ru": "Можно мне фасоли?",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.beans"
+      ],
+      "grammar_id": "sp4.m3.g-may"
+    },
+    {
+      "id": "sp4.m3.p5",
+      "en": "Can you pass me the salt?",
+      "ru": "Передай мне соль.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.pass",
+        "sp4.m3.salt"
+      ],
+      "grammar_id": "sp4.m3.g-may"
+    },
+    {
+      "id": "sp4.m3.p6",
+      "en": "A bottle of olive oil.",
+      "ru": "Бутылка оливкового масла.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.bottle",
+        "sp4.m3.olive-oil"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m3.p7",
+      "en": "I'm hungry!",
+      "ru": "Я голоден!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.hungry"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m3.p8",
+      "en": "A loaf of bread and a jar of jam.",
+      "ru": "Буханка хлеба и банка джема.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m3.loaf",
+        "sp4.m3.jar"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m3.g-much-many",
+      "title_ru": "How much? How many? — сколько?",
+      "rule_ru": "Many — про то, что можно посчитать: how many tomatoes. Much — про то, что не считают: how much sugar. A lot of — много, подходит везде.",
+      "examples": [
+        {
+          "en": "How much sugar do we need?",
+          "ru": "Сколько сахара нам нужно?"
+        },
+        {
+          "en": "How many tomatoes have we got?",
+          "ru": "Сколько у нас помидоров?"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m3.g-much-many.1",
+          "prompt_en": "How ___ sugar do we need?",
+          "options": [
+            "much",
+            "many"
+          ],
+          "answer": 0,
+          "ru": "Сколько сахара нам нужно?"
+        },
+        {
+          "id": "sp4.m3.g-much-many.2",
+          "prompt_en": "How ___ tomatoes?",
+          "options": [
+            "much",
+            "many"
+          ],
+          "answer": 1,
+          "ru": "Сколько помидоров?"
+        },
+        {
+          "id": "sp4.m3.g-much-many.3",
+          "prompt_en": "There isn't ___ butter.",
+          "options": [
+            "much",
+            "many"
+          ],
+          "answer": 0,
+          "ru": "Масла немного."
+        },
+        {
+          "id": "sp4.m3.g-much-many.4",
+          "prompt_en": "We need ___ lot of flour.",
+          "options": [
+            "a",
+            "an"
+          ],
+          "answer": 0,
+          "ru": "Нам нужно много муки."
+        }
+      ]
+    },
+    {
+      "id": "sp4.m3.g-may",
+      "title_ru": "May I…? — можно мне…?",
+      "rule_ru": "Вежливо просим разрешения: May I have some juice, please? Просим передать: Can you pass me the salt?",
+      "examples": [
+        {
+          "en": "May I have some beans?",
+          "ru": "Можно мне фасоли?"
+        },
+        {
+          "en": "Can you pass me the salt?",
+          "ru": "Передай мне соль, пожалуйста."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m3.g-may.1",
+          "prompt_en": "___ I have some mango?",
+          "options": [
+            "May",
+            "Must"
+          ],
+          "answer": 0,
+          "ru": "Можно мне манго?"
+        },
+        {
+          "id": "sp4.m3.g-may.2",
+          "prompt_en": "You may ___ a biscuit.",
+          "options": [
+            "have",
+            "has"
+          ],
+          "answer": 0,
+          "ru": "Можешь взять печенье."
+        },
+        {
+          "id": "sp4.m3.g-may.3",
+          "prompt_en": "May I have a bar ___ chocolate?",
+          "options": [
+            "of",
+            "off"
+          ],
+          "answer": 0,
+          "ru": "Можно мне плитку шоколада?"
+        },
+        {
+          "id": "sp4.m3.g-may.4",
+          "prompt_en": "Can you ___ me the pepper?",
+          "options": [
+            "pass",
+            "passes"
+          ],
+          "answer": 0,
+          "ru": "Передай мне перец."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m3.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m3.beans",
+        "sp4.m3.mango",
+        "sp4.m3.butter",
+        "sp4.m3.coconut",
+        "sp4.m3.pineapple",
+        "sp4.m3.tomato"
+      ]
+    },
+    {
+      "id": "sp4.m3.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m3.flour",
+        "sp4.m3.olive-oil",
+        "sp4.m3.sugar",
+        "sp4.m3.salt",
+        "sp4.m3.pepper",
+        "sp4.m3.pass"
+      ]
+    },
+    {
+      "id": "sp4.m3.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m3.packet",
+        "sp4.m3.bar",
+        "sp4.m3.kilo",
+        "sp4.m3.loaf",
+        "sp4.m3.jar",
+        "sp4.m3.carton"
+      ]
+    },
+    {
+      "id": "sp4.m3.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m3.bottle",
+        "sp4.m3.tin",
+        "sp4.m3.dairy",
+        "sp4.m3.hungry",
+        "sp4.m3.hate",
+        "sp4.m3.tasty",
+        "sp4.m3.dessert"
+      ]
+    },
+    {
+      "id": "sp4.m3.n5",
+      "kind": "grammar",
+      "grammar_id": "sp4.m3.g-much-many"
+    },
+    {
+      "id": "sp4.m3.n6",
+      "kind": "grammar",
+      "grammar_id": "sp4.m3.g-may"
+    },
+    {
+      "id": "sp4.m3.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m3.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m3.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

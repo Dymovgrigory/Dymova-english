@@ -1,0 +1,519 @@
+{
+  "id": "sp1.m2",
+  "book": "sp1",
+  "order": 2,
+  "label": "Module 2",
+  "title_en": "My School!",
+  "title_ru": "Моя школа",
+  "band": "starter",
+  "words": [
+    {
+      "id": "sp1.m2.school",
+      "en": "school",
+      "ru": "школа",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/school.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.pen",
+      "en": "pen",
+      "ru": "ручка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.pencil",
+      "en": "pencil",
+      "ru": "карандаш",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pencil.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.book",
+      "en": "book",
+      "ru": "книга",
+      "accept_en": [],
+      "accept_ru": [
+        "учебник"
+      ],
+      "kind": "noun",
+      "image": "words/book.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.desk",
+      "en": "desk",
+      "ru": "парта",
+      "accept_en": [],
+      "accept_ru": [
+        "стол"
+      ],
+      "kind": "noun",
+      "image": "words/desk.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.one",
+      "en": "one",
+      "ru": "один",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/one.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.two",
+      "en": "two",
+      "ru": "два",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/two.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.three",
+      "en": "three",
+      "ru": "три",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/three.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.four",
+      "en": "four",
+      "ru": "четыре",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/four.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.five",
+      "en": "five",
+      "ru": "пять",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/five.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.pencil-case",
+      "en": "pencil case",
+      "ru": "пенал",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/pencil-case.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.rubber",
+      "en": "rubber",
+      "ru": "ластик",
+      "accept_en": [
+        "eraser"
+      ],
+      "accept_ru": [
+        "резинка"
+      ],
+      "kind": "noun",
+      "image": "words/rubber.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.schoolbag",
+      "en": "schoolbag",
+      "ru": "портфель",
+      "accept_en": [
+        "school bag"
+      ],
+      "accept_ru": [
+        "рюкзак"
+      ],
+      "kind": "noun",
+      "image": "words/schoolbag.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.bus",
+      "en": "bus",
+      "ru": "автобус",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/bus.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.new",
+      "en": "new",
+      "ru": "новый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/new.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.six",
+      "en": "six",
+      "ru": "шесть",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/six.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.seven",
+      "en": "seven",
+      "ru": "семь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/seven.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.eight",
+      "en": "eight",
+      "ru": "восемь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/eight.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.nine",
+      "en": "nine",
+      "ru": "девять",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/nine.webp",
+      "trick": false
+    },
+    {
+      "id": "sp1.m2.ten",
+      "en": "ten",
+      "ru": "десять",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/ten.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp1.m2.p1",
+      "en": "It's in the schoolbag.",
+      "ru": "Это в портфеле.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m2.schoolbag"
+      ],
+      "grammar_id": "sp1.m2.g-in-on"
+    },
+    {
+      "id": "sp1.m2.p2",
+      "en": "The pen is on the desk.",
+      "ru": "Ручка на парте.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m2.pen",
+        "sp1.m2.desk"
+      ],
+      "grammar_id": "sp1.m2.g-in-on"
+    },
+    {
+      "id": "sp1.m2.p3",
+      "en": "My pencil is in the pencil case.",
+      "ru": "Мой карандаш в пенале.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m2.pencil",
+        "sp1.m2.pencil-case"
+      ],
+      "grammar_id": "sp1.m2.g-in-on"
+    },
+    {
+      "id": "sp1.m2.p4",
+      "en": "Ten pencils.",
+      "ru": "Десять карандашей.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m2.ten",
+        "sp1.m2.pencil"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m2.p5",
+      "en": "I have got a new pen.",
+      "ru": "У меня есть новая ручка.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m2.new",
+        "sp1.m2.pen"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m2.p6",
+      "en": "Goodbye, school!",
+      "ru": "Пока, школа!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m2.school"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp1.m2.p7",
+      "en": "Three red books.",
+      "ru": "Три красные книги.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp1.m2.three",
+        "sp1.m2.book"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp1.m2.g-in-on",
+      "title_ru": "In / on — в, на",
+      "rule_ru": "In — внутри: в портфеле, в пенале. On — сверху: на парте, на книге.",
+      "examples": [
+        {
+          "en": "It's in the schoolbag.",
+          "ru": "Это в портфеле."
+        },
+        {
+          "en": "The pen is on the desk.",
+          "ru": "Ручка на парте."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp1.m2.g-in-on.1",
+          "prompt_en": "The pen is ___ the book.",
+          "options": [
+            "in",
+            "on"
+          ],
+          "answer": 1,
+          "ru": "Ручка на книге."
+        },
+        {
+          "id": "sp1.m2.g-in-on.2",
+          "prompt_en": "The pencil is ___ the schoolbag.",
+          "options": [
+            "in",
+            "on"
+          ],
+          "answer": 0,
+          "ru": "Карандаш в портфеле."
+        },
+        {
+          "id": "sp1.m2.g-in-on.3",
+          "prompt_en": "The book is ___ the desk.",
+          "options": [
+            "on",
+            "in"
+          ],
+          "answer": 0,
+          "ru": "Книга на парте."
+        },
+        {
+          "id": "sp1.m2.g-in-on.4",
+          "prompt_en": "The rubber is ___ the pencil case.",
+          "options": [
+            "on",
+            "in"
+          ],
+          "answer": 1,
+          "ru": "Ластик в пенале."
+        }
+      ]
+    }
+  ],
+  "graphemes": [
+    {
+      "id": "sp1.m2.gr-g",
+      "grapheme": "g",
+      "sound_word": "green"
+    },
+    {
+      "id": "sp1.m2.gr-o",
+      "grapheme": "o",
+      "sound_word": "orange"
+    },
+    {
+      "id": "sp1.m2.gr-u",
+      "grapheme": "u",
+      "sound_word": "up"
+    },
+    {
+      "id": "sp1.m2.gr-l",
+      "grapheme": "l",
+      "sound_word": "lemon"
+    },
+    {
+      "id": "sp1.m2.gr-f",
+      "grapheme": "f",
+      "sound_word": "family"
+    },
+    {
+      "id": "sp1.m2.gr-b",
+      "grapheme": "b",
+      "sound_word": "book"
+    },
+    {
+      "id": "sp1.m2.gr-j",
+      "grapheme": "j",
+      "sound_word": "jam"
+    },
+    {
+      "id": "sp1.m2.gr-z",
+      "grapheme": "z",
+      "sound_word": "zoo"
+    },
+    {
+      "id": "sp1.m2.gr-w",
+      "grapheme": "w",
+      "sound_word": "window"
+    },
+    {
+      "id": "sp1.m2.gr-v",
+      "grapheme": "v",
+      "sound_word": "van"
+    },
+    {
+      "id": "sp1.m2.gr-x",
+      "grapheme": "x",
+      "sound_word": "box"
+    },
+    {
+      "id": "sp1.m2.gr-y",
+      "grapheme": "y",
+      "sound_word": "yes"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sp1.m2.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m2.school",
+        "sp1.m2.pen",
+        "sp1.m2.pencil",
+        "sp1.m2.book",
+        "sp1.m2.desk"
+      ]
+    },
+    {
+      "id": "sp1.m2.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m2.one",
+        "sp1.m2.two",
+        "sp1.m2.three",
+        "sp1.m2.four",
+        "sp1.m2.five"
+      ]
+    },
+    {
+      "id": "sp1.m2.n3",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m2.gr-g",
+        "sp1.m2.gr-o",
+        "sp1.m2.gr-u",
+        "sp1.m2.gr-l",
+        "sp1.m2.gr-f",
+        "sp1.m2.gr-b"
+      ]
+    },
+    {
+      "id": "sp1.m2.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m2.pencil-case",
+        "sp1.m2.rubber",
+        "sp1.m2.schoolbag",
+        "sp1.m2.bus",
+        "sp1.m2.new"
+      ]
+    },
+    {
+      "id": "sp1.m2.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp1.m2.six",
+        "sp1.m2.seven",
+        "sp1.m2.eight",
+        "sp1.m2.nine",
+        "sp1.m2.ten"
+      ]
+    },
+    {
+      "id": "sp1.m2.n6",
+      "kind": "phonics",
+      "grapheme_ids": [
+        "sp1.m2.gr-j",
+        "sp1.m2.gr-z",
+        "sp1.m2.gr-w",
+        "sp1.m2.gr-v",
+        "sp1.m2.gr-x",
+        "sp1.m2.gr-y"
+      ]
+    },
+    {
+      "id": "sp1.m2.n7",
+      "kind": "grammar",
+      "grammar_id": "sp1.m2.g-in-on"
+    },
+    {
+      "id": "sp1.m2.n8",
+      "kind": "chest"
+    },
+    {
+      "id": "sp1.m2.n9",
+      "kind": "review"
+    },
+    {
+      "id": "sp1.m2.n10",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
+    "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ]
+}

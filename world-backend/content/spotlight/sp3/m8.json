@@ -1,0 +1,429 @@
+{
+  "id": "sp3.m8",
+  "book": "sp3",
+  "order": 8,
+  "label": "Module 8",
+  "title_en": "Day by day!",
+  "title_ru": "День за днём",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp3.m8.monday",
+      "en": "Monday",
+      "ru": "понедельник",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/monday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.tuesday",
+      "en": "Tuesday",
+      "ru": "вторник",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/tuesday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.wednesday",
+      "en": "Wednesday",
+      "ru": "среда",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/wednesday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.thursday",
+      "en": "Thursday",
+      "ru": "четверг",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/thursday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.quiz",
+      "en": "quiz",
+      "ru": "викторина",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/quiz.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.friday",
+      "en": "Friday",
+      "ru": "пятница",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/friday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.saturday",
+      "en": "Saturday",
+      "ru": "суббота",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/saturday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.sunday",
+      "en": "Sunday",
+      "ru": "воскресенье",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/sunday.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.cartoon",
+      "en": "cartoon",
+      "ru": "мультфильм",
+      "accept_en": [],
+      "accept_ru": [
+        "мультик"
+      ],
+      "kind": "noun",
+      "image": "words/cartoon.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.clock",
+      "en": "clock",
+      "ru": "часы",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/clock.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.morning",
+      "en": "morning",
+      "ru": "утро",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/morning.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.afternoon",
+      "en": "afternoon",
+      "ru": "день",
+      "accept_en": [],
+      "accept_ru": [
+        "после обеда"
+      ],
+      "kind": "other",
+      "image": "words/afternoon.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.evening",
+      "en": "evening",
+      "ru": "вечер",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/evening.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.night",
+      "en": "night",
+      "ru": "ночь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/night.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.o-clock",
+      "en": "o'clock",
+      "ru": "часов",
+      "accept_en": [],
+      "accept_ru": [
+        "ровно"
+      ],
+      "kind": "other",
+      "image": "words/o-clock.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.shower",
+      "en": "shower",
+      "ru": "душ",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/shower.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.lunch",
+      "en": "lunch",
+      "ru": "обед",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/lunch.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.supper",
+      "en": "supper",
+      "ru": "ужин",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/supper.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.listen",
+      "en": "listen",
+      "ru": "слушать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/listen.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.visit",
+      "en": "visit",
+      "ru": "навещать",
+      "accept_en": [],
+      "accept_ru": [
+        "посещать"
+      ],
+      "kind": "verb",
+      "image": "words/visit.webp",
+      "trick": false
+    },
+    {
+      "id": "sp3.m8.video",
+      "en": "video",
+      "ru": "видео",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/video.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp3.m8.p1",
+      "en": "We play games on Mondays.",
+      "ru": "По понедельникам мы играем в игры.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m8.monday"
+      ],
+      "grammar_id": "sp3.m8.g-simple"
+    },
+    {
+      "id": "sp3.m8.p2",
+      "en": "I get up at seven o'clock.",
+      "ru": "Я встаю в семь часов.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m8.o-clock"
+      ],
+      "grammar_id": "sp3.m8.g-simple"
+    },
+    {
+      "id": "sp3.m8.p3",
+      "en": "She watches cartoons on Sundays.",
+      "ru": "По воскресеньям она смотрит мультики.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m8.cartoon",
+        "sp3.m8.sunday"
+      ],
+      "grammar_id": "sp3.m8.g-simple"
+    },
+    {
+      "id": "sp3.m8.p4",
+      "en": "I have lunch at one o'clock.",
+      "ru": "Я обедаю в час.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m8.lunch",
+        "sp3.m8.o-clock"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m8.p5",
+      "en": "I listen to music in the evening.",
+      "ru": "Вечером я слушаю музыку.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m8.listen",
+        "sp3.m8.evening"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp3.m8.p6",
+      "en": "We visit Grandma on Friday.",
+      "ru": "В пятницу мы навещаем бабушку.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp3.m8.visit",
+        "sp3.m8.friday"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m8.g-simple",
+      "title_ru": "Every day: I get up / he gets up — привычки",
+      "rule_ru": "О том, что делаем всегда или по дням недели: I play, we play. Про него или неё добавляем -s: he gets up, she watches.",
+      "examples": [
+        {
+          "en": "We play games on Mondays.",
+          "ru": "По понедельникам мы играем в игры."
+        },
+        {
+          "en": "He gets up at seven o'clock.",
+          "ru": "Он встаёт в семь часов."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp3.m8.g-simple.1",
+          "prompt_en": "We ___ games on Mondays.",
+          "options": [
+            "play",
+            "plays"
+          ],
+          "answer": 0,
+          "ru": "По понедельникам мы играем в игры."
+        },
+        {
+          "id": "sp3.m8.g-simple.2",
+          "prompt_en": "He ___ up at seven o'clock.",
+          "options": [
+            "get",
+            "gets"
+          ],
+          "answer": 1,
+          "ru": "Он встаёт в семь часов."
+        },
+        {
+          "id": "sp3.m8.g-simple.3",
+          "prompt_en": "What time ___ you get up?",
+          "options": [
+            "do",
+            "does"
+          ],
+          "answer": 0,
+          "ru": "Во сколько ты встаёшь?"
+        },
+        {
+          "id": "sp3.m8.g-simple.4",
+          "prompt_en": "___ Sundays I visit my grandma.",
+          "options": [
+            "On",
+            "In"
+          ],
+          "answer": 0,
+          "ru": "По воскресеньям я навещаю бабушку."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp3.m8.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m8.monday",
+        "sp3.m8.tuesday",
+        "sp3.m8.wednesday",
+        "sp3.m8.thursday",
+        "sp3.m8.quiz"
+      ]
+    },
+    {
+      "id": "sp3.m8.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m8.friday",
+        "sp3.m8.saturday",
+        "sp3.m8.sunday",
+        "sp3.m8.cartoon",
+        "sp3.m8.clock"
+      ]
+    },
+    {
+      "id": "sp3.m8.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m8.morning",
+        "sp3.m8.afternoon",
+        "sp3.m8.evening",
+        "sp3.m8.night",
+        "sp3.m8.o-clock"
+      ]
+    },
+    {
+      "id": "sp3.m8.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp3.m8.shower",
+        "sp3.m8.lunch",
+        "sp3.m8.supper",
+        "sp3.m8.listen",
+        "sp3.m8.visit",
+        "sp3.m8.video"
+      ]
+    },
+    {
+      "id": "sp3.m8.n5",
+      "kind": "grammar",
+      "grammar_id": "sp3.m8.g-simple"
+    },
+    {
+      "id": "sp3.m8.n6",
+      "kind": "chest"
+    },
+    {
+      "id": "sp3.m8.n7",
+      "kind": "review"
+    },
+    {
+      "id": "sp3.m8.n8",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ]
+}

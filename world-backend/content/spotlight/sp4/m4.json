@@ -1,0 +1,618 @@
+{
+  "id": "sp4.m4",
+  "book": "sp4",
+  "order": 4,
+  "label": "Module 4",
+  "title_en": "At the zoo!",
+  "title_ru": "В зоопарке",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m4.giraffe",
+      "en": "giraffe",
+      "ru": "жираф",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/giraffe.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.dolphin",
+      "en": "dolphin",
+      "ru": "дельфин",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/dolphin.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.seal",
+      "en": "seal",
+      "ru": "тюлень",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/seal.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.lizard",
+      "en": "lizard",
+      "ru": "ящерица",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/lizard.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.whale",
+      "en": "whale",
+      "ru": "кит",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/whale.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.hippo",
+      "en": "hippo",
+      "ru": "бегемот",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/hippo.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.crocodile",
+      "en": "crocodile",
+      "ru": "крокодил",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/crocodile.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.lazy",
+      "en": "lazy",
+      "ru": "ленивый",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/lazy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.lunchtime",
+      "en": "lunchtime",
+      "ru": "время обеда",
+      "accept_en": [],
+      "accept_ru": [
+        "обед"
+      ],
+      "kind": "other",
+      "image": "words/lunchtime.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.clap",
+      "en": "clap",
+      "ru": "хлопать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/clap.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.koala",
+      "en": "koala",
+      "ru": "коала",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/koala.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.kangaroo",
+      "en": "kangaroo",
+      "ru": "кенгуру",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/kangaroo.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.january",
+      "en": "January",
+      "ru": "январь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/january.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.february",
+      "en": "February",
+      "ru": "февраль",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/february.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.march",
+      "en": "March",
+      "ru": "март",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/march.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.april",
+      "en": "April",
+      "ru": "апрель",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/april.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.may",
+      "en": "May",
+      "ru": "май",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/may.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.june",
+      "en": "June",
+      "ru": "июнь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/june.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.july",
+      "en": "July",
+      "ru": "июль",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/july.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.august",
+      "en": "August",
+      "ru": "август",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/august.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.september",
+      "en": "September",
+      "ru": "сентябрь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/september.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.october",
+      "en": "October",
+      "ru": "октябрь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/october.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.november",
+      "en": "November",
+      "ru": "ноябрь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/november.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.december",
+      "en": "December",
+      "ru": "декабрь",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/december.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.amazing",
+      "en": "amazing",
+      "ru": "удивительный",
+      "accept_en": [],
+      "accept_ru": [
+        "потрясающий"
+      ],
+      "kind": "adj",
+      "image": "words/amazing.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.journey",
+      "en": "journey",
+      "ru": "путешествие",
+      "accept_en": [],
+      "accept_ru": [
+        "поездка"
+      ],
+      "kind": "other",
+      "image": "words/journey.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.ticket",
+      "en": "ticket",
+      "ru": "билет",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/ticket.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.passport",
+      "en": "passport",
+      "ru": "паспорт",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/passport.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.suitcase",
+      "en": "suitcase",
+      "ru": "чемодан",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/suitcase.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m4.feed",
+      "en": "feed",
+      "ru": "кормить",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/feed.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m4.p1",
+      "en": "Whales are bigger than dolphins.",
+      "ru": "Киты больше дельфинов.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.whale",
+        "sp4.m4.dolphin"
+      ],
+      "grammar_id": "sp4.m4.g-compare"
+    },
+    {
+      "id": "sp4.m4.p2",
+      "en": "A giraffe is taller than a hippo.",
+      "ru": "Жираф выше бегемота.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.giraffe",
+        "sp4.m4.hippo"
+      ],
+      "grammar_id": "sp4.m4.g-compare"
+    },
+    {
+      "id": "sp4.m4.p3",
+      "en": "Lizards are smaller than crocodiles.",
+      "ru": "Ящерицы меньше крокодилов.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.lizard",
+        "sp4.m4.crocodile"
+      ],
+      "grammar_id": "sp4.m4.g-compare"
+    },
+    {
+      "id": "sp4.m4.p4",
+      "en": "You mustn't feed the animals.",
+      "ru": "Нельзя кормить животных.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.feed"
+      ],
+      "grammar_id": "sp4.m4.g-must"
+    },
+    {
+      "id": "sp4.m4.p5",
+      "en": "You must have a ticket.",
+      "ru": "Нужен билет.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.ticket"
+      ],
+      "grammar_id": "sp4.m4.g-must"
+    },
+    {
+      "id": "sp4.m4.p6",
+      "en": "The seals clap at lunchtime.",
+      "ru": "Тюлени хлопают в обед.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.seal",
+        "sp4.m4.clap",
+        "sp4.m4.lunchtime"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m4.p7",
+      "en": "My birthday is in May.",
+      "ru": "Мой день рождения в мае.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.may"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m4.p8",
+      "en": "An amazing journey!",
+      "ru": "Удивительное путешествие!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m4.amazing",
+        "sp4.m4.journey"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m4.g-compare",
+      "title_ru": "Bigger than — больше, чем",
+      "rule_ru": "Сравниваем: к короткому слову добавляем -er и than: big — bigger than, tall — taller than.",
+      "examples": [
+        {
+          "en": "Whales are bigger than dolphins.",
+          "ru": "Киты больше дельфинов."
+        },
+        {
+          "en": "A giraffe is taller than a hippo.",
+          "ru": "Жираф выше бегемота."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m4.g-compare.1",
+          "prompt_en": "A whale is ___ than a dolphin.",
+          "options": [
+            "big",
+            "bigger"
+          ],
+          "answer": 1,
+          "ru": "Кит больше дельфина."
+        },
+        {
+          "id": "sp4.m4.g-compare.2",
+          "prompt_en": "A giraffe is ___ than a hippo.",
+          "options": [
+            "taller",
+            "tall"
+          ],
+          "answer": 0,
+          "ru": "Жираф выше бегемота."
+        },
+        {
+          "id": "sp4.m4.g-compare.3",
+          "prompt_en": "A lizard is smaller ___ a crocodile.",
+          "options": [
+            "than",
+            "then"
+          ],
+          "answer": 0,
+          "ru": "Ящерица меньше крокодила."
+        },
+        {
+          "id": "sp4.m4.g-compare.4",
+          "prompt_en": "A seal is ___ than a kangaroo.",
+          "options": [
+            "lazier",
+            "lazy"
+          ],
+          "answer": 0,
+          "ru": "Тюлень ленивее кенгуру."
+        }
+      ]
+    },
+    {
+      "id": "sp4.m4.g-must",
+      "title_ru": "Must / mustn't — нужно, нельзя",
+      "rule_ru": "Must — обязательно нужно: You must have a ticket. Mustn't — нельзя: You mustn't feed the animals.",
+      "examples": [
+        {
+          "en": "You mustn't feed the animals.",
+          "ru": "Нельзя кормить животных."
+        },
+        {
+          "en": "You must have a ticket.",
+          "ru": "У тебя должен быть билет."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m4.g-must.1",
+          "prompt_en": "You ___ feed the animals at the zoo.",
+          "options": [
+            "mustn't",
+            "must"
+          ],
+          "answer": 0,
+          "ru": "В зоопарке нельзя кормить животных."
+        },
+        {
+          "id": "sp4.m4.g-must.2",
+          "prompt_en": "You ___ have a ticket.",
+          "options": [
+            "must",
+            "mustn't"
+          ],
+          "answer": 0,
+          "ru": "Нужен билет."
+        },
+        {
+          "id": "sp4.m4.g-must.3",
+          "prompt_en": "You must ___ your passport.",
+          "options": [
+            "have",
+            "has"
+          ],
+          "answer": 0,
+          "ru": "У тебя должен быть паспорт."
+        },
+        {
+          "id": "sp4.m4.g-must.4",
+          "prompt_en": "We ___ be lazy.",
+          "options": [
+            "mustn't",
+            "must"
+          ],
+          "answer": 0,
+          "ru": "Нам нельзя лениться."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m4.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m4.giraffe",
+        "sp4.m4.dolphin",
+        "sp4.m4.seal",
+        "sp4.m4.lizard",
+        "sp4.m4.whale",
+        "sp4.m4.hippo"
+      ]
+    },
+    {
+      "id": "sp4.m4.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m4.crocodile",
+        "sp4.m4.lazy",
+        "sp4.m4.lunchtime",
+        "sp4.m4.clap",
+        "sp4.m4.koala",
+        "sp4.m4.kangaroo"
+      ]
+    },
+    {
+      "id": "sp4.m4.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m4.january",
+        "sp4.m4.february",
+        "sp4.m4.march",
+        "sp4.m4.april",
+        "sp4.m4.may",
+        "sp4.m4.june"
+      ]
+    },
+    {
+      "id": "sp4.m4.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m4.july",
+        "sp4.m4.august",
+        "sp4.m4.september",
+        "sp4.m4.october",
+        "sp4.m4.november",
+        "sp4.m4.december"
+      ]
+    },
+    {
+      "id": "sp4.m4.n5",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m4.amazing",
+        "sp4.m4.journey",
+        "sp4.m4.ticket",
+        "sp4.m4.passport",
+        "sp4.m4.suitcase",
+        "sp4.m4.feed"
+      ]
+    },
+    {
+      "id": "sp4.m4.n6",
+      "kind": "grammar",
+      "grammar_id": "sp4.m4.g-compare"
+    },
+    {
+      "id": "sp4.m4.n7",
+      "kind": "grammar",
+      "grammar_id": "sp4.m4.g-must"
+    },
+    {
+      "id": "sp4.m4.n8",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m4.n9",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m4.n10",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

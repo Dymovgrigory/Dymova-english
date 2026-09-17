@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "assetId": "school-foxcoin",
+      "type": "model/gltf-binary",
+      "url": "assets/school-foxcoin/school-foxcoin-v1.glb",
+      "thumbnail": "assets/school-foxcoin/school-foxcoin-thumb.png",
+      "version": 1,
+      "category": "collectibles",
+      "lod": [
+        "v1"
+      ],
+      "mobileVariant": "assets/school-foxcoin/school-foxcoin-v1.glb",
+      "desktopVariant": "assets/school-foxcoin/school-foxcoin-v1.glb",
+      "dependencies": [],
+      "sizeKb": 177,
+      "source": {
+        "provider": "meshy",
+        "task": "01a09b0c-b5b7-7243-ac7c-51f0cb6f3614",
+        "prompt": "Stylized cartoon gold coin ... fox paw print ... (preview 01a09af7)"
+      }
+    },
+    {
+      "assetId": "school-hub",
+      "type": "model/gltf-binary",
+      "url": "assets/school-hub/school-hub-v1.glb",
+      "thumbnail": "assets/school-hub/school-hub-i2-3d_textures/base_color.png",
+      "version": 2,
+      "category": "buildings",
+      "lod": ["v1"],
+      "mobileVariant": "assets/school-hub/school-hub-v1.glb",
+      "desktopVariant": "assets/school-hub/school-hub-v1.glb",
+      "dependencies": [],
+      "sizeKb": 477,
+      "source": {
+        "provider": "meshy",
+        "task": "01a0a111-5c82-7033-bae9-3575b1f42a71",
+        "pipeline": "nano-banana-pro still → image-to-3d",
+        "image": "generated/world/school-castle-hero-v1.png"
+      }
+    }
+  ]
+}

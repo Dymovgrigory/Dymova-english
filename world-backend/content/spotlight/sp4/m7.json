@@ -1,0 +1,494 @@
+{
+  "id": "sp4.m7",
+  "book": "sp4",
+  "order": 7,
+  "label": "Module 7",
+  "title_en": "Days to remember!",
+  "title_ru": "Памятные дни",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m7.museum",
+      "en": "museum",
+      "ru": "музей",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/museum.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.dinosaur",
+      "en": "dinosaur",
+      "ru": "динозавр",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/dinosaur.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.concert",
+      "en": "concert",
+      "ru": "концерт",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/concert.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.funfair",
+      "en": "funfair",
+      "ru": "парк аттракционов",
+      "accept_en": [],
+      "accept_ru": [
+        "ярмарка"
+      ],
+      "kind": "noun",
+      "image": "words/funfair.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.weekend",
+      "en": "weekend",
+      "ru": "выходные",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/weekend.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.fireworks",
+      "en": "fireworks",
+      "ru": "фейерверк",
+      "accept_en": [],
+      "accept_ru": [
+        "салют"
+      ],
+      "kind": "noun",
+      "image": "words/fireworks.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.pretty",
+      "en": "pretty",
+      "ru": "симпатичный",
+      "accept_en": [],
+      "accept_ru": [
+        "красивый"
+      ],
+      "kind": "adj",
+      "image": "words/pretty.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.shy",
+      "en": "shy",
+      "ru": "застенчивый",
+      "accept_en": [],
+      "accept_ru": [
+        "стеснительный"
+      ],
+      "kind": "adj",
+      "image": "words/shy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.strong",
+      "en": "strong",
+      "ru": "сильный",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/strong.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.loud",
+      "en": "loud",
+      "ru": "громкий",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/loud.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.young",
+      "en": "young",
+      "ru": "молодой",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "adj",
+      "image": "words/young.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.celebrate",
+      "en": "celebrate",
+      "ru": "праздновать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/celebrate.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.pancake",
+      "en": "pancake",
+      "ru": "блин",
+      "accept_en": [],
+      "accept_ru": [
+        "блинчик"
+      ],
+      "kind": "noun",
+      "image": "words/pancake.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.went",
+      "en": "went",
+      "ru": "ходил",
+      "accept_en": [],
+      "accept_ru": [
+        "поехал"
+      ],
+      "kind": "other",
+      "image": "words/went.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.saw",
+      "en": "saw",
+      "ru": "видел",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/saw.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.ate",
+      "en": "ate",
+      "ru": "ел",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/ate.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.had",
+      "en": "had",
+      "ru": "имел",
+      "accept_en": [],
+      "accept_ru": [
+        "было"
+      ],
+      "kind": "other",
+      "image": "words/had.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.took",
+      "en": "took",
+      "ru": "взял",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/took.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m7.made",
+      "en": "made",
+      "ru": "сделал",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/made.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m7.p1",
+      "en": "I went to the funfair.",
+      "ru": "Я ходил в парк аттракционов.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.went",
+        "sp4.m7.funfair"
+      ],
+      "grammar_id": "sp4.m7.g-irregular"
+    },
+    {
+      "id": "sp4.m7.p2",
+      "en": "We saw a dinosaur at the museum.",
+      "ru": "Мы видели динозавра в музее.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.saw",
+        "sp4.m7.dinosaur",
+        "sp4.m7.museum"
+      ],
+      "grammar_id": "sp4.m7.g-irregular"
+    },
+    {
+      "id": "sp4.m7.p3",
+      "en": "She ate a pancake.",
+      "ru": "Она съела блин.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.ate",
+        "sp4.m7.pancake"
+      ],
+      "grammar_id": "sp4.m7.g-irregular"
+    },
+    {
+      "id": "sp4.m7.p4",
+      "en": "He is the strongest boy.",
+      "ru": "Он самый сильный мальчик.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.strong"
+      ],
+      "grammar_id": "sp4.m7.g-best"
+    },
+    {
+      "id": "sp4.m7.p5",
+      "en": "It was the loudest concert.",
+      "ru": "Это был самый громкий концерт.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.loud",
+        "sp4.m7.concert"
+      ],
+      "grammar_id": "sp4.m7.g-best"
+    },
+    {
+      "id": "sp4.m7.p6",
+      "en": "We had fireworks at the weekend.",
+      "ru": "На выходных у нас был салют.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.had",
+        "sp4.m7.fireworks",
+        "sp4.m7.weekend"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m7.p7",
+      "en": "My sister is shy.",
+      "ru": "Моя сестра стеснительная.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.shy"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m7.p8",
+      "en": "Let's celebrate!",
+      "ru": "Давай праздновать!",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m7.celebrate"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m7.g-irregular",
+      "title_ru": "Went, saw, ate — неправильные глаголы",
+      "rule_ru": "Некоторые глаголы в прошлом меняются целиком: go — went, see — saw, eat — ate, have — had. Вопрос: Where did you go?",
+      "examples": [
+        {
+          "en": "I went to the funfair.",
+          "ru": "Я ходил в парк аттракционов."
+        },
+        {
+          "en": "Where did you go last weekend?",
+          "ru": "Куда ты ходил в прошлые выходные?"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m7.g-irregular.1",
+          "prompt_en": "Last weekend Phil ___ to the concert.",
+          "options": [
+            "went",
+            "goes"
+          ],
+          "answer": 0,
+          "ru": "В прошлые выходные Фил ходил на концерт."
+        },
+        {
+          "id": "sp4.m7.g-irregular.2",
+          "prompt_en": "We ___ a dinosaur at the museum.",
+          "options": [
+            "saw",
+            "see"
+          ],
+          "answer": 0,
+          "ru": "Мы видели динозавра в музее."
+        },
+        {
+          "id": "sp4.m7.g-irregular.3",
+          "prompt_en": "I ___ a pancake yesterday.",
+          "options": [
+            "ate",
+            "eat"
+          ],
+          "answer": 0,
+          "ru": "Вчера я съел блин."
+        },
+        {
+          "id": "sp4.m7.g-irregular.4",
+          "prompt_en": "Where ___ you go last weekend?",
+          "options": [
+            "did",
+            "do"
+          ],
+          "answer": 0,
+          "ru": "Куда ты ходил в прошлые выходные?"
+        }
+      ]
+    },
+    {
+      "id": "sp4.m7.g-best",
+      "title_ru": "The strongest, the best — самый",
+      "rule_ru": "Самый: к короткому слову добавляем -est и the: strong — the strongest, loud — the loudest. Особое слово: good — the best.",
+      "examples": [
+        {
+          "en": "He is the strongest boy.",
+          "ru": "Он самый сильный мальчик."
+        },
+        {
+          "en": "Who was the best student?",
+          "ru": "Кто был лучшим учеником?"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m7.g-best.1",
+          "prompt_en": "Who was the ___ student in the class?",
+          "options": [
+            "best",
+            "good"
+          ],
+          "answer": 0,
+          "ru": "Кто был лучшим учеником в классе?"
+        },
+        {
+          "id": "sp4.m7.g-best.2",
+          "prompt_en": "Tom is the ___ boy in the class.",
+          "options": [
+            "strongest",
+            "stronger"
+          ],
+          "answer": 0,
+          "ru": "Том самый сильный мальчик в классе."
+        },
+        {
+          "id": "sp4.m7.g-best.3",
+          "prompt_en": "It was the ___ concert!",
+          "options": [
+            "loudest",
+            "loud"
+          ],
+          "answer": 0,
+          "ru": "Это был самый громкий концерт!"
+        },
+        {
+          "id": "sp4.m7.g-best.4",
+          "prompt_en": "Ann is the ___ girl.",
+          "options": [
+            "prettiest",
+            "prettier"
+          ],
+          "answer": 0,
+          "ru": "Аня самая симпатичная девочка."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m7.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m7.museum",
+        "sp4.m7.dinosaur",
+        "sp4.m7.concert",
+        "sp4.m7.funfair",
+        "sp4.m7.weekend",
+        "sp4.m7.fireworks"
+      ]
+    },
+    {
+      "id": "sp4.m7.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m7.pretty",
+        "sp4.m7.shy",
+        "sp4.m7.strong",
+        "sp4.m7.loud",
+        "sp4.m7.young",
+        "sp4.m7.celebrate",
+        "sp4.m7.pancake"
+      ]
+    },
+    {
+      "id": "sp4.m7.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m7.went",
+        "sp4.m7.saw",
+        "sp4.m7.ate",
+        "sp4.m7.had",
+        "sp4.m7.took",
+        "sp4.m7.made"
+      ]
+    },
+    {
+      "id": "sp4.m7.n4",
+      "kind": "grammar",
+      "grammar_id": "sp4.m7.g-irregular"
+    },
+    {
+      "id": "sp4.m7.n5",
+      "kind": "grammar",
+      "grammar_id": "sp4.m7.g-best"
+    },
+    {
+      "id": "sp4.m7.n6",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m7.n7",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m7.n8",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}

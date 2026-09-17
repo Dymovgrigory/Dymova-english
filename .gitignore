@@ -23,3 +23,17 @@ seo/*.csv
 seo/report.md
 seo-fox-506709-972a5b8fcee0.json
 .venv-qa/
+world-backend/.venv/
+world-backend/data/*.sqlite
+world-backend/data/*.log
+world-backend/data/*.pid
+world-backend/data/tts/
+.pytest_cache/
+__pycache__/
+
+# World v2: сырые листы Meshy (итоговые webp лежат в world/public/content)
+world-pipeline/word-art/sheets/
+world-pipeline/word-art/foxy/
+world-pipeline/word-art/diorama/
+world-pipeline/word-art/modules/
+world-pipeline/word-art/compare-*.png

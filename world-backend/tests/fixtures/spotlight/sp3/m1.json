@@ -1,0 +1,39 @@
+{
+  "id": "sp3.m1", "book": "sp3", "order": 1,
+  "title_en": "School Days", "title_ru": "Школьные дни", "band": "junior",
+  "words": [
+    {"id": "sp3.m1.school", "en": "school", "ru": "школа", "image": "words/school.webp"},
+    {"id": "sp3.m1.book", "en": "book", "ru": "книга", "image": "words/book.webp"},
+    {"id": "sp3.m1.pencil", "en": "pencil", "ru": "карандаш", "image": "words/pencil.webp"},
+    {"id": "sp3.m1.rubber", "en": "rubber", "ru": "ластик", "accept_en": ["eraser"], "image": "words/rubber.webp"},
+    {"id": "sp3.m1.ruler", "en": "ruler", "ru": "линейка", "image": "words/ruler.webp"},
+    {"id": "sp3.m1.bag", "en": "bag", "ru": "сумка", "accept_ru": ["портфель", "рюкзак"], "image": "words/bag.webp"}
+  ],
+  "phrases": [
+    {"id": "sp3.m1.p1", "en": "This is my bag.", "ru": "Это моя сумка.", "word_ids": ["sp3.m1.bag"], "grammar_id": "sp3.m1.g-this"},
+    {"id": "sp3.m1.p2", "en": "These are my books.", "ru": "Это мои книги.", "word_ids": ["sp3.m1.book"], "grammar_id": "sp3.m1.g-this"},
+    {"id": "sp3.m1.p3", "en": "This is my school.", "ru": "Это моя школа.", "word_ids": ["sp3.m1.school"], "grammar_id": "sp3.m1.g-this"}
+  ],
+  "grammar": [
+    {
+      "id": "sp3.m1.g-this", "title_ru": "This is / These are — Это",
+      "rule_ru": "This is — про один предмет. These are — про несколько.",
+      "examples": [{"en": "This is my bag.", "ru": "Это моя сумка."}, {"en": "These are my books.", "ru": "Это мои книги."}],
+      "items": [
+        {"id": "sp3.m1.g-this.1", "prompt_en": "___ is my book.", "options": ["This", "These"], "answer": 0, "ru": "Это моя книга."},
+        {"id": "sp3.m1.g-this.2", "prompt_en": "___ are my pencils.", "options": ["This", "These"], "answer": 1, "ru": "Это мои карандаши."},
+        {"id": "sp3.m1.g-this.3", "prompt_en": "___ is my ruler.", "options": ["These", "This"], "answer": 1, "ru": "Это моя линейка."},
+        {"id": "sp3.m1.g-this.4", "prompt_en": "___ are my books.", "options": ["These", "This"], "answer": 0, "ru": "Это мои книги."}
+      ]
+    }
+  ],
+  "nodes": [
+    {"id": "sp3.m1.n1", "kind": "words", "word_ids": ["sp3.m1.school", "sp3.m1.book", "sp3.m1.pencil"]},
+    {"id": "sp3.m1.n2", "kind": "words", "word_ids": ["sp3.m1.rubber", "sp3.m1.ruler", "sp3.m1.bag"]},
+    {"id": "sp3.m1.n3", "kind": "grammar", "grammar_id": "sp3.m1.g-this"},
+    {"id": "sp3.m1.n4", "kind": "chest"},
+    {"id": "sp3.m1.n5", "kind": "review"},
+    {"id": "sp3.m1.n6", "kind": "module_test"}
+  ],
+  "sources": ["test fixture"]
+}

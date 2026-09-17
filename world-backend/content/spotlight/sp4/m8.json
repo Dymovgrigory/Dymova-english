@@ -1,0 +1,558 @@
+{
+  "id": "sp4.m8",
+  "book": "sp4",
+  "order": 8,
+  "label": "Module 8",
+  "title_en": "Places to go!",
+  "title_ru": "Куда поехать",
+  "band": "junior",
+  "words": [
+    {
+      "id": "sp4.m8.greece",
+      "en": "Greece",
+      "ru": "Греция",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/greece.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.italy",
+      "en": "Italy",
+      "ru": "Италия",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/italy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.spain",
+      "en": "Spain",
+      "ru": "Испания",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/spain.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.russia",
+      "en": "Russia",
+      "ru": "Россия",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/russia.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.turkey",
+      "en": "Turkey",
+      "ru": "Турция",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/turkey.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.mexico",
+      "en": "Mexico",
+      "ru": "Мексика",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mexico.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.camping",
+      "en": "camping",
+      "ru": "поход",
+      "accept_en": [],
+      "accept_ru": [
+        "кемпинг"
+      ],
+      "kind": "noun",
+      "image": "words/camping.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.mountains",
+      "en": "mountains",
+      "ru": "горы",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/mountains.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.lake",
+      "en": "lake",
+      "ru": "озеро",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/lake.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.travel",
+      "en": "travel",
+      "ru": "путешествовать",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "verb",
+      "image": "words/travel.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.relax",
+      "en": "relax",
+      "ru": "отдыхать",
+      "accept_en": [],
+      "accept_ru": [
+        "расслабляться"
+      ],
+      "kind": "verb",
+      "image": "words/relax.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.diary",
+      "en": "diary",
+      "ru": "дневник",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/diary.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.swimsuit",
+      "en": "swimsuit",
+      "ru": "купальник",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/swimsuit.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.sunglasses",
+      "en": "sunglasses",
+      "ru": "солнцезащитные очки",
+      "accept_en": [],
+      "accept_ru": [
+        "тёмные очки"
+      ],
+      "kind": "noun",
+      "image": "words/sunglasses.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.boots",
+      "en": "boots",
+      "ru": "ботинки",
+      "accept_en": [],
+      "accept_ru": [
+        "сапоги"
+      ],
+      "kind": "noun",
+      "image": "words/boots.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.tent",
+      "en": "tent",
+      "ru": "палатка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/tent.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.flippers",
+      "en": "flippers",
+      "ru": "ласты",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "noun",
+      "image": "words/flippers.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.sleeping-bag",
+      "en": "sleeping bag",
+      "ru": "спальный мешок",
+      "accept_en": [],
+      "accept_ru": [
+        "спальник"
+      ],
+      "kind": "noun",
+      "image": "words/sleeping-bag.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.cloudy",
+      "en": "cloudy",
+      "ru": "облачный",
+      "accept_en": [],
+      "accept_ru": [
+        "облачно"
+      ],
+      "kind": "adj",
+      "image": "words/cloudy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.rainy",
+      "en": "rainy",
+      "ru": "дождливый",
+      "accept_en": [],
+      "accept_ru": [
+        "дождливо"
+      ],
+      "kind": "adj",
+      "image": "words/rainy.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.tomorrow",
+      "en": "tomorrow",
+      "ru": "завтра",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/tomorrow.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.mistake",
+      "en": "mistake",
+      "ru": "ошибка",
+      "accept_en": [],
+      "accept_ru": [],
+      "kind": "other",
+      "image": "words/mistake.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.sorry",
+      "en": "sorry",
+      "ru": "извини",
+      "accept_en": [],
+      "accept_ru": [
+        "прости"
+      ],
+      "kind": "other",
+      "image": "words/sorry.webp",
+      "trick": false
+    },
+    {
+      "id": "sp4.m8.cool",
+      "en": "cool",
+      "ru": "прохладный",
+      "accept_en": [],
+      "accept_ru": [
+        "прохладно"
+      ],
+      "kind": "adj",
+      "image": "words/cool.webp",
+      "trick": false
+    }
+  ],
+  "phrases": [
+    {
+      "id": "sp4.m8.p1",
+      "en": "She is going to go camping.",
+      "ru": "Она собирается в поход.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.camping"
+      ],
+      "grammar_id": "sp4.m8.g-going-to"
+    },
+    {
+      "id": "sp4.m8.p2",
+      "en": "We are going to travel to Spain.",
+      "ru": "Мы собираемся поехать в Испанию.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.travel",
+        "sp4.m8.spain"
+      ],
+      "grammar_id": "sp4.m8.g-going-to"
+    },
+    {
+      "id": "sp4.m8.p3",
+      "en": "I'm going to relax at the lake.",
+      "ru": "Я собираюсь отдыхать на озере.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.relax",
+        "sp4.m8.lake"
+      ],
+      "grammar_id": "sp4.m8.g-going-to"
+    },
+    {
+      "id": "sp4.m8.p4",
+      "en": "It will be cloudy tomorrow.",
+      "ru": "Завтра будет облачно.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.cloudy",
+        "sp4.m8.tomorrow"
+      ],
+      "grammar_id": "sp4.m8.g-will"
+    },
+    {
+      "id": "sp4.m8.p5",
+      "en": "It won't be rainy.",
+      "ru": "Дождя не будет.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.rainy"
+      ],
+      "grammar_id": "sp4.m8.g-will"
+    },
+    {
+      "id": "sp4.m8.p6",
+      "en": "My sunglasses and a swimsuit.",
+      "ru": "Мои солнечные очки и купальник.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.sunglasses",
+        "sp4.m8.swimsuit"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m8.p7",
+      "en": "Sorry, it's my mistake.",
+      "ru": "Извини, это моя ошибка.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.sorry",
+        "sp4.m8.mistake"
+      ],
+      "grammar_id": null
+    },
+    {
+      "id": "sp4.m8.p8",
+      "en": "A tent in the mountains.",
+      "ru": "Палатка в горах.",
+      "accept_en": [],
+      "accept_ru": [],
+      "word_ids": [
+        "sp4.m8.tent",
+        "sp4.m8.mountains"
+      ],
+      "grammar_id": null
+    }
+  ],
+  "grammar": [
+    {
+      "id": "sp4.m8.g-going-to",
+      "title_ru": "Be going to — собираюсь",
+      "rule_ru": "Планы: am / is / are going to + глагол. She's going to go camping. What are you going to do?",
+      "examples": [
+        {
+          "en": "She's going to go camping.",
+          "ru": "Она собирается в поход."
+        },
+        {
+          "en": "What are you going to do?",
+          "ru": "Что ты собираешься делать?"
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m8.g-going-to.1",
+          "prompt_en": "She's ___ to go camping.",
+          "options": [
+            "going",
+            "go"
+          ],
+          "answer": 0,
+          "ru": "Она собирается в поход."
+        },
+        {
+          "id": "sp4.m8.g-going-to.2",
+          "prompt_en": "What ___ you going to do?",
+          "options": [
+            "are",
+            "is"
+          ],
+          "answer": 0,
+          "ru": "Что ты собираешься делать?"
+        },
+        {
+          "id": "sp4.m8.g-going-to.3",
+          "prompt_en": "We are going to ___ to Italy.",
+          "options": [
+            "travel",
+            "travels"
+          ],
+          "answer": 0,
+          "ru": "Мы собираемся поехать в Италию."
+        },
+        {
+          "id": "sp4.m8.g-going-to.4",
+          "prompt_en": "I'm going ___ relax.",
+          "options": [
+            "to",
+            "at"
+          ],
+          "answer": 0,
+          "ru": "Я собираюсь отдыхать."
+        }
+      ]
+    },
+    {
+      "id": "sp4.m8.g-will",
+      "title_ru": "Will — будет",
+      "rule_ru": "О будущем и прогнозе погоды: It will be cloudy tomorrow — завтра будет облачно. Не будет — won't: It won't be rainy.",
+      "examples": [
+        {
+          "en": "It will be cloudy tomorrow.",
+          "ru": "Завтра будет облачно."
+        },
+        {
+          "en": "It won't be rainy.",
+          "ru": "Дождя не будет."
+        }
+      ],
+      "items": [
+        {
+          "id": "sp4.m8.g-will.1",
+          "prompt_en": "It ___ be cloudy tomorrow.",
+          "options": [
+            "will",
+            "is"
+          ],
+          "answer": 0,
+          "ru": "Завтра будет облачно."
+        },
+        {
+          "id": "sp4.m8.g-will.2",
+          "prompt_en": "What will the weather ___ like?",
+          "options": [
+            "be",
+            "is"
+          ],
+          "answer": 0,
+          "ru": "Какая будет погода?"
+        },
+        {
+          "id": "sp4.m8.g-will.3",
+          "prompt_en": "It ___ be rainy.",
+          "options": [
+            "won't",
+            "don't"
+          ],
+          "answer": 0,
+          "ru": "Дождя не будет."
+        },
+        {
+          "id": "sp4.m8.g-will.4",
+          "prompt_en": "Will it be sunny? Yes, it ___.",
+          "options": [
+            "will",
+            "does"
+          ],
+          "answer": 0,
+          "ru": "Будет солнечно? Да."
+        }
+      ]
+    }
+  ],
+  "graphemes": [],
+  "nodes": [
+    {
+      "id": "sp4.m8.n1",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m8.greece",
+        "sp4.m8.italy",
+        "sp4.m8.spain",
+        "sp4.m8.russia",
+        "sp4.m8.turkey",
+        "sp4.m8.mexico"
+      ]
+    },
+    {
+      "id": "sp4.m8.n2",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m8.camping",
+        "sp4.m8.mountains",
+        "sp4.m8.lake",
+        "sp4.m8.travel",
+        "sp4.m8.relax",
+        "sp4.m8.diary"
+      ]
+    },
+    {
+      "id": "sp4.m8.n3",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m8.swimsuit",
+        "sp4.m8.sunglasses",
+        "sp4.m8.boots",
+        "sp4.m8.tent",
+        "sp4.m8.flippers",
+        "sp4.m8.sleeping-bag"
+      ]
+    },
+    {
+      "id": "sp4.m8.n4",
+      "kind": "words",
+      "word_ids": [
+        "sp4.m8.cloudy",
+        "sp4.m8.rainy",
+        "sp4.m8.tomorrow",
+        "sp4.m8.mistake",
+        "sp4.m8.sorry",
+        "sp4.m8.cool"
+      ]
+    },
+    {
+      "id": "sp4.m8.n5",
+      "kind": "grammar",
+      "grammar_id": "sp4.m8.g-going-to"
+    },
+    {
+      "id": "sp4.m8.n6",
+      "kind": "grammar",
+      "grammar_id": "sp4.m8.g-will"
+    },
+    {
+      "id": "sp4.m8.n7",
+      "kind": "chest"
+    },
+    {
+      "id": "sp4.m8.n8",
+      "kind": "review"
+    },
+    {
+      "id": "sp4.m8.n9",
+      "kind": "module_test"
+    }
+  ],
+  "sources": [
+    "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
+    "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ]
+}
