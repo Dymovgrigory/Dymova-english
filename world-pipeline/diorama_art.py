@@ -51,6 +51,8 @@ PEOPLE = {
 }
 COLOURS = {"red", "blue", "green", "yellow", "pink", "purple", "orange", "black", "white", "brown"}
 OBJECTS = {
+    "vest": "white cotton sleeveless vest undershirt neatly laid on the pedestal",
+    "fly": "small colourful bird flying with spread wings above the pedestal",
     "plane": "toy aeroplane with a spinning propeller and wings, clearly an aircraft, no animals",
     "run": "child figurine running fast with one leg forward and arms swinging, dust puffs behind",
     "jump": "child figurine jumping high in the air over a small puddle, feet off the ground",
