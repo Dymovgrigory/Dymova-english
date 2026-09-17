@@ -1209,6 +1209,8 @@ bot/
 
 **Интерьеры башен классов:** flare `room-tower-sp1..4.webp` (`diorama_art.py castle-tower-rooms`, 45 кр. с перерисовкой обсерватории из-за серого фона) — класс с лестницей и плющом, мастерская с водяным колесом, обсерватория, картографическая у маяка; подключены в комнаты башен.
 
+**Деплой замка (2026-09-17):** `world-v2` → `origin`, сервер `git reset --hard origin/world-v2` + пересборка `world-web`. Важно: без `NEXT_PUBLIC_WORLD_API=https://new.dymova-english.ru` образ собирается с `world-api.dymova-english.ru` (A-записи нет) — интерфейс рисуется, данные не грузятся; `WORLD_PLAYER_SECRET` передаётся заглушкой, т.к. `world-api` не пересоздаётся. Проверено на https://new.dymova-english.ru/world — 0 ошибок консоли, комнаты и башни открываются, 1440 и 390 px.
+
 ## Текущий статус / Где остановились
 
 **World 2026-09-16 (сессия 118):** Reference matrix + expanded RESEARCH (Duo/Puzzle mechanics only). Path: `RESEARCH/REFERENCE_MATRIX.md`. P0 code next: streak milestones, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry. Parallel: Meshy/chrome wiring (сессии 116–117). Identity/Brain/learn loop already shipped (сессия 115).
