@@ -56,7 +56,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/weekend.webp",
       "trick": false
     },
     {
@@ -80,7 +80,7 @@
         "красивый"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/pretty.webp",
       "trick": false
     },
     {
@@ -122,7 +122,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/young.webp",
       "trick": false
     },
     {
@@ -132,7 +132,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/celebrate.webp",
       "trick": false
     },
     {
@@ -156,7 +156,7 @@
         "поехал"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/went.webp",
       "trick": false
     },
     {
@@ -166,7 +166,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/saw.webp",
       "trick": false
     },
     {
@@ -176,7 +176,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/ate.webp",
       "trick": false
     },
     {
@@ -188,7 +188,7 @@
         "было"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/had.webp",
       "trick": false
     },
     {
@@ -198,7 +198,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/took.webp",
       "trick": false
     },
     {
@@ -208,7 +208,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/made.webp",
       "trick": false
     }
   ],

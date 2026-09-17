@@ -14,7 +14,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/join.webp",
       "trick": false
     },
     {
@@ -24,7 +24,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/hope.webp",
       "trick": false
     },
     {
@@ -34,7 +34,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/feel.webp",
       "trick": false
     },
     {
@@ -46,7 +46,7 @@
         "вспоминать"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/remember.webp",
       "trick": false
     },
     {
@@ -68,7 +68,7 @@
       ],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/surname.webp",
       "trick": false
     }
   ],

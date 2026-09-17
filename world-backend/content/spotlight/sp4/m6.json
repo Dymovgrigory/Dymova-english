@@ -46,7 +46,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/soon.webp",
       "trick": false
     },
     {
@@ -56,7 +56,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/rest.webp",
       "trick": false
     },
     {
@@ -90,7 +90,7 @@
         "пересекать"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/cross.webp",
       "trick": false
     },
     {
@@ -134,7 +134,7 @@
         "занятый"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/busy.webp",
       "trick": false
     },
     {
@@ -171,7 +171,7 @@
         "идти за"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/follow.webp",
       "trick": false
     },
     {

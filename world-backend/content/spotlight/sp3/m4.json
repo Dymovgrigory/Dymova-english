@@ -144,7 +144,7 @@
         "глупенький"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/silly.webp",
       "trick": false
     },
     {
@@ -164,7 +164,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/careful.webp",
       "trick": false
     },
     {
@@ -174,7 +174,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/whose.webp",
       "trick": false
     }
   ],

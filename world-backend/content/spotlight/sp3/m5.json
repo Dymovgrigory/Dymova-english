@@ -92,7 +92,7 @@
         "низкий"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/short.webp",
       "trick": false
     },
     {
@@ -102,7 +102,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/long.webp",
       "trick": false
     },
     {

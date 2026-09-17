@@ -16,7 +16,7 @@
         "опять"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/again.webp",
       "trick": false
     },
     {
@@ -28,7 +28,7 @@
         "каждый"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/everyone.webp",
       "trick": false
     },
     {
@@ -38,7 +38,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/today.webp",
       "trick": false
     },
     {
@@ -48,7 +48,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/think.webp",
       "trick": false
     },
     {
@@ -58,7 +58,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/day.webp",
       "trick": false
     },
     {
@@ -68,7 +68,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/phone-number.webp",
       "trick": false
     }
   ],

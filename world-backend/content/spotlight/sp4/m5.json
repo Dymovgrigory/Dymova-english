@@ -14,7 +14,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/first.webp",
       "trick": false
     },
     {
@@ -24,7 +24,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/second.webp",
       "trick": false
     },
     {
@@ -34,7 +34,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/third.webp",
       "trick": false
     },
     {
@@ -46,7 +46,7 @@
         "четвертый"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/fourth.webp",
       "trick": false
     },
     {
@@ -56,7 +56,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/fifth.webp",
       "trick": false
     },
     {
@@ -68,7 +68,7 @@
         "восхитительный"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/delicious.webp",
       "trick": false
     },
     {
@@ -78,7 +78,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/yesterday.webp",
       "trick": false
     },
     {
@@ -88,7 +88,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/ago.webp",
       "trick": false
     },
     {
@@ -100,7 +100,7 @@
         "последний"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/last.webp",
       "trick": false
     },
     {
@@ -158,7 +158,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/interesting.webp",
       "trick": false
     },
     {
@@ -170,7 +170,7 @@
         "сон"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/dream.webp",
       "trick": false
     },
     {
@@ -182,7 +182,7 @@
         "желать"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/wish.webp",
       "trick": false
     },
     {

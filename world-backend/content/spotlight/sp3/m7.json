@@ -28,7 +28,7 @@
         "строить"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/make.webp",
       "trick": false
     },
     {
@@ -202,7 +202,7 @@
         "заканчивать"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/finish.webp",
       "trick": false
     }
   ],

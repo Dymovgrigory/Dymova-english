@@ -104,7 +104,7 @@
         "темный"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/dark.webp",
       "trick": false
     },
     {
@@ -114,7 +114,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/fair.webp",
       "trick": false
     },
     {

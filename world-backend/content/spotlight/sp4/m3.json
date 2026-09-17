@@ -132,7 +132,7 @@
         "передавать"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/pass.webp",
       "trick": false
     },
     {
@@ -256,7 +256,7 @@
         "терпеть не могу"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/hate.webp",
       "trick": false
     },
     {
@@ -266,7 +266,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/tasty.webp",
       "trick": false
     },
     {

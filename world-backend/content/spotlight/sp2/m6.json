@@ -58,7 +58,7 @@
         "отпуск"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/holiday.webp",
       "trick": false
     },
     {
@@ -224,7 +224,7 @@
         "дождь"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/raining.webp",
       "trick": false
     },
     {

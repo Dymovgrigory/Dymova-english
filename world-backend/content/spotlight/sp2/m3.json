@@ -72,7 +72,7 @@
         "лет"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/old.webp",
       "trick": false
     },
     {
@@ -130,7 +130,7 @@
         "вкуснятина"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/yummy.webp",
       "trick": false
     },
     {
@@ -236,7 +236,7 @@
       ],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/favourite.webp",
       "trick": false
     }
   ],

@@ -96,7 +96,7 @@
         "обед"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/lunchtime.webp",
       "trick": false
     },
     {
@@ -136,7 +136,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/january.webp",
       "trick": false
     },
     {
@@ -146,7 +146,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/february.webp",
       "trick": false
     },
     {
@@ -156,7 +156,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/march.webp",
       "trick": false
     },
     {
@@ -166,7 +166,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/april.webp",
       "trick": false
     },
     {
@@ -176,7 +176,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/may.webp",
       "trick": false
     },
     {
@@ -186,7 +186,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/june.webp",
       "trick": false
     },
     {
@@ -196,7 +196,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/july.webp",
       "trick": false
     },
     {
@@ -206,7 +206,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/august.webp",
       "trick": false
     },
     {
@@ -216,7 +216,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/september.webp",
       "trick": false
     },
     {
@@ -226,7 +226,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/october.webp",
       "trick": false
     },
     {
@@ -236,7 +236,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/november.webp",
       "trick": false
     },
     {
@@ -246,7 +246,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/december.webp",
       "trick": false
     },
     {
@@ -258,7 +258,7 @@
         "потрясающий"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/amazing.webp",
       "trick": false
     },
     {
@@ -270,7 +270,7 @@
         "поездка"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/journey.webp",
       "trick": false
     },
     {

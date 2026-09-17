@@ -72,7 +72,7 @@
         "замечательный"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/great.webp",
       "trick": false
     },
     {
@@ -118,7 +118,7 @@
         "младший"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/little.webp",
       "trick": false
     },
     {
@@ -128,7 +128,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/live.webp",
       "trick": false
     },
     {

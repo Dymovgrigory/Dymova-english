@@ -262,7 +262,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/subject.webp",
       "trick": false
     },
     {
@@ -274,7 +274,7 @@
         "брать"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/get.webp",
       "trick": false
     },
     {
@@ -286,7 +286,7 @@
         "опаздывать"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/late.webp",
       "trick": false
     },
     {
@@ -298,7 +298,7 @@
         "идти"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/come.webp",
       "trick": false
     }
   ],

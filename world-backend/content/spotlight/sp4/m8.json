@@ -106,7 +106,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "verb",
-      "image": null,
+      "image": "words/travel.webp",
       "trick": false
     },
     {
@@ -118,7 +118,7 @@
         "расслабляться"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/relax.webp",
       "trick": false
     },
     {
@@ -228,7 +228,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/tomorrow.webp",
       "trick": false
     },
     {
@@ -238,7 +238,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/mistake.webp",
       "trick": false
     },
     {
@@ -250,7 +250,7 @@
         "прости"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/sorry.webp",
       "trick": false
     },
     {
@@ -262,7 +262,7 @@
         "прохладно"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/cool.webp",
       "trick": false
     }
   ],

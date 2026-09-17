@@ -14,7 +14,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/next-to.webp",
       "trick": false
     },
     {
@@ -24,7 +24,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/in-front-of.webp",
       "trick": false
     },
     {
@@ -36,7 +36,7 @@
         "позади"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/behind.webp",
       "trick": false
     },
     {
@@ -142,7 +142,7 @@
         "известный"
       ],
       "kind": "adj",
-      "image": null,
+      "image": "words/famous.webp",
       "trick": false
     },
     {
@@ -174,7 +174,7 @@
         "положить"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/put.webp",
       "trick": false
     },
     {

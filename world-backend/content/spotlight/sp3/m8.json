@@ -14,7 +14,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/monday.webp",
       "trick": false
     },
     {
@@ -24,7 +24,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/tuesday.webp",
       "trick": false
     },
     {
@@ -34,7 +34,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/wednesday.webp",
       "trick": false
     },
     {
@@ -44,7 +44,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/thursday.webp",
       "trick": false
     },
     {
@@ -54,7 +54,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/quiz.webp",
       "trick": false
     },
     {
@@ -64,7 +64,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/friday.webp",
       "trick": false
     },
     {
@@ -74,7 +74,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/saturday.webp",
       "trick": false
     },
     {
@@ -84,7 +84,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/sunday.webp",
       "trick": false
     },
     {
@@ -116,7 +116,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/morning.webp",
       "trick": false
     },
     {
@@ -128,7 +128,7 @@
         "после обеда"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/afternoon.webp",
       "trick": false
     },
     {
@@ -138,7 +138,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/evening.webp",
       "trick": false
     },
     {
@@ -160,7 +160,7 @@
         "ровно"
       ],
       "kind": "other",
-      "image": null,
+      "image": "words/o-clock.webp",
       "trick": false
     },
     {
@@ -212,7 +212,7 @@
         "посещать"
       ],
       "kind": "verb",
-      "image": null,
+      "image": "words/visit.webp",
       "trick": false
     },
     {
@@ -222,7 +222,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/video.webp",
       "trick": false
     }
   ],
