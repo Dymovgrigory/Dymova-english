@@ -244,6 +244,13 @@ h3 {
   }
 }
 
+/* Неверная пара в «Найди пары». */
+@keyframes pair-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
 /* Мягкое свечение окна текущего урока. */
 @keyframes window-glow {
   0%, 100% { filter: drop-shadow(0 0 10px rgb(255 196 80 / 0.55)) brightness(1); }

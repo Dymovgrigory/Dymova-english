@@ -223,8 +223,10 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
   const footer = (
     <div className="flex flex-col gap-2">
       {lessonState.error && <p className="text-center text-[15px] font-bold text-coral-ink" role="alert">{lessonState.error}</p>}
-      {challenge.type === "speak" ? (
-        <p className="text-center text-[15px] font-bold text-[#c9bfd8]">Нажми на микрофон и прочитай фразу вслух</p>
+      {challenge.type === "speak" || challenge.type === "match_pairs" ? (
+        <p className="text-center text-[15px] font-bold text-[#c9bfd8]">
+          {challenge.type === "speak" ? "Нажми на микрофон и прочитай фразу вслух" : "Соедини все пары — верные закрепятся сразу"}
+        </p>
       ) : (
         <Button
           block
@@ -273,6 +275,15 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
             void submit({ skip: true });
           }}
           onHeard={(transcript) => void submit({ transcript })}
+          onCheckPair={async (left, right) => {
+            try {
+              if (!session) return false;
+              return (await v2.checkPair(session.session_id, challenge.index, left, right)).correct;
+            } catch {
+              return false;
+            }
+          }}
+          onSubmit={(answer) => void submit(answer)}
         />
         </div>
       </main>

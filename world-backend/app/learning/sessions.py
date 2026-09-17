@@ -143,6 +143,28 @@ def answer(external_key: str, session_id: str, index: int, payload: dict, *, res
     }
 
 
+def check_pair(external_key: str, session_id: str, index: int, left: str, right: str,
+               *, now: datetime | None = None) -> dict:
+    """Мгновенная проверка одной пары в «Найди пары»: верная пара фиксируется на клиенте.
+
+    Задание не закрывается и попытка не пишется — итог засчитывается в answer().
+    """
+    moment = now or clock.now()
+    session = _load(_player_id(external_key), session_id)
+    if session["status"] != "active":
+        raise Conflict("session_finished")
+    if moment - session["started_at"] > SESSION_TTL:
+        raise Gone("session_expired")
+    if not 0 <= index < len(session["challenges"]):
+        raise NotFound("challenge not found")
+    challenge = session["challenges"][index]
+    if challenge.solution.get("kind") != "pairs":
+        raise Conflict("not_pairs")
+    if index not in session["pending"]:
+        raise Conflict("challenge_done")
+    return {"correct": [left, right] in challenge.solution["pairs"]}
+
+
 def finish(external_key: str, session_id: str, *, now: datetime | None = None) -> dict:
     moment = now or clock.now()
     player_id = _player_id(external_key)

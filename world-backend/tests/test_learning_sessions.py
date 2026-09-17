@@ -177,3 +177,23 @@ def test_speak_can_be_skipped(learner):
         pytest.skip("no speak challenge generated")
     reply = sessions.answer(key, started["session_id"], speak[0], {"skip": True})
     assert reply["skipped"] is True and reply["requeued"] is False
+
+
+def test_check_pair_answers_instantly_without_finishing_challenge(learner):
+    key, _ = learner
+    for seed in range(40):
+        started = sessions.start(key, "sp1.m1.n1", allow_speak=False, seed=seed)
+        payload = stored(started["session_id"])
+        index = next((i for i, c in enumerate(payload) if c["type"] == "match_pairs"), None)
+        if index is not None:
+            break
+    pairs = payload[index]["solution"]["pairs"]
+    left, right = pairs[0]
+    assert sessions.check_pair(key, started["session_id"], index, left, right) == {"correct": True}
+    wrong_right = pairs[1][1]
+    assert sessions.check_pair(key, started["session_id"], index, left, wrong_right) == {"correct": False}
+    # проверка пары не закрывает задание и не пишет попыток
+    reply = sessions.answer(key, started["session_id"], index, {"pairs": pairs})
+    assert reply["correct"] is True
+    with pytest.raises(Conflict, match="not_pairs"):
+        sessions.check_pair(key, started["session_id"], 0, left, right)

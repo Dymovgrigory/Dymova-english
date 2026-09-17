@@ -91,6 +91,8 @@ export const v2 = {
   startPractice: (allowSpeak: boolean) => post<SessionStart>("/api/v2/practice", { allow_speak: allowSpeak }),
   answer: (sessionId: string, index: number, answer: Answer, responseMs: number) =>
     post<AnswerReply>(`/api/v2/sessions/${sessionId}/answer`, { index, answer, response_ms: responseMs }),
+  checkPair: (sessionId: string, index: number, left: string, right: string) =>
+    post<{ correct: boolean }>(`/api/v2/sessions/${sessionId}/pair`, { index, left, right }),
   finish: (sessionId: string) => post<SessionResult>(`/api/v2/sessions/${sessionId}/finish`),
   openChest: (nodeId: string) => post<{ coins: number; next_node_id: string | null }>(`/api/v2/nodes/${nodeId}/chest`),
   words: (bookId: string) => call<WordsBook>(`/api/v2/words?book_id=${encodeURIComponent(bookId)}`),

@@ -7,6 +7,7 @@ import { ContentImage } from "@/design/ContentImage";
 import { Icon } from "@/design/Icon";
 import { Sound } from "@/design/Sound";
 import { Tile } from "@/design/Tile";
+import { playCorrect, playWrong } from "@/lib/sfx";
 import { speakEnglish } from "@/lib/speak";
 import type { Answer, AnswerReply, Challenge } from "@/lib/v2/types";
 
@@ -16,6 +17,8 @@ export type ViewProps = {
   locked: boolean;
   reveal: AnswerReply | null;
   onDraft: (answer: Answer | null) => void;
+  onCheckPair?: (left: string, right: string) => Promise<boolean>;
+  onSubmit?: (answer: Answer) => void;
 };
 
 const AUTOPLAY = new Set<Challenge["type"]>([
@@ -315,78 +318,105 @@ export function TilesChallenge({ challenge, locked, onDraft }: ViewProps) {
 
 /* ----------------------------- пары ----------------------------- */
 
-const PAIR_COLORS = ["mat-enamel ring-4 ring-[#8e5cd9]", "mat-enamel ring-4 ring-[#3e7bfa]", "mat-enamel ring-4 ring-[#e3a93a]", "mat-enamel ring-4 ring-[#3fae98]", "mat-enamel ring-4 ring-[#d9483c]"];
+type PairSide = "left" | "right";
 
-export function PairsChallenge({ challenge, locked, onDraft }: ViewProps) {
+const PAIR_BASE =
+  "press relative flex w-full items-center justify-center overflow-hidden rounded-2xl font-bold text-ink transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]/70";
+
+/** «Найди пары»: выбор сразу подсвечивается, верная пара мгновенно фиксируется, неверная вспыхивает красным. */
+export function PairsChallenge({ challenge, locked, onCheckPair, onSubmit }: ViewProps) {
   const left = challenge.left ?? [];
   const right = challenge.right ?? [];
-  const [pairs, setPairs] = useState<[string, string][]>([]);
-  const [activeLeft, setActiveLeft] = useState<string | null>(null);
+  const pictures = challenge.mode === "audio_image";
+  const [matched, setMatched] = useState<[string, string][]>([]);
+  const [selected, setSelected] = useState<{ side: PairSide; id: string } | null>(null);
+  const [wrong, setWrong] = useState<string[]>([]);
+  const [checking, setChecking] = useState(false);
 
-  useEffect(() => {
-    onDraft(pairs.length === left.length && left.length ? { pairs } : null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pairs]);
+  const isMatched = (id: string) => matched.some(([l, r]) => l === id || r === id);
 
-  const pairIndex = (id: string) => pairs.findIndex(([l, r]) => l === id || r === id);
+  const tryPair = async (leftId: string, rightId: string) => {
+    setChecking(true);
+    const correct = onCheckPair ? await onCheckPair(leftId, rightId) : false;
+    setChecking(false);
+    setSelected(null);
+    if (correct) {
+      playCorrect();
+      const next: [string, string][] = [...matched, [leftId, rightId]];
+      setMatched(next);
+      if (next.length === left.length) onSubmit?.({ pairs: next });
+    } else {
+      playWrong();
+      setWrong([leftId, rightId]);
+      window.setTimeout(() => setWrong([]), 650);
+    }
+  };
 
-  const pressLeft = (id: string) => {
-    if (pairIndex(id) >= 0) {
-      setPairs((prev) => prev.filter(([l]) => l !== id));
+  const press = (side: PairSide, id: string, audio?: string) => {
+    if (locked || checking || isMatched(id)) return;
+    if (audio) void speakEnglish(audio);
+    if (!selected || selected.side === side) {
+      setSelected(selected?.id === id ? null : { side, id });
       return;
     }
-    setActiveLeft(id === activeLeft ? null : id);
+    const leftId = side === "left" ? id : selected.id;
+    const rightId = side === "right" ? id : selected.id;
+    void tryPair(leftId, rightId);
   };
 
-  const pressRight = (id: string) => {
-    if (pairIndex(id) >= 0) {
-      setPairs((prev) => prev.filter(([, r]) => r !== id));
-      return;
-    }
-    if (activeLeft) {
-      setPairs((prev) => [...prev, [activeLeft, id]]);
-      setActiveLeft(null);
-    }
+  const look = (id: string) => {
+    if (isMatched(id))
+      return "text-[#07302a] bg-[linear-gradient(180deg,#e2fbf4,#a6ead9)] shadow-[inset_0_1px_0_#fff,0_0_0_3px_#3fae98,0_3px_0_#1f6f60] opacity-80";
+    if (wrong.includes(id))
+      return "animate-[pair-shake_0.45s_ease] text-[#5a120c] bg-[linear-gradient(180deg,#fff0ec,#f6b9ae)] shadow-[inset_0_1px_0_#fff,0_0_0_3px_#d9483c,0_5px_0_#7c1f17]";
+    if (selected?.id === id)
+      return "mat-enamel -translate-y-1 !shadow-[inset_0_1px_0_#fff,0_0_0_4px_#3fae98,0_6px_0_#1f6f60,0_0_28px_-2px_rgb(63_174_152/0.85)]";
+    return "mat-enamel hover:-translate-y-0.5";
   };
 
-  const tone = (id: string) => {
-    const index = pairIndex(id);
-    if (index >= 0) return PAIR_COLORS[index % PAIR_COLORS.length];
-    if (id === activeLeft) return "mat-enamel ring-4 ring-[#3fae98]";
-    return "mat-enamel";
-  };
+  const tick = (id: string) =>
+    isMatched(id) ? (
+      <span className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-[#3fae98] text-white shadow">
+        <Icon name="check" size={14} />
+      </span>
+    ) : null;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <Instruction>{challenge.instruction_ru ?? ""}</Instruction>
-      <p className="-mt-3 text-[16px] font-semibold text-ink-soft">Нажми слева, потом справа. Нажми ещё раз, чтобы разъединить.</p>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-3">
+      <p className="-mt-3 text-[16px] font-semibold text-ink-soft">
+        {pictures ? "Нажми на звук, потом на подходящую картинку." : "Нажми на слово, потом на его перевод."}
+      </p>
+      <div className={pictures ? "flex flex-col gap-4" : "grid grid-cols-2 gap-3"}>
+        <div className={pictures ? "grid grid-cols-5 gap-2" : "flex flex-col gap-3"}>
           {left.map((item) => (
             <button
               key={item.id}
               type="button"
-              disabled={locked}
-              onClick={() => {
-                if (item.audio) void speakEnglish(item.audio);
-                pressLeft(item.id);
-              }}
-              className={`press flex min-h-16 items-center justify-center gap-2 rounded-2xl px-3 text-[19px] font-bold text-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30 ${tone(item.id)}`}
+              disabled={locked || isMatched(item.id)}
+              aria-pressed={selected?.id === item.id}
+              aria-label={item.audio ? "Послушать слово" : item.label}
+              onClick={() => press("left", item.id, item.audio)}
+              className={`${PAIR_BASE} ${pictures ? "aspect-square" : "min-h-16 px-3 text-[19px]"} ${look(item.id)}`}
             >
-              {item.audio ? <Icon name="speaker" size={30} className="text-royal" /> : item.label}
+              {item.audio ? <Icon name="speaker" size={30} className="text-[#4a2a66]" /> : item.label}
+              {tick(item.id)}
             </button>
           ))}
         </div>
-        <div className="flex flex-col gap-3">
+        <div className={pictures ? "grid grid-cols-3 gap-3" : "flex flex-col gap-3"}>
           {right.map((item) => (
             <button
               key={item.id}
               type="button"
-              disabled={locked}
-              onClick={() => pressRight(item.id)}
-              className={`press flex min-h-16 items-center justify-center rounded-2xl px-3 text-[19px] font-bold text-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-royal/30 ${tone(item.id)}`}
+              disabled={locked || isMatched(item.id)}
+              aria-pressed={selected?.id === item.id}
+              aria-label={item.image ? "Картинка" : item.label}
+              onClick={() => press("right", item.id)}
+              className={`${PAIR_BASE} ${pictures ? "aspect-square p-1.5" : "min-h-16 px-3 text-[19px]"} ${look(item.id)}`}
             >
-              {item.image ? <ContentImage path={item.image} alt="Картинка" className="h-14 w-14" fallback="?" /> : item.label}
+              {item.image ? <ContentImage path={item.image} alt="Картинка" className="h-full w-full rounded-xl" fallback="?" /> : item.label}
+              {tick(item.id)}
             </button>
           ))}
         </div>

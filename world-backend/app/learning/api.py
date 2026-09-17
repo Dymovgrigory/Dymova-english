@@ -49,6 +49,12 @@ class AnswerBody(BaseModel):
     response_ms: int | None = None
 
 
+class PairBody(BaseModel):
+    index: int
+    left: str
+    right: str
+
+
 class PracticeBody(BaseModel):
     allow_speak: bool = True
 
@@ -90,6 +96,11 @@ def start_session(body: SessionBody, x_world_player: str | None = Header(None)):
 def answer(session_id: str, body: AnswerBody, x_world_player: str | None = Header(None)):
     return _run(sessions.answer, resolve_player_key(x_world_player), session_id, body.index, body.answer,
                 response_ms=body.response_ms)
+
+
+@router.post("/sessions/{session_id}/pair")
+def check_pair(session_id: str, body: PairBody, x_world_player: str | None = Header(None)):
+    return _run(sessions.check_pair, resolve_player_key(x_world_player), session_id, body.index, body.left, body.right)
 
 
 @router.post("/sessions/{session_id}/finish")
