@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 
 import { Button } from "@/design/Button";
@@ -102,11 +103,18 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
           <Button block onClick={failedTest ? onRetry : onContinue} autoFocus>
             {failedTest ? "Пройти ещё раз" : "Продолжить"}
           </Button>
-          {failedTest && (
+          {failedTest ? (
             <Button block variant="paper" onClick={onContinue}>
               К пути
             </Button>
-          )}
+          ) : result.coins > 0 ? (
+            <Link
+              href="/world?pulse=shop"
+              className="mat-enamel inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-7 text-[18px] font-extrabold text-ink"
+            >
+              В замок · +{result.coins}
+            </Link>
+          ) : null}
         </div>
       </footer>
     </div>

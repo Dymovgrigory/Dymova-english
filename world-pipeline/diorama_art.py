@@ -269,6 +269,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.module == "castle":
         assets = castle_assets()
+    elif args.module == "castle-structure":
+        assets = castle_structure_assets()
     elif args.module.startswith("towers:"):
         assets = [tower_asset(b) for b in args.module.split(":", 1)[1].split(",")]
     elif args.module.startswith("words:"):
@@ -474,8 +476,111 @@ CASTLE_BUILDINGS = {
 }
 
 
+# Конструктив замка — отдельные спрайты в том же стиле, что school/shop (изолированный объект + мшистая база).
+CASTLE_STRUCTURE = {
+    "gate": (
+        "Front view of a fairy-tale castle main gate as a miniature diorama piece: twin round stone gatehouses with plum "
+        "conical roofs, wooden drawbridge slightly lowered, warm lanterns, ivy on lavender-grey stone, small mossy oval base. "
+        "Isolated object on a plain background, the whole gate in frame, no other buildings."
+    ),
+    "wall-front": (
+        "Front view of a long miniature castle curtain wall segment: lavender-grey battlements, ivy and moss, two tiny "
+        "glowing arched windows in the wall, plum-tiled walkway edge, standing on a narrow mossy base. Isolated object on a "
+        "plain background, whole wall segment in frame, no towers, no gate, no houses."
+    ),
+    "wall-corner": (
+        "Three-quarter view of a miniature castle wall corner with a short round corner turret, plum conical roof, "
+        "battlements continuing both ways a short distance, ivy, mossy base. Isolated object on a plain background, "
+        "whole piece in frame, no other buildings."
+    ),
+    "cottage-a": (
+        "Tiny filler cottage for a miniature kingdom: small one-storey stone house with plum roof, glowing window, ivy, "
+        "mossy round base. Isolated object on a plain background, whole building in frame, deliberately smaller and simpler "
+        "than landmark buildings."
+    ),
+    "cottage-b": (
+        "Tiny filler stable shed for a miniature kingdom: weathered wood and stone shed with plum roof, hay bale beside it, "
+        "mossy round base. Isolated object on a plain background, whole building in frame, simple non-landmark prop."
+    ),
+    "bridge": (
+        "Small arched stone bridge for a miniature kingdom diorama, moss and tiny flowers on the sides, short cobblestone "
+        "path on both ends on a mossy base. Isolated object on a plain background, whole bridge in frame, no buildings."
+    ),
+}
+
+
+def castle_structure_assets() -> list[dict]:
+    items = []
+    for key, prompt in CASTLE_STRUCTURE.items():
+        items.append({
+            "name": f"castle-struct-{key}",
+            "aspect": "1:1",
+            "bg": True,
+            "size": (900, 900),
+            "out": PUBLIC / "castle" / f"{key}.webp",
+            "prompt": prompt,
+        })
+    # Плашка замка: стены/ворота/тропы/площадки ВПЕЧЕНЫ; landmark-здания — пустые мшистые холмики.
+    # Цвет мха/земли = тот же, что у баз school/shop (soft green moss, brown earth).
+    items.append({
+        "name": "castle-grounds",
+        "aspect": "16:9",
+        "bg": False,
+        "size": (1536, 864),
+        "out": PUBLIC / "castle" / "castle-grounds.webp",
+        "prompt": (
+            "ONE continuous handcrafted miniature diorama of Foxinburg Castle fortress grounds filling the frame edge to edge, "
+            "elevated three-quarter view, single unbroken tabletop model — NOT separate floating props. "
+            "A complete lavender-grey stone curtain wall with battlements encloses a rectangular courtyard; "
+            "twin-tower main gate with lowered wooden drawbridge at the BOTTOM-CENTER; a small stone bridge on the approach in front of the gate; "
+            "a tiny teal stream with mossy banks curves to the right of the bridge. "
+            "Cobblestone paths connect empty building pads. "
+            "EMPTY round mossy earth pads only (no houses, no shops, no landmark towers on the pads) — soft green moss and brown soil "
+            "identical in colour and texture to miniature building bases, tiny purple flowers, ready for figurines to sit on: "
+            "four corner pads on the wall perimeter (back-left, back-right, front-left, front-right); "
+            "five courtyard pads (back-center against the wall, left, center-left, center-right, right); "
+            "three outside pads (far front-left hillock, front-left of the gate approach, far front-right paddock clearing). "
+            "A few tiny non-landmark filler cottages and sheds baked into the walls and courtyard corners for density only. "
+            "Warm dusk light, misty plum mountains behind, continuous shared grass and earth everywhere — same moss green, same soil brown, "
+            "no colour breaks, no collage, no grey void between parts, no cutout buildings, no people, no text, no letters, no logos."
+        ),
+    })
+    return items
+
+
+# Цельный замок — один кадр, без склейки спрайтов. Композиция зафиксирована для хитбоксов.
+CASTLE_REALM_PROMPT = (
+    "ONE single continuous handcrafted miniature diorama of Foxinburg Castle as one solid tabletop fortress model, "
+    "photographed as one unbroken object filling the frame edge to edge, elevated three-quarter view. "
+    "Lavender-grey stone curtain walls with battlements enclose a busy courtyard; a grand front gate with twin gatehouses "
+    "and a raised wooden drawbridge sits at the bottom-center. "
+    "Four distinctive corner towers on the wall perimeter only: "
+    "front-left ivy-clad round tower with spiral stair; front-right workshop tower with a tiny water wheel; "
+    "back-left observatory tower with a brass telescope dome; back-right coastal lighthouse tower with a warm lantern crown. "
+    "Inside the walls, smaller and neat: left a two-storey schoolhouse with bell and satchels; "
+    "center-left a plum-awning merchant shop; back-center a slim glory tower with a golden trophy and star banners; "
+    "center-right a round word-treasury vault with an open iron door and glowing scrolls; "
+    "right a whimsical tower dotted with colourful blank badge-medals. "
+    "Outside the walls for mass and life: left-front a fox burrow-home in a mossy hill with round door and fox weathervane; "
+    "right-front a fenced training paddock with targets and hay; just outside the gate a plum-roof quest gazebo with a notice board; "
+    "plus several small non-landmark cottages, stables and sheds built into the walls for density. "
+    "Shared mossy ground, continuous cobblestone paths, one tiny river under a bridge near the right wall, "
+    "warm dusk light and misty plum mountains behind. "
+    "CRITICAL: everything is fused into one diorama — no separate cutout buildings, no floating pieces, no grey void between props, "
+    "no collage, no plain studio background. No text, letters, numbers, logos or people."
+)
+
+
 def castle_assets() -> list[dict]:
-    items: list[dict] = []
+    items: list[dict] = [{
+        "name": "castle-realm", "aspect": "16:9", "bg": False, "size": (1920, 1080),
+        "out": PUBLIC / "castle" / "castle-realm.webp",
+        "prompt": CASTLE_REALM_PROMPT,
+    }, {
+        "name": "castle-realm-tall", "aspect": "9:16", "bg": False, "size": (1080, 1920),
+        "out": PUBLIC / "castle" / "castle-realm-tall.webp",
+        "prompt": CASTLE_REALM_PROMPT + " Vertical portrait crop of the same fortress, gate near the bottom, walls filling height.",
+    }]
     for name, aspect, size in (("castle-plate-wide", "16:9", (1600, 900)), ("castle-plate-tall", "9:16", (900, 1600))):
         items.append({
             "name": name, "aspect": aspect, "bg": False, "size": size, "out": PUBLIC / "castle" / f"{name}.webp",

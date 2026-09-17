@@ -1,0 +1,137 @@
+{
+  "labelStep": 20,
+  "spots": [
+    {
+      "id": "tower-sp3",
+      "index": 1,
+      "labelTop": 1.59,
+      "area": {
+        "left": 22.526,
+        "top": 6.829,
+        "width": 5.859,
+        "height": 21.875
+      }
+    },
+    {
+      "id": "tower-sp4",
+      "index": 2,
+      "labelTop": 2.26,
+      "area": {
+        "left": 71.224,
+        "top": 8.102,
+        "width": 5.859,
+        "height": 20.486
+      }
+    },
+    {
+      "id": "glory",
+      "index": 3,
+      "labelTop": 0.0,
+      "area": {
+        "left": 40.755,
+        "top": 11.343,
+        "width": 6.185,
+        "height": 27.894
+      }
+    },
+    {
+      "id": "shop",
+      "index": 4,
+      "labelTop": 1.74,
+      "area": {
+        "left": 57.617,
+        "top": 22.338,
+        "width": 7.617,
+        "height": 19.907
+      }
+    },
+    {
+      "id": "school",
+      "index": 5,
+      "labelTop": 9.66,
+      "area": {
+        "left": 28.451,
+        "top": 29.977,
+        "width": 9.766,
+        "height": 20.37
+      }
+    },
+    {
+      "id": "lexicon",
+      "index": 6,
+      "labelTop": 7.28,
+      "area": {
+        "left": 46.159,
+        "top": 28.125,
+        "width": 10.026,
+        "height": 23.843
+      }
+    },
+    {
+      "id": "stickers",
+      "index": 7,
+      "labelTop": 3.33,
+      "area": {
+        "left": 64.062,
+        "top": 19.329,
+        "width": 7.878,
+        "height": 31.25
+      }
+    },
+    {
+      "id": "tower-sp1",
+      "index": 8,
+      "labelTop": 7.27,
+      "area": {
+        "left": 14.258,
+        "top": 15.972,
+        "width": 6.315,
+        "height": 38.194
+      }
+    },
+    {
+      "id": "tower-sp2",
+      "index": 9,
+      "labelTop": 6.02,
+      "area": {
+        "left": 78.451,
+        "top": 35.301,
+        "width": 6.641,
+        "height": 19.213
+      }
+    },
+    {
+      "id": "nest",
+      "index": 10,
+      "labelTop": 16.55,
+      "area": {
+        "left": 16.732,
+        "top": 63.426,
+        "width": 9.766,
+        "height": 16.782
+      }
+    },
+    {
+      "id": "quests",
+      "index": 11,
+      "labelTop": 10.61,
+      "area": {
+        "left": 32.682,
+        "top": 63.657,
+        "width": 9.961,
+        "height": 20.718
+      }
+    },
+    {
+      "id": "yard",
+      "index": 12,
+      "labelTop": 6.41,
+      "area": {
+        "left": 72.526,
+        "top": 62.037,
+        "width": 15.755,
+        "height": 27.083
+      }
+    }
+  ]
+}

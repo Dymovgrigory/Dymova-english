@@ -1,7 +1,7 @@
 "use client";
 
-import { CastleHub } from "@/ui/CastleHub";
+import { CastleScreen } from "@/features/castle/CastleScreen";
 
 export default function WorldPage() {
-  return <CastleHub />;
+  return <CastleScreen />;
 }

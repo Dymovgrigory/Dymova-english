@@ -1,4 +1,14 @@
-export type BuildingId =
+/**
+ * Замок Фоксинбург — одна цельная диорама `castle-diorama.webp` (flare сплавил спрайты зданий
+ * на площадках плашки, см. `world-pipeline/castle_compose.py`).
+ *
+ * Здания не клеятся поверх картинки: клик и hover определяются по карте зон `castle-hotspots.png`
+ * (каждый пиксель знает своё здание), подсветка — вырез той же картинки по маске `masks/{id}.png`.
+ * Области и индексы ниже приходят из `castle-hotspots.json` — после перегенерации ничего не правится руками.
+ */
+import hotspots from "./castle-hotspots.json";
+
+export type SpotId =
   | "school"
   | "shop"
   | "glory"
@@ -6,112 +16,76 @@ export type BuildingId =
   | "stickers"
   | "nest"
   | "quests"
-  | "yard";
+  | "yard"
+  | "tower-sp1"
+  | "tower-sp2"
+  | "tower-sp3"
+  | "tower-sp4";
 
-export type Building = {
-  id: BuildingId;
+export type SpotKind = "building" | "tower";
+
+/** Прямоугольник вокруг видимого силуэта здания, % от сцены. */
+export type SpotArea = { left: number; top: number; width: number; height: number };
+
+export type Spot = {
+  id: SpotId;
+  kind: SpotKind;
   title: string;
+  short: string;
   hint: string;
+  /** Иконка здания для ленты локаций. */
   art: string;
-  /** SVG polygon points in MAP_VIEWBOX pixel space (same as map.png). */
-  polygon: string;
-  /** Tooltip anchor — name appears here on hover (above the silhouette). */
-  label: { x: number; y: number };
+  room?: string;
+  bookId?: string;
+  /** Номер здания в карте зон. */
+  index: number;
+  area: SpotArea;
+  /** Верх плотной части силуэта, % от высоты области — сюда садится подпись. */
+  labelTop: number;
+  mask: string;
 };
 
-/** map.png is 1376×768 — polygons share this space with the SVG <image>. */
-export const MAP_VIEWBOX = { width: 1376, height: 768 } as const;
+export const CASTLE_SCENE = "/content/castle/castle-diorama.webp";
+export const CASTLE_HOTSPOTS = "/content/castle/castle-hotspots.png";
+export const CASTLE_LABEL_STEP = hotspots.labelStep;
 
-export const CASTLE_MAP = "/world/castle/map.png";
-export const CASTLE_MAP_DUSK = "/world/castle/map-dusk.png";
+type SpotInfo = Omit<Spot, "index" | "area" | "labelTop" | "mask">;
 
-export function isCastleDusk(hour = new Date().getHours()): boolean {
-  return hour >= 18 || hour < 6;
-}
-
-/** Кликабельная карта всегда дневная: хитбоксы привязаны к map.png. */
-export function castleMapSrc(): string {
-  return CASTLE_MAP;
-}
-
-/**
- * Только открытые здания. Остальная застройка — декор без клика.
- * Полигоны: map-v3 (калибровка по сетке, восстановлены после cinematic drift).
- */
-export const BUILDINGS: Building[] = [
-  {
-    id: "school",
-    title: "Школа Foxy",
-    hint: "Уроки 1 класса",
-    art: "/world/castle/school.png",
-    polygon:
-      "480,48 535,105 525,115 525,195 555,220 575,255 570,305 530,340 430,340 340,335 325,300 325,260 375,225 435,195 435,115 425,105",
-    label: { x: 455, y: 40 },
-  },
-  {
-    id: "shop",
-    title: "Лавка Фокси",
-    hint: "Монетки на сердца и стикеры",
-    art: "/world/castle/shop.png",
-    polygon:
-      "575,122 608,98 642,105 675,140 688,185 680,235 650,265 605,275 575,255 568,210 570,155",
-    label: { x: 625, y: 90 },
-  },
-  {
-    id: "glory",
-    title: "Башня Славы",
-    hint: "Лига и рейтинг недели",
-    art: "/world/castle/glory.png",
-    polygon:
-      "720,28 745,32 770,55 790,95 815,145 808,190 785,220 760,235 700,235 670,220 648,190 642,145 665,95 690,55 705,35",
-    label: { x: 730, y: 20 },
-  },
-  {
-    id: "lexicon",
-    title: "Сокровищница слов",
-    hint: "Всё, что уже звучало на уроке",
-    art: "/world/castle/lexicon.png",
-    polygon:
-      "835,118 880,102 930,112 962,150 972,205 952,268 905,295 855,285 822,245 815,185 820,145",
-    label: { x: 895, y: 95 },
-  },
-  {
-    id: "stickers",
-    title: "Башня стикеров",
-    hint: "Альбом наклеек",
-    art: "/world/castle/stickers.png",
-    polygon:
-      "1005,55 1035,42 1065,48 1090,70 1095,100 1088,155 1080,210 1068,255 1045,280 1020,288 1000,275 990,240 988,180 992,120 998,80",
-    label: { x: 1040, y: 35 },
-  },
-  {
-    id: "yard",
-    title: "Двор тренировки",
-    hint: "Повторить слова без нового урока",
-    art: "/world/castle/yard.png",
-    // wooden fence paddock — hug inner rails, clear of pines/path (map-v3)
-    polygon: "1070,298 1105,278 1148,280 1172,315 1175,355 1150,390 1110,400 1075,385 1060,340",
-    label: { x: 1120, y: 268 },
-  },
-  {
-    id: "quests",
-    title: "Беседка поручений",
-    hint: "Задания на сегодня",
-    art: "/world/castle/quests.png",
-    polygon:
-      "580,545 615,565 645,595 640,660 635,715 580,730 525,715 520,660 515,595 545,565",
-    label: { x: 580, y: 530 },
-  },
-  {
-    id: "nest",
-    title: "Гнездо Foxy",
-    hint: "Твой уровень, сердца, серия",
-    art: "/world/castle/nest.png",
-    polygon:
-      "210,375 270,385 325,425 350,480 348,545 310,590 255,605 200,575 170,515 172,450 190,400",
-    label: { x: 255, y: 365 },
-  },
+const INFO: SpotInfo[] = [
+  { id: "tower-sp1", kind: "tower", title: "Башня 1 класса", short: "1 кл.", hint: "Spotlight 1 · Башня плюща", art: "/content/castle/tower-sp1.webp", bookId: "sp1" },
+  { id: "tower-sp2", kind: "tower", title: "Башня 2 класса", short: "2 кл.", hint: "Spotlight 2 · Башня мастеров", art: "/content/castle/tower-sp2.webp", bookId: "sp2" },
+  { id: "tower-sp3", kind: "tower", title: "Башня 3 класса", short: "3 кл.", hint: "Spotlight 3 · Башня звездочётов", art: "/content/castle/tower-sp3.webp", bookId: "sp3" },
+  { id: "tower-sp4", kind: "tower", title: "Башня 4 класса", short: "4 кл.", hint: "Spotlight 4 · Башня путешественников", art: "/content/castle/tower-sp4.webp", bookId: "sp4" },
+  { id: "school", kind: "building", title: "Школа Foxy", short: "Школа", hint: "К пути обучения", art: "/content/castle/school.webp", room: "/content/castle/room-school.webp" },
+  { id: "shop", kind: "building", title: "Лавка Фокси", short: "Лавка", hint: "Монеты за уроки → сердца и стикеры", art: "/content/castle/shop.webp", room: "/content/castle/room-shop.webp" },
+  { id: "glory", kind: "building", title: "Башня Славы", short: "Слава", hint: "Лига и рейтинг недели", art: "/content/castle/glory.webp", room: "/content/castle/room-glory.webp" },
+  { id: "lexicon", kind: "building", title: "Сокровищница слов", short: "Слова", hint: "Слова из твоих уроков", art: "/content/castle/lexicon.webp", room: "/content/castle/room-lexicon.webp" },
+  { id: "stickers", kind: "building", title: "Башня стикеров", short: "Стикеры", hint: "Альбом наклеек", art: "/content/castle/stickers.webp", room: "/content/castle/room-stickers.webp" },
+  { id: "nest", kind: "building", title: "Гнездо Foxy", short: "Гнездо", hint: "Уровень, серия, монеты", art: "/content/castle/nest.webp", room: "/content/castle/room-nest.webp" },
+  { id: "quests", kind: "building", title: "Беседка поручений", short: "Задания", hint: "Задания на сегодня", art: "/content/castle/quests.webp", room: "/content/castle/room-quests.webp" },
+  { id: "yard", kind: "building", title: "Двор тренировки", short: "Двор", hint: "Повторить слова без нового урока", art: "/content/castle/yard.webp", room: "/content/castle/room-yard.webp" },
 ];
+
+/** Порядок = лента локаций; на сцене здания рисуются сзади вперёд по `index`. */
+export const SPOTS: Spot[] = INFO.map((info) => {
+  const zone = hotspots.spots.find((s) => s.id === info.id);
+  if (!zone) throw new Error(`castle-hotspots.json: нет зоны для ${info.id}`);
+  return { ...info, index: zone.index, area: zone.area, labelTop: zone.labelTop, mask: `/content/castle/masks/${info.id}.png` };
+});
+
+export type BuildingId = SpotId;
+
+/** Карта зон: номер здания на каждый пиксель (0 — пусто), строками сверху вниз. */
+export type HotspotMap = { width: number; height: number; labels: ArrayLike<number> };
+
+/** Здание под точкой сцены (x, y в долях 0..1) — по силуэту, а не по прямоугольнику. */
+export function spotAt(map: HotspotMap, x: number, y: number): SpotId | null {
+  if (x < 0 || y < 0 || x > 1 || y > 1) return null;
+  const column = Math.min(map.width - 1, Math.floor(x * map.width));
+  const row = Math.min(map.height - 1, Math.floor(y * map.height));
+  const index = map.labels[row * map.width + column];
+  return SPOTS.find((s) => s.index === index)?.id ?? null;
+}
 
 export const TIER_RU: Record<string, string> = {
   gold: "Золотая лига",
