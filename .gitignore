@@ -30,3 +30,7 @@ world-backend/data/*.pid
 world-backend/data/tts/
 .pytest_cache/
 __pycache__/
+
+# World v2: сырые листы Meshy (итоговые webp лежат в world/public/content)
+world-pipeline/word-art/sheets/
+world-pipeline/word-art/foxy/

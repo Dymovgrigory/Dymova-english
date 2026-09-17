@@ -1,63 +1,70 @@
 import { expect, test } from "@playwright/test";
 
 const API = process.env.WORLD_API || "http://127.0.0.1:8010";
-const APP = process.env.WORLD_APP || "http://127.0.0.1:3002";
-const KEY = "e2e-child";
 
-test("урок проходит от старта до финиша по API", async ({ request }) => {
-  const headers = { "X-World-Player": KEY, "Content-Type": "application/json" };
-  const player = await request.post(`${API}/api/world/players`, {
+test("API: профиль, путь и старт урока тренажёра", async ({ request }) => {
+  const headers = { "X-World-Player": `e2e-${Date.now()}`, "Content-Type": "application/json" };
+  expect((await request.post(`${API}/api/world/players`, { headers, data: { display_name: "Ева" } })).ok()).toBeTruthy();
+
+  const courses = await (await request.get(`${API}/api/v2/courses`)).json();
+  const book = courses.books[0];
+  expect(book.modules.length).toBeGreaterThan(0);
+
+  const profile = await request.put(`${API}/api/v2/profile`, {
     headers,
-    data: { display_name: "Ева" },
+    data: { book_id: book.id, module_id: book.modules[0].id, daily_goal_xp: 20 },
   });
-  expect(player.ok()).toBeTruthy();
+  expect(profile.ok()).toBeTruthy();
 
-  const review = await request.get(`${API}/api/world/learn/review`, { headers });
-  expect(review.ok()).toBeTruthy();
+  const home = await (await request.get(`${API}/api/v2/home`, { headers })).json();
+  expect(home.current_node.id).toBeTruthy();
 
-  const league = await request.get(`${API}/api/world/learn/league`, { headers });
-  expect(league.ok()).toBeTruthy();
-  const leagueBody = await league.json();
-  expect(leagueBody.rank).toBeGreaterThan(0);
-  expect(leagueBody.size).toBeGreaterThan(0);
-
-  const started = await request.post(`${API}/api/world/learn/lessons/start`, {
+  const started = await request.post(`${API}/api/v2/sessions`, {
     headers,
-    data: { lesson_id: "family-L1" },
+    data: { node_id: home.current_node.id, allow_speak: false },
   });
   expect(started.ok()).toBeTruthy();
   const session = await started.json();
-  expect(session.total).toBeGreaterThan(6);
-  expect(session.items?.length).toBe(session.total);
+  expect(session.graded_total).toBeGreaterThanOrEqual(8);
+  expect(session.challenges.every((c: Record<string, unknown>) => !("solution" in c))).toBeTruthy();
 
-  // Первые карточки (explain / word) — всегда верные; дальше стопаемся на первом drill.
-  for (const item of session.items.slice(0, 6)) {
-    const value =
-      item.kind === "listen"
-        ? {
-            choice: Math.max(
-              0,
-              (item.options as string[]).findIndex(
-                (o) => String(o).toLowerCase() === String(item.speak || "").toLowerCase(),
-              ),
-            ),
-          }
-        : {};
-    const ans = await request.post(
-      `${API}/api/world/learn/sessions/${session.session_id}/answer`,
-      { headers, data: { index: item.index, value } },
-    );
-    expect(ans.ok()).toBeTruthy();
-    const body = await ans.json();
-    expect(body.correct).toBeTruthy();
-  }
-
-  const health = await request.get(`${API}/health`);
-  expect(health.ok()).toBeTruthy();
+  const teach = session.challenges.find((c: { graded: boolean }) => !c.graded);
+  const reply = await request.post(`${API}/api/v2/sessions/${session.session_id}/answer`, {
+    headers,
+    data: { index: teach.index, answer: {} },
+  });
+  expect((await reply.json()).correct).toBe(true);
 });
 
+test("UI: знакомство → первый урок → путь", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (err) => errors.push(err.message));
 
-test("замок открывается", async ({ page }) => {
-  await page.goto(`${APP}/world`);
-  await expect(page.getByRole("heading", { name: /Замок/ })).toBeVisible();
+  await page.goto("/");
+  await expect(page).toHaveURL(/onboarding/);
+  await page.getByRole("textbox", { name: "Как тебя зовут?" }).fill("Ева");
+  await page.getByRole("button", { name: "Дальше" }).click();
+  await page.getByRole("button", { name: /1 класс/ }).click();
+  await page.getByRole("button", { name: "Дальше" }).click();
+  await page.getByRole("button", { name: /My Family!/ }).click();
+  await page.getByRole("button", { name: "Дальше" }).click();
+  await page.getByRole("button", { name: /Нормально/ }).click();
+  await page.getByRole("button", { name: "Начать первый урок" }).click();
+
+  await expect(page).toHaveURL(/lesson\/sp1\.m1\.n1/);
+  await expect(page.getByText("Новое слово")).toBeVisible();
+  await page.getByRole("button", { name: "Дальше" }).click();
+  // Следующее задание случайно: оценивается кнопкой «Проверить» или микрофоном.
+  await expect(page.getByRole("button", { name: /Проверить|Нажми и говори/ })).toBeVisible();
+
+  await page.getByRole("button", { name: "Выйти из урока" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Выйти", exact: true }).click();
+  await expect(page).toHaveURL(/learn/);
+  await expect(page.getByRole("heading", { name: "My Family!" })).toBeVisible();
+  await expect(page.getByText("Начать")).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Разделы" })).toBeVisible();
+
+  await page.getByRole("link", { name: "Словарь" }).click();
+  await expect(page.getByRole("heading", { name: "Мой словарь" })).toBeVisible();
+  expect(errors).toEqual([]);
 });
