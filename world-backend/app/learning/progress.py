@@ -18,6 +18,10 @@ XP_PER_STAR = 10
 COINS_SESSION = 5
 COINS_CHEST = 30
 COINS_MODULE_TEST_FIRST = 50
+COINS_PERFECT = 3          # урок без ошибок
+COINS_DAILY_GOAL = 10      # цель дня, один раз в день
+COINS_PRACTICE = 3         # тренировка во Дворе
+PRACTICE_PAID_PER_DAY = 2  # дальше тренировка бесплатна: иначе это ферма монет
 STAR_THRESHOLDS = (0.95, 0.80, 0.60)  # 3, 2, 1 звезда
 STREAK_LOOKBACK_DAYS = 400
 

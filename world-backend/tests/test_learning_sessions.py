@@ -125,7 +125,14 @@ def test_passed_module_test_gives_first_pass_bonus(learner):
     play(key, started)
     result = sessions.finish(key, started["session_id"])
     assert result["stars"] == 3 and result["xp"] == 30
-    assert result["coins"] == progress.COINS_SESSION + progress.COINS_MODULE_TEST_FIRST
+    # 30 xp сразу закрывают цель дня, поэтому в контрольной сходятся все четыре выплаты
+    assert result["coins_breakdown"] == {
+        "lesson": progress.COINS_SESSION,
+        "perfect": progress.COINS_PERFECT,
+        "module_test": progress.COINS_MODULE_TEST_FIRST,
+        "daily_goal": progress.COINS_DAILY_GOAL,
+    }
+    assert result["coins"] == sum(result["coins_breakdown"].values())
 
 
 def test_speak_can_be_skipped(learner):
