@@ -1,21 +1,19 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/design/Button";
 import { Foxy } from "@/design/Foxy";
-import { Seal } from "@/design/Seal";
 import { Shell } from "@/design/Shell";
 import { StatPill } from "@/design/StatPill";
 import { isProfileMissing, isUnauthorized, v2 } from "@/lib/v2/client";
-import { NODE_LABELS, nodeOffset } from "@/lib/v2/pathLayout";
 import type { Courses, Home, LearningPath, PathNode } from "@/lib/v2/types";
 
-type Loaded = { home: Home; courses: Courses; path: LearningPath };
+import { Tower } from "./Tower";
 
-const AMPLITUDE = 72;
+type Loaded = { home: Home; courses: Courses; path: LearningPath };
 
 async function loadAll(bookId?: string): Promise<Loaded | "onboarding" | { error: string }> {
   try {
@@ -132,7 +130,7 @@ export function PathScreen() {
 
   return (
     <Shell top={top}>
-      <div className="mx-auto max-w-2xl px-4 pb-16 pt-6">
+      <div className="min-h-dvh bg-[linear-gradient(180deg,#cdbfee_0%,#e6def8_50%,#f4f0fc_100%)] bg-fixed"><div className="mx-auto max-w-[560px] px-4 pb-16 pt-6">
         {problem && (
           <div className="flex flex-col items-center gap-4 py-16 text-center">
             <Foxy pose="think" size={140} />
@@ -162,66 +160,20 @@ export function PathScreen() {
           </p>
         )}
 
-        {data?.path.modules.map((module) => {
-          return (
-            <section key={module.id} className="mb-14" aria-labelledby={`${module.id}-title`}>
-              <div className="sticky top-[70px] z-10 mb-10 rounded-3xl bg-royal px-5 py-4 text-white shadow-[0_6px_0_var(--color-royal-edge)]">
-                <p className="text-[14px] font-bold text-crown">{module.label ?? `Модуль ${module.order}`}</p>
-                <h2 id={`${module.id}-title`} className="font-heading text-[26px] font-extrabold leading-8">{module.title_en}</h2>
-                <p className="text-[16px] font-semibold text-white/75">{module.title_ru}</p>
-              </div>
-
-              <ol className="flex flex-col items-center gap-7">
-                {module.nodes.map((node, position) => {
-                  const offset = nodeOffset(position, AMPLITUDE);
-                  const current = node.status === "current";
-                  return (
-                    <li key={node.id} className="relative flex flex-col items-center" style={{ transform: `translateX(${offset}px)` }}>
-                      <div ref={current ? currentRef : undefined} className="relative flex flex-col items-center">
-                        {current && (
-                          <motion.span
-                            initial={reduce ? false : { y: 6, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            className="mb-2 rounded-xl border-2 border-line bg-white px-3 py-1 text-[15px] font-extrabold text-royal shadow-[0_3px_0_var(--color-line)]"
-                          >
-                            Начать
-                          </motion.span>
-                        )}
-                        <Seal kind={node.kind} status={node.status} stars={node.stars} label={NODE_LABELS[node.kind]} onPress={() => void press(node)} />
-                        <span className={`mt-2 text-[14px] font-extrabold ${node.status === "locked" ? "text-ink-soft/60" : "text-ink-soft"}`}>
-                          {NODE_LABELS[node.kind]}
-                        </span>
-                        {current && (
-                          <Foxy
-                            pose="wave"
-                            size={96}
-                            className={`pointer-events-none absolute top-4 ${offset > 0 ? "-left-28" : "-right-28"}`}
-                          />
-                        )}
-                        <AnimatePresence>
-                          {hint?.nodeId === node.id && (
-                            <motion.button
-                              type="button"
-                              onClick={() => setHint(null)}
-                              initial={{ opacity: 0, y: -4 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0 }}
-                              className="absolute top-full z-10 mt-8 whitespace-nowrap rounded-xl bg-royal-deep px-3 py-2 text-[14px] font-bold text-white"
-                              role="status"
-                            >
-                              {hint.text}
-                            </motion.button>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
-            </section>
-          );
-        })}
-      </div>
+        {data && data.path.modules.length > 0 && (
+          <Tower path={data.path} onPress={(node) => void press(node)} currentRef={currentRef} />
+        )}
+        {hint && (
+          <button
+            type="button"
+            role="status"
+            onClick={() => setHint(null)}
+            className="fixed bottom-28 left-1/2 z-30 -translate-x-1/2 rounded-2xl bg-royal-deep px-5 py-3 text-[15px] font-extrabold text-white shadow-lg lg:bottom-10 lg:ml-30"
+          >
+            {hint.text}
+          </button>
+        )}
+      </div></div>
     </Shell>
   );
 }

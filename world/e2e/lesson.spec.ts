@@ -64,7 +64,7 @@ test("UI: знакомство → первый урок → путь", async ({
   await page.getByRole("dialog").getByRole("button", { name: "Выйти", exact: true }).click();
   await expect(page).toHaveURL(/learn/);
   await expect(page.getByRole("heading", { name: "My Family!" })).toBeVisible();
-  await expect(page.getByText("Начать")).toBeVisible();
+  await expect(page.getByRole("button", { name: /начать/ }).first()).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Разделы" })).toBeVisible();
 
   await page.getByRole("link", { name: "Словарь" }).click();
