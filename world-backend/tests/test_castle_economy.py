@@ -64,6 +64,27 @@ def test_practice_pays_three_coins_twice_a_day(learner, learn_course):
     assert payouts[2] == 0  # третья тренировка за день монет не приносит
 
 
+def test_practice_that_hits_track_threshold_returns_title(learner, learn_course):
+    """Тренировка, добившая порог ветки «Тренер», отдаёт звание в этом же ответе."""
+    key, player_id = learner
+    _finish_lesson(key, "sp1.m1.n1")
+    _finish_lesson(key, "sp1.m1.n2")
+    # порог первого уровня ветки — 5 тренировок, четыре кладём напрямую
+    for number in range(4):
+        get_conn().execute(
+            "INSERT INTO learn_sessions (id, player_id, node_id, kind, payload, pending, state, status, started_at)"
+            " VALUES (?,?,?,?,?,?,?,?,datetime('now'))",
+            (f"warmup-{number}", player_id, "sp1.m1", "practice", "{}", "[]", "{}", "completed"),
+        )
+    result = _finish_lesson(key, sessions.PRACTICE_NODE)
+    yard = [title for title in result["titles_gained"] if title["track"] == "yard"]
+    assert yard == [{"track": "yard", "level": 1, "title_ru": "Новичок двора", "coins": 25}]
+    # монеты за звание уже у игрока, поэтому они должны быть видны и в снимке ответа
+    assert result["player"]["coins"] == get_conn().execute(
+        "SELECT coins FROM players WHERE id=?", (player_id,)
+    ).fetchone()["coins"]
+
+
 def test_finish_is_idempotent_for_coins(learner, learn_course):
     key, player_id = learner
     started = sessions.start(key, "sp1.m1.n1", allow_speak=False)

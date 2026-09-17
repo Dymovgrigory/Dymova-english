@@ -190,12 +190,12 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
     day_key = clock.local_day(moment)
     breakdown: dict[str, int] = {}
     if kind == PRACTICE_NODE:
-        # created_at пишется в UTC, а сутки ученика московские — сдвигаем на +3 часа,
-        # иначе после 21:00 UTC потолок обнулялся бы раньше времени.
+        # created_at пишется в UTC, а сутки ученика местные: границу дня берём из clock,
+        # чтобы часовой пояс задавался в одном месте.
         paid_today = get_conn().execute(
             "SELECT COUNT(*) AS c FROM coin_transactions"
-            " WHERE player_id=? AND type='PRACTICE_REWARD' AND date(created_at, '+3 hours')=?",
-            (player_id, day_key),
+            " WHERE player_id=? AND type='PRACTICE_REWARD' AND created_at>=?",
+            (player_id, clock.day_start_sql(day_key)),
         ).fetchone()["c"]
         if paid_today < progress.PRACTICE_PAID_PER_DAY:
             breakdown["practice"] = progress.COINS_PRACTICE
@@ -208,7 +208,7 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
 
     coins = sum(breakdown.values())
     award_type = "PRACTICE_REWARD" if kind == PRACTICE_NODE else "LESSON_REWARD"
-    award = core.award(
+    core.award(
         external_key, xp=reward.xp, coins=coins, source=node_id, type_=award_type,
         idempotency_key=f"v2:{session_id}",
     )
@@ -224,9 +224,16 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
         if goal_award["coins_delta"]:
             breakdown["daily_goal"] = progress.COINS_DAILY_GOAL
             coins += progress.COINS_DAILY_GOAL
-            award = goal_award
 
+    # Сессию закрываем до пересчёта званий: ветка «Тренер» считает завершённые тренировки,
+    # иначе звание за эту тренировку пришло бы только со следующей.
+    conn = get_conn()
+    conn.execute(
+        "UPDATE learn_sessions SET status='completed', finished_at=? WHERE id=?",
+        (clock.to_iso(moment), session_id),
+    )
     titles_gained = castle_titles.sync(external_key)
+    player = core.get_player(external_key)  # снимок уже с монетами за новые звания
     result = {
         "node_id": node_id,
         "kind": kind,
@@ -243,12 +250,12 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
         "goal_reached": day["today_xp"] >= goal,
         "node_completed": completes,
         "next_node_id": progress.next_node_id(course, node_id) if completes else None,
-        "player": {k: award["player"][k] for k in ("xp", "coins", "level")},
+        "player": {k: player[k] for k in ("xp", "coins", "level")},
         "coins_breakdown": breakdown,
         "titles_gained": titles_gained,
     }
-    get_conn().execute(
-        "UPDATE learn_sessions SET status='completed', finished_at=?, result=? WHERE id=?",
-        (clock.to_iso(moment), json.dumps(result, ensure_ascii=False), session_id),
+    conn.execute(
+        "UPDATE learn_sessions SET result=? WHERE id=?",
+        (json.dumps(result, ensure_ascii=False), session_id),
     )
     return result
