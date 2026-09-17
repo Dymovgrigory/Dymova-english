@@ -51,6 +51,11 @@ PEOPLE = {
 }
 COLOURS = {"red", "blue", "green", "yellow", "pink", "purple", "orange", "black", "white", "brown"}
 OBJECTS = {
+    "plane": "toy aeroplane with a spinning propeller and wings, clearly an aircraft, no animals",
+    "run": "child figurine running fast with one leg forward and arms swinging, dust puffs behind",
+    "jump": "child figurine jumping high in the air over a small puddle, feet off the ground",
+    "climb": "child figurine climbing up a small tree trunk, holding onto a branch",
+    "toy": "open wooden toy box with a teddy bear, wooden blocks and a toy train inside",
     "new": "shiny brand-new red school backpack with a gift ribbon and a tiny price-free tag",
     "under": "red ball lying under a small wooden chair",
     "big": "giant oversized red apple towering over a tiny figurine child standing beside it",
@@ -163,7 +168,7 @@ def word_assets(module_id: str) -> list[dict]:
         else:
             subject = f"A single {en} as a handcrafted miniature"
         items.append({
-            "name": f"word-{Path(word['image']).stem}", "aspect": "1:1", "bg": False, "size": (768, 768),
+            "name": f"word-{Path(word['image']).stem}", "aspect": "1:1", "bg": False, "size": (768, 768), "en": en,
             "out": PUBLIC / "words" / Path(word["image"]).name,
             "prompt": f"{subject}, centered, standing on a small round mossy stone pedestal, whole object in frame, soft warm dusk bokeh background. "
                       f"{NOT_A_HOUSE}",
@@ -210,8 +215,21 @@ def floor_assets(module_ids: list[str]) -> list[dict]:
     } for mid in module_ids]
 
 
+# Более дешёвая модель для предметов/животных/отвлечённых слов (одобрено владельцем 2026-09-17);
+# уточнение композиции держит её в стиле flare.
+BUDGET_MODEL = "nano-banana-2"
+BUDGET_TUNE = (" Composition: the object is large and fills about 60 percent of the frame, seen slightly from above; "
+               "the background is only a smooth, strongly blurred warm golden-plum dusk bokeh with no room, no furniture, "
+               "no shelves, no buildings, no clutter.")
+PEOPLE_WORDS = set("""sister brother grandma grandpa children friend mother father grandmother grandfather aunt uncle
+cousin vet nurse doctor postman waiter mechanic clown magician ballerina men women slim plump""".split()) | {
+    "best friend", "police officer", "family tree", "toy soldier"}
+
+
 def generate(asset: dict, key: str) -> str:
-    payload = {"ai_model": MODEL, "prompt": CORE + asset["prompt"], "aspect_ratio": asset["aspect"]}
+    model = asset.get("model", MODEL)
+    prompt = CORE + asset["prompt"] + (BUDGET_TUNE if model == BUDGET_MODEL else "")
+    payload = {"ai_model": model, "prompt": prompt, "aspect_ratio": asset["aspect"]}
     if asset["bg"]:
         payload["remove_background"] = True
     for attempt in range(3):
@@ -245,11 +263,23 @@ def main() -> None:
     parser.add_argument("module")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--only", nargs="*")
+    parser.add_argument("--budget", action="store_true", help="nano-banana-2 для всех слов, кроме людей")
     args = parser.parse_args()
     if args.module.startswith("towers:"):
         assets = [tower_asset(b) for b in args.module.split(":", 1)[1].split(",")]
     elif args.module.startswith("words:"):
-        assets = [a for mid in args.module.split(":", 1)[1].split(",") for a in word_assets(mid)]
+        wanted = args.module.split(":", 1)[1].split(",")
+        # один файл — одна генерация; слова, уже нарисованные для Spotlight 1, не перезаписываем
+        sp1 = set() if any(m.startswith("sp1.") for m in wanted) else {
+            str(a["out"]) for p in sorted(CONTENT.glob("sp1/*.json")) for a in word_assets(json.loads(p.read_text(encoding="utf-8"))["id"])
+        }
+        seen: set[str] = set()
+        assets = []
+        for a in (a for mid in wanted for a in word_assets(mid)):
+            if str(a["out"]) in seen or str(a["out"]) in sp1:
+                continue
+            seen.add(str(a["out"]))
+            assets.append(a)
     elif args.module == "floors":
         ids = [json.loads(p.read_text(encoding="utf-8"))["id"] for p in sorted(CONTENT.glob("sp*/*.json"))]
         assets = floor_assets([m for m in ids if m != "sp1.m1"])
@@ -257,10 +287,15 @@ def main() -> None:
         assets = assets_for(args.module)
     if args.only:
         assets = [a for a in assets if a["name"] in args.only]
+    if args.budget:
+        for a in assets:
+            if a["name"].startswith("word-") and a.get("en") not in PEOPLE_WORDS:
+                a["model"] = BUDGET_MODEL
     marker = RAW / "done.json"
     done = set(json.loads(marker.read_text())) if marker.exists() and not args.force else set()
     todo = [a for a in assets if a["name"] not in done]
-    print(f"ассетов: {len(todo)} (~{len(todo) * 9} кредитов)", flush=True)
+    cost = sum(6 if a.get("model") == BUDGET_MODEL else 9 for a in todo)
+    print(f"ассетов: {len(todo)} (~{cost} кредитов)", flush=True)
     key = load_key()
     with ThreadPoolExecutor(max_workers=4) as pool:
         for asset, line in zip(todo, pool.map(lambda a: generate(a, key), todo)):

@@ -66,7 +66,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "other",
-      "image": null,
+      "image": "words/under.webp",
       "trick": false
     },
     {
@@ -176,7 +176,7 @@
       "accept_en": [],
       "accept_ru": [],
       "kind": "adj",
-      "image": null,
+      "image": "words/big.webp",
       "trick": false
     },
     {
