@@ -1,13 +1,14 @@
-# Очередь генерации Meshy (продолжить с новым ключом)
+# Очередь генерации Meshy
 
-Ключ — `secrets/meshy.env`. Модель и промпты не менять (STYLE_LOCK).
+Ключ — `secrets/meshy.env`. Модель и промпты не менять (STYLE_LOCK). Качество — модель flare (без `--budget`).
 
 ## Готово (2026-09-17)
-Все слова Spotlight 1–4 в стиле «живой миниатюры», 30 этажей, 4 башни классов, фоны, спрайты.
+Все слова Spotlight 1–4, эмоции SP4, 30 этажей, 4 башни классов, фоны, спрайты окон.
 
-## 1. Переделать эмоции (детские фигурки вместо каменных голов, ~24 кр.)
+## Замок (отложено владельцем, продолжить по команде)
+Уже сгенерировано в `world/public/content/castle/`: сцены (wide/tall), башни классов без фона (sp1–sp4),
+здания и интерьеры school, shop, glory. Осталось (~90 кр.): lexicon, stickers, yard, quests, nest (здание + интерьер).
 ```bash
-python3 world-pipeline/diorama_art.py words:sp4.m5 --budget --force --only word-bored word-angry word-scared word-tired
+python3 world-pipeline/diorama_art.py castle   # готовые пропустит
 ```
-
-## 2. Замок — башни классов без фона как здания (~36 кр.)
+Интерфейс Замка ещё не переделан (сейчас старый `CastleHub`).

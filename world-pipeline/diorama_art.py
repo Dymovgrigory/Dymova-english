@@ -267,7 +267,9 @@ def main() -> None:
     parser.add_argument("--only", nargs="*")
     parser.add_argument("--budget", action="store_true", help="nano-banana-2 для всех слов, кроме людей")
     args = parser.parse_args()
-    if args.module.startswith("towers:"):
+    if args.module == "castle":
+        assets = castle_assets()
+    elif args.module.startswith("towers:"):
         assets = [tower_asset(b) for b in args.module.split(":", 1)[1].split(",")]
     elif args.module.startswith("words:"):
         wanted = args.module.split(":", 1)[1].split(",")
@@ -452,6 +454,58 @@ def assign_missing_images(module_ids: list[str]) -> int:
                 changed += 1
         path.write_text(json.dumps(module, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return changed
+
+
+
+# ---------------------------------------------------------------- Замок ---------------------------------------------
+CASTLE_BUILDINGS = {
+    "school": "Foxy's School: a cosy two-storey stone schoolhouse with a small bell tower, arched glowing windows, a tiny "
+              "chalkboard sign without letters and satchels by the door",
+    "shop": "Foxy's Shop: a crooked little merchant shop with a striped plum awning, shelves of tiny goods, baskets of apples, "
+            "a brass shop bell and glowing lantern",
+    "glory": "The Tower of Glory: a slender stone tower crowned with a golden trophy, banners with stars and laurel wreaths",
+    "lexicon": "The Treasury of Words: a round stone vault with an open iron-bound door, glowing treasure chests full of "
+               "floating paper scrolls and books",
+    "stickers": "The Sticker Tower: a whimsical tower covered in colourful round sticker-like badges and emblems without "
+                "letters, a winding staircase",
+    "yard": "The Training Yard: a fenced wooden paddock with archery targets, a practice dummy, wooden training swords and hay bales",
+    "quests": "The Quest Gazebo: an open wooden gazebo with a plum roof, a notice board pinned with blank parchment scrolls and a map",
+    "nest": "Foxy's Nest: a cosy round burrow home built into a mossy hill with a round wooden door, a chimney and a fox-shaped weathervane",
+}
+
+
+def castle_assets() -> list[dict]:
+    items: list[dict] = []
+    for name, aspect, size in (("castle-plate-wide", "16:9", (1600, 900)), ("castle-plate-tall", "9:16", (900, 1600))):
+        items.append({
+            "name": name, "aspect": aspect, "bg": False, "size": size, "out": PUBLIC / "castle" / f"{name}.webp",
+            "prompt": "Empty landscape plate for a miniature kingdom diorama seen from a slightly elevated angle: a wide green "
+                      "mossy valley with winding cobblestone paths, a small sparkling river with a stone bridge, flower "
+                      "meadows, a few pine trees at the edges, distant misty blue-plum mountains and a warm dusk sky. Open "
+                      "empty ground spots for buildings. No buildings, no towers, no houses, no people.",
+        })
+    for book, theme in TOWER_THEMES.items():
+        items.append({
+            "name": f"castle-tower-{book}", "aspect": "9:16", "bg": True, "size": (700, 1244),
+            "out": PUBLIC / "castle" / f"tower-{book}.webp",
+            "prompt": theme.split(";")[0] + ". Isolated object on a plain background, the whole building with its small "
+                      "mossy base in frame.",
+        })
+    for key, text in CASTLE_BUILDINGS.items():
+        items.append({
+            "name": f"castle-{key}", "aspect": "1:1", "bg": True, "size": (720, 720),
+            "out": PUBLIC / "castle" / f"{key}.webp",
+            "prompt": f"{text}, as a miniature diorama building on a small round mossy base. Isolated object on a plain "
+                      "background, the whole building in frame.",
+        })
+        items.append({
+            "name": f"castle-room-{key}", "aspect": "16:9", "bg": False, "size": (1536, 864),
+            "out": PUBLIC / "castle" / f"room-{key}.webp",
+            "prompt": f"Cutaway interior of {text.split(':')[0]} inside the miniature kingdom: {text.split(':', 1)[1]}, seen "
+                      "from inside as a cosy detailed room with warm lanterns, misty dusk forest bokeh through the windows. "
+                      "No people.",
+        })
+    return items
 
 
 if __name__ == "__main__":
