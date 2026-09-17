@@ -98,3 +98,24 @@ def test_finish_is_idempotent_for_coins(learner, learn_course):
         (player_id,),
     ).fetchone()["total"]
     assert paid == first["coins"]
+
+
+def test_finish_rebuilds_result_lost_between_writes(learner, learn_course):
+    """Сессия завершена, но результат не сохранился: собираем его заново, не платя дважды."""
+    key, player_id = learner
+    started = sessions.start(key, "sp1.m1.n1", allow_speak=False)
+    for index, challenge in enumerate(stored(started["session_id"])):
+        sessions.answer(key, started["session_id"], index, right_answer(challenge))
+    first = sessions.finish(key, started["session_id"])
+    coins_after_first = get_conn().execute(
+        "SELECT coins FROM players WHERE id=?", (player_id,)
+    ).fetchone()["coins"]
+
+    get_conn().execute("UPDATE learn_sessions SET result=NULL WHERE id=?", (started["session_id"],))
+    again = sessions.finish(key, started["session_id"])
+    assert again["node_id"] == first["node_id"] and again["coins_breakdown"] == first["coins_breakdown"]
+    assert again["coins"] == first["coins"] and again["xp"] == first["xp"]
+    assert again["today_xp"] == first["today_xp"]  # день не пересчитывается второй раз
+    assert get_conn().execute(
+        "SELECT coins FROM players WHERE id=?", (player_id,)
+    ).fetchone()["coins"] == coins_after_first

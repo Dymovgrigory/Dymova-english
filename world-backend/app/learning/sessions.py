@@ -169,8 +169,11 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
     moment = now or clock.now()
     player_id = _player_id(external_key)
     session = _load(player_id, session_id)
-    if session["status"] == "completed":
+    # Результата может не быть, если сессию успели пометить завершённой, а сборка результата
+    # упала: тогда идём обычным путём и собираем его заново — начисления идемпотентны.
+    if session["status"] == "completed" and session["result"] is not None:
         return session["result"]
+    replay = session["status"] == "completed"
     if session["pending"]:
         raise Conflict("session_not_complete")
 
@@ -214,7 +217,12 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
     )
     if completes:
         progress.complete_node(player_id, node_id, stars=reward.stars, accuracy=accuracy, now=moment)
-    day = progress.record_activity(player_id, reward.xp, now=moment)
+    if replay:
+        # Пересборка результата: день уже посчитан, повторная запись задвоила бы xp дня.
+        day = {"today_xp": progress.today_xp(player_id, now=moment),
+               "streak_days": progress.streak_days(player_id, now=moment)}
+    else:
+        day = progress.record_activity(player_id, reward.xp, now=moment)
     goal = progress.get_profile(player_id)["daily_goal_xp"]
     if day["today_xp"] >= goal:
         goal_award = core.award(
