@@ -1207,6 +1207,8 @@ bot/
 
 **Замок зафиксирован владельцем (STYLE_LOCK). Комнаты зданий:** плашка опущена вниз и сделана из пергамента-вуали `mat-parchment-veil` (интерьер просвечивает), затемнение слабее; в Башне стикеров старая кривая FantasyButton заменена альбомом из эмалевых карточек (не полученные — «?»); Escape закрывает здание. Проверено: vitest 39, tsc, eslint 0 ошибок, `next build`, Playwright 8 комнат на 1440 и 390 px.
 
+**Интерьеры башен классов:** flare `room-tower-sp1..4.webp` (`diorama_art.py castle-tower-rooms`, 45 кр. с перерисовкой обсерватории из-за серого фона) — класс с лестницей и плющом, мастерская с водяным колесом, обсерватория, картографическая у маяка; подключены в комнаты башен.
+
 ## Текущий статус / Где остановились
 
 **World 2026-09-16 (сессия 118):** Reference matrix + expanded RESEARCH (Duo/Puzzle mechanics only). Path: `RESEARCH/REFERENCE_MATRIX.md`. P0 code next: streak milestones, league cohorts, chest loot v0, placement stub, parent provisioning, speak telemetry. Parallel: Meshy/chrome wiring (сессии 116–117). Identity/Brain/learn loop already shipped (сессия 115).

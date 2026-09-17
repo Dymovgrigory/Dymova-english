@@ -315,8 +315,8 @@ function RoomPanel({
           {spot.kind === "tower" && spot.bookId && (
             <div className="flex flex-col items-center gap-4 text-center">
               <Foxy pose="wave" size={84} />
-              <p className="text-[20px] font-extrabold text-ink">Это башня твоего учебника на карте замка.</p>
-              <p className="text-[15px] font-semibold text-ink-soft">Открой путь Spotlight {spot.bookId.replace("sp", "")} класса.</p>
+              <p className="text-[20px] font-extrabold text-ink">Башня учебника Spotlight {spot.bookId.replace("sp", "")}</p>
+              <p className="text-[15px] font-semibold text-ink-soft">Здесь начинается путь {spot.bookId.replace("sp", "")} класса.</p>
               <Button block onClick={() => onOpenBook(spot.bookId!)}>
                 Открыть путь класса
               </Button>

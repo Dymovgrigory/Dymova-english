@@ -271,6 +271,8 @@ def main() -> None:
         assets = castle_assets()
     elif args.module == "castle-structure":
         assets = castle_structure_assets()
+    elif args.module == "castle-tower-rooms":
+        assets = castle_tower_room_assets()
     elif args.module.startswith("towers:"):
         assets = [tower_asset(b) for b in args.module.split(":", 1)[1].split(",")]
     elif args.module.startswith("words:"):
@@ -569,6 +571,34 @@ CASTLE_REALM_PROMPT = (
     "CRITICAL: everything is fused into one diorama — no separate cutout buildings, no floating pieces, no grey void between props, "
     "no collage, no plain studio background. No text, letters, numbers, logos or people."
 )
+
+
+# Интерьеры башен классов для комнат Замка — та же формула, что у room-* зданий.
+CASTLE_TOWER_ROOMS = {
+    "sp1": "the Ivy Tower of the first-year pupils: a round cosy classroom with a stone spiral staircase winding up "
+           "along the curved wall, small wooden desks with slates and colourful wooden building blocks, picture cards "
+           "pinned on a cork board, a globe, ivy creeping through arched windows, a reading nook with cushions",
+    "sp2": "the Masters' Tower workshop: a round craftsman's workshop where the big wooden waterwheel gears turn through "
+           "the stone wall, workbenches with tiny hand tools, half-built wooden toys and little clocks, shelves of jars "
+           "with screws, a brass lathe, wood shavings on the floor",
+    "sp3": "the Stargazers' Tower observatory: a round domed room with the copper dome opened to a deep twilight sky "
+           "full of first stars, a large brass telescope on a wooden mount, a brass orrery, celestial globes, rolled "
+           "star charts with drawn constellations only, a spiral ladder to a balcony, tiny glowing star lanterns; the "
+           "whole scene set against a blurred misty dusk pine forest background, never a plain grey studio backdrop",
+    "sp4": "the Travellers' Tower map room: a round cabin high in a lighthouse tower with a big round window over a tiny "
+           "harbour with sailing ships and a striped hot-air balloon outside, old globes, ship models in bottles, brass "
+           "compasses and spyglasses, leather suitcases, pictorial maps without writing on a large wooden table",
+}
+
+
+def castle_tower_room_assets() -> list[dict]:
+    return [{
+        "name": f"castle-room-tower-{book}", "aspect": "16:9", "bg": False, "size": (1536, 864),
+        "out": PUBLIC / "castle" / f"room-tower-{book}.webp",
+        "prompt": f"Cutaway interior of {text.split(':')[0]} inside the miniature kingdom: {text.split(':', 1)[1]}, seen "
+                  "from inside as a cosy detailed room with warm lanterns, misty dusk forest bokeh through the windows. "
+                  "No people, no text, no letters.",
+    } for book, text in CASTLE_TOWER_ROOMS.items()]
 
 
 def castle_assets() -> list[dict]:

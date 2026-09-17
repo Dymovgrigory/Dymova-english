@@ -52,10 +52,10 @@ export const CASTLE_LABEL_STEP = hotspots.labelStep;
 type SpotInfo = Omit<Spot, "index" | "area" | "labelTop" | "mask">;
 
 const INFO: SpotInfo[] = [
-  { id: "tower-sp1", kind: "tower", title: "Башня 1 класса", short: "1 кл.", hint: "Spotlight 1 · Башня плюща", art: "/content/castle/tower-sp1.webp", bookId: "sp1" },
-  { id: "tower-sp2", kind: "tower", title: "Башня 2 класса", short: "2 кл.", hint: "Spotlight 2 · Башня мастеров", art: "/content/castle/tower-sp2.webp", bookId: "sp2" },
-  { id: "tower-sp3", kind: "tower", title: "Башня 3 класса", short: "3 кл.", hint: "Spotlight 3 · Башня звездочётов", art: "/content/castle/tower-sp3.webp", bookId: "sp3" },
-  { id: "tower-sp4", kind: "tower", title: "Башня 4 класса", short: "4 кл.", hint: "Spotlight 4 · Башня путешественников", art: "/content/castle/tower-sp4.webp", bookId: "sp4" },
+  { id: "tower-sp1", kind: "tower", title: "Башня 1 класса", short: "1 кл.", hint: "Spotlight 1 · Башня плюща", art: "/content/castle/tower-sp1.webp", room: "/content/castle/room-tower-sp1.webp", bookId: "sp1" },
+  { id: "tower-sp2", kind: "tower", title: "Башня 2 класса", short: "2 кл.", hint: "Spotlight 2 · Башня мастеров", art: "/content/castle/tower-sp2.webp", room: "/content/castle/room-tower-sp2.webp", bookId: "sp2" },
+  { id: "tower-sp3", kind: "tower", title: "Башня 3 класса", short: "3 кл.", hint: "Spotlight 3 · Башня звездочётов", art: "/content/castle/tower-sp3.webp", room: "/content/castle/room-tower-sp3.webp", bookId: "sp3" },
+  { id: "tower-sp4", kind: "tower", title: "Башня 4 класса", short: "4 кл.", hint: "Spotlight 4 · Башня путешественников", art: "/content/castle/tower-sp4.webp", room: "/content/castle/room-tower-sp4.webp", bookId: "sp4" },
   { id: "school", kind: "building", title: "Школа Foxy", short: "Школа", hint: "К пути обучения", art: "/content/castle/school.webp", room: "/content/castle/room-school.webp" },
   { id: "shop", kind: "building", title: "Лавка Фокси", short: "Лавка", hint: "Монеты за уроки → сердца и стикеры", art: "/content/castle/shop.webp", room: "/content/castle/room-shop.webp" },
   { id: "glory", kind: "building", title: "Башня Славы", short: "Слава", hint: "Лига и рейтинг недели", art: "/content/castle/glory.webp", room: "/content/castle/room-glory.webp" },
