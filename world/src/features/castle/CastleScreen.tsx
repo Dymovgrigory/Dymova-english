@@ -20,6 +20,7 @@ import {
 import { effectiveAppearance, lightLayer } from "@/castle/appearance";
 import { Weather } from "@/castle/Weather";
 import { fitScene } from "@/castle/scene";
+import { Workshop } from "@/features/castle/Workshop";
 import { Button } from "@/design/Button";
 import { ContentImage } from "@/design/ContentImage";
 import { Foxy } from "@/design/Foxy";
@@ -259,9 +260,77 @@ function CastleStage({
   );
 }
 
+/** Лавка: припасы (сердца, заморозка) и Мастерская облика — единственный выход монетам. */
+function ShopRoom({
+  shop,
+  castle,
+  shopMsg,
+  onBuy,
+  onCastleChange,
+}: {
+  shop: ShopItem[];
+  castle: CastleView | null;
+  shopMsg: string | null;
+  onBuy: (sku: string) => void;
+  onCastleChange: (view: CastleView) => void;
+}) {
+  const [tab, setTab] = useState<"supplies" | "workshop">("supplies");
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-1 rounded-2xl bg-[#3b2a1e]/10 p-1" role="tablist">
+        {(
+          [
+            ["supplies", "Припасы"],
+            ["workshop", "Мастерская облика"],
+          ] as const
+        ).map(([id, title]) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={tab === id}
+            onClick={() => setTab(id)}
+            className={`rounded-xl px-3 py-2 text-[14px] font-extrabold ${tab === id ? "mat-brass" : "text-ink-soft"}`}
+          >
+            {title}
+          </button>
+        ))}
+      </div>
+      {tab === "supplies" ? (
+        <div className="space-y-3">
+          <p className="text-[15px] font-semibold text-ink-soft">Монеты зарабатываются уроками и сундуками на пути.</p>
+          <ul className="space-y-2">
+            {shop.map((item) => (
+              <li key={item.sku}>
+                <button
+                  type="button"
+                  onClick={() => onBuy(item.sku)}
+                  className="mat-enamel flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left"
+                >
+                  <span className="font-fairy text-[17px] font-black text-[#4a2a66]">{item.title_ru}</span>
+                  <span className="inline-flex items-center gap-1 text-[16px] font-extrabold text-[#d69e00]">
+                    <Icon name="coin" size={18} />
+                    {item.coins}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          {shopMsg ? <p className="text-center text-[15px] font-bold text-[#a82f25]">{shopMsg}</p> : null}
+        </div>
+      ) : castle ? (
+        <Workshop view={castle} onChange={onCastleChange} />
+      ) : (
+        <p className="text-center text-[15px] font-semibold text-ink-soft">Витрина не загрузилась. Закрой и открой Лавку ещё раз.</p>
+      )}
+    </div>
+  );
+}
+
 function RoomPanel({
   spot,
   data,
+  castle,
   shopMsg,
   questMsg,
   onBuy,
@@ -269,9 +338,11 @@ function RoomPanel({
   onClose,
   onGo,
   onOpenBook,
+  onCastleChange,
 }: {
   spot: Spot;
   data: CastleData;
+  castle: CastleView | null;
   shopMsg: string | null;
   questMsg: string | null;
   onBuy: (sku: string) => void;
@@ -279,6 +350,7 @@ function RoomPanel({
   onClose: () => void;
   onGo: (href: string) => void;
   onOpenBook: (bookId: string) => void;
+  onCastleChange: (view: CastleView) => void;
 }) {
   const { home, words, player, hearts, shop, quests, stickers, stickerOwned, league, dueCount } = data;
   const room = spot.id;
@@ -392,27 +464,7 @@ function RoomPanel({
           )}
 
           {room === "shop" && (
-            <div className="space-y-3">
-              <p className="text-[15px] font-semibold text-ink-soft">Монеты зарабатываются уроками и сундуками на пути.</p>
-              <ul className="space-y-2">
-                {shop.map((item) => (
-                  <li key={item.sku}>
-                    <button
-                      type="button"
-                      onClick={() => onBuy(item.sku)}
-                      className="mat-enamel flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left"
-                    >
-                      <span className="font-fairy text-[17px] font-black text-[#4a2a66]">{item.title_ru}</span>
-                      <span className="inline-flex items-center gap-1 text-[16px] font-extrabold text-[#d69e00]">
-                        <Icon name="coin" size={18} />
-                        {item.coins}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {shopMsg ? <p className="text-center text-[15px] font-bold text-[#a82f25]">{shopMsg}</p> : null}
-            </div>
+            <ShopRoom shop={shop} castle={castle} shopMsg={shopMsg} onBuy={onBuy} onCastleChange={onCastleChange} />
           )}
 
           {room === "glory" && (
@@ -728,8 +780,10 @@ export function CastleScreen() {
         <RoomPanel
           spot={openSpot}
           data={data}
+          castle={castle}
           shopMsg={shopMsg}
           questMsg={questMsg}
+          onCastleChange={setCastle}
           onClose={() => setOpenId(null)}
           onGo={(href) => router.push(href)}
           onOpenBook={(bookId) => void openBook(bookId)}
