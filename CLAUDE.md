@@ -7,3 +7,11 @@ Plans must be bite-sized, concrete, and verifiable: exact files, commands, tests
 For coding work, I prefer TDD: failing test, minimal implementation, passing test, refactor only if needed.
 For debugging, I find the root cause before patching symptoms.
 For parallel work, I use isolated agents or worktrees so contexts and files do not collide.
+
+# 🔒 Мир Фоксинбурга: стиль зафиксирован владельцем
+
+Для всего проекта «Мир Фоксинбурга» (`world/`, `world-backend/content`, `world-pipeline/`) действует
+стиль «Живая миниатюра» — `docs/world/STYLE_LOCK.md`. Этот стиль и дизайн НЕ менять по своей
+инициативе. Меняется только деталь, которую владелец явно назвал; всё остальное остаётся как было.
+Новые экраны и картинки — строго в этом стиле (Meshy `gpt-image-2-5-flare`, промпты
+`world-pipeline/prompts/ART_DIRECTION.md`).

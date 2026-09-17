@@ -79,6 +79,15 @@ def assets_for(module_id: str) -> list[dict]:
                   "an outer spiral stone staircase, ivy, tiny brass lanterns, a plum tiled conical roof with a golden flag, "
                   "standing on a mossy rock base with a winding stone path to a small wooden door; misty evening forest bokeh.",
     }]
+    for name, aspect, size in (("scene-forest-wide", "16:9", (1600, 900)), ("scene-forest-tall", "9:16", (900, 1600))):
+        items.append({
+            "name": name, "aspect": aspect, "bg": False, "out": PUBLIC / "scenes" / f"{name}.webp", "size": size,
+            "prompt": "Pure landscape background plate, nature only: a misty dusk pine forest with mossy rocks at the "
+                      "edges, soft warm firefly bokeh lights among the trees, rolling hills and distant blue-plum mountains "
+                      "fading into haze, empty calm centre, strongly out of focus. The frame contains ONLY nature. Absolutely "
+                      "no houses, cottages, buildings, towers, roofs, windows, lanterns on structures or any man-made objects, "
+                      "no people.",
+        })
     for state, text in WINDOW_STATES.items():
         items.append({
             "name": f"window-{state}", "aspect": "1:1", "bg": True, "out": PUBLIC / "ui" / f"window-{state}.webp", "size": (512, 512),

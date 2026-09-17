@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useState, type Ref } from "react";
+import { useState, type ReactNode, type Ref } from "react";
 
 import { Icon, type IconName } from "@/design/Icon";
 import { NODE_LABELS } from "@/lib/v2/pathLayout";
@@ -194,12 +194,16 @@ function Stairs({ progress }: { progress: number }) {
 function Hero({ bookId, title, grade, raised }: { bookId: string; title: string; grade: number; raised: boolean }) {
   const [broken, setBroken] = useState(false);
   return (
-    <div className="relative -mx-4 mb-2 h-[62vh] min-h-[420px] overflow-hidden sm:mx-0 sm:rounded-[30px]">
+    <div className="relative -mx-4 mb-2 h-[64vh] min-h-[420px] lg:mx-0 lg:h-[92vh]">
       {!broken && (
-        // eslint-disable-next-line @next/next/no-img-element -- башня-герой учебника
-        <img src={`/content/towers/${bookId}.webp`} alt="" className="h-full w-full object-cover object-top" onError={() => setBroken(true)} />
+        // eslint-disable-next-line @next/next/no-img-element -- башня-герой учебника, края растворяются в фоне-сцене
+        <img
+          src={`/content/towers/${bookId}.webp`}
+          alt=""
+          className="hero-fade h-full w-full object-cover object-[50%_24%] lg:object-contain lg:object-bottom"
+          onError={() => setBroken(true)}
+        />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#150f1f]/10 via-transparent to-[#150f1f]" />
       <div className="absolute inset-x-0 bottom-6 flex justify-center px-6">
         <div className="mat-brass rounded-2xl px-6 py-3 text-center">
           <p className="font-fairy text-[26px] font-black leading-7">{title}</p>
@@ -210,7 +214,7 @@ function Hero({ bookId, title, grade, raised }: { bookId: string; title: string;
   );
 }
 
-export function Tower({ path, onPress, currentRef }: { path: LearningPath; onPress: PressNode; currentRef: Ref<HTMLDivElement> }) {
+export function Tower({ path, onPress, currentRef, afterHero }: { path: LearningPath; onPress: PressNode; currentRef: Ref<HTMLDivElement>; afterHero?: ReactNode }) {
   const floors = [...path.modules].reverse();
   const tests = path.modules.flatMap((m) => m.nodes.filter((n) => n.kind === "module_test"));
   const raised = tests.length > 0 && tests.every((n) => n.status === "completed");
@@ -218,6 +222,7 @@ export function Tower({ path, onPress, currentRef }: { path: LearningPath; onPre
   return (
     <div className="flex flex-col items-stretch">
       <Hero bookId={path.book.id} title={path.book.title} grade={path.book.grade} raised={raised} />
+      {afterHero}
       {floors.map((module, index) => {
         const below = floors[index + 1];
         const progress = below ? below.nodes.filter((n) => n.status === "completed").length / below.nodes.length : 0;

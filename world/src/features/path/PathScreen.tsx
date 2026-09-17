@@ -130,7 +130,14 @@ export function PathScreen() {
 
   return (
     <Shell top={top}>
-      <div><div className="mx-auto max-w-[560px] px-4 pb-16 pt-0 sm:pt-6">
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element -- фон-сцена: размытый лес и далёкие горы */}
+        <img src="/content/scenes/scene-forest-tall.webp" alt="" className="h-full w-full scale-105 object-cover blur-[2px] lg:hidden" />
+        {/* eslint-disable-next-line @next/next/no-img-element -- фон-сцена для широкого экрана */}
+        <img src="/content/scenes/scene-forest-wide.webp" alt="" className="hidden h-full w-full scale-105 object-cover blur-[2px] lg:block" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(21_15_31/0.15)_0%,rgb(21_15_31/0.35)_45%,rgb(21_15_31/0.7)_100%)]" />
+      </div>
+      <div className="relative z-10"><div className="mx-auto max-w-[560px] px-4 pb-16 pt-0 lg:max-w-[720px]">
         {problem && (
           <div className="flex flex-col items-center gap-4 py-16 text-center">
             <Foxy pose="think" size={140} />
@@ -140,7 +147,20 @@ export function PathScreen() {
         )}
         {!data && !problem && <p className="py-20 text-center text-[18px] font-extrabold text-[#c9bfd8]" role="status">Открываем учебник…</p>}
 
-        {data && home && home.due_count > 0 && (
+
+        {data && !data.path.modules.length && (
+          <p className="mat-parchment rounded-3xl p-6 text-center text-[18px] font-bold">
+            Уроки для {data.path.book.title} скоро появятся.
+          </p>
+        )}
+
+        {data && data.path.modules.length > 0 && (
+          <Tower
+            path={data.path}
+            onPress={(node) => void press(node)}
+            currentRef={currentRef}
+            afterHero={
+            home && home.due_count > 0 ? (
           <button
             type="button"
             onClick={() => router.push("/lesson/practice")}
@@ -152,16 +172,9 @@ export function PathScreen() {
             </span>
             <span className="mat-brass rounded-xl px-3 py-2 text-[15px] font-extrabold">Повторить</span>
           </button>
-        )}
-
-        {data && !data.path.modules.length && (
-          <p className="mat-parchment rounded-3xl p-6 text-center text-[18px] font-bold">
-            Уроки для {data.path.book.title} скоро появятся.
-          </p>
-        )}
-
-        {data && data.path.modules.length > 0 && (
-          <Tower path={data.path} onPress={(node) => void press(node)} currentRef={currentRef} />
+        ) : null
+            }
+          />
         )}
         {hint && (
           <button
