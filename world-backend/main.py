@@ -6,6 +6,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.castle import api as castle_api
 from app.learning import api as learning_api
 from app.learning import content as learning_content
 from app.world import api as world_api
@@ -30,6 +31,7 @@ app.add_middleware(
     allow_headers=["Content-Type", "X-World-Player"],
 )
 app.include_router(world_api.router)
+app.include_router(castle_api.router)
 app.include_router(learning_api.router)
 
 
