@@ -52,31 +52,51 @@ function WindowSlot({ node, onPress, currentRef }: { node: PathNode; onPress: Pr
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         />
       )}
-      <button
-        type="button"
-        onClick={() => onPress(node)}
-        aria-label={`${label}${status === "locked" ? ", закрыто" : status === "completed" ? ", пройдено" : status === "current" ? ", начать" : ""}`}
-        className={[
-          "press relative flex h-[84px] w-[64px] items-center justify-center overflow-hidden rounded-t-full rounded-b-lg",
-          "border-[5px] border-[#5b4580] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-crown",
-          glass,
-          status === "current" ? "seal-current" : "",
-        ].join(" ")}
-      >
-        {status === "locked" ? (
-          <>
-            <span className="absolute inset-y-0 left-0 w-1/2 border-r-2 border-[#4b321e] bg-[repeating-linear-gradient(90deg,#7a5536_0_7px,#6b4a2e_7px_9px)]" />
-            <span className="absolute inset-y-0 right-0 w-1/2 bg-[repeating-linear-gradient(90deg,#7a5536_0_7px,#6b4a2e_7px_9px)]" />
-            <Icon name="lock" size={20} className="relative text-[#f3d9a8]" />
-          </>
-        ) : (
-          <>
-            <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 bg-[#5b4580]/35" aria-hidden />
-            <span className="absolute inset-y-0 left-1/2 w-[3px] -translate-x-1/2 bg-[#5b4580]/35" aria-hidden />
-            <Icon name={status === "completed" ? "check" : KIND_ICON[node.kind]} size={24} filled={status !== "completed" && node.kind === "words"} className="relative" />
-          </>
-        )}
-      </button>
+      {node.kind === "chest" ? (
+        <button
+          type="button"
+          onClick={() => onPress(node)}
+          aria-label={`Сундук${status === "locked" ? ", закрыто" : status === "completed" ? ", открыт" : ", открыть"}`}
+          className={[
+            "press flex h-[84px] w-[64px] items-end justify-center rounded-2xl border-[5px] border-[#5b4580] pb-2",
+            "bg-[linear-gradient(180deg,#2a1f3d,#4a3a6b)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-crown",
+            status === "current" || status === "open" ? "seal-current" : "",
+          ].join(" ")}
+        >
+          <Icon
+            name="chest"
+            size={36}
+            filled={status === "completed"}
+            className={status === "locked" ? "text-[#8f7bb8]" : status === "completed" ? "text-crown/60" : "text-crown"}
+          />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => onPress(node)}
+          aria-label={`${label}${status === "locked" ? ", закрыто" : status === "completed" ? ", пройдено" : status === "current" ? ", начать" : ""}`}
+          className={[
+            "press relative flex h-[84px] w-[64px] items-center justify-center overflow-hidden rounded-t-full rounded-b-lg",
+            "border-[5px] border-[#5b4580] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-crown",
+            glass,
+            status === "current" ? "seal-current" : "",
+          ].join(" ")}
+        >
+          {status === "locked" ? (
+            <>
+              <span className="absolute inset-y-0 left-0 w-1/2 border-r-2 border-[#4b321e] bg-[repeating-linear-gradient(90deg,#7a5536_0_7px,#6b4a2e_7px_9px)]" />
+              <span className="absolute inset-y-0 right-0 w-1/2 bg-[repeating-linear-gradient(90deg,#7a5536_0_7px,#6b4a2e_7px_9px)]" />
+              <Icon name="lock" size={20} className="relative text-[#f3d9a8]" />
+            </>
+          ) : (
+            <>
+              <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 bg-[#5b4580]/35" aria-hidden />
+              <span className="absolute inset-y-0 left-1/2 w-[3px] -translate-x-1/2 bg-[#5b4580]/35" aria-hidden />
+              <Icon name={status === "completed" ? "check" : KIND_ICON[node.kind]} size={24} filled={status !== "completed" && node.kind === "words"} className="relative" />
+            </>
+          )}
+        </button>
+      )}
       <span className={`text-center text-[12px] font-extrabold leading-4 ${status === "locked" ? "text-royal-deep/55" : "text-royal-deep"}`}>
         {label}
       </span>
