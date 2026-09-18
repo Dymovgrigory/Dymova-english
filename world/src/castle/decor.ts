@@ -29,10 +29,10 @@ export const DECOR_POINTS: Record<DecorAnchor, DecorPoint> = {
  * точку делят несколько предметов (ворота), чтобы они не вставали друг в друга.
  */
 export const DECOR_OFFSETS: Record<string, { dx?: number; dy?: number }> = {
-  lantern: { dx: -0.04 },
-  statue: { dx: 0.05 },
-  pots: { dx: -0.055, dy: 0.015 },
-  pumpkins: { dx: 0.06, dy: 0.02 },
+  "decor-gate-lantern": { dx: -0.04 },
+  "decor-gate-fox-statue": { dx: 0.05 },
+  "decor-gate-pots": { dx: -0.055, dy: 0.015 },
+  "decor-gate-pumpkins": { dx: 0.06, dy: 0.02 },
 };
 
 /** Подкраска предмета под время суток — та же логика, что у светового слоя сцены. */
