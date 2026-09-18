@@ -112,7 +112,7 @@ export function FittingRoom({
   };
 
   return (
-    <div className="fixed inset-0 z-50" role="dialog" aria-label="Примерка облика замка">
+    <div className="fixed inset-0 z-[60]" role="dialog" aria-label="Примерка облика замка">
       <CastleStage
         freeArea={freeArea}
         openId={null}

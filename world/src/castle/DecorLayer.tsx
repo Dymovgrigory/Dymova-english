@@ -1,6 +1,6 @@
 "use client";
 
-import { DECOR_POINTS, decorFilter, type DecorAnchor } from "./decor";
+import { DECOR_OFFSETS, DECOR_POINTS, decorFilter, type DecorAnchor } from "./decor";
 import type { DecorItem } from "@/lib/v2/castle";
 
 /**
@@ -15,7 +15,10 @@ export function Decor({ items, time }: { items: DecorItem[]; time: string }) {
     <>
       {placed.map((item) => {
         const point = DECOR_POINTS[item.anchor as DecorAnchor];
-        const zIndex = Math.round(point.y * 100);
+        const offset = DECOR_OFFSETS[item.item_id] ?? {};
+        const x = point.x + (offset.dx ?? 0);
+        const y = point.y + (offset.dy ?? 0);
+        const zIndex = Math.round(y * 100);
         return (
           <div
             key={item.item_id}
@@ -23,8 +26,8 @@ export function Decor({ items, time }: { items: DecorItem[]; time: string }) {
             data-decor={item.item_id}
             className="pointer-events-none absolute"
             style={{
-              left: `${(point.x - point.width / 2) * 100}%`,
-              top: `${point.y * 100}%`,
+              left: `${(x - point.width / 2) * 100}%`,
+              top: `${y * 100}%`,
               width: `${point.width * 100}%`,
               transform: "translateY(-100%)",
               zIndex,
