@@ -32,6 +32,7 @@ app.add_middleware(
 )
 app.include_router(world_api.router)
 app.include_router(castle_api.router)
+app.include_router(castle_api.quests_router)
 app.include_router(learning_api.router)
 
 

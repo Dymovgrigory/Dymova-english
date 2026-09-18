@@ -70,3 +70,11 @@ def test_lexicon_chest_endpoints(client, monkeypatch):
     assert opened["coins"] == 30
     again = client.post("/api/v2/castle/lexicon-chest/open", headers=HEAD).json()
     assert again == opened
+
+
+def test_quests_endpoints(client):
+    client.put("/api/v2/profile", json={"book_id": "sp1", "module_id": "sp1.m1", "daily_goal_xp": 20}, headers=HEAD)
+    body = client.get("/api/v2/quests", headers=HEAD).json()
+    assert len(body["daily"]) == 3 and len(body["weekly"]) == 3
+    res = client.post("/api/v2/quests/claim", json={"quest_id": "lesson-1", "period": "day"}, headers=HEAD)
+    assert res.status_code == 409  # не выполнено — не забрать

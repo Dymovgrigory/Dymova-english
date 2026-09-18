@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from app.world import core
 from app.world.api import _player_key as resolve_player_key
 
-from . import lexicon_chest, service, titles
+from . import lexicon_chest, quests, service, titles
 
 router = APIRouter(prefix="/api/v2/castle", tags=["castle"])
 
@@ -72,3 +72,21 @@ def lexicon_chest_status(x_world_player: str | None = Header(None)):
 @router.post("/lexicon-chest/open")
 def lexicon_chest_open(x_world_player: str | None = Header(None)):
     return _run(lexicon_chest.open, resolve_player_key(x_world_player))
+
+
+quests_router = APIRouter(prefix="/api/v2/quests", tags=["quests"])
+
+
+class ClaimBody(BaseModel):
+    quest_id: str
+    period: str  # "day" | "week"
+
+
+@quests_router.get("")
+def list_quests(x_world_player: str | None = Header(None)):
+    return _run(quests.quests, resolve_player_key(x_world_player))
+
+
+@quests_router.post("/claim")
+def claim_quest(body: ClaimBody, x_world_player: str | None = Header(None)):
+    return _run(quests.claim, resolve_player_key(x_world_player), body.quest_id, body.period)
