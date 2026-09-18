@@ -445,6 +445,15 @@ CREATE TABLE IF NOT EXISTS titles (
     PRIMARY KEY (player_id, track)
 );
 
+CREATE TABLE IF NOT EXISTS lexicon_chests (
+    player_id   INTEGER NOT NULL REFERENCES players(id),
+    chest_index INTEGER NOT NULL,              -- 0,1,2... — какой по счёту сундук
+    opened_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    coins       INTEGER NOT NULL,
+    item_id     TEXT,                          -- выпавшее украшение, NULL если всё куплено
+    PRIMARY KEY (player_id, chest_index)
+);
+
 CREATE TABLE IF NOT EXISTS league_weeks (
     player_id     INTEGER NOT NULL REFERENCES players(id),
     week_start    TEXT NOT NULL,               -- понедельник недели, YYYY-MM-DD

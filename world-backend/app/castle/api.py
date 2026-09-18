@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from app.world import core
 from app.world.api import _player_key as resolve_player_key
 
-from . import service, titles
+from . import lexicon_chest, service, titles
 
 router = APIRouter(prefix="/api/v2/castle", tags=["castle"])
 
@@ -61,3 +61,14 @@ def wear_title(body: TitleBody, x_world_player: str | None = Header(None)):
     player = _run(core.get_player, key)
     _run(titles.wear, int(player["id"]), body.track)
     return _run(service.view, key)
+
+
+@router.get("/lexicon-chest")
+def lexicon_chest_status(x_world_player: str | None = Header(None)):
+    player = _run(core.get_player, resolve_player_key(x_world_player))
+    return lexicon_chest.status(int(player["id"]))
+
+
+@router.post("/lexicon-chest/open")
+def lexicon_chest_open(x_world_player: str | None = Header(None)):
+    return _run(lexicon_chest.open, resolve_player_key(x_world_player))

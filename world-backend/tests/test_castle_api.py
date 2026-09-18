@@ -46,3 +46,27 @@ def test_wear_title_without_level_returns_409(client):
 def test_unknown_item_returns_404(client):
     res = client.post("/api/v2/castle/buy", json={"item_id": "time-полночь"}, headers=HEAD)
     assert res.status_code == 404
+
+def test_lexicon_chest_endpoints(client, monkeypatch):
+    from app.castle import counters
+    from app.world.db import get_conn
+
+    fake = {f"sp1.m1.w{n}" for n in range(30)}
+    real = counters.course_word_ids()
+    monkeypatch.setattr(counters, "course_word_ids", lambda: real | fake)
+    player_id = int(core.get_player("kid-v2")["id"])
+    for atom_id in sorted(fake)[:26]:
+        get_conn().execute(
+            "INSERT INTO atom_mastery (player_id, atom_id, strength, correct_count, wrong_count,"
+            " due_at, updated_at, learned_at) VALUES (?,?,3,3,0,'2026-09-18','2026-09-18T10:00:00','2026-09-18')",
+            (player_id, atom_id),
+        )
+
+    status = client.get("/api/v2/castle/lexicon-chest", headers=HEAD).json()
+    assert status["ready"] == 1
+    assert status["progress"] == 1
+
+    opened = client.post("/api/v2/castle/lexicon-chest/open", headers=HEAD).json()
+    assert opened["coins"] == 30
+    again = client.post("/api/v2/castle/lexicon-chest/open", headers=HEAD).json()
+    assert again == opened
