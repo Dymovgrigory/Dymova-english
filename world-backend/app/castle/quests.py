@@ -29,6 +29,16 @@ WEEKLY = (
 
 _TYPE = "QUEST_V2"
 
+DEFAULT_DAILY_GOAL = 20
+
+
+def _daily_goal(player_id: int) -> int:
+    """Цель дня из профиля; без профиля (до онбординга) — дефолт, чтобы Беседка не падала."""
+    try:
+        return int(progress.get_profile(player_id)["daily_goal_xp"])
+    except Exception:
+        return DEFAULT_DAILY_GOAL
+
 
 def _claimed(player_id: int, window: str) -> set[str]:
     prefix = f"quest-v2:{player_id}:{window}:"
@@ -75,7 +85,7 @@ def quests(external_key: str) -> dict:
         ).fetchone()["n"]
         else 0
     )
-    goal = int(progress.get_profile(player_id)["daily_goal_xp"])
+    goal = _daily_goal(player_id)
 
     lessons_today = int(conn.execute(
         "SELECT COUNT(*) AS n FROM learn_sessions WHERE player_id=? AND status='completed'"

@@ -101,3 +101,11 @@ def test_weekly_lessons_count(learner):
         _lesson(player_id, f"w{n}")
     quest = next(q for q in quests.quests(key)["weekly"] if q["id"] == "week-lessons")
     assert quest["done"]
+
+
+def test_quests_without_profile_use_default_goal(learn_db):
+    """Игрок без профиля (до онбординга) видит задания, а не ошибку сервера."""
+    core.get_or_create_player("no-profile-kid")
+    data = quests.quests("no-profile-kid")
+    goal = next(q for q in data["daily"] if q["id"] == "xp-goal")
+    assert goal["target"] == 20
