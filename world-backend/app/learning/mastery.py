@@ -13,6 +13,8 @@ from app.world.srs import INTERVALS_DAYS, MAX_STRENGTH
 
 from . import clock
 
+LEARNED_STRENGTH = 2  # шкала силы атома 0..5; 2 — пережило пару верных ответов
+
 
 def record(player_id: int, atom_id: str, *, correct: bool, now: datetime | None = None) -> int:
     moment = now or clock.now()
@@ -24,15 +26,18 @@ def record(player_id: int, atom_id: str, *, correct: bool, now: datetime | None 
     old = int(row["strength"]) if row else 0
     strength = min(MAX_STRENGTH, old + 1) if correct else max(0, old - 1)
     due = clock.add_days(today, INTERVALS_DAYS[strength]) if correct else today
+    # День первого взятия порога «выучено» — пишется один раз, дальше COALESCE его держит.
+    learned = today if old < LEARNED_STRENGTH <= strength else None
     conn.execute(
-        "INSERT INTO atom_mastery (player_id, atom_id, strength, correct_count, wrong_count, due_at, updated_at)"
-        " VALUES (?,?,?,?,?,?,?)"
+        "INSERT INTO atom_mastery (player_id, atom_id, strength, correct_count, wrong_count, due_at, updated_at, learned_at)"
+        " VALUES (?,?,?,?,?,?,?,?)"
         " ON CONFLICT(player_id, atom_id) DO UPDATE SET"
         " strength=excluded.strength,"
         " correct_count=atom_mastery.correct_count+excluded.correct_count,"
         " wrong_count=atom_mastery.wrong_count+excluded.wrong_count,"
-        " due_at=excluded.due_at, updated_at=excluded.updated_at",
-        (player_id, atom_id, strength, int(correct), int(not correct), due, clock.to_iso(moment)),
+        " due_at=excluded.due_at, updated_at=excluded.updated_at,"
+        " learned_at=COALESCE(atom_mastery.learned_at, excluded.learned_at)",
+        (player_id, atom_id, strength, int(correct), int(not correct), due, clock.to_iso(moment), learned),
     )
     return strength
 

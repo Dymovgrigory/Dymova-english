@@ -3,17 +3,28 @@ from __future__ import annotations
 
 import pytest
 
-from app.castle import titles, tracks
+from app.castle import counters, titles, tracks
 from app.world import core
 from app.world.db import get_conn
 from app.world.core import Conflict
 
 
+FAKE_WORDS = {f"sp1.m1.w{n}" for n in range(60)}  # фикстурного курса мало для порога 50
+
+
+@pytest.fixture(autouse=True)
+def _wide_course(monkeypatch: pytest.MonkeyPatch):
+    real = counters.course_word_ids()
+    monkeypatch.setattr(counters, "course_word_ids", lambda: real | FAKE_WORDS)
+
+
 def _learn_words(player_id: int, count: int) -> None:
-    for n in range(count):
+    """Отмечает `count` слов выученными (сила 3, как после пары верных ответов)."""
+    for atom_id in sorted(FAKE_WORDS)[:count]:
         get_conn().execute(
-            "INSERT INTO word_stats (player_id, unit_id, word_en, strength) VALUES (?,?,?,?)",
-            (player_id, "sp1.m1", f"word{n}", 3),
+            "INSERT INTO atom_mastery (player_id, atom_id, strength, correct_count, wrong_count,"
+            " due_at, updated_at, learned_at) VALUES (?,?,3,3,0,'2026-09-18','2026-09-18T10:00:00','2026-09-18')",
+            (player_id, atom_id),
         )
 
 

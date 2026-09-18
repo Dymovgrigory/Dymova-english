@@ -172,7 +172,16 @@ _TABLE_EXTRAS = {
     "word_stats": {"due_at": "TEXT"},
     "auth_sessions": {"revoked_at": "TEXT"},
     "castle_appearance": {"decor_off": "TEXT NOT NULL DEFAULT '[]'"},  # JSON-массив снятых украшений
+    "atom_mastery": {"learned_at": "TEXT"},  # московский день первого взятия порога силы 2
 }
+
+
+def _backfill_atom_learned_at(conn: sqlite3.Connection) -> None:
+    """Для атомов, выученных до появления колонки, — приблизим день по последнему ответу."""
+    conn.execute(
+        "UPDATE atom_mastery SET learned_at=substr(updated_at,1,10)"
+        " WHERE strength>=2 AND learned_at IS NULL"
+    )
 
 
 def _ensure_columns(conn: sqlite3.Connection) -> None:
@@ -181,6 +190,7 @@ def _ensure_columns(conn: sqlite3.Connection) -> None:
         for name, spec in extras.items():
             if name not in existing:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {spec}")
+    _backfill_atom_learned_at(conn)
 
 
 def migrate(conn: sqlite3.Connection) -> None:
