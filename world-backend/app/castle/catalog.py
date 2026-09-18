@@ -20,6 +20,7 @@ class Item:
     requires_track: str | None = None
     requires_level: int = 0
     purchasable: bool = True
+    anchor: str | None = None  # точка на сцене для декора: gate|bridge|courtyard|roofs|stream|meadow|walls
 
 
 def _items() -> dict[str, Item]:
@@ -52,6 +53,28 @@ def _items() -> dict[str, Item]:
     for color, title in colors_ru.items():
         items[f"banner-{color}"] = Item(
             id=f"banner-{color}", kind="banner", title_ru=f"{title} знамя", price=50, value=color,
+        )
+    # Украшения: точка закреплена за предметом, купленное встаёт на сцену сразу.
+    decor_specs = [
+        ("decor-gate-lantern", "Фонарь у ворот", "gate", 40, None, 0),
+        ("decor-gate-pots", "Цветочные кашпо", "gate", 60, None, 0),
+        ("decor-gate-pumpkins", "Тыквы у ворот", "gate", 60, None, 0),
+        ("decor-bridge-garland", "Гирлянда на мосту", "bridge", 80, None, 0),
+        ("decor-stream-boat", "Лодочка на ручье", "stream", 120, None, 0),
+        ("decor-yard-swing", "Качели во дворе", "courtyard", 100, None, 0),
+        ("decor-yard-firepit", "Костровая чаша", "courtyard", 120, "yard", 2),
+        ("decor-roof-weathervane", "Флюгер-петух", "roofs", 60, None, 0),
+        ("decor-meadow-sundial", "Солнечные часы", "meadow", 80, None, 0),
+        ("decor-meadow-beehive", "Пчелиный улей", "meadow", 100, None, 0),
+        ("decor-meadow-apple-tree", "Яблоня", "meadow", 140, "lexicon", 2),
+        ("decor-wall-gargoyle", "Горгулья на стене", "walls", 160, "glory", 2),
+        ("decor-wall-bell", "Колокол на стене", "walls", 120, None, 0),
+        ("decor-gate-fox-statue", "Статуя лисы", "gate", 200, "nest", 3),
+    ]
+    for item_id, title, anchor, price, track, level in decor_specs:
+        items[item_id] = Item(
+            id=item_id, kind="decor", title_ru=title, price=price, value=item_id,
+            requires_track=track, requires_level=level, anchor=anchor,
         )
     return items
 

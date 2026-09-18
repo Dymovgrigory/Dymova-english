@@ -171,6 +171,7 @@ _TABLE_EXTRAS = {
     "players": _PLAYER_EXTRAS,
     "word_stats": {"due_at": "TEXT"},
     "auth_sessions": {"revoked_at": "TEXT"},
+    "castle_appearance": {"decor_off": "TEXT NOT NULL DEFAULT '[]'"},  # JSON-массив снятых украшений
 }
 
 

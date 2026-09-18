@@ -22,6 +22,8 @@ class AppearanceBody(BaseModel):
     weather: str | None = None
     banner_color: str | None = None
     banner_emblem: str | None = None
+    decor_on: list[str] | None = None
+    decor_off: list[str] | None = None
 
 
 class TitleBody(BaseModel):

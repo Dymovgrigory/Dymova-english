@@ -49,6 +49,7 @@ def view(external_key: str) -> dict:
         "appearance": state.appearance(player_id),
         "catalog": items,
         "owned": owned,
+        "decor": state.decor(player_id),
         "titles": track_rows,
         "coins": int(player["coins"]),
     }
@@ -73,8 +74,8 @@ def buy(external_key: str, item_id: str) -> dict:
         idempotency_key=f"castle:{player_id}:{item_id}",
     )
     get_conn().execute(
-        "INSERT OR IGNORE INTO castle_owned (player_id, item_id, source) VALUES (?,?,?)",
-        (player_id, item_id, "shop"),
+        "INSERT OR IGNORE INTO castle_owned (player_id, item_id, anchor, source) VALUES (?,?,?,?)",
+        (player_id, item_id, item.anchor, "shop"),
     )
     return view(external_key)
 
@@ -85,6 +86,18 @@ def apply(external_key: str, **fields) -> dict:
     player_id = int(player["id"])
     owned = set(state.owned(player_id))
     levels = _levels(player_id)
+
+    decor_off_ids = set(fields.pop("decor_off", None) or [])
+    decor_on_ids = set(fields.pop("decor_on", None) or [])
+    for item_id in decor_off_ids | decor_on_ids:
+        item = catalog.ITEMS.get(item_id)
+        if item is None or item.kind != "decor":
+            raise Conflict(f"unknown decor {item_id!r}")
+        if item_id not in owned:
+            raise Conflict("item_not_owned")
+    if decor_off_ids or decor_on_ids:
+        off = (set(state.decor_off(player_id)) | decor_off_ids) - decor_on_ids
+        state.set_decor_off(player_id, sorted(off))
 
     for field, value in fields.items():
         kind = _FIELD_KIND.get(field)

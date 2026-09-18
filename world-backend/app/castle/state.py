@@ -1,10 +1,12 @@
 """Что выбрано и что куплено у конкретного игрока."""
 from __future__ import annotations
 
+import json
+
 from app.world.core import Conflict
 from app.world.db import get_conn
 
-from .catalog import BANNER_COLORS, SEASONS, TIMES, WEATHERS
+from .catalog import BANNER_COLORS, ITEMS, SEASONS, TIMES, WEATHERS
 
 _ALLOWED = {
     "season": SEASONS,
@@ -58,3 +60,41 @@ def owned(player_id: int) -> list[str]:
         "SELECT item_id FROM castle_owned WHERE player_id=? ORDER BY acquired_at", (player_id,)
     ).fetchall()
     return [row["item_id"] for row in rows]
+
+
+def decor_off(player_id: int) -> list[str]:
+    """Снятые украшения (куплены, но не стоят на сцене)."""
+    row = get_conn().execute(
+        "SELECT decor_off FROM castle_appearance WHERE player_id=?", (player_id,)
+    ).fetchone()
+    if row is None:
+        return []
+    return list(json.loads(row["decor_off"] or "[]"))
+
+
+def set_decor_off(player_id: int, off: list[str]) -> None:
+    get_conn().execute(
+        "INSERT INTO castle_appearance (player_id, decor_off) VALUES (?,?)"
+        " ON CONFLICT(player_id) DO UPDATE SET decor_off=excluded.decor_off, updated_at=datetime('now')",
+        (player_id, json.dumps(sorted(off))),
+    )
+
+
+def decor(player_id: int) -> list[dict]:
+    """Купленные украшения с точкой и признаком «стоит на сцене»."""
+    off = set(decor_off(player_id))
+    rows = get_conn().execute(
+        "SELECT item_id, anchor FROM castle_owned WHERE player_id=? ORDER BY acquired_at", (player_id,)
+    ).fetchall()
+    placed = []
+    for row in rows:
+        item = ITEMS.get(row["item_id"])
+        if item is None or item.kind != "decor":
+            continue
+        placed.append({
+            "item_id": item.id,
+            "anchor": row["anchor"] or item.anchor,
+            "title_ru": item.title_ru,
+            "active": item.id not in off,
+        })
+    return placed
