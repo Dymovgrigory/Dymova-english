@@ -44,6 +44,7 @@ def view(external_key: str) -> dict:
             "unlocked": _unlocked(item, levels),
             "requires_track": item.requires_track,
             "requires_level": item.requires_level,
+            "anchor": item.anchor,
         })
     return {
         "appearance": state.appearance(player_id),

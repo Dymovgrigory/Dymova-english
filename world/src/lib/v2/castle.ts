@@ -23,6 +23,7 @@ export type CastleItem = {
   unlocked: boolean;
   requires_track: string | null;
   requires_level: number;
+  anchor: string | null;
 };
 
 export type TitleRow = {

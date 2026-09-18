@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { SPOTS, TIER_RU, type Spot, type SpotId } from "@/castle/buildings";
 import { CastleStage } from "@/features/castle/CastleStage";
+import { FittingRoom } from "@/features/castle/FittingRoom";
 import { Workshop } from "@/features/castle/Workshop";
 import { Button } from "@/design/Button";
 import { ContentImage } from "@/design/ContentImage";
@@ -45,12 +46,14 @@ function ShopRoom({
   shopMsg,
   onBuy,
   onCastleChange,
+  onFit,
 }: {
   shop: ShopItem[];
   castle: CastleView | null;
   shopMsg: string | null;
   onBuy: (sku: string) => void;
   onCastleChange: (view: CastleView) => void;
+  onFit: () => void;
 }) {
   const [tab, setTab] = useState<"supplies" | "workshop">("supplies");
   return (
@@ -97,7 +100,12 @@ function ShopRoom({
           {shopMsg ? <p className="text-center text-[15px] font-bold text-[#a82f25]">{shopMsg}</p> : null}
         </div>
       ) : castle ? (
-        <Workshop view={castle} onChange={onCastleChange} />
+        <div className="space-y-3">
+          <Button block variant="crown" onClick={onFit}>
+            Примерить на замке
+          </Button>
+          <Workshop view={castle} onChange={onCastleChange} />
+        </div>
       ) : (
         <p className="text-center text-[15px] font-semibold text-ink-soft">Витрина не загрузилась. Закрой и открой Лавку ещё раз.</p>
       )}
@@ -117,6 +125,7 @@ function RoomPanel({
   onGo,
   onOpenBook,
   onCastleChange,
+  onFit,
 }: {
   spot: Spot;
   data: CastleData;
@@ -129,6 +138,7 @@ function RoomPanel({
   onGo: (href: string) => void;
   onOpenBook: (bookId: string) => void;
   onCastleChange: (view: CastleView) => void;
+  onFit: () => void;
 }) {
   const { home, words, player, hearts, shop, quests, stickers, stickerOwned, league, dueCount } = data;
   const room = spot.id;
@@ -242,7 +252,7 @@ function RoomPanel({
           )}
 
           {room === "shop" && (
-            <ShopRoom shop={shop} castle={castle} shopMsg={shopMsg} onBuy={onBuy} onCastleChange={onCastleChange} />
+            <ShopRoom shop={shop} castle={castle} shopMsg={shopMsg} onBuy={onBuy} onCastleChange={onCastleChange} onFit={onFit} />
           )}
 
           {room === "glory" && (
@@ -438,6 +448,7 @@ export function CastleScreen() {
   const [shopMsg, setShopMsg] = useState<string | null>(null);
   const [questMsg, setQuestMsg] = useState<string | null>(null);
   const [castle, setCastle] = useState<CastleView | null>(null);
+  const [fitting, setFitting] = useState(false);
 
   const load = () => {
     void worldApi
@@ -524,6 +535,9 @@ export function CastleScreen() {
         emblem={castle?.titles.find((t) => t.worn)?.track ?? "fox"}
         onOpen={setOpenId}
       />
+      {fitting && castle ? (
+        <FittingRoom view={castle} onChange={setCastle} onClose={() => setFitting(false)} />
+      ) : null}
 
       {/* Интерфейс поверх сцены; пустая середина пропускает клики к зданиям */}
       <div className="pointer-events-none relative z-10 flex h-[calc(100dvh-6rem)] flex-col lg:h-dvh">
@@ -597,6 +611,7 @@ export function CastleScreen() {
           shopMsg={shopMsg}
           questMsg={questMsg}
           onCastleChange={setCastle}
+          onFit={() => setFitting(true)}
           onClose={() => setOpenId(null)}
           onGo={(href) => router.push(href)}
           onOpenBook={(bookId) => void openBook(bookId)}
