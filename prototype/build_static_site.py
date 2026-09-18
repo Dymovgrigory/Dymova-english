@@ -491,7 +491,11 @@ WOW_SNIPPET = (
     # идти РАНЬШЕ foxi-consent.js, иначе тот успеет разослать announce()
     # сохранённого выбора до того, как мы подпишемся на событие.
     '<script src="/wow/foxi-analytics.js" defer></script>\n'
-    '<script src="/wow/foxi-consent.js" defer></script>'
+    '<script src="/wow/foxi-consent.js" defer></script>\n'
+    # noscript-пиксель: робот Метрики / клиенты без JS видят счётчик
+    # (без него code_status часто CS_ERR_UNKNOWN).
+    '<noscript><div><img src="https://mc.yandex.ru/watch/109945462" '
+    'style="position:absolute;left:-9999px;" alt="" /></div></noscript>'
 )
 
 # ATMOS (сессия 58): единая «кинематографичная» атмосфера внутренних страниц —
