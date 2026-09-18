@@ -1,15 +1,16 @@
 """HTTP API тренажёра Spotlight: /api/v2 (урок, путь, профиль, словарь)."""
 from __future__ import annotations
 
-from typing import Callable, TypeVar
+from typing import Callable, Literal, TypeVar
 
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
 from app.world import core
+from app.world.db import get_conn
 from app.world.api import _player_key as resolve_player_key  # единая авторизация с v1
 
-from . import content, progress, sessions, views
+from . import builder, clock, content, progress, sessions, views
 from .errors import LearningError
 
 router = APIRouter(prefix="/api/v2", tags=["learning"])
@@ -57,6 +58,7 @@ class PairBody(BaseModel):
 
 class PracticeBody(BaseModel):
     allow_speak: bool = True
+    mode: Literal["practice", "trial"] = "practice"
 
 
 @router.get("/courses")
@@ -115,8 +117,30 @@ def open_chest(node_id: str, x_world_player: str | None = Header(None)):
 
 @router.post("/practice")
 def start_practice(body: PracticeBody, x_world_player: str | None = Header(None)):
-    return _run(sessions.start, resolve_player_key(x_world_player), sessions.PRACTICE_NODE,
+    node = sessions.TRIAL_NODE if body.mode == "trial" else sessions.PRACTICE_NODE
+    return _run(sessions.start, resolve_player_key(x_world_player), node,
                 allow_speak=body.allow_speak)
+
+
+@router.get("/practice/status")
+def practice_status(x_world_player: str | None = Header(None)):
+    """Статус испытания дня: пройдено ли сегодня и есть ли из чего его собрать."""
+    key = resolve_player_key(x_world_player)
+    player = _run(core.get_player, key)
+    player_id = int(player["id"])
+    day = clock.local_day(clock.now())
+    done = get_conn().execute(
+        "SELECT COUNT(*) AS c FROM coin_transactions"
+        " WHERE player_id=? AND type='TRIAL_REWARD' AND created_at>=?",
+        (player_id, clock.day_start_sql(day)),
+    ).fetchone()["c"]
+    word_ids = {w.id for m in content.get_course().modules for w in m.words}
+    marks = ",".join("?" for _ in word_ids) or "''"
+    seen = get_conn().execute(
+        f"SELECT COUNT(*) AS c FROM atom_mastery WHERE player_id=? AND atom_id IN ({marks})",
+        (player_id, *sorted(word_ids)),
+    ).fetchone()["c"]
+    return {"trial_done_today": bool(done), "trial_available": seen >= builder.TRIAL_SIZE}
 
 
 @router.get("/words")

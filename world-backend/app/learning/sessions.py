@@ -20,6 +20,9 @@ from .errors import Conflict, Gone, NotFound
 
 SESSION_TTL = timedelta(hours=2)
 PRACTICE_NODE = "practice"
+TRIAL_NODE = "trial"
+TRIAL_LIMIT_MS = 15_000  # на каждый ответ испытания
+COINS_TRIAL = 5          # раз в московские сутки, только за пройденное испытание
 
 
 def _player_id(external_key: str) -> int:
@@ -35,6 +38,8 @@ def start(external_key: str, node_id: str, *, allow_speak: bool, seed: int | Non
     progress.get_profile(player_id)
     if node_id == PRACTICE_NODE:
         plan = builder.build_practice(course, player_id, seed=session_seed, allow_speak=allow_speak)
+    elif node_id == TRIAL_NODE:
+        plan = builder.build_trial(course, player_id, seed=session_seed)
     else:
         progress.assert_startable(course, player_id, node_id)
         plan = builder.build_session(course, node_id, player_id=player_id, seed=session_seed, allow_speak=allow_speak)
@@ -186,12 +191,13 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
     accuracy = round(first_ok / len(graded), 3) if graded else 1.0
     reward = progress.session_reward(kind, accuracy, state["wrong"])
 
-    completes = kind != PRACTICE_NODE and reward.passed
+    completes = kind not in (PRACTICE_NODE, TRIAL_NODE) and reward.passed
 
     from app.castle import titles as castle_titles
 
     day_key = clock.local_day(moment)
     breakdown: dict[str, int] = {}
+    trial_passed: bool | None = None
     if kind == PRACTICE_NODE:
         # created_at пишется в UTC, а сутки ученика местные: границу дня берём из clock,
         # чтобы часовой пояс задавался в одном месте.
@@ -202,6 +208,29 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
         ).fetchone()["c"]
         if paid_today < progress.PRACTICE_PAID_PER_DAY:
             breakdown["practice"] = progress.COINS_PRACTICE
+    elif kind == TRIAL_NODE:
+        # Пройдено, если каждое слово решено с первой попытки и быстрее лимита.
+        first_ms = {
+            row["atom_id"]: row["response_ms"]
+            for row in get_conn().execute(
+                "SELECT atom_id, response_ms FROM attempts WHERE session_id=? AND attempt_no=1",
+                (session_id,),
+            ).fetchall()
+        }
+        graded_idx = [i for i, c in enumerate(session["challenges"]) if c.graded]
+        trial_passed = all(
+            state["first_try"].get(str(i))
+            and (first_ms.get(session["challenges"][i].atom_id) or TRIAL_LIMIT_MS + 1) <= TRIAL_LIMIT_MS
+            for i in graded_idx
+        )
+        if trial_passed:
+            paid_today = get_conn().execute(
+                "SELECT COUNT(*) AS c FROM coin_transactions"
+                " WHERE player_id=? AND type='TRIAL_REWARD' AND created_at>=?",
+                (player_id, clock.day_start_sql(day_key)),
+            ).fetchone()["c"]
+            if paid_today == 0:
+                breakdown["trial"] = COINS_TRIAL
     else:
         breakdown["lesson"] = reward.coins
         if state["wrong"] == 0:
@@ -210,7 +239,7 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
             breakdown["module_test"] = progress.COINS_MODULE_TEST_FIRST
 
     coins = sum(breakdown.values())
-    award_type = "PRACTICE_REWARD" if kind == PRACTICE_NODE else "LESSON_REWARD"
+    award_type = {"practice": "PRACTICE_REWARD", "trial": "TRIAL_REWARD"}.get(kind, "LESSON_REWARD")
     core.award(
         external_key, xp=reward.xp, coins=coins, source=node_id, type_=award_type,
         idempotency_key=f"v2:{session_id}",
@@ -262,6 +291,8 @@ def finish(external_key: str, session_id: str, *, now: datetime | None = None) -
         "coins_breakdown": breakdown,
         "titles_gained": titles_gained,
     }
+    if kind == TRIAL_NODE:
+        result["trial_passed"] = trial_passed
     conn.execute(
         "UPDATE learn_sessions SET result=? WHERE id=?",
         (json.dumps(result, ensure_ascii=False), session_id),

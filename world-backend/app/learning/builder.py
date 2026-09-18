@@ -36,6 +36,7 @@ PHONICS_SPELL_WORDS = 2
 PHONICS_READ_PHRASES = 2
 PRACTICE_SIZE = 12
 PRACTICE_MIN = 5
+TRIAL_SIZE = 5  # испытание дня: ровно 5 слов на время
 
 
 @dataclass
@@ -294,12 +295,27 @@ def build_session(course: Course, node_id: str, *, player_id: int | None, seed: 
 
 
 def build_practice(course: Course, player_id: int, *, seed: int, allow_speak: bool) -> SessionPlan:
+    return _build_drill(course, player_id, seed=seed, allow_speak=allow_speak,
+                        size=PRACTICE_SIZE, min_size=PRACTICE_MIN, words_only=False, node="practice")
+
+
+def build_trial(course: Course, player_id: int, *, seed: int) -> SessionPlan:
+    """Испытание дня: 5 слов на время. Только слова — фразы и грамматика не подходят под лимит."""
+    return _build_drill(course, player_id, seed=seed, allow_speak=False,
+                        size=TRIAL_SIZE, min_size=TRIAL_SIZE, words_only=True, node="trial")
+
+
+def _build_drill(course: Course, player_id: int, *, seed: int, allow_speak: bool,
+                 size: int, min_size: int, words_only: bool, node: str) -> SessionPlan:
     rng = random.Random(seed)
-    atom_ids = mastery.due_atoms(player_id, limit=PRACTICE_SIZE)
-    atom_ids += [a for a in mastery.weakest_seen(player_id, PRACTICE_SIZE) if a not in atom_ids]
+    word_ids = {w.id for m in course.modules for w in m.words} if words_only else None
+    atom_ids = mastery.due_atoms(player_id, limit=size * 4)
+    atom_ids += [a for a in mastery.weakest_seen(player_id, size * 4) if a not in atom_ids]
+    if word_ids is not None:
+        atom_ids = [a for a in atom_ids if a in word_ids]
     speak_budget = [MAX_SPEAK if allow_speak else 0]
     items: list[Challenge] = []
-    for atom_id in atom_ids[:PRACTICE_SIZE]:
+    for atom_id in atom_ids[:size]:
         try:
             module, atom = course.atom(atom_id)
         except NotFound:
@@ -308,7 +324,7 @@ def build_practice(course: Course, player_id: int, *, seed: int, allow_speak: bo
         challenge = ctx.graded(atom)
         if challenge is not None:
             items.append(challenge)
-    if len(items) < PRACTICE_MIN:
+    if len(items) < min_size:
         raise Conflict("nothing_to_practice")
     rng.shuffle(items)
-    return SessionPlan("practice", "practice", _spread(items))
+    return SessionPlan(node, node, _spread(items))
