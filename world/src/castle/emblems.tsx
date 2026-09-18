@@ -39,8 +39,10 @@ const PATHS: Record<string, JSX.Element> = {
 };
 
 export function Emblem({ id, className }: { id: string; className?: string }) {
+  // width/height обязательны: внутри другого SVG вложенный <svg> без них
+  // растягивается на весь внешний viewport, а не на свой viewBox.
   return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden>
+    <svg viewBox="0 0 24 24" width="24" height="24" className={className} aria-hidden>
       {PATHS[id] ?? PATHS.fox}
     </svg>
   );

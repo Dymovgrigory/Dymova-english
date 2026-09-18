@@ -5,6 +5,8 @@
 """
 from __future__ import annotations
 
+import os
+
 from app.world import core
 from app.world.core import Conflict, NotFound
 from app.world.db import get_conn
@@ -12,6 +14,11 @@ from app.world.db import get_conn
 from . import catalog, state, titles
 
 _FIELD_KIND = {"season": "season", "time_of_day": "time", "weather": "weather", "banner_color": "banner"}
+
+
+def _open_all() -> bool:
+    """Режим просмотра для ревью владельцем: вся витрина открыта, покупки бесплатны."""
+    return os.environ.get("CASTLE_OPEN_ALL") == "1"
 
 
 def _levels(player_id: int) -> dict[str, int]:
@@ -41,7 +48,7 @@ def view(external_key: str) -> dict:
             "price": item.price,
             "purchasable": item.purchasable,
             "owned": item.id in owned,
-            "unlocked": _unlocked(item, levels),
+            "unlocked": _open_all() or _unlocked(item, levels),
             "requires_track": item.requires_track,
             "requires_level": item.requires_level,
             "anchor": item.anchor,
@@ -64,6 +71,12 @@ def buy(external_key: str, item_id: str) -> dict:
     player_id = int(player["id"])
     if item_id in state.owned(player_id):
         return view(external_key)          # повторное нажатие не списывает второй раз
+    if _open_all():
+        get_conn().execute(
+            "INSERT OR IGNORE INTO castle_owned (player_id, item_id, anchor, source) VALUES (?,?,?,?)",
+            (player_id, item_id, item.anchor, "review"),
+        )
+        return view(external_key)
     if not item.purchasable:
         raise Conflict("item_not_for_sale")
     levels = _levels(player_id)
@@ -95,7 +108,13 @@ def apply(external_key: str, **fields) -> dict:
         if item is None or item.kind != "decor":
             raise Conflict(f"unknown decor {item_id!r}")
         if item_id not in owned:
-            raise Conflict("item_not_owned")
+            if not _open_all():
+                raise Conflict("item_not_owned")
+            # режим просмотра: примеряем украшение, как будто оно уже куплено
+            get_conn().execute(
+                "INSERT OR IGNORE INTO castle_owned (player_id, item_id, anchor, source) VALUES (?,?,?,?)",
+                (player_id, item_id, item.anchor, "review"),
+            )
     if decor_off_ids or decor_on_ids:
         off = (set(state.decor_off(player_id)) | decor_off_ids) - decor_on_ids
         state.set_decor_off(player_id, sorted(off))
@@ -108,7 +127,7 @@ def apply(external_key: str, **fields) -> dict:
         if item is None:
             raise Conflict(f"unknown value for {field}")
         earned = not item.purchasable and _unlocked(item, levels)
-        if item.id not in owned and not earned:
+        if item.id not in owned and not earned and not _open_all():
             raise Conflict("item_not_owned")
 
     state.set_appearance(player_id, **fields)
