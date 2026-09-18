@@ -10,22 +10,11 @@ export type StickerItem = {
   owned: boolean;
 };
 
-const ART: Record<string, string> = {
-  "sticker-family": "/world/ui/stickers/sticker-family.png",
-  "sticker-school": "/world/ui/stickers/sticker-school.png",
-  "sticker-room": "/world/ui/stickers/sticker-room.png",
-  "sticker-pets": "/world/ui/stickers/sticker-pets.png",
-  "sticker-food": "/world/ui/stickers/sticker-food.png",
-  "sticker-play": "/world/ui/stickers/sticker-play.png",
-  "sticker-satp": "/world/ui/stickers/sticker-satp.png",
-  "sticker-hello": "/world/ui/stickers/sticker-hello.png",
-  "sticker-perfect": "/world/ui/stickers/sticker-perfect.png",
-  "sticker-streak": "/world/ui/stickers/sticker-streak.png",
-  "sticker-rainbow": "/world/ui/stickers/sticker-rainbow.png",
-};
+/** Путь по конвенции: бэкенд добавляет стикеры (sticker-{unit} и т.п.) без правки фронта. */
+const SAFE_ID = /^[a-z0-9-]+$/;
 
 export function stickerArt(id: string) {
-  return ART[id] || null;
+  return SAFE_ID.test(id) ? `/world/ui/stickers/${id}.webp` : null;
 }
 
 /** CTA + slide-up animated collection drawer. */
@@ -93,8 +82,9 @@ export function StickerCollection({
   );
 }
 
-function StickerCard({ item }: { item: StickerItem }) {
-  const art = stickerArt(item.id);
+export function StickerCard({ item }: { item: StickerItem }) {
+  const [broken, setBroken] = useState(false);
+  const art = broken ? null : stickerArt(item.id);
   return (
     <div
       className={`relative overflow-hidden rounded-[20px] border p-3 text-center transition ${
@@ -104,11 +94,18 @@ function StickerCard({ item }: { item: StickerItem }) {
       }`}
       style={{ clipPath: "polygon(6% 0, 94% 0, 100% 10%, 100% 90%, 94% 100%, 6% 100%, 0 90%, 0 10%)" }}
     >
-      {art ? (
+      {item.owned && art ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={art} alt="" className="mx-auto h-36 w-36 object-contain drop-shadow-lg sm:h-40 sm:w-40" />
+        <img
+          src={art}
+          alt=""
+          onError={() => setBroken(true)}
+          className="mx-auto h-36 w-36 object-contain drop-shadow-lg sm:h-40 sm:w-40"
+        />
       ) : (
-        <p className="py-8 font-[family-name:var(--font-display)] text-3xl font-extrabold text-[#f5ed75]/40">?</p>
+        <p className="py-8 font-[family-name:var(--font-display)] text-3xl font-extrabold text-[#f5ed75]/40">
+          {item.owned ? item.emoji || "★" : "?"}
+        </p>
       )}
       <p className="mt-2 font-[family-name:var(--font-display)] text-sm font-extrabold text-[#f5ed75]">
         {item.title_ru}
@@ -123,22 +120,26 @@ export function StickerPreviewRow({ stickers }: { stickers: StickerItem[] }) {
   if (!owned.length) return null;
   return (
     <div className="mx-auto flex max-w-[min(92vw,22rem)] justify-center gap-2">
-      {owned.map((s) => {
-        const art = stickerArt(s.id);
-        return art ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img key={s.id} src={art} alt="" className="h-14 w-14 object-contain drop-shadow" />
-        ) : (
-          <span
-            key={s.id}
-            className="grid h-14 w-14 place-items-center border border-[#f5ed75]/35 text-sm font-extrabold text-[#f5ed75]"
-            style={{ clipPath: "polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%)" }}
-          >
-            ★
-          </span>
-        );
-      })}
+      {owned.map((s) => (
+        <StickerThumb key={s.id} item={s} />
+      ))}
     </div>
+  );
+}
+
+function StickerThumb({ item }: { item: StickerItem }) {
+  const [broken, setBroken] = useState(false);
+  const art = broken ? null : stickerArt(item.id);
+  return art ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={art} alt="" onError={() => setBroken(true)} className="h-14 w-14 object-contain drop-shadow" />
+  ) : (
+    <span
+      className="grid h-14 w-14 place-items-center border border-[#f5ed75]/35 text-sm font-extrabold text-[#f5ed75]"
+      style={{ clipPath: "polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%)" }}
+    >
+      {item.emoji || "★"}
+    </span>
   );
 }
 

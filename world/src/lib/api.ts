@@ -263,6 +263,23 @@ export class ApiError extends Error {
   }
 }
 
+/** Машинные коды API → фразы для игрока. Неизвестное никогда не показываем сырым. */
+const ERROR_TEXTS: Record<string, string> = {
+  "not enough coins": "Не хватает монет",
+  "item not found": "Товар не найден",
+  item_not_for_sale: "Это не продаётся",
+  title_required: "Сначала нужно звание",
+  item_not_owned: "Сначала нужно купить",
+  "quest not complete": "Задание ещё не выполнено",
+  nothing_to_practice: "Пока нечего тренировать — сначала пройди урок",
+};
+
+export function humanizeError(err: unknown, fallback: string): string {
+  if (err instanceof ApiError) return ERROR_TEXTS[err.message] ?? fallback;
+  if (err instanceof Error) return err.message;
+  return fallback;
+}
+
 export function playerKey(): string {
   if (typeof window === "undefined") return "guest";
   try {
@@ -292,7 +309,16 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
         ...(init?.headers ?? {}),
       },
     });
-    if (!res.ok) throw new ApiError(res.status, `${path}: ${res.status} ${await res.text()}`);
+    if (!res.ok) {
+      let detail = `${res.status}`;
+      try {
+        const body = (await res.json()) as { detail?: string };
+        if (typeof body.detail === "string") detail = body.detail;
+      } catch {
+        /* тело не JSON — остаётся статус */
+      }
+      throw new ApiError(res.status, detail);
+    }
     return (await res.json()) as T;
   } catch (err) {
     if (err instanceof ApiError) throw err;

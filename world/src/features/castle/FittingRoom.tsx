@@ -78,15 +78,36 @@ export function FittingRoom({
 
   const items = view.catalog.filter((item) => item.kind === category);
   const emblem = view.titles.find((t) => t.worn)?.track ?? "fox";
+  const decorActive = new Map(decor.map((d) => [d.item_id, d.active]));
+
+  /** Украшение: купленное — сразу ставится/снимается на сервере; некупленное — локальная примерка. */
+  const toggleDecor = async (item: CastleItem) => {
+    const active = decorActive.get(item.id) ?? false;
+    if (item.owned) {
+      setBusy(true);
+      setMessage(null);
+      try {
+        const next = await castleApi.apply(active ? { decor_off: [item.id] } : { decor_on: [item.id] });
+        onChange(next);
+        setDecor(next.decor);
+      } catch {
+        setMessage("Не удалось применить украшение");
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+    setDecor((current) => {
+      const existing = current.find((d) => d.item_id === item.id);
+      if (existing) return current.map((d) => (d.item_id === item.id ? { ...d, active: !active } : d));
+      // Примерка некупленного украшения — просто ставим на его точку локально.
+      return [...current, { item_id: item.id, anchor: item.anchor ?? "meadow", title_ru: item.title_ru, active: true }];
+    });
+  };
 
   const show = (item: CastleItem) => {
     if (item.kind === "decor") {
-      setDecor((current) => {
-        const existing = current.find((d) => d.item_id === item.id);
-        if (existing) return current.map((d) => (d.item_id === item.id ? { ...d, active: true } : d));
-        // Примерка некупленного украшения — просто ставим на его точку локально.
-        return [...current, { item_id: item.id, anchor: item.anchor ?? "meadow", title_ru: item.title_ru, active: true }];
-      });
+      void toggleDecor(item);
       return;
     }
     setPreview((current) => ({ ...current, ...fieldPatch(FIELD_BY_KIND[item.kind], item.value) }));
@@ -152,19 +173,31 @@ export function FittingRoom({
           ))}
         </div>
         <ul className="flex gap-2 overflow-x-auto pb-1">
-          {items.map((item) => (
+          {items.map((item) => {
+            const placed = item.kind === "decor" && (decorActive.get(item.id) ?? false);
+            return (
             <li key={item.id} className="shrink-0">
               <div className="flex w-36 flex-col items-center gap-1 rounded-2xl bg-white/10 p-2">
                 <button
                   type="button"
+                  aria-label={item.title_ru}
+                  disabled={busy && item.kind === "decor" && item.owned}
                   onClick={() => show(item)}
-                  className="flex h-14 w-full items-center justify-center rounded-xl bg-black/20 px-1 text-center text-[12px] font-bold text-[#f6efe2]"
+                  className={`flex h-14 w-full items-center justify-center rounded-xl bg-black/20 px-1 text-center text-[12px] font-bold text-[#f6efe2] ${
+                    placed ? "ring-2 ring-[#ffd36e]" : ""
+                  }`}
                 >
                   <Thumb item={item} />
                   {!["decor", "season", "banner"].includes(item.kind) ? item.title_ru : null}
                 </button>
                 <span className="max-w-full truncate text-[12px] font-extrabold text-[#f6efe2]">{item.title_ru}</span>
-                {item.owned ? (
+                {item.kind === "decor" && item.owned ? (
+                  <span className={`text-[11px] font-bold ${placed ? "text-[#9fe3b1]" : "text-[#c9b8e8]"}`}>
+                    {placed ? "стоит на замке — нажми, чтобы убрать" : "снято — нажми, чтобы поставить"}
+                  </span>
+                ) : item.kind === "decor" && placed ? (
+                  <span className="text-[11px] font-bold text-[#9fe3b1]">на сцене · примерка</span>
+                ) : item.owned ? (
                   <span className="text-[11px] font-bold text-[#9fe3b1]">есть</span>
                 ) : !item.unlocked ? (
                   <span className="text-[11px] font-bold text-[#c9b8e8]">
@@ -184,7 +217,8 @@ export function FittingRoom({
                 )}
               </div>
             </li>
-          ))}
+            );
+          })}
         </ul>
         {message ? <p className="text-center text-[13px] font-bold text-[#ffb3a6]" role="alert">{message}</p> : null}
       </div>

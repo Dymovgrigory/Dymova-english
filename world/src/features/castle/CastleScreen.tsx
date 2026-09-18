@@ -14,7 +14,7 @@ import { Foxy } from "@/design/Foxy";
 import { Icon } from "@/design/Icon";
 import { Shell } from "@/design/Shell";
 import { StatPill } from "@/design/StatPill";
-import { worldApi, type League, type Player } from "@/lib/api";
+import { humanizeError, worldApi, type League, type Player } from "@/lib/api";
 import { isProfileMissing, isUnauthorized, v2 } from "@/lib/v2/client";
 import { castleApi, type CastleView, type LexiconChestOpen, type LexiconChestStatus } from "@/lib/v2/castle";
 import type { Courses, Home, PracticeStatus, Quest, QuestBoard, WordsBook } from "@/lib/v2/types";
@@ -112,6 +112,23 @@ function ShopRoom({
         <p className="text-center text-[15px] font-semibold text-ink-soft">Витрина не загрузилась. Закрой и открой Лавку ещё раз.</p>
       )}
     </div>
+  );
+}
+
+/** Наклейка альбома: при битой картинке (404/нет файла) — emoji вместо сломанного img. */
+function AlbumSticker({ id, emoji }: { id: string; emoji?: string }) {
+  const [broken, setBroken] = useState(false);
+  const art = broken ? null : stickerArt(id);
+  if (art) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={art} alt="" onError={() => setBroken(true)} className="mx-auto h-14 w-14 object-contain" />
+    );
+  }
+  return (
+    <span className="mx-auto grid h-14 w-14 place-items-center font-fairy text-[28px] font-black text-[#3b2a1e]/45">
+      {emoji || "★"}
+    </span>
   );
 }
 
@@ -377,31 +394,27 @@ function RoomPanel({
                 <p className="text-[15px] font-semibold text-ink-soft">Проходи уроки — наклейки появятся здесь.</p>
               ) : (
                 <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                  {stickers.map((sticker) => {
-                    const art = stickerArt(sticker.id);
-                    return (
-                      <li
-                        key={sticker.id}
-                        className={[
-                          "rounded-2xl px-1.5 py-2 text-center",
-                          sticker.owned ? "mat-enamel" : "bg-[#3b2a1e]/10 ring-1 ring-[#3b2a1e]/15",
-                        ].join(" ")}
-                      >
-                        {/* Не полученная наклейка — сюрприз: только знак вопроса */}
-                        {sticker.owned && art ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={art} alt="" className="mx-auto h-14 w-14 object-contain" />
+                  {stickers.map((sticker) => (
+                    <li
+                      key={sticker.id}
+                      className={[
+                        "rounded-2xl px-1.5 py-2 text-center",
+                        sticker.owned ? "mat-enamel" : "bg-[#3b2a1e]/10 ring-1 ring-[#3b2a1e]/15",
+                      ].join(" ")}
+                    >
+                        {/* Не полученная наклейка — сюрприз: только знак вопроса; битая картинка — emoji */}
+                        {sticker.owned ? (
+                          <AlbumSticker id={sticker.id} emoji={sticker.emoji} />
                         ) : (
                           <span className="mx-auto grid h-14 w-14 place-items-center font-fairy text-[28px] font-black text-[#3b2a1e]/45">
-                            {sticker.owned ? sticker.emoji || "★" : "?"}
+                            ?
                           </span>
                         )}
                         <p className={`mt-1 text-[11px] font-extrabold leading-tight ${sticker.owned ? "text-ink" : "text-ink-soft"}`}>
                           {sticker.title_ru}
                         </p>
-                      </li>
-                    );
-                  })}
+                    </li>
+                  ))}
                 </ul>
               )}
               <Button block variant="paper" onClick={() => onGo("/learn")}>
@@ -752,7 +765,7 @@ export function CastleScreen() {
                 );
                 load();
               })
-              .catch((err) => setShopMsg(err instanceof Error ? err.message : "Не хватило монет"));
+              .catch((err) => setShopMsg(humanizeError(err, "Не хватило монет")));
           }}
           onClaim={(quest) => {
             void v2
