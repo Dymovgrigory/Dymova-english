@@ -13,6 +13,7 @@ services:
       WORLD_CORS_ORIGINS: ${WORLD_CORS_ORIGINS:-https://world.dymova-english.ru,https://new.dymova-english.ru}
       WORLD_DB_PATH: /app/data/world.sqlite
       WORLD_UNLOCK_ALL: ${WORLD_UNLOCK_ALL:-0}
+      CASTLE_OPEN_ALL: ${CASTLE_OPEN_ALL:-0}
       WORLD_DATABASE_URL: ${WORLD_DATABASE_URL:-}
     volumes:
       - world_data:/app/data
