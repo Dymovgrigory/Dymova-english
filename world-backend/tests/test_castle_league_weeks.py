@@ -42,3 +42,30 @@ def test_player_without_lessons_is_not_recorded(learn_db):
     league_weeks.close_previous_week()
     rows = get_conn().execute("SELECT COUNT(*) AS c FROM league_weeks").fetchone()["c"]
     assert rows == 0
+
+
+def test_league_returns_trophy_history(learn_db):
+    """Башня Славы показывает прошлые недели: свежие первыми, не больше восьми."""
+    key = "trophy-kid"
+    player_id = int(core.get_or_create_player(key, "Трофеев")["id"])
+    conn = get_conn()
+    for n in range(10):
+        conn.execute(
+            "INSERT INTO league_weeks (player_id, week_start, rank, weekly_xp, coins_awarded)"
+            " VALUES (?,?,?,?,?)",
+            (player_id, f"2026-07-{n + 1:02d}", (n % 5) + 1, 100 + n, 30),
+        )
+    from app.world import learn
+    body = learn.league(key)
+    history = body["history"]
+    assert len(history) == 8
+    assert history[0]["week_start"] == "2026-07-10"  # свежая первая
+    assert history[0]["rank"] == (9 % 5) + 1
+    assert all(set(row) == {"week_start", "rank", "weekly_xp", "coins_awarded"} for row in history)
+
+
+def test_league_history_empty_for_newcomer(learn_db):
+    key = "no-trophies"
+    core.get_or_create_player(key, "Новичок")
+    from app.world import learn
+    assert learn.league(key)["history"] == []

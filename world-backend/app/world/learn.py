@@ -134,12 +134,22 @@ def league(external_key: str) -> dict:
     ]
     me = next((row for row in board if row["is_me"]), None)
     weekly = me["weekly_xp"] if me else 0
+    history = [
+        {"week_start": r["week_start"], "rank": int(r["rank"]),
+         "weekly_xp": int(r["weekly_xp"]), "coins_awarded": int(r["coins_awarded"])}
+        for r in get_conn().execute(
+            "SELECT week_start, rank, weekly_xp, coins_awarded FROM league_weeks"
+            " WHERE player_id=? ORDER BY week_start DESC LIMIT 8",
+            (player["id"],),
+        ).fetchall()
+    ]
     return {
         "tier": tier_for(weekly),
         "weekly_xp": weekly,
         "rank": me["rank"] if me else len(board) + 1,
         "size": len(board),
         "top": board[:LEAGUE_TOP],
+        "history": history,
     }
 
 
