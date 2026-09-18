@@ -154,12 +154,20 @@ export type LeagueRow = {
   is_me: boolean;
 };
 
+export type LeagueHistoryRow = {
+  week_start: string;
+  rank: number;
+  weekly_xp: number;
+  coins_awarded: number;
+};
+
 export type League = {
   tier: string;
   weekly_xp: number;
   rank: number;
   size: number;
   top?: LeagueRow[];
+  history?: LeagueHistoryRow[];
 };
 
 export type ReviewQueue = {

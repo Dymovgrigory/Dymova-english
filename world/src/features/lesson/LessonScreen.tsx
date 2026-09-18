@@ -32,6 +32,10 @@ import { SpeakChallenge } from "./SpeakChallenge";
 
 const TILE_TYPES = new Set<Challenge["type"]>(["spell_tiles", "build_phrase", "listen_build"]);
 
+/** Испытание дня: 15 секунд на вопрос, с небольшим запасом, чтобы response_ms уложился в правило сервера. */
+const TRIAL_SECONDS = 15;
+const TRIAL_TIMEOUT_MS = TRIAL_SECONDS * 1000 - 200;
+
 function ChallengeView(props: ViewProps & { onSkip: () => void; onHeard: (t: string) => void }) {
   const { challenge } = props;
   switch (challenge.type) {
@@ -60,7 +64,12 @@ type LoadState =
 async function requestSession(nodeId: string): Promise<LoadState | "onboarding"> {
   try {
     const allowSpeak = speakAllowed() && speechRecognitionSupported();
-    const session = nodeId === "practice" ? await v2.startPractice(allowSpeak) : await v2.startSession(nodeId, allowSpeak);
+    const session =
+      nodeId === "practice"
+        ? await v2.startPractice(allowSpeak)
+        : nodeId === "trial"
+          ? await v2.startPractice(allowSpeak, "trial")
+          : await v2.startSession(nodeId, allowSpeak);
     return { status: "ready", session };
   } catch (err) {
     if (isProfileMissing(err)) return "onboarding";
@@ -69,20 +78,24 @@ async function requestSession(nodeId: string): Promise<LoadState | "onboarding">
         ? "Этот урок пока закрыт. Сначала пройди предыдущие."
         : err instanceof ApiError && err.message === "nothing_to_practice"
           ? "Пока нечего повторять. Пройди пару уроков — и слабые слова появятся здесь."
-          : err instanceof Error
-            ? err.message
-            : "Не получилось открыть урок.";
+          : err instanceof ApiError && err.message === "trial_not_available"
+            ? "Испытание пока недоступно. Сначала выучи слова на уроках."
+            : err instanceof Error
+              ? err.message
+              : "Не получилось открыть урок.";
     return { status: "error", message };
   }
 }
 
 export function LessonScreen({ nodeId }: { nodeId: string }) {
   const router = useRouter();
+  const isTrial = nodeId === "trial";
   const [load, setLoad] = useState<LoadState>({ status: "loading" });
   const [result, setResult] = useState<SessionResult | null>(null);
   const [confirmExit, setConfirmExit] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [lessonState, setLessonState] = useState(() => initLesson([]));
+  const [trialLeft, setTrialLeft] = useState(TRIAL_SECONDS);
   const shownAt = useRef(0);
 
   const applyLoad = useCallback(
@@ -153,6 +166,22 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
     act({ type: "continue" });
     setAttempt((n) => n + 1);
   }, [act]);
+
+  // Испытание дня: 15 с на вопрос, по таймауту — заведомо неверный ответ, дальше обычная логика урока.
+  useEffect(() => {
+    if (!isTrial || !challenge?.graded || lessonState.phase !== "answering") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- запуск отсчёта для нового вопроса
+    setTrialLeft(TRIAL_SECONDS);
+    const started = Date.now();
+    const tick = window.setInterval(() => {
+      setTrialLeft(Math.max(0, Math.ceil(TRIAL_SECONDS - (Date.now() - started) / 1000)));
+    }, 200);
+    const timeout = window.setTimeout(() => void submit({}), TRIAL_TIMEOUT_MS);
+    return () => {
+      window.clearInterval(tick);
+      window.clearTimeout(timeout);
+    };
+  }, [isTrial, challenge, attempt, lessonState.phase, submit]);
 
   // Финиш, когда очередь опустела.
   useEffect(() => {
@@ -242,7 +271,7 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
   const sceneModule = nodeId.split(".").slice(0, 2).join("-");
   return (
     <div className="study relative flex min-h-dvh flex-col">
-      {nodeId !== "practice" && (
+      {nodeId !== "practice" && nodeId !== "trial" && (
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element -- размытая диорама этажа как атмосфера урока */}
           <img src={`/content/modules/${sceneModule}.webp`} alt="" className="h-full w-full scale-110 object-cover opacity-80 blur-[10px]" />
@@ -260,6 +289,20 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
         </button>
         <ProgressBar value={progressOf(lessonState)} label="Прогресс урока" />
       </header>
+
+      {isTrial && lessonState.phase === "answering" && challenge.graded ? (
+        <div className="relative z-10 mx-auto mt-3 w-full max-w-2xl px-4" role="timer" aria-label={`Осталось ${trialLeft} секунд`}>
+          <div className="flex items-center gap-3">
+            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/15">
+              <div
+                className={`h-full rounded-full transition-[width] duration-200 ${trialLeft <= 5 ? "bg-[#ff8a3d]" : "bg-[#ffd36e]"}`}
+                style={{ width: `${(trialLeft / TRIAL_SECONDS) * 100}%` }}
+              />
+            </div>
+            <span className="w-10 text-right text-[15px] font-extrabold tabular-nums text-[#f6efe2]">{trialLeft} с</span>
+          </div>
+        </div>
+      ) : null}
 
       <main className="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 pb-8 pt-6">
         <div className="mat-parchment rounded-[28px] px-5 py-6 sm:px-8 sm:py-8">

@@ -9,7 +9,9 @@ import type {
   Courses,
   Home,
   LearningPath,
+  PracticeStatus,
   Profile,
+  QuestBoard,
   SessionResult,
   SessionStart,
   WordsBook,
@@ -88,7 +90,12 @@ export const v2 = {
   path: (bookId: string) => call<LearningPath>(`/api/v2/path?book_id=${encodeURIComponent(bookId)}`),
   startSession: (nodeId: string, allowSpeak: boolean) =>
     post<SessionStart>("/api/v2/sessions", { node_id: nodeId, allow_speak: allowSpeak }),
-  startPractice: (allowSpeak: boolean) => post<SessionStart>("/api/v2/practice", { allow_speak: allowSpeak }),
+  startPractice: (allowSpeak: boolean, mode: "practice" | "trial" = "practice") =>
+    post<SessionStart>("/api/v2/practice", { allow_speak: allowSpeak, mode }),
+  practiceStatus: () => call<PracticeStatus>("/api/v2/practice/status"),
+  quests: () => call<QuestBoard>("/api/v2/quests"),
+  claimQuest: (questId: string, period: "day" | "week") =>
+    post<{ coins_delta: number }>("/api/v2/quests/claim", { quest_id: questId, period }),
   answer: (sessionId: string, index: number, answer: Answer, responseMs: number) =>
     post<AnswerReply>(`/api/v2/sessions/${sessionId}/answer`, { index, answer, response_ms: responseMs }),
   checkPair: (sessionId: string, index: number, left: string, right: string) =>

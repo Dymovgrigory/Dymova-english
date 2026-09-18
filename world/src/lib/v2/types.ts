@@ -108,7 +108,7 @@ export type Answer =
 export type SessionStart = {
   session_id: string;
   node_id: string;
-  kind: NodeKind | "practice";
+  kind: NodeKind | "practice" | "trial";
   challenges: Challenge[];
   graded_total: number;
 };
@@ -125,7 +125,7 @@ export type AnswerReply = {
 
 export type SessionResult = {
   node_id: string;
-  kind: NodeKind | "practice";
+  kind: NodeKind | "practice" | "trial";
   xp: number;
   coins: number;
   stars: number;
@@ -142,7 +142,28 @@ export type SessionResult = {
   player: { xp: number; coins: number; level: number };
   coins_breakdown: Record<string, number>;
   titles_gained: { track: string; level: number; title_ru: string; coins: number }[];
+  /** Только у kind="trial": прошёл ли игрок испытание дня. */
+  trial_passed?: boolean;
 };
 
 export type WordEntry = { id: string; en: string; ru: string; image: string | null; strength: number };
 export type WordsBook = { modules: (ModuleSummary & { words: WordEntry[] })[] };
+
+/** Задание Беседки поручений (/api/v2/quests). */
+export type Quest = {
+  id: string;
+  period: "day" | "week";
+  title_ru: string;
+  progress: number;
+  target: number;
+  coins: number;
+  done: boolean;
+  claimed: boolean;
+  claimable: boolean;
+  spot: string;
+  href: string;
+};
+
+export type QuestBoard = { daily: Quest[]; weekly: Quest[] };
+
+export type PracticeStatus = { trial_done_today: boolean; trial_available: boolean };

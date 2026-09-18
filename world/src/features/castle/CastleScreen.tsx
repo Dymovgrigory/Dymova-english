@@ -16,12 +16,12 @@ import { Shell } from "@/design/Shell";
 import { StatPill } from "@/design/StatPill";
 import { worldApi, type League, type Player } from "@/lib/api";
 import { isProfileMissing, isUnauthorized, v2 } from "@/lib/v2/client";
-import { castleApi, type CastleView } from "@/lib/v2/castle";
-import type { Courses, Home, WordsBook } from "@/lib/v2/types";
+import { castleApi, type CastleView, type LexiconChestOpen, type LexiconChestStatus } from "@/lib/v2/castle";
+import type { Courses, Home, PracticeStatus, Quest, QuestBoard, WordsBook } from "@/lib/v2/types";
+import { formatWeekRange, medalForRank } from "@/lib/v2/weeks";
 import { stickerArt } from "@/ui/fantasy/StickerDrawer";
 
 type ShopItem = { sku: string; coins: number; title_ru: string };
-type Quest = { id?: string; title_ru: string; progress: number; target: number; done: boolean; claimed?: boolean; claimable?: boolean };
 type Sticker = { id: string; title_ru: string; emoji: string; owned: boolean };
 
 type CastleData = {
@@ -31,7 +31,9 @@ type CastleData = {
   player: Player | null;
   hearts: number;
   shop: ShopItem[];
-  quests: Quest[];
+  questBoard: QuestBoard | null;
+  chest: LexiconChestStatus | null;
+  trial: PracticeStatus | null;
   stickers: Sticker[];
   stickerOwned: number;
   league: League | null;
@@ -119,6 +121,7 @@ function RoomPanel({
   castle,
   shopMsg,
   questMsg,
+  chestPrize,
   onBuy,
   onClaim,
   onClose,
@@ -126,21 +129,24 @@ function RoomPanel({
   onOpenBook,
   onCastleChange,
   onFit,
+  onOpenChest,
 }: {
   spot: Spot;
   data: CastleData;
   castle: CastleView | null;
   shopMsg: string | null;
   questMsg: string | null;
+  chestPrize: LexiconChestOpen | null;
   onBuy: (sku: string) => void;
-  onClaim: (id: string) => void;
+  onClaim: (quest: Quest) => void;
   onClose: () => void;
   onGo: (href: string) => void;
   onOpenBook: (bookId: string) => void;
   onCastleChange: (view: CastleView) => void;
   onFit: () => void;
+  onOpenChest: () => void;
 }) {
-  const { home, words, player, hearts, shop, quests, stickers, stickerOwned, league, dueCount } = data;
+  const { home, words, player, hearts, shop, questBoard, chest, trial, stickers, stickerOwned, league, dueCount } = data;
   const room = spot.id;
   const wordRows = (words?.modules ?? []).flatMap((m) => m.words.map((w) => ({ ...w, module: m.title_ru })));
   const learned = wordRows.filter((w) => w.strength > 0);
@@ -213,6 +219,19 @@ function RoomPanel({
 
           {room === "yard" && (
             <div className="flex flex-col gap-3 text-center">
+              <div className="mat-enamel rounded-2xl px-4 py-3">
+                <p className="text-[17px] font-extrabold text-ink">Испытание дня</p>
+                <p className="mt-0.5 text-[13px] font-bold text-ink-soft">5 слов · 15 секунд на ответ · с первой попытки</p>
+                {trial?.trial_done_today ? (
+                  <p className="mt-2 text-[15px] font-extrabold text-[#1f6f60]">Пройдено сегодня ✓</p>
+                ) : trial && !trial.trial_available ? (
+                  <p className="mt-2 text-[15px] font-semibold text-ink-soft">Сначала выучи слова на уроках</p>
+                ) : (
+                  <Button block className="mt-2" onClick={() => onGo("/lesson/trial")}>
+                    Начать испытание
+                  </Button>
+                )}
+              </div>
               <Foxy pose="think" size={84} />
               <p className="text-[18px] font-extrabold text-ink">
                 {dueCount > 0 ? `Ждут повторения: ${dueCount}` : "Слова свежие — можно потренироваться всё равно"}
@@ -228,6 +247,35 @@ function RoomPanel({
 
           {room === "lexicon" && (
             <div className="space-y-4">
+              <div className="mat-enamel rounded-2xl px-4 py-3 text-center">
+                <p className="text-[17px] font-extrabold text-ink">Сундук слов</p>
+                {chestPrize ? (
+                  <div className="mt-2 flex flex-col items-center gap-1">
+                    <p className="text-[16px] font-extrabold text-[#d69e00]">+{chestPrize.coins} монет</p>
+                    {chestPrize.item_id ? (
+                      <>
+                        <ContentImage
+                          path={`/content/castle/decor/${chestPrize.item_id}.webp`}
+                          alt={castle?.catalog.find((i) => i.id === chestPrize.item_id)?.title_ru ?? "Украшение"}
+                          className="h-20 w-20"
+                          fallback="★"
+                        />
+                        <p className="text-[14px] font-extrabold text-ink">
+                          {castle?.catalog.find((i) => i.id === chestPrize.item_id)?.title_ru ?? "Украшение для замка"}
+                        </p>
+                      </>
+                    ) : null}
+                  </div>
+                ) : chest && chest.ready > 0 ? (
+                  <Button block variant="crown" className="mt-2" onClick={onOpenChest}>
+                    Открыть сундук
+                  </Button>
+                ) : (
+                  <p className="mt-1 text-[14px] font-bold text-ink-soft">
+                    Слов до сундука: {chest?.progress ?? 0}/{chest?.per_chest ?? 25}
+                  </p>
+                )}
+              </div>
               <p className="text-[17px] font-extrabold text-ink">
                 В словаре: {wordRows.length}
                 {dueCount > 0 ? ` · пора повторить ${dueCount}` : ""}
@@ -294,6 +342,29 @@ function RoomPanel({
               ) : (
                 <p className="text-[15px] font-semibold text-ink-soft">Пройди урок — появишься в лиге.</p>
               )}
+              <div className="space-y-1.5">
+                <h3 className="text-[15px] font-extrabold text-ink">Трофеи</h3>
+                {league?.history?.length ? (
+                  <ul className="space-y-1.5">
+                    {league.history.map((row) => (
+                      <li
+                        key={row.week_start}
+                        className="mat-enamel flex items-center justify-between gap-2 rounded-2xl px-3 py-2 text-[14px] font-bold text-ink"
+                      >
+                        <span>
+                          {medalForRank(row.rank) ? `${medalForRank(row.rank)} ` : ""}
+                          {row.rank} место · {formatWeekRange(row.week_start)}
+                        </span>
+                        <span className="text-ink-soft">
+                          {row.weekly_xp} XP · <span className="text-[#d69e00]">+{row.coins_awarded} монет</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-[14px] font-semibold text-ink-soft">Закрой неделю в лиге, и трофей появится здесь.</p>
+                )}
+              </div>
             </div>
           )}
 
@@ -404,32 +475,59 @@ function RoomPanel({
           )}
 
           {room === "quests" && (
-            <div className="space-y-3">
-              {quests.length === 0 ? (
-                <p className="text-[15px] font-semibold text-ink-soft">Поручения появятся после первого урока.</p>
-              ) : (
-                quests.map((q) => (
-                  <button
-                    key={q.id || q.title_ru}
-                    type="button"
-                    disabled={!q.claimable || !q.id}
-                    onClick={() => q.id && onClaim(q.id)}
-                    className="mat-enamel flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left disabled:opacity-70"
-                  >
-                    <span className="text-[15px] font-extrabold text-ink">
-                      {q.done ? "✓ " : ""}
-                      {q.title_ru}
-                    </span>
-                    <span className="text-[13px] font-bold text-ink-soft">
-                      {q.claimed ? "Получено" : q.claimable ? "Забрать" : `${q.progress}/${q.target}`}
-                    </span>
-                  </button>
-                ))
-              )}
+            <div className="space-y-4">
+              {(
+                [
+                  ["Сегодня", questBoard?.daily ?? []],
+                  ["Эта неделя", questBoard?.weekly ?? []],
+                ] as const
+              ).map(([section, list]) => (
+                <section key={section} className="space-y-2">
+                  <h3 className="text-[15px] font-extrabold text-ink">{section}</h3>
+                  {list.length === 0 ? (
+                    <p className="text-[14px] font-semibold text-ink-soft">Задания появятся после первого урока.</p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {list.map((q) => (
+                        <li key={q.id} className="mat-enamel flex items-center justify-between gap-3 rounded-2xl px-4 py-3">
+                          <div className="min-w-0">
+                            <p className="text-[15px] font-extrabold text-ink">
+                              {q.done ? "✓ " : ""}
+                              {q.title_ru}
+                            </p>
+                            <p className="text-[13px] font-bold text-ink-soft">
+                              {q.progress}/{q.target} · <span className="text-[#d69e00]">+{q.coins} монет</span>
+                            </p>
+                          </div>
+                          <div className="flex shrink-0 items-center gap-2">
+                            {q.claimed ? (
+                              <span className="text-[13px] font-extrabold text-[#1f6f60]">Получено</span>
+                            ) : q.claimable ? (
+                              <button
+                                type="button"
+                                onClick={() => onClaim(q)}
+                                className="mat-brass rounded-xl px-3 py-1.5 text-[13px] font-extrabold"
+                              >
+                                Забрать
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => onGo(q.href)}
+                                aria-label={`Перейти: ${q.title_ru}`}
+                                className="rounded-xl px-3 py-1.5 text-[13px] font-extrabold text-ink ring-1 ring-[#3b2a1e]/25"
+                              >
+                                Перейти
+                              </button>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              ))}
               {questMsg ? <p className="text-center text-[15px] font-bold text-[#1f6f60]">{questMsg}</p> : null}
-              <Button block onClick={() => onGo("/learn")}>
-                К урокам
-              </Button>
             </div>
           )}
         </div>
@@ -449,19 +547,23 @@ export function CastleScreen() {
   const [questMsg, setQuestMsg] = useState<string | null>(null);
   const [castle, setCastle] = useState<CastleView | null>(null);
   const [fitting, setFitting] = useState(false);
+  const [chestPrize, setChestPrize] = useState<LexiconChestOpen | null>(null);
 
   const load = () => {
     void worldApi
       .ensurePlayer(typeof window !== "undefined" ? window.localStorage.getItem("world.name") || "Исследователь" : "Исследователь")
       .then(() => Promise.all([v2.home(), v2.courses()]))
       .then(async ([home, courses]) => {
-        const [words, learnHome, shopBody, league, review, castleBody] = await Promise.all([
+        const [words, learnHome, shopBody, league, review, castleBody, questBoard, chest, trial] = await Promise.all([
           v2.words(home.profile.book_id).catch(() => null),
           worldApi.getLearnHome().catch(() => null),
           worldApi.getShop().catch(() => ({ items: [] as ShopItem[] })),
           worldApi.getLeague().catch(() => null),
           worldApi.getReview().catch(() => null),
           castleApi.get().catch(() => null),
+          v2.quests().catch(() => null),
+          castleApi.lexiconChestStatus().catch(() => null),
+          v2.practiceStatus().catch(() => null),
         ]);
         setError(null);
         setNeedsSetup(false);
@@ -473,7 +575,9 @@ export function CastleScreen() {
           player: learnHome?.player ?? null,
           hearts: learnHome?.hearts?.current ?? 5,
           shop: shopBody.items,
-          quests: learnHome?.quests || [],
+          questBoard,
+          chest,
+          trial,
           stickers: learnHome?.stickers?.items || [],
           stickerOwned: learnHome?.stickers?.owned ?? 0,
           league: league || learnHome?.league || null,
@@ -508,8 +612,18 @@ export function CastleScreen() {
   }, []);
 
   const [freeArea, setFreeArea] = useState<HTMLDivElement | null>(null);
-  const claimable = useMemo(() => data?.quests.filter((q) => q.claimable).length ?? 0, [data]);
+  const claimable = useMemo(
+    () => (data?.questBoard ? [...data.questBoard.daily, ...data.questBoard.weekly].filter((q) => q.claimable).length : 0),
+    [data],
+  );
   const openSpot = SPOTS.find((s) => s.id === openId) ?? null;
+
+  // Приз сундука и сообщение Беседки живут, пока открыта их комната.
+  const openRoom = (id: SpotId | null) => {
+    setChestPrize(null);
+    setQuestMsg(null);
+    setOpenId(id);
+  };
 
   const openBook = async (bookId: string) => {
     if (!data) return;
@@ -533,7 +647,7 @@ export function CastleScreen() {
         appearance={castle?.appearance ?? null}
         decor={castle?.decor ?? []}
         emblem={castle?.titles.find((t) => t.worn)?.track ?? "fox"}
-        onOpen={setOpenId}
+        onOpen={openRoom}
       />
       {fitting && castle ? (
         <FittingRoom view={castle} onChange={setCastle} onClose={() => setFitting(false)} />
@@ -586,7 +700,7 @@ export function CastleScreen() {
               <li key={spot.id}>
                 <button
                   type="button"
-                  onClick={() => setOpenId(spot.id)}
+                  onClick={() => openRoom(spot.id)}
                   className={[
                     "flex w-full flex-col items-center gap-0.5 rounded-xl px-0.5 py-1 text-center",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36e]/70",
@@ -610,11 +724,21 @@ export function CastleScreen() {
           castle={castle}
           shopMsg={shopMsg}
           questMsg={questMsg}
+          chestPrize={chestPrize}
           onCastleChange={setCastle}
           onFit={() => setFitting(true)}
-          onClose={() => setOpenId(null)}
+          onClose={() => openRoom(null)}
           onGo={(href) => router.push(href)}
           onOpenBook={(bookId) => void openBook(bookId)}
+          onOpenChest={() => {
+            void castleApi
+              .lexiconChestOpen()
+              .then((prize) => {
+                setChestPrize(prize);
+                load();
+              })
+              .catch(() => load());
+          }}
           onBuy={(sku) => {
             void worldApi
               .buyShop(sku)
@@ -630,11 +754,11 @@ export function CastleScreen() {
               })
               .catch((err) => setShopMsg(err instanceof Error ? err.message : "Не хватило монет"));
           }}
-          onClaim={(id) => {
-            void worldApi
-              .claimDailyQuest(id)
+          onClaim={(quest) => {
+            void v2
+              .claimQuest(quest.id, quest.period)
               .then((r) => {
-                setQuestMsg(r.xp_delta ? `+${r.xp_delta} XP` : "Уже получено");
+                setQuestMsg(`+${r.coins_delta} монет`);
                 load();
               })
               .catch(() => load());

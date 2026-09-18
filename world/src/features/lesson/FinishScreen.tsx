@@ -17,6 +17,11 @@ function formatDuration(seconds: number): string {
 }
 
 function headline(result: SessionResult): { title: string; line: string } {
+  if (result.kind === "trial") {
+    return result.trial_passed
+      ? { title: "Испытание пройдено!", line: "+5 монет — быстро и с первой попытки." }
+      : { title: "Не успел — попробуй ещё раз сегодня", line: "Правило испытания: 5 слов, 15 секунд на ответ, с первой попытки." };
+  }
   if (result.kind === "module_test") {
     return result.passed
       ? { title: "Контрольная сдана!", line: "Модуль пройден. Следующий уже открыт." }
@@ -40,7 +45,7 @@ function Stat({ icon, value, label, tone }: { icon: IconName; value: string; lab
 export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
   const reduce = useReducedMotion();
   const { title, line } = headline(result);
-  const failedTest = result.kind === "module_test" && !result.passed;
+  const failed = (result.kind === "module_test" && !result.passed) || (result.kind === "trial" && !result.trial_passed);
   return (
     <div className="study flex min-h-dvh flex-col">
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center gap-6 px-4 pb-8 pt-10 text-center"><div className="mat-parchment flex w-full flex-col items-center gap-6 rounded-[28px] px-5 pb-6 pt-4">
@@ -49,7 +54,7 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 220, damping: 16 }}
         >
-          <Foxy pose={failedTest ? "think" : "cheer"} size={190} />
+          <Foxy pose={failed ? "think" : "cheer"} size={190} />
         </motion.div>
         <div>
           <h1 className="font-fairy text-[36px] font-black leading-10 text-[#4a2a66]">{title}</h1>
@@ -125,10 +130,10 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
       </div></main>
       <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
         <div className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row-reverse">
-          <Button block onClick={failedTest ? onRetry : onContinue} autoFocus>
-            {failedTest ? "Пройти ещё раз" : "Продолжить"}
+          <Button block onClick={failed ? onRetry : onContinue} autoFocus>
+            {failed ? "Пройти ещё раз" : "Продолжить"}
           </Button>
-          {failedTest ? (
+          {failed ? (
             <Button block variant="paper" onClick={onContinue}>
               К пути
             </Button>

@@ -49,6 +49,17 @@ export type CastleView = {
   coins: number;
 };
 
+/** Сундук слов Сокровищницы (/api/v2/castle/lexicon-chest). */
+export type LexiconChestStatus = {
+  words: number;
+  per_chest: number;
+  opened: number;
+  ready: number;
+  progress: number;
+};
+
+export type LexiconChestOpen = { chest_index: number; coins: number; item_id: string | null };
+
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -83,4 +94,6 @@ export const castleApi = {
     call<CastleView>("/api/v2/castle/appearance", { method: "POST", body: JSON.stringify(fields) }),
   wear: (track: string) =>
     call<CastleView>("/api/v2/castle/title", { method: "POST", body: JSON.stringify({ track }) }),
+  lexiconChestStatus: () => call<LexiconChestStatus>("/api/v2/castle/lexicon-chest"),
+  lexiconChestOpen: () => call<LexiconChestOpen>("/api/v2/castle/lexicon-chest/open", { method: "POST" }),
 };
