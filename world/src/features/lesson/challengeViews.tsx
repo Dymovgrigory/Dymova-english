@@ -62,7 +62,7 @@ export function TeachWord({ challenge }: { challenge: Challenge }) {
     <div className="flex flex-col items-center gap-6 text-center">
       <p className="mat-brass rounded-full px-4 py-1 text-[14px] font-extrabold">Новое слово</p>
       {challenge.image && (
-        <ContentImage path={challenge.image} alt={challenge.en ?? ""} className="size-52 overflow-hidden rounded-3xl shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" />
+        <ContentImage path={challenge.image} alt={challenge.en ?? ""} className="size-56 overflow-hidden rounded-3xl sm:size-72 lg:size-80 shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" />
       )}
       <div className="flex items-center gap-4">
         <span className="font-fairy text-[56px] font-black leading-none text-[#4a2a66]">{challenge.en}</span>
@@ -132,7 +132,7 @@ function OptionsList({ challenge, draft, locked, reveal, onDraft, big = false }:
 function ImageOptions({ challenge, draft, locked, reveal, onDraft }: ViewProps) {
   const options = (challenge.options ?? []) as { image?: string }[];
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
       {options.map((option, index) => (
         <Choice
           key={`${option.image}-${index}`}
@@ -193,7 +193,7 @@ export function ChoiceChallenge(props: ViewProps) {
     case "image_pick_word":
       prompt = (
         <div className="flex justify-center">
-          <ContentImage path={challenge.image} alt="Что на картинке?" className="size-44 overflow-hidden rounded-3xl shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback="?" />
+          <ContentImage path={challenge.image} alt="Что на картинке?" className="size-52 overflow-hidden rounded-3xl sm:size-64 lg:size-72 shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback="?" />
         </div>
       );
       break;
@@ -280,7 +280,7 @@ export function TilesChallenge({ challenge, locked, onDraft }: ViewProps) {
     <div className="flex flex-col gap-6">
       <Instruction>{challenge.instruction_ru ?? ""}</Instruction>
       <div className="flex items-center gap-4">
-        {challenge.image && <ContentImage path={challenge.image} alt={challenge.ru ?? ""} className="size-28 overflow-hidden rounded-2xl shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback={challenge.ru ?? "?"} />}
+        {challenge.image && <ContentImage path={challenge.image} alt={challenge.ru ?? ""} className="size-36 overflow-hidden rounded-2xl sm:size-44 shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback={challenge.ru ?? "?"} />}
         {challenge.audio && <Sound text={challenge.audio} size={challenge.type === "listen_build" ? "lg" : "sm"} />}
         {challenge.ru && challenge.type !== "spell_tiles" && (
           <p className="mat-enamel rounded-3xl px-5 py-3 text-[23px] font-extrabold text-ink">{challenge.ru}</p>
@@ -388,7 +388,7 @@ export function PairsChallenge({ challenge, locked, onCheckPair, onSubmit }: Vie
         {pictures ? "Нажми на звук, потом на подходящую картинку." : "Нажми на слово, потом на его перевод."}
       </p>
       <div className={pictures ? "flex flex-col gap-4" : "grid grid-cols-2 gap-3"}>
-        <div className={pictures ? "grid grid-cols-5 gap-2" : "flex flex-col gap-3"}>
+        <div className={pictures ? "grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5" : "flex flex-col gap-3"}>
           {left.map((item) => (
             <button
               key={item.id}
@@ -433,7 +433,7 @@ export function TypeChallenge({ challenge, draft, locked, onDraft }: ViewProps) 
     <div className="flex flex-col gap-6">
       <Instruction>{challenge.instruction_ru ?? ""}</Instruction>
       <div className="flex items-center gap-4">
-        {challenge.image && <ContentImage path={challenge.image} alt={challenge.ru ?? ""} className="size-28 overflow-hidden rounded-2xl shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback={challenge.ru ?? "?"} />}
+        {challenge.image && <ContentImage path={challenge.image} alt={challenge.ru ?? ""} className="size-36 overflow-hidden rounded-2xl sm:size-44 shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback={challenge.ru ?? "?"} />}
         {challenge.audio && <Sound text={challenge.audio} />}
         <p className="text-[24px] font-extrabold text-ink">{challenge.ru}</p>
       </div>
