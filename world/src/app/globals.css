@@ -291,6 +291,11 @@ h3 {
 }
 .castle-pulse { animation: castle-pulse 1.8s ease-in-out infinite; }
 
+@keyframes castle-banner {
+  0%, 100% { transform: skewY(0deg) scaleX(1); }
+  50% { transform: skewY(-1.6deg) scaleX(0.985); }
+}
+
 .press {
   transition: transform 90ms ease, box-shadow 90ms ease, background-color 120ms ease;
 }

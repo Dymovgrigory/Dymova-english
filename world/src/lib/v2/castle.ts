@@ -37,10 +37,13 @@ export type TitleRow = {
   worn: boolean;
 };
 
+export type DecorItem = { item_id: string; anchor: string; title_ru: string; active: boolean };
+
 export type CastleView = {
   appearance: Appearance;
   catalog: CastleItem[];
   owned: string[];
+  decor: DecorItem[];
   titles: TitleRow[];
   coins: number;
 };
@@ -75,7 +78,7 @@ export const castleApi = {
   get: () => call<CastleView>("/api/v2/castle"),
   buy: (itemId: string) =>
     call<CastleView>("/api/v2/castle/buy", { method: "POST", body: JSON.stringify({ item_id: itemId }) }),
-  apply: (fields: Partial<Appearance>) =>
+  apply: (fields: Partial<Appearance> & { decor_on?: string[]; decor_off?: string[] }) =>
     call<CastleView>("/api/v2/castle/appearance", { method: "POST", body: JSON.stringify(fields) }),
   wear: (track: string) =>
     call<CastleView>("/api/v2/castle/title", { method: "POST", body: JSON.stringify({ track }) }),

@@ -66,12 +66,22 @@ const INFO: SpotInfo[] = [
   { id: "yard", kind: "building", title: "Двор тренировки", short: "Двор", hint: "Повторить слова без нового урока", art: "/content/castle/yard.webp", room: "/content/castle/room-yard.webp" },
 ];
 
+type HotspotsFile = {
+  labelStep: number;
+  spots: Array<{ id: string; index: number; labelTop: number; area: SpotArea }>;
+};
+
+/** Строит SPOTS из карты зон: базовой или сезонной — раскладка у них своя. */
+export function buildSpots(source: HotspotsFile, maskPrefix = "masks"): Spot[] {
+  return INFO.map((info) => {
+    const zone = source.spots.find((s) => s.id === info.id);
+    if (!zone) throw new Error(`castle-hotspots: нет зоны для ${info.id}`);
+    return { ...info, index: zone.index, area: zone.area, labelTop: zone.labelTop, mask: `/content/castle/${maskPrefix}/${info.id}.png` };
+  });
+}
+
 /** Порядок = лента локаций; на сцене здания рисуются сзади вперёд по `index`. */
-export const SPOTS: Spot[] = INFO.map((info) => {
-  const zone = hotspots.spots.find((s) => s.id === info.id);
-  if (!zone) throw new Error(`castle-hotspots.json: нет зоны для ${info.id}`);
-  return { ...info, index: zone.index, area: zone.area, labelTop: zone.labelTop, mask: `/content/castle/masks/${info.id}.png` };
-});
+export const SPOTS: Spot[] = buildSpots(hotspots);
 
 /** Замок на картинке (доли 0..1): все здания с небольшим запасом — его сцена вписывает в экран целиком. */
 export const CASTLE_FOCUS = (() => {
