@@ -394,16 +394,95 @@ def masks(pick: Path) -> None:
     print(f"готово: {CASTLE / 'castle-diorama.webp'}, проверка зон: {WORK / 'hotspots-preview.png'}")
 
 
+def season_masks(season: str, pick: Path | None = None) -> None:
+    """Зоны кликов сезонной диорамы: базовая карта меток прогоняется через тот же сдвиг/масштаб,
+    что flare сделал со сценой (global_fit против базовой диорамы), затем каждое здание
+    уточняется локальным сдвигом ±8 px по совпадению контуров его маски с контуром сезона.
+
+    Базовые метки полного размера восстанавливаются из masks/{id}.png + областей castle-hotspots.json.
+    """
+    fused = Image.open(pick or CASTLE / "seasons" / f"{season}.webp").convert("RGB").resize(SIZE, Image.LANCZOS)
+    fused_edges = edges(fused)
+    base = Image.open(CASTLE / "castle-diorama.webp").convert("RGB")
+    base_info = json.loads((ROOT / "world" / "src" / "castle" / "castle-hotspots.json").read_text())
+
+    base_labels = np.zeros((SIZE[1], SIZE[0]), dtype=np.uint8)
+    for spot in base_info["spots"]:
+        box = spot["area"]
+        left = round(box["left"] * SIZE[0] / 100)
+        top = round(box["top"] * SIZE[1] / 100)
+        width = round(box["width"] * SIZE[0] / 100)
+        height = round(box["height"] * SIZE[1] / 100)
+        alpha = np.asarray(Image.open(CASTLE / "masks" / f"{spot['id']}.png").getchannel("A").resize((width, height)))
+        region = base_labels[top:top + height, left:left + width]
+        region[(alpha > 128) & (region == 0)] = spot["index"]  # передние уже записаны? маски не пересекаются
+        base_labels[top:top + height, left:left + width] = np.where(alpha > 128, spot["index"], region)
+
+    scale, shift_x, shift_y = global_fit(base, fused_edges)
+    cx, cy = SIZE[0] / 2, SIZE[1] / 2
+    inverse = 1 / scale
+    matrix = (inverse, 0, cx - (cx + shift_x) * inverse, 0, inverse, cy - (cy + shift_y) * inverse)
+    warped = np.asarray(
+        Image.fromarray(base_labels).transform(SIZE, Image.AFFINE, matrix, Image.NEAREST)
+    )
+    # flare держит раскладку (проверено: масштаб 1.000, сдвиг 0 на всех сезонах), поэтому локальное
+    # уточнение по контурам маски не используем — оно шумное: силуэт-бLOB коррелирует где угодно.
+    # Если кадр сезона уедет (совпадение < 0.7), карту сезона нужно пересмотреть вручную.
+    labels = warped
+    for spot in base_info["spots"]:
+        if not (labels == spot["index"]).any():
+            print(f"{spot['id']:10s} потерян при переносе — оставляю как в базе")
+            labels[base_labels == spot["index"]] = spot["index"]
+
+    spots = []
+    (CASTLE / "masks" / season).mkdir(parents=True, exist_ok=True)
+    for spot in base_info["spots"]:
+        visible = labels == spot["index"]
+        rows, cols = np.where(visible.any(axis=1))[0], np.where(visible.any(axis=0))[0]
+        box = (int(cols[0]), int(rows[0]), int(cols[-1]) + 1, int(rows[-1]) + 1)
+        alpha_img = Image.fromarray((visible * 255).astype(np.uint8)).crop(box).filter(ImageFilter.GaussianBlur(1.2))
+        cutout = Image.new("RGBA", alpha_img.size, (255, 255, 255, 0))
+        cutout.putalpha(alpha_img)
+        cutout.save(CASTLE / "masks" / season / f"{spot['id']}.png", optimize=True)
+        counts = visible[box[1]:box[3]].sum(axis=1)
+        dense_top = int(np.argmax(counts >= counts.max() * 0.2))
+        spots.append({
+            "id": spot["id"], "index": spot["index"],
+            "labelTop": round(dense_top * 100 / (box[3] - box[1]), 2),
+            "area": {name: round(value * 100 / total, 3) for name, value, total in (
+                ("left", box[0], SIZE[0]), ("top", box[1], SIZE[1]),
+                ("width", box[2] - box[0], SIZE[0]), ("height", box[3] - box[1], SIZE[1]))},
+        })
+
+    Image.fromarray(labels * LABEL_STEP).resize((SIZE[0] // 4, SIZE[1] // 4), Image.NEAREST).save(
+        CASTLE / f"castle-hotspots-{season}.png", optimize=True)
+    (ROOT / "world" / "src" / "castle" / f"castle-hotspots-{season}.json").write_text(
+        json.dumps({"labelStep": LABEL_STEP, "spots": spots}, indent=2) + "\n")
+    preview = fused.convert("RGBA")
+    tint = np.zeros((SIZE[1], SIZE[0], 4), dtype=np.uint8)
+    palette = np.array([[0, 0, 0, 0]] + [[(i * 97) % 255, (i * 57) % 255, (i * 151) % 255, 110] for i in range(1, 13)], dtype=np.uint8)
+    tint[:] = palette[labels]
+    preview.alpha_composite(Image.fromarray(tint))
+    WORK.mkdir(parents=True, exist_ok=True)
+    preview.convert("RGB").save(WORK / f"hotspots-preview-{season}.png")
+    print(f"готово: сезон {season}, проверка зон: {WORK / f'hotspots-preview-{season}.png'}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("step", choices=["compose", "fuse", "masks"])
+    parser.add_argument("step", choices=["compose", "fuse", "masks", "season-masks"])
     parser.add_argument("--variants", type=int, default=2)
     parser.add_argument("--pick", type=Path)
+    parser.add_argument("--season", choices=["spring", "summer", "autumn", "winter"])
     args = parser.parse_args()
     if args.step == "compose":
         compose()
     elif args.step == "fuse":
         fuse(args.variants, args.pick)
+    elif args.step == "season-masks":
+        if not args.season:
+            parser.error("season-masks требует --season")
+        season_masks(args.season, args.pick)
     else:
         masks(args.pick)
 
