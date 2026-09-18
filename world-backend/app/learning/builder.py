@@ -34,6 +34,7 @@ GRAMMAR_PHRASES = 3
 PHONICS_READ_WORDS = 3
 PHONICS_SPELL_WORDS = 2
 PHONICS_READ_PHRASES = 2
+PHRASES_IN_WORDS_LESSON = 2  # хвост урока слов: пары фраз модуля, чтобы урок был не только про слова
 PRACTICE_SIZE = 12
 PRACTICE_MIN = 5
 TRIAL_SIZE = 5  # испытание дня: ровно 5 слов на время
@@ -131,6 +132,13 @@ def _words_session(ctx: _Context, node: Node) -> list[Challenge]:
     pairs = ch.match_pairs(words, ctx.rng, "audio_image" if ctx.band == "starter" else "en_ru")
     if pairs is not None:
         items.append(pairs)
+    # Фразы модуля в хвосте урока: ребёнок сразу собирает из новых слов живую речь.
+    phrases = list(ctx.module.phrases)
+    ctx.rng.shuffle(phrases)
+    for phrase in phrases[:PHRASES_IN_WORDS_LESSON]:
+        challenge = ctx.graded(phrase)
+        if challenge is not None:
+            items.append(challenge)
     return items
 
 

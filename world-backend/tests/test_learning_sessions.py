@@ -32,7 +32,7 @@ def play(key: str, started: dict, *, wrong_first: int = 0) -> list[dict]:
 def test_start_hides_solutions(learner):
     key, _ = learner
     started = sessions.start(key, "sp1.m1.n1", allow_speak=False, seed=1)
-    assert started["kind"] == "words" and started["graded_total"] == 10
+    assert started["kind"] == "words" and started["graded_total"] == 12  # 10 на слова + 2 фразы
     assert all("solution" not in c for c in started["challenges"])
 
 
@@ -55,14 +55,14 @@ def test_full_lesson_with_mistake_requeues_and_rewards(learner):
         assert wrong["solution_index"] == wrong_challenge["solution"]["index"]
     result = sessions.finish(key, started["session_id"])
     assert result["xp"] == 10 and result["coins"] == 5
-    assert result["accuracy"] == pytest.approx(0.9)
+    assert result["accuracy"] == pytest.approx(0.917, abs=1e-3)  # 1 ошибка из 12 заданий
     assert result["mistakes"] == 1
     assert result["node_completed"] is True and result["next_node_id"] == "sp1.m1.n2"
     assert result["streak_days"] == 1 and result["today_xp"] == 10
     assert result["daily_goal_xp"] == 20 and result["goal_reached"] is False
     assert core.get_player(key)["xp"] == xp_before + 10
     attempts = get_conn().execute("SELECT COUNT(*) AS n FROM attempts WHERE player_id=?", (pid,)).fetchone()["n"]
-    assert attempts == 11
+    assert attempts == 13  # 12 заданий + 1 повтор после ошибки
 
     again = sessions.finish(key, started["session_id"])
     assert again == result

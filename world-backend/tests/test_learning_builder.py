@@ -54,7 +54,7 @@ def test_words_node_teaches_then_practises(learn_course):
     teach = [c.atom_id for c in plan.challenges if c.type == "teach_word"]
     assert sorted(teach) == ["sp1.m1.cat", "sp1.m1.dad", "sp1.m1.mum"]
     graded = _graded(plan)
-    assert len(graded) == 10
+    assert len(graded) == 12  # 10 заданий на слова + 2 фразы модуля в хвосте
     assert graded[-1].type == "match_pairs" or any(c.type == "match_pairs" for c in graded)
     assert all(c.type != "read_word_pick_image" for c in plan.challenges)
 
@@ -121,3 +121,14 @@ def test_practice_uses_weak_atoms_or_refuses(pid, learn_course):
     assert plan.kind == "practice" and len(plan.challenges) == 6
     assert all(c.graded for c in plan.challenges)
     _assert_layout(plan)
+
+
+def test_words_lesson_ends_with_phrases(learn_course):
+    """Урок слов не только про слова: в хвосте — задания на фразы модуля."""
+    plan = builder.build_session(learn_course, "sp1.m1.n1", player_id=None, seed=7, allow_speak=False)
+    import re
+    phrase_tasks = [c for c in plan.challenges if c.atom_id and re.fullmatch(r"p\d+", c.atom_id.rsplit(".", 1)[-1])]
+    assert 1 <= len(phrase_tasks) <= builder.PHRASES_IN_WORDS_LESSON
+    # слова всё равно ядро урока
+    words = [c for c in plan.challenges if c.atom_id and not re.fullmatch(r"p\d+", c.atom_id.rsplit(".", 1)[-1])]
+    assert len(words) > len(phrase_tasks)
