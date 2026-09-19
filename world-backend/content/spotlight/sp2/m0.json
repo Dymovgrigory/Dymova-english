@@ -555,6 +555,11 @@
       ]
     },
     {
+      "id": "sp2.m0.n12",
+      "kind": "reading",
+      "text_id": "sp2.m0.t1"
+    },
+    {
       "id": "sp2.m0.n9",
       "kind": "chest"
     },
@@ -570,5 +575,59 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp2.m0.t1",
+      "title_en": "Foxy's Ship",
+      "title_ru": "Кораблик Фокси",
+      "body_en": "This is Foxy. He has a ship and a fish. The fish is in a glass. The ship is in a box.",
+      "questions": [
+        {
+          "id": "sp2.m0.t1.q1",
+          "kind": "choice",
+          "q_en": "What is in the glass?",
+          "q_ru": "Что в стакане?",
+          "options": [
+            "a fish",
+            "a ship",
+            "an ant"
+          ],
+          "answer": "a fish"
+        },
+        {
+          "id": "sp2.m0.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The ship is in a box.",
+          "q_ru": "Кораблик в коробке.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp2.m0.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy has a ___ and a fish.",
+          "q_ru": "У Фокси есть ___ и рыбка.",
+          "options": [
+            "ship",
+            "egg",
+            "nest"
+          ],
+          "answer": "ship"
+        },
+        {
+          "id": "sp2.m0.t1.q4",
+          "kind": "choice",
+          "q_en": "Where is the ship?",
+          "q_ru": "Где кораблик?",
+          "options": [
+            "in a box",
+            "in a nest",
+            "on a bed"
+          ],
+          "answer": "in a box"
+        }
+      ]
+    }
   ]
 }

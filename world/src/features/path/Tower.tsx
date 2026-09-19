@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
 import { useState, type ReactNode, type Ref } from "react";
 
 import { Icon, type IconName } from "@/design/Icon";
+import { FoxiMascot } from "@/foxi3d/FoxiMascot";
 import { NODE_LABELS } from "@/lib/v2/pathLayout";
 import type { LearningPath, NodeKind, PathModule, PathNode } from "@/lib/v2/types";
 
@@ -13,6 +13,7 @@ const KIND_ICON: Record<NodeKind, IconName> = {
   words: "star",
   phonics: "letters",
   grammar: "rule",
+  reading: "book",
   chest: "chest",
   review: "repeat",
   module_test: "crown",
@@ -46,22 +47,12 @@ function Medallion({ icon, tone }: { icon: IconName; tone: "brass" | "done" | "m
 }
 
 function WindowSlot({ node, onPress, currentRef }: { node: PathNode; onPress: PressNode; currentRef?: Ref<HTMLDivElement> }) {
-  const reduce = useReducedMotion();
   const label = NODE_LABELS[node.kind];
   const { status } = node;
   const current = status === "current";
   return (
     <div ref={currentRef} className="relative flex flex-col items-center">
-      {current && (
-        // eslint-disable-next-line @next/next/no-img-element -- прозрачный Foxy над окном текущего урока
-        <motion.img
-          src="/content/foxy/wave.webp"
-          alt=""
-          className="pointer-events-none absolute -top-10 left-1/2 z-10 h-12 w-12 -translate-x-1/2 object-contain drop-shadow-[0_4px_6px_rgb(0_0_0/0.6)]"
-          animate={reduce ? undefined : { y: [0, -4, 0] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-        />
-      )}
+      {current && <FoxiMascot />}
       <button
         type="button"
         onClick={() => onPress(node)}

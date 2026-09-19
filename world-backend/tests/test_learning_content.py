@@ -139,7 +139,10 @@ def test_real_course_builds_every_session():
             for seed in range(6):
                 plan = builder.build_session(course, node.id, player_id=None, seed=seed, allow_speak=True)
                 graded = [c for c in plan.challenges if c.graded]
-                assert len(graded) >= 8, (node.id, seed, len(graded))
+                if node.kind == "reading":  # текст + 4–5 вопросов по контракту
+                    assert 4 <= len(graded) <= 5, (node.id, seed, len(graded))
+                else:
+                    assert len(graded) >= 8, (node.id, seed, len(graded))
                 _assert_layout(plan)
 
 

@@ -350,6 +350,11 @@
       "grammar_id": "sp3.m4.g-whose"
     },
     {
+      "id": "sp3.m4.n8",
+      "kind": "reading",
+      "text_id": "sp3.m4.t1"
+    },
+    {
       "id": "sp3.m4.n5",
       "kind": "chest"
     },
@@ -365,5 +370,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp3.m4.t1",
+      "title_en": "Foxy's playroom",
+      "title_ru": "Игровая комната Фокси",
+      "body_en": "This is Foxy's playroom. He has got a rocking horse, an aeroplane and a musical box. Whose tea set is this? It is his grandmother's present. Do not shout, be careful with the musical box!",
+      "questions": [
+        {
+          "id": "sp3.m4.t1.q1",
+          "kind": "choice",
+          "q_en": "What is this?",
+          "q_ru": "Что это за комната?",
+          "options": [
+            "Foxy's playroom",
+            "Foxy's school",
+            "Foxy's family tree"
+          ],
+          "answer": "Foxy's playroom"
+        },
+        {
+          "id": "sp3.m4.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The tea set is a present from Foxy's grandmother.",
+          "q_ru": "Чайный сервиз — подарок от бабушки Фокси.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp3.m4.t1.q3",
+          "kind": "gap",
+          "q_en": "Be careful with the ___ box!",
+          "q_ru": "Будь осторожен с ___ коробочкой (музыкальной).",
+          "options": [
+            "musical",
+            "lunch",
+            "school"
+          ],
+          "answer": "musical"
+        },
+        {
+          "id": "sp3.m4.t1.q4",
+          "kind": "choice",
+          "q_en": "Whose tea set is it?",
+          "q_ru": "Чей это чайный сервиз?",
+          "options": [
+            "His grandmother's",
+            "His father's",
+            "His uncle's"
+          ],
+          "answer": "His grandmother's"
+        },
+        {
+          "id": "sp3.m4.t1.q5",
+          "kind": "truefalse",
+          "q_en": "You can shout in the playroom.",
+          "q_ru": "В игровой можно кричать.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

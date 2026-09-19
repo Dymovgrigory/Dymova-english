@@ -381,6 +381,11 @@
       "grammar_id": "sp3.m7.g-continuous"
     },
     {
+      "id": "sp3.m7.n8",
+      "kind": "reading",
+      "text_id": "sp3.m7.t1"
+    },
+    {
       "id": "sp3.m7.n5",
       "kind": "chest"
     },
@@ -396,5 +401,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp3.m7.t1",
+      "title_en": "A day in the park",
+      "title_ru": "День в парке",
+      "body_en": "Today Foxy is in the park. He can ride his bike. He can paint a picture and make a sandcastle. Foxy has got a picnic in the park. The bell rings — finish your game, Foxy!",
+      "questions": [
+        {
+          "id": "sp3.m7.t1.q1",
+          "kind": "choice",
+          "q_en": "Where is Foxy today?",
+          "q_ru": "Где Фокси сегодня?",
+          "options": [
+            "In the park",
+            "On the farm",
+            "In the castle"
+          ],
+          "answer": "In the park"
+        },
+        {
+          "id": "sp3.m7.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy can paint a picture.",
+          "q_ru": "Фокси умеет рисовать картину.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp3.m7.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy can ride his ___.",
+          "q_ru": "Фокси умеет кататься на ___ (велосипеде).",
+          "options": [
+            "bike",
+            "bell",
+            "piano"
+          ],
+          "answer": "bike"
+        },
+        {
+          "id": "sp3.m7.t1.q4",
+          "kind": "choice",
+          "q_en": "What does Foxy make?",
+          "q_ru": "Что Фокси строит?",
+          "options": [
+            "A sandcastle",
+            "A picture",
+            "A musical box"
+          ],
+          "answer": "A sandcastle"
+        },
+        {
+          "id": "sp3.m7.t1.q5",
+          "kind": "truefalse",
+          "q_en": "The bell rings in the park.",
+          "q_ru": "В парке звенит колокольчик.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

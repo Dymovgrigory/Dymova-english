@@ -382,6 +382,11 @@
       "grammar_id": "sp4.m6.g-past"
     },
     {
+      "id": "sp4.m6.n8",
+      "kind": "reading",
+      "text_id": "sp4.m6.t1"
+    },
+    {
       "id": "sp4.m6.n5",
       "kind": "chest"
     },
@@ -397,5 +402,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m6.t1",
+      "title_en": "The race",
+      "title_ru": "Гонка",
+      "body_en": "A hare and Foxy have got a race. The hare laughs: «You are slow, Foxy!» But the hare has a rest by the river. Foxy is busy and he goes and goes. Foxy crosses the finish line first!",
+      "questions": [
+        {
+          "id": "sp4.m6.t1.q1",
+          "kind": "choice",
+          "q_en": "Who laughs at Foxy?",
+          "q_ru": "Кто смеётся над Фокси?",
+          "options": [
+            "The hare",
+            "The lamb",
+            "The kitten"
+          ],
+          "answer": "The hare"
+        },
+        {
+          "id": "sp4.m6.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The hare has a rest by the river.",
+          "q_ru": "Заяц отдыхает у реки.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp4.m6.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy crosses the finish ___ first.",
+          "q_ru": "Фокси пересекает финишную ___ первым (линию).",
+          "options": [
+            "line",
+            "race",
+            "river"
+          ],
+          "answer": "line"
+        },
+        {
+          "id": "sp4.m6.t1.q4",
+          "kind": "choice",
+          "q_en": "Who crosses the finish line first?",
+          "q_ru": "Кто пересекает финишную линию первым?",
+          "options": [
+            "Foxy",
+            "The hare",
+            "The lamb"
+          ],
+          "answer": "Foxy"
+        },
+        {
+          "id": "sp4.m6.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy is slow.",
+          "q_ru": "Фокси медленный.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

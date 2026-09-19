@@ -104,7 +104,7 @@ def test_failed_module_test_does_not_complete_node(learner, learn_course):
     key, pid = learner
     from app.learning import progress
 
-    for node_id in ("sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3", "sp1.m1.n4", "sp1.m1.n5"):
+    for node_id in ("sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3", "sp1.m1.n7", "sp1.m1.n4", "sp1.m1.n5"):
         progress.complete_node(pid, node_id, stars=0, accuracy=1.0, now=clock.now())
     started = sessions.start(key, "sp1.m1.n6", allow_speak=False, seed=7)
     replies = play(key, started, wrong_first=8)
@@ -119,7 +119,7 @@ def test_passed_module_test_gives_first_pass_bonus(learner):
     key, pid = learner
     from app.learning import progress
 
-    for node_id in ("sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3", "sp1.m1.n4", "sp1.m1.n5"):
+    for node_id in ("sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3", "sp1.m1.n7", "sp1.m1.n4", "sp1.m1.n5"):
         progress.complete_node(pid, node_id, stars=0, accuracy=1.0, now=clock.now())
     started = sessions.start(key, "sp1.m1.n6", allow_speak=False, seed=8)
     play(key, started)

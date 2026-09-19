@@ -126,6 +126,11 @@
       ]
     },
     {
+      "id": "sp3.m0.n5",
+      "kind": "reading",
+      "text_id": "sp3.m0.t1"
+    },
+    {
       "id": "sp3.m0.n2",
       "kind": "chest"
     },
@@ -141,5 +146,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp3.m0.t1",
+      "title_en": "Foxy is back",
+      "title_ru": "Фокси вернулся",
+      "body_en": "Foxy is in Foxinburg again. Everyone is here today. What is your phone number? It is 3 5 9, I think.",
+      "questions": [
+        {
+          "id": "sp3.m0.t1.q1",
+          "kind": "choice",
+          "q_en": "Who is in Foxinburg today?",
+          "q_ru": "Кто сегодня в Фоксинбурге?",
+          "options": [
+            "Everyone",
+            "A phone",
+            "A number"
+          ],
+          "answer": "Everyone"
+        },
+        {
+          "id": "sp3.m0.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy is in Foxinburg again.",
+          "q_ru": "Фокси снова в Фоксинбурге.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp3.m0.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy is in Foxinburg ___.",
+          "q_ru": "Фокси в Фоксинбурге ___ (снова).",
+          "options": [
+            "again",
+            "phone",
+            "everyone"
+          ],
+          "answer": "again"
+        },
+        {
+          "id": "sp3.m0.t1.q4",
+          "kind": "choice",
+          "q_en": "What is the phone number?",
+          "q_ru": "Какой номер телефона?",
+          "options": [
+            "3 5 9",
+            "7 2 5",
+            "1 2 3"
+          ],
+          "answer": "3 5 9"
+        },
+        {
+          "id": "sp3.m0.t1.q5",
+          "kind": "truefalse",
+          "q_en": "The phone number is 7 2 5.",
+          "q_ru": "Номер телефона 7 2 5.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

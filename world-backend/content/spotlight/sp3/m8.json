@@ -410,6 +410,11 @@
       "grammar_id": "sp3.m8.g-simple"
     },
     {
+      "id": "sp3.m8.n9",
+      "kind": "reading",
+      "text_id": "sp3.m8.t1"
+    },
+    {
       "id": "sp3.m8.n6",
       "kind": "chest"
     },
@@ -425,5 +430,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp3.m8.t1",
+      "title_en": "Foxy's week",
+      "title_ru": "Неделя Фокси",
+      "body_en": "On Monday morning Foxy has got English. On Wednesday he visits his grandmother. He has lunch at 1 o'clock and supper at 6 o'clock. On Friday evening he watches a video and listens to music. On Sunday he watches a cartoon.",
+      "questions": [
+        {
+          "id": "sp3.m8.t1.q1",
+          "kind": "choice",
+          "q_en": "When has Foxy got English?",
+          "q_ru": "Когда у Фокси английский?",
+          "options": [
+            "On Monday morning",
+            "On Friday evening",
+            "On Sunday"
+          ],
+          "answer": "On Monday morning"
+        },
+        {
+          "id": "sp3.m8.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy visits his grandmother on Wednesday.",
+          "q_ru": "Фокси навещает бабушку в среду.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp3.m8.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy has supper at ___ o'clock.",
+          "q_ru": "Фокси ужинает в ___ часов.",
+          "options": [
+            "6",
+            "1",
+            "12"
+          ],
+          "answer": "6"
+        },
+        {
+          "id": "sp3.m8.t1.q4",
+          "kind": "choice",
+          "q_en": "What does Foxy watch on Sunday?",
+          "q_ru": "Что Фокси смотрит в воскресенье?",
+          "options": [
+            "A cartoon",
+            "A video",
+            "A quiz"
+          ],
+          "answer": "A cartoon"
+        },
+        {
+          "id": "sp3.m8.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy has lunch at 2 o'clock.",
+          "q_ru": "Фокси обедает в 2 часа.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

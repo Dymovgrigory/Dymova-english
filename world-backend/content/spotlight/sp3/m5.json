@@ -518,6 +518,11 @@
       "grammar_id": "sp3.m5.g-has-got"
     },
     {
+      "id": "sp3.m5.n10",
+      "kind": "reading",
+      "text_id": "sp3.m5.t1"
+    },
+    {
       "id": "sp3.m5.n7",
       "kind": "chest"
     },
@@ -533,5 +538,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp3.m5.t1",
+      "title_en": "Foxy on the farm",
+      "title_ru": "Фокси на ферме",
+      "body_en": "Foxy is on a farm today. The sheep are fat, and the cows are tall. A parrot can talk, and a spider can crawl. The mice have got little feet. Foxy thinks the sea horse is very cute.",
+      "questions": [
+        {
+          "id": "sp3.m5.t1.q1",
+          "kind": "choice",
+          "q_en": "Where is Foxy today?",
+          "q_ru": "Где Фокси сегодня?",
+          "options": [
+            "On a farm",
+            "At school",
+            "In the playroom"
+          ],
+          "answer": "On a farm"
+        },
+        {
+          "id": "sp3.m5.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The sheep are thin.",
+          "q_ru": "Овцы худенькие.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp3.m5.t1.q3",
+          "kind": "gap",
+          "q_en": "A spider can ___.",
+          "q_ru": "Паук умеет ___ (ползать).",
+          "options": [
+            "crawl",
+            "talk",
+            "shout"
+          ],
+          "answer": "crawl"
+        },
+        {
+          "id": "sp3.m5.t1.q4",
+          "kind": "choice",
+          "q_en": "What have the mice got?",
+          "q_ru": "Что есть у мышей?",
+          "options": [
+            "Little feet",
+            "Long necks",
+            "Fat tails"
+          ],
+          "answer": "Little feet"
+        },
+        {
+          "id": "sp3.m5.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy thinks the sea horse is cute.",
+          "q_ru": "Фокси считает морского конька милым.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

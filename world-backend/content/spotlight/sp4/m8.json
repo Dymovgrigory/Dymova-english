@@ -539,6 +539,11 @@
       "grammar_id": "sp4.m8.g-will"
     },
     {
+      "id": "sp4.m8.n10",
+      "kind": "reading",
+      "text_id": "sp4.m8.t1"
+    },
+    {
       "id": "sp4.m8.n7",
       "kind": "chest"
     },
@@ -554,5 +559,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m8.t1",
+      "title_en": "Foxy goes to Italy",
+      "title_ru": "Фокси едет в Италию",
+      "body_en": "Tomorrow Foxy will travel to Italy. He has got his swimsuit, sunglasses and flippers. He will go camping in the mountains by a lake. He has got a tent, boots and a sleeping bag. It will not be cloudy or rainy — cool!",
+      "questions": [
+        {
+          "id": "sp4.m8.t1.q1",
+          "kind": "choice",
+          "q_en": "Where will Foxy travel?",
+          "q_ru": "Куда Фокси отправится?",
+          "options": [
+            "To Italy",
+            "To Spain",
+            "To Greece"
+          ],
+          "answer": "To Italy"
+        },
+        {
+          "id": "sp4.m8.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy has got his swimsuit.",
+          "q_ru": "У Фокси есть купальник.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp4.m8.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy will go camping in the ___.",
+          "q_ru": "Фокси пойдёт в поход в ___ (горы).",
+          "options": [
+            "mountains",
+            "tent",
+            "lake"
+          ],
+          "answer": "mountains"
+        },
+        {
+          "id": "sp4.m8.t1.q4",
+          "kind": "choice",
+          "q_en": "What has Foxy got for the lake?",
+          "q_ru": "Что у Фокси есть для озера?",
+          "options": [
+            "His flippers",
+            "His boots",
+            "His uniform"
+          ],
+          "answer": "His flippers"
+        },
+        {
+          "id": "sp4.m8.t1.q5",
+          "kind": "truefalse",
+          "q_en": "It will be rainy tomorrow.",
+          "q_ru": "Завтра будет дождливо.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

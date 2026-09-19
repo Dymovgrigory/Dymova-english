@@ -571,6 +571,56 @@
       "sound_word": "dog"
     }
   ],
+  "texts": [
+    {
+      "id": "sp1.m1.t1",
+      "title_en": "Foxy's Family",
+      "title_ru": "Семья Фокси",
+      "body_en": "Hello! I am Foxy. This is my family. My mummy is a queen. My daddy is a king. I like my family.",
+      "questions": [
+        {
+          "id": "sp1.m1.t1.q1",
+          "kind": "choice",
+          "q_en": "What is Foxy's mummy?",
+          "q_ru": "Кто мама Фокси?",
+          "options": [
+            "a queen",
+            "a girl",
+            "a chimp"
+          ],
+          "answer": "a queen"
+        },
+        {
+          "id": "sp1.m1.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy's daddy is a king.",
+          "q_ru": "Папа Фокси — король.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp1.m1.t1.q3",
+          "kind": "gap",
+          "q_en": "My ___ is a king.",
+          "q_ru": "Мой ___ — король.",
+          "options": [
+            "daddy",
+            "mummy",
+            "boy"
+          ],
+          "answer": "daddy"
+        },
+        {
+          "id": "sp1.m1.t1.q4",
+          "kind": "truefalse",
+          "q_en": "Foxy has a family.",
+          "q_ru": "У Фокси есть семья.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
+  ],
   "nodes": [
     {
       "id": "sp1.m1.n1",
@@ -659,6 +709,11 @@
       "id": "sp1.m1.n8",
       "kind": "grammar",
       "grammar_id": "sp1.m1.g-be"
+    },
+    {
+      "id": "sp1.m1.n12",
+      "kind": "reading",
+      "text_id": "sp1.m1.t1"
     },
     {
       "id": "sp1.m1.n9",

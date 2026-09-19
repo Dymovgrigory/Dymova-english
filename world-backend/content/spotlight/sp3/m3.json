@@ -451,6 +451,11 @@
       "grammar_id": "sp3.m3.g-some"
     },
     {
+      "id": "sp3.m3.n9",
+      "kind": "reading",
+      "text_id": "sp3.m3.t1"
+    },
+    {
       "id": "sp3.m3.n6",
       "kind": "chest"
     },
@@ -466,5 +471,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp3.m3.t1",
+      "title_en": "Foxy's lunch box",
+      "title_ru": "Ланчбокс Фокси",
+      "body_en": "Today Foxy has got toast and fruit for breakfast. His lunch box has got chicken, rice and carrots in it. Foxy needs water and lemonade. What is on the shopping list? Potatoes, pasta and vegetables. Foxy thinks popcorn is great.",
+      "questions": [
+        {
+          "id": "sp3.m3.t1.q1",
+          "kind": "choice",
+          "q_en": "What has Foxy got for breakfast?",
+          "q_ru": "Что у Фокси на завтрак?",
+          "options": [
+            "Toast and fruit",
+            "Chicken and rice",
+            "Pasta and potatoes"
+          ],
+          "answer": "Toast and fruit"
+        },
+        {
+          "id": "sp3.m3.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy's lunch box has got pasta in it.",
+          "q_ru": "В ланчбоксе у Фокси паста.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp3.m3.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy needs water and ___.",
+          "q_ru": "Фокси нужны вода и ___ (лимонад).",
+          "options": [
+            "lemonade",
+            "toast",
+            "menu"
+          ],
+          "answer": "lemonade"
+        },
+        {
+          "id": "sp3.m3.t1.q4",
+          "kind": "choice",
+          "q_en": "What is on the shopping list?",
+          "q_ru": "Что в списке покупок?",
+          "options": [
+            "Potatoes, pasta and vegetables",
+            "Jelly and popcorn",
+            "Toast and lemonade"
+          ],
+          "answer": "Potatoes, pasta and vegetables"
+        },
+        {
+          "id": "sp3.m3.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy thinks popcorn is great.",
+          "q_ru": "Фокси считает попкорн отличным.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

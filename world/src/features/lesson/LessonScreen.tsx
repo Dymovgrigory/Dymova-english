@@ -28,6 +28,8 @@ import {
   type ViewProps,
 } from "./challengeViews";
 import { FinishScreen } from "./FinishScreen";
+import { ReadAnswer, ReadText, ReadTrueFalse, WordInContext } from "./readingViews";
+import { SkillBadge } from "./SkillBadge";
 import { SpeakChallenge } from "./SpeakChallenge";
 
 const TILE_TYPES = new Set<Challenge["type"]>(["spell_tiles", "build_phrase", "listen_build"]);
@@ -51,6 +53,14 @@ function ChallengeView(props: ViewProps & { onSkip: () => void; onHeard: (t: str
       return <TypeChallenge {...props} />;
     case "speak":
       return <SpeakChallenge {...props} />;
+    case "read_text":
+      return <ReadText {...props} />;
+    case "read_text_truefalse":
+      return <ReadTrueFalse {...props} />;
+    case "read_text_answer":
+      return <ReadAnswer {...props} />;
+    case "word_in_context":
+      return <WordInContext {...props} />;
     default:
       return TILE_TYPES.has(challenge.type) ? <TilesChallenge {...props} /> : <ChoiceChallenge {...props} />;
   }
@@ -252,9 +262,13 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
   const footer = (
     <div className="flex flex-col gap-2">
       {lessonState.error && <p className="text-center text-[15px] font-bold text-coral-ink" role="alert">{lessonState.error}</p>}
-      {challenge.type === "speak" || challenge.type === "match_pairs" ? (
+      {challenge.type === "speak" || challenge.type === "match_pairs" || challenge.type === "read_text" ? (
         <p className="text-center text-[15px] font-bold text-[#c9bfd8]">
-          {challenge.type === "speak" ? "Нажми на микрофон и прочитай фразу вслух" : "Соедини все пары — верные закрепятся сразу"}
+          {challenge.type === "speak"
+            ? "Нажми на микрофон и прочитай фразу вслух"
+            : challenge.type === "read_text"
+              ? "Прочитай текст и нажми «Я прочитал(а)»"
+              : "Соедини все пары — верные закрепятся сразу"}
         </p>
       ) : (
         <Button
@@ -305,7 +319,8 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
       ) : null}
 
       <main className="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 pb-8 pt-6">
-        <div className="mat-parchment rounded-[28px] px-5 py-6 sm:px-8 sm:py-8">
+        <div className="relative mat-parchment rounded-[28px] px-5 py-6 sm:px-8 sm:py-8">
+        <SkillBadge type={challenge.type} />
         <ChallengeView
           key={`${challenge.index}-${attempt}`}
           challenge={challenge}

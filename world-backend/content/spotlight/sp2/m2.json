@@ -374,6 +374,11 @@
       "grammar_id": "sp2.m2.g-where"
     },
     {
+      "id": "sp2.m2.n9",
+      "kind": "reading",
+      "text_id": "sp2.m2.t1"
+    },
+    {
       "id": "sp2.m2.n6",
       "kind": "chest"
     },
@@ -389,5 +394,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp2.m2.t1",
+      "title_en": "Foxy's House",
+      "title_ru": "Дом Фокси",
+      "body_en": "This is Foxy's house. The door is brown. The kitchen and the bathroom are white. A tree is in the garden.",
+      "questions": [
+        {
+          "id": "sp2.m2.t1.q1",
+          "kind": "choice",
+          "q_en": "What colour is the door?",
+          "q_ru": "Какого цвета дверь?",
+          "options": [
+            "brown",
+            "white",
+            "green"
+          ],
+          "answer": "brown"
+        },
+        {
+          "id": "sp2.m2.t1.q2",
+          "kind": "truefalse",
+          "q_en": "A tree is in the garden.",
+          "q_ru": "Дерево в саду.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp2.m2.t1.q3",
+          "kind": "gap",
+          "q_en": "The ___ is brown.",
+          "q_ru": "___ коричневая.",
+          "options": [
+            "door",
+            "window",
+            "tree"
+          ],
+          "answer": "door"
+        },
+        {
+          "id": "sp2.m2.t1.q4",
+          "kind": "choice",
+          "q_en": "Where is the tree?",
+          "q_ru": "Где дерево?",
+          "options": [
+            "in the garden",
+            "in the bathroom",
+            "in the bedroom"
+          ],
+          "answer": "in the garden"
+        },
+        {
+          "id": "sp2.m2.t1.q5",
+          "kind": "truefalse",
+          "q_en": "The kitchen is brown.",
+          "q_ru": "Кухня коричневая.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

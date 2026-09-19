@@ -69,6 +69,10 @@ def check_choice(answer: int, correct: int) -> Verdict:
     return Verdict(answer == correct)
 
 
+def check_bool(answer: bool, correct: bool) -> Verdict:
+    return Verdict(answer is correct)
+
+
 def check_pairs(answer: list[list[str]], pairs: list[list[str]]) -> Verdict:
     return Verdict({tuple(p) for p in answer} == {tuple(p) for p in pairs})
 

@@ -19,7 +19,7 @@ from .errors import NotFound
 DEFAULT_DIR = Path(__file__).resolve().parents[2] / "content" / "spotlight"
 
 Band = Literal["starter", "junior"]
-NodeKind = Literal["words", "phonics", "grammar", "chest", "review", "module_test"]
+NodeKind = Literal["words", "phonics", "grammar", "reading", "chest", "review", "module_test"]
 
 # Служебные слова, которые можно использовать во фразах без отдельного урока.
 FUNCTION_WORDS = frozenset(
@@ -28,6 +28,13 @@ FUNCTION_WORDS = frozenset(
     what where who how when why can have has got do does me him us them there here
     let us will foxy go was were did must be than lot some any very too so all many much may by""".split()
 )
+
+# Числительные и имена собственные разрешены в текстах для чтения без отдельного урока.
+NUMBER_WORDS = frozenset(
+    """one two three four five six seven eight nine ten eleven twelve thirteen fourteen
+    fifteen sixteen seventeen eighteen nineteen twenty""".split()
+)
+PROPER_NAMES = frozenset({"foxy", "foxinburg"})
 
 _VOWELS = "aeiou"
 
@@ -119,12 +126,30 @@ class Grapheme(BaseModel):
     sound_word: str
 
 
+class TextQA(BaseModel):
+    id: str
+    kind: Literal["choice", "truefalse", "gap"]
+    q_en: str
+    q_ru: str
+    options: list[str] = []
+    answer: str
+
+
+class Text(BaseModel):
+    id: str
+    title_en: str
+    title_ru: str
+    body_en: str
+    questions: list[TextQA] = Field(min_length=4, max_length=5)
+
+
 class Node(BaseModel):
     id: str
     kind: NodeKind
     word_ids: list[str] = []
     grammar_id: str | None = None
     grapheme_ids: list[str] = []
+    text_id: str | None = None
 
 
 class Module(BaseModel):
@@ -139,6 +164,7 @@ class Module(BaseModel):
     phrases: list[Phrase] = []
     grammar: list[Grammar] = []
     graphemes: list[Grapheme] = []
+    texts: list[Text] = []
     nodes: list[Node] = Field(min_length=1)
     sources: list[str] = Field(min_length=1)
 
@@ -161,6 +187,7 @@ class Course:
         self._nodes: dict[str, tuple[Module, Node]] = {}
         self._grammar: dict[str, Grammar] = {}
         self._graphemes: dict[str, Grapheme] = {}
+        self._texts: dict[str, tuple[Module, Text]] = {}
         for module in self.modules:
             for word in module.words:
                 self._atoms[word.id] = (module, word)
@@ -172,6 +199,8 @@ class Course:
                     self._atoms[item.id] = (module, item)
             for grapheme in module.graphemes:
                 self._graphemes[grapheme.id] = grapheme
+            for text in module.texts:
+                self._texts[text.id] = (module, text)
             for node in module.nodes:
                 self._nodes[node.id] = (module, node)
 
@@ -199,6 +228,9 @@ class Course:
 
     def grapheme(self, grapheme_id: str) -> Grapheme:
         return self._get(self._graphemes, grapheme_id, "grapheme")
+
+    def text(self, text_id: str) -> tuple[Module, Text]:
+        return self._get(self._texts, text_id, "text")
 
     def modules_of(self, book_id: str) -> list[Module]:
         self.book(book_id)
@@ -242,6 +274,13 @@ class Course:
         return sorted({g.grapheme for m in self.modules for g in m.graphemes}, key=lambda g: (-len(g), g))
 
 
+def _reading_token_ok(token: str, known: set[str]) -> bool:
+    """Токен текста для чтения допустим: число, числительное, имя собственное или пройденное слово."""
+    if token.isdigit() or token in NUMBER_WORDS or _stems(token) & PROPER_NAMES:
+        return True
+    return is_taught(token, known)
+
+
 def validate(course: Course) -> list[str]:
     errors: list[str] = []
     seen: set[str] = set()
@@ -252,6 +291,7 @@ def validate(course: Course) -> list[str]:
         seen.add(item_id)
 
     known_vocabulary: set[str] = set()
+    known_by_book: dict[str, set[str]] = {}
     book_ids = {b.id for b in course.books}
     for module in course.modules:
         unique(module.id)
@@ -271,12 +311,17 @@ def validate(course: Course) -> list[str]:
                 unique(item.id)
         for grapheme in module.graphemes:
             unique(grapheme.id)
+        for text in module.texts:
+            unique(text.id)
+            for question in text.questions:
+                unique(question.id)
         for node in module.nodes:
             unique(node.id)
 
         word_ids = {w.id for w in module.words}
         grammar_ids = {g.id for g in module.grammar}
         grapheme_ids = {g.id for g in module.graphemes}
+        text_ids = {t.id for t in module.texts}
         words_in_nodes: set[str] = set()
         for node in module.nodes:
             for word_id in node.word_ids:
@@ -297,6 +342,8 @@ def validate(course: Course) -> list[str]:
                 for grapheme_id in node.grapheme_ids:
                     if grapheme_id not in grapheme_ids:
                         errors.append(f"{node.id}: unknown grapheme {grapheme_id}")
+            if node.kind == "reading" and node.text_id not in text_ids:
+                errors.append(f"{node.id}: unknown text {node.text_id}")
 
         for word in module.words:
             if word.id not in words_in_nodes:
@@ -308,6 +355,10 @@ def validate(course: Course) -> list[str]:
 
         for word in module.words:
             known_vocabulary.update(tokens(word.en))
+        # Лексика книги до конца текущего модуля: тексты читают после прохождения слов модуля.
+        known_in_book = known_by_book.setdefault(module.book, set())
+        for word in module.words:
+            known_in_book.update(tokens(word.en))
         for phrase in module.phrases:
             for word_id in phrase.word_ids:
                 if word_id not in word_ids:
@@ -318,6 +369,35 @@ def validate(course: Course) -> list[str]:
                 if is_taught(token, known_vocabulary):
                     continue
                 errors.append(f"{phrase.id}: word '{token}' not taught yet")
+
+        module_words_en = {w.en.lower() for w in module.words}
+        module_word_tokens = {t for w in module.words for t in tokens(w.en)}
+        for text in module.texts:
+            kinds = {q.kind for q in text.questions}
+            if not {"choice", "truefalse"} <= kinds:
+                errors.append(f"{text.id}: needs at least one choice and one truefalse question")
+            for token in tokens(text.body_en):
+                if not _reading_token_ok(token, known_in_book):
+                    errors.append(f"{text.id}: word '{token}' not taught yet")
+            for question in text.questions:
+                for token in tokens(question.q_en):
+                    if not _reading_token_ok(token, known_in_book):
+                        errors.append(f"{question.id}: word '{token}' not taught yet")
+                if question.kind == "truefalse":
+                    if question.answer not in ("true", "false"):
+                        errors.append(f"{question.id}: truefalse answer must be 'true' or 'false'")
+                    continue
+                if len(question.options) != 3:
+                    errors.append(f"{question.id}: needs exactly 3 options")
+                if question.answer not in question.options:
+                    errors.append(f"{question.id}: answer not in options")
+                if question.kind == "gap":
+                    if "___" not in question.q_en:
+                        errors.append(f"{question.id}: gap question needs ___")
+                    answer = question.answer.lower()
+                    if (answer not in module_words_en and answer not in module_word_tokens
+                            and not answer.isdigit() and answer not in NUMBER_WORDS):
+                        errors.append(f"{question.id}: gap answer must be a word of the module")
     return errors
 
 

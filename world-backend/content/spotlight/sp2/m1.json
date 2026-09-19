@@ -335,6 +335,11 @@
       "grammar_id": "sp2.m1.g-this-is"
     },
     {
+      "id": "sp2.m1.n8",
+      "kind": "reading",
+      "text_id": "sp2.m1.t1"
+    },
+    {
       "id": "sp2.m1.n5",
       "kind": "chest"
     },
@@ -350,5 +355,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp2.m1.t1",
+      "title_en": "Foxy's Family Colours",
+      "title_ru": "Цвета семьи Фокси",
+      "body_en": "Foxy has a sister and a brother. His sister is blue. His brother is green. His grandma is white. They are his friends.",
+      "questions": [
+        {
+          "id": "sp2.m1.t1.q1",
+          "kind": "choice",
+          "q_en": "What colour is Foxy's sister?",
+          "q_ru": "Какого цвета сестра Фокси?",
+          "options": [
+            "blue",
+            "red",
+            "yellow"
+          ],
+          "answer": "blue"
+        },
+        {
+          "id": "sp2.m1.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy's brother is green.",
+          "q_ru": "Брат Фокси зелёный.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp2.m1.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy has a ___ and a brother.",
+          "q_ru": "У Фокси есть ___ и брат.",
+          "options": [
+            "sister",
+            "grandpa",
+            "friend"
+          ],
+          "answer": "sister"
+        },
+        {
+          "id": "sp2.m1.t1.q4",
+          "kind": "choice",
+          "q_en": "What colour is grandma?",
+          "q_ru": "Какого цвета бабушка?",
+          "options": [
+            "white",
+            "green",
+            "blue"
+          ],
+          "answer": "white"
+        },
+        {
+          "id": "sp2.m1.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy has a sister.",
+          "q_ru": "У Фокси есть сестра.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

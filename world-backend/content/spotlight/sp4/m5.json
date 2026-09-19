@@ -382,6 +382,11 @@
       "grammar_id": "sp4.m5.g-was-were"
     },
     {
+      "id": "sp4.m5.n8",
+      "kind": "reading",
+      "text_id": "sp4.m5.t1"
+    },
+    {
       "id": "sp4.m5.n5",
       "kind": "chest"
     },
@@ -397,5 +402,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m5.t1",
+      "title_en": "Foxy's dream",
+      "title_ru": "Сон Фокси",
+      "body_en": "Foxy was tired yesterday. His dream was very interesting. In his dream he got a balloon and a card. He was not scared in the dream. He has got a wish: a delicious mango for dessert!",
+      "questions": [
+        {
+          "id": "sp4.m5.t1.q1",
+          "kind": "choice",
+          "q_en": "How was Foxy yesterday?",
+          "q_ru": "Каким Фокси был вчера?",
+          "options": [
+            "Tired",
+            "Angry",
+            "Scared"
+          ],
+          "answer": "Tired"
+        },
+        {
+          "id": "sp4.m5.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy was scared in his dream.",
+          "q_ru": "Фокси было страшно во сне.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp4.m5.t1.q3",
+          "kind": "gap",
+          "q_en": "His ___ was very interesting.",
+          "q_ru": "Его ___ был очень интересным (сон).",
+          "options": [
+            "dream",
+            "card",
+            "wish"
+          ],
+          "answer": "dream"
+        },
+        {
+          "id": "sp4.m5.t1.q4",
+          "kind": "choice",
+          "q_en": "What did Foxy have in his dream?",
+          "q_ru": "Что Фокси получил во сне?",
+          "options": [
+            "A balloon and a card",
+            "A mango",
+            "A ticket"
+          ],
+          "answer": "A balloon and a card"
+        },
+        {
+          "id": "sp4.m5.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy's wish is a delicious pineapple.",
+          "q_ru": "Мечта Фокси — вкусный ананас.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

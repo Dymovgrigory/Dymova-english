@@ -194,6 +194,24 @@ def _grammar_session(ctx: _Context, node: Node) -> list[Challenge]:
     return [ch.teach_rule(grammar), *graded]
 
 
+def _reading_session(ctx: _Context, node: Node) -> list[Challenge]:
+    """Урок чтения: текст целиком, затем его вопросы (truefalse/choice/gap), без повторов id."""
+    text = ctx.course.text(node.text_id or "")[1]
+    items: list[Challenge] = [ch.read_text(text)]
+    seen: set[str] = set()
+    for qa in text.questions:
+        if qa.id in seen:
+            continue
+        seen.add(qa.id)
+        if qa.kind == "truefalse":
+            items.append(ch.read_text_truefalse(text, qa))
+        elif qa.kind == "choice":
+            items.append(ch.read_text_answer(text, qa, ctx.rng))
+        else:
+            items.append(ch.word_in_context(text, qa, ctx.rng))
+    return items
+
+
 def _mixed_session(ctx: _Context, atoms: list[Atom], size: int) -> list[Challenge]:
     """Оцениваемые задания по кругу атомов; каждый атом — разными типами."""
     items: list[Challenge] = []
@@ -247,7 +265,10 @@ def _valid(sequence: list[Challenge], remaining: list[Challenge]) -> bool:
     for position, item in enumerate(sequence):
         if position:
             previous = sequence[position - 1]
-            if item.graded and previous.graded and item.atom_id and item.atom_id == previous.atom_id:
+            # Вопросы одного текста чтения (общий atom_id) могут идти подряд.
+            both_reading = item.type in ch.READING_TYPES and previous.type in ch.READING_TYPES
+            if (item.graded and previous.graded and not both_reading
+                    and item.atom_id and item.atom_id == previous.atom_id):
                 return False
         if position >= MAX_SAME_TYPE_RUN:
             window = sequence[position - MAX_SAME_TYPE_RUN: position + 1]
@@ -291,6 +312,8 @@ def build_session(course: Course, node_id: str, *, player_id: int | None, seed: 
         items = _phonics_session(ctx, node)
     elif node.kind == "grammar":
         items = _grammar_session(ctx, node)
+    elif node.kind == "reading":
+        items = _reading_session(ctx, node)
     elif node.kind == "review":
         items = _mixed_session(ctx, _review_atoms(ctx, player_id), REVIEW_SIZE)
     else:

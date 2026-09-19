@@ -551,6 +551,11 @@
       "grammar_id": "sp4.m3.g-may"
     },
     {
+      "id": "sp4.m3.n10",
+      "kind": "reading",
+      "text_id": "sp4.m3.t1"
+    },
+    {
       "id": "sp4.m3.n7",
       "kind": "chest"
     },
@@ -566,5 +571,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m3.t1",
+      "title_en": "A tasty dessert",
+      "title_ru": "Вкусный десерт",
+      "body_en": "Foxy is hungry. Pass him a tin of beans and a bottle of olive oil. Foxy hates pepper, but sugar is tasty. He has got a mango for dessert. It is very tasty!",
+      "questions": [
+        {
+          "id": "sp4.m3.t1.q1",
+          "kind": "choice",
+          "q_en": "What does Foxy hate?",
+          "q_ru": "Что Фокси терпеть не может?",
+          "options": [
+            "Pepper",
+            "Sugar",
+            "Mango"
+          ],
+          "answer": "Pepper"
+        },
+        {
+          "id": "sp4.m3.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy is hungry.",
+          "q_ru": "Фокси голодный.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp4.m3.t1.q3",
+          "kind": "gap",
+          "q_en": "Pass Foxy a ___ of beans.",
+          "q_ru": "Передай Фокси ___ фасоли (жестяную банку).",
+          "options": [
+            "tin",
+            "bar",
+            "loaf"
+          ],
+          "answer": "tin"
+        },
+        {
+          "id": "sp4.m3.t1.q4",
+          "kind": "choice",
+          "q_en": "What has Foxy got for dessert?",
+          "q_ru": "Что у Фокси на десерт?",
+          "options": [
+            "A mango",
+            "A pineapple",
+            "A coconut"
+          ],
+          "answer": "A mango"
+        },
+        {
+          "id": "sp4.m3.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy has got a pineapple for dessert.",
+          "q_ru": "У Фокси на десерт ананас.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

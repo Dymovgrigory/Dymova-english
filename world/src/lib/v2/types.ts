@@ -1,7 +1,7 @@
 /** Типы ответов API тренажёра Spotlight (/api/v2). Зеркало world-backend/app/learning. */
 
 export type Band = "starter" | "junior";
-export type NodeKind = "words" | "phonics" | "grammar" | "chest" | "review" | "module_test";
+export type NodeKind = "words" | "phonics" | "grammar" | "reading" | "chest" | "review" | "module_test";
 export type NodeStatus = "completed" | "current" | "open" | "locked";
 
 export type ModuleSummary = { id: string; order: number; label: string | null; title_en: string; title_ru: string };
@@ -71,7 +71,11 @@ export type Challenge = {
     | "listen_build"
     | "grammar_pick"
     | "type_word"
-    | "speak";
+    | "speak"
+    | "read_text"
+    | "read_text_truefalse"
+    | "read_text_answer"
+    | "word_in_context";
   atom_id: string;
   graded: boolean;
   instruction_ru?: string;
@@ -94,10 +98,18 @@ export type Challenge = {
   title_ru?: string;
   rule_ru?: string;
   examples?: { en: string; ru: string }[];
+  /** Задания чтения (этап 5): текст и вопросы по нему. */
+  text_id?: string;
+  title_en?: string;
+  sentences?: string[];
+  sentence_en?: string;
+  q_en?: string;
+  q_ru?: string;
 };
 
 export type Answer =
   | { index: number }
+  | { answer: boolean }
   | { text: string }
   | { tiles: string[] }
   | { pairs: [string, string][] }

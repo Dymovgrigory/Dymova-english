@@ -478,6 +478,11 @@
       "grammar_id": "sp1.m4.g-can"
     },
     {
+      "id": "sp1.m4.n11",
+      "kind": "reading",
+      "text_id": "sp1.m4.t1"
+    },
+    {
       "id": "sp1.m4.n8",
       "kind": "chest"
     },
@@ -493,5 +498,59 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
     "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp1.m4.t1",
+      "title_en": "Foxy's Pet",
+      "title_ru": "Питомец Фокси",
+      "body_en": "I have a pet. It is a cat. My cat can jump and run. It is in my house.",
+      "questions": [
+        {
+          "id": "sp1.m4.t1.q1",
+          "kind": "choice",
+          "q_en": "What pet does Foxy have?",
+          "q_ru": "Какой питомец у Фокси?",
+          "options": [
+            "a cat",
+            "a dog",
+            "a duck"
+          ],
+          "answer": "a cat"
+        },
+        {
+          "id": "sp1.m4.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The cat can climb.",
+          "q_ru": "Кот умеет лазить.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp1.m4.t1.q3",
+          "kind": "gap",
+          "q_en": "My cat can ___ and run.",
+          "q_ru": "Мой кот умеет ___ и бегать.",
+          "options": [
+            "jump",
+            "climb",
+            "fly"
+          ],
+          "answer": "jump"
+        },
+        {
+          "id": "sp1.m4.t1.q4",
+          "kind": "choice",
+          "q_en": "Where is the cat?",
+          "q_ru": "Где кот?",
+          "options": [
+            "in the house",
+            "on the tree",
+            "under the bed"
+          ],
+          "answer": "in the house"
+        }
+      ]
+    }
   ]
 }

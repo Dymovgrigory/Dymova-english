@@ -384,6 +384,11 @@
       "grammar_id": "sp2.m4.g-can"
     },
     {
+      "id": "sp2.m4.n9",
+      "kind": "reading",
+      "text_id": "sp2.m4.t1"
+    },
+    {
       "id": "sp2.m4.n6",
       "kind": "chest"
     },
@@ -399,5 +404,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp2.m4.t1",
+      "title_en": "Foxy at the Circus",
+      "title_ru": "Фокси в цирке",
+      "body_en": "Foxy is at the circus. A frog can jump. A fish can swim. A bird can sing and fly. The clown is funny.",
+      "questions": [
+        {
+          "id": "sp2.m4.t1.q1",
+          "kind": "choice",
+          "q_en": "What can the frog do?",
+          "q_ru": "Что умеет лягушка?",
+          "options": [
+            "jump",
+            "swim",
+            "sing"
+          ],
+          "answer": "jump"
+        },
+        {
+          "id": "sp2.m4.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The fish can fly.",
+          "q_ru": "Рыба умеет летать.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp2.m4.t1.q3",
+          "kind": "gap",
+          "q_en": "A fish can ___.",
+          "q_ru": "Рыба умеет ___.",
+          "options": [
+            "swim",
+            "fly",
+            "dance"
+          ],
+          "answer": "swim"
+        },
+        {
+          "id": "sp2.m4.t1.q4",
+          "kind": "choice",
+          "q_en": "Who is funny?",
+          "q_ru": "Кто смешной?",
+          "options": [
+            "the clown",
+            "the frog",
+            "the magician"
+          ],
+          "answer": "the clown"
+        },
+        {
+          "id": "sp2.m4.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy is at the circus.",
+          "q_ru": "Фокси в цирке.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

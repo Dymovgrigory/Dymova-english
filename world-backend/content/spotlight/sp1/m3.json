@@ -436,6 +436,11 @@
       "grammar_id": "sp1.m3.g-have-got"
     },
     {
+      "id": "sp1.m3.n10",
+      "kind": "reading",
+      "text_id": "sp1.m3.t1"
+    },
+    {
       "id": "sp1.m3.n7",
       "kind": "chest"
     },
@@ -451,5 +456,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
     "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp1.m3.t1",
+      "title_en": "Foxy's Room",
+      "title_ru": "Комната Фокси",
+      "body_en": "My room is big. My ball is under the chair. The teddy bear is on my bed. I like my toys!",
+      "questions": [
+        {
+          "id": "sp1.m3.t1.q1",
+          "kind": "choice",
+          "q_en": "Where is the ball?",
+          "q_ru": "Где мяч?",
+          "options": [
+            "under the chair",
+            "on the bed",
+            "in the bus"
+          ],
+          "answer": "under the chair"
+        },
+        {
+          "id": "sp1.m3.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The room is small.",
+          "q_ru": "Комната маленькая.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp1.m3.t1.q3",
+          "kind": "gap",
+          "q_en": "The teddy bear is on my ___.",
+          "q_ru": "Мишка на моей ___.",
+          "options": [
+            "bed",
+            "chair",
+            "table"
+          ],
+          "answer": "bed"
+        },
+        {
+          "id": "sp1.m3.t1.q4",
+          "kind": "choice",
+          "q_en": "What is on the bed?",
+          "q_ru": "Что на кровати?",
+          "options": [
+            "the teddy bear",
+            "the ball",
+            "the TV"
+          ],
+          "answer": "the teddy bear"
+        },
+        {
+          "id": "sp1.m3.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy's room is big.",
+          "q_ru": "Комната Фокси большая.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

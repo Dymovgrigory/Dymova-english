@@ -17,6 +17,8 @@ def right_answer(challenge: dict) -> dict:
         return {}
     if kind == "choice":
         return {"index": solution["index"]}
+    if kind == "bool":
+        return {"answer": solution["answer"]}
     if kind == "text":
         return {"text": solution["accepted"][0]}
     if kind == "tiles":
@@ -32,6 +34,8 @@ def wrong_answer(challenge: dict) -> dict:
     kind = solution["kind"]
     if kind == "choice":
         return {"index": solution["index"] + 1 if solution["index"] == 0 else 0}
+    if kind == "bool":
+        return {"answer": not solution["answer"]}
     if kind in ("text",):
         return {"text": "zzzzzz"}
     if kind == "tiles":

@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass
 
 from . import checker, phonics
 from .checker import Verdict
-from .content import Grammar, GrammarItem, Grapheme, Phrase, Word
+from .content import Grammar, GrammarItem, Grapheme, Phrase, Text, TextQA, Word
 from .errors import BadAnswer
 
 OPTIONS = 3
@@ -283,6 +283,45 @@ def read_phrase_pick_image(phrase: Phrase, phrases: list[Phrase], rng: random.Ra
     return Challenge("read_phrase_pick_image", phrase.id, prompt, _choice_solution(index, phrase.en))
 
 
+# --- чтение текстов (узел reading) ----------------------------------------------------------
+
+READING_TYPES = frozenset({"read_text", "read_text_truefalse", "read_text_answer", "word_in_context"})
+_SENTENCE = re.compile(r"[^.!?]+[.!?]")
+
+
+def _sentences(body: str) -> list[str]:
+    return [s.strip() for s in _SENTENCE.findall(body)]
+
+
+def read_text(text: Text) -> Challenge:
+    """Первый шаг урока чтения: ребёнок читает текст, оценки нет."""
+    prompt = {"text_id": text.id, "title_en": text.title_en, "title_ru": text.title_ru,
+              "sentences": _sentences(text.body_en)}
+    return Challenge("read_text", text.id, prompt, {"kind": "none"}, graded=False)
+
+
+def read_text_truefalse(text: Text, qa: TextQA) -> Challenge:
+    prompt = {"text_id": text.id, "sentence_en": qa.q_en, "q_ru": qa.q_ru}
+    return Challenge("read_text_truefalse", text.id, prompt, {"kind": "bool", "answer": qa.answer == "true"})
+
+
+def _reading_choice(kind: str, text: Text, qa: TextQA, prompt: dict, rng: random.Random) -> Challenge:
+    options = list(qa.options)
+    rng.shuffle(options)
+    prompt["options"] = options
+    return Challenge(kind, text.id, prompt, _choice_solution(options.index(qa.answer), qa.answer))
+
+
+def read_text_answer(text: Text, qa: TextQA, rng: random.Random) -> Challenge:
+    prompt = {"text_id": text.id, "q_en": qa.q_en, "q_ru": qa.q_ru}
+    return _reading_choice("read_text_answer", text, qa, prompt, rng)
+
+
+def word_in_context(text: Text, qa: TextQA, rng: random.Random) -> Challenge:
+    prompt = {"text_id": text.id, "sentence_en": qa.q_en}
+    return _reading_choice("word_in_context", text, qa, prompt, rng)
+
+
 # --- проверка ------------------------------------------------------------------------------
 
 def grade(challenge: Challenge, answer: dict) -> Verdict:
@@ -291,6 +330,10 @@ def grade(challenge: Challenge, answer: dict) -> Verdict:
     try:
         if kind == "choice":
             return checker.check_choice(int(answer["index"]), solution["index"])
+        if kind == "bool":
+            if not isinstance(answer.get("answer"), bool):
+                raise BadAnswer(f"malformed answer for {challenge.type}")
+            return checker.check_bool(answer["answer"], solution["answer"])
         if kind == "text":
             return checker.check_text(str(answer["text"]), solution["accepted"], allow_typo=True)
         if kind == "tiles":

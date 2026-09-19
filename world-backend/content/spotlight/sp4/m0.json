@@ -125,6 +125,11 @@
       ]
     },
     {
+      "id": "sp4.m0.n5",
+      "kind": "reading",
+      "text_id": "sp4.m0.t1"
+    },
+    {
       "id": "sp4.m0.n2",
       "kind": "chest"
     },
@@ -140,5 +145,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m0.t1",
+      "title_en": "Foxy is back",
+      "title_ru": "Фокси вернулся",
+      "body_en": "Foxy is in Foxinburg. He hopes you can join him. Do you remember his surname? Foxy has got a CD.",
+      "questions": [
+        {
+          "id": "sp4.m0.t1.q1",
+          "kind": "choice",
+          "q_en": "Where is Foxy?",
+          "q_ru": "Где Фокси?",
+          "options": [
+            "In Foxinburg",
+            "On the CD",
+            "In a surname"
+          ],
+          "answer": "In Foxinburg"
+        },
+        {
+          "id": "sp4.m0.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy has got a CD.",
+          "q_ru": "У Фокси есть диск.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp4.m0.t1.q3",
+          "kind": "gap",
+          "q_en": "Do you remember Foxy's ___?",
+          "q_ru": "Ты помнишь ___ Фокси (фамилию)?",
+          "options": [
+            "surname",
+            "CD",
+            "hope"
+          ],
+          "answer": "surname"
+        },
+        {
+          "id": "sp4.m0.t1.q4",
+          "kind": "truefalse",
+          "q_en": "Foxy hopes you can join him.",
+          "q_ru": "Фокси надеется, что ты присоединишься.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp4.m0.t1.q5",
+          "kind": "choice",
+          "q_en": "What has Foxy got?",
+          "q_ru": "Что есть у Фокси?",
+          "options": [
+            "A CD",
+            "A surname",
+            "A hope"
+          ],
+          "answer": "A CD"
+        }
+      ]
+    }
   ]
 }

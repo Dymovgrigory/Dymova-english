@@ -500,6 +500,11 @@
       "grammar_id": "sp1.m2.g-in-on"
     },
     {
+      "id": "sp1.m2.n11",
+      "kind": "reading",
+      "text_id": "sp1.m2.t1"
+    },
+    {
       "id": "sp1.m2.n8",
       "kind": "chest"
     },
@@ -515,5 +520,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
     "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp1.m2.t1",
+      "title_en": "My New Schoolbag",
+      "title_ru": "Мой новый рюкзак",
+      "body_en": "This is my school. I have a new schoolbag. My pen and pencil are in it. I like my school.",
+      "questions": [
+        {
+          "id": "sp1.m2.t1.q1",
+          "kind": "choice",
+          "q_en": "What is new?",
+          "q_ru": "Что новое?",
+          "options": [
+            "my schoolbag",
+            "my book",
+            "my bus"
+          ],
+          "answer": "my schoolbag"
+        },
+        {
+          "id": "sp1.m2.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The pen is in the schoolbag.",
+          "q_ru": "Ручка в рюкзаке.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp1.m2.t1.q3",
+          "kind": "gap",
+          "q_en": "I have a new ___.",
+          "q_ru": "У меня новый ___.",
+          "options": [
+            "schoolbag",
+            "bus",
+            "desk"
+          ],
+          "answer": "schoolbag"
+        },
+        {
+          "id": "sp1.m2.t1.q4",
+          "kind": "choice",
+          "q_en": "Where is the pencil?",
+          "q_ru": "Где карандаш?",
+          "options": [
+            "in the schoolbag",
+            "on the desk",
+            "in the bus"
+          ],
+          "answer": "in the schoolbag"
+        },
+        {
+          "id": "sp1.m2.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy is at school.",
+          "q_ru": "Фокси в школе.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

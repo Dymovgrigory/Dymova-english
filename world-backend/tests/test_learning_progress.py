@@ -94,7 +94,7 @@ def test_open_chest(learner, learn_course):
         progress.open_chest(key, learn_course, "sp1.m1.n4")
     with pytest.raises(Conflict):
         progress.open_chest(key, learn_course, "sp1.m1.n1")
-    for node_id in ("sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3"):
+    for node_id in ("sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3", "sp1.m1.n7"):
         progress.complete_node(pid, node_id, stars=0, accuracy=1.0, now=NOW)
     before = core.get_player(key)["coins"]
     result = progress.open_chest(key, learn_course, "sp1.m1.n4")

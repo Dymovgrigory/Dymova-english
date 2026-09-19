@@ -3,7 +3,7 @@ from datetime import timedelta
 
 import pytest
 
-from app.learning import builder, clock, mastery
+from app.learning import builder, challenges, clock, mastery
 from app.learning.errors import Conflict
 
 @pytest.fixture()
@@ -14,7 +14,7 @@ def pid(learn_db, learn_course):
 
 
 SESSION_NODES = [
-    "sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3", "sp1.m1.n5", "sp1.m1.n6",
+    "sp1.m1.n1", "sp1.m1.n2", "sp1.m1.n3", "sp1.m1.n5", "sp1.m1.n6", "sp1.m1.n7",
     "sp1.m2.n1", "sp1.m2.n2", "sp1.m2.n4", "sp1.m2.n5",
     "sp3.m1.n1", "sp3.m1.n2", "sp3.m1.n3", "sp3.m1.n5", "sp3.m1.n6",
 ]
@@ -29,7 +29,8 @@ def _assert_layout(plan):
     speak = sum(c.type == "speak" for c in items)
     assert speak <= builder.MAX_SPEAK
     for i, ch in enumerate(items):
-        if i and ch.graded and items[i - 1].graded and ch.atom_id:
+        both_reading = ch.type in challenges.READING_TYPES and items[i - 1].type in challenges.READING_TYPES
+        if i and ch.graded and items[i - 1].graded and ch.atom_id and not both_reading:
             assert ch.atom_id != items[i - 1].atom_id, (plan.node_id, i)
         if i >= builder.MAX_SAME_TYPE_RUN:
             window = items[i - builder.MAX_SAME_TYPE_RUN: i + 1]

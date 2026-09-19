@@ -21,10 +21,29 @@
     {"id": "sp1.m1.gr-d", "grapheme": "d", "sound_word": "duck"},
     {"id": "sp1.m1.gr-m", "grapheme": "m", "sound_word": "milk"}
   ],
+  "texts": [
+    {
+      "id": "sp1.m1.t1", "title_en": "Foxy's Family", "title_ru": "Семья Фокси",
+      "body_en": "Hello! I am Mum. This is Dad. It is a cat. The dog and the cat.",
+      "questions": [
+        {"id": "sp1.m1.t1.q1", "kind": "choice", "q_en": "Who is Mum?", "q_ru": "Кто мама?",
+         "options": ["Mum", "Dad", "Foxy"], "answer": "Mum"},
+        {"id": "sp1.m1.t1.q2", "kind": "truefalse", "q_en": "It is a dog.", "q_ru": "Это собака.",
+         "options": [], "answer": "false"},
+        {"id": "sp1.m1.t1.q3", "kind": "truefalse", "q_en": "This is Dad.", "q_ru": "Это папа.",
+         "options": [], "answer": "true"},
+        {"id": "sp1.m1.t1.q4", "kind": "gap", "q_en": "It is a ___.", "q_ru": "Это ___.",
+         "options": ["cat", "dog", "sun"], "answer": "cat"},
+        {"id": "sp1.m1.t1.q5", "kind": "choice", "q_en": "Who is Dad?", "q_ru": "Кто папа?",
+         "options": ["Dad", "Mum", "Foxy"], "answer": "Dad"}
+      ]
+    }
+  ],
   "nodes": [
     {"id": "sp1.m1.n1", "kind": "words", "word_ids": ["sp1.m1.cat", "sp1.m1.dad", "sp1.m1.mum"]},
     {"id": "sp1.m1.n2", "kind": "words", "word_ids": ["sp1.m1.dog", "sp1.m1.sun", "sp1.m1.hello"]},
     {"id": "sp1.m1.n3", "kind": "phonics", "grapheme_ids": ["sp1.m1.gr-a", "sp1.m1.gr-t", "sp1.m1.gr-c", "sp1.m1.gr-d", "sp1.m1.gr-m"]},
+    {"id": "sp1.m1.n7", "kind": "reading", "text_id": "sp1.m1.t1"},
     {"id": "sp1.m1.n4", "kind": "chest"},
     {"id": "sp1.m1.n5", "kind": "review"},
     {"id": "sp1.m1.n6", "kind": "module_test"}

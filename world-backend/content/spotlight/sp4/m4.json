@@ -599,6 +599,11 @@
       "grammar_id": "sp4.m4.g-must"
     },
     {
+      "id": "sp4.m4.n11",
+      "kind": "reading",
+      "text_id": "sp4.m4.t1"
+    },
+    {
       "id": "sp4.m4.n8",
       "kind": "chest"
     },
@@ -614,5 +619,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m4.t1",
+      "title_en": "Foxy's journey",
+      "title_ru": "Путешествие Фокси",
+      "body_en": "Foxy is on a journey in July. He feeds the dolphin and the seal. The hippo is lazy at lunchtime. The kangaroo and the koala are amazing. Foxy claps and claps.",
+      "questions": [
+        {
+          "id": "sp4.m4.t1.q1",
+          "kind": "choice",
+          "q_en": "When is Foxy's journey?",
+          "q_ru": "Когда путешествие Фокси?",
+          "options": [
+            "In July",
+            "In June",
+            "In January"
+          ],
+          "answer": "In July"
+        },
+        {
+          "id": "sp4.m4.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy feeds the whale.",
+          "q_ru": "Фокси кормит кита.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp4.m4.t1.q3",
+          "kind": "gap",
+          "q_en": "The ___ is lazy at lunchtime.",
+          "q_ru": "___ ленивый в обеденное время (бегемот).",
+          "options": [
+            "hippo",
+            "giraffe",
+            "seal"
+          ],
+          "answer": "hippo"
+        },
+        {
+          "id": "sp4.m4.t1.q4",
+          "kind": "choice",
+          "q_en": "What is amazing?",
+          "q_ru": "Кто потрясающий?",
+          "options": [
+            "The kangaroo and the koala",
+            "The crocodile and the lizard",
+            "The whale and the dolphin"
+          ],
+          "answer": "The kangaroo and the koala"
+        },
+        {
+          "id": "sp4.m4.t1.q5",
+          "kind": "truefalse",
+          "q_en": "The hippo is lazy.",
+          "q_ru": "Бегемот ленивый.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

@@ -37,15 +37,15 @@ export function useAutoplay(challenge: Challenge) {
   }, [challenge]);
 }
 
-function Instruction({ children }: { children: string }) {
+export function Instruction({ children }: { children: string }) {
   return <h1 className="font-fairy text-[25px] font-black leading-8 text-ink sm:text-[28px]">{children}</h1>;
 }
 
-function selectedIndex(draft: Answer | null): number | null {
+export function selectedIndex(draft: Answer | null): number | null {
   return draft && "index" in draft ? draft.index : null;
 }
 
-function choiceState(draft: Answer | null, index: number, locked: boolean, reveal: AnswerReply | null): ChoiceState {
+export function choiceState(draft: Answer | null, index: number, locked: boolean, reveal: AnswerReply | null): ChoiceState {
   const selected = selectedIndex(draft) === index;
   if (reveal) {
     if (reveal.solution_index === index || (selected && reveal.correct)) return "correct";
@@ -109,7 +109,7 @@ export function TeachGrapheme({ challenge }: { challenge: Challenge }) {
 
 /* ----------------------------- выбор варианта ----------------------------- */
 
-function OptionsList({ challenge, draft, locked, reveal, onDraft, big = false }: ViewProps & { big?: boolean }) {
+export function OptionsList({ challenge, draft, locked, reveal, onDraft, big = false }: ViewProps & { big?: boolean }) {
   const options = (challenge.options ?? []) as string[];
   return (
     <div className="grid gap-3">

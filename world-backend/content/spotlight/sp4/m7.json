@@ -475,6 +475,11 @@
       "grammar_id": "sp4.m7.g-best"
     },
     {
+      "id": "sp4.m7.n9",
+      "kind": "reading",
+      "text_id": "sp4.m7.t1"
+    },
+    {
       "id": "sp4.m7.n6",
       "kind": "chest"
     },
@@ -490,5 +495,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m7.t1",
+      "title_en": "A weekend to remember",
+      "title_ru": "Памятные выходные",
+      "body_en": "Last weekend Foxy went to the museum. He saw a young dinosaur there. He had pancakes at the cafe too. He ate 5 pancakes! He went to the funfair and saw fireworks. They were loud and pretty.",
+      "questions": [
+        {
+          "id": "sp4.m7.t1.q1",
+          "kind": "choice",
+          "q_en": "Where did Foxy go last weekend?",
+          "q_ru": "Куда Фокси пошёл в выходные?",
+          "options": [
+            "To the museum",
+            "To the concert",
+            "To the hospital"
+          ],
+          "answer": "To the museum"
+        },
+        {
+          "id": "sp4.m7.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy saw a dinosaur at the museum.",
+          "q_ru": "Фокси видел динозавра в музее.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp4.m7.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy ___ 5 pancakes.",
+          "q_ru": "Фокси ___ 5 блинчиков (съел).",
+          "options": [
+            "ate",
+            "saw",
+            "took"
+          ],
+          "answer": "ate"
+        },
+        {
+          "id": "sp4.m7.t1.q4",
+          "kind": "choice",
+          "q_en": "What did Foxy watch at the funfair?",
+          "q_ru": "Что Фокси видел на ярмарке?",
+          "options": [
+            "Fireworks",
+            "A dinosaur",
+            "A concert"
+          ],
+          "answer": "Fireworks"
+        },
+        {
+          "id": "sp4.m7.t1.q5",
+          "kind": "truefalse",
+          "q_en": "The fireworks were loud.",
+          "q_ru": "Фейерверки были громкими.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

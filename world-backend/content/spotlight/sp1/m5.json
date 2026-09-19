@@ -471,6 +471,11 @@
       "grammar_id": "sp1.m5.g-like"
     },
     {
+      "id": "sp1.m5.n10",
+      "kind": "reading",
+      "text_id": "sp1.m5.t1"
+    },
+    {
       "id": "sp1.m5.n7",
       "kind": "chest"
     },
@@ -486,5 +491,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_Starter_Teacher-s_book.pdf (тематическое планирование, с. 13–24)",
     "https://eng4school.ru/uchebniki/6544-spotlight-starter-angliyskiy-v-fokuse-1-klass-uchebnik-dlya-nachinayuschih-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp1.m5.t1",
+      "title_en": "At the Seaside",
+      "title_ru": "На море",
+      "body_en": "I like food. I love ice cream and chocolate. I eat a sandwich at the seaside. I drink orange juice.",
+      "questions": [
+        {
+          "id": "sp1.m5.t1.q1",
+          "kind": "choice",
+          "q_en": "What does Foxy love?",
+          "q_ru": "Что любит Фокси?",
+          "options": [
+            "ice cream and chocolate",
+            "pizza and bread",
+            "eggs and cheese"
+          ],
+          "answer": "ice cream and chocolate"
+        },
+        {
+          "id": "sp1.m5.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy eats a sandwich at school.",
+          "q_ru": "Фокси ест сэндвич в школе.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp1.m5.t1.q3",
+          "kind": "gap",
+          "q_en": "I drink ___ juice.",
+          "q_ru": "Я пью ___ сок.",
+          "options": [
+            "orange",
+            "lemon",
+            "apple"
+          ],
+          "answer": "orange"
+        },
+        {
+          "id": "sp1.m5.t1.q4",
+          "kind": "choice",
+          "q_en": "Where does Foxy eat?",
+          "q_ru": "Где ест Фокси?",
+          "options": [
+            "at the seaside",
+            "at school",
+            "in bed"
+          ],
+          "answer": "at the seaside"
+        },
+        {
+          "id": "sp1.m5.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy likes food.",
+          "q_ru": "Фокси любит еду.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

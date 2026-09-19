@@ -452,6 +452,11 @@
       "grammar_id": "sp4.m1.g-look-like"
     },
     {
+      "id": "sp4.m1.n9",
+      "kind": "reading",
+      "text_id": "sp4.m1.t1"
+    },
+    {
       "id": "sp4.m1.n6",
       "kind": "chest"
     },
@@ -467,5 +472,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m1.t1",
+      "title_en": "Foxy's best friend",
+      "title_ru": "Лучший друг Фокси",
+      "body_en": "Foxy has got a best friend. His best friend is slim and very kind. He can ski, skate and surf. He has got a camera, a mobile phone and a guitar. Foxy and his best friend are very friendly.",
+      "questions": [
+        {
+          "id": "sp4.m1.t1.q1",
+          "kind": "choice",
+          "q_en": "What can Foxy's best friend do?",
+          "q_ru": "Что умеет лучший друг Фокси?",
+          "options": [
+            "Ski, skate and surf",
+            "Ski and sail",
+            "Surf and sail"
+          ],
+          "answer": "Ski, skate and surf"
+        },
+        {
+          "id": "sp4.m1.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy's best friend has got a violin.",
+          "q_ru": "У лучшего друга Фокси есть скрипка.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp4.m1.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy's best friend is slim and ___.",
+          "q_ru": "Лучший друг Фокси стройный и ___ (добрый).",
+          "options": [
+            "kind",
+            "plump",
+            "slim"
+          ],
+          "answer": "kind"
+        },
+        {
+          "id": "sp4.m1.t1.q4",
+          "kind": "choice",
+          "q_en": "What has Foxy's best friend got?",
+          "q_ru": "Что есть у лучшего друга Фокси?",
+          "options": [
+            "A guitar",
+            "A violin",
+            "A hairbrush"
+          ],
+          "answer": "A guitar"
+        },
+        {
+          "id": "sp4.m1.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy's best friend is plump.",
+          "q_ru": "Лучший друг Фокси пухлый.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

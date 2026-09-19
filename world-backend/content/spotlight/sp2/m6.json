@@ -454,6 +454,11 @@
       "grammar_id": "sp2.m6.g-weather"
     },
     {
+      "id": "sp2.m6.n10",
+      "kind": "reading",
+      "text_id": "sp2.m6.t1"
+    },
+    {
       "id": "sp2.m6.n7",
       "kind": "chest"
     },
@@ -469,5 +474,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_2_Teacher-s_book.pdf (тематическое планирование, с. 12–23)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6556-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-2-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp2.m6.t1",
+      "title_en": "Foxy's Summer",
+      "title_ru": "Лето Фокси",
+      "body_en": "It is summer. The sun is hot. Foxy is at the beach. He has a hat and shorts. He is happy.",
+      "questions": [
+        {
+          "id": "sp2.m6.t1.q1",
+          "kind": "choice",
+          "q_en": "Is it summer or winter?",
+          "q_ru": "Лето или зима?",
+          "options": [
+            "summer",
+            "winter",
+            "autumn"
+          ],
+          "answer": "summer"
+        },
+        {
+          "id": "sp2.m6.t1.q2",
+          "kind": "truefalse",
+          "q_en": "The sun is hot.",
+          "q_ru": "Солнце горячее.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp2.m6.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy has a ___ and shorts.",
+          "q_ru": "У Фокси есть ___ и шорты.",
+          "options": [
+            "hat",
+            "coat",
+            "jacket"
+          ],
+          "answer": "hat"
+        },
+        {
+          "id": "sp2.m6.t1.q4",
+          "kind": "choice",
+          "q_en": "Where is Foxy?",
+          "q_ru": "Где Фокси?",
+          "options": [
+            "at the beach",
+            "in the bathroom",
+            "in the kitchen"
+          ],
+          "answer": "at the beach"
+        },
+        {
+          "id": "sp2.m6.t1.q5",
+          "kind": "truefalse",
+          "q_en": "It is raining.",
+          "q_ru": "Идёт дождь.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }

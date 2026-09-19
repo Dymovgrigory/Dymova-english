@@ -624,6 +624,11 @@
       "grammar_id": "sp4.m2.g-have-to"
     },
     {
+      "id": "sp4.m2.n11",
+      "kind": "reading",
+      "text_id": "sp4.m2.t1"
+    },
+    {
       "id": "sp4.m2.n8",
       "kind": "chest"
     },
@@ -639,5 +644,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_4_Teacher-s_book.pdf (тематическое планирование, с. 15–29)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6622-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-4-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp4.m2.t1",
+      "title_en": "Foxy's best friend at work",
+      "title_ru": "Лучший друг Фокси на работе",
+      "body_en": "Foxy's best friend is a mechanic in a garage. He always wears a uniform. He usually goes to the garage at half past 7. He is often at the sports centre too. He sometimes goes to the cafe with Foxy.",
+      "questions": [
+        {
+          "id": "sp4.m2.t1.q1",
+          "kind": "choice",
+          "q_en": "What is Foxy's best friend?",
+          "q_ru": "Кем работает лучший друг Фокси?",
+          "options": [
+            "A mechanic",
+            "A doctor",
+            "A nurse"
+          ],
+          "answer": "A mechanic"
+        },
+        {
+          "id": "sp4.m2.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy's best friend is a waiter.",
+          "q_ru": "Лучший друг Фокси — официант.",
+          "options": [],
+          "answer": "false"
+        },
+        {
+          "id": "sp4.m2.t1.q3",
+          "kind": "gap",
+          "q_en": "He always wears a ___.",
+          "q_ru": "Он всегда носит ___ (форму).",
+          "options": [
+            "uniform",
+            "gloves",
+            "watch"
+          ],
+          "answer": "uniform"
+        },
+        {
+          "id": "sp4.m2.t1.q4",
+          "kind": "choice",
+          "q_en": "When does he go to the garage?",
+          "q_ru": "Когда он идёт в гараж?",
+          "options": [
+            "At half past 7",
+            "At quarter past 7",
+            "At half past 8"
+          ],
+          "answer": "At half past 7"
+        },
+        {
+          "id": "sp4.m2.t1.q5",
+          "kind": "truefalse",
+          "q_en": "He sometimes goes to the cafe with Foxy.",
+          "q_ru": "Он иногда ходит в кафе с Фокси.",
+          "options": [],
+          "answer": "true"
+        }
+      ]
+    }
   ]
 }

@@ -306,6 +306,11 @@
       "grammar_id": "sp3.m2.g-possessive"
     },
     {
+      "id": "sp3.m2.n7",
+      "kind": "reading",
+      "text_id": "sp3.m2.t1"
+    },
+    {
       "id": "sp3.m2.n4",
       "kind": "chest"
     },
@@ -321,5 +326,67 @@
   "sources": [
     "https://eng4school.ru/uploads/files/spotlight/Spotlight_3_Teacher-s_book.pdf (тематическое планирование, с. 15–28)",
     "https://eng4school.ru/knigi-dlja-uchitelja/6612-spotlight-angliyskiy-v-fokuse-kniga-dlya-uchitelya-3-klass-bykova-ni.html"
+  ],
+  "texts": [
+    {
+      "id": "sp3.m2.t1",
+      "title_en": "Foxy's family tree",
+      "title_ru": "Семейное дерево Фокси",
+      "body_en": "Foxy has got a great family. His mother is tall, and his father is tall too. His grandmother and grandfather live in Foxinburg. Foxy has got a little cousin. He is 3.",
+      "questions": [
+        {
+          "id": "sp3.m2.t1.q1",
+          "kind": "choice",
+          "q_en": "Who lives in Foxinburg?",
+          "q_ru": "Кто живёт в Фоксинбурге?",
+          "options": [
+            "His grandmother and grandfather",
+            "His cousin",
+            "His aunt"
+          ],
+          "answer": "His grandmother and grandfather"
+        },
+        {
+          "id": "sp3.m2.t1.q2",
+          "kind": "truefalse",
+          "q_en": "Foxy's father is tall.",
+          "q_ru": "Папа Фокси высокий.",
+          "options": [],
+          "answer": "true"
+        },
+        {
+          "id": "sp3.m2.t1.q3",
+          "kind": "gap",
+          "q_en": "Foxy has got a little ___.",
+          "q_ru": "У Фокси есть маленький ___ (двоюродный брат).",
+          "options": [
+            "cousin",
+            "family tree",
+            "grandmother"
+          ],
+          "answer": "cousin"
+        },
+        {
+          "id": "sp3.m2.t1.q4",
+          "kind": "choice",
+          "q_en": "Who is little?",
+          "q_ru": "Кто маленький?",
+          "options": [
+            "Foxy's cousin",
+            "Foxy's grandfather",
+            "Foxy's uncle"
+          ],
+          "answer": "Foxy's cousin"
+        },
+        {
+          "id": "sp3.m2.t1.q5",
+          "kind": "truefalse",
+          "q_en": "Foxy's cousin is 13.",
+          "q_ru": "Двоюродному брату Фокси 13 лет.",
+          "options": [],
+          "answer": "false"
+        }
+      ]
+    }
   ]
 }
