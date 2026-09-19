@@ -1,0 +1,86 @@
+[
+  {
+    "id": "tower-sp3",
+    "left": 416,
+    "top": 183,
+    "width": 109,
+    "height": 202
+  },
+  {
+    "id": "tower-sp4",
+    "left": 1020,
+    "top": 185,
+    "width": 109,
+    "height": 206
+  },
+  {
+    "id": "glory",
+    "left": 653,
+    "top": 199,
+    "width": 138,
+    "height": 196
+  },
+  {
+    "id": "shop",
+    "left": 858,
+    "top": 270,
+    "width": 97,
+    "height": 141
+  },
+  {
+    "id": "school",
+    "left": 499,
+    "top": 326,
+    "width": 123,
+    "height": 145
+  },
+  {
+    "id": "lexicon",
+    "left": 718,
+    "top": 310,
+    "width": 127,
+    "height": 170
+  },
+  {
+    "id": "stickers",
+    "left": 936,
+    "top": 244,
+    "width": 168,
+    "height": 231
+  },
+  {
+    "id": "tower-sp1",
+    "left": 315,
+    "top": 204,
+    "width": 162,
+    "height": 379
+  },
+  {
+    "id": "tower-sp2",
+    "left": 1094,
+    "top": 372,
+    "width": 121,
+    "height": 215
+  },
+  {
+    "id": "nest",
+    "left": 344,
+    "top": 537,
+    "width": 133,
+    "height": 137
+  },
+  {
+    "id": "quests",
+    "left": 552,
+    "top": 560,
+    "width": 126,
+    "height": 146
+  },
+  {
+    "id": "yard",
+    "left": 1039,
+    "top": 539,
+    "width": 197,
+    "height": 193
+  }
+]

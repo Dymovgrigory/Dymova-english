@@ -39,6 +39,27 @@
         "pipeline": "nano-banana-pro still → image-to-3d",
         "image": "generated/world/school-castle-hero-v1.png"
       }
+    },
+    {
+      "assetId": "foxi-rigged-v2",
+      "type": "model/gltf-binary",
+      "url": "../world/public/assets/foxi-rigged-v2.glb",
+      "version": 2,
+      "category": "mascot",
+      "lod": ["v2"],
+      "mobileVariant": "../world/public/assets/foxi-rigged-v2.glb",
+      "desktopVariant": "../world/public/assets/foxi-rigged-v2.glb",
+      "dependencies": [],
+      "sizeKb": 889,
+      "clips": ["Big_Wave_Hello", "Cheer_with_Both_Hands_Up", "Happy_jump_f", "Running", "Shake_It_Off_Dance", "Walking", "Call_Gesture", "Walk_Inplace", "Idle"],
+      "source": {
+        "provider": "meshy",
+        "rig_task": "01a0b868-0fb7-7408-9512-c23c0748cf8d",
+        "animation_tasks": {"Call_Gesture": "01a0b913-c91f-716f-9317-5966feebeef6", "Walk_Inplace": "01a0b915-1783-714e-84fd-8ec5a9f3227b", "Idle": "01a0b915-fb4d-774d-86c7-38b4aa61ff20"},
+        "action_ids": {"Call_Gesture": 29, "Walk_Inplace": 613, "Idle": 0},
+        "pipeline": "foxi_animate.py rig+anim (unrigged foxi.glb -> draco-decode -> /v1/rigging) -> merge_clips.py -> gltf-transform optimize (draco+webp512)",
+        "base": "prototype/mascot/foxi-rigged.glb (6 клипов, скиннинг-фиксы хвост/рюкзак сохранены)"
+      }
     }
   ]
 }
