@@ -272,10 +272,19 @@ const ERROR_TEXTS: Record<string, string> = {
   item_not_owned: "Сначала нужно купить",
   "quest not complete": "Задание ещё не выполнено",
   nothing_to_practice: "Пока нечего тренировать — сначала пройди урок",
+  phone_recently_sent: "Код уже отправлен, подождите минуту",
+  code_invalid: "Неверный код",
+  code_expired: "Код истёк — отправьте новый",
+  too_many_attempts: "Слишком много попыток",
+  no_pending_verification: "Сначала запросите код",
+  consent_required: "Нужны обязательные согласия",
 };
 
 export function humanizeError(err: unknown, fallback: string): string {
-  if (err instanceof ApiError) return ERROR_TEXTS[err.message] ?? fallback;
+  if (err instanceof ApiError) {
+    // коды вида "consent_required:privacy" — смотрим по части до двоеточия
+    return ERROR_TEXTS[err.message] ?? ERROR_TEXTS[err.message.split(":")[0]] ?? fallback;
+  }
   if (err instanceof Error) return err.message;
   return fallback;
 }

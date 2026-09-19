@@ -454,6 +454,74 @@ CREATE TABLE IF NOT EXISTS lexicon_chests (
     PRIMARY KEY (player_id, chest_index)
 );
 
+-- Регистрация: анкета ученика, согласия, верификация телефона.
+CREATE TABLE IF NOT EXISTS player_identity (
+    player_id       INTEGER PRIMARY KEY REFERENCES players(id),
+    first_name      TEXT NOT NULL,
+    last_name       TEXT NOT NULL,
+    birth_date      TEXT NOT NULL,
+    school_number   TEXT NOT NULL,
+    class_grade     INTEGER NOT NULL,
+    class_letter    TEXT,
+    parent_email    TEXT NOT NULL,
+    parent_phone    TEXT NOT NULL,
+    phone_verified_at TEXT,
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at      TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS consents (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_id   INTEGER NOT NULL REFERENCES players(id),
+    type        TEXT NOT NULL,               -- pd_child|privacy|marketing
+    version     TEXT NOT NULL,
+    accepted_at TEXT NOT NULL DEFAULT (datetime('now')),
+    ip          TEXT,
+    user_agent  TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_consents_player_type ON consents (player_id, type);
+
+CREATE TABLE IF NOT EXISTS phone_verifications (
+    id          TEXT PRIMARY KEY,
+    player_id   INTEGER NOT NULL REFERENCES players(id),
+    phone       TEXT NOT NULL,
+    code_hash   TEXT NOT NULL,               -- sha256(salt:code), salt = id записи
+    channel     TEXT NOT NULL,               -- sms|call
+    attempts    INTEGER NOT NULL DEFAULT 0,
+    expires_at  TEXT NOT NULL,
+    verified_at TEXT,
+    provider_id TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- Админка: пользователи, сессии, аудит.
+CREATE TABLE IF NOT EXISTS admin_users (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    login         TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,             -- salt_hex$pbkdf2_hex
+    role          TEXT NOT NULL DEFAULT 'manager',  -- owner|manager
+    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS admin_sessions (
+    id         TEXT PRIMARY KEY,
+    admin_id   INTEGER NOT NULL REFERENCES admin_users(id),
+    token_hash TEXT NOT NULL UNIQUE,
+    expires_at TEXT NOT NULL,
+    revoked_at TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS admin_audit (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    actor      TEXT NOT NULL,                -- login админа
+    action     TEXT NOT NULL,                -- adjust|patch_identity|mastery|items
+    entity     TEXT NOT NULL,                -- player:{id}
+    payload    TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS league_weeks (
     player_id     INTEGER NOT NULL REFERENCES players(id),
     week_start    TEXT NOT NULL,               -- понедельник недели, YYYY-MM-DD

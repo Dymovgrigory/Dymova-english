@@ -6,7 +6,10 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.admin import api as admin_api
+from app.admin import auth as admin_auth
 from app.castle import api as castle_api
+from app.identity import api as identity_api
 from app.learning import api as learning_api
 from app.learning import content as learning_content
 from app.world import api as world_api
@@ -27,18 +30,21 @@ app = FastAPI(title="Foxinburg World")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins(),
-    allow_methods=["GET", "POST", "PUT"],
-    allow_headers=["Content-Type", "X-World-Player"],
+    allow_methods=["GET", "POST", "PUT", "PATCH"],
+    allow_headers=["Content-Type", "X-World-Player", "Authorization"],
 )
 app.include_router(world_api.router)
 app.include_router(castle_api.router)
 app.include_router(castle_api.quests_router)
 app.include_router(learning_api.router)
+app.include_router(identity_api.router)
+app.include_router(admin_api.router)
 
 
 @app.on_event("startup")
 def _seed() -> None:
     core.seed_quests()
+    admin_auth.bootstrap()
     learning_content.get_course()  # битый контент Spotlight не даёт стартовать
 
 

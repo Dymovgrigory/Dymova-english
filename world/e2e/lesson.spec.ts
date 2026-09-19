@@ -47,6 +47,13 @@ test("UI: знакомство → первый урок → путь", async ({
   await expect(page).toHaveURL(/onboarding/);
   await page.getByRole("textbox", { name: "Как тебя зовут?" }).fill("Ева");
   await page.getByRole("button", { name: "Дальше" }).click();
+  // Мягкий гейт регистрации: анкету можно пропустить, мир играется и без неё.
+  const skipRegistration = page.getByRole("button", { name: /Заполню позже/ });
+  const gateShown = await skipRegistration
+    .waitFor({ state: "visible", timeout: 5000 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateShown) await skipRegistration.click();
   await page.getByRole("button", { name: /1 класс/ }).click();
   await page.getByRole("button", { name: "Дальше" }).click();
   await page.getByRole("button", { name: /My Family!/ }).click();

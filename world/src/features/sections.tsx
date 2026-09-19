@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@/design/Button";
 import { ContentImage } from "@/design/ContentImage";
@@ -10,7 +10,9 @@ import { Icon } from "@/design/Icon";
 import { ProgressBar } from "@/design/ProgressBar";
 import { Shell } from "@/design/Shell";
 import { Sound } from "@/design/Sound";
+import { RegistrationFlow } from "@/features/registration/RegistrationFlow";
 import { isProfileMissing, isUnauthorized, v2 } from "@/lib/v2/client";
+import { registrationApi, type RegistrationStatus } from "@/lib/v2/registration";
 import type { Courses, Home, WordsBook } from "@/lib/v2/types";
 
 type Status<T> = { state: "loading" } | { state: "error"; message: string } | { state: "ready"; data: T };
@@ -133,9 +135,40 @@ export function ProfileScreen() {
     const [home, courses] = await Promise.all([v2.home(), v2.courses()]);
     return { home, courses };
   });
+  const [registration, setRegistration] = useState<RegistrationStatus | null>(null);
+  const [editing, setEditing] = useState(false);
+
+  const loadRegistration = useCallback(() => {
+    registrationApi
+      .status()
+      .then(setRegistration)
+      .catch(() => setRegistration({ identity: null, consents: [] }));
+  }, []);
+
+  useEffect(loadRegistration, [loadRegistration]);
+
   const ready = status.state === "ready" ? status.data : null;
   const book = ready?.courses.books.find((b) => b.id === ready.home.profile.book_id);
   const schoolModule = book?.modules.find((m) => m.id === ready?.home.profile.module_id);
+  const identity = registration?.identity ?? null;
+
+  if (editing) {
+    return (
+      <Shell>
+        <div className="mx-auto max-w-md px-4 py-8">
+          <RegistrationFlow
+            mode="edit"
+            onDone={() => {
+              setEditing(false);
+              loadRegistration();
+            }}
+            onCancel={() => setEditing(false)}
+          />
+        </div>
+      </Shell>
+    );
+  }
+
   return (
     <Shell>
       <div className="mx-auto max-w-2xl px-4 py-8">
@@ -166,6 +199,38 @@ export function ProfileScreen() {
                 </div>
               ))}
             </div>
+            <section className="mat-parchment mb-8 rounded-3xl p-5">
+              <h2 className="text-[18px] font-extrabold text-ink">Анкета</h2>
+              {identity ? (
+                <>
+                  <p className="mt-1 text-[16px] font-semibold text-ink-soft">
+                    {identity.last_name} {identity.first_name} · школа №{identity.school_number},{" "}
+                    {identity.class_grade}
+                    {identity.class_letter ? ` «${identity.class_letter}»` : ""} класс
+                  </p>
+                  <p className="mt-1 text-[16px] font-semibold text-ink-soft">{identity.parent_phone_masked}</p>
+                  <span
+                    className={`mt-3 inline-block rounded-full px-3 py-1 text-[13px] font-extrabold ${
+                      identity.phone_verified ? "bg-[#d9f3e5] text-[#17685b]" : "bg-[#ffe9e6] text-[#a82f25]"
+                    }`}
+                  >
+                    {identity.phone_verified ? "Телефон подтверждён" : "Телефон не подтверждён"}
+                  </span>
+                  <Button variant="paper" size="md" className="mt-4" onClick={() => setEditing(true)}>
+                    Изменить
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p className="mt-1 text-[16px] font-semibold text-ink-soft">
+                    Заполните анкету и подтвердите телефон родителя — так прогресс не потеряется.
+                  </p>
+                  <Button variant="paper" size="md" className="mt-4" onClick={() => setEditing(true)}>
+                    Заполнить анкету
+                  </Button>
+                </>
+              )}
+            </section>
             <section className="mat-parchment rounded-3xl p-5">
               <h2 className="text-[18px] font-extrabold text-ink">Мой класс</h2>
               <p className="mt-1 text-[16px] font-semibold text-ink-soft">

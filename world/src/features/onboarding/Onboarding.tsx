@@ -9,10 +9,11 @@ import { Choice } from "@/design/Choice";
 import { Foxy } from "@/design/Foxy";
 import { Icon } from "@/design/Icon";
 import { ProgressBar } from "@/design/ProgressBar";
+import { RegistrationFlow } from "@/features/registration/RegistrationFlow";
 import { hasPlayer, v2, verifiedPlayer } from "@/lib/v2/client";
 import type { BookSummary, Courses } from "@/lib/v2/types";
 
-type Step = "name" | "grade" | "module" | "goal";
+type Step = "name" | "registration" | "grade" | "module" | "goal";
 
 const GOALS = [
   { xp: 10, title: "Легко", note: "5 минут в день" },
@@ -22,6 +23,7 @@ const GOALS = [
 
 const FOXY_LINES: Record<Step, string> = {
   name: "Привет! Я Foxy. Помогу подтянуть английский по твоему школьному учебнику.",
+  registration: "Теперь попроси маму или папу заполнить анкету — так мы сохраним твой прогресс.",
   grade: "В каком ты классе? Откроем твой учебник Spotlight.",
   module: "Какой модуль сейчас проходите в школе? Начнём прямо с него.",
   goal: "Сколько будем заниматься каждый день?",
@@ -55,7 +57,9 @@ export function Onboarding() {
     };
   }, []);
 
-  const steps: Step[] = ["name", "grade", "module", "goal"];
+  const steps: Step[] = returning
+    ? ["grade", "module", "goal"]
+    : ["name", "registration", "grade", "module", "goal"];
   const position = steps.indexOf(step);
 
   const finish = async () => {
@@ -73,7 +77,7 @@ export function Onboarding() {
     }
   };
 
-  const firstStep = returning ? 1 : 0;
+  const firstStep = 0;
   const back = () => setStep(steps[Math.max(position - 1, firstStep)]);
 
   return (
@@ -116,11 +120,15 @@ export function Onboarding() {
                   value={name}
                   maxLength={24}
                   onChange={(e) => setName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("grade")}
+                  onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("registration")}
                   placeholder="Имя"
                   className="h-16 rounded-2xl bg-[#fffaf0] px-5 text-[22px] font-bold text-ink shadow-[inset_0_3px_6px_rgb(92_60_30/0.25),0_0_0_2px_#c9a86a] outline-none focus:shadow-[inset_0_3px_6px_rgb(92_60_30/0.25),0_0_0_3px_#3fae98]"
                 />
               </label>
+            )}
+
+            {step === "registration" && (
+              <RegistrationFlow mode="onboarding" onDone={() => setStep("grade")} />
             )}
 
             {step === "grade" &&
@@ -179,7 +187,7 @@ export function Onboarding() {
 
       <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
         <div className="mx-auto max-w-xl">
-          {step === "name" && <Button block disabled={!name.trim()} onClick={() => setStep("grade")}>Дальше</Button>}
+          {step === "name" && <Button block disabled={!name.trim()} onClick={() => setStep("registration")}>Дальше</Button>}
           {step === "grade" && <Button block disabled={!book} onClick={() => setStep("module")}>Дальше</Button>}
           {step === "module" && <Button block disabled={!moduleId} onClick={() => setStep("goal")}>Дальше</Button>}
           {step === "goal" && (
