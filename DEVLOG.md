@@ -1,5 +1,27 @@
 
-### Сессия 130 (агент — Kimi: кнопка «Мир Фоксинбурга» в боте + единая регистрация с мостом бот→world) — в работе
+### Сессия 131 (агент — Kimi: подтверждение телефона через бота без SMS + кнопка мира повыше) — в работе
+
+**Дата:** 2026-09-19
+**Ветка:** `world-v2` (коммит `87836a0d`)
+**Запрос владельца:** «1) Хочу БЕЗ SMS и звонка: авторизация через регистрацию в самом боте, подтверждение — через самого бота! 2) В мини-приложениях бота нет кнопки Мир Фоксинбурга — добавить повыше, чтобы прям хорошо видно было!»
+
+**Решение (зафиксировано до старта):** в Telegram подтверждение номера — нативный `requestContact` (Telegram гарантирует владение номером — это замена SMS-коду); SMS/звонок остаются для браузера и MAX. «Повыше» = Menu Button чата (setChatMenuButton на весь бот при старте) + баннеры сверху мини-аппов бота (tgapp/miniapp).
+
+**Что сделано (оркестратор, главный цикл — субагенты упали по квоте окна):**
+- **Бот:** `Lead.phone_confirmed: bool = False` + метод `Lead.set_phone(phone, confirmed=False)` (смена номера сбрасывает флаг; пустое значение — no-op); все текстовые пути ввода номера (`registration.py`, `lead_manager.py` ×3, `ai_core.py`) переведены на `set_phone` — текст подтверждением не считается. `identify.handle_contact(conv, raw, confirmed=False)`; в `main.py` нативный контакт TG вызывает с `confirmed=True` ТОЛЬКО если `contact.user_id == from.id` (чужая визитка из адресной книги подтверждением не считается). Мост `/world-bridge/profile`: lead += `phone_confirmed` (всегда, когда lead≠null). `telegram_client.set_menu_button(text, url)` → Bot API setChatMenuButton (без chat_id = на все чаты); вызов в startup после init telegram — сбой логируется, запуск не роняет. Баннеры «Мир Фоксинбурга» сверху: tgapp/index.html (`#world-banner` + `world-banner` в app.css; клик в app.js: внутри Telegram `WebApp.close()` → человек в чате с Menu Button, в браузере — новая вкладка; openLink без initData не используем — задокументировано) и miniapp/index.html (ссылка + стили в его <style>). Иконка — фирменная `fox-head-yellow.png` + SVG-стрелка: дизайн-тесты `test_no_system_emoji` поймали 🏰/→ в первой редакции — заменено.
+- **World-backend:** `RegistrationStart.channel` += `telegram`. `start` с channel=telegram: анкета+согласия сохраняются, SMS не шлётся, `phone_verifications` не пишется, `_check_rate_limits` пропускается; ответ `{"status":"awaiting_bot","cooldown_sec":0,…}`. Новый `POST /api/v2/registration/confirm-bot` → `service.confirm_via_bot`: нет анкеты → 409 `no_pending_verification`; уже verified → 200 идемпотентно (мост НЕ дёргается); нет TG-привязки → 409 `no_telegram_link`; мост None/нет phone/`phone_confirmed`≠True → 409 `bot_phone_unconfirmed`; `normalize_phone(lead.phone) != parent_phone` → 409 `phone_mismatch`; ок → `phone_verified_at` → 200 verified. `bridge.fetch_bot_prefill` сохраняет булев `phone_confirmed` поверх строкового LEAD_KEYS-фильтра (невалидное значение отбрасывается).
+- **Фронт world:** `lib/messenger.ts` — тип `Telegram.WebApp.requestContact`, `supportsTelegramContact()`, промис `requestTelegramContact()`. `lib/v2/registration.ts` — канал `telegram`, статус `awaiting_bot`, `registrationApi.confirmBot()`. `RegistrationFlow`: в Telegram WebApp третий Choice «Telegram — без SMS, одной кнопкой» (дефолт в TG), новый шаг `bot` («Подтверждение в Telegram»): «Поделиться номером» → requestContact → sent → confirmBot с ретраями 3×2с (бот на long-polling может отставать) → success; ручная «Проверить ещё раз» (1 попытка); phone_mismatch/no_telegram_link/bot_phone_unconfirmed — понятные тексты; отказ делиться — подсказка без вызова confirm-bot.
+- **Дока:** `docs/world/messenger-auth.md` — раздел «Подтверждение телефона через Telegram (без SMS)» + Menu Button/баннеры + `phone_confirmed` в контракте моста.
+
+**Как проверено:** bot pytest **1265** (+8: set_phone ×5, handle_contact ×2, payload set_menu_button; дизайн-тесты emoji починены заменой на фирменные ассеты); world-backend pytest **392** (+9: awaiting_bot без SMS и без rate-limit, confirm-bot: no_pending/no_telegram_link/unconfirmed/bridge_down/mismatch/happy+идемпотентность/переключение telegram→sms; +2 phone_confirmed в bridge); vitest **134** (+4 TG-канал: дефолт и выбор, share→confirm→success, phone_mismatch, отказ делиться); tsc/eslint 0; `next build` ок; e2e локально **34/34**. Живой кросс-процессный round-trip: бот на :8021 (WORLD_BRIDGE_SECRET, реальный handle_contact confirmed=True) ↔ world-backend :8010 с реальным мостом — start(awaiting_bot) → confirm-bot: no_telegram_link → привязка → verified → идемпотентно verified; mismatch на втором игроке → phone_mismatch; текстовый ввод номера → phone_confirmed=False. Тестовые игроки rt-* вычищены, бот :8021 погашен.
+
+**Деплой:** (заполняется ниже по факту).
+
+**Владельцу проверить после деплоя:** Menu Button «🏰 Мир Фоксинбурга» слева от поля ввода появится у всех чатов после рестарта бота (setChatMenuButton применён на весь бот); баннер сверху в «Личном кабинете» TG и в MAX-приложении; регистрация в мире внутри Telegram: канал «Telegram» выбран по умолчанию → «Поделиться номером» → без SMS. Остаются хвосты: ключи SMS Aero → `PHONE_VERIFICATION_REQUIRED=1`, `CASTLE_OPEN_ALL=1` выключить после ревью.
+
+---
+
+### Сессия 130 (агент — Kimi: кнопка «Мир Фоксинбурга» в боте + единая регистрация с мостом бот→world) — DONE, ЗАДЕПЛОЕНО
 
 **Дата:** 2026-09-19
 **Ветка:** `world-v2` (коммит `20589c71`)
