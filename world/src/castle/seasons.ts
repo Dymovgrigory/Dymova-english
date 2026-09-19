@@ -30,12 +30,10 @@ export function spotsForSeason(season: string): Spot[] {
 }
 
 /**
- * Картинка сцены: запечённый набор (гирлянды, фонари, тыквы), если выбран, иначе
- * сезонная диорама; базовая диорама — если сезон неизвестен. Файл набора может ещё
- * не существовать — тогда сцена молча откатывается на сезонную (onError в CastleStage).
+ * Картинка сцены: сезонная диорама; базовая — если сезон неизвестен. Файл сезона
+ * может ещё не существовать — тогда сцена молча откатывается на базовую (onError в CastleStage).
  */
-export function sceneForSeason(season: string, sceneSet?: string | null): string {
-  if (sceneSet) return `/content/castle/sets/${sceneSet}.webp`;
+export function sceneForSeason(season: string): string {
   return isSeason(season) ? `/content/castle/seasons/${season}.webp` : "/content/castle/castle-diorama.webp";
 }
 

@@ -126,7 +126,7 @@ def test_verify_without_start(client):
 
 def test_status_empty_for_new_player(client):
     st = client.get("/api/v2/registration/status", headers=HEADERS).json()
-    assert st == {"identity": None, "consents": []}
+    assert st == {"identity": None, "consents": [], "is_registered": False}
 
 
 def test_requires_player_header(client):

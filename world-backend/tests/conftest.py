@@ -8,6 +8,12 @@ import pytest
 FIXTURE_CONTENT = Path(__file__).resolve().parent / "fixtures" / "spotlight"
 
 
+@pytest.fixture(autouse=True)
+def _gate_off(monkeypatch):
+    """Гейт регистрации по умолчанию выключен в тестах; test_registration_gate включает сам."""
+    monkeypatch.setenv("REGISTRATION_GATE", "0")
+
+
 @pytest.fixture()
 def learn_course(monkeypatch):
     from app.learning import content

@@ -1,7 +1,15 @@
 "use client";
 
-import { BANNER_HEX } from "./decor";
 import { Emblem } from "./emblems";
+
+/** Цвета знамени — пары к каталогу бэкенда (BANNER_COLORS). */
+export const BANNER_HEX: Record<string, string> = {
+  plum: "#7c4d8f",
+  emerald: "#2e8b6e",
+  gold: "#c9962e",
+  azure: "#3b7dd8",
+  rose: "#d35f7f",
+};
 
 /**
  * Знамя на остроконечной башенке правее главных ворот: цвет выбранный в Мастерской,

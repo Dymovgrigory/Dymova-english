@@ -1,13 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+import { authHeaders, completeRegistrationUi, createPlayer, registerPlayer } from "./helpers";
+
 const API = process.env.WORLD_API || "http://127.0.0.1:8010";
 
 test("API: профиль, путь и старт урока тренажёра", async ({ request }) => {
-  const bootstrap = { "X-World-Player": `e2e-${Date.now()}`, "Content-Type": "application/json" };
-  const created = await request.post(`${API}/api/world/players`, { headers: bootstrap, data: { display_name: "Ева" } });
-  expect(created.ok()).toBeTruthy();
-  // Дальше — как настоящий клиент: с выданным сервером токеном сессии.
-  const headers = { ...bootstrap, "X-World-Player": (await created.json()).token };
+  const { token } = await createPlayer(request);
+  // Гейт регистрации: без анкеты /api/v2/* отвечает 403 registration_required.
+  await registerPlayer(request, token);
+  const headers = authHeaders(token);
 
   const courses = await (await request.get(`${API}/api/v2/courses`)).json();
   const book = courses.books[0];
@@ -47,13 +48,8 @@ test("UI: знакомство → первый урок → путь", async ({
   await expect(page).toHaveURL(/onboarding/);
   await page.getByRole("textbox", { name: "Как тебя зовут?" }).fill("Ева");
   await page.getByRole("button", { name: "Дальше" }).click();
-  // Мягкий гейт регистрации: анкету можно пропустить, мир играется и без неё.
-  const skipRegistration = page.getByRole("button", { name: /Заполню позже/ });
-  const gateShown = await skipRegistration
-    .waitFor({ state: "visible", timeout: 5000 })
-    .then(() => true)
-    .catch(() => false);
-  if (gateShown) await skipRegistration.click();
+  // Обязательная регистрация: без анкеты и подтверждения телефона мир закрыт.
+  await completeRegistrationUi(page);
   await page.getByRole("button", { name: /1 класс/ }).click();
   await page.getByRole("button", { name: "Дальше" }).click();
   await page.getByRole("button", { name: /My Family!/ }).click();

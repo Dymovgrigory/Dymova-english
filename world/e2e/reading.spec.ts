@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { authHeaders, createPlayer, registerPlayer } from "./helpers";
+
 const API = process.env.WORLD_API || "http://127.0.0.1:8010";
 
 /** Контрактные ответы этапа 5 (docs/world/reading-contract.md) — мок сети, бэк не нужен. */
@@ -85,10 +87,10 @@ async function mockReadingSession(page: Page) {
 }
 
 test("API: узел чтения на пути и сессия чтения", async ({ request }) => {
-  const bootstrap = { "X-World-Player": `e2e-${Date.now()}`, "Content-Type": "application/json" };
-  const created = await request.post(`${API}/api/world/players`, { headers: bootstrap, data: { display_name: "Ева" } });
-  expect(created.ok()).toBeTruthy();
-  const headers = { ...bootstrap, "X-World-Player": (await created.json()).token };
+  const { token } = await createPlayer(request);
+  // Гейт регистрации: без анкеты /api/v2/* отвечает 403 registration_required.
+  await registerPlayer(request, token);
+  const headers = authHeaders(token);
 
   const courses = await (await request.get(`${API}/api/v2/courses`)).json();
   const book = courses.books[0];
@@ -116,6 +118,16 @@ test("API: узел чтения на пути и сессия чтения", as
 test("UI: сессия чтения на моке сети", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (err) => errors.push(err.message));
+  // Гейт регистрации: без зарегистрированного игрока AppGate уводит на /onboarding.
+  const { key, token } = await createPlayer(page.request);
+  await registerPlayer(page.request, token);
+  await page.addInitScript(
+    ([t, k]) => {
+      window.localStorage.setItem("world.playerToken", t);
+      window.localStorage.setItem("world.playerKey", k);
+    },
+    [token, key] as const,
+  );
   await mockReadingSession(page);
   await page.goto("/lesson/sp2.m1.n9");
 

@@ -92,17 +92,21 @@ export function RegistrationFlow({
   mode,
   onDone,
   onCancel,
+  prefillFirstName = "",
 }: {
-  mode: "onboarding" | "edit";
+  /** gate — обязательная регистрация: без кнопки «Заполню позже». */
+  mode: "onboarding" | "edit" | "gate";
   onDone: () => void;
   onCancel?: () => void;
+  /** Имя из профиля мессенджера — предзаполнение анкеты. */
+  prefillFirstName?: string;
 }) {
   const [step, setStep] = useState<FlowStep>("profile");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
 
-  const [firstName, setFirstName] = useState("");
+  const [firstName, setFirstName] = useState(prefillFirstName);
   const [lastName, setLastName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [schoolNumber, setSchoolNumber] = useState("");

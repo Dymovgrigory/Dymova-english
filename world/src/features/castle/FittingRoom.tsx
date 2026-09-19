@@ -2,20 +2,16 @@
 
 import { useState } from "react";
 
-import { BANNER_HEX } from "@/castle/decor";
+import { BANNER_HEX } from "@/castle/Banner";
 import { CastleStage } from "@/features/castle/CastleStage";
-import { needsSlotPicker, slotOptions, type SlotOption } from "@/features/castle/decorPlacement";
-import { SlotPicker } from "@/features/castle/SlotPicker";
 import { ApiError } from "@/lib/api";
-import { castleApi, type Appearance, type CastleItem, type CastleView, type DecorItem } from "@/lib/v2/castle";
+import { castleApi, type Appearance, type CastleItem, type CastleView } from "@/lib/v2/castle";
 
 const CATEGORY_TITLES: Record<string, string> = {
   season: "Сезон",
   time: "Время суток",
   weather: "Погода",
   banner: "Знамя",
-  decor: "Украшения",
-  scene: "Праздники",
 };
 
 type Field = "season" | "time_of_day" | "weather" | "banner_color";
@@ -43,27 +39,8 @@ const TRACK_TITLES: Record<string, string> = {
   stickers: "Собиратель",
 };
 
-/** Миниатюра варианта в ленте: картинка сезона, цвет знамени, предмет или подпись. */
+/** Миниатюра варианта в ленте: картинка сезона, цвет знамени или подпись. */
 function Thumb({ item }: { item: CastleItem }) {
-  if (item.kind === "decor") {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={`/content/castle/decor/${item.id}.webp`} alt="" className="h-12 w-12 object-contain" />;
-  }
-  if (item.kind === "scene") {
-    // Файл набора может ещё не сгенерироваться — показываем базовую диораму.
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={`/content/castle/sets/${item.value}.webp`}
-        alt=""
-        onError={(event) => {
-          const img = event.currentTarget;
-          if (!img.src.endsWith("castle-diorama.webp")) img.src = "/content/castle/castle-diorama.webp";
-        }}
-        className="h-12 w-16 rounded-lg object-cover"
-      />
-    );
-  }
   if (item.kind === "season") {
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={`/content/castle/seasons/${item.value}.webp`} alt="" className="h-12 w-16 rounded-lg object-cover" />;
@@ -77,7 +54,6 @@ function Thumb({ item }: { item: CastleItem }) {
 /**
  * Примерка облика: замок на весь экран, лента вариантов внизу, выбор виден сразу.
  * Превью — локальное, сервер не трогаем; «Купить» покупает и применяет на месте.
- * Украшения и праздничные наборы у купленных применяются на сервере сразу.
  */
 export function FittingRoom({
   view,
@@ -89,102 +65,15 @@ export function FittingRoom({
   onClose: () => void;
 }) {
   const [preview, setPreview] = useState<Appearance>(view.appearance);
-  const [decor, setDecor] = useState<DecorItem[]>(view.decor);
   const [category, setCategory] = useState<string>("season");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [freeArea, setFreeArea] = useState<HTMLDivElement | null>(null);
-  const [picker, setPicker] = useState<{ item: CastleItem; options: SlotOption[] } | null>(null);
 
   const items = view.catalog.filter((item) => item.kind === category);
   const emblem = view.titles.find((t) => t.worn)?.track ?? "fox";
-  const decorActive = new Map(decor.map((d) => [d.item_id, d.active]));
-
-  /** Ответ сервера → новое состояние сцены и ленты. */
-  const accept = (next: CastleView) => {
-    onChange(next);
-    setPreview(next.appearance);
-    setDecor(next.decor);
-  };
-
-  /** Постановка купленного украшения: в явно выбранный слот, с заменой occupant'а. */
-  const placeDecor = async (item: CastleItem, option: SlotOption) => {
-    setBusy(true);
-    setMessage(null);
-    try {
-      const next = await castleApi.apply({
-        ...(option.occupant ? { decor_off: [option.occupant.item_id] } : {}),
-        decor_place: [{ item_id: item.id, slot: option.id }],
-      });
-      accept(next);
-      setPicker(null);
-    } catch {
-      setMessage("Не удалось поставить украшение");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  /** Украшение: стоящее — снимается; снятое — встаёт в дефолтный слот или спрашивает место. */
-  const toggleDecor = async (item: CastleItem) => {
-    const active = decorActive.get(item.id) ?? false;
-    if (item.owned) {
-      if (!active && needsSlotPicker(item, decor)) {
-        setPicker({ item, options: slotOptions(item.anchor, decor) });
-        return;
-      }
-      setBusy(true);
-      setMessage(null);
-      try {
-        const next = await castleApi.apply(active ? { decor_off: [item.id] } : { decor_on: [item.id] });
-        accept(next);
-      } catch (err) {
-        // Дефолтный слот успели занять — спрашиваем место явно.
-        if (!active && err instanceof ApiError && err.message.includes("slot_occupied")) {
-          setPicker({ item, options: slotOptions(item.anchor, decor) });
-        } else {
-          setMessage("Не удалось применить украшение");
-        }
-      } finally {
-        setBusy(false);
-      }
-      return;
-    }
-    setDecor((current) => {
-      const existing = current.find((d) => d.item_id === item.id);
-      if (existing) return current.map((d) => (d.item_id === item.id ? { ...d, active: !active } : d));
-      // Примерка некупленного украшения — просто ставим в его слот локально.
-      return [...current, { item_id: item.id, anchor: item.anchor ?? "meadow", title_ru: item.title_ru, active: true, slot: null }];
-    });
-  };
-
-  /** Праздничный набор у купленного: применить или снять на сервере; у некупленного — превью. */
-  const toggleScene = async (item: CastleItem) => {
-    const applied = preview.scene_set === item.value;
-    if (item.owned) {
-      setBusy(true);
-      setMessage(null);
-      try {
-        accept(await castleApi.apply({ scene_set: applied ? null : item.value }));
-      } catch {
-        setMessage("Не удалось применить праздник");
-      } finally {
-        setBusy(false);
-      }
-      return;
-    }
-    setPreview((current) => ({ ...current, scene_set: applied ? null : item.value }));
-  };
 
   const show = (item: CastleItem) => {
-    if (item.kind === "decor") {
-      void toggleDecor(item);
-      return;
-    }
-    if (item.kind === "scene") {
-      void toggleScene(item);
-      return;
-    }
     setPreview((current) => ({ ...current, ...fieldPatch(FIELD_BY_KIND[item.kind], item.value) }));
   };
 
@@ -192,13 +81,10 @@ export function FittingRoom({
     setBusy(true);
     setMessage(null);
     try {
-      let next = await castleApi.buy(item.id);
-      if (item.kind === "scene") {
-        next = await castleApi.apply({ scene_set: item.value });
-      } else if (item.kind !== "decor") {
-        next = await castleApi.apply(fieldPatch(FIELD_BY_KIND[item.kind], item.value));
-      }
-      accept(next);
+      await castleApi.buy(item.id);
+      const next = await castleApi.apply(fieldPatch(FIELD_BY_KIND[item.kind], item.value));
+      onChange(next);
+      setPreview(next.appearance);
     } catch (err) {
       const detail = err instanceof ApiError ? err.message : "";
       setMessage(detail.includes("not enough coins") ? "Не хватает монет" : "Не удалось купить");
@@ -214,7 +100,6 @@ export function FittingRoom({
         openId={null}
         pulsing={[]}
         appearance={preview}
-        decor={decor}
         emblem={emblem}
         onOpen={() => undefined}
       />
@@ -248,39 +133,20 @@ export function FittingRoom({
           ))}
         </div>
         <ul className="flex gap-2 overflow-x-auto pb-1">
-          {items.map((item) => {
-            const placed = item.kind === "decor" && (decorActive.get(item.id) ?? false);
-            const sceneApplied = item.kind === "scene" && preview.scene_set === item.value;
-            const highlighted = placed || sceneApplied;
-            return (
+          {items.map((item) => (
             <li key={item.id} className="shrink-0">
               <div className="flex w-36 flex-col items-center gap-1 rounded-2xl bg-white/10 p-2">
                 <button
                   type="button"
                   aria-label={item.title_ru}
-                  disabled={busy && (item.kind === "decor" || item.kind === "scene") && item.owned}
                   onClick={() => show(item)}
-                  className={`flex h-14 w-full items-center justify-center rounded-xl bg-black/20 px-1 text-center text-[12px] font-bold text-[#f6efe2] ${
-                    highlighted ? "ring-2 ring-[#ffd36e]" : ""
-                  }`}
+                  className="flex h-14 w-full items-center justify-center rounded-xl bg-black/20 px-1 text-center text-[12px] font-bold text-[#f6efe2]"
                 >
                   <Thumb item={item} />
-                  {!["decor", "scene", "season", "banner"].includes(item.kind) ? item.title_ru : null}
+                  {!["season", "banner"].includes(item.kind) ? item.title_ru : null}
                 </button>
                 <span className="max-w-full truncate text-[12px] font-extrabold text-[#f6efe2]">{item.title_ru}</span>
-                {item.kind === "decor" && item.owned ? (
-                  <span className={`text-[11px] font-bold ${placed ? "text-[#9fe3b1]" : "text-[#c9b8e8]"}`}>
-                    {placed ? "стоит на замке — нажми, чтобы убрать" : "снято — нажми, чтобы поставить"}
-                  </span>
-                ) : item.kind === "decor" && placed ? (
-                  <span className="text-[11px] font-bold text-[#9fe3b1]">на сцене · примерка</span>
-                ) : item.kind === "scene" && item.owned ? (
-                  <span className={`text-[11px] font-bold ${sceneApplied ? "text-[#9fe3b1]" : "text-[#c9b8e8]"}`}>
-                    {sceneApplied ? "праздник на замке — нажми, чтобы убрать" : "куплен — нажми, чтобы устроить"}
-                  </span>
-                ) : item.kind === "scene" && sceneApplied ? (
-                  <span className="text-[11px] font-bold text-[#9fe3b1]">на сцене · примерка</span>
-                ) : item.owned ? (
+                {item.owned ? (
                   <span className="text-[11px] font-bold text-[#9fe3b1]">есть</span>
                 ) : !item.unlocked ? (
                   <span className="text-[11px] font-bold text-[#c9b8e8]">
@@ -300,20 +166,10 @@ export function FittingRoom({
                 )}
               </div>
             </li>
-            );
-          })}
+          ))}
         </ul>
         {message ? <p className="text-center text-[13px] font-bold text-[#ffb3a6]" role="alert">{message}</p> : null}
       </div>
-      {picker ? (
-        <SlotPicker
-          title={picker.item.title_ru}
-          options={picker.options}
-          busy={busy}
-          onPick={(option) => void placeDecor(picker.item, option)}
-          onCancel={() => setPicker(null)}
-        />
-      ) : null}
       {/* свободная область для вписывания сцены: весь экран минус лента */}
       <div ref={setFreeArea} className="pointer-events-none absolute inset-x-0 top-0" style={{ bottom: 170 }} aria-hidden />
     </div>

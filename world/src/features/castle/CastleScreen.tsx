@@ -658,7 +658,6 @@ export function CastleScreen() {
         openId={openId}
         pulsing={[...(pulse ? [pulse] : []), ...(claimable > 0 ? (["quests"] as const) : [])]}
         appearance={castle?.appearance ?? null}
-        decor={castle?.decor ?? []}
         emblem={castle?.titles.find((t) => t.worn)?.track ?? "fox"}
         onOpen={openRoom}
       />

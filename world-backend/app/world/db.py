@@ -499,6 +499,17 @@ CREATE TABLE IF NOT EXISTS phone_verifications (
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+-- Вход через мессенджеры (Telegram/MAX): привязка внешнего аккаунта к игроку.
+CREATE TABLE IF NOT EXISTS external_identities (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    provider         TEXT NOT NULL,              -- telegram|max
+    provider_user_id TEXT NOT NULL,
+    player_id        INTEGER NOT NULL REFERENCES players(id),
+    display_name     TEXT NOT NULL DEFAULT '',
+    created_at       TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (provider, provider_user_id)
+);
+
 -- Админка: пользователи, сессии, аудит.
 CREATE TABLE IF NOT EXISTS admin_users (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,

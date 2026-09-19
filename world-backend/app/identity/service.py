@@ -204,9 +204,20 @@ def verify_code(external_key: str, code: str) -> dict:
     return {"status": "verified"}
 
 
+def is_registered(player_id: int) -> bool:
+    """Регистрация завершена: анкета и согласия записаны на /start,
+    телефон подтверждён на /verify (в fake-режиме — dev_code с клиента)."""
+    row = get_conn().execute(
+        "SELECT phone_verified_at FROM player_identity WHERE player_id=?",
+        (player_id,),
+    ).fetchone()
+    return bool(row and row["phone_verified_at"])
+
+
 def get_status(external_key: str) -> dict:
     player_id = _player_id(external_key)
     return {
         "identity": get_identity(player_id),
         "consents": list_consents(player_id),
+        "is_registered": is_registered(player_id),
     }

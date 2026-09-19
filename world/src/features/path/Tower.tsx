@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, type ReactNode, type Ref } from "react";
+import { useEffect, useRef, useState, type ReactNode, type Ref } from "react";
 
 import { Icon, type IconName } from "@/design/Icon";
 import { FoxiMascot } from "@/foxi3d/FoxiMascot";
+import type { WalkOffset } from "@/foxi3d/walk";
 import { NODE_LABELS } from "@/lib/v2/pathLayout";
 import type { LearningPath, NodeKind, PathModule, PathNode } from "@/lib/v2/types";
 
@@ -46,13 +47,24 @@ function Medallion({ icon, tone }: { icon: IconName; tone: "brass" | "done" | "m
   );
 }
 
-function WindowSlot({ node, onPress, currentRef }: { node: PathNode; onPress: PressNode; currentRef?: Ref<HTMLDivElement> }) {
+type SlotRegistry = (id: string, el: HTMLDivElement | null) => void;
+
+function mergeSlotRef(id: string, register: SlotRegistry, currentRef?: Ref<HTMLDivElement>) {
+  return (el: HTMLDivElement | null) => {
+    register(id, el);
+    if (!currentRef) return;
+    if (typeof currentRef === "function") currentRef(el);
+    else currentRef.current = el;
+  };
+}
+
+function WindowSlot({ node, onPress, currentRef, registerSlot, walkFrom }: { node: PathNode; onPress: PressNode; currentRef?: Ref<HTMLDivElement>; registerSlot: SlotRegistry; walkFrom?: WalkOffset | null }) {
   const label = NODE_LABELS[node.kind];
   const { status } = node;
   const current = status === "current";
   return (
-    <div ref={currentRef} className="relative flex flex-col items-center">
-      {current && <FoxiMascot />}
+    <div ref={mergeSlotRef(node.id, registerSlot, currentRef)} className="relative flex flex-col items-center">
+      {current && <FoxiMascot walkFrom={walkFrom} />}
       <button
         type="button"
         onClick={() => onPress(node)}
@@ -83,11 +95,11 @@ function WindowSlot({ node, onPress, currentRef }: { node: PathNode; onPress: Pr
   );
 }
 
-function Balcony({ node, onPress, currentRef }: { node: PathNode; onPress: PressNode; currentRef?: Ref<HTMLDivElement> }) {
+function Balcony({ node, onPress, currentRef, registerSlot }: { node: PathNode; onPress: PressNode; currentRef?: Ref<HTMLDivElement>; registerSlot: SlotRegistry }) {
   const locked = node.status === "locked";
   const done = node.status === "completed";
   return (
-    <div ref={currentRef}>
+    <div ref={mergeSlotRef(node.id, registerSlot, currentRef)}>
       <button
         type="button"
         onClick={() => onPress(node)}
@@ -128,7 +140,7 @@ function rowsBottomUp(nodes: PathNode[]): PathNode[][] {
   return rows.reverse();
 }
 
-function Floor({ module, onPress, currentRef }: { module: PathModule; onPress: PressNode; currentRef: Ref<HTMLDivElement> }) {
+function Floor({ module, onPress, currentRef, registerSlot, walkFrom }: { module: PathModule; onPress: PressNode; currentRef: Ref<HTMLDivElement>; registerSlot: SlotRegistry; walkFrom?: WalkOffset | null }) {
   const [imageBroken, setImageBroken] = useState(false);
   const windows = module.nodes.filter((n) => n.kind !== "module_test");
   const test = module.nodes.find((n) => n.kind === "module_test");
@@ -161,12 +173,12 @@ function Floor({ module, onPress, currentRef }: { module: PathModule; onPress: P
 
       <div className="px-2 pb-4 pt-6">
         {/* Подъём снизу вверх: контрольная — над окнами, первый урок — в нижнем ряду. */}
-        {test && <Balcony node={test} onPress={onPress} currentRef={test.id === firstCurrent ? currentRef : undefined} />}
+        {test && <Balcony node={test} onPress={onPress} currentRef={test.id === firstCurrent ? currentRef : undefined} registerSlot={registerSlot} />}
         <div className="mt-12 flex flex-col gap-y-10">
           {rowsBottomUp(windows).map((row) => (
             <div key={row[0].id} className="grid grid-cols-3 justify-items-center gap-x-2">
               {row.map((node) => (
-                <WindowSlot key={node.id} node={node} onPress={onPress} currentRef={node.id === firstCurrent ? currentRef : undefined} />
+                <WindowSlot key={node.id} node={node} onPress={onPress} currentRef={node.id === firstCurrent ? currentRef : undefined} registerSlot={registerSlot} walkFrom={node.id === firstCurrent ? walkFrom : null} />
               ))}
             </div>
           ))}
@@ -222,6 +234,34 @@ export function Tower({ path, onPress, currentRef, afterHero }: { path: Learning
   const tests = path.modules.flatMap((m) => m.nodes.filter((n) => n.kind === "module_test"));
   const raised = tests.length > 0 && tests.every((n) => n.status === "completed");
 
+  // Реестр координат окон — для перехода Фокси от предыдущего узла к текущему
+  const slotEls = useRef(new Map<string, HTMLDivElement>());
+  const registerSlot: SlotRegistry = (id, el) => {
+    if (el) slotEls.current.set(id, el);
+    else slotEls.current.delete(id);
+  };
+  const orderedIds = path.modules.flatMap((m) => m.nodes.map((n) => n.id));
+  const currentId = orderedIds.find((id) => path.modules.some((m) => m.nodes.some((n) => n.id === id && n.status === "current")));
+  const walkedFor = useRef<string | null>(null);
+  const [walkFrom, setWalkFrom] = useState<WalkOffset | null>(null);
+
+  useEffect(() => {
+    if (!currentId || walkedFor.current === currentId) return;
+    walkedFor.current = currentId;
+    const idx = orderedIds.indexOf(currentId);
+    if (idx <= 0) return; // первый узел учебника — идти неоткуда
+    const prevEl = slotEls.current.get(orderedIds[idx - 1]);
+    const curEl = slotEls.current.get(currentId);
+    if (!prevEl || !curEl) return;
+    const a = prevEl.getBoundingClientRect();
+    const b = curEl.getBoundingClientRect();
+    const dx = a.left + a.width / 2 - (b.left + b.width / 2);
+    const dy = a.top + a.height / 2 - (b.top + b.height / 2);
+    if (Math.hypot(dx, dy) < 8) return;
+    setWalkFrom({ dx, dy });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- orderedIds производный от path, currentId достаточен
+  }, [currentId]);
+
   return (
     <div className="flex flex-col items-stretch">
       <Hero bookId={path.book.id} title={path.book.title} grade={path.book.grade} raised={raised} />
@@ -231,7 +271,7 @@ export function Tower({ path, onPress, currentRef, afterHero }: { path: Learning
         const progress = below ? below.nodes.filter((n) => n.status === "completed").length / below.nodes.length : 0;
         return (
           <div key={module.id} className="flex flex-col items-stretch">
-            <Floor module={module} onPress={onPress} currentRef={currentRef} />
+            <Floor module={module} onPress={onPress} currentRef={currentRef} registerSlot={registerSlot} walkFrom={walkFrom} />
             {below && <Stairs progress={progress} />}
           </div>
         );

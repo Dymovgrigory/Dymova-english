@@ -128,7 +128,7 @@ export function Onboarding() {
             )}
 
             {step === "registration" && (
-              <RegistrationFlow mode="onboarding" onDone={() => setStep("grade")} />
+              <RegistrationFlow mode="gate" onDone={() => setStep("grade")} />
             )}
 
             {step === "grade" &&

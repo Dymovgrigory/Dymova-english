@@ -46,6 +46,8 @@ export type RegistrationIdentity = {
 export type RegistrationStatus = {
   identity: RegistrationIdentity | null;
   consents: Consent[];
+  /** Анкета заполнена, согласия приняты, телефон подтверждён. */
+  is_registered?: boolean;
 };
 
 /** Ошибка регистрации: у code_invalid сервер шлёт attempts_left отдельным полем. */

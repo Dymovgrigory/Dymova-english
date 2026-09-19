@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Nunito, Playfair_Display } from "next/font/google";
+import { AppGate } from "@/features/gate/AppGate";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -32,7 +33,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="ru"
       className={`${montserrat.variable} ${playfair.variable} ${nunito.variable} ${nunito.className} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">{children}</body>
+      <body className="flex min-h-full flex-col font-sans">
+        <AppGate>{children}</AppGate>
+      </body>
     </html>
   );
 }

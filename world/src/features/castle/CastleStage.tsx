@@ -13,11 +13,10 @@ import {
 } from "@/castle/buildings";
 import { effectiveAppearance, lightLayer, seasonByDate } from "@/castle/appearance";
 import { Banner } from "@/castle/Banner";
-import { Decor } from "@/castle/DecorLayer";
 import { hotspotsForSeason, sceneForSeason, spotsForSeason } from "@/castle/seasons";
 import { Weather } from "@/castle/Weather";
 import { fitScene } from "@/castle/scene";
-import type { Appearance, DecorItem } from "@/lib/v2/castle";
+import type { Appearance } from "@/lib/v2/castle";
 
 /** Карта зон из PNG: номер здания на пиксель. Пока не загрузилась — работают кнопки-области. */
 function useHotspotMap(url: string): HotspotMap | null {
@@ -128,7 +127,6 @@ export function CastleStage({
   openId,
   pulsing,
   appearance,
-  decor,
   emblem,
   onOpen,
 }: {
@@ -136,15 +134,14 @@ export function CastleStage({
   openId: SpotId | null;
   pulsing: SpotId[];
   appearance: Appearance | null;
-  decor: DecorItem[];
   emblem: string;
   onOpen: (id: SpotId) => void;
 }) {
   const season = appearance?.season ?? seasonByDate(new Date());
-  const wanted = sceneForSeason(season, appearance?.scene_set ?? null);
-  // Файл набора сцены может ещё не существовать — молча откатываемся на сезонную.
+  const wanted = sceneForSeason(season);
+  // Файл сцены может ещё не существовать — молча откатываемся на базовую диораму.
   const [broken, setBroken] = useState<string | null>(null);
-  const scene = broken === wanted ? sceneForSeason(season) : wanted;
+  const scene = broken === wanted ? "/content/castle/castle-diorama.webp" : wanted;
   const onSceneError = () => setBroken(wanted);
   const spots = spotsForSeason(season);
   const map = useHotspotMap(hotspotsForSeason(season));
@@ -211,13 +208,6 @@ export function CastleStage({
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
                 style={lightLayer(effectiveAppearance(appearance, new Date()).time) as CSSProperties}
-              />
-              <Decor
-                items={decor}
-                time={effectiveAppearance(appearance, new Date()).time}
-                season={season}
-                scene={scene}
-                spots={spots}
               />
               <Banner color={appearance.banner_color} emblem={emblem} />
               <Weather kind={effectiveAppearance(appearance, new Date()).weather} />

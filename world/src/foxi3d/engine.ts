@@ -27,6 +27,14 @@ export interface FoxiOptions {
 export interface FoxiHandle {
   celebrate: () => void;
   dance: () => void;
+  /**
+   * Переход к новому окну: клип Walking, разворот по направлению движения.
+   * DOM-контейнер в это время двигает вызывающий код (transform translate).
+   * По истечении durationMs — приветствие (wave/cheer), Idle и бабл-подсказка.
+   */
+  walk: (direction: 1 | -1, durationMs: number, onArrived?: () => void) => void;
+  /** Приветствие без ходьбы: движок поднялся, когда DOM-переход уже завершён. */
+  greet: () => void;
   dispose: () => void;
 }
 
@@ -35,6 +43,7 @@ type Three = typeof import("three");
 const CLIP = {
   idle: "Idle",
   walk: "Walk_Inplace",
+  walking: "Walking",
   wave: "Big_Wave_Hello",
   call: "Call_Gesture",
   cheer: "Cheer_with_Both_Hands_Up",
@@ -140,6 +149,19 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
   rig.position.set(0, 0, 0);
   scene.add(rig);
 
+  // Фрейминг: вписываем маскота в кадр по bounding sphere — без обрезки
+  // краёв и искажения пропорций при любом размере контейнера.
+  const fitSphere = new THREE.Box3().setFromObject(body).getBoundingSphere(new THREE.Sphere());
+  const FIT_MARGIN = 1.15;
+  function fitCamera() {
+    const vFov = (camera.fov * Math.PI) / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
+    const dist = (fitSphere.radius * FIT_MARGIN) / Math.tan(Math.min(vFov, hFov) / 2);
+    camera.position.set(fitSphere.center.x, fitSphere.center.y + fitSphere.radius * 0.1, fitSphere.center.z + Math.max(dist, 0.5));
+    camera.lookAt(fitSphere.center);
+  }
+  fitCamera();
+
   function makeBlobShadow() {
     const c = document.createElement("canvas");
     c.width = c.height = 128;
@@ -175,7 +197,7 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
   });
   const tailQuat = new THREE.Quaternion();
 
-  type Mode = "idle" | "oneshot" | "stroll";
+  type Mode = "idle" | "oneshot" | "stroll" | "travel";
   const state = {
     mode: "idle" as Mode,
     active: null as Action | null,
@@ -185,12 +207,14 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
     visible: true,
     pageVisible: !document.hidden,
     behaviorTimer: 0 as unknown as ReturnType<typeof setTimeout>,
+    promptTimer: 0 as unknown as ReturnType<typeof setTimeout>,
     strollTargetX: 0,
+    travelYaw: 0,
     promptShown: false,
   };
 
-  // «Окна» — якоря по горизонтали в пределах canvas
-  const ANCHORS = [-0.85, 0, 0.85];
+  // «Окна» — якоря по горизонтали в пределах canvas (скромные, чтобы не резать кадр)
+  const ANCHORS = [-0.5, 0, 0.5];
   let anchorIndex = 1;
 
   function fadeTo(action: Action, fade: number, timeScale = 1) {
@@ -216,6 +240,15 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
       state.promptShown = false;
       opts.onPrompt?.(false);
     }
+  }
+
+  function showPrompt(autoHideMs = 6000) {
+    clearTimeout(state.promptTimer);
+    if (!state.promptShown) {
+      state.promptShown = true;
+      opts.onPrompt?.(true);
+    }
+    state.promptTimer = setTimeout(hidePrompt, autoHideMs);
   }
 
   function startOneshot(name: string, timeScale = 1, onDone?: () => void) {
@@ -309,6 +342,42 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
     }, DANCE_FRAGMENT_SEC * 1000);
   }
 
+  /**
+   * Ходьба от окна к окну: клип Walking + разворот корпуса по направлению.
+   * Само перемещение делает DOM (transform контейнера) — здесь только «игра».
+   * По прибытии: приветствие → Idle → бабл «Нажми на следующий урок!».
+   */
+  function walk(direction: 1 | -1, durationMs: number, onArrived?: () => void) {
+    if (state.disposed || durationMs <= 0) return;
+    clearTimeout(state.behaviorTimer);
+    hidePrompt();
+    state.mode = "travel";
+    state.travelYaw = direction * Math.PI * 0.42;
+    playLoop(actions[CLIP.walking] ? CLIP.walking : CLIP.walk, 0.25, 1.1);
+    state.behaviorTimer = setTimeout(() => {
+      if (state.disposed) return;
+      state.travelYaw = 0;
+      arrive();
+      onArrived?.();
+    }, durationMs);
+  }
+
+  /** Прибытие: приветствие (wave/cheer) → Idle → бабл «Нажми на следующий урок!». */
+  function arrive() {
+    const arrival = Math.random() < 0.5 ? CLIP.wave : CLIP.cheer;
+    startOneshot(arrival, 1.1, () => {
+      endIdle();
+      showPrompt();
+    });
+  }
+
+  function greet() {
+    if (state.disposed) return;
+    clearTimeout(state.behaviorTimer);
+    state.travelYaw = 0;
+    arrive();
+  }
+
   // --- покадровый цикл ---
   const clock = new THREE.Clock();
   const _q = new THREE.Quaternion();
@@ -334,7 +403,9 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
     const t = state.time;
 
     let targetYaw = 0;
-    if (state.mode === "stroll") {
+    if (state.mode === "travel") {
+      targetYaw = state.travelYaw;
+    } else if (state.mode === "stroll") {
       const dx = state.strollTargetX - rig.position.x;
       if (Math.abs(dx) > 0.03) {
         targetYaw = Math.sign(dx) * 0.7; // лёгкий поворот в сторону перехода
@@ -352,7 +423,7 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
 
     // Хвост — процедурно: назад от рига, упругое запаздывание + виляние
     if (tailBone) {
-      const active = state.mode === "stroll";
+      const active = state.mode === "stroll" || state.mode === "travel";
       const wagSpeed = active ? 7 : 2.2;
       const wagAmp = active ? 0.28 : 0.12;
       _e.set(Math.sin(t * wagSpeed * 0.5) * 0.06, state.yaw + Math.sin(t * wagSpeed) * wagAmp, 0, "XYZ");
@@ -396,6 +467,7 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
     const h = Math.max(container.clientHeight, 1);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    fitCamera();
     renderer.setSize(w, h);
   };
   const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(onResize) : null;
@@ -410,6 +482,7 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
   function dispose() {
     state.disposed = true;
     clearTimeout(state.behaviorTimer);
+    clearTimeout(state.promptTimer);
     cancelAnimationFrame(rafId);
     document.removeEventListener("visibilitychange", onVisibility);
     io.disconnect();
@@ -434,5 +507,5 @@ export async function createFoxi(container: HTMLElement, opts: FoxiOptions = {})
     canvas.remove();
   }
 
-  return { celebrate, dance, dispose };
+  return { celebrate, dance, walk, greet, dispose };
 }

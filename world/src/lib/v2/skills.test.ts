@@ -36,16 +36,18 @@ describe("skillFor — шильдики навыков по контракту �
     expect(skillFor("teach_rule")).toBe("Грамматика");
   });
 
+  it("графемы и звуки → Звуки", () => {
+    for (const t of ["teach_grapheme", "letter_sound", "sound_letter", "blend_sounds"] as Challenge["type"][]) {
+      expect(skillFor(t)).toBe("Звуки");
+    }
+  });
+
   it("остальные словные → Слова", () => {
     for (const t of [
       "teach_word",
-      "teach_grapheme",
       "image_pick_word",
-      "blend_sounds",
       "translate_pick",
       "match_pairs",
-      "letter_sound",
-      "sound_letter",
     ] as Challenge["type"][]) {
       expect(skillFor(t)).toBe("Слова");
     }
