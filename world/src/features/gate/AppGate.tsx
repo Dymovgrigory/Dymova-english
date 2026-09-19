@@ -5,7 +5,12 @@ import { useEffect, useState } from "react";
 
 import { Foxy } from "@/design/Foxy";
 import { RegistrationFlow } from "@/features/registration/RegistrationFlow";
-import { detectMessenger, messengerLogin } from "@/lib/messenger";
+import {
+  buildRegistrationPrefill,
+  detectMessenger,
+  messengerLogin,
+  type RegistrationPrefill,
+} from "@/lib/messenger";
 import { rememberPlayerToken } from "@/lib/token";
 import { hasPlayer } from "@/lib/v2/client";
 import { registrationApi } from "@/lib/v2/registration";
@@ -26,15 +31,15 @@ export function AppGate({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const isOpen = OPEN_PATHS.has(pathname) || OPEN_PREFIXES.some((p) => pathname.startsWith(p));
   const [gate, setGate] = useState<{ path: string; state: GateState }>({ path: "", state: "checking" });
-  const [prefillName, setPrefillName] = useState("");
+  const [prefill, setPrefill] = useState<RegistrationPrefill>({});
   const state: GateState = gate.path === pathname ? gate.state : "checking";
 
   useEffect(() => {
     if (isOpen) return;
     let alive = true;
-    const finish = (registered: boolean, displayName?: string) => {
+    const finish = (registered: boolean, nextPrefill?: RegistrationPrefill) => {
       if (!alive) return;
-      if (displayName) setPrefillName(displayName.trim().split(/\s+/)[0] ?? "");
+      if (nextPrefill) setPrefill(nextPrefill);
       setGate({ path: pathname, state: registered ? "open" : "register" });
     };
     const messenger = detectMessenger();
@@ -42,7 +47,7 @@ export function AppGate({ children }: { children: React.ReactNode }) {
       messengerLogin(messenger.provider, messenger.initData)
         .then((res) => {
           rememberPlayerToken(res.token, res.external_key);
-          finish(res.is_registered, res.display_name);
+          finish(res.is_registered, buildRegistrationPrefill(res.display_name, res.prefill));
         })
         // сеть/конфиг не блокируют UI: бэкенд всё равно вернёт 403 на данных
         .catch(() => finish(true));
@@ -78,7 +83,7 @@ export function AppGate({ children }: { children: React.ReactNode }) {
             короткую анкету и подтвердить номер телефона. Это займёт пару минут.
           </p>
         </div>
-        <RegistrationFlow mode="gate" prefillFirstName={prefillName} onDone={() => setGate({ path: pathname, state: "open" })} />
+        <RegistrationFlow mode="gate" prefill={prefill} onDone={() => setGate({ path: pathname, state: "open" })} />
       </div>
     );
   }

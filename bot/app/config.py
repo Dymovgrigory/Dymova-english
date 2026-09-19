@@ -272,6 +272,12 @@ class Settings(BaseSettings):
     # Публичный HTTPS-URL Telegram Mini App (кнопка web_app в чате).
     # Пусто = взять {MINIAPP_BASE_URL origin}/tg/ , если он задан.
     TELEGRAM_MINIAPP_URL: str = ""
+    # Публичный HTTPS-URL платформы «Мир Фоксинбурга» (кнопка в меню бота).
+    # Пусто = default https://new.dymova-english.ru/world.
+    WORLD_APP_URL: str = ""
+    # Секрет подписи bridge-endpointа /world-bridge/profile (единая
+    # регистрация бот↔world). Пусто = endpoint выключен (404).
+    WORLD_BRIDGE_SECRET: str = ""
     # Известные адреса api.telegram.org. Сторож проверяет их, чтобы при
     # обрыве связи сразу подсказать администратору рабочий адрес для
     # extra_hosts, а не просто сообщить «всё сломалось».
@@ -323,12 +329,23 @@ class Settings(BaseSettings):
         "MAX_WEBHOOK_SECRET",
         "TELEGRAM_WEBHOOK_SECRET",
         "PODPISLON_API_KEY",
+        "WORLD_BRIDGE_SECRET",
         mode="before",
     )
     @classmethod
     def _strip_secret(cls, v: object) -> object:
         # Пробелы/переводы строк в ключах ломают HTTP-заголовки провайдеров.
         return v.strip() if isinstance(v, str) else v
+
+    @property
+    def world_app_url(self) -> str:
+        """URL платформы «Мир Фоксинбурга» для кнопки меню.
+
+        Telegram не откроет web_app по http, поэтому не-https адрес считаем
+        ошибкой конфигурации и прячем кнопку вовсе.
+        """
+        url = self.WORLD_APP_URL.strip() or "https://new.dymova-english.ru/world"
+        return url if url.startswith("https://") else ""
 
     @property
     def telegram_miniapp_url(self) -> str:

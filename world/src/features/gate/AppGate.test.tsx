@@ -15,10 +15,14 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace: mockReplace }),
 }));
 
-vi.mock("@/lib/messenger", () => ({
-  detectMessenger: () => mockMessenger,
-  messengerLogin: (...args: unknown[]) => mockLogin(...args),
-}));
+vi.mock("@/lib/messenger", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/messenger")>();
+  return {
+    ...actual,
+    detectMessenger: () => mockMessenger,
+    messengerLogin: (...args: unknown[]) => mockLogin(...args),
+  };
+});
 
 vi.mock("@/lib/v2/client", () => ({
   hasPlayer: () => mockHasPlayer,

@@ -149,15 +149,24 @@ def _miniapp_open(user_id: str, platform: str = PLATFORM) -> bool:
 
 
 def _main_menu(user_id: str = "") -> list[list[dict]]:
-    rows = [
-        [callback_button("🎓 Подобрать курс", "menu:courses")],
-        [callback_button("📅 Записаться на пробное", "menu:signup")],
-        [callback_button("💳 Стоимость обучения", "menu:price")],
-        [callback_button("🏫 Наши филиалы", "menu:branches")],
-        [callback_button("🙋 Позвать менеджера", "menu:admin")],
-    ]
+    rows: list[list[dict]] = []
+    # В MAX Bot API нет web_app-кнопки (см. max_client.py), поэтому мир
+    # открываем обычной link-кнопкой. Показываем всем: мир — точка входа.
+    world_url = settings.world_app_url
+    if world_url:
+        rows.append([link_button("🏰 Мир Фоксинбурга", world_url)])
+    rows.extend(
+        [
+            [callback_button("🎓 Подобрать курс", "menu:courses")],
+            [callback_button("📅 Записаться на пробное", "menu:signup")],
+            [callback_button("💳 Стоимость обучения", "menu:price")],
+            [callback_button("🏫 Наши филиалы", "menu:branches")],
+            [callback_button("🙋 Позвать менеджера", "menu:admin")],
+        ]
+    )
     if settings.MINIAPP_BASE_URL and _miniapp_open(user_id):
-        rows.insert(0, [link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
+        # Кабинет не должен оттеснять мир с первой строки.
+        rows.insert(1 if world_url else 0, [link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
     return rows
 
 
@@ -637,6 +646,11 @@ def _telegram_webapp_button(user_id: str = "") -> dict | None:
 
 def _telegram_menu_buttons(user_id: str = "") -> list[list[dict]]:
     rows: list[list[dict]] = []
+    # «Мир Фоксинбурга» — точка входа для новых учеников, поэтому в отличие от
+    # «Личного кабинета» показывается всем, без проверки регистрации.
+    world_url = settings.world_app_url
+    if world_url:
+        rows.append([{"type": "web_app", "text": "🏰 Мир Фоксинбурга", "web_app": world_url}])
     webapp = _telegram_webapp_button(user_id)
     if webapp:
         rows.append([webapp])
@@ -1981,6 +1995,7 @@ async def admin_set_webhook(request: Request, data: dict) -> dict:
 # CRM Admin API регистрируется ДО StaticFiles: монтирование перехватывает всё
 # под /admin, что не совпало с уже объявленными маршрутами.
 from app import admin_api
+from app import world_bridge
 from app.platform import account_api as platform_account_api
 from app.platform import billing_api as platform_billing_api
 from app.platform import podpislon_webhooks as platform_podpislon_webhooks
@@ -1993,6 +2008,7 @@ app.include_router(platform_podpislon_webhooks.router)
 app.include_router(platform_account_api.router)
 app.include_router(platform_billing_api.router)
 app.include_router(platform_public_api.router)
+app.include_router(world_bridge.router)
 
 # Монтируется В САМОМ КОНЦЕ файла осознанно: StaticFiles на "/admin"
 # перехватывает всё, что не совпало с уже объявленными маршрутами, поэтому

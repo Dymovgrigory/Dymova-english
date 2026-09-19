@@ -21,6 +21,12 @@ services:
       SMSAERO_EMAIL: ${SMSAERO_EMAIL:-}
       SMSAERO_API_KEY: ${SMSAERO_API_KEY:-}
       SMSAERO_SIGN: ${SMSAERO_SIGN:-}
+      # Вход через мини-приложения мессенджеров (валидация initData)
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      MAX_BOT_TOKEN: ${MAX_BOT_TOKEN:-}
+      # Мост к школьному боту: предзаполнение анкеты лидами из бота
+      WORLD_BOT_BRIDGE_URL: ${WORLD_BOT_BRIDGE_URL:-http://bot:8000/world-bridge/profile}
+      WORLD_BRIDGE_SECRET: ${WORLD_BRIDGE_SECRET:-}
     volumes:
       - world_data:/app/data
     expose:

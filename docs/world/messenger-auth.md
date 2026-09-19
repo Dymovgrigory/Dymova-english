@@ -77,6 +77,47 @@ UNIQUE(provider, provider_user_id)). Первый вход создаёт игр
 `localStorage world.playerToken`, при `is_registered=false` фронт показывает
 гейт регистрации (имя предзаполнено из профиля мессенджера).
 
+## Кнопка «🏰 Мир Фоксинбурга» в школьном боте
+
+Существующий бот (`bot/`) показывает кнопку мира первой строкой меню `/start`
+и `/menu`:
+
+- **Telegram** — inline web_app-кнопка (`_telegram_menu_buttons` в
+  `bot/app/main.py`): открывает мир прямо внутри Telegram с initData —
+  вход проходит автоматически. Показывается всем (в отличие от «Личного
+  кабинета»), регистрация перехватывается гейтом самого мира.
+- **MAX** — link-кнопка (`_main_menu`): у MAX Bot API нет web_app-кнопок,
+  нативный запуск мини-приложения привязывается к боту в кабинете
+  MAX Бизнес (кнопка появляется в чате сама).
+
+URL: env `WORLD_APP_URL` бота (default `https://new.dymova-english.ru/world`;
+не-https значение скрывает кнопку).
+
+## Единая регистрация: мост бот → world (prefill анкеты)
+
+Если родитель уже общался с ботом (оставил ФИО, телефон, день рождения
+ребёнка), анкета мира предзаполняется этими данными — повторно вбивать не
+нужно.
+
+- Бот отдаёт `GET /world-bridge/profile?provider=…&user_id=…&ts=…&sign=…`
+  (`bot/app/world_bridge.py`), где `sign = HMAC_SHA256(key=WORLD_BRIDGE_SECRET,
+  msg="{provider}\n{user_id}\n{ts}")`, свежесть ts ≤ 300 c. Без секрета в env
+  бота endpoint отвечает 404 (фича выключена). Данные — только непустые поля
+  лида: `fio_parent`, `fio_child`, `birthday`, `phone`.
+- World-backend (`app/identity/bridge.py`, `fetch_bot_prefill`) при входе
+  через мессенджер и **незавершённой** регистрации спрашивает бота
+  (`WORLD_BOT_BRIDGE_URL`, default `http://bot:8000/world-bridge/profile` —
+  обе машины в docker-сети `bot_default`; таймаут 2.5 с, fail-open: мир не
+  зависит от доступности бота) и возвращает `prefill` в ответе
+  `/api/world/auth/{telegram,max}`.
+- Фронт (`buildRegistrationPrefill` в `lib/messenger.ts`) мапит: `fio_child`
+  → имя/фамилия ученика, `birthday` ДД.ММ.ГГГГ → дата рождения, `phone` →
+  телефон родителя. Подтверждение телефона SMS/звонком всё равно обязательно
+  (152-ФЗ и требование реального номера не ослабляются).
+
+Env: `WORLD_BRIDGE_SECRET` (одинаковый в `bot/.env` и `world/.env.production`),
+`WORLD_BOT_BRIDGE_URL` (на проде default уже верный).
+
 ## Тестирование
 
 Валидный `init_data` в тестах фабрикуется тем же алгоритмом с тестовым
@@ -85,8 +126,12 @@ UNIQUE(provider, provider_user_id)). Первый вход создаёт игр
 `urlencode(pairs) + "&hash=" + signature`.
 
 - Бэкенд: `cd world-backend && .venv/bin/python -m pytest -q`
-  (`test_registration_gate.py`, `test_messenger_auth.py`).
+  (`test_registration_gate.py`, `test_messenger_auth.py`, `test_bridge.py`).
+- Бот: `cd bot && pytest -q` (`tests/test_world_bridge.py` — подпись,
+  свежесть, трим полей, кнопки меню TG/MAX).
 - Фронт: `cd world && npx vitest run`
-  (`src/lib/messenger.test.ts`, `src/features/gate/AppGate.test.tsx`).
-- Ручная проверка в Telegram: открыть мини-приложение из бота — вход должен
-  пройти без онбординга; в браузере вне мессенджера — обычный онбординг.
+  (`src/lib/messenger.test.ts`, `src/features/gate/AppGate.test.tsx`,
+  `src/features/registration/RegistrationFlow.test.tsx`).
+- Ручная проверка в Telegram: «🏰 Мир Фоксинбурга» в меню бота → вход без
+  онбординга; если лид уже есть в боте — анкета предзаполнена; в браузере
+  вне мессенджера — обычный онбординг.

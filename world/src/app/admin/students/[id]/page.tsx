@@ -149,7 +149,7 @@ export default function AdminStudentPage() {
     );
   }
 
-  const { player, identity, consents, profile, titles, weakest_atoms, mistakes, daily_activity, counters } = detail;
+  const { player, identity, consents, profile, titles, weakest_atoms, mistakes, daily_activity, counters, identities = [] } = detail;
   const activity14 = daily_activity.slice(-14);
   const maxXp = Math.max(1, ...activity14.map((d) => d.xp));
 
@@ -188,6 +188,24 @@ export default function AdminStudentPage() {
           }
         }}
       />
+
+      <section className="mat-parchment rounded-2xl p-5">
+        <h2 className="text-lg font-extrabold">Мессенджеры</h2>
+        {identities.length === 0 ? (
+          <p className="mt-2 text-sm text-[#6f5843]">Привязок нет — участник ещё не входил через Telegram/MAX</p>
+        ) : (
+          <ul className="mt-2 space-y-1 text-sm">
+            {identities.map((m) => (
+              <li key={`${m.provider}-${m.provider_user_id}`} className="flex flex-wrap gap-x-3">
+                <span className="font-bold">{m.provider === "telegram" ? "Telegram" : m.provider === "max" ? "MAX" : m.provider}</span>
+                <span>{m.display_name}</span>
+                <span className="text-[#6f5843]">id {m.provider_user_id}</span>
+                <span className="ml-auto text-[#6f5843]">{fmtDateTime(m.created_at)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <section className="mat-parchment rounded-2xl p-5">
         <h2 className="text-lg font-extrabold">Согласия</h2>

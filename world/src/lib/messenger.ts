@@ -26,13 +26,60 @@ export function detectMessenger(): { provider: MessengerProvider; initData: stri
   return null;
 }
 
+/** Данные лида из школьного бота (мост /world-bridge/profile) — предзаполнение анкеты. */
+export type MessengerPrefill = {
+  fio_parent?: string;
+  fio_child?: string;
+  birthday?: string;
+  phone?: string;
+};
+
 export type MessengerAuthResult = {
   id: number;
   external_key: string;
   display_name: string;
   token: string;
   is_registered: boolean;
+  /** null — игрок уже зарегистрирован, мост выключен или лид в боте не найден. */
+  prefill?: MessengerPrefill | null;
 };
+
+/** Предзаполнение анкеты регистрации (поля RegistrationFlow). */
+export type RegistrationPrefill = {
+  firstName?: string;
+  lastName?: string;
+  /** YYYY-MM-DD для <input type="date">. */
+  birthDate?: string;
+  phone?: string;
+};
+
+/** ДД.ММ.ГГГГ или ГГГГ-ММ-ДД → ГГГГ-ММ-ДД; возраст («9 лет») и мусор → undefined. */
+function normalizeBirthDate(raw?: string): string | undefined {
+  const value = (raw ?? "").trim();
+  const dotted = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value);
+  if (dotted) return `${dotted[3]}-${dotted[2]}-${dotted[1]}`;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  return undefined;
+}
+
+/**
+ * Собирает предзаполнение анкеты: приоритет у данных лида из бота
+ * (fio_child — ребёнок), имя из профиля мессенджера — запасной вариант.
+ */
+export function buildRegistrationPrefill(
+  displayName: string,
+  prefill?: MessengerPrefill | null,
+): RegistrationPrefill {
+  const childWords = (prefill?.fio_child ?? "").trim().split(/\s+/).filter(Boolean);
+  const [childFirst, ...childRest] = childWords;
+  const fallbackFirst = displayName.trim().split(/\s+/)[0] ?? "";
+  return {
+    firstName: childFirst || fallbackFirst || undefined,
+    lastName: childRest.length ? childRest.join(" ") : undefined,
+    birthDate: normalizeBirthDate(prefill?.birthday),
+    phone: (prefill?.phone ?? "").trim() || undefined,
+  };
+}
 
 const API = (process.env.NEXT_PUBLIC_WORLD_API || "").replace(/\/$/, "");
 const TIMEOUT_MS = 12000;

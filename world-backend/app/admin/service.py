@@ -94,6 +94,14 @@ def student_card(player_id: int) -> dict:
 
     identity = identity_service.get_identity(player_id)
     consents = identity_service.list_consents(player_id)
+    identities = [
+        dict(r)
+        for r in conn.execute(
+            "SELECT provider, provider_user_id, display_name, created_at"
+            " FROM external_identities WHERE player_id=? ORDER BY created_at",
+            (player_id,),
+        ).fetchall()
+    ]
     profile_row = conn.execute(
         "SELECT book_id, module_id, daily_goal_xp FROM learner_profile WHERE player_id=?",
         (player_id,),
@@ -145,6 +153,7 @@ def student_card(player_id: int) -> dict:
         "player": player,
         "identity": identity,
         "consents": consents,
+        "identities": identities,
         "profile": dict(profile_row) if profile_row else None,
         "titles": titles,
         "weakest_atoms": weakest,

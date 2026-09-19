@@ -68,6 +68,13 @@ export type AdminWeakAtom = { atom_id: string; strength: number; wrong_count: nu
 export type AdminMistake = { unit_id: string; item: string };
 export type AdminDayActivity = { day: string; xp: number; sessions: number };
 
+export type AdminMessengerIdentity = {
+  provider: string;
+  provider_user_id: string;
+  display_name: string;
+  created_at: string;
+};
+
 export type AdminStudentDetail = {
   player: {
     id: number;
@@ -87,6 +94,8 @@ export type AdminStudentDetail = {
   mistakes: AdminMistake[];
   daily_activity: AdminDayActivity[];
   counters: { inventory: number; castle_owned: number; sessions_total: number };
+  /** Привязки мессенджеров (Telegram/MAX) из external_identities. */
+  identities?: AdminMessengerIdentity[];
 };
 
 export type AdminAuditItem = {

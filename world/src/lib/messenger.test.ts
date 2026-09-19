@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { detectMessenger, messengerLogin } from "./messenger";
+import { buildRegistrationPrefill, detectMessenger, messengerLogin } from "./messenger";
 
 declare const globalThis: Record<string, unknown>;
 
@@ -67,5 +67,50 @@ describe("messengerLogin", () => {
       status: 503,
       message: "provider_not_configured",
     });
+  });
+});
+
+describe("buildRegistrationPrefill", () => {
+  it("полный lead из бота: имя/фамилия ребёнка, дата ДД.ММ.ГГГГ → ISO, телефон", () => {
+    expect(
+      buildRegistrationPrefill("Маша Петрова", {
+        fio_parent: "Петрова Анна Сергеевна",
+        fio_child: "Миша Петров",
+        birthday: "15.03.2016",
+        phone: "+79164552233",
+      }),
+    ).toEqual({
+      firstName: "Миша",
+      lastName: "Петров",
+      birthDate: "2016-03-15",
+      phone: "+79164552233",
+    });
+  });
+
+  it("без лида — имя из профиля мессенджера, остальное пусто", () => {
+    expect(buildRegistrationPrefill("Маша Петрова", null)).toEqual({
+      firstName: "Маша",
+      lastName: undefined,
+      birthDate: undefined,
+      phone: undefined,
+    });
+  });
+
+  it("fio_child только имя — lastName не заполняется", () => {
+    expect(buildRegistrationPrefill("", { fio_child: "Миша" })).toEqual({
+      firstName: "Миша",
+      lastName: undefined,
+      birthDate: undefined,
+      phone: undefined,
+    });
+  });
+
+  it("дата уже ISO — оставляем; возраст «9 лет» — пропускаем", () => {
+    expect(buildRegistrationPrefill("", { birthday: "2016-03-15" }).birthDate).toBe("2016-03-15");
+    expect(buildRegistrationPrefill("", { birthday: "9 лет" }).birthDate).toBeUndefined();
+  });
+
+  it("пустой телефон → undefined", () => {
+    expect(buildRegistrationPrefill("", { phone: "   " }).phone).toBeUndefined();
   });
 });

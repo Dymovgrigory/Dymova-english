@@ -137,6 +137,28 @@ describe("RegistrationFlow", () => {
     expect(screen.getByText(/\+7 \(916\) \*\*\*-\*\*-33/)).toBeInTheDocument();
   });
 
+  it("prefill от моста бота: анкета и телефон предзаполнены", async () => {
+    render(
+      <RegistrationFlow
+        mode="gate"
+        onDone={() => {}}
+        prefill={{ firstName: "Миша", lastName: "Петров", birthDate: "2016-03-15", phone: "+79164552233" }}
+      />,
+    );
+    await waitFor(() => expect(screen.getByPlaceholderText("Аня")).toBeInTheDocument());
+    expect(screen.getByPlaceholderText("Аня")).toHaveValue("Миша");
+    expect(screen.getByPlaceholderText("Иванова")).toHaveValue("Петров");
+    expect(screen.getByLabelText(/Дата рождения/)).toHaveValue("2016-03-15");
+
+    // школа/класс предзаполнить нельзя — их нет в боте
+    fireEvent.change(screen.getByPlaceholderText("12"), { target: { value: "12" } });
+    fireEvent.click(screen.getByRole("button", { name: "3" }));
+    fireEvent.click(screen.getByRole("button", { name: "Дальше" }));
+
+    // телефон подставлен и отформатирован
+    expect(screen.getByPlaceholderText("+7 (___) ___-__-__")).toHaveValue("+7 (916) 455-22-33");
+  });
+
   it("subscriberDigits/toE164: префиксы 7 и 8 отбрасываются", () => {
     expect(subscriberDigits("89164552233")).toBe("9164552233");
     expect(subscriberDigits("+7 916 455-22-33")).toBe("9164552233");

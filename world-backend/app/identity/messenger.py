@@ -24,7 +24,7 @@ from pydantic import BaseModel
 from app.world import auth, core
 from app.world.db import get_conn
 
-from . import service
+from . import bridge, service
 
 router = APIRouter(prefix="/api/world/auth", tags=["messenger-auth"])
 
@@ -95,6 +95,11 @@ def _login(provider: str, body: MessengerAuthBody) -> dict:
             (provider, provider_user_id, player["id"], player["display_name"]),
         )
     else:
+        conn.execute(
+            "UPDATE external_identities SET display_name=?"
+            " WHERE provider=? AND provider_user_id=?",
+            (_display_name(user), provider, provider_user_id),
+        )
         row = conn.execute(
             "SELECT external_key FROM players WHERE id=?", (link["player_id"],),
         ).fetchone()
@@ -102,7 +107,9 @@ def _login(provider: str, body: MessengerAuthBody) -> dict:
             raise HTTPException(401, {"code": "bad_init_data", "reason": "broken_link"})
         player = core.get_player(row["external_key"])
     token = auth.issue_session(player["id"])
-    return {**player, "token": token, "is_registered": service.is_registered(player["id"])}
+    registered = service.is_registered(player["id"])
+    prefill = None if registered else bridge.fetch_bot_prefill(provider, provider_user_id)
+    return {**player, "token": token, "is_registered": registered, "prefill": prefill}
 
 
 @router.post("/telegram")

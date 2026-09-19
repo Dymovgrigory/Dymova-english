@@ -7,6 +7,7 @@ import { Choice } from "@/design/Choice";
 import { Foxy } from "@/design/Foxy";
 import { humanizeError } from "@/lib/api";
 import { CONSENT_LABELS, CONSENT_LINKS, LEGAL_VERSION, type ConsentType } from "@/lib/legal";
+import type { RegistrationPrefill } from "@/lib/messenger";
 import {
   RegistrationError,
   registrationApi,
@@ -92,27 +93,27 @@ export function RegistrationFlow({
   mode,
   onDone,
   onCancel,
-  prefillFirstName = "",
+  prefill = {},
 }: {
   /** gate — обязательная регистрация: без кнопки «Заполню позже». */
   mode: "onboarding" | "edit" | "gate";
   onDone: () => void;
   onCancel?: () => void;
-  /** Имя из профиля мессенджера — предзаполнение анкеты. */
-  prefillFirstName?: string;
+  /** Предзаполнение из профиля мессенджера и лида бота (единая регистрация). */
+  prefill?: RegistrationPrefill;
 }) {
   const [step, setStep] = useState<FlowStep>("profile");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
 
-  const [firstName, setFirstName] = useState(prefillFirstName);
-  const [lastName, setLastName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [firstName, setFirstName] = useState(prefill.firstName ?? "");
+  const [lastName, setLastName] = useState(prefill.lastName ?? "");
+  const [birthDate, setBirthDate] = useState(prefill.birthDate ?? "");
   const [schoolNumber, setSchoolNumber] = useState("");
   const [classGrade, setClassGrade] = useState<number | null>(null);
   const [classLetter, setClassLetter] = useState("");
-  const [phoneDigits, setPhoneDigits] = useState("");
+  const [phoneDigits, setPhoneDigits] = useState(subscriberDigits(prefill.phone ?? ""));
   const [email, setEmail] = useState("");
   const [channel, setChannel] = useState<RegistrationChannel>("sms");
   const [consents, setConsents] = useState<Record<ConsentType, boolean>>({
