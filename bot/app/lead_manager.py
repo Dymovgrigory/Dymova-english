@@ -313,7 +313,7 @@ async def step(
         if not phone:
             return ("Кажется, номер указан не полностью. Напишите телефон в "
                     "формате +7XXXXXXXXXX или 8XXXXXXXXXX."), False
-        lead.phone = phone
+        lead.set_phone(phone)
 
     elif current == "branch":
         lead.branch = _match_branch(kb, clean) or clean[:255]
@@ -420,7 +420,7 @@ def _opportunistic_fill(conv: Conversation, text: str, kb: KnowledgeBase) -> boo
     updated = False
     phone = extract_phone(text)
     if phone and not lead.phone:
-        lead.phone = phone
+        lead.set_phone(phone)
         updated = True
     birthday = extract_birthday(text)
     if birthday and not lead.birthday:
@@ -491,7 +491,7 @@ def _apply_correction(
     # сообщении целиком.
     phone = extract_phone(clean)
     if phone and phone != lead.phone:
-        lead.phone = phone
+        lead.set_phone(phone)
         changed.append(("телефон", phone))
 
     birthday = extract_birthday(clean)

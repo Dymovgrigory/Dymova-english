@@ -42,6 +42,11 @@ def verify(body: VerifyBody, x_world_player: str | None = Header(None)):
     return _guard(service.verify_code, resolve_player_key(x_world_player), body.code)
 
 
+@router.post("/confirm-bot")
+def confirm_bot(x_world_player: str | None = Header(None)):
+    return _guard(service.confirm_via_bot, resolve_player_key(x_world_player))
+
+
 @router.get("/status")
 def status(x_world_player: str | None = Header(None)):
     return _guard(service.get_status, resolve_player_key(x_world_player))

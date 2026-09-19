@@ -13,8 +13,9 @@
 
 Регистрация считается завершённой, когда у игрока есть `player_identity` с
 `phone_verified_at` (анкета + согласия пишутся на `/api/v2/registration/start`,
-телефон подтверждается на `/api/v2/registration/verify`; при
-`PHONE_VERIFICATION_REQUIRED=0` код возвращается как `dev_code`).
+телефон подтверждается на `/api/v2/registration/verify` кодом из SMS/звонка
+либо на `/api/v2/registration/confirm-bot` через бота Telegram — см. ниже;
+при `PHONE_VERIFICATION_REQUIRED=0` код возвращается как `dev_code`).
 
 Middleware `RegistrationGateMiddleware` (`world-backend/app/identity/gate.py`)
 для всех `/api/v2/*` и `/api/world/*` с валидным `X-World-Player` проверяет
@@ -93,6 +94,19 @@ UNIQUE(provider, provider_user_id)). Первый вход создаёт игр
 URL: env `WORLD_APP_URL` бота (default `https://new.dymova-english.ru/world`;
 не-https значение скрывает кнопку).
 
+Дополнительные точки входа:
+
+- **Menu Button чата** (кнопка слева от поля ввода, видна постоянно): при
+  старте бот вызывает `setChatMenuButton` с web_app-кнопкой «🏰 Мир
+  Фоксинбурга» на весь бот (`telegram_client.set_menu_button`, вызов в
+  startup `bot/app/main.py`). Сбой установки не роняет запуск.
+- **Баннеры в мини-приложениях бота**: сверху Telegram ЛК
+  (`bot/app/tgapp/index.html`, кнопка `#world-banner`; внутри Telegram клик
+  закрывает мини-апп — человек попадает в чат с Menu Button, в браузере —
+  новая вкладка) и MAX-приложения (`bot/app/miniapp/index.html`, обычная
+  ссылка). Дизайн-правило «никаких системных emoji» соблюдено: иконка —
+  фирменная голова Фокси + SVG-стрелка.
+
 ## Единая регистрация: мост бот → world (prefill анкеты)
 
 Если родитель уже общался с ботом (оставил ФИО, телефон, день рождения
@@ -103,7 +117,8 @@ URL: env `WORLD_APP_URL` бота (default `https://new.dymova-english.ru/world`
   (`bot/app/world_bridge.py`), где `sign = HMAC_SHA256(key=WORLD_BRIDGE_SECRET,
   msg="{provider}\n{user_id}\n{ts}")`, свежесть ts ≤ 300 c. Без секрета в env
   бота endpoint отвечает 404 (фича выключена). Данные — только непустые поля
-  лида: `fio_parent`, `fio_child`, `birthday`, `phone`.
+  лида: `fio_parent`, `fio_child`, `birthday`, `phone`, плюс флаг
+  `phone_confirmed: bool` (True — номер прислан нативным контактом Telegram).
 - World-backend (`app/identity/bridge.py`, `fetch_bot_prefill`) при входе
   через мессенджер и **незавершённой** регистрации спрашивает бота
   (`WORLD_BOT_BRIDGE_URL`, default `http://bot:8000/world-bridge/profile` —
@@ -112,11 +127,42 @@ URL: env `WORLD_APP_URL` бота (default `https://new.dymova-english.ru/world`
   `/api/world/auth/{telegram,max}`.
 - Фронт (`buildRegistrationPrefill` в `lib/messenger.ts`) мапит: `fio_child`
   → имя/фамилия ученика, `birthday` ДД.ММ.ГГГГ → дата рождения, `phone` →
-  телефон родителя. Подтверждение телефона SMS/звонком всё равно обязательно
-  (152-ФЗ и требование реального номера не ослабляются).
+  телефон родителя. Подтверждение телефона всё равно обязательно — SMS/звонком
+  или через бота Telegram (следующий раздел).
 
 Env: `WORLD_BRIDGE_SECRET` (одинаковый в `bot/.env` и `world/.env.production`),
 `WORLD_BOT_BRIDGE_URL` (на проде default уже верный).
+
+## Подтверждение телефона через Telegram (без SMS)
+
+Внутри Telegram WebApp регистрация предлагает третий канал «Telegram (без
+SMS)» — он же дефолтный. SMS/звонок остаются для браузера и MAX.
+
+1. Фронт (`RegistrationFlow`) видит `window.Telegram.WebApp.requestContact`
+   (`supportsTelegramContact` в `lib/messenger.ts`) и показывает выбор канала.
+2. `POST /api/v2/registration/start` с `channel: "telegram"`: анкета и
+   согласия сохраняются, SMS **не** отправляется, `phone_verifications` не
+   пишется, rate-limit кодов не применяется; ответ
+   `{"status": "awaiting_bot", "cooldown_sec": 0, …}`.
+3. Фронт показывает шаг «Подтверждение в Telegram»: кнопка «Поделиться
+   номером» → системный `requestContact` → контакт уходит боту сообщением.
+4. Бот помечает номер подтверждённым (`Lead.phone_confirmed=True`,
+   `identify.handle_contact(..., confirmed=True)`) — только если
+   `contact.user_id == from.id` (собственный контакт отправителя; чужая
+   визитка из адресной книги подтверждением не считается). Номер, введённый
+   текстом, флаг сбрасывает (`Lead.set_phone`).
+5. Фронт зовёт `POST /api/v2/registration/confirm-bot` (с ретраями 3×2 с —
+   бот на long-polling может отставать). Сервер (`service.confirm_via_bot`):
+   нет анкеты → 409 `no_pending_verification`; уже подтверждён → 200
+   идемпотентно (мост не дёргается); нет TG-привязки в `external_identities`
+   → 409 `no_telegram_link`; мост недоступен / номера нет /
+   `phone_confirmed != True` → 409 `bot_phone_unconfirmed`; номер из бота не
+   совпадает с анкетой → 409 `phone_mismatch`; иначе `phone_verified_at`
+   проставляется → 200 `{"status": "verified"}`.
+
+Почему это безопасно как замена SMS: нативный контакт Telegram платформа
+отдаёт только по явному жесту владельца аккаунта, а мост закрыт
+HMAC-подписью — подделать «подтверждённый» номер снаружи нельзя.
 
 ## Тестирование
 

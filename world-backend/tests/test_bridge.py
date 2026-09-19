@@ -109,6 +109,17 @@ def test_prefill_filters_unknown_lead_keys(monkeypatch, fake_http):
     assert out == {k: LEAD[k] for k in ("fio_parent", "fio_child", "phone")}
 
 
+def test_prefill_preserves_phone_confirmed_flag(monkeypatch, fake_http):
+    """Булев phone_confirmed переживает строковый фильтр LEAD_KEYS."""
+    monkeypatch.setenv("WORLD_BRIDGE_SECRET", SECRET)
+    fake_http.payload = {"found": True, "lead": {**LEAD, "phone_confirmed": True}}
+    out = bridge.fetch_bot_prefill("telegram", "123")
+    assert out["phone_confirmed"] is True
+    fake_http.payload = {"found": True, "lead": {**LEAD, "phone_confirmed": "да"}}
+    out = bridge.fetch_bot_prefill("telegram", "123")
+    assert "phone_confirmed" not in out
+
+
 def test_bridge_signature_matches_contract(monkeypatch, fake_http):
     """sign = HMAC_SHA256(key=WORLD_BRIDGE_SECRET, msg=f"{provider}\\n{user_id}\\n{ts}")."""
     monkeypatch.setenv("WORLD_BRIDGE_SECRET", SECRET)

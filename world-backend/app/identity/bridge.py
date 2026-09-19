@@ -58,4 +58,9 @@ def fetch_bot_prefill(provider: str, provider_user_id: str) -> dict | None:
     lead = payload.get("lead")
     if not isinstance(lead, dict):
         return None
-    return {k: v for k, v in lead.items() if k in LEAD_KEYS and isinstance(v, str)}
+    out = {k: v for k, v in lead.items() if k in LEAD_KEYS and isinstance(v, str)}
+    # Флаг подтверждения номера нативным контактом Telegram — булев, поэтому
+    # через строковый LEAD_KEYS-фильтр не проходит, переносим отдельно.
+    if isinstance(lead.get("phone_confirmed"), bool):
+        out["phone_confirmed"] = lead["phone_confirmed"]
+    return out

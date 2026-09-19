@@ -7,7 +7,12 @@ import { Choice } from "@/design/Choice";
 import { Foxy } from "@/design/Foxy";
 import { humanizeError } from "@/lib/api";
 import { CONSENT_LABELS, CONSENT_LINKS, LEGAL_VERSION, type ConsentType } from "@/lib/legal";
-import type { RegistrationPrefill } from "@/lib/messenger";
+import {
+  detectMessenger,
+  requestTelegramContact,
+  supportsTelegramContact,
+  type RegistrationPrefill,
+} from "@/lib/messenger";
 import {
   RegistrationError,
   registrationApi,
@@ -17,13 +22,14 @@ import {
 
 import { formatPhone, subscriberDigits, toE164 } from "./phone";
 
-type FlowStep = "profile" | "contacts" | "consents" | "code" | "success";
+type FlowStep = "profile" | "contacts" | "consents" | "code" | "bot" | "success";
 
 const STEP_TITLES: Record<FlowStep, string> = {
   profile: "Анкета ученика",
   contacts: "Контакты родителя",
   consents: "Согласия",
   code: "Код подтверждения",
+  bot: "Подтверждение в Telegram",
   success: "Готово!",
 };
 
@@ -115,7 +121,6 @@ export function RegistrationFlow({
   const [classLetter, setClassLetter] = useState("");
   const [phoneDigits, setPhoneDigits] = useState(subscriberDigits(prefill.phone ?? ""));
   const [email, setEmail] = useState("");
-  const [channel, setChannel] = useState<RegistrationChannel>("sms");
   const [consents, setConsents] = useState<Record<ConsentType, boolean>>({
     pd_child: false,
     privacy: false,
@@ -124,6 +129,16 @@ export function RegistrationFlow({
   const [code, setCode] = useState("");
   const [phoneMasked, setPhoneMasked] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  const [contactSent, setContactSent] = useState(false);
+
+  // Подтверждение через Telegram без SMS — только внутри Telegram WebApp.
+  const telegramContactOk = useMemo(
+    () => detectMessenger()?.provider === "telegram" && supportsTelegramContact(),
+    [],
+  );
+  const [channel, setChannel] = useState<RegistrationChannel>(
+    telegramContactOk ? "telegram" : "sms",
+  );
 
   // В режиме редактирования (и на всякий случай в онбординге) предзаполняем анкету.
   useEffect(() => {
@@ -196,11 +211,66 @@ export function RegistrationFlow({
     try {
       const res = await registrationApi.start(startBody);
       setPhoneMasked(res.phone_masked);
+      if (res.status === "awaiting_bot") {
+        setContactSent(false);
+        setStep("bot");
+        return;
+      }
       setCooldown(res.cooldown_sec || 60);
       setCode("");
       setStep("code");
     } catch (err) {
       setProblem(humanizeError(err, "Не получилось отправить код. Попробуйте ещё раз."));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Бот на long-polling может отставать на секунды: после «поделиться номером»
+  // пробуем confirm-bot несколько раз с паузой, прежде чем показать ошибку.
+  const confirmViaBot = async (attempts = 3): Promise<void> => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      let lastError: unknown = null;
+      for (let i = 0; i < attempts; i += 1) {
+        try {
+          await registrationApi.confirmBot();
+          setStep("success");
+          return;
+        } catch (err) {
+          lastError = err;
+          if (!(err instanceof RegistrationError && err.message === "bot_phone_unconfirmed")) break;
+          if (i < attempts - 1) await new Promise((r) => setTimeout(r, 2000));
+        }
+      }
+      if (lastError instanceof RegistrationError && lastError.message === "phone_mismatch") {
+        setProblem(
+          "В Telegram поделились другим номером. Вернитесь к контактам и укажите тот же номер, что и в Telegram.",
+        );
+      } else if (lastError instanceof RegistrationError && lastError.message === "no_telegram_link") {
+        setProblem("Откройте мир через кнопку «Мир Фоксинбурга» в нашем боте — тогда Telegram свяжется с анкетой.");
+      } else {
+        setProblem(
+          humanizeError(lastError, "Бот пока не видит номер. Нажмите «Поделиться номером» ещё раз или проверьте позже."),
+        );
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const shareContact = async () => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      const sent = await requestTelegramContact();
+      if (!sent) {
+        setProblem("Номер не отправлен. Нажмите «Поделиться номером» и подтвердите в окне Telegram.");
+        return;
+      }
+      setContactSent(true);
+      await confirmViaBot();
     } finally {
       setBusy(false);
     }
@@ -308,8 +378,16 @@ export function RegistrationFlow({
               onChange={(e) => setEmail(e.target.value)}
             />
           </Field>
-          <span className={labelCls}>Как удобнее получить код?</span>
-          <div className="grid grid-cols-2 gap-3">
+          <span className={labelCls}>Как подтвердить номер?</span>
+          <div className={`grid gap-3 ${telegramContactOk ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"}`}>
+            {telegramContactOk && (
+              <Choice state={channel === "telegram" ? "selected" : "idle"} onPick={() => setChannel("telegram")}>
+                <span className="flex flex-col">
+                  <span className="text-[18px] font-extrabold">Telegram</span>
+                  <span className="text-[13px] font-semibold text-ink-soft">Без SMS, одной кнопкой</span>
+                </span>
+              </Choice>
+            )}
             <Choice state={channel === "sms" ? "selected" : "idle"} onPick={() => setChannel("sms")}>
               <span className="flex flex-col">
                 <span className="text-[18px] font-extrabold">SMS</span>
@@ -344,7 +422,7 @@ export function RegistrationFlow({
               Назад
             </Button>
             <Button block disabled={!consentsOk || busy} onClick={sendCode}>
-              {busy ? "Отправляем код…" : "Получить код"}
+              {busy ? "Отправляем…" : channel === "telegram" ? "Продолжить" : "Получить код"}
             </Button>
           </div>
         </>
@@ -389,6 +467,36 @@ export function RegistrationFlow({
               </button>
             )}
           </div>
+        </>
+      )}
+
+      {step === "bot" && (
+        <>
+          <p className="text-[16px] font-semibold text-[#c9bfd8]">
+            Подтвердим номер {phoneMasked || formatPhone(phoneDigits)} через Telegram — без SMS.{" "}
+            <button type="button" className="font-bold text-[#7fd8c9] underline" onClick={() => setStep("contacts")}>
+              Изменить номер
+            </button>
+          </p>
+          <p className="text-[15px] font-semibold text-[#c9bfd8]">
+            Нажмите кнопку ниже — Telegram спросит разрешение и передаст номер нашему боту. Так мы узнаем, что
+            номер настоящий.
+          </p>
+          <Button block disabled={busy} onClick={shareContact}>
+            {busy ? "Проверяем…" : contactSent ? "Поделиться номером ещё раз" : "Поделиться номером в Telegram"}
+          </Button>
+          {contactSent && (
+            <div className="text-center">
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => confirmViaBot(1)}
+                className="min-h-11 px-4 text-[15px] font-bold text-[#7fd8c9] underline disabled:opacity-50"
+              >
+                Уже поделился — проверить ещё раз
+              </button>
+            </div>
+          )}
         </>
       )}
 

@@ -2053,3 +2053,33 @@ body.is-locked { overflow: hidden; }
   display: grid;
 }
 .lead__branches--wrap .lead__branch { min-height: 48px; }
+
+/* Баннер входа в «Мир Фоксинбурга» — самый верх главной, фирменный
+   градиент: заметен сразу, но не кричит над шапкой. */
+.world-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: calc(100% - 32px);
+  margin: 14px 16px 4px;
+  padding: 14px 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(120deg, var(--amber) 0%, var(--amber-deep) 45%, var(--violet) 100%);
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shadow-lift);
+  transition: transform var(--duration-fast) var(--ease-entrance);
+}
+.world-banner:active { transform: scale(.97); }
+.world-banner__fox { width: 44px; height: 44px; flex: none; }
+.world-banner__text { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.world-banner__text strong { font-size: 1.02rem; font-weight: 700; }
+.world-banner__text small { font-size: .8rem; opacity: .88; }
+.world-banner__arrow { width: 22px; height: 22px; flex: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .world-banner { transition: none; }
+}

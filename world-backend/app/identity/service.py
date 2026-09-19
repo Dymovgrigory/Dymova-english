@@ -9,8 +9,8 @@ from datetime import datetime, timedelta, timezone
 from app.world import core
 from app.world.db import get_conn
 
-from . import sms
-from .schemas import RegistrationStart, mask_phone
+from . import bridge, sms
+from .schemas import RegistrationStart, mask_phone, normalize_phone
 
 CONSENT_VERSION = "2026-09-19"
 REQUIRED_CONSENTS = ("pd_child", "privacy")
@@ -136,6 +136,20 @@ def start_registration(external_key: str, body: RegistrationStart,
                        ip: str | None, user_agent: str | None) -> dict:
     _check_consents(body)
     player_id = _player_id(external_key)
+
+    if body.channel == "telegram":
+        # Подтверждение через бота: анкета и согласия сохраняем сразу, но
+        # SMS не шлём и rate-limit кодов не трогаем — номер удостоверит
+        # нативный контакт Telegram (см. confirm_via_bot).
+        upsert_identity(player_id, body)
+        record_consents(player_id, body.consents, ip, user_agent)
+        return {
+            "status": "awaiting_bot",
+            "channel": "telegram",
+            "phone_masked": mask_phone(body.parent_phone),
+            "cooldown_sec": 0,
+        }
+
     _check_rate_limits(player_id, body.parent_phone)
 
     upsert_identity(player_id, body)
@@ -206,12 +220,56 @@ def verify_code(external_key: str, code: str) -> dict:
 
 def is_registered(player_id: int) -> bool:
     """Регистрация завершена: анкета и согласия записаны на /start,
-    телефон подтверждён на /verify (в fake-режиме — dev_code с клиента)."""
+    телефон подтверждён на /verify (код из SMS) или /confirm-bot
+    (нативный контакт Telegram через бота)."""
     row = get_conn().execute(
         "SELECT phone_verified_at FROM player_identity WHERE player_id=?",
         (player_id,),
     ).fetchone()
     return bool(row and row["phone_verified_at"])
+
+
+def confirm_via_bot(external_key: str) -> dict:
+    """Подтверждение телефона через бота вместо SMS-кода.
+
+    Номер считаем удостоверенным, если у игрока есть привязка Telegram и
+    бот по мосту подтверждает, что ЭТОТ номер прислан нативным контактом
+    (lead.phone_confirmed=True) и совпадает с анкетой.
+    """
+    player_id = _player_id(external_key)
+    conn = get_conn()
+    identity = conn.execute(
+        "SELECT parent_phone, phone_verified_at FROM player_identity WHERE player_id=?",
+        (player_id,),
+    ).fetchone()
+    if identity is None:
+        raise core.Conflict("no_pending_verification")
+    if identity["phone_verified_at"]:
+        # Идемпотентно: повторный вызов — успех, мост не дёргаем.
+        return {"status": "verified"}
+    link = conn.execute(
+        "SELECT provider_user_id FROM external_identities"
+        " WHERE player_id=? AND provider='telegram'",
+        (player_id,),
+    ).fetchone()
+    if link is None:
+        raise core.Conflict("no_telegram_link")
+    prefill = bridge.fetch_bot_prefill("telegram", link["provider_user_id"])
+    lead_phone = (prefill or {}).get("phone") or ""
+    if not lead_phone or (prefill or {}).get("phone_confirmed") is not True:
+        raise core.Conflict("bot_phone_unconfirmed")
+    try:
+        bot_phone = normalize_phone(lead_phone)
+    except ValueError:
+        raise core.Conflict("bot_phone_unconfirmed") from None
+    if bot_phone != identity["parent_phone"]:
+        raise core.Conflict("phone_mismatch")
+    conn.execute(
+        "UPDATE player_identity SET phone_verified_at=?, updated_at=datetime('now')"
+        " WHERE player_id=?",
+        (_ts(_now()), player_id),
+    )
+    return {"status": "verified"}
 
 
 def get_status(external_key: str) -> dict:

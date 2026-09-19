@@ -10,10 +10,36 @@ export type MessengerProvider = "telegram" | "max";
 
 declare global {
   interface Window {
-    Telegram?: { WebApp?: { initData?: string; ready?: () => void; expand?: () => void } };
+    Telegram?: {
+      WebApp?: {
+        initData?: string;
+        ready?: () => void;
+        expand?: () => void;
+        /** Bot API 6.9+: системный запрос «поделиться номером» — замена SMS-коду. */
+        requestContact?: (callback?: (sent: boolean) => void) => void;
+      };
+    };
     /** JS-бридж MAX mini apps. */
     WebApp?: { initData?: string; ready?: () => void; platform?: string };
   }
+}
+
+/** Подтверждение номера через Telegram доступно только внутри его WebApp. */
+export function supportsTelegramContact(): boolean {
+  if (typeof window === "undefined") return false;
+  return typeof window.Telegram?.WebApp?.requestContact === "function";
+}
+
+/** Системный запрос Telegram «поделиться номером телефона». */
+export function requestTelegramContact(): Promise<boolean> {
+  return new Promise((resolve) => {
+    const request = window.Telegram?.WebApp?.requestContact;
+    if (typeof request !== "function") {
+      resolve(false);
+      return;
+    }
+    request.call(window.Telegram?.WebApp, (sent: boolean) => resolve(sent === true));
+  });
 }
 
 /** Возвращает провайдера и сырую initData, если приложение открыто в мессенджере. */

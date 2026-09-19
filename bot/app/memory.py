@@ -45,6 +45,25 @@ class Lead:
     comment: str = ""
     email: str = ""
     city: str = ""
+    # True только если номер прислан нативным контактом Telegram — Telegram
+    # сам гарантирует владение номером, это замена SMS-коду. Номер, введённый
+    # текстом, подтверждённым не считается.
+    phone_confirmed: bool = False
+
+    def set_phone(self, phone: str, confirmed: bool = False) -> None:
+        """Сохранить номер с контролем подтверждения.
+
+        Номер, введённый текстом, подтверждением не считается; смена номера
+        сбрасывает прежнее подтверждение. confirmed=True — только нативный
+        контакт Telegram (см. identify.handle_contact).
+        """
+        if not phone:
+            return
+        if phone != self.phone:
+            self.phone_confirmed = confirmed
+        elif confirmed:
+            self.phone_confirmed = True
+        self.phone = phone
 
     def missing_required(self) -> list[str]:
         required = {

@@ -133,6 +133,132 @@ def test_requires_player_header(client):
     assert client.get("/api/v2/registration/status").status_code == 401
 
 
+# --- канал telegram: подтверждение через бота без SMS -------------------------
+
+
+def _link_telegram(player_key: str, tg_user_id: str = "555000111") -> None:
+    from app.world.db import get_conn
+
+    player_id = core.get_or_create_player(player_key)["id"]
+    get_conn().execute(
+        "INSERT INTO external_identities (provider, provider_user_id, player_id, display_name)"
+        " VALUES ('telegram', ?, ?, 'Тест')",
+        (tg_user_id, player_id),
+    )
+
+
+def test_start_telegram_channel_awaiting_bot(client):
+    from app.world.db import get_conn
+
+    r = client.post("/api/v2/registration/start",
+                    json=_body(channel="telegram"), headers=HEADERS)
+    assert r.status_code == 200
+    data = r.json()
+    assert data == {
+        "status": "awaiting_bot",
+        "channel": "telegram",
+        "phone_masked": "+7 916 ***-**-67",
+        "cooldown_sec": 0,
+    }
+    # SMS не отправлялась: верификаций нет, повторный start не бьёт rate-limit.
+    player_id = core.get_or_create_player("kid-reg")["id"]
+    cnt = get_conn().execute(
+        "SELECT COUNT(*) AS c FROM phone_verifications WHERE player_id=?",
+        (player_id,),
+    ).fetchone()["c"]
+    assert cnt == 0
+    again = client.post("/api/v2/registration/start",
+                        json=_body(channel="telegram"), headers=HEADERS)
+    assert again.status_code == 200
+    # Анкета и согласия сохранены.
+    st = client.get("/api/v2/registration/status", headers=HEADERS).json()
+    assert st["identity"]["phone_verified"] is False
+    assert {c["type"] for c in st["consents"]} == {"pd_child", "privacy"}
+
+
+def test_confirm_bot_without_start(client):
+    r = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    assert r.status_code == 409
+    assert r.json()["detail"] == "no_pending_verification"
+
+
+def test_confirm_bot_no_telegram_link(client):
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    r = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    assert r.status_code == 409
+    assert r.json()["detail"] == "no_telegram_link"
+
+
+def test_confirm_bot_phone_unconfirmed(client, monkeypatch):
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    _link_telegram("kid-reg")
+    monkeypatch.setattr(
+        "app.identity.service.bridge.fetch_bot_prefill",
+        lambda provider, uid: {"phone": "+79161234567", "phone_confirmed": False},
+    )
+    r = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    assert r.status_code == 409
+    assert r.json()["detail"] == "bot_phone_unconfirmed"
+
+
+def test_confirm_bot_bridge_down(client, monkeypatch):
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    _link_telegram("kid-reg")
+    monkeypatch.setattr("app.identity.service.bridge.fetch_bot_prefill", lambda p, u: None)
+    r = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    assert r.status_code == 409
+    assert r.json()["detail"] == "bot_phone_unconfirmed"
+
+
+def test_confirm_bot_phone_mismatch(client, monkeypatch):
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    _link_telegram("kid-reg")
+    monkeypatch.setattr(
+        "app.identity.service.bridge.fetch_bot_prefill",
+        lambda provider, uid: {"phone": "+79009998877", "phone_confirmed": True},
+    )
+    r = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    assert r.status_code == 409
+    assert r.json()["detail"] == "phone_mismatch"
+
+
+def test_confirm_bot_happy_path_and_idempotent(client, monkeypatch):
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    _link_telegram("kid-reg")
+    calls = []
+
+    def fake_prefill(provider, uid):
+        calls.append((provider, uid))
+        assert provider == "telegram"
+        return {"phone": "8 916 123-45-67", "phone_confirmed": True}
+
+    monkeypatch.setattr("app.identity.service.bridge.fetch_bot_prefill", fake_prefill)
+    r = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    assert r.status_code == 200
+    assert r.json() == {"status": "verified"}
+    assert calls == [("telegram", "555000111")]
+
+    st = client.get("/api/v2/registration/status", headers=HEADERS).json()
+    assert st["is_registered"] is True
+    assert st["identity"]["phone_verified"] is True
+
+    # Повторный вызов — успех, но мост больше не дёргаем.
+    again = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    assert again.status_code == 200
+    assert len(calls) == 1
+
+
+def test_start_telegram_then_sms_channel_keeps_flow(client):
+    """После awaiting_bot можно переключиться на SMS — обычный флоу не сломан."""
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    r = client.post("/api/v2/registration/start", json=_body(channel="sms"), headers=HEADERS)
+    assert r.status_code == 200
+    assert r.json()["status"] == "code_sent"
+    ok = client.post("/api/v2/registration/verify",
+                     json={"code": r.json()["dev_code"]}, headers=HEADERS)
+    assert ok.status_code == 200
+
+
 def test_phone_change_resets_verification(client):
     r = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
     client.post("/api/v2/registration/verify", json={"code": r["dev_code"]}, headers=HEADERS)

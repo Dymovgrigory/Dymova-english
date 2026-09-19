@@ -166,3 +166,91 @@ describe("RegistrationFlow", () => {
     expect(toE164("916")).toBeNull();
   });
 });
+
+describe("RegistrationFlow: канал telegram (без SMS)", () => {
+  const requestContact = vi.fn((cb?: (sent: boolean) => void) => cb?.(true));
+
+  beforeEach(() => {
+    requestContact.mockClear();
+    vi.stubGlobal("Telegram", {
+      WebApp: { initData: "query_id=AAE&user=%7B%22id%22%3A1%7D", requestContact },
+    });
+  });
+
+  it("в Telegram предлагает канал telegram и шлёт awaiting_bot → шаг бота", async () => {
+    queueStart({ status: "awaiting_bot", channel: "telegram", phone_masked: "+7 (916) ***-**-33", cooldown_sec: 0 });
+    await reachConsents("+7 (916) 455-22-33");
+
+    // канал по умолчанию — telegram: вернёмся на шаг контактов и проверим
+    fireEvent.click(screen.getByRole("button", { name: "Назад" }));
+    expect(screen.getByRole("button", { name: /Telegram/ })).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Дальше" }));
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /законным представителем/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /политику конфиденциальности/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Продолжить" }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Поделиться номером в Telegram" })).toBeInTheDocument(),
+    );
+    const start = calls.find((c) => c.url.includes("/registration/start"));
+    expect(start?.body?.channel).toBe("telegram");
+    // шаг кода не показывается
+    expect(screen.queryByLabelText("Код подтверждения")).not.toBeInTheDocument();
+  });
+
+  it("поделиться номером → confirm-bot → успех", async () => {
+    queueStart({ status: "awaiting_bot", channel: "telegram", phone_masked: "+7 (916) ***-**-33", cooldown_sec: 0 });
+    replies.push(jsonResponse(200, { status: "verified" }));
+    const onDone = vi.fn();
+    await reachConsents("+7 (916) 455-22-33", onDone);
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /законным представителем/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /политику конфиденциальности/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Продолжить" }));
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Поделиться номером в Telegram" })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Поделиться номером в Telegram" }));
+    await waitFor(() => expect(screen.getByText(/Телефон подтверждён/)).toBeInTheDocument());
+    expect(requestContact).toHaveBeenCalled();
+    expect(calls.some((c) => c.url.includes("/registration/confirm-bot"))).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "Продолжить" }));
+    expect(onDone).toHaveBeenCalled();
+  });
+
+  it("phone_mismatch: понятная ошибка про другой номер", async () => {
+    queueStart({ status: "awaiting_bot", channel: "telegram", phone_masked: "+7 (916) ***-**-33", cooldown_sec: 0 });
+    replies.push(jsonResponse(409, { detail: "phone_mismatch" }));
+    await reachConsents("+7 (916) 455-22-33");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /законным представителем/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /политику конфиденциальности/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Продолжить" }));
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Поделиться номером в Telegram" })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Поделиться номером в Telegram" }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(/другим номером/));
+  });
+
+  it("отказ делиться номером: просим нажать ещё раз, confirm-bot не зовём", async () => {
+    requestContact.mockImplementationOnce((cb?: (sent: boolean) => void) => cb?.(false));
+    queueStart({ status: "awaiting_bot", channel: "telegram", phone_masked: "+7 (916) ***-**-33", cooldown_sec: 0 });
+    await reachConsents("+7 (916) 455-22-33");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /законным представителем/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /политику конфиденциальности/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Продолжить" }));
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Поделиться номером в Telegram" })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Поделиться номером в Telegram" }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(/Номер не отправлен/));
+    expect(calls.some((c) => c.url.includes("/registration/confirm-bot"))).toBe(false);
+  });
+});

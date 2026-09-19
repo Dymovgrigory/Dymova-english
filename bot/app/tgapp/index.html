@@ -42,6 +42,21 @@
   </div>
 
   <main id="root" class="app" aria-live="polite">
+    <!-- Вход в платформу «Мир Фоксинбурга» — на самом видном месте, сверху.
+         Клик обрабатывает app.js: внутри Telegram закрываем мини-апп
+         (возврат в чат, где живёт Menu Button), снаружи — новая вкладка. -->
+    <button type="button" class="world-banner" id="world-banner"
+            data-world-url="https://new.dymova-english.ru/world">
+      <img class="world-banner__fox" src="img/fox-head-yellow.png" alt="" width="44" height="44" />
+      <span class="world-banner__text">
+        <strong>Мир Фоксинбурга</strong>
+        <small>уроки-приключения для детей</small>
+      </span>
+      <svg class="world-banner__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </button>
     <!-- ===================== ДОМ ===================== -->
     <section class="tab" data-tab="home">
       <!-- Шапка-«чернила»: живая жидкость на WebGL вместо картинки.

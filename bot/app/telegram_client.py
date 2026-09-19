@@ -341,6 +341,23 @@ class TelegramClient:
     async def delete_webhook(self) -> bool:
         return await self._post("deleteWebhook", {}, attempts=2) is not None
 
+    async def set_menu_button(self, text: str, url: str) -> bool:
+        """Menu Button чата (кнопка слева от поля ввода) на весь бот.
+
+        Без chat_id setChatMenuButton задаёт кнопку по умолчанию для всех
+        чатов — так «Мир Фоксинбурга» виден постоянно, а не только в /start.
+        """
+        menu_button = {
+            "type": "web_app",
+            "text": text,
+            "web_app": {"url": url},
+        }
+        return await self._post(
+            "setChatMenuButton",
+            {"menu_button": json.dumps(menu_button, ensure_ascii=False)},
+            attempts=2,
+        ) is not None
+
     async def get_updates(self, offset: int | None, timeout: int = 25) -> list[dict]:
         if not self.configured:
             return []

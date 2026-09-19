@@ -175,19 +175,24 @@ def _finish_as_student(conv: Conversation, candidate: dict) -> str:
 
 
 def _finish_as_new_lead(conv: Conversation, phone: str) -> str:
-    conv.lead.phone = normalize_phone(phone) or conv.lead.phone
+    conv.lead.set_phone(normalize_phone(phone))
     conv.identify_state = ""
     conv.identify_candidates = []
     return NEW_LEAD_REPLY
 
 
-def handle_contact(conv: Conversation, raw_phone: str) -> str:
-    """Обработка присланного контакта/номера. Возвращает ответ клиенту."""
+def handle_contact(conv: Conversation, raw_phone: str, confirmed: bool = False) -> str:
+    """Обработка присланного контакта/номера. Возвращает ответ клиенту.
+
+    confirmed=True ставится только для нативного контакта Telegram
+    (message.contact): платформа гарантирует, что номер принадлежит
+    отправителю. Номер, присланный текстом, — confirmed=False.
+    """
     phone = normalize_phone(raw_phone)
     if not phone:
         conv.identify_state = STATE_AWAIT_CONTACT
         return ASK_PHONE_TEXT_MAX
-    conv.lead.phone = phone
+    conv.lead.set_phone(phone, confirmed=confirmed)
     try:
         rows = bb_store.find_students_by_phone(phone)
     except Exception:

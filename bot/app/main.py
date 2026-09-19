@@ -129,6 +129,17 @@ async def _start_scheduler() -> None:
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
     telegram = get_telegram()
+    if telegram.configured and settings.world_app_url:
+        # Menu Button чата (слева от поля ввода) на все чаты бота — «Мир
+        # Фоксинбурга» виден постоянно. Сбой не должен ронять запуск.
+        try:
+            ok = await telegram.set_menu_button("🏰 Мир Фоксинбурга", settings.world_app_url)
+            if ok:
+                logger.info("telegram: menu button «Мир Фоксинбурга» установлена")
+            else:
+                logger.warning("telegram: setChatMenuButton не удался")
+        except Exception:
+            logger.exception("telegram: ошибка установки menu button")
     if settings.TELEGRAM_POLLING and telegram.configured:
         logger.info("telegram: запуск long-polling")
         task = asyncio.create_task(_telegram_poll_loop(telegram))
@@ -894,7 +905,12 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             crm_ctx = _telegram_inbound_ctx(update, message, user_id, "[контакт]")
             conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
             conv.add("user", "[поделился номером телефона]")
-            reply = identify.handle_contact(conv, str(contact["phone_number"]))
+            # Подтверждённым считаем только СОБСТВЕННЫЙ контакт отправителя
+            # (contact.user_id == from.id) — чужую визитку из адресной книги
+            # Telegram прислать тоже можно, но она номер не удостоверяет.
+            from_id = (message.get("from") or {}).get("id")
+            confirmed = contact.get("user_id") is not None and contact.get("user_id") == from_id
+            reply = identify.handle_contact(conv, str(contact["phone_number"]), confirmed=confirmed)
             if not identify.needs_gate(conv) and not registration.is_registered(conv):
                 reply = f"{reply}\n\n{registration.start_registration(conv)}"
             conv.add("assistant", reply)

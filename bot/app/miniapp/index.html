@@ -220,6 +220,22 @@
     @media (prefers-reduced-motion: reduce) {
       * { transition: none !important; animation: none !important; }
     }
+
+    /* Баннер входа в «Мир Фоксинбурга» — сверху меню, фирменный градиент. */
+    .world-banner {
+      display: flex; align-items: center; gap: 12px;
+      margin: 4px 16px 12px; padding: 14px 16px;
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, var(--amber) 0%, var(--amber-deep) 45%, var(--violet) 100%);
+      color: #fff; text-decoration: none;
+      box-shadow: 0 2px 6px rgba(20, 17, 12, .06), 0 22px 50px -20px rgba(107, 77, 230, .45);
+    }
+    .world-banner:active { transform: scale(.97); }
+    .world-banner__fox { width: 44px; height: 44px; flex: none; }
+    .world-banner__text { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .world-banner__text strong { font-size: 16px; }
+    .world-banner__text small { font-size: 12.5px; opacity: .88; }
+    .world-banner__arrow { width: 22px; height: 22px; flex: none; }
   </style>
 </head>
 <body>
@@ -232,6 +248,19 @@
       <p>Английский не для школы, а для жизни</p>
     </div>
   </header>
+
+  <!-- Вход в платформу «Мир Фоксинбурга» — самое видное место, над меню. -->
+  <a class="world-banner" href="https://new.dymova-english.ru/world" target="_blank" rel="noopener">
+    <img class="world-banner__fox" src="img/fox-head-yellow.png" alt="" width="44" height="44" />
+    <span class="world-banner__text">
+      <strong>Мир Фоксинбурга</strong>
+      <small>уроки-приключения для детей</small>
+    </span>
+    <svg class="world-banner__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6"/>
+    </svg>
+  </a>
 
   <!-- МЕНЮ -->
   <section id="screen-menu">

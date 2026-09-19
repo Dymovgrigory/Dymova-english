@@ -87,8 +87,8 @@ class RegistrationStart(BaseModel):
     @classmethod
     def _channel_ok(cls, v: str) -> str:
         v = v.strip().lower()
-        if v not in ("sms", "call"):
-            raise ValueError("channel must be sms or call")
+        if v not in ("sms", "call", "telegram"):
+            raise ValueError("channel must be sms, call or telegram")
         return v
 
     @field_validator("class_letter")

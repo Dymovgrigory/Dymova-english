@@ -93,7 +93,7 @@ def _capture_entities(conv: Conversation, text: str) -> None:
         conv.lead.age = age
     phone = I.extract_phone(text)
     if phone and not conv.lead.phone:
-        conv.lead.phone = phone
+        conv.lead.set_phone(phone)
     if "онлайн" in low and not conv.selected_format:
         conv.selected_format = "Онлайн"
     elif ("офлайн" in low or "оффлайн" in low) and not conv.selected_format:

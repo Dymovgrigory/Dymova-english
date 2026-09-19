@@ -332,7 +332,7 @@ async def handle_registration_step(
                 "Напишите, пожалуйста, номер телефона в формате "
                 "+7XXXXXXXXXX или 8XXXXXXXXXX 📱"
             ), False
-        lead.phone = phone
+        lead.set_phone(phone)
 
     # Move to next step
     next_step = _current_step(conv)

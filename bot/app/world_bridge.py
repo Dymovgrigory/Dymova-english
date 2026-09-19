@@ -15,7 +15,9 @@ WORLD_BRIDGE_SECRET фича выключена и endpoint отвечает 404
     sign = HMAC_SHA256(key=WORLD_BRIDGE_SECRET,
                        msg=f"{provider}\\n{user_id}\\n{ts}").hexdigest()
     200 {"found": bool, "lead": {...} | null}  — lead содержит только
-        непустые поля из {fio_parent, fio_child, birthday, phone}.
+        непустые поля из {fio_parent, fio_child, birthday, phone} плюс
+        phone_confirmed: bool (True — номер прислан нативным контактом
+        Telegram, т.е. удостоверен платформой).
     400 {"detail": "bad_provider"}  — provider ∉ {telegram, max}.
     401 {"detail": "stale"}         — |now - ts| > 300 сек.
     401 {"detail": "bad_signature"} — подпись не сошлась.
@@ -74,6 +76,11 @@ def world_bridge_profile(
     try:
         lead = get_store().get(user_id, platform=provider).lead
         data = {f: getattr(lead, f).strip() for f in _LEAD_FIELDS if getattr(lead, f).strip()}
+        if data:
+            # True только для номера, присланного нативным контактом
+            # Telegram, — world-backend полагается на этот флаг как на
+            # замену SMS-кода при подтверждении телефона через бота.
+            data["phone_confirmed"] = bool(lead.phone_confirmed)
     except Exception:
         # Fail-open: мост не должен ронять регистрацию в мире из-за сбоя
         # хранилища бота — world покажет пустую анкету, как для новичка.

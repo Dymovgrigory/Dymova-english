@@ -5,7 +5,7 @@ import type { ConsentType } from "@/lib/legal";
 const API = (process.env.NEXT_PUBLIC_WORLD_API || "").replace(/\/$/, "");
 const TIMEOUT_MS = 12000;
 
-export type RegistrationChannel = "sms" | "call";
+export type RegistrationChannel = "sms" | "call" | "telegram";
 
 export type Consent = { type: ConsentType; version: string; accepted_at?: string };
 
@@ -23,7 +23,8 @@ export type RegistrationStartBody = {
 };
 
 export type RegistrationStartResult = {
-  status: "code_sent";
+  /** code_sent — код отправлен (sms/call); awaiting_bot — ждём подтверждения в боте. */
+  status: "code_sent" | "awaiting_bot";
   channel: RegistrationChannel;
   phone_masked: string;
   cooldown_sec: number;
@@ -95,5 +96,7 @@ const post = <T>(path: string, body: unknown) =>
 export const registrationApi = {
   start: (body: RegistrationStartBody) => post<RegistrationStartResult>("/api/v2/registration/start", body),
   verify: (code: string) => post<{ status: "verified" }>("/api/v2/registration/verify", { code }),
+  /** Подтверждение номера через бота (нативный контакт Telegram), без SMS. */
+  confirmBot: () => post<{ status: "verified" }>("/api/v2/registration/confirm-bot", {}),
   status: () => call<RegistrationStatus>("/api/v2/registration/status"),
 };

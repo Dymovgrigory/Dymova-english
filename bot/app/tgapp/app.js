@@ -1517,6 +1517,22 @@
       });
     });
 
+    // Баннер «Мир Фоксинбурга». Внутри Telegram у WebApp нет openLink с
+    // initData для внешнего мира — надёжнее закрыть мини-апп: человек
+    // попадает в чат, где та же кнопка живёт в Menu Button у поля ввода.
+    // В обычном браузере просто открываем новую вкладку.
+    var worldBanner = $("#world-banner");
+    if (worldBanner) {
+      worldBanner.addEventListener("click", function () {
+        var url = worldBanner.dataset.worldUrl || "https://new.dymova-english.ru/world";
+        if (tg && typeof tg.close === "function") {
+          tg.close();
+          return;
+        }
+        window.open(url, "_blank", "noopener");
+      });
+    }
+
     // Нажатие на кнопку меню бьёт всплеск чернил в шапке: интерфейс и
     // фон — одно целое, а не картинка и кнопки поверх неё.
     document.addEventListener("pointerdown", function (event) {
