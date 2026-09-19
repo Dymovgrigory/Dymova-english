@@ -68,3 +68,26 @@ Spotlight 1 — стройная башня с плющом; Spotlight 2 — «�
 - Урок: размытая диорама этажа на фоне, задание на пергаменте, эмалевые варианты, латунные
   кнопки и прогресс-трубка, лист результата на тёмном дереве.
 - Шрифты: Playfair Display (заголовки, `font-fairy`), Nunito (текст). Маскот — Foxy по брендбуку.
+
+### 3D-маскот Фокси (утверждено владельцем 2026-09-18)
+
+Фокси у окна текущего урока в башне — живой 3D-маскот, а не статичный спрайт.
+
+- Модель: `world/public/assets/foxi-rigged-v2.glb` (889 КБ, draco + webp512). Клипы:
+  `Idle` (4.03с), `Walk_Inplace` (4.23с), `Walking`, `Running`, `Call_Gesture` (7.57с),
+  `Big_Wave_Hello` (5.3с), `Cheer_with_Both_Hands_Up` (1.9с), `Happy_jump_f` (9.8с),
+  `Shake_It_Off_Dance` (16.3с). Пайплайн: `world-pipeline/foxi_animate.py`, `merge_clips.py`.
+- Поведение у окон (`world/src/foxi3d/`, чистый three.js без R3F; `Tower.tsx` → `<FoxiMascot/>`):
+  стоит у текущего окна (`Idle`, изредка `Big_Wave_Hello`), периодически переходит к соседнему
+  окну (`Walk_Inplace` + смещение и поворот корпуса, хвост — процедурно, кость `Tail`),
+  при долгом простое — `Call_Gesture` + бабл «Нажми на следующий урок!» (DOM поверх canvas,
+  латунь/пергамент-токены), по пульсу нового урока (`?pulse=`, события `foxi:celebrate` /
+  `foxi:dance`) — `Cheer_with_Both_Hands_Up` + `Happy_jump_f` или короткий фрагмент
+  `Shake_It_Off_Dance`.
+- Фолбэки: `prefers-reduced-motion`, нет WebGL или ошибка загрузки GLB → статичный
+  `/content/foxy/wave.webp`. Кнопка «Спрятать Фокси» (localStorage `world-foxi-hidden`),
+  возврат — «Позвать Фокси». Canvas `aria-hidden`, бабл — `role="status"` polite.
+- Производительность: three.js и GLB — dynamic import после `requestIdleCallback` и только
+  когда маскот во вьюпорте (IntersectionObserver), pixelRatio ≤ 2, пауза при скрытой вкладке /
+  вне вьюпорта, полный dispose при unmount. Draco-декодер — локально из `world/public/draco/`
+  (без CDN).
