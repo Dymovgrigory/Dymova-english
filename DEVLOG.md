@@ -1,5 +1,5 @@
 
-### Сессия 131 (агент — Kimi: подтверждение телефона через бота без SMS + кнопка мира повыше) — в работе
+### Сессия 131 (агент — Kimi: подтверждение телефона через бота без SMS + кнопка мира повыше) — DONE, ЗАДЕПЛОЕНО
 
 **Дата:** 2026-09-19
 **Ветка:** `world-v2` (коммит `87836a0d`)
@@ -15,7 +15,7 @@
 
 **Как проверено:** bot pytest **1265** (+8: set_phone ×5, handle_contact ×2, payload set_menu_button; дизайн-тесты emoji починены заменой на фирменные ассеты); world-backend pytest **392** (+9: awaiting_bot без SMS и без rate-limit, confirm-bot: no_pending/no_telegram_link/unconfirmed/bridge_down/mismatch/happy+идемпотентность/переключение telegram→sms; +2 phone_confirmed в bridge); vitest **134** (+4 TG-канал: дефолт и выбор, share→confirm→success, phone_mismatch, отказ делиться); tsc/eslint 0; `next build` ок; e2e локально **34/34**. Живой кросс-процессный round-trip: бот на :8021 (WORLD_BRIDGE_SECRET, реальный handle_contact confirmed=True) ↔ world-backend :8010 с реальным мостом — start(awaiting_bot) → confirm-bot: no_telegram_link → привязка → verified → идемпотентно verified; mismatch на втором игроке → phone_mismatch; текстовый ввод номера → phone_confirmed=False. Тестовые игроки rt-* вычищены, бот :8021 погашен.
 
-**Деплой:** (заполняется ниже по факту).
+**Деплой:** ВЫПОЛНЕН (2026-09-19). Бэкап прод-БД `world.sqlite.bak-20260919e`; bundle `94bcb87b..b8cbeaa7` → сервер, fast-forward; пересобраны оба стека (world-api Healthy, world-web Started, bot-bot-1 Healthy). Новых env не потребовалось. Прод-проверки: лог бота `telegram: menu button «Мир Фоксинбурга» установлена` (setChatMenuButton применён на все чаты); `start` channel=telegram через реальный токен игрока → `awaiting_bot` без SMS; `confirm-bot` без TG-привязки → 409 `no_telegram_link`; мост с валидной подписью → 200 `{"found":false}`; e2e API против прода **8/8**. Тестовый игрок `prod-rt-check` удалён с явной чисткой FK-строк (player_identity/consents/phone_verifications/external_identities/auth_sessions).
 
 **Владельцу проверить после деплоя:** Menu Button «🏰 Мир Фоксинбурга» слева от поля ввода появится у всех чатов после рестарта бота (setChatMenuButton применён на весь бот); баннер сверху в «Личном кабинете» TG и в MAX-приложении; регистрация в мире внутри Telegram: канал «Telegram» выбран по умолчанию → «Поделиться номером» → без SMS. Остаются хвосты: ключи SMS Aero → `PHONE_VERIFICATION_REQUIRED=1`, `CASTLE_OPEN_ALL=1` выключить после ревью.
 
