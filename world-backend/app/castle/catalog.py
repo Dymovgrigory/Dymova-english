@@ -8,12 +8,13 @@ SEASONS = ("spring", "summer", "autumn", "winter")
 TIMES = ("dawn", "day", "dusk", "night")
 WEATHERS = ("snow", "rain", "fireflies", "fog", "aurora", "petals")
 BANNER_COLORS = ("plum", "emerald", "gold", "azure", "rose")
+SCENES = ("garland", "lanterns", "pumpkins")
 
 
 @dataclass(frozen=True)
 class Item:
     id: str
-    kind: str              # season|time|weather|banner|decor
+    kind: str              # season|time|weather|banner|decor|scene
     title_ru: str
     price: int
     value: str             # что применяется: имя сезона, времени, погоды, цвета
@@ -76,13 +77,21 @@ def _items() -> dict[str, Item]:
             id=item_id, kind="decor", title_ru=title, price=price, value=item_id,
             requires_track=track, requires_level=level, anchor=anchor,
         )
+    # Запечённые наборы сцены: заменяют композицию целиком, слоты декора не занимают.
+    scene_specs = [
+        ("scene-garland", "Гирлянды", "garland", 120),
+        ("scene-lanterns", "Фестиваль фонарей", "lanterns", 150),
+        ("scene-pumpkins", "Тыквенный праздник", "pumpkins", 150),
+    ]
+    for item_id, title, value, price in scene_specs:
+        items[item_id] = Item(id=item_id, kind="scene", title_ru=title, price=price, value=value)
     return items
 
 
 ITEMS: dict[str, Item] = _items()
 
 # Бесплатно и всегда доступно: сезон по календарю, время «как за окном», сливовое знамя.
-FREE_VALUES = {"season": None, "time": None, "weather": None, "banner": "plum"}
+FREE_VALUES = {"season": None, "time": None, "weather": None, "banner": "plum", "scene": None}
 
 
 def season_by_date(moment: datetime) -> str:

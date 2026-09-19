@@ -2,7 +2,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { castleApi } from "./castle";
 
 const view = {
-  appearance: { season: null, time_of_day: null, weather: null, banner_color: "plum", banner_emblem: "fox" },
+  appearance: { season: null, time_of_day: null, weather: null, banner_color: "plum", banner_emblem: "fox", scene_set: null },
   catalog: [],
   owned: [],
   titles: [],

@@ -16,14 +16,21 @@ class BuyBody(BaseModel):
     item_id: str
 
 
+class DecorPlace(BaseModel):
+    item_id: str
+    slot: str
+
+
 class AppearanceBody(BaseModel):
     season: str | None = None
     time_of_day: str | None = None
     weather: str | None = None
     banner_color: str | None = None
     banner_emblem: str | None = None
+    scene_set: str | None = None
     decor_on: list[str] | None = None
     decor_off: list[str] | None = None
+    decor_place: list[DecorPlace] | None = None
 
 
 class TitleBody(BaseModel):

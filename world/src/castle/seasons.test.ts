@@ -22,4 +22,11 @@ describe("seasons", () => {
     expect(isSeason("spring")).toBe(true);
     expect(isSeason("")).toBe(false);
   });
+
+  it("запечённый набор заменяет сцену независимо от сезона, null — сезонная", () => {
+    expect(sceneForSeason("autumn", "garland")).toBe("/content/castle/sets/garland.webp");
+    expect(sceneForSeason("mars", "pumpkins")).toBe("/content/castle/sets/pumpkins.webp");
+    expect(sceneForSeason("autumn", null)).toBe("/content/castle/seasons/autumn.webp");
+    expect(sceneForSeason("autumn", "")).toBe("/content/castle/seasons/autumn.webp");
+  });
 });

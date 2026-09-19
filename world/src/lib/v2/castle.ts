@@ -10,11 +10,12 @@ export type Appearance = {
   weather: string | null;
   banner_color: string;
   banner_emblem: string;
+  scene_set: string | null;
 };
 
 export type CastleItem = {
   id: string;
-  kind: "season" | "time" | "weather" | "banner" | "decor";
+  kind: "season" | "time" | "weather" | "banner" | "decor" | "scene";
   title_ru: string;
   value: string;
   price: number;
@@ -38,7 +39,7 @@ export type TitleRow = {
   worn: boolean;
 };
 
-export type DecorItem = { item_id: string; anchor: string; title_ru: string; active: boolean };
+export type DecorItem = { item_id: string; anchor: string; title_ru: string; active: boolean; slot: string | null };
 
 export type CastleView = {
   appearance: Appearance;
@@ -90,7 +91,13 @@ export const castleApi = {
   get: () => call<CastleView>("/api/v2/castle"),
   buy: (itemId: string) =>
     call<CastleView>("/api/v2/castle/buy", { method: "POST", body: JSON.stringify({ item_id: itemId }) }),
-  apply: (fields: Partial<Appearance> & { decor_on?: string[]; decor_off?: string[] }) =>
+  apply: (
+    fields: Partial<Appearance> & {
+      decor_on?: string[];
+      decor_off?: string[];
+      decor_place?: { item_id: string; slot: string }[];
+    },
+  ) =>
     call<CastleView>("/api/v2/castle/appearance", { method: "POST", body: JSON.stringify(fields) }),
   wear: (track: string) =>
     call<CastleView>("/api/v2/castle/title", { method: "POST", body: JSON.stringify({ track }) }),

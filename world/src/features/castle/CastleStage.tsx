@@ -63,7 +63,7 @@ function SpotHighlight({ spot, scene, active, pulse }: { spot: Spot; scene: stri
         top: `${top}%`,
         width: `${width}%`,
         height: `${height}%`,
-        zIndex: 10 + spot.index,
+        zIndex: 100 + spot.index,
         opacity: shown ? 1 : 0,
         filter: "drop-shadow(0 0 6px rgb(255 211 110 / 0.9)) drop-shadow(0 10px 12px rgb(20 10 30 / 0.45))",
       }}
@@ -141,7 +141,11 @@ export function CastleStage({
   onOpen: (id: SpotId) => void;
 }) {
   const season = appearance?.season ?? seasonByDate(new Date());
-  const scene = sceneForSeason(season);
+  const wanted = sceneForSeason(season, appearance?.scene_set ?? null);
+  // Файл набора сцены может ещё не существовать — молча откатываемся на сезонную.
+  const [broken, setBroken] = useState<string | null>(null);
+  const scene = broken === wanted ? sceneForSeason(season) : wanted;
+  const onSceneError = () => setBroken(wanted);
   const spots = spotsForSeason(season);
   const map = useHotspotMap(hotspotsForSeason(season));
   const fit = useSceneFit(freeArea);
@@ -165,7 +169,13 @@ export function CastleStage({
     <div className="fixed inset-0 z-0 overflow-hidden bg-[#1a1230]">
       {/* Подложка на случай узкого экрана, где картинка не закрывает всё */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={scene} alt="" aria-hidden className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl" />
+      <img
+        src={scene}
+        alt=""
+        aria-hidden
+        onError={onSceneError}
+        className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl"
+      />
       {fit ? (
         <div
           ref={sceneRef}
@@ -191,6 +201,7 @@ export function CastleStage({
             src={scene}
             alt="Замок Фоксинбург"
             draggable={false}
+            onError={onSceneError}
             className="absolute inset-0 h-full w-full"
             style={covers ? undefined : { WebkitMaskImage: EDGE_FADE, maskImage: EDGE_FADE }}
           />
@@ -201,7 +212,13 @@ export function CastleStage({
                 className="pointer-events-none absolute inset-0"
                 style={lightLayer(effectiveAppearance(appearance, new Date()).time) as CSSProperties}
               />
-              <Decor items={decor} time={effectiveAppearance(appearance, new Date()).time} />
+              <Decor
+                items={decor}
+                time={effectiveAppearance(appearance, new Date()).time}
+                season={season}
+                scene={scene}
+                spots={spots}
+              />
               <Banner color={appearance.banner_color} emblem={emblem} />
               <Weather kind={effectiveAppearance(appearance, new Date()).weather} />
             </>

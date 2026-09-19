@@ -16,7 +16,7 @@ describe("облик замка", () => {
 
   it("выбранное побеждает автоматическое", () => {
     const result = effectiveAppearance(
-      { season: "winter", time_of_day: "night", weather: "snow", banner_color: "gold", banner_emblem: "fox" },
+      { season: "winter", time_of_day: "night", weather: "snow", banner_color: "gold", banner_emblem: "fox", scene_set: null },
       new Date("2026-07-15T13:00:00"),
     );
     expect(result).toEqual({ season: "winter", time: "night", weather: "snow" });
@@ -24,7 +24,7 @@ describe("облик замка", () => {
 
   it("пустой выбор подставляет календарь и часы", () => {
     const result = effectiveAppearance(
-      { season: null, time_of_day: null, weather: null, banner_color: "plum", banner_emblem: "fox" },
+      { season: null, time_of_day: null, weather: null, banner_color: "plum", banner_emblem: "fox", scene_set: null },
       new Date("2026-07-15T13:00:00"),
     );
     expect(result).toEqual({ season: "summer", time: "day", weather: null });

@@ -11,9 +11,12 @@ from app.world import core
 from app.world.core import Conflict, NotFound
 from app.world.db import get_conn
 
-from . import catalog, state, titles
+from . import catalog, slots as slots_mod, state, titles
 
-_FIELD_KIND = {"season": "season", "time_of_day": "time", "weather": "weather", "banner_color": "banner"}
+_FIELD_KIND = {
+    "season": "season", "time_of_day": "time", "weather": "weather",
+    "banner_color": "banner", "scene_set": "scene",
+}
 
 
 def _open_all() -> bool:
@@ -103,7 +106,9 @@ def apply(external_key: str, **fields) -> dict:
 
     decor_off_ids = set(fields.pop("decor_off", None) or [])
     decor_on_ids = set(fields.pop("decor_on", None) or [])
-    for item_id in decor_off_ids | decor_on_ids:
+    decor_place = fields.pop("decor_place", None) or []
+    place_ids = {entry["item_id"] for entry in decor_place}
+    for item_id in decor_off_ids | decor_on_ids | place_ids:
         item = catalog.ITEMS.get(item_id)
         if item is None or item.kind != "decor":
             raise Conflict(f"unknown decor {item_id!r}")
@@ -118,6 +123,39 @@ def apply(external_key: str, **fields) -> dict:
     if decor_off_ids or decor_on_ids:
         off = (set(state.decor_off(player_id)) | decor_off_ids) - decor_on_ids
         state.set_decor_off(player_id, sorted(off))
+
+    # Расстановка по слотам: явная (decor_place) и автоматическая (decor_on — дефолтный слот).
+    slots = state.decor_slots(player_id)
+    if decor_place:
+        for entry in decor_place:
+            item = catalog.ITEMS[entry["item_id"]]
+            if entry["slot"] not in slots_mod.allowed_slots(item.anchor):
+                raise Conflict("invalid_slot")
+        off = set(state.decor_off(player_id)) - place_ids
+        state.set_decor_off(player_id, sorted(off))
+
+    def occupied(exclude: str) -> dict[str, str]:
+        """Занятые слоты активных украшений: {slot: item_id}, без предмета exclude."""
+        busy: dict[str, str] = {}
+        for d in state.decor(player_id):
+            if d["active"] and d["item_id"] != exclude and d["slot"] is not None:
+                busy[d["slot"]] = d["item_id"]
+        return busy
+
+    for entry in decor_place:
+        item_id, slot = entry["item_id"], entry["slot"]
+        if slot in occupied(item_id):
+            raise Conflict("slot_occupied")
+        slots[item_id] = slot
+    for item_id in decor_on_ids - place_ids:
+        if item_id in slots:
+            continue                      # явный слот уже выбран ранее — не трогаем
+        item = catalog.ITEMS[item_id]
+        target = slots_mod.default_slot(item)
+        if target in occupied(item_id):
+            raise Conflict("slot_occupied")
+    if decor_place:
+        state.set_decor_slots(player_id, slots)
 
     for field, value in fields.items():
         kind = _FIELD_KIND.get(field)

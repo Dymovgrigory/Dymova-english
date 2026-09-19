@@ -171,7 +171,11 @@ _TABLE_EXTRAS = {
     "players": _PLAYER_EXTRAS,
     "word_stats": {"due_at": "TEXT"},
     "auth_sessions": {"revoked_at": "TEXT"},
-    "castle_appearance": {"decor_off": "TEXT NOT NULL DEFAULT '[]'"},  # JSON-массив снятых украшений
+    "castle_appearance": {
+        "decor_off": "TEXT NOT NULL DEFAULT '[]'",   # JSON-массив снятых украшений
+        "scene_set": "TEXT",                         # запечённый набор сцены, NULL = нет набора
+        "decor_slots": "TEXT NOT NULL DEFAULT '{}'",  # JSON {item_id: slot_id}
+    },
     "atom_mastery": {"learned_at": "TEXT"},  # московский день первого взятия порога силы 2
 }
 

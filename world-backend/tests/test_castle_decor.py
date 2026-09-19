@@ -25,7 +25,8 @@ def test_bought_decor_is_placed_at_its_anchor(learner):
     _give_coins(key, 50)
     view = service.buy(key, "decor-gate-lantern")
     assert view["decor"] == [
-        {"item_id": "decor-gate-lantern", "anchor": "gate", "title_ru": "Фонарь у ворот", "active": True}
+        {"item_id": "decor-gate-lantern", "anchor": "gate", "title_ru": "Фонарь у ворот",
+         "active": True, "slot": "gate-left"}
     ]
 
 
