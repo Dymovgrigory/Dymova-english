@@ -1,10 +1,9 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type APIRequestContext } from "@playwright/test";
 
 const API = process.env.WORLD_API || "http://127.0.0.1:8010";
 const CONSENT_VERSION = "2026-09-19";
 
 const run = Date.now();
-const headers = { "X-World-Player": `e2e-reg-${run}`, "Content-Type": "application/json" };
 const phone = `+7916${String(run).slice(-7)}`;
 
 const anketa = {
@@ -19,7 +18,22 @@ const anketa = {
   channel: "sms",
 };
 
+/**
+ * Заголовки с валидной сессией: на проде WORLD_PLAYER_SECRET не пускает сырые ключи,
+ * поэтому сначала создаём игрока и берём выданный токен (как в castle-спеках).
+ */
+async function authHeaders(request: APIRequestContext, key: string) {
+  const created = await request.post(`${API}/api/world/players`, {
+    headers: { "X-World-Player": key, "Content-Type": "application/json" },
+    data: { display_name: "Ева" },
+  });
+  expect(created.ok()).toBeTruthy();
+  const { token } = (await created.json()) as { token: string };
+  return { "X-World-Player": token, "Content-Type": "application/json" };
+}
+
 test("API: регистрация — start → verify(dev_code) → status", async ({ request }) => {
+  const headers = await authHeaders(request, `e2e-reg-${run}`);
   const start = await request.post(`${API}/api/v2/registration/start`, {
     headers,
     data: {
@@ -54,8 +68,9 @@ test("API: регистрация — start → verify(dev_code) → status", as
 });
 
 test("API: регистрация — без обязательных согласий 409 consent_required", async ({ request }) => {
+  const headers = await authHeaders(request, `e2e-reg-no-consent-${run}`);
   const start = await request.post(`${API}/api/v2/registration/start`, {
-    headers: { ...headers, "X-World-Player": `e2e-reg-no-consent-${run}` },
+    headers,
     data: { ...anketa, parent_phone: `+7917${String(run).slice(-7)}`, consents: [] },
   });
   expect(start.status()).toBe(409);
