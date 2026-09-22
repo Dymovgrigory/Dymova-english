@@ -1,7 +1,8 @@
 
-### Сессия 132 (агент — Cursor: команда — Кир Анджела + Силантьева Ирина) — PR pending
+### Сессия 132 (агент — Cursor: команда — Кир Анджела + Силантьева Ирина) — PR #225, ЗАДЕПЛОЕНО
 
 **Дата:** 2026-09-22
+**PR:** #225 — site: Кир Анджела и Силантьева Ирина в команду (`site/team-kir-silantieva` → main)
 **Ветка:** `site/team-kir-silantieva` → main
 **Запрос владельца:** добавить администратора Силантьеву Ирину и педагога английского/немецкого Кир Анджелу (фото из папки «Команда»); педагога — на все страницы, связанные с английским.
 
@@ -13,7 +14,7 @@
 
 **Как проверено:** локально имена/фото в HTML; после деплоя — curl/grep на dymova-english.ru.
 
-**Деплой:** `build_static_site.py --out dist_prod` + rsync → `foxinburg-vm:/home/yc-user/foxinburg-site/`.
+**Деплой:** ВЫПОЛНЕН (2026-09-22). `build_static_site.py --out dist_prod` (249 стр.) + `rsync -az` → `foxinburg-vm:/home/yc-user/foxinburg-site/`. Прод: главная/doshkolniki/nemeckij — Кир; главная — Силантьева; `/team-media/kir.webp` и `silantieva.webp` → 200.
 
 **Осталось:** видеовизитка Кир (пока без кнопок видео).
 
