@@ -407,9 +407,11 @@ ENGLISH_TEACHERS = [
     {"name": "Спорыхина Анастасия", "role": "Педагог английского и испанского языков", "photo": TEAM_MEDIA + "sporyhina.webp", "video": TEAM_MEDIA + "sporyhina.mp4"},
     {"name": "Прокудина Мария", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "prokudina.webp", "video": TEAM_MEDIA + "prokudina.mp4"},
     {"name": "Виноградова Анна", "role": "Педагог английского языка", "photo": TEAM_MEDIA + "vinogradova.webp", "video": TEAM_MEDIA + "vinogradova.mp4"},
+    {"name": "Кир Анджела", "role": "Педагог английского и немецкого языков", "photo": TEAM_MEDIA + "kir.webp"},
 ]
 GERMAN_TEACHERS = [
     {"name": "Саляхова Алина", "role": "Педагог немецкого языка", "photo": TEAM_MEDIA + "salyahova.webp", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
+    {"name": "Кир Анджела", "role": "Педагог английского и немецкого языков", "photo": TEAM_MEDIA + "kir.webp"},
 ]
 CHINESE_TEACHERS = [
     {"name": "Шевченко Дарья", "role": "Педагог китайского языка", "photo": TEAM_MEDIA + "shevchenko.webp", "video": TEAM_MEDIA + "shevchenko.mp4"},
