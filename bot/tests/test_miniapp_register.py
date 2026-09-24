@@ -95,6 +95,34 @@ def test_register_validation_errors_returned_per_field():
     assert not get_store().get("tg:777", platform="telegram").registered
 
 
+def test_double_submit_is_idempotent_no_duplicate_lead_or_message():
+    """Ретрай/двойной тап на «Отправить» не должен плодить второй лид в
+    BigBen и второе сообщение-подтверждение в чат — только один раз."""
+    client = TestClient(main_module.app)
+    first = client.post("/api/miniapp/register", json=FORM, headers=auth())
+    second = client.post("/api/miniapp/register", json=FORM, headers=auth())
+    assert first.status_code == 200 and first.json()["ok"] is True
+    assert second.status_code == 200 and second.json()["ok"] is True
+    assert second.json()["access"]["locked"] is False
+    assert len(main_module._test_sent_leads) == 1
+    assert len(main_module._test_chat_messages) == 1
+
+
+def test_register_survives_crm_upsert_failure(monkeypatch):
+    """Сбой апдейта карточки клиента в собственной CRM бота — не повод
+    терять лид в BigBen и подтверждение в чат."""
+    def boom(*args, **kwargs):
+        raise RuntimeError("crm недоступна")
+
+    monkeypatch.setattr(main_module.crm_store, "upsert_customer_for_identity", boom)
+    client = TestClient(main_module.app)
+    resp = client.post("/api/miniapp/register", json=FORM, headers=auth())
+    assert resp.status_code == 200 and resp.json()["ok"] is True
+    assert len(main_module._test_sent_leads) == 1
+    assert main_module._test_chat_messages[0][0] == "tg:777"
+    assert get_store().get("tg:777", platform="telegram").registered
+
+
 def test_old_registered_user_needs_consents_only():
     store = get_store()
     conv = store.get("tg:777", platform="telegram")

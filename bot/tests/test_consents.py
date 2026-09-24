@@ -48,3 +48,17 @@ def test_summary_line_mentions_every_type_and_version():
     assert "политика: да" in line
     assert "рассылки: да" in line
     assert consents.LEGAL_VERSION in line
+
+
+def test_parse_accepted_defaults_missing_to_false():
+    # Общий разбор для анкеты и ручки /api/miniapp/consents: неотмеченный
+    # или отсутствующий чекбокс — это False, а не пропуск ключа.
+    assert consents.parse_accepted({"pd_child": True}) == {
+        "pd_child": True, "privacy": False, "marketing": False,
+    }
+
+
+def test_parse_accepted_ignores_non_dict_input():
+    assert consents.parse_accepted(None) == {
+        "pd_child": False, "privacy": False, "marketing": False,
+    }

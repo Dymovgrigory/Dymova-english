@@ -32,6 +32,17 @@ REQUIRED: tuple[str, ...] = ("pd_child", "privacy")
 _SUMMARY_NAMES = {"pd_child": "ПД ребёнка", "privacy": "политика", "marketing": "рассылки"}
 
 
+def parse_accepted(raw: object) -> dict[str, bool]:
+    """Разбирает сырой `consents` из JSON-тела запроса в плоский dict.
+
+    Общая логика для анкеты (registration_form.validate) и отдельной ручки
+    согласий (POST /api/miniapp/consents) — раньше одно и то же выражение
+    было продублировано в обоих местах.
+    """
+    source = raw if isinstance(raw, dict) else {}
+    return {kind: bool(source.get(kind)) for kind in CONSENT_LABELS}
+
+
 def record(
     platform: str,
     user_id: str,

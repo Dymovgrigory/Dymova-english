@@ -1915,23 +1915,37 @@ async def miniapp_register(request: Request, data: dict) -> dict:
     identity, error = _verified_identity_or_401(request)
     if error:
         return error
+    store = get_store()
+    conv = store.get(identity.user_id, platform=identity.platform)
+    if conv.registered and consents.has_required(identity.platform, identity.user_id):
+        # Повторная отправка той же формы (двойной тап, ретрай сети) не
+        # должна плодить второй лид в BigBen и второе «Анкета заполнена» в
+        # чат — человек уже зарегистрирован и согласия уже в журнале.
+        return {"ok": True, "access": _miniapp_access_state(identity)}
     form, errors = registration_form.validate(data if isinstance(data, dict) else {})
     if errors:
         return JSONResponse({"ok": False, "errors": errors}, status_code=400)
-    store = get_store()
-    conv = store.get(identity.user_id, platform=identity.platform)
+    # Журнал согласий пишем первым: если он упадёт, conv ещё не помечен
+    # зарегистрированным и человек может просто повторить отправку. Если бы
+    # порядок был обратным, ошибка после store.save оставляла бы диалог
+    # «зарегистрированным» без единой строки согласия в журнале.
+    consents.record(identity.platform, identity.user_id, form.consents, channel="miniapp")
     registration_form.apply(conv, form)
     conv.add("assistant", "[анкета мини-приложения заполнена]")
     store.save(conv)
-    consents.record(identity.platform, identity.user_id, form.consents, channel="miniapp")
-    # upsert_customer_for_identity дописывает только пустые поля — это
-    # осознанно: анкета не должна затирать то, что менеджер уже поправил в CRM.
-    crm_store.upsert_customer_for_identity(
-        identity.platform, identity.user_id,
-        name=form.fio_parent, phone=conv.lead.phone,
-        child_name=form.fio_child, child_age=form.age or form.birthday,
-        source="анкета мини-приложения",
-    )
+    try:
+        # upsert_customer_for_identity дописывает только пустые поля — это
+        # осознанно: анкета не должна затирать то, что менеджер уже поправил
+        # в CRM. Сбой здесь — не повод терять лид в BigBen или подтверждение
+        # в чат, поэтому гасим исключение и продолжаем.
+        crm_store.upsert_customer_for_identity(
+            identity.platform, identity.user_id,
+            name=form.fio_parent, phone=conv.lead.phone,
+            child_name=form.fio_child, child_age=form.age or form.birthday,
+            source="анкета мини-приложения",
+        )
+    except Exception:
+        logger.exception("miniapp: не удалось обновить карточку клиента в CRM")
     platform_name = "Telegram" if identity.platform == TELEGRAM_PLATFORM else "MAX"
     await registration._submit_registration(
         conv, get_bigben(),
@@ -1948,8 +1962,7 @@ async def miniapp_consents(request: Request, data: dict) -> dict:
     identity, error = _verified_identity_or_401(request)
     if error:
         return error
-    raw = data.get("consents") if isinstance(data.get("consents"), dict) else {}
-    accepted = {kind: bool(raw.get(kind)) for kind in consents.CONSENT_LABELS}
+    accepted = consents.parse_accepted(data.get("consents"))
     if not all(accepted[kind] for kind in consents.REQUIRED):
         return JSONResponse({"ok": False, "errors": {"consents": "Нужны обязательные согласия"}}, status_code=400)
     consents.record(identity.platform, identity.user_id, accepted, channel="miniapp")

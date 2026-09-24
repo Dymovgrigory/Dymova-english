@@ -53,8 +53,7 @@ def validate(payload: dict) -> tuple[FormData | None, dict[str, str]]:
     phone = extract_phone(_clean(payload.get("phone"), 40)) or ""
     if not phone:
         errors["phone"] = "Укажите телефон в формате +7 900 123-45-67"
-    raw_consents = payload.get("consents") if isinstance(payload.get("consents"), dict) else {}
-    accepted = {kind: bool(raw_consents.get(kind)) for kind in consents.CONSENT_LABELS}
+    accepted = consents.parse_accepted(payload.get("consents"))
     if not all(accepted[kind] for kind in consents.REQUIRED):
         errors["consents"] = "Без обязательных согласий мы не можем сохранить анкету"
     if errors:
