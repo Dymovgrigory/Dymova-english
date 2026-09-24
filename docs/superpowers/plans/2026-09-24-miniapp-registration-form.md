@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Все команды тестов — из каталога `bot/`: `cd /Users/grigory/Dymova-english/bot && python -m pytest …`.
+- Все команды тестов — из каталога `bot/` интерпретатором venv: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest …` (голого `python` в PATH нет).
 - Версия юр. текстов: `LEGAL_VERSION = "2026-09-19"` (как `world/src/lib/legal.ts`).
 - Ссылки на полные тексты: `https://new.dymova-english.ru/legal/pd-consent`, `https://new.dymova-english.ru/legal/privacy` (проверено: 200).
 - Формулировки согласий — дословно:
@@ -21,7 +21,7 @@
   - `marketing`: «Хочу получать новости и акции школы (необязательно)» — **чекбокс отмечен по умолчанию**; сохраняем `default_checked=1`.
 - Форма принимается только при `identity.verified == True`.
 - Веб-виджет сайта (platform `web`) остаётся на старом пошаговом опросе.
-- В рабочем дереве есть чужие незакоммиченные правки `bot/app/main.py`, `bot/app/tgapp/*`, `bot/tests/test_tgapp.py`, `bot/tests/test_world_bridge.py` (Menu Button «Кабинет», мир внутри мини-приложения). Их не откатывать и не коммитить в рамках этих задач: коммитить только свои hunks (`git add -p`), либо сначала согласовать с владельцем отдельный коммит этих правок.
+- Прежние незакоммиченные правки бота закоммичены отдельно (`ab4da3bd`); `git add -p` не обязателен, но в коммиты задач не добавлять файлы вне `bot/` и `docs/`, кроме `DEVLOG.md`.
 - Коммиты — Conventional Commits, `feat(bot): …`, с трейлером `Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>`.
 - Комментарии в коде — по-русски, в стиле файла («почему», а не «что»).
 
@@ -100,7 +100,7 @@ def test_summary_line_mentions_every_type_and_version():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_consents.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_consents.py -v`
 Expected: FAIL — `ImportError: cannot import name 'consents'`
 
 - [ ] **Step 3: Add table to CRM schema** — в `bot/app/crm_store.py` перед `CREATE TABLE IF NOT EXISTS crm_meta` вставить:
@@ -220,7 +220,7 @@ def summary_line(platform: str, user_id: str) -> str:
 
 - [ ] **Step 5: Run tests to verify they pass**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_consents.py tests/test_crm_store.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_consents.py tests/test_crm_store.py -v`
 Expected: все PASS (если `crm_store.reset` не существует под этим именем в фикстуре — проверить `crm_store.reset()` на стр. 331, он есть).
 
 - [ ] **Step 6: Commit**
@@ -318,7 +318,7 @@ def test_apply_keeps_confirmed_phone_when_same_number():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_registration_form.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_registration_form.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'app.registration_form'`
 
 - [ ] **Step 3: Check `Conversation` constructor and phone format**
@@ -408,7 +408,7 @@ def apply(conv: Conversation, form: FormData) -> None:
 
 - [ ] **Step 5: Run tests**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_registration_form.py tests/test_registration.py tests/test_registration_strict.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_registration_form.py tests/test_registration.py tests/test_registration_strict.py -v`
 Expected: все PASS.
 
 - [ ] **Step 6: Commit**
@@ -556,7 +556,7 @@ def test_old_registered_user_needs_consents_only():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_miniapp_register.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_miniapp_register.py -v`
 Expected: FAIL — 404/405 на `/api/miniapp/register`, `KeyError: 'legal'`, `AttributeError: _notify_registered_in_chat`.
 
 - [ ] **Step 3: Extend `_submit_registration` in `bot/app/registration.py`**
@@ -699,7 +699,7 @@ async def miniapp_consents(request: Request, data: dict) -> dict:
 
 - [ ] **Step 6: Run tests**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_miniapp_register.py tests/test_cabinet.py tests/test_max_miniapp.py tests/test_miniapp_auth.py tests/test_registration.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_miniapp_register.py tests/test_cabinet.py tests/test_max_miniapp.py tests/test_miniapp_auth.py tests/test_registration.py -v`
 Expected: все PASS.
 
 - [ ] **Step 7: Commit** (только свои hunks `main.py`)
@@ -780,7 +780,7 @@ def test_max_invite_gets_link_to_register():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_registration_invite.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_registration_invite.py -v`
 Expected: FAIL — `AttributeError: module 'app.registration' has no attribute 'FORM_INVITE_MARK'`. (Если `pytest.mark.asyncio` не настроен — посмотреть, как async-тесты пишутся в `tests/test_registration.py`, и повторить тот же приём.)
 
 - [ ] **Step 3: Add invite to `bot/app/registration.py`**
@@ -874,7 +874,7 @@ def _register_button_rows(platform: str) -> list[list[dict]]:
 
 - [ ] **Step 6: Run tests**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_registration_invite.py tests/test_registration.py tests/test_registration_strict.py tests/test_telegram_adapter.py tests/test_bot.py -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_registration_invite.py tests/test_registration.py tests/test_registration_strict.py tests/test_telegram_adapter.py tests/test_bot.py -v`
 Expected: все PASS. Если старые тесты регистрации проверяли вопросы в чате для telegram/max при заданном `MINIAPP_BASE_URL` — в этих тестах явно выставить `MINIAPP_BASE_URL=""` (пошаговый путь остаётся валидным фолбэком), не удалять их.
 
 - [ ] **Step 7: Commit**
@@ -921,7 +921,7 @@ def test_register_form_matches_server_contract():
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_tgapp.py::test_register_form_matches_server_contract -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_tgapp.py::test_register_form_matches_server_contract -v`
 Expected: FAIL — `assert 'id="register"' in html`.
 
 - [ ] **Step 3: Markup** — в `index.html` сразу перед `<main id="root" …>`:
@@ -1094,7 +1094,7 @@ body.is-registering #root { display: none; }
 
 - [ ] **Step 6: Run tests**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_tgapp.py tests/test_max_miniapp.py tests/test_maxapp_design.py -v && node --check app/tgapp/app.js`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_tgapp.py tests/test_max_miniapp.py tests/test_maxapp_design.py -v && node --check app/tgapp/app.js`
 Expected: PASS, `node --check` без вывода.
 
 - [ ] **Step 7: Browser check** — локальный сервер + Playwright:
@@ -1142,7 +1142,7 @@ def test_customer_card_shows_consents():
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_client_card.py::test_customer_card_shows_consents -v`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_client_card.py::test_customer_card_shows_consents -v`
 Expected: FAIL — `KeyError: 'consents'`.
 
 - [ ] **Step 3: Implement in `get_customer`** — перед `customer["counts"] = {`:
@@ -1185,7 +1185,7 @@ const CONSENT_NAMES = { pd_child: "ПД ребёнка", privacy: "Полити�
 
 - [ ] **Step 5: Run tests**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest tests/test_client_card.py tests/test_customer360.py tests/test_admin_api.py tests/test_adminapp.py -v && node --check app/adminapp/app.js`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest tests/test_client_card.py tests/test_customer360.py tests/test_admin_api.py tests/test_adminapp.py -v && node --check app/adminapp/app.js`
 Expected: PASS.
 
 - [ ] **Step 6: Commit**
@@ -1207,7 +1207,7 @@ Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Full test suite**
 
-Run: `cd /Users/grigory/Dymova-english/bot && python -m pytest -q -x --ignore=tests/benchmark`
+Run: `cd /Users/grigory/Dymova-english/bot && .venv/bin/python -m pytest -q -x --ignore=tests/benchmark`
 Expected: 0 failed. Упавшие тесты чинить по сути (не ослаблять), особенно `test_bot.py`/`test_e2e_flows.py`, где мог жёстко ожидаться пошаговый опрос для telegram/max.
 
 - [ ] **Step 2: Review** — `superpowers:requesting-code-review` по диффу задач 1–6; устранить замечания.
