@@ -594,6 +594,14 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     _remember_dialogue_state(conv, text, intent)
 
     if not registration.is_registered(conv):
+        if registration.uses_form(platform) and intent != I.HANDOFF:
+            # Анкета — форма в мини-приложении: вопросы по одному в чате
+            # занимали несколько минут, люди бросали на середине.
+            reply = registration.FORM_INVITE
+            conv.add("assistant", reply)
+            store.save(conv)
+            convlog.log_turn(user_id, text, reply, intent, conv.stage, "registration_form_invite")
+            return reply
         started = conv.stage != registration.STAGE_REGISTRATION
         # start_registration склеивает приветствие и первый вопрос анкеты.
         welcome = registration.start_registration(conv) if started else ""
@@ -1228,7 +1236,8 @@ async def handle_start(user_id: str, platform: str = "max") -> str:
         store.save(conv)
         return reply
     if not registration.is_registered(conv):
-        reply = registration.start_registration(conv)
+        reply = (registration.FORM_INVITE if registration.uses_form(platform)
+                 else registration.start_registration(conv))
         conv.add("assistant", reply)
         store.save(conv)
         return reply

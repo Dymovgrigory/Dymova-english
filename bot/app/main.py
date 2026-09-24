@@ -635,7 +635,22 @@ async def api_homework(
     }
 
 
+def _register_button_rows(platform: str) -> list[list[dict]]:
+    """Кнопка анкеты. В Telegram — web_app: только так мини-приложение
+    получает подписанный initData и может принять форму."""
+    if platform == TELEGRAM_PLATFORM:
+        url = settings.telegram_miniapp_url
+        if not url.startswith("https://"):
+            return []
+        return [[{"type": "web_app", "text": registration.FORM_INVITE_MARK,
+                  "web_app": f"{url.split('#', 1)[0]}#register"}]]
+    base = _miniapp_url()
+    return [[link_button(registration.FORM_INVITE_MARK, f"{base}/#register")]] if base else []
+
+
 def _telegram_buttons(text: str, reply: str) -> list[list[dict]]:
+    if registration.FORM_INVITE_MARK in (reply or ""):
+        return _register_button_rows(TELEGRAM_PLATFORM)
     buttons = _contextual_buttons(text, reply)
     return [[button] for button in buttons]
 
@@ -695,6 +710,8 @@ def _telegram_menu_buttons(user_id: str = "") -> list[list[dict]]:
 def _telegram_start_buttons(text: str, reply: str, user_id: str = "") -> list[list[dict]] | None:
     """На /start показываем меню целиком — иначе новый пользователь видит
     только текст и не знает, что у бота вообще есть кнопки."""
+    if registration.FORM_INVITE_MARK in (reply or ""):
+        return _register_button_rows(TELEGRAM_PLATFORM)
     return _telegram_menu_buttons(user_id) or _telegram_buttons(text, reply) or None
 
 
@@ -705,6 +722,8 @@ def _start_buttons(user_id: str, platform: str) -> list[list[dict]]:
     menu = _main_menu(user_id)
     if identify.needs_gate(get_store().get(user_id, platform=platform)):
         return [[callback_button(identify.SHARE_BUTTON_TEXT, identify.SHARE_BUTTON_PAYLOAD)]] + menu
+    if not registration.is_registered(get_store().get(user_id, platform=platform)) and registration.uses_form(platform):
+        return _register_button_rows(platform)
     return menu
 
 
@@ -721,6 +740,8 @@ async def _maybe_send_tg_contact_request(telegram, chat_id, user_id: str) -> Non
 
 
 def _link_button_rows(text: str, reply: str) -> list[list[dict]]:
+    if registration.FORM_INVITE_MARK in (reply or ""):
+        return _register_button_rows(PLATFORM)
     return [[link_button(button["title"], button["url"])] for button in _contextual_buttons(text, reply)]
 
 
