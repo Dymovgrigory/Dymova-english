@@ -233,6 +233,19 @@ CREATE INDEX IF NOT EXISTS idx_callback_requests_status ON callback_requests(sta
 CREATE INDEX IF NOT EXISTS idx_callback_requests_customer ON callback_requests(customer_id);
 CREATE INDEX IF NOT EXISTS idx_callback_requests_conv ON callback_requests(conversation_id);
 
+CREATE TABLE IF NOT EXISTS consents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    platform TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    type TEXT NOT NULL,
+    accepted INTEGER NOT NULL,
+    legal_version TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT '',
+    default_checked INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_consents_user ON consents(platform, user_id, type, id);
+
 CREATE TABLE IF NOT EXISTS crm_meta (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL DEFAULT ''
