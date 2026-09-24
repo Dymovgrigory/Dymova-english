@@ -110,10 +110,15 @@
 ### Аудио
 - Telegram: `voice`, `audio`; MAX: аудио-вложения; мини-приложение: запись с микрофона
   (MediaRecorder) и загрузка файла. Лимит 20 МБ / 5 мин.
-- Модуль `app/speech.py`: основной — OpenAI `gpt-4o-mini-transcribe`
-  (`STT_OPENAI_API_KEY`, `STT_OPENAI_MODEL`), запасной — Yandex SpeechKit
-  (`STT_YANDEX_API_KEY`, `STT_YANDEX_FOLDER_ID`), включается при ошибке/отсутствии
-  основного. Язык — авто (ru+en).
+- Модуль `app/speech.py`. Проверено на проде 2026-09-24: Cloudflare-воркер основного
+  LLM-провайдера на `/audio/transcriptions` отвечает 403; `api.proxyapi.ru` (запасной
+  провайдер из `LLM_FALLBACKS`, тот же ключ) — 200.
+  Каскад: `gpt-4o-mini-transcribe` → `gpt-4o-transcribe` через провайдер из
+  `STT_BASE_URL`/`STT_API_KEY` (пусто = первый провайдер из `LLM_FALLBACKS`, чей
+  base_url содержит `proxyapi`) → опционально Yandex SpeechKit
+  (`STT_YANDEX_API_KEY`, `STT_YANDEX_FOLDER_ID`).
+  Обязателен параметр `prompt` с контекстом («школьник диктует задание, английские слова —
+  латиницей…»): без него «вставь is или are» распознаётся как «из Ильяр», с ним — точно.
 - Бот показывает «Услышал: …» и разбирает задание.
 
 ### Чат с Фокси в мини-приложении
