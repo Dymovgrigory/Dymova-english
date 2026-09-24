@@ -155,9 +155,10 @@ body {
   z-index: 1;
   max-width: 560px;
   margin: 0 auto;
-  /* Нижний отступ учитывает док: иначе последняя карточка прячется под ним. */
-  padding: max(16px, env(safe-area-inset-top)) var(--pad)
-           calc(96px + env(safe-area-inset-bottom));
+  /* Нижний отступ учитывает док: иначе последняя карточка прячется под ним.
+     --foxi-safe-top задаёт JS из safeAreaInset / запас под шапку MAX. */
+  padding: max(16px, env(safe-area-inset-top), var(--foxi-safe-top, 0px)) var(--pad)
+           calc(96px + env(safe-area-inset-bottom) + var(--foxi-safe-bottom, 0px));
 }
 
 .tab { animation: screen-in .34s var(--ease) both; }
@@ -186,7 +187,7 @@ body {
 .hero {
   position: relative;
   /* Во всю ширину экрана, а не по колонке: чернила должны доходить до края. */
-  margin: calc(max(16px, env(safe-area-inset-top)) * -1) calc(var(--pad) * -1) 0;
+  margin: calc(max(16px, env(safe-area-inset-top), var(--foxi-safe-top, 0px)) * -1) calc(var(--pad) * -1) 0;
   padding: 0;
   min-height: 46dvh;
   display: grid;
@@ -2061,7 +2062,7 @@ body.is-locked { overflow: hidden; }
   align-items: center;
   gap: 12px;
   width: calc(100% - 32px);
-  margin: 14px 16px 4px;
+  margin: 8px 16px 4px;
   padding: 14px 16px;
   border: none;
   border-radius: var(--radius);
@@ -2072,6 +2073,8 @@ body.is-locked { overflow: hidden; }
   cursor: pointer;
   box-shadow: var(--shadow-lift);
   transition: transform var(--duration-fast) var(--ease-entrance);
+  position: relative;
+  z-index: 2;
 }
 .world-banner:active { transform: scale(.97); }
 .world-banner__fox { width: 44px; height: 44px; flex: none; }
@@ -2079,6 +2082,12 @@ body.is-locked { overflow: hidden; }
 .world-banner__text strong { font-size: 1.02rem; font-weight: 700; }
 .world-banner__text small { font-size: .8rem; opacity: .88; }
 .world-banner__arrow { width: 22px; height: 22px; flex: none; }
+
+/* MAX: шапка мини-приложения часто перекрывает верх — баннер ниже безопасной зоны. */
+html.platform-max .world-banner,
+body.platform-max .world-banner {
+  margin-top: 4px;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .world-banner { transition: none; }

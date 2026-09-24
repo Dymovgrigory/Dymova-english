@@ -129,13 +129,14 @@ async def _start_scheduler() -> None:
         _BACKGROUND_TASKS.add(task)
         task.add_done_callback(_BACKGROUND_TASKS.discard)
     telegram = get_telegram()
-    if telegram.configured and settings.world_app_url:
-        # Menu Button чата (слева от поля ввода) на все чаты бота — «Мир
-        # Фоксинбурга» виден постоянно. Сбой не должен ронять запуск.
+    miniapp_url = settings.telegram_miniapp_url
+    if telegram.configured and miniapp_url.startswith("https://"):
+        # Menu Button чата (слева от поля ввода) — вход в школьное
+        # мини-приложение. «Мир Фоксинбурга» живёт кнопкой внутри него.
         try:
-            ok = await telegram.set_menu_button("🏰 Мир Фоксинбурга", settings.world_app_url)
+            ok = await telegram.set_menu_button("📱 Кабинет", miniapp_url)
             if ok:
-                logger.info("telegram: menu button «Мир Фоксинбурга» установлена")
+                logger.info("telegram: menu button «Кабинет» установлена")
             else:
                 logger.warning("telegram: setChatMenuButton не удался")
         except Exception:
@@ -161,11 +162,10 @@ def _miniapp_open(user_id: str, platform: str = PLATFORM) -> bool:
 
 def _main_menu(user_id: str = "") -> list[list[dict]]:
     rows: list[list[dict]] = []
-    # В MAX Bot API нет web_app-кнопки (см. max_client.py), поэтому мир
-    # открываем обычной link-кнопкой. Показываем всем: мир — точка входа.
-    world_url = settings.world_app_url
-    if world_url:
-        rows.append([link_button("🏰 Мир Фоксинбурга", world_url)])
+    # «Мир Фоксинбурга» — только внутри мини-приложения. В меню чата —
+    # кабинет школы (в MAX это обычная link-кнопка, web_app там нет).
+    if settings.MINIAPP_BASE_URL and _miniapp_open(user_id):
+        rows.append([link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
     rows.extend(
         [
             [callback_button("🎓 Подобрать курс", "menu:courses")],
@@ -175,9 +175,6 @@ def _main_menu(user_id: str = "") -> list[list[dict]]:
             [callback_button("🙋 Позвать менеджера", "menu:admin")],
         ]
     )
-    if settings.MINIAPP_BASE_URL and _miniapp_open(user_id):
-        # Кабинет не должен оттеснять мир с первой строки.
-        rows.insert(1 if world_url else 0, [link_button("📱 Личный кабинет", settings.MINIAPP_BASE_URL)])
     return rows
 
 
@@ -657,11 +654,8 @@ def _telegram_webapp_button(user_id: str = "") -> dict | None:
 
 def _telegram_menu_buttons(user_id: str = "") -> list[list[dict]]:
     rows: list[list[dict]] = []
-    # «Мир Фоксинбурга» — точка входа для новых учеников, поэтому в отличие от
-    # «Личного кабинета» показывается всем, без проверки регистрации.
-    world_url = settings.world_app_url
-    if world_url:
-        rows.append([{"type": "web_app", "text": "🏰 Мир Фоксинбурга", "web_app": world_url}])
+    # «Мир Фоксинбурга» открывается баннером внутри мини-приложения, а не
+    # отдельной кнопкой чата — иначе Menu Button / клавиатура вытесняют кабинет.
     webapp = _telegram_webapp_button(user_id)
     if webapp:
         rows.append([webapp])

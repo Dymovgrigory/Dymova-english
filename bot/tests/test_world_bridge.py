@@ -129,12 +129,13 @@ def test_store_failure_is_fail_open(client, monkeypatch):
     assert resp.json() == {"found": False, "lead": None}
 
 
-# --- кнопка «Мир Фоксинбурга» в меню ---------------------------------------
+# --- вход в «Мир Фоксинбурга» только из мини-приложения -------------------
 
 
-def test_telegram_menu_world_button_first_row():
+def test_telegram_menu_has_no_world_button(monkeypatch):
+    monkeypatch.setattr(settings, "WORLD_APP_URL", DEFAULT_WORLD_URL)
     rows = main_module._telegram_menu_buttons("u1")
-    assert rows[0][0] == {"type": "web_app", "text": "🏰 Мир Фоксинбурга", "web_app": DEFAULT_WORLD_URL}
+    assert all(b.get("text") != "🏰 Мир Фоксинбурга" for row in rows for b in row)
 
 
 def test_telegram_menu_world_button_hidden_without_https(monkeypatch):
@@ -143,11 +144,10 @@ def test_telegram_menu_world_button_hidden_without_https(monkeypatch):
     assert all(b.get("text") != "🏰 Мир Фоксинбурга" for row in rows for b in row)
 
 
-def test_max_menu_world_button_first_row():
+def test_max_menu_has_no_world_button(monkeypatch):
+    monkeypatch.setattr(settings, "WORLD_APP_URL", DEFAULT_WORLD_URL)
     rows = main_module._main_menu("u1")
-    assert rows[0][0]["type"] == "link"
-    assert rows[0][0]["text"] == "🏰 Мир Фоксинбурга"
-    assert rows[0][0]["url"] == DEFAULT_WORLD_URL
+    assert all(b.get("text") != "🏰 Мир Фоксинбурга" for row in rows for b in row)
 
 
 def test_max_menu_world_button_hidden_without_https(monkeypatch):
@@ -231,7 +231,7 @@ def test_set_menu_button_payload(monkeypatch):
 
     monkeypatch.setattr(TelegramClient, "_post", fake_post)
     client = TelegramClient()
-    ok = asyncio.run(client.set_menu_button("🏰 Мир Фоксинбурга", DEFAULT_WORLD_URL))
+    ok = asyncio.run(client.set_menu_button("📱 Кабинет", "https://bot.example/tg/"))
 
     assert ok is True
     assert sent["method"] == "setChatMenuButton"
@@ -239,6 +239,6 @@ def test_set_menu_button_payload(monkeypatch):
     button = _json.loads(sent["data"]["menu_button"])
     assert button == {
         "type": "web_app",
-        "text": "🏰 Мир Фоксинбурга",
-        "web_app": {"url": DEFAULT_WORLD_URL},
+        "text": "📱 Кабинет",
+        "web_app": {"url": "https://bot.example/tg/"},
     }

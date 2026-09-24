@@ -112,10 +112,10 @@ def test_webapp_button_is_added_to_menu(monkeypatch):
 
     rows = main_module._telegram_menu_buttons("tg-user")
 
-    # Первая строка — «Мир Фоксинбурга» (показывается всем), кабинет — за ней.
-    assert rows[0][0]["web_app"] == "https://new.dymova-english.ru/world"
-    assert rows[1][0]["type"] == "web_app"
-    assert rows[1][0]["web_app"] == "https://bot.example/tg/"
+    # Кабинет — первая web_app-кнопка; «Мир» только внутри мини-приложения.
+    assert rows[0][0]["type"] == "web_app"
+    assert rows[0][0]["web_app"] == "https://bot.example/tg/"
+    assert all(b.get("text") != "🏰 Мир Фоксинбурга" for row in rows for b in row)
 
 
 def test_webapp_button_hidden_until_registration(monkeypatch):
@@ -129,16 +129,16 @@ def test_webapp_button_hidden_until_registration(monkeypatch):
     store = get_store()
     store.reset("tg-newbie", platform="telegram")
     rows = main_module._telegram_menu_buttons("tg-newbie")
-    # «Мир Фоксинбурга» есть у всех, кабинет (web_app на /tg/) — только
-    # после регистрации: кнопка, ведущая в анкету, — худший вид кнопки.
+    # Кабинет (web_app на /tg/) — только после регистрации.
     assert all(b.get("web_app") != "https://bot.example/tg/" for row in rows for b in row)
+    assert all(b.get("text") != "🏰 Мир Фоксинбурга" for row in rows for b in row)
 
     conv = store.get("tg-newbie", platform="telegram")
     conv.registered = True
     store.save(conv)
     rows = main_module._telegram_menu_buttons("tg-newbie")
-    assert rows[1][0]["type"] == "web_app"
-    assert rows[1][0]["web_app"] == "https://bot.example/tg/"
+    assert rows[0][0]["type"] == "web_app"
+    assert rows[0][0]["web_app"] == "https://bot.example/tg/"
 
 
 def test_max_menu_hides_cabinet_until_registration(monkeypatch):

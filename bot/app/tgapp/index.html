@@ -14,7 +14,7 @@
        Дальше версию можно не трогать — заголовок заставляет браузер
        проверять файл при каждой загрузке, — но при крупной правке её проще
        поднять, чем объяснять человеку, почему у него старый экран. -->
-  <link rel="stylesheet" href="/tg/app.css?v=6" />
+  <link rel="stylesheet" href="/tg/app.css?v=7" />
   <!-- Хиро-картинка маскота решает первый экран: грузим её раньше всего. -->
   <link rel="preload" as="image" href="/tg/assets/foxi.webp" />
   <!-- Мост площадки подставляет сервер: на /tg/ — SDK Telegram, на /app/ —
@@ -43,8 +43,7 @@
 
   <main id="root" class="app" aria-live="polite">
     <!-- Вход в платформу «Мир Фоксинбурга» — на самом видном месте, сверху.
-         Клик обрабатывает app.js: внутри Telegram закрываем мини-апп
-         (возврат в чат, где живёт Menu Button), снаружи — новая вкладка. -->
+         Клик обрабатывает app.js: открываем мир в том же WebView (initData). -->
     <button type="button" class="world-banner" id="world-banner"
             data-world-url="https://new.dymova-english.ru/world">
       <img class="world-banner__fox" src="img/fox-head-yellow.png" alt="" width="44" height="44" />
@@ -249,6 +248,6 @@
 
   <script src="/widget/fxb-schedule.js?v=20260830" defer></script>
   <script src="/tg/fluid.js?v=6"></script>
-  <script src="/tg/app.js?v=7"></script>
+  <script src="/tg/app.js?v=8"></script>
 </body>
 </html>

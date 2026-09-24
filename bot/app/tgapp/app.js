@@ -34,6 +34,37 @@
   var REQUEST_TIMEOUT_MS = 15000;
   var TABS = ["home", "programs", "schedule", "team", "chat"];
 
+  try {
+    document.documentElement.classList.add("platform-" + PLATFORM);
+    document.body.classList.add("platform-" + PLATFORM);
+  } catch (e) {
+    /* до DOMContentLoaded body может ещё не быть */
+  }
+
+  /** Верхний отступ под нативную шапку мессенджера (MAX часто не пишет safe-area). */
+  function applySafeInsets() {
+    var top = 0;
+    var bottom = 0;
+    try {
+      var safe = bridge && bridge.safeAreaInset;
+      var content = bridge && bridge.contentSafeAreaInset;
+      if (safe) {
+        top += Number(safe.top) || 0;
+        bottom += Number(safe.bottom) || 0;
+      }
+      if (content) {
+        top += Number(content.top) || 0;
+        bottom += Number(content.bottom) || 0;
+      }
+    } catch (e) {
+      /* старый клиент */
+    }
+    // У MAX шапка мини-приложения часто перекрывает первые ~48–56px без inset.
+    if (PLATFORM === "max" && top < 48) top = 56;
+    document.documentElement.style.setProperty("--foxi-safe-top", top + "px");
+    document.documentElement.style.setProperty("--foxi-safe-bottom", bottom + "px");
+  }
+
   var state = {
     tab: "home",
     sheet: null,
@@ -1517,19 +1548,17 @@
       });
     });
 
-    // Баннер «Мир Фоксинбурга». Внутри Telegram у WebApp нет openLink с
-    // initData для внешнего мира — надёжнее закрыть мини-апп: человек
-    // попадает в чат, где та же кнопка живёт в Menu Button у поля ввода.
-    // В обычном браузере просто открываем новую вкладку.
+    // Баннер «Мир Фоксинбурга»: открываем мир в том же WebView, чтобы
+    // сохранились initData Telegram/MAX (иначе прогресс и вход не свяжутся).
     var worldBanner = $("#world-banner");
     if (worldBanner) {
       worldBanner.addEventListener("click", function () {
         var url = worldBanner.dataset.worldUrl || "https://new.dymova-english.ru/world";
-        if (tg && typeof tg.close === "function") {
-          tg.close();
-          return;
+        try {
+          window.location.assign(url);
+        } catch (e) {
+          window.open(url, "_blank", "noopener");
         }
-        window.open(url, "_blank", "noopener");
       });
     }
 
@@ -1629,10 +1658,15 @@
         if (bridge.ready) bridge.ready();
         if (bridge.expand) bridge.expand();
         if (bridge.onEvent) bridge.onEvent("themeChanged", applyTheme);
+        if (bridge.onEvent) {
+          bridge.onEvent("safeAreaChanged", applySafeInsets);
+          bridge.onEvent("contentSafeAreaChanged", applySafeInsets);
+        }
       } catch (e) {
         /* мост урезан — приложение работает и так */
       }
       applyTheme();
+      applySafeInsets();
       try {
         if (bridge.BackButton && bridge.BackButton.onClick) {
           bridge.BackButton.onClick(function () {
@@ -1643,6 +1677,8 @@
       } catch (e) {
         /* старый клиент */
       }
+    } else {
+      applySafeInsets();
     }
     startFluid();
     startPhrases();
