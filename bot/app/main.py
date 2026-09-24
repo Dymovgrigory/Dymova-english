@@ -29,6 +29,7 @@ from app import ai_core
 from app.ai_core import handle_message, handle_start
 from app import broadcast
 from app import cabinet
+from app import consents
 from app import crm_ingest
 from app import crm_store
 from app.bigben import get_bigben
@@ -44,6 +45,7 @@ from app import leveltest
 from app import nudge
 from app import profile
 from app import registration
+from app import registration_form
 from app import runtime
 from app import sales
 from app import scheduler
@@ -283,17 +285,29 @@ def _identity_from_request(
 def _miniapp_access_state(identity: miniapp_auth.MiniAppIdentity | None) -> dict:
     has_identity = identity is not None
     registered = False
+    needs_consents = False
+    prefill: dict = {}
     if identity is not None:
-        registered = bool(
-            get_store().get(identity.user_id, platform=identity.platform).registered
+        conv = get_store().get(identity.user_id, platform=identity.platform)
+        registered = bool(conv.registered)
+        # Старые пользователи (анкета в переписке до этой задачи) уже
+        # зарегистрированы, но согласий в журнале у них ещё нет — им нужно
+        # отдельно предложить принять согласия, а не всю анкету заново.
+        needs_consents = registered and not consents.has_required(
+            identity.platform, identity.user_id
         )
+        lead = conv.lead
+        prefill = {
+            "fio_parent": lead.fio_parent or identity.display_name or "",
+            "fio_child": lead.fio_child,
+            "child_birth": lead.birthday or lead.age,
+            "phone": lead.phone,
+            "phone_confirmed": bool(lead.phone_confirmed),
+        }
     locked = has_identity and settings.MINIAPP_REQUIRE_REGISTRATION and not registered
     message = ""
     if locked:
-        message = (
-            "Сначала зарегистрируйтесь в чате бота: "
-            "напишите «зарегистрироваться», и я проведу вас по шагам."
-        )
+        message = "Заполните короткую анкету — и всё откроется."
     elif not has_identity:
         message = "Откройте приложение внутри Telegram или MAX, чтобы связать профиль."
     return {
@@ -305,6 +319,13 @@ def _miniapp_access_state(identity: miniapp_auth.MiniAppIdentity | None) -> dict
         "registered": registered,
         "locked": locked,
         "message": message,
+        "needs_consents": needs_consents,
+        "prefill": prefill,
+        "legal": {
+            "version": consents.LEGAL_VERSION,
+            "labels": consents.CONSENT_LABELS,
+            "links": consents.CONSENT_LINKS,
+        },
     }
 
 
@@ -1854,6 +1875,85 @@ async def miniapp_lead(request: Request, data: dict) -> dict:
         for admin_id in settings.admin_ids:
             await get_max().send_message(admin_id, admin_note)
     return {"ok": ok}
+
+
+REGISTERED_CHAT_TEXT = (
+    "Спасибо! Анкета заполнена ✅ Всё открыто 🦊\n\n"
+    "Спрашивайте про курсы, расписание и цены, присылайте домашку — помогу."
+)
+
+
+async def _notify_registered_in_chat(identity: miniapp_auth.MiniAppIdentity, text: str) -> None:
+    """Подтверждение в нативный чат мессенджера: человек вернётся в чат и
+    должен видеть, что анкета дошла, а не гадать, нажалась ли кнопка."""
+    try:
+        if identity.platform == TELEGRAM_PLATFORM:
+            chat_id = identity.user_id.removeprefix("tg:")
+            await get_telegram().send_message(
+                chat_id, text, buttons=_telegram_menu_buttons(identity.user_id) or None
+            )
+        else:
+            await get_max().send_message(identity.user_id, text, buttons=_main_menu(identity.user_id))
+    except Exception:
+        logger.exception("miniapp: не удалось отправить подтверждение анкеты в чат")
+
+
+def _verified_identity_or_401(request: Request):
+    """Общая проверка для ручек анкеты: без подписанной личности форму
+    принимать нельзя — иначе кто угодно допишет чужому диалогу «регистрацию»."""
+    identity = _identity_from_request(request)
+    if identity is None or not identity.verified:
+        return None, JSONResponse(
+            {"ok": False, "error": "Откройте анкету внутри Telegram или MAX"}, status_code=401
+        )
+    return identity, None
+
+
+@app.post("/api/miniapp/register")
+async def miniapp_register(request: Request, data: dict) -> dict:
+    """Анкета мини-приложения вместо четырёх вопросов в переписке."""
+    identity, error = _verified_identity_or_401(request)
+    if error:
+        return error
+    form, errors = registration_form.validate(data if isinstance(data, dict) else {})
+    if errors:
+        return JSONResponse({"ok": False, "errors": errors}, status_code=400)
+    store = get_store()
+    conv = store.get(identity.user_id, platform=identity.platform)
+    registration_form.apply(conv, form)
+    conv.add("assistant", "[анкета мини-приложения заполнена]")
+    store.save(conv)
+    consents.record(identity.platform, identity.user_id, form.consents, channel="miniapp")
+    # upsert_customer_for_identity дописывает только пустые поля — это
+    # осознанно: анкета не должна затирать то, что менеджер уже поправил в CRM.
+    crm_store.upsert_customer_for_identity(
+        identity.platform, identity.user_id,
+        name=form.fio_parent, phone=conv.lead.phone,
+        child_name=form.fio_child, child_age=form.age or form.birthday,
+        source="анкета мини-приложения",
+    )
+    platform_name = "Telegram" if identity.platform == TELEGRAM_PLATFORM else "MAX"
+    await registration._submit_registration(
+        conv, get_bigben(),
+        source=f"{platform_name} мини-приложение — анкета",
+        extra_note=consents.summary_line(identity.platform, identity.user_id),
+    )
+    await _notify_registered_in_chat(identity, REGISTERED_CHAT_TEXT)
+    return {"ok": True, "access": _miniapp_access_state(identity)}
+
+
+@app.post("/api/miniapp/consents")
+async def miniapp_consents(request: Request, data: dict) -> dict:
+    """Только согласия — для клиентов, прошедших старую анкету в чате."""
+    identity, error = _verified_identity_or_401(request)
+    if error:
+        return error
+    raw = data.get("consents") if isinstance(data.get("consents"), dict) else {}
+    accepted = {kind: bool(raw.get(kind)) for kind in consents.CONSENT_LABELS}
+    if not all(accepted[kind] for kind in consents.REQUIRED):
+        return JSONResponse({"ok": False, "errors": {"consents": "Нужны обязательные согласия"}}, status_code=400)
+    consents.record(identity.platform, identity.user_id, accepted, channel="miniapp")
+    return {"ok": True}
 
 
 @app.post("/api/lead")

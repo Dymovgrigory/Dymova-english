@@ -429,4 +429,6 @@ def test_miniapp_lead_blocks_unregistered_user(monkeypatch):
     )
 
     assert resp.status_code == 403
-    assert "зарегистр" in resp.json()["error"].lower()
+    # Текст локи теперь зовёт заполнить анкету мини-приложения, а не писать
+    # в переписке «зарегистрироваться» — этого пути к анкете больше нет.
+    assert "анкет" in resp.json()["error"].lower()

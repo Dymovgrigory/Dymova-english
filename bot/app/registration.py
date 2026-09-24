@@ -351,17 +351,28 @@ async def handle_registration_step(
     return REG_PROMPTS[next_step], False
 
 
-async def _submit_registration(conv: Conversation, bigben: BigBenClient) -> None:
-    """Submit registration data as a lead to BigBen CRM."""
+async def _submit_registration(
+    conv: Conversation,
+    bigben: BigBenClient,
+    source: str = "MAX-бот Фоксинбург — регистрация",
+    extra_note: str = "",
+) -> None:
+    """Submit registration data as a lead to BigBen CRM.
+
+    `source` и `extra_note` — параметры, а не константы: анкету теперь
+    можно прислать и из мини-приложения (там нужен свой источник и строка
+    с согласиями в заметке), не дублируя сборку note.
+    """
     lead = conv.lead
-    source = "MAX-бот Фоксинбург — регистрация"
     note = (
         f"Регистрация в боте. "
         f"Родитель: {lead.fio_parent}. "
         f"Ребёнок: {lead.fio_child}. "
         f"{'Дата рождения: ' + lead.birthday if lead.birthday else 'Возраст: ' + (lead.age or '—')}. "
-        f"Телефон: {lead.phone}."
+        f"Телефон: {lead.phone}{' (подтверждён Telegram)' if lead.phone_confirmed else ''}."
     )
+    if extra_note:
+        note = f"{note} {extra_note}"
     utm = {**(conv.utm or {})}
     utm.setdefault("utm_source", "max")
     utm.setdefault("utm_medium", "bot")
