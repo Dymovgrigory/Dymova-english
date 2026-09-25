@@ -135,7 +135,9 @@ def configured() -> bool:
     return bool(settings.BIGBEN_PUBLIC_API_KEY and settings.BIGBEN_PUBLIC_API_BASE)
 
 
-_STALE_ALERT_COOLDOWN_SEC = 3600  # не чаще раза в час, иначе спам при долгом сбое
+_STALE_ALERT_COOLDOWN_SEC = 3600  # не чаще раза в час — гейтит и внеплановую
+# синхронизацию, и оповещение вместе, иначе при долгом сбое BigBen внеплановая
+# попытка дублировала бы обычный запрос на каждом тике (каждые 15 мин)
 _last_stale_alert_at: float = 0.0
 
 
@@ -155,8 +157,6 @@ def check_schedule_freshness(max_age_min: int | None = None) -> bool:
     """True — данные о группах и уроках свежие. Отсутствие данных вовсе
     (last_synced_at=None) тоже считается несвежим: значит синхронизация
     ещё ни разу не прошла успешно."""
-    from app.platform import bb_store
-
     limit = max_age_min if max_age_min is not None else max(15, settings.BIGBEN_SYNC_INTERVAL_MIN) * 4
     fresh = bb_store.freshness()
     for kind in ("groups", "lessons"):
@@ -167,21 +167,22 @@ def check_schedule_freshness(max_age_min: int | None = None) -> bool:
 
 
 async def check_schedule_freshness_and_alert(max_age_min: int | None = None) -> bool:
-    """Как check_schedule_freshness, но при устаревании сначала пробует
-    внеплановую синхронизацию прямо сейчас (а не ждёт следующего тика
-    обычного цикла), и только если это не помогло — раз в
-    _STALE_ALERT_COOLDOWN_SEC шлёт администраторам предупреждение. Иначе о
-    сломанной синхронизации узнают только от жалобы клиента."""
+    """Как check_schedule_freshness, но при устаревании — не чаще раза в
+    _STALE_ALERT_COOLDOWN_SEC — пробует внеплановую синхронизацию прямо
+    сейчас и, если это не помогло, оповещает администраторов. Между
+    окнами cooldown просто молчит и ждёт обычный цикл: иначе при затяжном
+    сбое BigBen внеплановая попытка дублировала бы обычный запрос каждые
+    15 минут, удваивая нагрузку на и так недоступный сервис."""
     global _last_stale_alert_at
-    if check_schedule_freshness(max_age_min):
-        return True
-    await run_all("incremental")
     if check_schedule_freshness(max_age_min):
         return True
     now = time.monotonic()
     if now - _last_stale_alert_at < _STALE_ALERT_COOLDOWN_SEC:
         return False
     _last_stale_alert_at = now
+    await run_all("incremental")
+    if check_schedule_freshness(max_age_min):
+        return True
     from app import watchdog
 
     limit = max_age_min if max_age_min is not None else max(15, settings.BIGBEN_SYNC_INTERVAL_MIN) * 4

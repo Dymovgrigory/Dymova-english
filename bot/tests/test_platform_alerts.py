@@ -75,7 +75,7 @@ def test_check_schedule_freshness_true_when_recent(monkeypatch):
 def test_check_schedule_freshness_false_and_alerts_when_stale(monkeypatch):
     from datetime import datetime, timedelta, timezone
     stale = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
-    sync_module._last_stale_alert_at = 0.0
+    monkeypatch.setattr(sync_module, "_last_stale_alert_at", 0.0)
     with patch("app.platform.bb_store.freshness",
               return_value={"lessons": {"count": 10, "last_synced_at": stale},
                             "groups": {"count": 5, "last_synced_at": stale}}), \
@@ -100,18 +100,23 @@ def test_check_schedule_freshness_no_data_at_all_counts_as_stale():
 
 
 def test_stale_alert_has_cooldown_no_double_alert(monkeypatch):
+    """Cooldown гейтит и внеплановую синхронизацию, и оповещение вместе —
+    повторный тик того же устаревания (например, каждые 15 мин обычного
+    цикла) не должен ни повторно дёргать run_all, ни слать второе письмо,
+    пока не истечёт _STALE_ALERT_COOLDOWN_SEC."""
     from datetime import datetime, timedelta, timezone
     stale = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
-    sync_module._last_stale_alert_at = 0.0
+    monkeypatch.setattr(sync_module, "_last_stale_alert_at", 0.0)
     with patch("app.platform.bb_store.freshness",
               return_value={"lessons": {"count": 10, "last_synced_at": stale},
                             "groups": {"count": 5, "last_synced_at": stale}}), \
-         patch("app.platform.sync.run_all", new=AsyncMock()), \
+         patch("app.platform.sync.run_all", new=AsyncMock()) as run_all, \
          patch("app.watchdog._alert", new=AsyncMock()) as alert:
         import asyncio
         asyncio.run(sync_module.check_schedule_freshness_and_alert(max_age_min=60))
         asyncio.run(sync_module.check_schedule_freshness_and_alert(max_age_min=60))
         assert alert.call_count == 1
+        run_all.assert_called_once_with("incremental")
 
 
 def test_freshness_restored_after_unplanned_sync_skips_alert(monkeypatch):
@@ -120,7 +125,7 @@ def test_freshness_restored_after_unplanned_sync_skips_alert(monkeypatch):
     from datetime import datetime, timedelta, timezone
     stale = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
     fresh = datetime.now(timezone.utc).isoformat()
-    sync_module._last_stale_alert_at = 0.0
+    monkeypatch.setattr(sync_module, "_last_stale_alert_at", 0.0)
     responses = iter([
         {"lessons": {"count": 10, "last_synced_at": stale}, "groups": {"count": 5, "last_synced_at": stale}},
         {"lessons": {"count": 10, "last_synced_at": fresh}, "groups": {"count": 5, "last_synced_at": fresh}},
