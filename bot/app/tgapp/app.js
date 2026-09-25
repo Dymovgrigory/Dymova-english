@@ -1500,6 +1500,98 @@
     });
   }
 
+  /* ------------------------------------------------------------- анкета */
+
+  /** Анкета вместо вопросов в чате. Показывается поверх приложения, пока
+   *  сервер говорит locked (нет регистрации) или needs_consents (старый
+   *  клиент без согласий — тогда только чекбоксы). */
+  function renderRegister(access) {
+    var box = $("#register");
+    var consentsOnly = !access.locked && access.needs_consents;
+    if (!access.has_identity || (!access.locked && !access.needs_consents)) {
+      box.hidden = true;
+      document.body.classList.remove("is-registering");
+      return;
+    }
+    var legal = access.legal || { labels: {}, links: {} };
+    all("[data-consent-label]", box).forEach(function (node) {
+      var kind = node.dataset.consentLabel;
+      node.textContent = legal.labels[kind] || "";
+      if (legal.links[kind]) {
+        var link = document.createElement("a");
+        link.href = legal.links[kind];
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = " (текст)";
+        node.appendChild(link);
+      }
+    });
+    var profile = $("[data-register-profile]", box);
+    profile.hidden = consentsOnly;
+    $("#register-title").textContent = consentsOnly ? "Остался один шаг" : "Давайте познакомимся";
+    var prefill = access.prefill || {};
+    var form = $("#register-form");
+    ["fio_parent", "fio_child", "child_birth", "phone"].forEach(function (name) {
+      if (prefill[name] && !form.elements[name].value) form.elements[name].value = prefill[name];
+    });
+    var share = $("#register-share-phone");
+    share.hidden = !(bridge && typeof bridge.requestContact === "function") || !!prefill.phone_confirmed;
+    box.hidden = false;
+    document.body.classList.add("is-registering");
+    state.registerConsentsOnly = consentsOnly;
+  }
+
+  function sharePhone() {
+    // Telegram присылает контакт и боту (вебхук помечает номер
+    // подтверждённым), и в колбэк — им заполняем поле сразу.
+    bridge.requestContact(function (shared, response) {
+      var phone = shared && response && response.responseUnsafe &&
+        response.responseUnsafe.contact && response.responseUnsafe.contact.phone_number;
+      if (phone) $("#register-form").elements.phone.value = "+" + String(phone).replace(/^\+/, "");
+    });
+  }
+
+  function submitRegister(event) {
+    event.preventDefault();
+    var form = event.target;
+    var status = $("#register-status");
+    all("[data-error]", form).forEach(function (n) { n.textContent = ""; });
+    var consents = {
+      pd_child: form.elements.consent_pd_child.checked,
+      privacy: form.elements.consent_privacy.checked,
+      marketing: form.elements.consent_marketing.checked,
+    };
+    var path = state.registerConsentsOnly ? "/api/miniapp/consents" : "/api/miniapp/register";
+    var body = state.registerConsentsOnly ? { consents: consents } : {
+      fio_parent: form.elements.fio_parent.value.trim(),
+      fio_child: form.elements.fio_child.value.trim(),
+      child_birth: form.elements.child_birth.value.trim(),
+      phone: form.elements.phone.value.trim(),
+      consents: consents,
+    };
+    status.hidden = false;
+    status.textContent = "Сохраняю…";
+    postJSON(path, body)
+      .then(function (data) {
+        if (data && data.ok) {
+          haptic("success");
+          status.hidden = true;
+          loadInfo();
+          return;
+        }
+        status.textContent = "Проверьте поля, отмеченные ниже.";
+        var errors = (data && data.errors) || {};
+        Object.keys(errors).forEach(function (key) {
+          var slot = $('[data-error="' + key + '"]', form);
+          if (slot) slot.textContent = errors[key];
+        });
+        haptic("error");
+      })
+      .catch(function () {
+        status.textContent = "Нет связи. Попробуйте ещё раз.";
+      });
+  }
+
   /* ------------------------------------------------------------- загрузка */
 
   function loadInfo() {
@@ -1507,6 +1599,7 @@
       .then(function (data) {
         state.info = data;
         state.access = data.access || null;
+        if (state.access) renderRegister(state.access);
         if (state.access && state.access.display_name) {
           $("#greeting-title").textContent = "Здравствуйте, " + state.access.display_name;
           $("#greeting-sub").textContent = "Чем помочь сегодня?";
@@ -1649,6 +1742,12 @@
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") closeSheet();
     });
+
+    $("#register-form").addEventListener("submit", submitRegister);
+    $("#register-share-phone").addEventListener("click", sharePhone);
+    // Ссылка из приглашения ведёт на #register — экран и так покажется по
+    // access.locked, а хэш в адресной строке больше не нужен.
+    if (location.hash === "#register") history.replaceState(null, "", location.pathname);
   }
 
   function start() {

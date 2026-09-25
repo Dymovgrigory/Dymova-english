@@ -14,7 +14,7 @@
        Дальше версию можно не трогать — заголовок заставляет браузер
        проверять файл при каждой загрузке, — но при крупной правке её проще
        поднять, чем объяснять человеку, почему у него старый экран. -->
-  <link rel="stylesheet" href="/tg/app.css?v=7" />
+  <link rel="stylesheet" href="/tg/app.css?v=8" />
   <!-- Хиро-картинка маскота решает первый экран: грузим её раньше всего. -->
   <link rel="preload" as="image" href="/tg/assets/foxi.webp" />
   <!-- Мост площадки подставляет сервер: на /tg/ — SDK Telegram, на /app/ —
@@ -40,6 +40,43 @@
   <div id="offline" class="banner banner--offline" hidden>
     Нет связи. Экран покажет последние загруженные данные.
   </div>
+
+  <!-- ===================== АНКЕТА ===================== -->
+  <!-- Поверх приложения, пока сервер говорит locked (нет регистрации) или
+       needs_consents (старый клиент без согласий — тогда видны только
+       чекбоксы). Логика показа/скрытия — в app.js:renderRegister(). -->
+  <section id="register" class="register" hidden aria-labelledby="register-title">
+    <h1 id="register-title" class="register__title">Давайте познакомимся</h1>
+    <p class="register__lede">30 секунд — и откроются курсы, расписание, запись и помощь с домашкой.</p>
+    <form id="register-form" novalidate>
+      <div data-register-profile>
+        <label class="field"><span>ФИО родителя</span>
+          <input name="fio_parent" autocomplete="name" required /></label>
+        <p class="field__error" data-error="fio_parent"></p>
+        <label class="field"><span>Имя ребёнка</span>
+          <input name="fio_child" required /></label>
+        <p class="field__error" data-error="fio_child"></p>
+        <label class="field"><span>Дата рождения или возраст ребёнка</span>
+          <input name="child_birth" placeholder="15.03.2016 или 9" inputmode="text" required /></label>
+        <p class="field__error" data-error="child_birth"></p>
+        <label class="field"><span>Телефон</span>
+          <input name="phone" type="tel" autocomplete="tel" placeholder="+7 900 123-45-67" required /></label>
+        <button type="button" id="register-share-phone" class="ghost" hidden>📞 Поделиться номером из Telegram</button>
+        <p class="field__error" data-error="phone"></p>
+      </div>
+      <fieldset class="consents">
+        <label class="consent"><input type="checkbox" name="consent_pd_child" />
+          <span data-consent-label="pd_child"></span></label>
+        <label class="consent"><input type="checkbox" name="consent_privacy" />
+          <span data-consent-label="privacy"></span></label>
+        <label class="consent"><input type="checkbox" name="consent_marketing" checked />
+          <span data-consent-label="marketing"></span></label>
+        <p class="field__error" data-error="consents"></p>
+      </fieldset>
+      <button type="submit" class="primary register__submit">Готово</button>
+      <p id="register-status" class="status" hidden></p>
+    </form>
+  </section>
 
   <main id="root" class="app" aria-live="polite">
     <!-- Вход в платформу «Мир Фоксинбурга» — на самом видном месте, сверху.
@@ -248,6 +285,6 @@
 
   <script src="/widget/fxb-schedule.js?v=20260830" defer></script>
   <script src="/tg/fluid.js?v=6"></script>
-  <script src="/tg/app.js?v=8"></script>
+  <script src="/tg/app.js?v=9"></script>
 </body>
 </html>

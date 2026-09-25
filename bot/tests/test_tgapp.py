@@ -220,3 +220,15 @@ def test_miniapp_markup_is_never_cached():
     client = TestClient(main_module.app)
     for path in ("/tg/", "/app/"):
         assert client.get(path).headers["cache-control"] == "no-store"
+
+
+def test_register_form_matches_server_contract():
+    html = (TGAPP / "index.html").read_text(encoding="utf-8")
+    js = (TGAPP / "app.js").read_text(encoding="utf-8")
+    assert 'id="register"' in html and 'id="register-form"' in html
+    for field in ("fio_parent", "fio_child", "child_birth", "phone"):
+        assert f'name="{field}"' in html
+    assert 'name="consent_marketing" checked' in html
+    assert "/api/miniapp/register" in js and "/api/miniapp/consents" in js
+    assert "requestContact" in js
+    assert "needs_consents" in js

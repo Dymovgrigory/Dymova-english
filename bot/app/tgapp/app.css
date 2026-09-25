@@ -2092,3 +2092,27 @@ body.platform-max .world-banner {
 @media (prefers-reduced-motion: reduce) {
   .world-banner { transition: none; }
 }
+
+/* ===================== АНКЕТА =====================
+   Полноэкранный слой поверх приложения, пока регистрация не пройдена
+   (см. app.js:renderRegister). #root прячем целиком — под анкетой не
+   должно быть видно ни дока, ни разделов. */
+body.is-registering #root { display: none; }
+.register { padding: 24px 16px 40px; max-width: 520px; margin: 0 auto; }
+.register__title { font-size: 28px; line-height: 1.15; margin: 8px 0 6px; }
+.register__lede { color: var(--ink-faint); margin: 0 0 20px; }
+.register .field { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; font-weight: 600; }
+.register .field input {
+  font: inherit;
+  font-weight: 400;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+}
+.register .field__error { color: var(--rose); font-size: 13px; margin: 4px 0 0; min-height: 0; }
+.register .field__error:empty { display: none; }
+.register .consents { border: 0; padding: 0; margin: 20px 0 0; display: grid; gap: 12px; }
+.register .consent { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; font-size: 14px; line-height: 1.35; }
+.register .consent input { width: 20px; height: 20px; margin-top: 1px; }
+.register__submit { width: 100%; margin-top: 22px; }
