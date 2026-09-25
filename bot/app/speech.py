@@ -74,7 +74,13 @@ async def _try_openai_models(audio_bytes: bytes, filename: str, mime_type: str) 
         if resp.status_code != 200:
             logger.warning("speech: %s (%s) ответил %s", base_url, model, resp.status_code)
             continue
-        text = (resp.json() or {}).get("text", "").strip()
+        try:
+            # Битый JSON или {"text": null} — тоже считаем неудачей этой
+            # модели, а не падением всего каскада: пробуем следующую.
+            text = ((resp.json() or {}).get("text") or "").strip()
+        except Exception:
+            logger.warning("speech: %s (%s) вернул невалидный JSON", base_url, model, exc_info=True)
+            continue
         if text:
             return text
     return None
@@ -97,7 +103,12 @@ async def _try_yandex(audio_bytes: bytes) -> str | None:
     if resp.status_code != 200:
         logger.warning("speech: Yandex SpeechKit ответил %s", resp.status_code)
         return None
-    text = (resp.json() or {}).get("result", "").strip()
+    try:
+        # Битый JSON или {"result": null} — тоже не крашим каскад.
+        text = ((resp.json() or {}).get("result") or "").strip()
+    except Exception:
+        logger.warning("speech: Yandex SpeechKit вернул невалидный JSON", exc_info=True)
+        return None
     return text or None
 
 

@@ -137,3 +137,30 @@ async def test_transcribe_network_exception_does_not_crash(monkeypatch):
     monkeypatch.setattr(httpx.AsyncClient, "post", fake_post)
     result = await speech.transcribe(b"bytes", "a.ogg", "audio/ogg")
     assert result is None
+
+
+@pytest.mark.asyncio
+async def test_transcribe_malformed_json_response_does_not_crash(monkeypatch):
+    # 200, но тело — не JSON: resp.json() бросает JSONDecodeError, каскад
+    # обязан пойти дальше, а не упасть.
+    async def fake_post(self, url, **kwargs):
+        return httpx.Response(200, text="<html>not json</html>",
+                              request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", fake_post)
+    result = await speech.transcribe(b"bytes", "a.ogg", "audio/ogg")
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_transcribe_null_text_field_does_not_crash(monkeypatch):
+    # 200 с валидным JSON, но {"text": null} / {"result": null} — .strip()
+    # на None раньше валился AttributeError; каскад обязан просто пойти дальше.
+    async def fake_post(self, url, **kwargs):
+        if "yandex" in url:
+            return httpx.Response(200, json={"result": None}, request=httpx.Request("POST", url))
+        return httpx.Response(200, json={"text": None}, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", fake_post)
+    result = await speech.transcribe(b"bytes", "a.ogg", "audio/ogg")
+    assert result is None
