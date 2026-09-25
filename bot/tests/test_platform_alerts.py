@@ -56,3 +56,80 @@ def test_alerts_quiet_when_fresh(client):
     assert not any(c.startswith("sync_empty_") or c.startswith("sync_stale_") for c in codes)
     critical = [a for a in r.json()["alerts"] if a["level"] == "critical"]
     assert critical == []
+
+
+from unittest.mock import AsyncMock, patch
+
+from app.platform import sync as sync_module
+
+
+def test_check_schedule_freshness_true_when_recent(monkeypatch):
+    from datetime import datetime, timezone
+    recent = datetime.now(timezone.utc).isoformat()
+    with patch("app.platform.bb_store.freshness",
+              return_value={"lessons": {"count": 10, "last_synced_at": recent},
+                            "groups": {"count": 5, "last_synced_at": recent}}):
+        assert sync_module.check_schedule_freshness(max_age_min=60) is True
+
+
+def test_check_schedule_freshness_false_and_alerts_when_stale(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+    stale = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
+    sync_module._last_stale_alert_at = 0.0
+    with patch("app.platform.bb_store.freshness",
+              return_value={"lessons": {"count": 10, "last_synced_at": stale},
+                            "groups": {"count": 5, "last_synced_at": stale}}), \
+         patch("app.platform.sync.run_all", new=AsyncMock()) as run_all, \
+         patch("app.watchdog._alert", new=AsyncMock()) as alert:
+        import asyncio
+        result = asyncio.run(sync_module.check_schedule_freshness_and_alert(max_age_min=60))
+        assert result is False
+        # Внеплановая синхронизация пробуется ДО оповещения — раз данные
+        # всё равно остались несвежими (bb_store.freshness замокан статично),
+        # проверяем только сам факт попытки и что после неё пришло письмо.
+        run_all.assert_called_once_with("incremental")
+        alert.assert_called_once()
+        assert "расписан" in alert.call_args.args[0].lower()
+
+
+def test_check_schedule_freshness_no_data_at_all_counts_as_stale():
+    with patch("app.platform.bb_store.freshness",
+              return_value={"lessons": {"count": 0, "last_synced_at": None},
+                            "groups": {"count": 0, "last_synced_at": None}}):
+        assert sync_module.check_schedule_freshness(max_age_min=60) is False
+
+
+def test_stale_alert_has_cooldown_no_double_alert(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+    stale = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
+    sync_module._last_stale_alert_at = 0.0
+    with patch("app.platform.bb_store.freshness",
+              return_value={"lessons": {"count": 10, "last_synced_at": stale},
+                            "groups": {"count": 5, "last_synced_at": stale}}), \
+         patch("app.platform.sync.run_all", new=AsyncMock()), \
+         patch("app.watchdog._alert", new=AsyncMock()) as alert:
+        import asyncio
+        asyncio.run(sync_module.check_schedule_freshness_and_alert(max_age_min=60))
+        asyncio.run(sync_module.check_schedule_freshness_and_alert(max_age_min=60))
+        assert alert.call_count == 1
+
+
+def test_freshness_restored_after_unplanned_sync_skips_alert(monkeypatch):
+    """Внеплановая run_all() иногда чинит дело сама — тогда предупреждение
+    не нужно вовсе."""
+    from datetime import datetime, timedelta, timezone
+    stale = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
+    fresh = datetime.now(timezone.utc).isoformat()
+    sync_module._last_stale_alert_at = 0.0
+    responses = iter([
+        {"lessons": {"count": 10, "last_synced_at": stale}, "groups": {"count": 5, "last_synced_at": stale}},
+        {"lessons": {"count": 10, "last_synced_at": fresh}, "groups": {"count": 5, "last_synced_at": fresh}},
+    ])
+    with patch("app.platform.bb_store.freshness", side_effect=lambda: next(responses)), \
+         patch("app.platform.sync.run_all", new=AsyncMock()) as run_all, \
+         patch("app.watchdog._alert", new=AsyncMock()) as alert:
+        import asyncio
+        result = asyncio.run(sync_module.check_schedule_freshness_and_alert(max_age_min=60))
+        assert result is True
+        run_all.assert_called_once_with("incremental")
+        alert.assert_not_called()

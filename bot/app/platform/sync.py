@@ -135,6 +135,64 @@ def configured() -> bool:
     return bool(settings.BIGBEN_PUBLIC_API_KEY and settings.BIGBEN_PUBLIC_API_BASE)
 
 
+_STALE_ALERT_COOLDOWN_SEC = 3600  # не чаще раза в час, иначе спам при долгом сбое
+_last_stale_alert_at: float = 0.0
+
+
+def _minutes_since(iso_ts: str | None) -> float | None:
+    if not iso_ts:
+        return None
+    try:
+        ts = datetime.fromisoformat(iso_ts.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - ts).total_seconds() / 60
+
+
+def check_schedule_freshness(max_age_min: int | None = None) -> bool:
+    """True — данные о группах и уроках свежие. Отсутствие данных вовсе
+    (last_synced_at=None) тоже считается несвежим: значит синхронизация
+    ещё ни разу не прошла успешно."""
+    from app.platform import bb_store
+
+    limit = max_age_min if max_age_min is not None else max(15, settings.BIGBEN_SYNC_INTERVAL_MIN) * 4
+    fresh = bb_store.freshness()
+    for kind in ("groups", "lessons"):
+        age = _minutes_since(fresh.get(kind, {}).get("last_synced_at"))
+        if age is None or age > limit:
+            return False
+    return True
+
+
+async def check_schedule_freshness_and_alert(max_age_min: int | None = None) -> bool:
+    """Как check_schedule_freshness, но при устаревании сначала пробует
+    внеплановую синхронизацию прямо сейчас (а не ждёт следующего тика
+    обычного цикла), и только если это не помогло — раз в
+    _STALE_ALERT_COOLDOWN_SEC шлёт администраторам предупреждение. Иначе о
+    сломанной синхронизации узнают только от жалобы клиента."""
+    global _last_stale_alert_at
+    if check_schedule_freshness(max_age_min):
+        return True
+    await run_all("incremental")
+    if check_schedule_freshness(max_age_min):
+        return True
+    now = time.monotonic()
+    if now - _last_stale_alert_at < _STALE_ALERT_COOLDOWN_SEC:
+        return False
+    _last_stale_alert_at = now
+    from app import watchdog
+
+    limit = max_age_min if max_age_min is not None else max(15, settings.BIGBEN_SYNC_INTERVAL_MIN) * 4
+    await watchdog._alert(
+        f"🚨 Расписание не обновлялось дольше {limit} мин, внеплановая "
+        "синхронизация не помогла — BigBen мог стать недоступен. "
+        "Проверьте /admin/insights и логи бота."
+    )
+    return False
+
+
 async def _incremental_loop() -> None:
     # стартовая полная выгрузка, если read-model пуста
     fresh = await asyncio.to_thread(bb_store.freshness)
@@ -155,6 +213,7 @@ async def _incremental_loop() -> None:
                 last_full = time.monotonic()
             else:
                 await run_all("incremental")
+            await check_schedule_freshness_and_alert()
         except Exception:
             logger.exception("sync: ошибка цикла синхронизации")
 
