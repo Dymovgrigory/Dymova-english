@@ -1507,6 +1507,9 @@
    *  клиент без согласий — тогда только чекбоксы). */
   function renderRegister(access) {
     var box = $("#register");
+    // Закэшированная разметка без секции анкеты не должна ронять весь
+    // loadInfo() — та же защита, что и у on() среди утилит выше по файлу.
+    if (!box) return;
     var consentsOnly = !access.locked && access.needs_consents;
     if (!access.has_identity || (!access.locked && !access.needs_consents)) {
       box.hidden = true;
@@ -1542,6 +1545,10 @@
   }
 
   function sharePhone() {
+    // Кнопка скрыта, если моста или метода нет (см. renderRegister), но
+    // клик мог случиться до перерисовки после устаревшего access — метод
+    // проверяем ещё раз, чтобы не падать в вебе/MAX без него.
+    if (!bridge || typeof bridge.requestContact !== "function") return;
     // Telegram присылает контакт и боту (вебхук помечает номер
     // подтверждённым), и в колбэк — им заполняем поле сразу.
     bridge.requestContact(function (shared, response) {
@@ -1555,6 +1562,7 @@
     event.preventDefault();
     var form = event.target;
     var status = $("#register-status");
+    var submitButton = $(".register__submit", form);
     all("[data-error]", form).forEach(function (n) { n.textContent = ""; });
     var consents = {
       pd_child: form.elements.consent_pd_child.checked,
@@ -1571,6 +1579,10 @@
     };
     status.hidden = false;
     status.textContent = "Сохраняю…";
+    // Замок на кнопке: два быстрых тапа иначе успевают пройти проверку на
+    // идемпотентность сервера раньше, чем сохранится первая запись, и
+    // уходят два лида в BigBen.
+    if (submitButton) submitButton.disabled = true;
     postJSON(path, body)
       .then(function (data) {
         if (data && data.ok) {
@@ -1579,16 +1591,23 @@
           loadInfo();
           return;
         }
-        status.textContent = "Проверьте поля, отмеченные ниже.";
         var errors = (data && data.errors) || {};
-        Object.keys(errors).forEach(function (key) {
-          var slot = $('[data-error="' + key + '"]', form);
-          if (slot) slot.textContent = errors[key];
-        });
+        if (data && data.__status === 400 && Object.keys(errors).length) {
+          status.textContent = "Проверьте поля, отмеченные ниже.";
+          Object.keys(errors).forEach(function (key) {
+            var slot = $('[data-error="' + key + '"]', form);
+            if (slot) slot.textContent = errors[key];
+          });
+        } else {
+          status.textContent = (data && data.error) || "Не удалось сохранить. Попробуйте ещё раз.";
+        }
         haptic("error");
       })
       .catch(function () {
         status.textContent = "Нет связи. Попробуйте ещё раз.";
+      })
+      .finally(function () {
+        if (submitButton) submitButton.disabled = false;
       });
   }
 
@@ -1743,8 +1762,8 @@
       if (event.key === "Escape") closeSheet();
     });
 
-    $("#register-form").addEventListener("submit", submitRegister);
-    $("#register-share-phone").addEventListener("click", sharePhone);
+    on("#register-form", "submit", submitRegister);
+    on("#register-share-phone", "click", sharePhone);
     // Ссылка из приглашения ведёт на #register — экран и так покажется по
     // access.locked, а хэш в адресной строке больше не нужен.
     if (location.hash === "#register") history.replaceState(null, "", location.pathname);

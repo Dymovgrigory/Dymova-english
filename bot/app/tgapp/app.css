@@ -2096,8 +2096,11 @@ body.platform-max .world-banner {
 /* ===================== АНКЕТА =====================
    Полноэкранный слой поверх приложения, пока регистрация не пройдена
    (см. app.js:renderRegister). #root прячем целиком — под анкетой не
-   должно быть видно ни дока, ни разделов. */
+   должно быть видно ни дока, ни разделов. Док — фиксированный элемент вне
+   #root, его нужно гасить отдельным правилом, иначе он остаётся поверх
+   формы при прокрутке. */
 body.is-registering #root { display: none; }
+body.is-registering .dock { display: none; }
 .register { padding: 24px 16px 40px; max-width: 520px; margin: 0 auto; }
 .register__title { font-size: 28px; line-height: 1.15; margin: 8px 0 6px; }
 .register__lede { color: var(--ink-faint); margin: 0 0 20px; }
@@ -2115,4 +2118,10 @@ body.is-registering #root { display: none; }
 .register .consents { border: 0; padding: 0; margin: 20px 0 0; display: grid; gap: 12px; }
 .register .consent { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; font-size: 14px; line-height: 1.35; }
 .register .consent input { width: 20px; height: 20px; margin-top: 1px; }
+/* .ghost — общая кнопка-«призрак» — по умолчанию inline-flex, стандартное
+   правило браузера [hidden]{display:none} она перекрывает. Явный
+   per-class hidden-рецепт — как у .status[hidden] и .banner[hidden] выше
+   по файлу, — иначе скрытая кнопка «поделиться номером» остаётся видимой. */
+.register .ghost[hidden] { display: none; }
 .register__submit { width: 100%; margin-top: 22px; }
+.register__submit[disabled] { opacity: .55; cursor: not-allowed; }
