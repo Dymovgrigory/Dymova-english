@@ -331,6 +331,22 @@ def test_check_homework_system_prompt_forbids_giving_correct_answer():
     assert "не называй" in prompt.lower() or "не давай правильный" in prompt.lower()
 
 
+def test_check_homework_prompts_forbid_indirect_leak_via_deciding_feature():
+    """Владелец: правильный ответ нельзя слить и косвенно — например, назвав
+    признак, который в задании с двумя вариантами (is/are, a/an) однозначно
+    определяет ответ через исключение второго. Список таких признаков не
+    только грамматический (число, лицо, время) — для a/an решающий признак
+    ЗВУКОВОЙ (гласный/согласный звук следующего слова), поэтому пин на
+    конкретное слово «звук» — чтобы правка, которая случайно сузит защиту
+    обратно до одних грамматических категорий, роняла тест."""
+    system_prompt = homework._check_homework_system_prompt().lower()
+    user_prompt = homework._check_homework_user_prompt("").lower()
+    critic_prompt = homework._CRITIC_PROMPT["check"].lower()
+    for prompt in (system_prompt, user_prompt, critic_prompt):
+        assert "звук" in prompt
+        assert "a/an" in prompt
+
+
 @pytest.mark.asyncio
 async def test_check_homework_image_returns_finalized_reply():
     with patch("app.homework.get_gateway") as get_gw:
