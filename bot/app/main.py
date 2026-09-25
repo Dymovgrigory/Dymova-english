@@ -53,6 +53,7 @@ from app import scheduler
 from app import speech
 from app import watchdog
 from app.homework import (
+    HOMEWORK_IMAGE_DIR,
     HOMEWORK_INVITE,
     HOMEWORK_TEXT_FALLBACK,
     _homework_task_text,
@@ -653,6 +654,135 @@ async def api_homework(
         "explanation": explanation,
         "buttons": _contextual_buttons("домашка", explanation),
     }
+
+
+@app.get("/api/miniapp/chat/history")
+async def miniapp_chat_history(request: Request, limit: int = 50) -> dict:
+    """История диалога для чата мини-приложения: подгружается при открытии,
+    в отличие от поллинга новых исходящих (см. /api/miniapp/messages)."""
+    identity = _identity_from_request(request)
+    if identity is None:
+        return JSONResponse(
+            {"ok": False, "error": "Нужна авторизация внутри Telegram или MAX"},
+            status_code=401,
+        )
+    conv = crm_store.find_conversation(identity.platform, identity.user_id)
+    if conv is None:
+        return {"ok": True, "messages": []}
+    limit = max(1, min(int(limit), 100))
+    rows = crm_store.get_messages(conv["id"], limit=limit)
+    messages = []
+    for m in rows:
+        image_url = None
+        try:
+            payload = json.loads(m.get("payload_json") or "{}")
+            if payload.get("image_path"):
+                image_url = f"/api/miniapp/homework/image/{payload['image_path'].split('/', 1)[1]}"
+        except Exception:
+            pass
+        role = "me" if m["direction"] == "in" else ("manager" if m["sender_type"] == "manager" else "bot")
+        messages.append({
+            "id": m["id"], "role": role, "text": m["text"],
+            "image_url": image_url, "created_at": m["created_at"],
+        })
+    return {"ok": True, "messages": messages}
+
+
+@app.get("/api/miniapp/homework/image/{filename}")
+async def miniapp_homework_image(request: Request, filename: str) -> FileResponse:
+    """Миниатюры фото задания в истории чата. Только по подписанному
+    initData — на фото могут быть личные данные ребёнка."""
+    identity = _identity_from_request(request)
+    if identity is None:
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
+    safe_name = Path(filename).name  # без произвольных путей вроде "../.."
+    path = Path(HOMEWORK_IMAGE_DIR) / safe_name
+    if not path.exists():
+        return JSONResponse({"detail": "not found"}, status_code=404)
+    return FileResponse(str(path))
+
+
+@app.post("/api/miniapp/homework/check")
+async def api_homework_check(
+    request: Request,
+    note: str = Form(default=""),
+    init_data: str = Form(default=""),
+    image: UploadFile | None = File(default=None),
+) -> dict:
+    identity = _identity_from_request(request, init_data=init_data)
+    access = _miniapp_access_state(identity)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
+    if image is None or not image.filename:
+        return JSONResponse({"detail": "Нужна фотография решения"}, status_code=400)
+    content_type = (image.content_type or "").lower()
+    if not content_type.startswith("image/"):
+        return JSONResponse({"detail": "Файл должен быть в формате изображения"}, status_code=400)
+    image_bytes = await image.read(MAX_HOMEWORK_IMAGE_BYTES + 1)
+    if len(image_bytes) > MAX_HOMEWORK_IMAGE_BYTES:
+        return JSONResponse({"detail": "Фото слишком большое — пришлите снимок до 8 МБ"}, status_code=413)
+    if not image_bytes:
+        return JSONResponse({"detail": "Пустой файл"}, status_code=400)
+    explanation = await homework.check_homework_image(image_bytes, content_type, note)
+    if not explanation:
+        explanation = "Не удалось разобрать фото. Попробуйте снять его при хорошем свете."
+    image_path = homework.save_homework_image(image_bytes, ext="jpg")
+    crm_ctx = None
+    if identity is not None:
+        crm_ctx = crm_ingest.ingest_inbound(
+            identity.platform, identity.user_id, f"[фото решения] {note}".strip(),
+            external_event_id=f"miniapp-hw-check:{uuid.uuid4().hex}",
+            payload={"image_path": image_path},
+        )
+        crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL)
+        crm_store.record_homework_request(
+            platform=identity.platform, user_id=identity.user_id,
+            customer_id=crm_ctx.get("customer_id") if crm_ctx else None,
+            conversation_id=crm_ctx.get("conversation_id") if crm_ctx else None,
+            channel=identity.platform, mode="check", input_type="image",
+            image_path=image_path, task_text=note, reply=explanation,
+        )
+    return {"ok": True, "explanation": explanation}
+
+
+@app.post("/api/miniapp/homework/voice")
+async def api_homework_voice(
+    request: Request,
+    mode: str = Form(default="explain"),
+    init_data: str = Form(default=""),
+    audio: UploadFile | None = File(default=None),
+) -> dict:
+    identity = _identity_from_request(request, init_data=init_data)
+    access = _miniapp_access_state(identity)
+    if access["locked"]:
+        return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
+    if audio is None or not audio.filename:
+        return JSONResponse({"detail": "Нужна голосовая запись"}, status_code=400)
+    audio_bytes = await audio.read(MAX_HOMEWORK_AUDIO_BYTES + 1)
+    if len(audio_bytes) > MAX_HOMEWORK_AUDIO_BYTES:
+        return JSONResponse({"detail": "Запись слишком большая — до 20 МБ"}, status_code=413)
+    text = await speech.transcribe(audio_bytes, audio.filename or "voice.webm",
+                                   (audio.content_type or "audio/webm"))
+    if not text:
+        return {"ok": False, "error": "Не расслышала запись. Попробуйте ещё раз или напишите текстом."}
+    explanation = await homework.explain_homework_text(text)
+    if not explanation:
+        explanation = HOMEWORK_TEXT_FALLBACK
+    crm_ctx = None
+    if identity is not None:
+        crm_ctx = crm_ingest.ingest_inbound(
+            identity.platform, identity.user_id, f"[голосовое] {text}",
+            external_event_id=f"miniapp-hw-voice:{uuid.uuid4().hex}",
+        )
+        crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL)
+        crm_store.record_homework_request(
+            platform=identity.platform, user_id=identity.user_id,
+            customer_id=crm_ctx.get("customer_id") if crm_ctx else None,
+            conversation_id=crm_ctx.get("conversation_id") if crm_ctx else None,
+            channel=identity.platform, mode="explain", input_type="voice",
+            audio_transcript=text, task_text=text, reply=explanation,
+        )
+    return {"ok": True, "transcript": text, "explanation": explanation}
 
 
 def _register_button_rows(platform: str) -> list[list[dict]]:

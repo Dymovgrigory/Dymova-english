@@ -72,7 +72,6 @@
     access: null,
     format: "",
     ageFilter: "",
-    homeworkFile: null,
     chatBusy: false,
     quiz: { questions: [], index: 0, answers: {} },
     me: null, // что мы знаем о человеке после теста и подбора
@@ -245,7 +244,6 @@
     signup: { title: "Запись на занятия", build: buildSignup },
     diagnostic: { title: "Запись на диагностику", build: buildDiagnostic },
     mylessons: { title: "Мои занятия", build: buildMyLessons },
-    homework: { title: "Помощь с домашкой", build: buildHomework },
   };
 
   function showSheet(title, html) {
@@ -985,93 +983,140 @@
       "</div>";
   }
 
-  /* -------------------------------------------------------------- домашка */
-
-  function buildHomework(box) {
-    box.innerHTML =
-      '<div class="hw">' +
-      '<p class="lede">Сфотографируйте задание — Фокси объяснит, как его решать. Бесплатно.</p>' +
-      '<label class="drop"><input id="hw-file" type="file" accept="image/*" hidden />' +
-      '<span id="hw-hint">Выбрать фото задания</span>' +
-      '<img id="hw-preview" class="drop__preview" alt="" hidden /></label>' +
-      '<input id="hw-note" type="text" placeholder="Например: задание 3, перевести предложения" />' +
-      '<button type="button" class="primary" data-fallback-action="homework">Разобрать задание</button>' +
-      '<p id="hw-status" class="status" hidden></p>' +
-      '<div id="hw-answer" class="answer" hidden></div>' +
-      "</div>";
-
-    $("#hw-file", box).addEventListener("change", function (event) {
-      var file = event.target.files && event.target.files[0];
-      state.homeworkFile = file || null;
-      var preview = $("#hw-preview", box);
-      if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.hidden = false;
-        $("#hw-hint", box).textContent = "Заменить фото";
-      } else {
-        preview.hidden = true;
-        $("#hw-hint", box).textContent = "Выбрать фото задания";
-      }
-    });
-
-    $('[data-fallback-action="homework"]', box).addEventListener("click", submitHomework);
-  }
-
-  function submitHomework() {
-    var status = $("#hw-status");
-    var answer = $("#hw-answer");
-    if (!state.homeworkFile) {
-      status.hidden = false;
-      status.textContent = "Сначала выберите фото задания.";
-      return;
-    }
-    status.hidden = false;
-    status.textContent = "Смотрю задание…";
-    answer.hidden = true;
-
-    var form = new FormData();
-    // Поле и ответ — по серверному контракту (его же использует legacy /app).
-    form.append("image", state.homeworkFile);
-    form.append("note", $("#hw-note").value.trim());
-
-    request("/api/miniapp/homework", { method: "POST", body: form, timeout: 90000 })
-      .then(function (data) {
-        if (data.__status === 403) {
-          status.textContent = data.error || "Раздел откроется после регистрации.";
-          return;
-        }
-        if (data.explanation) {
-          status.hidden = true;
-          answer.hidden = false;
-          answer.textContent = data.explanation;
-          haptic("success");
-        } else {
-          status.textContent = data.error || data.detail || "Не получилось разобрать задание.";
-        }
-      })
-      .catch(function () {
-        status.textContent = "Нет связи. Попробуйте позже.";
-      });
-  }
-
   /* ------------------------------------------------------------------ чат */
+
+  /* Помощь с домашкой раньше открывалась отдельным листом (buildHomework).
+     Теперь это кнопки прямо в чате (см. submitHomeworkFile/pickHomeworkPhoto/
+     startVoiceHomework ниже) — разбор фото, проверка решения и голосовое
+     доступны сразу, без перехода на другой экран. */
 
   function greetInChat() {
     var log = $("#chat-log");
-    if (log.dataset.greeted) return;
-    log.dataset.greeted = "1";
-    addMessage("bot", "Спросите что угодно: программы, цены, расписание, как проходят занятия.");
-    startChatPolling();
+    if (log.dataset.loaded) return;
+    log.dataset.loaded = "1";
+    request("/api/miniapp/chat/history")
+      .then(function (data) {
+        if (data && data.ok && data.messages && data.messages.length) {
+          data.messages.forEach(function (m) {
+            addMessage(m.role, m.text, m.image_url);
+            state.chatLastId = Math.max(state.chatLastId || 0, m.id);
+          });
+        } else {
+          addMessage("bot", "Спросите что угодно: программы, цены, расписание, как проходят занятия.");
+        }
+      })
+      .catch(function () {
+        addMessage("bot", "Спросите что угодно: программы, цены, расписание, как проходят занятия.");
+      })
+      .finally(startChatPolling);
   }
 
-  function addMessage(role, text) {
+  function addMessage(role, text, imageUrl) {
     var log = $("#chat-log");
     var bubble = document.createElement("div");
     bubble.className = "bubble bubble--" + role;
-    bubble.textContent = text;
+    if (imageUrl) {
+      var img = document.createElement("img");
+      img.className = "bubble__thumb";
+      img.src = imageUrl;
+      img.alt = "";
+      img.loading = "lazy";
+      bubble.appendChild(img);
+    }
+    if (text) {
+      var span = document.createElement("span");
+      span.textContent = text;
+      bubble.appendChild(span);
+    }
     log.appendChild(bubble);
     log.scrollTop = log.scrollHeight;
     return bubble;
+  }
+
+  /** Разбор/проверка задания по фото — та же ручка, что раньше открывалась
+   *  отдельным листом; теперь фото сразу уходит из чата. */
+  function submitHomeworkFile(file, note, checkMode) {
+    var typing = addMessage("bot", "…");
+    typing.classList.add("bubble--typing");
+    var form = new FormData();
+    form.append("image", file);
+    if (note) form.append("note", note);
+    var path = checkMode ? "/api/miniapp/homework/check" : "/api/miniapp/homework";
+    request(path, { method: "POST", body: form, timeout: 90000 })
+      .then(function (data) {
+        typing.remove();
+        if (data.__status === 403) {
+          addMessage("bot", data.error || "Раздел откроется после регистрации.");
+          return;
+        }
+        addMessage("bot", data.explanation || data.error || "Не удалось разобрать задание.");
+      })
+      .catch(function () {
+        typing.remove();
+        addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+      });
+  }
+
+  function pickHomeworkPhoto(checkMode) {
+    var input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      addMessage("me", checkMode ? "Проверь моё решение" : "Разбери задание", URL.createObjectURL(file));
+      submitHomeworkFile(file, "", checkMode);
+    });
+    input.click();
+  }
+
+  var mediaRecorder = null;
+  var mediaChunks = [];
+
+  /** Голосовое сообщение с заданием: запись в браузере, распознавание и
+   *  разбор — на сервере (см. /api/miniapp/homework/voice). */
+  function startVoiceHomework() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      addMessage("bot", "Голосовые здесь не поддерживаются — напишите задание текстом.");
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      mediaChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.addEventListener("dataavailable", function (e) {
+        if (e.data && e.data.size) mediaChunks.push(e.data);
+      });
+      mediaRecorder.addEventListener("stop", function () {
+        stream.getTracks().forEach(function (t) { t.stop(); });
+        var blob = new Blob(mediaChunks, { type: "audio/webm" });
+        addMessage("me", "Голосовое сообщение");
+        var typing = addMessage("bot", "…");
+        typing.classList.add("bubble--typing");
+        var form = new FormData();
+        form.append("audio", blob, "voice.webm");
+        request("/api/miniapp/homework/voice", { method: "POST", body: form, timeout: 90000 })
+          .then(function (data) {
+            typing.remove();
+            if (data.ok) {
+              addMessage("bot", "Услышал: «" + data.transcript + "»");
+              addMessage("bot", data.explanation);
+            } else {
+              addMessage("bot", data.error || "Не расслышала запись.");
+            }
+          })
+          .catch(function () {
+            typing.remove();
+            addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+          });
+      });
+      mediaRecorder.start();
+      haptic("light");
+      setTimeout(function () {
+        if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      }, 5 * 60 * 1000); // лимит 5 минут — тот же, что у голосовых в чате бота
+    }).catch(function () {
+      addMessage("bot", "Не удалось включить микрофон — проверьте разрешения браузера.");
+    });
   }
 
   /* Ответы менеджера из админки уходят клиенту и в нативный чат мессенджера,
@@ -1711,6 +1756,10 @@
     });
 
     on("#chat-form", "submit", sendChat);
+
+    on("#chat-explain-btn", "click", function () { pickHomeworkPhoto(false); });
+    on("#chat-check-btn", "click", function () { pickHomeworkPhoto(true); });
+    on("#chat-voice-btn", "click", startVoiceHomework);
 
     on("#chat-manager-call", "click", function () {
       // Кнопка «Позвать менеджера»: заявка админам + режим менеджера.

@@ -158,18 +158,33 @@ def test_all_tabs_and_dock_buttons_exist():
 
 
 def test_actions_open_as_sheets():
-    """Действия — лист снизу поверх раздела, а не отдельный экран."""
-    for sheet in ("quiz", "picker", "signup", "homework"):
+    """Действия — лист снизу поверх раздела, а не отдельный экран.
+
+    Помощь с домашкой раньше была отдельным листом (`homework` в SHEETS);
+    теперь это кнопки прямо в чате, поэтому в SHEETS её больше нет —
+    вместо неё проверяем кнопки-действия и подключение к серверным ручкам.
+    """
+    for sheet in ("quiz", "picker", "signup"):
         assert f'{sheet}: {{ title:' in JS, f"нет листа {sheet}"
+    assert "homework: { title:" not in JS
     assert 'data-sheet="quiz"' in HTML or 'data-sheet="picker"' in HTML
     # Лист закрывается жестом, а не только кнопкой.
     assert "touchmove" in JS and "closeSheet()" in JS
 
 
+def test_homework_help_lives_inside_chat():
+    """Разбор задания, проверка решения и голосовое — кнопки в чате."""
+    for element_id in ("chat-explain-btn", "chat-check-btn", "chat-voice-btn"):
+        assert f'id="{element_id}"' in HTML, f"нет кнопки #{element_id}"
+    assert "/api/miniapp/homework/check" in JS
+    assert "/api/miniapp/homework/voice" in JS
+    assert "/api/miniapp/chat/history" in JS
+    assert "MediaRecorder" in JS
+
+
 def test_sheet_forms_are_built_in_js_with_escaping():
     """Формы листов собираются скриптом — значит там же и экранирование."""
-    for element_id in ("lf-parent", "lf-phone", "lead-status", "hw-file",
-                       "hw-preview", "hw-status", "hw-answer", "age", "age-value",
+    for element_id in ("lf-parent", "lf-phone", "lead-status", "age", "age-value",
                        "picker-results"):
         assert f'id="{element_id}"' in JS, f"потерян элемент #{element_id}"
 
