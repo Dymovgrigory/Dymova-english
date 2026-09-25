@@ -602,12 +602,16 @@ MAX_HOMEWORK_IMAGE_BYTES = 8 * 1024 * 1024
 # Голосовое до 5 минут — примерно 20 МБ в ogg/opus с запасом.
 MAX_HOMEWORK_AUDIO_BYTES = 20 * 1024 * 1024
 
-_CHECK_STEM_RE = re.compile(r"\bпровер", re.IGNORECASE)
+# Стем "провер" + один из этих символов покрывает реальные формы слова
+# «проверить/проверять/проверка» (проверь, проверьте, проверить, проверю,
+# проверит, проверял, проверяй, проверка, проверен...), но не «провернуть» —
+# там за стемом сразу идёт «н», которого в этом наборе нет.
+_CHECK_STEM_RE = re.compile(r"\bпровер[ьияюек]", re.IGNORECASE)
 
 
 def _looks_like_check_request(text: str) -> bool:
-    """«Проверь», «проверка», «провери» — просьба проверить решение, а не
-    объяснить задание заново."""
+    """«Проверь», «проверка», «провери(ть)» — просьба проверить решение, а
+    не объяснить задание заново. Не должно ловить постороннее «провернуть»."""
     return bool(_CHECK_STEM_RE.search(text or ""))
 
 
@@ -949,9 +953,15 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             # подпись сразу после разбора задания (homework_check_context) —
             # тоже решение, которое прислали в ответ, а не новое задание.
             # Пустая подпись без такого контекста — обычное фото задания.
+            # Но стем-совпадение не должно перебивать подпись, у которой
+            # намерение уже ЯВНО распознано как другая тема (цена, контакты
+            # и т.п.) — иначе «Проверьте, сколько стоит абонемент?» вместо
+            # ответа про цену улетает в vision-проверку фото.
             conv_for_photo = get_store().get(f"tg:{chat_id}", platform=TELEGRAM_PLATFORM)
-            wants_check = _looks_like_check_request(caption) or (
-                not caption and conv_for_photo.homework_check_context
+            caption_is_clearly_other = caption_intent not in (None, I.QUESTION, I.HOMEWORK)
+            wants_check = not caption_is_clearly_other and (
+                _looks_like_check_request(caption)
+                or (not caption and conv_for_photo.homework_check_context)
             )
             if caption_intent in (I.QUESTION, I.HOMEWORK) or wants_check:
                 await _handle_telegram_photo(message, chat_id, telegram, check_mode=wants_check)
@@ -1582,6 +1592,13 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             url = (audio_att.get("payload") or {}).get("url", "")
             if url:
                 await _handle_max_voice(url, user_id, message, update, max_client)
+            else:
+                # Вложение есть, а ссылки на файл нет — платформа прислала
+                # что-то нестандартное. Как и в других сбоях этой ветки,
+                # отвечаем человеку, а не молчим.
+                await max_client.send_message(
+                    user_id, "Не получилось открыть голосовое. Напишите, пожалуйста, текстом."
+                )
             return
         if not text:
             return

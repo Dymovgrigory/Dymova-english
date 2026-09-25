@@ -317,18 +317,27 @@ class MaxClient:
 
     async def download_file(self, url: str, max_bytes: int) -> bytes | None:
         """Скачивает вложение MAX по прямой ссылке из payload.url. None — не
-        удалось или файл больше лимита."""
+        удалось или файл больше лимита.
+
+        Стримим, а не читаем ответ целиком: как и в telegram_client, без
+        этого большая присылка (или чужой сервер, отвечающий гигабайтами)
+        полностью буферизуется в памяти процесса ещё до проверки лимита.
+        """
         try:
             async with httpx.AsyncClient(timeout=60) as client:
-                response = await client.get(url)
-                if response.status_code != 200:
-                    logger.warning("max: скачивание вложения ответило %s", response.status_code)
-                    return None
-                content = response.content
-                if len(content) > max_bytes:
-                    logger.warning("max: вложение больше лимита %s байт", max_bytes)
-                    return None
-                return content
+                async with client.stream("GET", url) as response:
+                    if response.status_code != 200:
+                        logger.warning("max: скачивание вложения ответило %s", response.status_code)
+                        return None
+                    chunks: list[bytes] = []
+                    size = 0
+                    async for chunk in response.aiter_bytes():
+                        size += len(chunk)
+                        if size > max_bytes:
+                            logger.info("max: вложение больше лимита %s байт", max_bytes)
+                            return None
+                        chunks.append(chunk)
+            return b"".join(chunks)
         except Exception:
             logger.warning("max: сбой скачивания вложения", exc_info=True)
             return None
