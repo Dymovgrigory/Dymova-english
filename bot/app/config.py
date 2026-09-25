@@ -58,6 +58,18 @@ class Settings(BaseSettings):
     # Выключать стоит только для локальной отладки промптов.
     LLM_PII_REDACTION: bool = True
 
+    # --- Распознавание речи для домашки (голосовые/аудио) ---
+    # Основной путь — OpenAI напрямую (пусто = не настроено, пропускаем).
+    STT_OPENAI_API_KEY: str = ""
+    STT_OPENAI_BASE_URL: str = ""
+    # Запасной путь при пустых STT_OPENAI_*: первый провайдер из LLM_FALLBACKS,
+    # чей base_url содержит "proxyapi" — на проде это единственный провайдер,
+    # который реально пропускает /audio/transcriptions (Cloudflare-воркер
+    # основного провайдера отвечает 403, проверено 2026-09-24).
+    STT_MODELS: str = "gpt-4o-mini-transcribe,gpt-4o-transcribe"
+    STT_YANDEX_API_KEY: str = ""
+    STT_YANDEX_FOLDER_ID: str = ""
+
     # --- Дедлайны диалога ---
     # Максимум, сколько пользователь ждёт ответ (включая очередь своих же
     # предыдущих сообщений). По истечении — честный фолбэк, а не молчание.
