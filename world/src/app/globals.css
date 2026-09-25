@@ -36,6 +36,11 @@
   --world-teal: #7fd8c9;
   --world-ink: #ffffff;
   --world-gold-deep: #e8b93e;
+  /* Отступы под чёлку / home indicator; в Telegram перезаписывает prepareMessengerUi. */
+  --fox-safe-top: env(safe-area-inset-top, 0px);
+  --fox-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --fox-safe-left: env(safe-area-inset-left, 0px);
+  --fox-safe-right: env(safe-area-inset-right, 0px);
 }
 
 html,

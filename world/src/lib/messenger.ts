@@ -15,6 +15,12 @@ declare global {
         initData?: string;
         ready?: () => void;
         expand?: () => void;
+        /** Bot API 7.10+: системные отступы (чёлка, home indicator). */
+        safeAreaInset?: { top?: number; bottom?: number; left?: number; right?: number };
+        /** Bot API 7.10+: отступы под UI Telegram (шапка с крестиком и т.п.). */
+        contentSafeAreaInset?: { top?: number; bottom?: number; left?: number; right?: number };
+        onEvent?: (event: string, handler: () => void) => void;
+        offEvent?: (event: string, handler: () => void) => void;
         /** Bot API 6.9+: системный запрос «поделиться номером» — замена SMS-коду. */
         requestContact?: (
           callback?: (sent: boolean, response?: { responseUnsafe?: { contact?: { phone_number?: string } } }) => void,
@@ -62,6 +68,33 @@ export function requestTelegramContact(): Promise<boolean> {
   });
 }
 
+/**
+ * Пишет CSS-переменные --fox-safe-* из inset'ов Telegram.
+ * Без API — минимум под шапку TG (~56px), иначе крестик и заголовки уезжают под системную полосу.
+ */
+export function syncMessengerSafeArea(): void {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  const root = document.documentElement;
+  const tg = window.Telegram?.WebApp;
+  if (!tg?.initData) return;
+
+  const safe = tg.safeAreaInset ?? {};
+  const content = tg.contentSafeAreaInset ?? {};
+  const top = Math.max(0, Number(safe.top) || 0) + Math.max(0, Number(content.top) || 0);
+  const bottom = Math.max(0, Number(safe.bottom) || 0) + Math.max(0, Number(content.bottom) || 0);
+  const left = Math.max(0, Number(safe.left) || 0) + Math.max(0, Number(content.left) || 0);
+  const right = Math.max(0, Number(safe.right) || 0) + Math.max(0, Number(content.right) || 0);
+
+  // Пока клиент не отдал insets (старые клиенты / до события) — запас под шапку TG.
+  const topPx = top > 0 ? top : 56;
+  const bottomPx = bottom > 0 ? bottom : 12;
+
+  root.style.setProperty("--fox-safe-top", `${topPx}px`);
+  root.style.setProperty("--fox-safe-bottom", `${bottomPx}px`);
+  root.style.setProperty("--fox-safe-left", `${left}px`);
+  root.style.setProperty("--fox-safe-right", `${right}px`);
+}
+
 /** Сообщить клиенту Telegram, что мини-приложение готово; развернуть на весь экран. */
 export function prepareMessengerUi(): void {
   if (typeof window === "undefined") return;
@@ -73,6 +106,18 @@ export function prepareMessengerUi(): void {
     } catch {
       /* клиент без ready/expand */
     }
+    syncMessengerSafeArea();
+    const resync = () => syncMessengerSafeArea();
+    try {
+      tg.onEvent?.("safeAreaChanged", resync);
+      tg.onEvent?.("contentSafeAreaChanged", resync);
+      tg.onEvent?.("viewportChanged", resync);
+    } catch {
+      /* старый клиент без onEvent */
+    }
+    // Insets часто появляются через тик после expand.
+    window.setTimeout(resync, 50);
+    window.setTimeout(resync, 300);
     return;
   }
   const max = window.WebApp;

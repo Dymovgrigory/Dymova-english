@@ -191,7 +191,7 @@ function RoomPanel({
         <div className="absolute inset-0 bg-gradient-to-b from-[#241a30]/70 via-transparent via-30% to-[#241a30]/55" />
       </div>
 
-      <header className="relative z-10 flex items-start justify-between gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
+      <header className="relative z-10 flex items-start justify-between gap-3 px-4 pb-2 pt-[max(0.75rem,var(--fox-safe-top))]">
         <div>
           <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-[#7fd8c9]">Замок Фоксинбург</p>
           <h2 className="font-fairy text-[32px] font-black leading-tight text-[#ffd36e]">{spot.title}</h2>
@@ -208,7 +208,7 @@ function RoomPanel({
       </header>
 
       {/* Плашка внизу: интерьер в центре остаётся открытым и просвечивает сквозь пергамент */}
-      <div className="relative z-10 mx-auto mt-auto flex w-full max-w-xl flex-col px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <div className="relative z-10 mx-auto mt-auto flex w-full max-w-xl flex-col px-4 pb-[max(1rem,var(--fox-safe-bottom))]">
         <div className="mat-parchment-veil max-h-[52dvh] overflow-y-auto rounded-[28px] px-5 py-4">
           {spot.kind === "tower" && spot.bookId && (
             <div className="flex flex-col items-center gap-4 text-center">
@@ -666,8 +666,8 @@ export function CastleScreen() {
       ) : null}
 
       {/* Интерфейс поверх сцены; пустая середина пропускает клики к зданиям */}
-      <div className="pointer-events-none relative z-10 flex h-[calc(100dvh-6rem)] flex-col lg:h-dvh">
-        <header className="pointer-events-auto flex shrink-0 flex-wrap items-start justify-between gap-3 px-4 pt-4 lg:px-8 lg:pt-6">
+      <div className="pointer-events-none relative z-10 flex h-[calc(100dvh-6rem-var(--fox-safe-bottom))] flex-col lg:h-dvh">
+        <header className="pointer-events-auto flex shrink-0 flex-wrap items-start justify-between gap-3 px-4 pt-[max(1rem,var(--fox-safe-top))] lg:px-8 lg:pt-[max(1.5rem,var(--fox-safe-top))]">
           <div className="max-w-xl">
             <h1 className="font-fairy text-[28px] font-black leading-tight text-[#ffd36e] drop-shadow-[0_2px_10px_rgb(0_0_0/0.6)] lg:text-[40px]">
               Замок Фоксинбург

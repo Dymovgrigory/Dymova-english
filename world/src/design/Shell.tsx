@@ -21,13 +21,13 @@ export function Shell({ children, top }: { children: ReactNode; top?: ReactNode 
     <div className="study flex min-h-dvh">
       <nav
         aria-label="Разделы"
-        className="glass-dusk fixed inset-x-0 bottom-0 z-30 pb-[env(safe-area-inset-bottom)] lg:inset-y-0 lg:left-0 lg:right-auto lg:w-60 lg:pb-0"
+        className="glass-dusk fixed inset-x-0 bottom-0 z-30 pb-[max(0.5rem,var(--fox-safe-bottom))] lg:inset-y-0 lg:left-0 lg:right-auto lg:w-60 lg:pb-0"
       >
         <div className="hidden px-6 pb-4 pt-7 lg:block">
           <span className="font-fairy text-[28px] font-black tracking-tight text-[#ffd36e]">Фоксинбург</span>
           <p className="mt-0.5 text-[13px] font-bold text-[#c9bfd8]">Тренажёр к учебнику Spotlight</p>
         </div>
-        <ul className="mx-auto flex max-w-lg justify-between px-2 lg:max-w-none lg:flex-col lg:gap-1 lg:px-3">
+        <ul className="mx-auto flex max-w-lg justify-between px-2 pt-1.5 lg:max-w-none lg:flex-col lg:gap-1 lg:px-3 lg:pt-0">
           {TABS.map((tab) => {
             const active = pathname === tab.href || pathname.startsWith(`${tab.href}/`);
             return (
@@ -49,7 +49,7 @@ export function Shell({ children, top }: { children: ReactNode; top?: ReactNode 
           })}
         </ul>
       </nav>
-      <div className="flex min-w-0 flex-1 flex-col pb-24 lg:pb-0 lg:pl-60">
+      <div className="flex min-w-0 flex-1 flex-col pb-[calc(5.75rem+var(--fox-safe-bottom))] lg:pb-0 lg:pl-60">
         {top}
         <main className="flex-1">{children}</main>
       </div>

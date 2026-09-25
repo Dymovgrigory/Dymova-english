@@ -5,6 +5,7 @@ import {
   detectMessenger,
   messengerLogin,
   requestTelegramContact,
+  syncMessengerSafeArea,
 } from "./messenger";
 
 declare const globalThis: Record<string, unknown>;
@@ -71,6 +72,42 @@ describe("detectMessenger", () => {
   it("обычный браузер — null", () => {
     globalThis.window = {};
     expect(detectMessenger()).toBeNull();
+  });
+});
+
+describe("syncMessengerSafeArea", () => {
+  it("суммирует safe + content insets в --fox-safe-*", () => {
+    const props: Record<string, string> = {};
+    globalThis.window = {
+      Telegram: {
+        WebApp: {
+          initData: "tg",
+          safeAreaInset: { top: 20, bottom: 10, left: 0, right: 0 },
+          contentSafeAreaInset: { top: 48, bottom: 0, left: 0, right: 0 },
+        },
+      },
+    };
+    globalThis.document = {
+      documentElement: {
+        style: { setProperty: (k: string, v: string) => { props[k] = v; } },
+      },
+    };
+    syncMessengerSafeArea();
+    expect(props["--fox-safe-top"]).toBe("68px");
+    expect(props["--fox-safe-bottom"]).toBe("10px");
+  });
+
+  it("без insets — минимум 56px сверху под шапку TG", () => {
+    const props: Record<string, string> = {};
+    globalThis.window = { Telegram: { WebApp: { initData: "tg" } } };
+    globalThis.document = {
+      documentElement: {
+        style: { setProperty: (k: string, v: string) => { props[k] = v; } },
+      },
+    };
+    syncMessengerSafeArea();
+    expect(props["--fox-safe-top"]).toBe("56px");
+    expect(props["--fox-safe-bottom"]).toBe("12px");
   });
 });
 

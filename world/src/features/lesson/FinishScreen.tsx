@@ -128,7 +128,7 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
           </div>
         ) : null}
       </div></main>
-      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
+      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,var(--fox-safe-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
         <div className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row-reverse">
           <Button block onClick={failed ? onRetry : onContinue} autoFocus>
             {failed ? "Пройти ещё раз" : "Продолжить"}

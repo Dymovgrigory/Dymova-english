@@ -119,7 +119,7 @@ export function Onboarding() {
 
   return (
     <div className="study flex min-h-dvh flex-col">
-      <header className="mx-auto flex w-full max-w-xl items-center gap-4 px-4 pt-5">
+      <header className="mx-auto flex w-full max-w-xl items-center gap-4 px-4 pt-[max(1.25rem,var(--fox-safe-top))]">
         <button
           type="button"
           onClick={back}
@@ -222,7 +222,7 @@ export function Onboarding() {
         {problem && <p role="alert" className="text-[16px] font-bold text-[#ffb3a6]">{problem}</p>}
       </main>
 
-      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
+      <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,var(--fox-safe-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
         <div className="mx-auto max-w-xl">
           {step === "name" && (
             <Button block disabled={!name.trim() || busy} onClick={() => void goRegistration()}>

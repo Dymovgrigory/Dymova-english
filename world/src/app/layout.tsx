@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat, Nunito, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { AppGate } from "@/features/gate/AppGate";
@@ -26,6 +26,14 @@ export const metadata: Metadata = {
   title: "Фоксинбург — тренажёр английского по Spotlight",
   description:
     "Короткие уроки по учебнику Spotlight: слова, чтение, грамматика и говорение. Замок Фоксинбурга — награда за учёбу.",
+};
+
+/** viewport-fit=cover — иначе env(safe-area-*) и inset'ы Telegram не работают на iOS. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#241a30",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -83,7 +83,7 @@ export function PathScreen() {
 
   const home = data?.home;
   const top = (
-    <header className="glass-dusk sticky top-0 z-20">
+    <header className="glass-dusk sticky top-0 z-20 pt-[var(--fox-safe-top)]">
       <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
         <div className="relative">
           <button

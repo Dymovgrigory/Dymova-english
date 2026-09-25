@@ -97,7 +97,7 @@ export function AppGate({ children }: { children: React.ReactNode }) {
 
   if (state === "auth_error") {
     return (
-      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col items-center gap-5 px-4 py-8 text-center">
+      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col items-center gap-5 px-4 pt-[max(2rem,var(--fox-safe-top))] pb-8 text-center">
         <Foxy pose="wave" size={120} />
         <h1 className="font-fairy text-[28px] font-black text-[#ffd36e]">Не удалось войти</h1>
         <p className="max-w-md text-[16px] font-semibold text-[#c9bfd8]">
@@ -117,7 +117,7 @@ export function AppGate({ children }: { children: React.ReactNode }) {
   if (state === "register") {
     const reload = () => window.location.reload();
     return (
-      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-5 px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))]">
+      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-5 px-4 pt-[max(2rem,var(--fox-safe-top))] pb-[max(2rem,var(--fox-safe-bottom))]">
         <div className="flex flex-col items-center gap-3 text-center">
           <Foxy pose="wave" size={120} />
           <h1 className="font-fairy text-[28px] font-black text-[#ffd36e]">Осталось совсем чуть-чуть!</h1>
