@@ -1,5 +1,6 @@
 """Парсер блока команды с сайта dymova-english.ru."""
 import json
+from unittest.mock import patch
 
 import httpx
 import pytest
@@ -223,3 +224,43 @@ async def test_sync_once_empty_parse_keeps_previous_snapshot(tmp_path, monkeypat
     count = await team_sync.sync_once()
     assert count == 0
     assert team_sync.get_team()[0]["name"] == "Старые Данные"
+
+
+def test_teaching_groups_matches_by_surname():
+    groups = [
+        {"id": 1, "caption": "Английский 2 класс, вт/чт 17:00"},
+        {"id": 2, "caption": "Английский 4 класс, пн/ср 18:00"},
+    ]
+    with patch("app.platform.bot_bridge.active_groups", return_value=groups), \
+         patch("app.platform.booking.group_teacher", side_effect=["Алина Саляхова", "Юлия Дмитроченко"]):
+        assert team_sync.teaching_groups("Саляхова Алина") == ["Английский 2 класс, вт/чт 17:00"]
+
+
+def test_teaching_groups_empty_for_non_teacher_name():
+    with patch("app.platform.bot_bridge.active_groups", return_value=[]):
+        assert team_sync.teaching_groups("") == []
+
+
+@pytest.mark.asyncio
+async def test_sync_once_attaches_teaching_to_teachers_only(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "TEAM_SYNC_URL", "https://dymova-english.ru")
+    monkeypatch.setattr(settings, "TEAM_SNAPSHOT_PATH", str(tmp_path / "team_snapshot.json"))
+
+    async def fake_get(self, url, **kwargs):
+        return httpx.Response(200, text=FIXTURE_HTML, request=httpx.Request("GET", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "get", fake_get)
+    with patch.object(team_sync, "teaching_groups", return_value=["Английский 2 класс"]) as mocked:
+        await team_sync.sync_once()
+        people = team_sync.get_team()
+        salyahova = next(p for p in people if p["name"] == "Саляхова Алина")
+        admin = next(p for p in people if p["name"] == "Джанузакова Салтанат")
+        assert salyahova["teaching"] == ["Английский 2 класс"]
+        assert admin["teaching"] == []
+        # Для администратора teaching_groups вообще не должен вызываться —
+        # незачем ходить в BigBen ради человека, который не ведёт группы.
+        # (В FIXTURE_HTML несколько педагогов, поэтому проверяем не общее
+        # число вызовов, а то, что среди них есть Саляхова и нет админа.)
+        called_names = [call.args[0] for call in mocked.call_args_list]
+        assert "Саляхова Алина" in called_names
+        assert "Джанузакова Салтанат" not in called_names

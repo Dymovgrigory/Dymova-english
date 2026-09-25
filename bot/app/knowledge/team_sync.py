@@ -95,6 +95,25 @@ def parse_team_html(html: str, origin: str) -> list[dict]:
     return people
 
 
+def teaching_groups(site_name: str) -> list[str]:
+    """Активные группы этого педагога. Сопоставление по фамилии: на сайте
+    имя «Фамилия Имя», group_teacher() отдаёт «Имя Фамилия» — фамилия у
+    неё последним словом."""
+    from app.platform import bot_bridge, booking
+
+    words = (site_name or "").split()
+    if not words:
+        return []
+    surname = words[0].lower()
+    out: list[str] = []
+    for group in bot_bridge.active_groups():
+        teacher = booking.group_teacher(group["id"], group.get("caption", ""))
+        teacher_words = teacher.split()
+        if teacher_words and teacher_words[-1].lower() == surname:
+            out.append(group.get("caption", ""))
+    return out
+
+
 _TEAM_CACHE: list[dict] | None = None
 
 
@@ -157,6 +176,8 @@ async def sync_once() -> int:
         logger.warning("team_sync: не удалось скачать %s: %s", url, exc)
         return 0
     people = parse_team_html(resp.text, url)
+    for person in people:
+        person["teaching"] = teaching_groups(person["name"]) if _is_teacher(person["role"]) else []
     if not people:
         logger.warning("team_sync: на странице %s не нашлось карточек команды — оставляю прежние", url)
         return 0

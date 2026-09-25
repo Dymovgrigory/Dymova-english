@@ -1432,6 +1432,9 @@
             '<p class="person__role">' + esc(person.role || "") + "</p></div>" +
             "</div>" +
             (person.about ? '<p class="person__about">' + esc(person.about) + "</p>" : "") +
+            (person.teaching && person.teaching.length
+              ? '<p class="person__teaching">Ведёт: ' + esc(person.teaching.join(", ")) + "</p>"
+              : "") +
             (video ? '<button class="ghost" data-video="' + index + '">Смотреть видео</button>' : "") +
             "</article>"
           );
