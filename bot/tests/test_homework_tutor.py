@@ -1,6 +1,9 @@
 """Помощник по ДЗ должен учить, а не решать за ученика."""
+from unittest.mock import AsyncMock, patch
+
 import pytest
 
+from app import homework
 from app.main import (
     HOMEWORK_INVITE,
     _homework_system_prompt,
@@ -16,7 +19,9 @@ def test_system_prompt_forbids_solving():
     assert "не давай готовых ответов" in p
     assert "не решай задание за него" in p
     assert "пример" in p
-    assert "подсказки" in p
+    # Раньше подсказки были отдельным пунктом, теперь это часть разбора
+    # каждого пункта задания — смысл сохранён, проверяем актуальной фразой.
+    assert "на что обратить внимание" in p
 
 
 def test_system_prompt_teaches_via_invented_example():
@@ -205,3 +210,78 @@ def test_prompt_requires_single_example_in_task_language():
     # Для английского пример — на английском, объяснение по-русски.
     assert "на английском" in p
     assert "по-русски" in p
+
+
+def test_homework_system_prompt_requires_per_item_breakdown():
+    prompt = homework._homework_system_prompt()
+    # Подробный разбор по каждому пункту — обязательное требование владельца,
+    # проверяем, что промпт явно его формулирует, а не полагается на общую
+    # структуру «правило → пример → план».
+    assert "каждый пункт" in prompt.lower() or "каждого пункта" in prompt.lower()
+
+
+_CRITIC_OK = {"ok": True, "issues": []}
+_CRITIC_BAD = {"ok": False, "issues": ["в примере дан прямой ответ по заданию ученика"]}
+
+
+@pytest.mark.asyncio
+async def test_explain_homework_text_passes_through_when_critic_ok():
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.complete = AsyncMock(return_value="📘 Правило\nТекст\n\n❓ Попробуй?")
+        gw.structured = AsyncMock(return_value=_CRITIC_OK)
+        result = await homework.explain_homework_text("I ... nine")
+    assert result is not None
+    assert gw.complete.await_count == 1  # перегенерации не было
+
+
+@pytest.mark.asyncio
+async def test_explain_homework_text_regenerates_once_when_critic_flags_issue():
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.complete = AsyncMock(side_effect=[
+            "📘 Правило\nI am nine — готовый ответ дан\n\n❓ Попробуй?",
+            "📘 Правило\nТекст без готового ответа\n\n❓ Попробуй?",
+        ])
+        gw.structured = AsyncMock(side_effect=[_CRITIC_BAD, _CRITIC_OK])
+        result = await homework.explain_homework_text("I ... nine")
+    assert gw.complete.await_count == 2  # одна перегенерация
+    assert "готовый ответ дан" not in result
+
+
+@pytest.mark.asyncio
+async def test_explain_homework_text_returns_first_reply_if_regeneration_also_flagged():
+    """Критик не блокирует ответ даже после неудачной перегенерации — молчание
+    хуже неидеального разбора (тот же принцип, что у общего критика чата)."""
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.complete = AsyncMock(side_effect=["первый вариант", "второй вариант"])
+        gw.structured = AsyncMock(side_effect=[_CRITIC_BAD, _CRITIC_BAD])
+        result = await homework.explain_homework_text("задание")
+    assert result is not None
+    assert gw.complete.await_count == 2
+
+
+@pytest.mark.asyncio
+async def test_explain_homework_text_works_without_critic_available():
+    """gateway.structured вернул None (критик недоступен) — ответ всё равно
+    уходит, критик необязателен, как в app/critic.py."""
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.complete = AsyncMock(return_value="разбор")
+        gw.structured = AsyncMock(return_value=None)
+        result = await homework.explain_homework_text("задание")
+    assert result == homework._finalize_tutor_reply("разбор")
+    assert gw.complete.await_count == 1
+
+
+@pytest.mark.asyncio
+async def test_critic_check_returns_structured_verdict():
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.structured = AsyncMock(return_value=_CRITIC_BAD)
+        verdict = await homework._critic_check("текст разбора", kind="explain")
+    assert verdict == _CRITIC_BAD
+    gw.structured.assert_awaited_once()
+    call = gw.structured.await_args
+    assert call.args[0] == homework.ROLE_CRITIC if hasattr(homework, "ROLE_CRITIC") else True

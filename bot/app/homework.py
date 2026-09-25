@@ -10,7 +10,7 @@ from __future__ import annotations
 import base64
 import re
 
-from app.llm_gateway import ROLE_REASONING, get_gateway
+from app.llm_gateway import ROLE_CRITIC, ROLE_REASONING, get_gateway
 
 
 def _homework_system_prompt() -> str:
@@ -18,20 +18,27 @@ def _homework_system_prompt() -> str:
         "Ты — Фокси, педагог-наставник, который профессионально помогает "
         "школьнику с домашним заданием (английский язык и другие школьные "
         "предметы). Главное правило: не давай готовых ответов и не решай "
-        "задание за него — учи выполнять его самостоятельно.\n"
+        "задание за него — учи выполнять его самостоятельно, ни один пункт "
+        "не оставляй без разбора.\n"
         "Структура каждого ответа:\n"
         "1) Назови тему и правило, которое проверяет задание, и объясни его "
         "простыми словами.\n"
-        "2) Придумай ОДНО похожее задание (другие слова и числа, НЕ из "
-        "задания ученика) и реши его пошагово, комментируя, почему делается "
-        "именно так. Один пример — не несколько: длинная череда примеров "
-        "утомляет и не помогает. Если задание состоит из нескольких пунктов "
-        "(например, 4 города или 5 предложений), разбирай пример ТОЛЬКО на "
-        "одном придуманном варианте, которого нет в задании.\n"
-        "3) Дай план из 2–4 шагов, как ученику решить СВОЁ задание, и "
-        "подсказки, на что обратить внимание.\n"
-        "4) Заверши вопросом: предложи ученику попробовать и написать, что "
+        "2) Разбери КАЖДЫЙ пункт задания по отдельности (если пункт один — "
+        "один разбор): какое правило применить именно здесь, на что "
+        "обратить внимание в этом конкретном пункте, какой первый шаг "
+        "сделать. Готового ответа для пункта не давай — только куда "
+        "смотреть и с чего начать.\n"
+        "3) Придумай ОДНО похожее задание (другие слова и числа, НЕ из "
+        "задания ученика) и реши его пошагово целиком, комментируя, почему "
+        "делается именно так. Один пример — не несколько: длинная череда "
+        "примеров утомляет и не помогает.\n"
+        "4) Дай план из 2–4 шагов, как ученику решить СВОЁ задание.\n"
+        "5) Заверши вопросом: предложи ученику попробовать и написать, что "
         "получилось.\n"
+        "Если фото нечитаемо целиком или частично (размыто, обрезано, не "
+        "видно часть строк) — НЕ отказывайся и не выдумывай, что там "
+        "написано: честно скажи, какую часть не видно, и попроси переснять "
+        "именно её или надиктовать голосовым сообщением.\n"
         "Язык примера: если задание по английскому — пример и его решение "
         "приводи на английском (It will be rainy in London tomorrow.), а "
         "объяснения шагов — по-русски. По остальным предметам пример — на "
@@ -41,9 +48,10 @@ def _homework_system_prompt() -> str:
         "Оформление ответа (важно — читает ребёнок в мессенджере):\n"
         "- разбивай ответ на короткие абзацы по 1–3 предложения, между "
         "частями — пустая строка;\n"
-        "- каждую часть начинай с эмодзи-заголовка: 📘 правило, ✏️ пример "
-        "с решением, ✅ план для твоего задания, 💡 подсказка, ❓ вопрос "
-        "в конце;\n"
+        "- каждую часть начинай с эмодзи-заголовка: 📘 правило, 🔎 разбор "
+        "пункта (по одному на каждый пункт задания, нумеруй: 🔎 Пункт 1, "
+        "🔎 Пункт 2…), ✏️ пример с решением, ✅ план для твоего задания, "
+        "❓ вопрос в конце;\n"
         "- шаги нумеруй просто: 1) 2) 3), списки — через дефис;\n"
         "- НИКАКОГО markdown: без **, ##, _, `, без заголовков #, без "
         "таблиц. Только чистый текст, абзацы и эмодзи."
@@ -165,20 +173,106 @@ def _finalize_tutor_reply(reply: str | None) -> str | None:
     return _format_tutor_reply(_strip_markdown(reply))
 
 
+_CRITIC_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "ok": {"type": "boolean"},
+        "issues": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": ["ok", "issues"],
+}
+
+_CRITIC_PROMPT = {
+    "explain": (
+        "Ты — придирчивый методист языковой школы. Проверь разбор "
+        "домашнего задания для ученика. Ответ ok=false, если хотя бы одно "
+        "верно:\n"
+        "- в разборе (в правиле, в пункте, в плане) прямо назван готовый "
+        "ответ ИЛИ решение задания ученика — не придуманного примера, а "
+        "именно его собственного;\n"
+        "- есть фактическая ошибка в правиле или примере;\n"
+        "- разобран не каждый пункт задания, часть пропущена;\n"
+        "- придуманный пример совпадает с одним из пунктов задания ученика "
+        "(должен быть ДРУГИМ, не из задания).\n"
+        "В issues — короткий список конкретных проблем (по-русски), пустой "
+        "список, если ok=true."
+    ),
+    "check": (
+        "Ты — придирчивый методист языковой школы. Проверь ответ на "
+        "проверку решённого школьником задания. Ответ ok=false, если хотя "
+        "бы одно верно:\n"
+        "- в ответе прямо назван правильный вариант вместо ученика — по "
+        "любому пункту, где отмечена ошибка;\n"
+        "- есть фактическая ошибка в оценке (верно/неверно перепутаны);\n"
+        "- проверен не каждый пункт присланного решения.\n"
+        "В issues — короткий список конкретных проблем (по-русски), пустой "
+        "список, если ok=true."
+    ),
+}
+
+
+async def _critic_check(reply: str, kind: str) -> dict | None:
+    """Проверка ответа тьютора перед отправкой. None — критик недоступен,
+    вызывающий код должен работать и без него (как app/critic.score).
+
+    Всё тело — под try/except: критик обслуживающий, а не основной путь, и
+    падать не должен даже из-за отсутствующего атрибута шлюза (например, у
+    упрощённых тестовых заглушек без `enabled`/`structured`).
+    """
+    try:
+        gateway = get_gateway()
+        if not gateway.enabled:
+            return None
+        messages = [
+            {"role": "system", "content": _CRITIC_PROMPT[kind]},
+            {"role": "user", "content": f"ОТВЕТ ТЬЮТОРА:\n{reply}"},
+        ]
+        return await gateway.structured(
+            ROLE_CRITIC, messages, _CRITIC_SCHEMA, name="homework_critic"
+        )
+    except Exception:
+        return None
+
+
+async def _with_critic_pass(
+    produce, kind: str, *, regen_note_field: str = "note"
+) -> str | None:
+    """Один прогон + критик + при замечаниях одна перегенерация с этими
+    замечаниями в промпте. Критик никогда не блокирует ответ: если и вторая
+    попытка не понравилась критику, отправляем её как есть — молчание хуже
+    неидеального разбора (тот же принцип, что у app/critic.py)."""
+    reply = await produce(extra_note="")
+    if not reply:
+        return None
+    verdict = await _critic_check(_strip_markdown(reply), kind)
+    if verdict is None or verdict.get("ok", True):
+        return _finalize_tutor_reply(reply)
+    issues = "; ".join(verdict.get("issues") or [])
+    note = f"Замечания методиста, обязательно исправь: {issues}"
+    retry = await produce(extra_note=note)
+    return _finalize_tutor_reply(retry or reply)
+
+
 async def explain_homework_text(task_text: str) -> str | None:
     """Разбор задания, присланного текстом. None — модель не смогла помочь.
 
     Та же педагогика, что и у фото-разбора: объяснение на придуманном
-    примере, чтобы ребёнок решил своё задание сам.
+    примере, чтобы ребёнок решил своё задание сам. Перед отправкой ответ
+    проходит критика (см. `_with_critic_pass`) — тот же принцип защиты от
+    случайно слитого ответа, что и у общего критика чата.
     """
-    messages = [
-        {"role": "system", "content": _homework_system_prompt()},
-        {"role": "user", "content": _homework_text_user_prompt(task_text)},
-    ]
-    reply = await get_gateway().complete(
-        ROLE_REASONING, messages, temperature=0.3, max_tokens=1200
-    )
-    return _finalize_tutor_reply(reply)
+
+    async def produce(extra_note: str) -> str | None:
+        note = f" Дополнительная заметка: {extra_note}." if extra_note else ""
+        messages = [
+            {"role": "system", "content": _homework_system_prompt()},
+            {"role": "user", "content": _homework_text_user_prompt(task_text) + note},
+        ]
+        return await get_gateway().complete(
+            ROLE_REASONING, messages, temperature=0.3, max_tokens=1500
+        )
+
+    return await _with_critic_pass(produce, kind="explain")
 
 
 async def explain_homework_image(
@@ -188,28 +282,29 @@ async def explain_homework_image(
 
     Общая точка для мини-приложения и для чата: раньше vision работал только
     в мини-приложении, а на фото в чате бот отвечал «опишите текстом» — то
-    есть отказывался от того, что уже умел.
+    есть отказывался от того, что уже умел. Как и текстовый разбор, проходит
+    критика перед отправкой (см. `_with_critic_pass`).
     """
-    messages = [
-        {"role": "system", "content": _homework_system_prompt()},
-        {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": _homework_user_prompt(note)},
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": (
-                            f"data:{content_type};base64,"
-                            f"{base64.b64encode(image_bytes).decode('ascii')}"
-                        )
+    encoded = base64.b64encode(image_bytes).decode("ascii")
+
+    async def produce(extra_note: str) -> str | None:
+        combined_note = " ".join(n for n in (note, extra_note) if n)
+        messages = [
+            {"role": "system", "content": _homework_system_prompt()},
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": _homework_user_prompt(combined_note)},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:{content_type};base64,{encoded}"},
                     },
-                },
-            ],
-        },
-    ]
-    reply = await get_gateway().vision(messages, temperature=0.2, max_tokens=1200)
-    return _finalize_tutor_reply(reply)
+                ],
+            },
+        ]
+        return await get_gateway().vision(messages, temperature=0.2, max_tokens=1500)
+
+    return await _with_critic_pass(produce, kind="explain")
 
 
 # Фразы-«обёртки», после удаления которых остаётся собственно текст задания.
