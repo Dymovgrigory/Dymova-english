@@ -50,6 +50,18 @@ FIXTURE_HTML = """
           <p>Поможет с расписанием и записью</p>
         </div>
       </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:url(/team-media/ivanov.webp)"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-teacher">Педагог</span>
+          <h3>Иванов Сергей</h3>
+          <p>Педагог французского языка</p>
+          <div class="fxb-btns">
+            <button class="fxb-vbtn" type="button" data-video="/team-media/ivanov.mp4">Видеовизитка</button>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </div>
@@ -77,7 +89,7 @@ ORIGIN = "https://dymova-english.ru"
 def test_parses_all_team_cards_only():
     people = team_sync.parse_team_html(FIXTURE_HTML, ORIGIN)
     assert [p["name"] for p in people] == [
-        "Саляхова Алина", "Анохин Роман", "Спорыхина Анастасия", "Джанузакова Салтанат",
+        "Саляхова Алина", "Анохин Роман", "Спорыхина Анастасия", "Джанузакова Салтанат", "Иванов Сергей",
     ]
 
 
@@ -111,9 +123,16 @@ def test_role_without_modifier_class_still_read():
 
 def test_lang_block_cards_never_leak_into_team():
     people = team_sync.parse_team_html(FIXTURE_HTML, ORIGIN)
-    # #fxb-lang не должен дать пятого человека с role="Педагог немецкого языка"
+    # #fxb-lang не должен дать шестого человека с role="Педагог немецкого языка"
     # без about/фото — это была бы карточка-мусор поверх настоящей Саляховой.
-    assert len(people) == 4
+    assert len(people) == 5
+
+
+def test_single_video_button_no_second_video():
+    ivanov = team_sync.parse_team_html(FIXTURE_HTML, ORIGIN)[4]
+    assert ivanov["name"] == "Иванов Сергей"
+    assert ivanov["video_intro"] == "https://dymova-english.ru/team-media/ivanov.mp4"
+    assert ivanov["video_lesson"] == ""
 
 
 def test_is_teacher_matches_role_variants():
