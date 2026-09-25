@@ -164,3 +164,39 @@ async def test_transcribe_null_text_field_does_not_crash(monkeypatch):
     monkeypatch.setattr(httpx.AsyncClient, "post", fake_post)
     result = await speech.transcribe(b"bytes", "a.ogg", "audio/ogg")
     assert result is None
+
+
+@pytest.mark.asyncio
+async def test_transcribe_yandex_malformed_json_response_does_not_crash(monkeypatch):
+    # OpenAI-каскад полностью провален (500), поэтому вызов реально доходит
+    # до _try_yandex; там 200 с телом не-JSON — resp.json() должен быть
+    # изолирован try/except, а не падать наружу из transcribe().
+    monkeypatch.setattr(settings, "STT_YANDEX_API_KEY", "yandex-key")
+    monkeypatch.setattr(settings, "STT_YANDEX_FOLDER_ID", "folder-1")
+
+    async def fake_post(self, url, **kwargs):
+        if "yandex" in url:
+            return httpx.Response(200, text="<html>not json</html>",
+                                  request=httpx.Request("POST", url))
+        return httpx.Response(500, json={}, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", fake_post)
+    result = await speech.transcribe(b"bytes", "a.ogg", "audio/ogg")
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_transcribe_yandex_null_result_field_does_not_crash(monkeypatch):
+    # То же самое, но {"result": null}: без фикса .get("result", "").strip()
+    # падает AttributeError на None — тоже должно дойти именно до Yandex.
+    monkeypatch.setattr(settings, "STT_YANDEX_API_KEY", "yandex-key")
+    monkeypatch.setattr(settings, "STT_YANDEX_FOLDER_ID", "folder-1")
+
+    async def fake_post(self, url, **kwargs):
+        if "yandex" in url:
+            return httpx.Response(200, json={"result": None}, request=httpx.Request("POST", url))
+        return httpx.Response(500, json={}, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", fake_post)
+    result = await speech.transcribe(b"bytes", "a.ogg", "audio/ogg")
+    assert result is None
