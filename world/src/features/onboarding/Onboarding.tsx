@@ -9,11 +9,14 @@ import { Choice } from "@/design/Choice";
 import { Foxy } from "@/design/Foxy";
 import { Icon } from "@/design/Icon";
 import { ProgressBar } from "@/design/ProgressBar";
+import { LoginFlow } from "@/features/login/LoginFlow";
+import { RecoveryFlow } from "@/features/recovery/RecoveryFlow";
 import { RegistrationFlow } from "@/features/registration/RegistrationFlow";
 import { hasPlayer, v2, verifiedPlayer } from "@/lib/v2/client";
 import type { BookSummary, Courses } from "@/lib/v2/types";
 
 type Step = "name" | "registration" | "grade" | "module" | "goal";
+type AuthPanel = "none" | "login" | "recovery";
 
 const GOALS = [
   { xp: 10, title: "Легко", note: "5 минут в день" },
@@ -41,6 +44,7 @@ export function Onboarding() {
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
   const [returning, setReturning] = useState(false);
+  const [authPanel, setAuthPanel] = useState<AuthPanel>("none");
 
   useEffect(() => {
     let alive = true;
@@ -79,6 +83,26 @@ export function Onboarding() {
 
   const firstStep = 0;
   const back = () => setStep(steps[Math.max(position - 1, firstStep)]);
+
+  if (authPanel === "recovery") {
+    return (
+      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-5 px-4 py-8">
+        <RecoveryFlow onDone={() => window.location.reload()} onCancel={() => setAuthPanel("login")} />
+      </div>
+    );
+  }
+
+  if (authPanel === "login") {
+    return (
+      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-5 px-4 py-8">
+        <LoginFlow
+          onDone={() => window.location.reload()}
+          onForgot={() => setAuthPanel("recovery")}
+          onCancel={() => setAuthPanel("none")}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="study flex min-h-dvh flex-col">
@@ -194,6 +218,15 @@ export function Onboarding() {
             <Button block disabled={busy} onClick={finish}>
               {busy ? "Открываем учебник…" : "Начать первый урок"}
             </Button>
+          )}
+          {step === "name" && !returning && (
+            <button
+              type="button"
+              onClick={() => setAuthPanel("login")}
+              className="mt-2 min-h-11 w-full px-4 text-center text-[15px] font-bold text-[#c9bfd8] underline"
+            >
+              Уже есть аккаунт? Войти
+            </button>
           )}
         </div>
       </footer>

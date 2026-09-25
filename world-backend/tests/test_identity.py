@@ -19,6 +19,7 @@ def client(tmp_path, monkeypatch):
     core.seed_quests()
     app = FastAPI()
     app.include_router(identity_api.router)
+    app.include_router(identity_api.auth_router)
     with TestClient(app) as c:
         yield c
     reset_for_tests(str(tmp_path / "world2.sqlite"))
@@ -34,7 +35,8 @@ def _body(**over):
         "class_letter": "А",
         "parent_email": "mama@example.com",
         "parent_phone": "8 (916) 123-45-67",
-        "channel": "sms",
+        "password": "secret123",
+        "channel": "email",
         "consents": [
             {"type": "pd_child", "version": "2026-09-19"},
             {"type": "privacy", "version": "2026-09-19"},
@@ -49,8 +51,8 @@ def test_start_and_verify_happy_path(client):
     assert r.status_code == 200
     data = r.json()
     assert data["status"] == "code_sent"
-    assert data["channel"] == "sms"
-    assert data["phone_masked"] == "+7 916 ***-**-67"
+    assert data["channel"] == "email"
+    assert data["email_masked"] == "m***a@example.com"
     assert data["cooldown_sec"] == 60
     code = data["dev_code"]
 
@@ -62,10 +64,14 @@ def test_start_and_verify_happy_path(client):
     assert bad.json()["attempts_left"] == 4
 
     ok = client.post("/api/v2/registration/verify", json={"code": code}, headers=HEADERS)
-    assert ok.status_code == 200 and ok.json() == {"status": "verified"}
+    assert ok.status_code == 200
+    assert ok.json()["status"] == "verified"
+    assert ok.json()["token"].startswith("wses.")
+    assert ok.json()["external_key"] == "kid-reg"
 
     st = client.get("/api/v2/registration/status", headers=HEADERS).json()
-    assert st["identity"]["phone_verified"] is True
+    assert st["identity"]["email_verified"] is True
+    assert st["identity"]["verified"] is True
     assert "parent_phone" not in st["identity"]
     assert st["identity"]["parent_phone_masked"] == "+7 916 ***-**-67"
     assert {c["type"] for c in st["consents"]} == {"pd_child", "privacy"}
@@ -75,7 +81,7 @@ def test_resend_within_cooldown_rejected(client):
     client.post("/api/v2/registration/start", json=_body(), headers=HEADERS)
     again = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS)
     assert again.status_code == 409
-    assert again.json()["detail"] == "phone_recently_sent"
+    assert again.json()["detail"] == "email_recently_sent"
 
 
 def test_missing_consent_rejected(client):
@@ -160,10 +166,10 @@ def test_start_telegram_channel_awaiting_bot(client):
         "phone_masked": "+7 916 ***-**-67",
         "cooldown_sec": 0,
     }
-    # SMS не отправлялась: верификаций нет, повторный start не бьёт rate-limit.
+    # Код на почту не отправлялся: верификаций нет, повторный start не бьёт rate-limit.
     player_id = core.get_or_create_player("kid-reg")["id"]
     cnt = get_conn().execute(
-        "SELECT COUNT(*) AS c FROM phone_verifications WHERE player_id=?",
+        "SELECT COUNT(*) AS c FROM email_verifications WHERE player_id=?",
         (player_id,),
     ).fetchone()["c"]
     assert cnt == 0
@@ -235,23 +241,84 @@ def test_confirm_bot_happy_path_and_idempotent(client, monkeypatch):
     monkeypatch.setattr("app.identity.service.bridge.fetch_bot_prefill", fake_prefill)
     r = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
     assert r.status_code == 200
-    assert r.json() == {"status": "verified"}
+    assert r.json()["status"] == "verified"
+    assert r.json()["token"].startswith("wses.")
     assert calls == [("telegram", "555000111")]
 
     st = client.get("/api/v2/registration/status", headers=HEADERS).json()
     assert st["is_registered"] is True
     assert st["identity"]["phone_verified"] is True
+    assert st["identity"]["email_verified"] is True
 
     # Повторный вызов — успех, но мост больше не дёргаем.
     again = client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
     assert again.status_code == 200
+    assert again.json()["status"] == "verified"
     assert len(calls) == 1
 
 
-def test_start_telegram_then_sms_channel_keeps_flow(client):
-    """После awaiting_bot можно переключиться на SMS — обычный флоу не сломан."""
+def test_login_after_email_registration(client):
+    r = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
+    client.post("/api/v2/registration/verify", json={"code": r["dev_code"]}, headers=HEADERS)
+
+    bad = client.post("/api/v2/auth/login",
+                      json={"email": "mama@example.com", "password": "wrong-pass"})
+    assert bad.status_code == 409
+    assert bad.json()["detail"] == "bad_credentials"
+
+    ok = client.post("/api/v2/auth/login",
+                     json={"email": "Mama@Example.com", "password": "secret123"})
+    assert ok.status_code == 200
+    body = ok.json()
+    assert body["status"] == "ok"
+    assert body["external_key"] == "kid-reg"
+    assert body["token"].startswith("wses.")
+
+
+def test_login_after_telegram_registration(client, monkeypatch):
     client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
-    r = client.post("/api/v2/registration/start", json=_body(channel="sms"), headers=HEADERS)
+    _link_telegram("kid-reg")
+    monkeypatch.setattr(
+        "app.identity.service.bridge.fetch_bot_prefill",
+        lambda p, u: {"phone": "+79161234567", "phone_confirmed": True},
+    )
+    client.post("/api/v2/registration/confirm-bot", headers=HEADERS)
+    ok = client.post("/api/v2/auth/login",
+                     json={"email": "mama@example.com", "password": "secret123"})
+    assert ok.status_code == 200
+    assert ok.json()["external_key"] == "kid-reg"
+
+
+def test_login_unverified_email(client):
+    client.post("/api/v2/registration/start", json=_body(), headers=HEADERS)
+    r = client.post("/api/v2/auth/login",
+                    json={"email": "mama@example.com", "password": "secret123"})
+    assert r.status_code == 409
+    assert r.json()["detail"] == "email_not_verified"
+
+
+def test_email_taken_blocks_second_registration(client):
+    first = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
+    client.post("/api/v2/registration/verify", json={"code": first["dev_code"]}, headers=HEADERS)
+    other = {"X-World-Player": "kid-other"}
+    again = client.post(
+        "/api/v2/registration/start",
+        json=_body(parent_phone="8 916 999-88-77", parent_email="mama@example.com"),
+        headers=other,
+    )
+    assert again.status_code == 409
+    assert again.json()["detail"] == "email_taken"
+
+
+def test_password_too_short_rejected(client):
+    assert client.post("/api/v2/registration/start",
+                       json=_body(password="short"), headers=HEADERS).status_code == 422
+
+
+def test_start_telegram_then_email_channel_keeps_flow(client):
+    """После awaiting_bot можно переключиться на email — обычный флоу не сломан."""
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    r = client.post("/api/v2/registration/start", json=_body(channel="email"), headers=HEADERS)
     assert r.status_code == 200
     assert r.json()["status"] == "code_sent"
     ok = client.post("/api/v2/registration/verify",
@@ -259,25 +326,165 @@ def test_start_telegram_then_sms_channel_keeps_flow(client):
     assert ok.status_code == 200
 
 
-def test_phone_change_resets_verification(client):
+def test_email_change_resets_verification(client):
     r = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
     client.post("/api/v2/registration/verify", json={"code": r["dev_code"]}, headers=HEADERS)
-    assert client.get("/api/v2/registration/status", headers=HEADERS).json()["identity"]["phone_verified"] is True
-    # новый телефон → верификация сброшена
+    assert client.get("/api/v2/registration/status", headers=HEADERS).json()["identity"]["email_verified"] is True
+    # новый email → верификация сброшена
     other = FastAPI()
     other.include_router(identity_api.router)
     with TestClient(other) as c2:
         # другой игрок, чтобы не сработал cooldown по player_id
-        c2.post("/api/v2/registration/start", json=_body(parent_phone="+7 900 111-22-33"),
+        c2.post("/api/v2/registration/start", json=_body(parent_email="new@example.com"),
                 headers={"X-World-Player": "kid-reg-2"})
     # тот же игрок, но снять cooldown через правку created_at
     from app.world.db import get_conn
     get_conn().execute(
-        "UPDATE phone_verifications SET created_at='2020-01-01 00:00:00' WHERE player_id=?",
+        "UPDATE email_verifications SET created_at='2020-01-01 00:00:00' WHERE player_id=?",
         (core.get_or_create_player("kid-reg")["id"],),
     )
     client.post("/api/v2/registration/start",
-                json=_body(parent_phone="+7 903 999-88-77"), headers=HEADERS)
+                json=_body(parent_email="other@example.com"), headers=HEADERS)
     st = client.get("/api/v2/registration/status", headers=HEADERS).json()
-    assert st["identity"]["phone_verified"] is False
-    assert st["identity"]["parent_phone_masked"] == "+7 903 ***-**-77"
+    assert st["identity"]["email_verified"] is False
+    assert st["identity"]["verified"] is False
+
+
+def test_legacy_phone_verified_counts_as_registered(client):
+    """Игроки, подтвердившие телефон через бота до email-эпохи, остаются зарегистрированными."""
+    from app.world.db import get_conn
+
+    client.post("/api/v2/registration/start", json=_body(channel="telegram"), headers=HEADERS)
+    player_id = core.get_or_create_player("kid-reg")["id"]
+    get_conn().execute(
+        "UPDATE player_identity SET phone_verified_at='2026-09-19 10:00:00' WHERE player_id=?",
+        (player_id,),
+    )
+    st = client.get("/api/v2/registration/status", headers=HEADERS).json()
+    assert st["is_registered"] is True
+    assert st["identity"]["verified"] is True
+    assert st["identity"]["email_verified"] is False
+
+
+# --- восстановление доступа по email (сайт) ----------------------------------
+
+
+def test_recovery_start_and_verify(client):
+    r = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
+    client.post("/api/v2/registration/verify", json={"code": r["dev_code"]}, headers=HEADERS)
+
+    from app.world.db import get_conn
+    get_conn().execute(
+        "UPDATE email_verifications SET created_at='2020-01-01 00:00:00' WHERE player_id=?",
+        (core.get_or_create_player("kid-reg")["id"],),
+    )
+
+    start = client.post("/api/v2/registration/recovery/start",
+                        json={"email": "Mama@Example.com"})
+    assert start.status_code == 200
+    data = start.json()
+    assert data["status"] == "code_sent"
+    assert data["email_masked"] == "m***a@example.com"
+    code = data["dev_code"]
+
+    bad = client.post("/api/v2/registration/recovery/verify",
+                      json={"email": "mama@example.com",
+                            "code": "000000" if code != "000000" else "111111"})
+    assert bad.status_code == 409
+    assert bad.json()["detail"] == "code_invalid"
+
+    ok = client.post("/api/v2/registration/recovery/verify",
+                     json={"email": "mama@example.com", "code": code})
+    assert ok.status_code == 200
+    body = ok.json()
+    assert body["status"] == "code_ok"
+    assert "reset_token" in body
+    assert "token" not in body
+
+    pw = client.post("/api/v2/registration/recovery/password",
+                     json={"reset_token": body["reset_token"], "password": "newpass99"})
+    assert pw.status_code == 200
+    assert pw.json()["status"] == "verified"
+    assert pw.json()["token"].startswith("wses.")
+    assert pw.json()["external_key"] == "kid-reg"
+
+    login = client.post("/api/v2/auth/login",
+                        json={"email": "mama@example.com", "password": "newpass99"})
+    assert login.status_code == 200
+
+    # токен одноразовый
+    again = client.post("/api/v2/registration/recovery/password",
+                        json={"reset_token": body["reset_token"], "password": "another99"})
+    assert again.status_code == 409
+
+
+def test_recovery_by_phone(client):
+    r = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
+    client.post("/api/v2/registration/verify", json={"code": r["dev_code"]}, headers=HEADERS)
+    from app.world.db import get_conn
+    get_conn().execute(
+        "UPDATE email_verifications SET created_at='2020-01-01 00:00:00' WHERE player_id=?",
+        (core.get_or_create_player("kid-reg")["id"],),
+    )
+
+    start = client.post("/api/v2/registration/recovery/start",
+                        json={"phone": "8 916 123-45-67"})
+    assert start.status_code == 200
+    assert start.json()["status"] == "code_sent"
+    assert start.json()["email_masked"] == "m***a@example.com"
+    code = start.json()["dev_code"]
+
+    ok = client.post("/api/v2/registration/recovery/verify",
+                     json={"phone": "+79161234567", "code": code})
+    assert ok.status_code == 200
+    assert ok.json()["status"] == "code_ok"
+    pw = client.post("/api/v2/registration/recovery/password",
+                     json={"reset_token": ok.json()["reset_token"], "password": "phonepass1"})
+    assert pw.status_code == 200
+    assert pw.json()["token"].startswith("wses.")
+    assert pw.json()["external_key"] == "kid-reg"
+
+
+def test_phone_taken_blocks_second_registration(client):
+    first = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
+    client.post("/api/v2/registration/verify", json={"code": first["dev_code"]}, headers=HEADERS)
+
+    other = {"X-World-Player": "kid-other"}
+    client.post("/api/world/players", json={"display_name": "Другой"}, headers=other)
+    again = client.post("/api/v2/registration/start",
+                        json=_body(parent_email="other@example.com"), headers=other)
+    assert again.status_code == 409
+    assert again.json()["detail"] == "phone_taken"
+
+
+def test_verify_returns_session_token(client):
+    r = client.post("/api/v2/registration/start", json=_body(), headers=HEADERS).json()
+    verified = client.post("/api/v2/registration/verify",
+                           json={"code": r["dev_code"]}, headers=HEADERS)
+    assert verified.status_code == 200
+    body = verified.json()
+    assert body["status"] == "verified"
+    assert body["token"].startswith("wses.")
+    assert body["external_key"] == "kid-reg"
+
+
+def test_recovery_unknown_email_same_response(client):
+    """Anti-enumeration: для неизвестного ящика ответ неотличим."""
+    r = client.post("/api/v2/registration/recovery/start",
+                    json={"email": "ghost@example.com"})
+    assert r.status_code == 200
+    assert r.json()["status"] == "code_sent"
+    assert r.json()["email_masked"] == "g***t@example.com"
+    assert "dev_code" not in r.json()
+    # verify без запрошенного кода
+    v = client.post("/api/v2/registration/recovery/verify",
+                    json={"email": "ghost@example.com", "code": "123456"})
+    assert v.status_code == 409
+    assert v.json()["detail"] == "no_pending_verification"
+
+
+def test_recovery_verify_without_start(client):
+    r = client.post("/api/v2/registration/recovery/verify",
+                    json={"email": "mama@example.com", "code": "123456"})
+    assert r.status_code == 409
+    assert r.json()["detail"] == "no_pending_verification"

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/design/Button";
-import { Choice } from "@/design/Choice";
 import { Foxy } from "@/design/Foxy";
 import { humanizeError } from "@/lib/api";
 import { CONSENT_LABELS, CONSENT_LINKS, LEGAL_VERSION, type ConsentType } from "@/lib/legal";
@@ -13,6 +12,7 @@ import {
   supportsTelegramContact,
   type RegistrationPrefill,
 } from "@/lib/messenger";
+import { rememberPlayerToken } from "@/lib/token";
 import {
   RegistrationError,
   registrationApi,
@@ -121,6 +121,8 @@ export function RegistrationFlow({
   const [classLetter, setClassLetter] = useState("");
   const [phoneDigits, setPhoneDigits] = useState(subscriberDigits(prefill.phone ?? ""));
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [consents, setConsents] = useState<Record<ConsentType, boolean>>({
     pd_child: false,
     privacy: false,
@@ -128,17 +130,17 @@ export function RegistrationFlow({
   });
   const [code, setCode] = useState("");
   const [phoneMasked, setPhoneMasked] = useState("");
+  const [emailMasked, setEmailMasked] = useState("");
+  const [devCode, setDevCode] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
   const [contactSent, setContactSent] = useState(false);
 
-  // Подтверждение через Telegram без SMS — только внутри Telegram WebApp.
+  // В Telegram — только контакт бота; MAX/браузер — код на email.
   const telegramContactOk = useMemo(
     () => detectMessenger()?.provider === "telegram" && supportsTelegramContact(),
     [],
   );
-  const [channel, setChannel] = useState<RegistrationChannel>(
-    telegramContactOk ? "telegram" : "sms",
-  );
+  const channel: RegistrationChannel = telegramContactOk ? "telegram" : "email";
 
   // В режиме редактирования (и на всякий случай в онбординге) предзаполняем анкету.
   useEffect(() => {
@@ -179,15 +181,16 @@ export function RegistrationFlow({
 
   const e164 = toE164(phoneDigits);
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const passwordOk = password.length >= 8 && password === password2;
 
   const profileOk =
     firstName.trim().length > 0 && lastName.trim().length > 0 && birthDate.length === 10 &&
     schoolNumber.trim().length > 0 && classGrade !== null;
-  const contactsOk = e164 !== null && emailOk;
+  const contactsOk = e164 !== null && emailOk && passwordOk;
   const consentsOk = consents.pd_child && consents.privacy;
 
   const startBody = useMemo<RegistrationStartBody | null>(() => {
-    if (!e164 || classGrade === null) return null;
+    if (!e164 || classGrade === null || !passwordOk) return null;
     return {
       first_name: firstName.trim(),
       last_name: lastName.trim(),
@@ -197,12 +200,13 @@ export function RegistrationFlow({
       ...(classLetter.trim() ? { class_letter: classLetter.trim() } : {}),
       parent_email: email.trim(),
       parent_phone: e164,
+      password,
       channel,
       consents: (Object.keys(consents) as ConsentType[])
         .filter((type) => consents[type])
         .map((type) => ({ type, version: LEGAL_VERSION })),
     };
-  }, [e164, classGrade, firstName, lastName, birthDate, schoolNumber, classLetter, email, channel, consents]);
+  }, [e164, classGrade, firstName, lastName, birthDate, schoolNumber, classLetter, email, password, passwordOk, channel, consents]);
 
   const sendCode = async () => {
     if (!startBody) return;
@@ -210,7 +214,9 @@ export function RegistrationFlow({
     setProblem(null);
     try {
       const res = await registrationApi.start(startBody);
-      setPhoneMasked(res.phone_masked);
+      setPhoneMasked(res.phone_masked ?? "");
+      setEmailMasked(res.email_masked ?? "");
+      setDevCode(res.dev_code ?? null);
       if (res.status === "awaiting_bot") {
         setContactSent(false);
         setStep("bot");
@@ -226,6 +232,18 @@ export function RegistrationFlow({
     }
   };
 
+  const botProblem = (err: unknown): string => {
+    if (err instanceof RegistrationError) {
+      if (err.message === "phone_mismatch") {
+        return "В Telegram поделились другим номером. Вернитесь к контактам и укажите тот же номер, что и в Telegram.";
+      }
+      if (err.message === "no_telegram_link") {
+        return "Откройте мир через кнопку «Мир Фоксинбурга» в нашем боте — тогда Telegram свяжется с анкетой.";
+      }
+    }
+    return humanizeError(err, "Бот пока не видит номер. Нажмите «Поделиться номером» ещё раз или проверьте позже.");
+  };
+
   // Бот на long-polling может отставать на секунды: после «поделиться номером»
   // пробуем confirm-bot несколько раз с паузой, прежде чем показать ошибку.
   const confirmViaBot = async (attempts = 3): Promise<void> => {
@@ -235,45 +253,35 @@ export function RegistrationFlow({
       let lastError: unknown = null;
       for (let i = 0; i < attempts; i += 1) {
         try {
-          await registrationApi.confirmBot();
+          const res = await registrationApi.confirmBot();
+          if (res.token) rememberPlayerToken(res.token, res.external_key);
           setStep("success");
           return;
         } catch (err) {
           lastError = err;
-          if (!(err instanceof RegistrationError && err.message === "bot_phone_unconfirmed")) break;
-          if (i < attempts - 1) await new Promise((r) => setTimeout(r, 2000));
+          const retryable =
+            err instanceof RegistrationError && err.message === "bot_phone_unconfirmed";
+          if (!retryable || i === attempts - 1) break;
+          await new Promise((r) => setTimeout(r, 2000));
         }
       }
-      if (lastError instanceof RegistrationError && lastError.message === "phone_mismatch") {
-        setProblem(
-          "В Telegram поделились другим номером. Вернитесь к контактам и укажите тот же номер, что и в Telegram.",
-        );
-      } else if (lastError instanceof RegistrationError && lastError.message === "no_telegram_link") {
-        setProblem("Откройте мир через кнопку «Мир Фоксинбурга» в нашем боте — тогда Telegram свяжется с анкетой.");
-      } else {
-        setProblem(
-          humanizeError(lastError, "Бот пока не видит номер. Нажмите «Поделиться номером» ещё раз или проверьте позже."),
-        );
-      }
+      setProblem(botProblem(lastError));
     } finally {
       setBusy(false);
     }
   };
 
   const shareContact = async () => {
-    setBusy(true);
+    // Не ставим busy до ответа Telegram: иначе при «молчущем» колбэке
+    // кнопка навсегда остаётся «Проверяем…» и disabled.
     setProblem(null);
-    try {
-      const sent = await requestTelegramContact();
-      if (!sent) {
-        setProblem("Номер не отправлен. Нажмите «Поделиться номером» и подтвердите в окне Telegram.");
-        return;
-      }
-      setContactSent(true);
-      await confirmViaBot();
-    } finally {
-      setBusy(false);
+    const sent = await requestTelegramContact();
+    if (!sent) {
+      setProblem("Номер не отправлен. Нажмите «Поделиться номером» и подтвердите в окне Telegram.");
+      return;
     }
+    setContactSent(true);
+    await confirmViaBot();
   };
 
   const verifyCode = async () => {
@@ -281,7 +289,8 @@ export function RegistrationFlow({
     setBusy(true);
     setProblem(null);
     try {
-      await registrationApi.verify(code);
+      const res = await registrationApi.verify(code);
+      if (res.token) rememberPlayerToken(res.token, res.external_key);
       setStep("success");
     } catch (err) {
       if (err instanceof RegistrationError && err.message === "code_invalid") {
@@ -352,6 +361,11 @@ export function RegistrationFlow({
           <Button block disabled={!profileOk} onClick={() => setStep("contacts")}>
             Дальше
           </Button>
+          {!profileOk && (
+            <p className="text-center text-[13px] font-semibold text-[#c9bfd8]">
+              Заполните имя, фамилию, дату рождения, школу и класс
+            </p>
+          )}
         </>
       )}
 
@@ -378,35 +392,45 @@ export function RegistrationFlow({
               onChange={(e) => setEmail(e.target.value)}
             />
           </Field>
-          <span className={labelCls}>Как подтвердить номер?</span>
-          <div className={`grid gap-3 ${telegramContactOk ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"}`}>
-            {telegramContactOk && (
-              <Choice state={channel === "telegram" ? "selected" : "idle"} onPick={() => setChannel("telegram")}>
-                <span className="flex flex-col">
-                  <span className="text-[18px] font-extrabold">Telegram</span>
-                  <span className="text-[13px] font-semibold text-ink-soft">Без SMS, одной кнопкой</span>
-                </span>
-              </Choice>
-            )}
-            <Choice state={channel === "sms" ? "selected" : "idle"} onPick={() => setChannel("sms")}>
-              <span className="flex flex-col">
-                <span className="text-[18px] font-extrabold">SMS</span>
-                <span className="text-[13px] font-semibold text-ink-soft">Код в сообщении</span>
-              </span>
-            </Choice>
-            <Choice state={channel === "call" ? "selected" : "idle"} onPick={() => setChannel("call")}>
-              <span className="flex flex-col">
-                <span className="text-[18px] font-extrabold">Позвонить</span>
-                <span className="text-[13px] font-semibold text-ink-soft">Код голосом</span>
-              </span>
-            </Choice>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="ghost" size="md" onClick={() => setStep("profile")}>
-              Назад
-            </Button>
+          <Field label="Пароль (мин. 8 символов)">
+            <input
+              type="password"
+              className={inputCls}
+              value={password}
+              autoComplete="new-password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Field>
+          <Field label="Повторите пароль">
+            <input
+              type="password"
+              className={inputCls}
+              value={password2}
+              autoComplete="new-password"
+              onChange={(e) => setPassword2(e.target.value)}
+            />
+          </Field>
+          {password.length > 0 && password2.length > 0 && password !== password2 && (
+            <p className="text-[14px] font-bold text-[#ffb3a6]">Пароли не совпадают</p>
+          )}
+          {password.length > 0 && password.length < 8 && (
+            <p className="text-[14px] font-bold text-[#ffb3a6]">Пароль — минимум 8 символов</p>
+          )}
+          {telegramContactOk ? (
+            <p className="text-[15px] font-semibold text-[#c9bfd8]">
+              Номер подтвердим через Telegram — без кода. Потом можно входить с сайта по email и паролю.
+            </p>
+          ) : (
+            <p className="text-[15px] font-semibold text-[#c9bfd8]">
+              Пришлём письмо с кодом подтверждения на email родителя.
+            </p>
+          )}
+          <div className="flex flex-col gap-3">
             <Button block disabled={!contactsOk} onClick={() => setStep("consents")}>
               Дальше
+            </Button>
+            <Button variant="ghost" size="md" block onClick={() => setStep("profile")}>
+              Назад
             </Button>
           </div>
         </>
@@ -417,12 +441,12 @@ export function RegistrationFlow({
           <ConsentRow type="pd_child" required checked={consents.pd_child} onToggle={() => setConsents((c) => ({ ...c, pd_child: !c.pd_child }))} />
           <ConsentRow type="privacy" required checked={consents.privacy} onToggle={() => setConsents((c) => ({ ...c, privacy: !c.privacy }))} />
           <ConsentRow type="marketing" required={false} checked={consents.marketing} onToggle={() => setConsents((c) => ({ ...c, marketing: !c.marketing }))} />
-          <div className="flex gap-3">
-            <Button variant="ghost" size="md" onClick={() => setStep("contacts")}>
-              Назад
-            </Button>
+          <div className="flex flex-col gap-3">
             <Button block disabled={!consentsOk || busy} onClick={sendCode}>
               {busy ? "Отправляем…" : channel === "telegram" ? "Продолжить" : "Получить код"}
+            </Button>
+            <Button variant="ghost" size="md" block onClick={() => setStep("contacts")}>
+              Назад
             </Button>
           </div>
         </>
@@ -431,13 +455,13 @@ export function RegistrationFlow({
       {step === "code" && (
         <>
           <p className="text-[16px] font-semibold text-[#c9bfd8]">
-            {channel === "call" ? "Позвоним" : "Отправили SMS"} на номер {phoneMasked || formatPhone(phoneDigits)}.{" "}
+            Отправили письмо с кодом на {emailMasked || email.trim()}.{" "}
             <button type="button" className="font-bold text-[#7fd8c9] underline" onClick={() => setStep("contacts")}>
-              Изменить номер
+              Изменить email
             </button>
           </p>
           <label className="flex flex-col gap-1.5">
-            <span className={labelCls}>Код из {channel === "call" ? "звонка" : "SMS"}</span>
+            <span className={labelCls}>Код из письма</span>
             <input
               className={`${inputCls} h-16 text-center text-[28px] tracking-[0.4em]`}
               value={code}
@@ -450,6 +474,11 @@ export function RegistrationFlow({
               onKeyDown={(e) => e.key === "Enter" && verifyCode()}
             />
           </label>
+          {devCode && (
+            <p role="note" className="rounded-2xl bg-[#fff3c4] px-4 py-3 text-center text-[15px] font-bold text-[#6b4e00]">
+              Почта пока не настроена, тестовый режим. Ваш код: {devCode}
+            </p>
+          )}
           <Button block disabled={code.length !== 6 || busy} onClick={verifyCode}>
             {busy ? "Проверяем…" : "Подтвердить"}
           </Button>
@@ -503,9 +532,9 @@ export function RegistrationFlow({
       {step === "success" && (
         <div className="mat-parchment flex flex-col items-center gap-4 rounded-3xl px-6 py-8 text-center">
           <Foxy pose="cheer" size={140} />
-          <p className="text-[20px] font-extrabold text-ink">Телефон подтверждён, анкета сохранена!</p>
+          <p className="text-[20px] font-extrabold text-ink">Контакт подтверждён, анкета сохранена!</p>
           <p className="max-w-sm text-[15px] font-semibold text-ink-soft">
-            Теперь прогресс ученика не потеряется, а родитель сможет восстановить доступ по номеру телефона.
+            Теперь прогресс ученика не потеряется, а родитель сможет восстановить доступ по электронной почте.
           </p>
           <Button block onClick={onDone}>{mode === "edit" ? "Готово" : "Продолжить"}</Button>
         </div>

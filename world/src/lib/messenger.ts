@@ -16,11 +16,13 @@ declare global {
         ready?: () => void;
         expand?: () => void;
         /** Bot API 6.9+: системный запрос «поделиться номером» — замена SMS-коду. */
-        requestContact?: (callback?: (sent: boolean) => void) => void;
+        requestContact?: (
+          callback?: (sent: boolean, response?: { responseUnsafe?: { contact?: { phone_number?: string } } }) => void,
+        ) => void;
       };
     };
     /** JS-бридж MAX mini apps. */
-    WebApp?: { initData?: string; ready?: () => void; platform?: string };
+    WebApp?: { initData?: string; ready?: () => void; expand?: () => void; platform?: string };
   }
 }
 
@@ -30,7 +32,13 @@ export function supportsTelegramContact(): boolean {
   return typeof window.Telegram?.WebApp?.requestContact === "function";
 }
 
-/** Системный запрос Telegram «поделиться номером телефона». */
+const CONTACT_TIMEOUT_MS = 90_000;
+
+/**
+ * Системный запрос Telegram «поделиться номером телефона».
+ * Таймаут: на части клиентов колбэк не вызывается при закрытии попапа —
+ * без него кнопка зависала бы в busy навсегда.
+ */
 export function requestTelegramContact(): Promise<boolean> {
   return new Promise((resolve) => {
     const request = window.Telegram?.WebApp?.requestContact;
@@ -38,8 +46,44 @@ export function requestTelegramContact(): Promise<boolean> {
       resolve(false);
       return;
     }
-    request.call(window.Telegram?.WebApp, (sent: boolean) => resolve(sent === true));
+    let done = false;
+    const finish = (sent: boolean) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      resolve(sent);
+    };
+    const timer = setTimeout(() => finish(false), CONTACT_TIMEOUT_MS);
+    try {
+      request.call(window.Telegram?.WebApp, (sent: boolean) => finish(sent === true));
+    } catch {
+      finish(false);
+    }
   });
+}
+
+/** Сообщить клиенту Telegram, что мини-приложение готово; развернуть на весь экран. */
+export function prepareMessengerUi(): void {
+  if (typeof window === "undefined") return;
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    try {
+      tg.ready?.();
+      tg.expand?.();
+    } catch {
+      /* клиент без ready/expand */
+    }
+    return;
+  }
+  const max = window.WebApp;
+  if (max) {
+    try {
+      max.ready?.();
+      max.expand?.();
+    } catch {
+      /* ignore */
+    }
+  }
 }
 
 /** Возвращает провайдера и сырую initData, если приложение открыто в мессенджере. */

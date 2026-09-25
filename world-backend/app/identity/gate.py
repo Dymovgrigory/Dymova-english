@@ -23,7 +23,8 @@ from . import service
 
 _OPEN_PREFIXES = (
     "/api/v2/admin",         # Bearer-авторизация админа, не игрока
-    "/api/v2/registration",  # анкета, согласия, коды телефона, статус
+    "/api/v2/registration",  # анкета, согласия, коды, recovery
+    "/api/v2/auth",          # login email+пароль
     "/api/world/auth",       # вход через Telegram/MAX mini apps
 )
 _OPEN_PATHS = {

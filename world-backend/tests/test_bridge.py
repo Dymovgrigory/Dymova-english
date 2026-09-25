@@ -155,7 +155,8 @@ def _register(client, token: str) -> None:
         "first_name": "Маша", "last_name": "Петрова", "birth_date": "2015-04-01",
         "school_number": "12", "class_grade": 5,
         "parent_email": "mama@example.com", "parent_phone": "+79161234567",
-        "channel": "sms",
+        "password": "secret123",
+        "channel": "email",
         "consents": [
             {"type": "pd_child", "version": "2026-09-19"},
             {"type": "privacy", "version": "2026-09-19"},

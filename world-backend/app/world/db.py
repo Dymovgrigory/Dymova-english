@@ -55,6 +55,9 @@ class _Rows:
         self.lastrowid = lastrowid
         self.rowcount = rowcount
 
+    def __iter__(self):
+        return iter(self._rows)
+
     def fetchone(self):
         return self._rows[0] if self._rows else None
 
@@ -177,6 +180,10 @@ _TABLE_EXTRAS = {
         "decor_slots": "TEXT NOT NULL DEFAULT '{}'",  # JSON {item_id: slot_id}
     },
     "atom_mastery": {"learned_at": "TEXT"},  # московский день первого взятия порога силы 2
+    "player_identity": {
+        "email_verified_at": "TEXT",  # email подтверждён кодом из письма / TG
+        "password_hash": "TEXT",      # salt_hex$pbkdf2_hex — вход в браузере
+    },
 }
 
 
@@ -458,7 +465,7 @@ CREATE TABLE IF NOT EXISTS lexicon_chests (
     PRIMARY KEY (player_id, chest_index)
 );
 
--- Регистрация: анкета ученика, согласия, верификация телефона.
+-- Регистрация: анкета ученика, согласия, верификация контакта родителя.
 CREATE TABLE IF NOT EXISTS player_identity (
     player_id       INTEGER PRIMARY KEY REFERENCES players(id),
     first_name      TEXT NOT NULL,
@@ -469,7 +476,9 @@ CREATE TABLE IF NOT EXISTS player_identity (
     class_letter    TEXT,
     parent_email    TEXT NOT NULL,
     parent_phone    TEXT NOT NULL,
-    phone_verified_at TEXT,
+    phone_verified_at TEXT,                -- телефон подтверждён через бота Telegram
+    email_verified_at TEXT,                -- email подтверждён кодом из письма / TG
+    password_hash   TEXT,                  -- salt_hex$pbkdf2_hex — вход email+пароль
     created_at      TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at      TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -486,6 +495,8 @@ CREATE TABLE IF NOT EXISTS consents (
 
 CREATE INDEX IF NOT EXISTS idx_consents_player_type ON consents (player_id, type);
 
+-- Legacy SMS-верификация (SMS Aero удалён): таблица оставлена для старых
+-- записей, новый код в неё не пишет — коды теперь email (email_verifications).
 CREATE TABLE IF NOT EXISTS phone_verifications (
     id          TEXT PRIMARY KEY,
     player_id   INTEGER NOT NULL REFERENCES players(id),
@@ -498,6 +509,22 @@ CREATE TABLE IF NOT EXISTS phone_verifications (
     provider_id TEXT,
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+-- Коды подтверждения email: регистрация и восстановление доступа на сайте.
+CREATE TABLE IF NOT EXISTS email_verifications (
+    id          TEXT PRIMARY KEY,
+    player_id   INTEGER NOT NULL REFERENCES players(id),
+    email       TEXT NOT NULL,
+    code_hash   TEXT NOT NULL,               -- sha256(salt:code), salt = id записи
+    purpose     TEXT NOT NULL DEFAULT 'registration',  -- registration|recovery
+    attempts    INTEGER NOT NULL DEFAULT 0,
+    expires_at  TEXT NOT NULL,
+    verified_at TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_email_verifications_email
+    ON email_verifications (email, purpose, created_at);
 
 -- Вход через мессенджеры (Telegram/MAX): привязка внешнего аккаунта к игроку.
 CREATE TABLE IF NOT EXISTS external_identities (

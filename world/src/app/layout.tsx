@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Nunito, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import { AppGate } from "@/features/gate/AppGate";
 import "./globals.css";
 
@@ -34,6 +35,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${montserrat.variable} ${playfair.variable} ${nunito.variable} ${nunito.className} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
+        {/* Официальный bridge Telegram Mini Apps (ready / expand / requestContact). */}
+        <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
         <AppGate>{children}</AppGate>
       </body>
     </html>

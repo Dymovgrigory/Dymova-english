@@ -1,4 +1,4 @@
-"""HTTP API регистрации: /api/v2/registration/*."""
+"""HTTP API регистрации: /api/v2/registration/* и /api/v2/auth/login."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Header, HTTPException, Request
@@ -8,9 +8,22 @@ from app.world import core
 from app.world.api import _player_key as resolve_player_key
 
 from . import service
-from .schemas import RegistrationStart, VerifyBody
+from .schemas import (
+    LoginBody,
+    RecoveryPassword,
+    RecoveryStart,
+    RecoveryVerify,
+    RegistrationStart,
+    VerifyBody,
+)
 
 router = APIRouter(prefix="/api/v2/registration", tags=["registration"])
+auth_router = APIRouter(prefix="/api/v2/auth", tags=["auth"])
+
+
+def _client_meta(request: Request) -> tuple[str | None, str | None]:
+    ip = request.client.host if request.client else None
+    return ip, request.headers.get("user-agent")
 
 
 def _guard(fn, *a, **kw):
@@ -31,10 +44,9 @@ def _guard(fn, *a, **kw):
 @router.post("/start")
 def start(body: RegistrationStart, request: Request,
           x_world_player: str | None = Header(None)):
-    key = resolve_player_key(x_world_player)
-    ip = request.client.host if request.client else None
-    return _guard(service.start_registration, key, body, ip,
-                  request.headers.get("user-agent"))
+    ip, ua = _client_meta(request)
+    return _guard(service.start_registration, resolve_player_key(x_world_player),
+                  body, ip, ua)
 
 
 @router.post("/verify")
@@ -47,6 +59,27 @@ def confirm_bot(x_world_player: str | None = Header(None)):
     return _guard(service.confirm_via_bot, resolve_player_key(x_world_player))
 
 
+@router.post("/recovery/start")
+def recovery_start(body: RecoveryStart, request: Request):
+    ip, ua = _client_meta(request)
+    return _guard(service.recovery_start, body.email, body.phone, ip, ua)
+
+
+@router.post("/recovery/verify")
+def recovery_verify(body: RecoveryVerify):
+    return _guard(service.recovery_verify, body.email, body.phone, body.code)
+
+
+@router.post("/recovery/password")
+def recovery_password(body: RecoveryPassword):
+    return _guard(service.recovery_set_password, body.reset_token, body.password)
+
+
 @router.get("/status")
 def status(x_world_player: str | None = Header(None)):
     return _guard(service.get_status, resolve_player_key(x_world_player))
+
+
+@auth_router.post("/login")
+def login(body: LoginBody):
+    return _guard(service.login, body.email, body.password)

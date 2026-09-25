@@ -13,9 +13,10 @@ const anketa = {
   school_number: "12",
   class_grade: 1,
   class_letter: "А",
-  parent_email: "e2e-parent@example.ru",
+  parent_email: `e2e-${run}-${Math.random().toString(36).slice(2, 8)}@example.ru`,
   parent_phone: phone,
-  channel: "sms",
+  password: "e2e-secret1",
+  channel: "email",
 };
 
 /**
@@ -47,10 +48,10 @@ test("API: регистрация — start → verify(dev_code) → status", as
   expect(start.status()).toBe(200);
   const sent = await start.json();
   expect(sent.status).toBe("code_sent");
-  expect(sent.phone_masked).toBeTruthy();
+  expect(sent.email_masked).toBeTruthy();
 
-  // В проде (PHONE_VERIFICATION_REQUIRED=1) dev_code не отдаётся — тогда verify пропускаем.
-  test.skip(!sent.dev_code, "dev_code отсутствует — прод-режим верификации телефона");
+  // В проде (EMAIL_VERIFICATION_REQUIRED=1) dev_code не отдаётся — тогда verify пропускаем.
+  test.skip(!sent.dev_code, "dev_code отсутствует — прод-режим верификации email");
 
   const verify = await request.post(`${API}/api/v2/registration/verify`, {
     headers,
@@ -63,7 +64,7 @@ test("API: регистрация — start → verify(dev_code) → status", as
   expect(status.ok()).toBeTruthy();
   const body = await status.json();
   expect(body.identity).toBeTruthy();
-  expect(body.identity.phone_verified).toBe(true);
+  expect(body.identity.email_verified).toBe(true);
   expect(body.identity.first_name).toBe("Ева");
 });
 

@@ -4,11 +4,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Foxy } from "@/design/Foxy";
+import { LoginFlow } from "@/features/login/LoginFlow";
+import { RecoveryFlow } from "@/features/recovery/RecoveryFlow";
 import { RegistrationFlow } from "@/features/registration/RegistrationFlow";
 import {
   buildRegistrationPrefill,
   detectMessenger,
   messengerLogin,
+  prepareMessengerUi,
   type RegistrationPrefill,
 } from "@/lib/messenger";
 import { rememberPlayerToken } from "@/lib/token";
@@ -20,6 +23,7 @@ const OPEN_PREFIXES = ["/admin", "/legal"];
 const OPEN_PATHS = new Set(["/", "/onboarding"]);
 
 type GateState = "checking" | "open" | "register";
+type AuthPanel = "register" | "login" | "recovery";
 
 /**
  * Обязательная регистрация: без завершённой анкеты мир недоступен.
@@ -32,7 +36,12 @@ export function AppGate({ children }: { children: React.ReactNode }) {
   const isOpen = OPEN_PATHS.has(pathname) || OPEN_PREFIXES.some((p) => pathname.startsWith(p));
   const [gate, setGate] = useState<{ path: string; state: GateState }>({ path: "", state: "checking" });
   const [prefill, setPrefill] = useState<RegistrationPrefill>({});
+  const [panel, setPanel] = useState<AuthPanel>("register");
   const state: GateState = gate.path === pathname ? gate.state : "checking";
+
+  useEffect(() => {
+    prepareMessengerUi();
+  }, []);
 
   useEffect(() => {
     if (isOpen) return;
@@ -44,13 +53,13 @@ export function AppGate({ children }: { children: React.ReactNode }) {
     };
     const messenger = detectMessenger();
     if (messenger) {
+      prepareMessengerUi();
       messengerLogin(messenger.provider, messenger.initData)
         .then((res) => {
           rememberPlayerToken(res.token, res.external_key);
           finish(res.is_registered, buildRegistrationPrefill(res.display_name, res.prefill));
         })
-        // сеть/конфиг не блокируют UI: бэкенд всё равно вернёт 403 на данных
-        .catch(() => finish(true));
+        .catch(() => finish(false));
       return () => {
         alive = false;
       };
@@ -64,7 +73,7 @@ export function AppGate({ children }: { children: React.ReactNode }) {
     registrationApi
       .status()
       .then((s) => finish(s.is_registered === true))
-      .catch(() => finish(true));
+      .catch(() => finish(false));
     return () => {
       alive = false;
     };
@@ -73,17 +82,43 @@ export function AppGate({ children }: { children: React.ReactNode }) {
   if (isOpen || state === "open") return <>{children}</>;
 
   if (state === "register") {
+    const reload = () => window.location.reload();
     return (
-      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-5 px-4 py-8">
+      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-5 px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))]">
         <div className="flex flex-col items-center gap-3 text-center">
           <Foxy pose="wave" size={120} />
           <h1 className="font-fairy text-[28px] font-black text-[#ffd36e]">Осталось совсем чуть-чуть!</h1>
           <p className="max-w-md text-[16px] font-semibold text-[#c9bfd8]">
             Чтобы играть в Фоксинбург и не потерять прогресс, маме или папе нужно заполнить
-            короткую анкету и подтвердить номер телефона. Это займёт пару минут.
+            короткую анкету и подтвердить контакт. Это займёт пару минут.
           </p>
         </div>
-        <RegistrationFlow mode="gate" prefill={prefill} onDone={() => setGate({ path: pathname, state: "open" })} />
+        {panel === "recovery" && (
+          <RecoveryFlow onDone={reload} onCancel={() => setPanel("login")} />
+        )}
+        {panel === "login" && (
+          <LoginFlow
+            onDone={reload}
+            onForgot={() => setPanel("recovery")}
+            onCancel={() => setPanel("register")}
+          />
+        )}
+        {panel === "register" && (
+          <>
+            <RegistrationFlow
+              mode="gate"
+              prefill={prefill}
+              onDone={() => setGate({ path: pathname, state: "open" })}
+            />
+            <button
+              type="button"
+              onClick={() => setPanel("login")}
+              className="min-h-11 px-4 text-[15px] font-bold text-[#c9bfd8] underline"
+            >
+              Уже есть аккаунт? Войти
+            </button>
+          </>
+        )}
       </div>
     );
   }

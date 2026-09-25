@@ -43,6 +43,7 @@ app.include_router(castle_api.router)
 app.include_router(castle_api.quests_router)
 app.include_router(learning_api.router)
 app.include_router(identity_api.router)
+app.include_router(identity_api.auth_router)
 app.include_router(messenger_api.router)
 app.include_router(admin_api.router)
 

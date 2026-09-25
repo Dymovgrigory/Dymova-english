@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import hashlib
-import hmac
 import os
 import secrets
 import uuid
@@ -10,27 +9,11 @@ from datetime import datetime, timedelta, timezone
 
 from fastapi import Header, HTTPException
 
+from app.identity.passwords import hash_password, verify_password
 from app.world.db import get_conn
 
 SESSION_PREFIX = "wadm."
 SESSION_HOURS = 12
-PBKDF2_ITERATIONS = 100_000
-
-
-def hash_password(password: str) -> str:
-    salt = secrets.token_bytes(16)
-    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, PBKDF2_ITERATIONS)
-    return f"{salt.hex()}${digest.hex()}"
-
-
-def verify_password(password: str, stored: str) -> bool:
-    try:
-        salt_hex, expect = stored.split("$", 1)
-        salt = bytes.fromhex(salt_hex)
-    except ValueError:
-        return False
-    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, PBKDF2_ITERATIONS)
-    return hmac.compare_digest(digest.hex(), expect)
 
 
 def _hash_token(token: str) -> str:

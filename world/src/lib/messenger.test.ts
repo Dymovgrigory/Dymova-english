@@ -1,12 +1,43 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { buildRegistrationPrefill, detectMessenger, messengerLogin } from "./messenger";
+import {
+  buildRegistrationPrefill,
+  detectMessenger,
+  messengerLogin,
+  requestTelegramContact,
+} from "./messenger";
 
 declare const globalThis: Record<string, unknown>;
 
 afterEach(() => {
   delete globalThis.window;
   vi.unstubAllGlobals();
+  vi.useRealTimers();
+});
+
+describe("requestTelegramContact", () => {
+  it("без requestContact — false", async () => {
+    globalThis.window = { Telegram: { WebApp: { initData: "x" } } };
+    await expect(requestTelegramContact()).resolves.toBe(false);
+  });
+
+  it("колбэк true — true", async () => {
+    const requestContact = vi.fn((cb?: (sent: boolean) => void) => cb?.(true));
+    globalThis.window = { Telegram: { WebApp: { initData: "x", requestContact } } };
+    await expect(requestTelegramContact()).resolves.toBe(true);
+    expect(requestContact).toHaveBeenCalled();
+  });
+
+  it("колбэк не приходит — false по таймауту (не зависаем)", async () => {
+    vi.useFakeTimers();
+    const requestContact = vi.fn(() => {
+      /* никогда не зовём callback — баг части клиентов TG */
+    });
+    globalThis.window = { Telegram: { WebApp: { initData: "x", requestContact } } };
+    const pending = requestTelegramContact();
+    await vi.advanceTimersByTimeAsync(90_000);
+    await expect(pending).resolves.toBe(false);
+  });
 });
 
 describe("detectMessenger", () => {

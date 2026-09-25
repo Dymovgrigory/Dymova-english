@@ -29,7 +29,7 @@ export function Button({ variant = "crown", size = "lg", block = false, classNam
       type="button"
       {...rest}
       className={[
-        "press inline-flex items-center justify-center gap-2 rounded-2xl font-extrabold tracking-[0.01em]",
+        "press relative z-10 inline-flex items-center justify-center gap-2 rounded-2xl font-extrabold tracking-[0.01em]",
         "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#ffd36e]/70",
         "disabled:cursor-not-allowed disabled:bg-none disabled:bg-[#4a3f58] disabled:text-[#c9bfd8]/70 disabled:shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_6px_0_#2c2437]",
         VARIANTS[variant],

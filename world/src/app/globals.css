@@ -298,17 +298,27 @@ h3 {
 
 .press {
   transition: transform 90ms ease, box-shadow 90ms ease, background-color 120ms ease;
+  /* Убирает 300ms delay и «залипание» жестов в Telegram WebView */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
-.press:active:not(:disabled) {
-  transform: translateY(4px);
-  box-shadow: 0 0 0 0 transparent !important;
+/*
+ * transform на :active в Telegram/iOS WebView сдвигает кнопку из-под пальца —
+ * touchend/click не приходит, кажется что «не нажимается».
+ * Анимацию оставляем только на устройствах с мышью.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .press:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 0 transparent !important;
+  }
 }
 
 @keyframes seal-pulse {
   0%, 100% { box-shadow: 0 6px 0 var(--color-crown-edge), 0 0 0 0 rgb(245 237 117 / 0.75); }
   50% { box-shadow: 0 6px 0 var(--color-crown-edge), 0 0 0 14px rgb(245 237 117 / 0); }
 }
-.seal-current { animation: seal-pulse 2.2s ease-in-out infinite; }
+.seal-current { animation: seal-pulse 2.2s ease-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .seal-current, .window-current, .castle-pulse { animation: none; }

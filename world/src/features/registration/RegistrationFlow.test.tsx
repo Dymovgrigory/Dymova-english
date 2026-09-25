@@ -13,7 +13,7 @@ function jsonResponse(status: number, body: unknown): FetchReply {
   return { ok: status >= 200 && status < 300, json: async () => body };
 }
 
-function queueStart(result: unknown = { status: "code_sent", channel: "sms", phone_masked: "+7 (916) ***-**-33", cooldown_sec: 60 }) {
+function queueStart(result: unknown = { status: "code_sent", channel: "email", email_masked: "m***a@example.ru", cooldown_sec: 60 }) {
   replies.push(jsonResponse(200, result));
 }
 
@@ -34,7 +34,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-/** Проходит анкету → контакты → согласия и нажимает «Получить код». */
+/** Проходит анкету → контакты (с паролем) → согласия и нажимает «Получить код». */
 async function reachConsents(phone: string, onDone: () => void = () => {}) {
   render(<RegistrationFlow mode="onboarding" onDone={onDone} />);
   await waitFor(() => expect(screen.getByPlaceholderText("Аня")).toBeInTheDocument());
@@ -48,6 +48,8 @@ async function reachConsents(phone: string, onDone: () => void = () => {}) {
 
   fireEvent.change(screen.getByPlaceholderText("+7 (___) ___-__-__"), { target: { value: phone } });
   fireEvent.change(screen.getByPlaceholderText("parent@example.ru"), { target: { value: "mama@example.ru" } });
+  fireEvent.change(screen.getByLabelText(/Пароль \(мин\. 8/), { target: { value: "secret123" } });
+  fireEvent.change(screen.getByLabelText(/Повторите пароль/), { target: { value: "secret123" } });
   fireEvent.click(screen.getByRole("button", { name: "Дальше" }));
 }
 
@@ -71,8 +73,9 @@ describe("RegistrationFlow", () => {
     const start = calls.find((c) => c.url.includes("/registration/start"));
     expect(start?.body).toMatchObject({
       parent_phone: "+79164552233",
-      channel: "sms",
+      channel: "email",
       class_grade: 3,
+      password: "secret123",
     });
     expect(start?.body?.consents).toEqual(
       expect.arrayContaining([
@@ -84,7 +87,7 @@ describe("RegistrationFlow", () => {
     fireEvent.change(screen.getByLabelText("Код подтверждения"), { target: { value: "123456" } });
     fireEvent.click(screen.getByRole("button", { name: "Подтвердить" }));
 
-    await waitFor(() => expect(screen.getByText(/Телефон подтверждён/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Контакт подтверждён/)).toBeInTheDocument());
     const verify = calls.find((c) => c.url.includes("/registration/verify"));
     expect(verify?.body).toEqual({ code: "123456" });
 
@@ -108,8 +111,8 @@ describe("RegistrationFlow", () => {
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Неверный код. Осталось попыток: 2"));
   });
 
-  it("phone_recently_sent: просит подождать минуту", async () => {
-    replies.push(jsonResponse(409, { detail: "phone_recently_sent" }));
+  it("email_recently_sent: просит подождать минуту", async () => {
+    replies.push(jsonResponse(409, { detail: "email_recently_sent" }));
     await reachConsents("9164552233");
 
     fireEvent.click(screen.getByRole("checkbox", { name: /законным представителем/ }));
@@ -134,7 +137,7 @@ describe("RegistrationFlow", () => {
       const start = calls.find((c) => c.url.includes("/registration/start"));
       expect(start?.body?.parent_phone).toBe("+79164552233");
     });
-    expect(screen.getByText(/\+7 \(916\) \*\*\*-\*\*-33/)).toBeInTheDocument();
+    expect(screen.getByText(/m\*\*\*a@example\.ru/)).toBeInTheDocument();
   });
 
   it("prefill от моста бота: анкета и телефон предзаполнены", async () => {
@@ -177,14 +180,9 @@ describe("RegistrationFlow: канал telegram (без SMS)", () => {
     });
   });
 
-  it("в Telegram предлагает канал telegram и шлёт awaiting_bot → шаг бота", async () => {
+  it("в Telegram шлёт awaiting_bot → шаг бота (без кода на email)", async () => {
     queueStart({ status: "awaiting_bot", channel: "telegram", phone_masked: "+7 (916) ***-**-33", cooldown_sec: 0 });
     await reachConsents("+7 (916) 455-22-33");
-
-    // канал по умолчанию — telegram: вернёмся на шаг контактов и проверим
-    fireEvent.click(screen.getByRole("button", { name: "Назад" }));
-    expect(screen.getByRole("button", { name: /Telegram/ })).toHaveAttribute("aria-pressed", "true");
-    fireEvent.click(screen.getByRole("button", { name: "Дальше" }));
 
     fireEvent.click(screen.getByRole("checkbox", { name: /законным представителем/ }));
     fireEvent.click(screen.getByRole("checkbox", { name: /политику конфиденциальности/ }));
@@ -195,7 +193,7 @@ describe("RegistrationFlow: канал telegram (без SMS)", () => {
     );
     const start = calls.find((c) => c.url.includes("/registration/start"));
     expect(start?.body?.channel).toBe("telegram");
-    // шаг кода не показывается
+    expect(start?.body?.password).toBe("secret123");
     expect(screen.queryByLabelText("Код подтверждения")).not.toBeInTheDocument();
   });
 
@@ -213,7 +211,7 @@ describe("RegistrationFlow: канал telegram (без SMS)", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Поделиться номером в Telegram" }));
-    await waitFor(() => expect(screen.getByText(/Телефон подтверждён/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Контакт подтверждён/)).toBeInTheDocument());
     expect(requestContact).toHaveBeenCalled();
     expect(calls.some((c) => c.url.includes("/registration/confirm-bot"))).toBe(true);
 

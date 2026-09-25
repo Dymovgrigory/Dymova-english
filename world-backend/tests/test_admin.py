@@ -42,7 +42,8 @@ def _register(client, key=HEADERS["X-World-Player"], last_name="Сидорова
     body = {
         "first_name": "Анна", "last_name": last_name, "birth_date": "2013-03-03",
         "school_number": "7", "class_grade": 6, "class_letter": "Б",
-        "parent_email": "papa@example.com", "parent_phone": phone, "channel": "sms",
+        "parent_email": "papa@example.com", "parent_phone": phone, "channel": "email",
+        "password": "secret123",
         "consents": [
             {"type": "pd_child", "version": "2026-09-19"},
             {"type": "privacy", "version": "2026-09-19"},
@@ -99,7 +100,7 @@ def test_students_list_with_and_without_identity(client):
     ghost = next(i for i in data["items"] if i["display_name"] == "Призрак")
     assert ghost["first_name"] is None and ghost["phone_verified"] is False
     anna = next(i for i in data["items"] if i["first_name"] == "Анна")
-    assert anna["phone_masked"] == "+7 916 ***-**-33"
+    assert anna["parent_phone"] == "+7 916 111-22-33"
     assert anna["class_grade"] == 6
 
 
@@ -135,6 +136,7 @@ def test_student_card_and_404(client):
     card = r.json()
     assert card["player"]["id"] == pid
     assert card["identity"]["first_name"] == "Анна"
+    assert card["identity"]["parent_phone"] == "+7 916 111-22-33"
     assert len(card["consents"]) == 2
     assert card["profile"] is None
     assert card["counters"]["inventory"] == 0
@@ -156,6 +158,7 @@ def test_patch_phone_resets_verified_and_audits(client):
                      headers=auth)
     assert r.status_code == 200
     assert r.json()["identity"]["phone_verified"] is False
+    assert r.json()["identity"]["parent_phone"] == "+7 901 222-33-44"
     assert r.json()["identity"]["parent_phone_masked"] == "+7 901 ***-**-44"
 
     feed = client.get("/api/v2/admin/audit", params={"player_id": pid}, headers=auth).json()

@@ -273,11 +273,18 @@ const ERROR_TEXTS: Record<string, string> = {
   "quest not complete": "Задание ещё не выполнено",
   nothing_to_practice: "Пока нечего тренировать — сначала пройди урок",
   phone_recently_sent: "Код уже отправлен, подождите минуту",
+  email_recently_sent: "Код уже отправлен, подождите минуту",
+  email_daily_limit: "Слишком много писем за день — попробуйте завтра",
   code_invalid: "Неверный код",
   code_expired: "Код истёк — отправьте новый",
   too_many_attempts: "Слишком много попыток",
   no_pending_verification: "Сначала запросите код",
   consent_required: "Нужны обязательные согласия",
+  phone_taken: "Этот телефон уже зарегистрирован — восстановите доступ",
+  email_taken: "Этот email уже зарегистрирован — войдите или восстановите пароль",
+  bad_credentials: "Неверный email или пароль",
+  email_not_verified: "Сначала подтвердите почту — код из письма",
+  registration_required: "Сначала завершите регистрацию",
 };
 
 export function humanizeError(err: unknown, fallback: string): string {

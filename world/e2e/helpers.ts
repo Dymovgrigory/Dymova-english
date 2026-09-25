@@ -21,7 +21,7 @@ export function authHeaders(token: string) {
 
 /**
  * Обязательная регистрация (гейт): start → verify(dev_code).
- * В прод-режиме PHONE_VERIFICATION_REQUIRED=1 dev_code не отдаётся — тест пропускается.
+ * В прод-режиме EMAIL_VERIFICATION_REQUIRED=1 dev_code не отдаётся — тест пропускается.
  */
 export async function registerPlayer(request: APIRequestContext, token: string): Promise<void> {
   const headers = authHeaders(token);
@@ -34,9 +34,10 @@ export async function registerPlayer(request: APIRequestContext, token: string):
       school_number: "12",
       class_grade: 1,
       class_letter: "А",
-      parent_email: "e2e-parent@example.ru",
+      parent_email: `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.ru`,
       parent_phone: `+7916${String(Math.floor(Math.random() * 1e7)).padStart(7, "0")}`,
-      channel: "sms",
+      password: "e2e-secret1",
+      channel: "email",
       consents: [
         { type: "pd_child", version: CONSENT_VERSION },
         { type: "privacy", version: CONSENT_VERSION },
@@ -45,7 +46,7 @@ export async function registerPlayer(request: APIRequestContext, token: string):
   });
   expect(start.status()).toBe(200);
   const sent = await start.json();
-  test.skip(!sent.dev_code, "прод-режим верификации телефона: dev_code не отдаётся");
+  test.skip(!sent.dev_code, "прод-режим верификации email: dev_code не отдаётся");
   const verify = await request.post(`${API}/api/v2/registration/verify`, {
     headers,
     data: { code: sent.dev_code },
@@ -89,7 +90,9 @@ export async function completeRegistrationUi(page: Page): Promise<void> {
   await page.getByRole("button", { name: "Дальше" }).click();
 
   await page.getByLabel("Телефон родителя").fill(phoneDigits);
-  await page.getByLabel("Email родителя").fill("e2e-parent@example.ru");
+  await page.getByLabel("Email родителя").fill(`e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.ru`);
+  await page.getByLabel(/Пароль \(мин\. 8/).fill("e2e-secret1");
+  await page.getByLabel(/Повторите пароль/).fill("e2e-secret1");
   await page.getByRole("button", { name: "Дальше" }).click();
 
   // Обязательные согласия: ПД ребёнка + политика конфиденциальности.
@@ -101,7 +104,7 @@ export async function completeRegistrationUi(page: Page): Promise<void> {
   await page.getByRole("button", { name: "Получить код" }).click();
   const sent = await sentPromise;
   const body = (await sent.json()) as { dev_code?: string };
-  test.skip(!body.dev_code, "прод-режим верификации телефона: код приходит только на реальный номер");
+  test.skip(!body.dev_code, "прод-режим верификации email: код приходит только на реальный номер");
 
   await page.getByLabel("Код подтверждения").fill(body.dev_code!);
   await page.getByRole("button", { name: "Подтвердить" }).click();
