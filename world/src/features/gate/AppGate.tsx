@@ -14,6 +14,7 @@ import {
   prepareMessengerUi,
   type RegistrationPrefill,
 } from "@/lib/messenger";
+import { worldApi } from "@/lib/api";
 import { rememberPlayerToken } from "@/lib/token";
 import { hasPlayer } from "@/lib/v2/client";
 import { registrationApi } from "@/lib/v2/registration";
@@ -22,7 +23,7 @@ import { registrationApi } from "@/lib/v2/registration";
 const OPEN_PREFIXES = ["/admin", "/legal"];
 const OPEN_PATHS = new Set(["/", "/onboarding"]);
 
-type GateState = "checking" | "open" | "register";
+type GateState = "checking" | "open" | "register" | "auth_error";
 type AuthPanel = "register" | "login" | "recovery";
 
 /**
@@ -37,6 +38,7 @@ export function AppGate({ children }: { children: React.ReactNode }) {
   const [gate, setGate] = useState<{ path: string; state: GateState }>({ path: "", state: "checking" });
   const [prefill, setPrefill] = useState<RegistrationPrefill>({});
   const [panel, setPanel] = useState<AuthPanel>("register");
+  const [authRetry, setAuthRetry] = useState(0);
   const state: GateState = gate.path === pathname ? gate.state : "checking";
 
   useEffect(() => {
@@ -51,6 +53,10 @@ export function AppGate({ children }: { children: React.ReactNode }) {
       if (nextPrefill) setPrefill(nextPrefill);
       setGate({ path: pathname, state: registered ? "open" : "register" });
     };
+    const failAuth = () => {
+      if (!alive) return;
+      setGate({ path: pathname, state: "auth_error" });
+    };
     const messenger = detectMessenger();
     if (messenger) {
       prepareMessengerUi();
@@ -59,7 +65,15 @@ export function AppGate({ children }: { children: React.ReactNode }) {
           rememberPlayerToken(res.token, res.external_key);
           finish(res.is_registered, buildRegistrationPrefill(res.display_name, res.prefill));
         })
-        .catch(() => finish(false));
+        .catch(async () => {
+          // Без wses-токена start всегда 401 на проде (WORLD_PLAYER_SECRET).
+          try {
+            await worldApi.ensurePlayer("Ученик");
+            if (alive) finish(false);
+          } catch {
+            failAuth();
+          }
+        });
       return () => {
         alive = false;
       };
@@ -77,9 +91,28 @@ export function AppGate({ children }: { children: React.ReactNode }) {
     return () => {
       alive = false;
     };
-  }, [isOpen, pathname, router]);
+  }, [isOpen, pathname, router, authRetry]);
 
   if (isOpen || state === "open") return <>{children}</>;
+
+  if (state === "auth_error") {
+    return (
+      <div className="study mx-auto flex min-h-dvh w-full max-w-xl flex-col items-center gap-5 px-4 py-8 text-center">
+        <Foxy pose="wave" size={120} />
+        <h1 className="font-fairy text-[28px] font-black text-[#ffd36e]">Не удалось войти</h1>
+        <p className="max-w-md text-[16px] font-semibold text-[#c9bfd8]">
+          Откройте мир через кнопку «Мир Фоксинбурга» в боте и попробуйте снова.
+        </p>
+        <button
+          type="button"
+          onClick={() => setAuthRetry((n) => n + 1)}
+          className="min-h-11 rounded-2xl bg-[#ffd36e] px-6 text-[16px] font-extrabold text-[#3a2410]"
+        >
+          Повторить
+        </button>
+      </div>
+    );
+  }
 
   if (state === "register") {
     const reload = () => window.location.reload();

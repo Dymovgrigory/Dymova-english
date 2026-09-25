@@ -67,7 +67,34 @@ export class RegistrationError extends ApiError {
   }
 }
 
-type ErrorBody = { detail?: string; attempts_left?: number };
+type ErrorBody = {
+  detail?: string | { type?: string; loc?: (string | number)[]; msg?: string }[];
+  attempts_left?: number;
+};
+
+/** Pydantic 422 → короткий машинный код для humanizeError. */
+function validationDetail(
+  items: { type?: string; loc?: (string | number)[]; msg?: string }[],
+): string {
+  const first = items[0];
+  if (!first) return "validation_error";
+  const field = [...(first.loc ?? [])].reverse().find((p) => typeof p === "string" && p !== "body");
+  const msg = (first.msg ?? "").toLowerCase();
+  if (field === "password" && (msg.includes("required") || first.type === "missing")) {
+    return "password_required";
+  }
+  if (field === "password" && msg.includes("short")) return "password_too_short";
+  if (field === "birth_date" && msg.includes("age")) return "age_out_of_range";
+  if ((field === "first_name" || field === "last_name") && msg.includes("letters")) {
+    return "bad_name";
+  }
+  if (field === "parent_email" || field === "email") return "bad_email";
+  if (field === "parent_phone" || field === "phone") return "bad_phone";
+  if (typeof field === "string" && (msg.includes("required") || first.type === "missing")) {
+    return `field_required:${field}`;
+  }
+  return "validation_error";
+}
 
 async function readError(res: Response): Promise<RegistrationError> {
   let detail = `${res.status}`;
@@ -75,6 +102,7 @@ async function readError(res: Response): Promise<RegistrationError> {
   try {
     const body = (await res.json()) as ErrorBody;
     if (typeof body.detail === "string") detail = body.detail;
+    else if (Array.isArray(body.detail)) detail = validationDetail(body.detail);
     if (typeof body.attempts_left === "number") attemptsLeft = body.attempts_left;
   } catch {
     /* пустое тело ответа */

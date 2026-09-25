@@ -20,12 +20,20 @@ function queueStart(result: unknown = { status: "code_sent", channel: "email", e
 beforeEach(() => {
   replies.length = 0;
   calls.length = 0;
-  // по умолчанию: status() → анкеты нет
+  // по умолчанию: status() → анкеты нет; bootstrap игрока → wses-токен
   vi.stubGlobal("fetch", async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     calls.push({ url, body: init?.body ? JSON.parse(String(init.body)) : undefined });
-    // status() всегда отвечает «анкеты нет», очередь replies — только для start/verify
     if (url.includes("/registration/status")) return jsonResponse(200, { identity: null, consents: [] });
+    if (url.includes("/api/world/players")) {
+      return jsonResponse(200, {
+        id: 1,
+        external_key: "explorer-test",
+        display_name: "Ученик",
+        token: "wses.test.token",
+      });
+    }
+    if (url.includes("/api/world/player")) return jsonResponse(200, { id: 1, external_key: "explorer-test" });
     return replies.shift() ?? jsonResponse(200, { identity: null, consents: [] });
   });
 });
@@ -123,6 +131,29 @@ describe("RegistrationFlow", () => {
       expect(screen.getByRole("alert")).toHaveTextContent("Код уже отправлен, подождите минуту"),
     );
     expect(screen.queryByLabelText("Код подтверждения")).not.toBeInTheDocument();
+  });
+
+  it("422 age_out_of_range: показывает понятную ошибку возраста", async () => {
+    replies.push(
+      jsonResponse(422, {
+        detail: [
+          {
+            type: "value_error",
+            loc: ["body", "birth_date"],
+            msg: "Value error, age must be between 3 and 17",
+          },
+        ],
+      }),
+    );
+    await reachConsents("9164552233");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /законным представителем/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /политику конфиденциальности/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Получить код" }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("alert")).toHaveTextContent("Возраст ученика должен быть от 3 до 17 лет"),
+    );
   });
 
   it("нормализация: 8916… → +7916…", async () => {

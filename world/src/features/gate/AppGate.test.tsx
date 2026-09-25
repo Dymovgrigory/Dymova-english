@@ -28,6 +28,15 @@ vi.mock("@/lib/v2/client", () => ({
   hasPlayer: () => mockHasPlayer,
 }));
 
+const mockEnsurePlayer = vi.fn();
+vi.mock("@/lib/api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/api")>();
+  return {
+    ...actual,
+    worldApi: { ensurePlayer: (...args: unknown[]) => mockEnsurePlayer(...args) },
+  };
+});
+
 vi.mock("@/lib/v2/registration", () => ({
   registrationApi: { status: () => mockStatus() },
   RegistrationError: class RegistrationError extends Error {},
@@ -45,6 +54,8 @@ beforeEach(() => {
   mockReplace.mockReset();
   mockLogin.mockReset();
   mockStatus.mockReset();
+  mockEnsurePlayer.mockReset();
+  mockEnsurePlayer.mockResolvedValue({ id: 1, token: "wses.new" });
   // RegistrationFlow при монтировании сам запрашивает статус для предзаполнения
   mockStatus.mockResolvedValue({ identity: null, consents: [], is_registered: false });
   mockRemember.mockReset();
@@ -100,6 +111,14 @@ describe("AppGate", () => {
     render(<AppGate><div>Мир открыт</div></AppGate>);
     await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/onboarding"));
     expect(screen.queryByText("Мир открыт")).not.toBeInTheDocument();
+  });
+
+  it("Telegram: login упал — создаём сессию через ensurePlayer и показываем анкету", async () => {
+    mockMessenger = { provider: "telegram", initData: "tg-data" };
+    mockLogin.mockRejectedValue(new Error("bad_init_data"));
+    render(<AppGate><div>Мир открыт</div></AppGate>);
+    await waitFor(() => expect(mockEnsurePlayer).toHaveBeenCalled());
+    await waitFor(() => expect(screen.getByText("Анкета ученика")).toBeInTheDocument());
   });
 
   it("открытые маршруты (/legal) — без проверок", async () => {

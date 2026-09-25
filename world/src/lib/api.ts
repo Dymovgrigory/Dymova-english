@@ -285,6 +285,14 @@ const ERROR_TEXTS: Record<string, string> = {
   bad_credentials: "Неверный email или пароль",
   email_not_verified: "Сначала подтвердите почту — код из письма",
   registration_required: "Сначала завершите регистрацию",
+  "signed player token required": "Сессия устарела — обновите страницу и попробуйте снова",
+  password_required: "Укажите пароль (минимум 8 символов)",
+  password_too_short: "Пароль слишком короткий — минимум 8 символов",
+  age_out_of_range: "Возраст ученика должен быть от 3 до 17 лет",
+  bad_name: "Имя и фамилия — только буквы, дефис или пробел",
+  bad_email: "Проверьте email — похоже, он написан с ошибкой",
+  bad_phone: "Проверьте телефон — нужен российский номер +7",
+  validation_error: "Проверьте анкету — какое-то поле заполнено неверно",
 };
 
 export function humanizeError(err: unknown, fallback: string): string {

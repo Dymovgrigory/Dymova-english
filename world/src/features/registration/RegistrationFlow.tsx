@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/design/Button";
 import { Foxy } from "@/design/Foxy";
-import { humanizeError } from "@/lib/api";
+import { humanizeError, worldApi } from "@/lib/api";
+import { birthDateBounds } from "@/lib/birthDateBounds";
 import { CONSENT_LABELS, CONSENT_LINKS, LEGAL_VERSION, type ConsentType } from "@/lib/legal";
 import {
   detectMessenger,
@@ -13,6 +14,7 @@ import {
   type RegistrationPrefill,
 } from "@/lib/messenger";
 import { rememberPlayerToken } from "@/lib/token";
+import { hasPlayer } from "@/lib/v2/client";
 import {
   RegistrationError,
   registrationApi,
@@ -21,6 +23,8 @@ import {
 } from "@/lib/v2/registration";
 
 import { formatPhone, subscriberDigits, toE164 } from "./phone";
+
+const BIRTH_BOUNDS = birthDateBounds();
 
 type FlowStep = "profile" | "contacts" | "consents" | "code" | "bot" | "success";
 
@@ -135,19 +139,39 @@ export function RegistrationFlow({
   const [cooldown, setCooldown] = useState(0);
   const [contactSent, setContactSent] = useState(false);
 
-  // В Telegram — только контакт бота; MAX/браузер — код на email.
-  const telegramContactOk = useMemo(
+  // requestContact появляется после загрузки telegram-web-app.js — перепроверяем коротко.
+  const [telegramContactOk, setTelegramContactOk] = useState(
     () => detectMessenger()?.provider === "telegram" && supportsTelegramContact(),
-    [],
   );
   const channel: RegistrationChannel = telegramContactOk ? "telegram" : "email";
+
+  useEffect(() => {
+    if (telegramContactOk) return;
+    if (detectMessenger()?.provider !== "telegram") return;
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries += 1;
+      if (supportsTelegramContact()) {
+        setTelegramContactOk(true);
+        clearInterval(timer);
+      } else if (tries >= 20) {
+        clearInterval(timer);
+      }
+    }, 250);
+    return () => clearInterval(timer);
+  }, [telegramContactOk]);
 
   // В режиме редактирования (и на всякий случай в онбординге) предзаполняем анкету.
   useEffect(() => {
     let alive = true;
-    registrationApi
-      .status()
-      .then((status) => {
+    (async () => {
+      try {
+        if (!hasPlayer()) {
+          await worldApi.ensurePlayer(
+            [prefill.firstName, prefill.lastName].filter(Boolean).join(" ") || "Ученик",
+          );
+        }
+        const status = await registrationApi.status();
         if (!alive || !status.identity) return;
         const id = status.identity;
         setFirstName(id.first_name);
@@ -163,15 +187,16 @@ export function RegistrationFlow({
           privacy: accepted.has("privacy"),
           marketing: accepted.has("marketing"),
         });
-      })
-      .catch(() => {
-        /* анкеты ещё нет — начинаем с пустой */
-      })
-      .finally(() => alive && setLoading(false));
+      } catch {
+        /* анкеты ещё нет / сессию создадим при отправке */
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
     return () => {
       alive = false;
     };
-  }, []);
+  }, [prefill.firstName, prefill.lastName]);
 
   useEffect(() => {
     if (step !== "code" || cooldown <= 0) return;
@@ -213,7 +238,25 @@ export function RegistrationFlow({
     setBusy(true);
     setProblem(null);
     try {
-      const res = await registrationApi.start(startBody);
+      if (!hasPlayer()) {
+        await worldApi.ensurePlayer(
+          [firstName, lastName].filter(Boolean).join(" ") || "Ученик",
+        );
+      }
+      let res;
+      try {
+        res = await registrationApi.start(startBody);
+      } catch (err) {
+        // Протухший/сырой токен после редеплоя — новая сессия и один повтор.
+        if (err instanceof RegistrationError && err.status === 401) {
+          await worldApi.ensurePlayer(
+            [firstName, lastName].filter(Boolean).join(" ") || "Ученик",
+          );
+          res = await registrationApi.start(startBody);
+        } else {
+          throw err;
+        }
+      }
       setPhoneMasked(res.phone_masked ?? "");
       setEmailMasked(res.email_masked ?? "");
       setDevCode(res.dev_code ?? null);
@@ -330,7 +373,14 @@ export function RegistrationFlow({
             </Field>
           </div>
           <Field label="Дата рождения">
-            <input type="date" className={inputCls} value={birthDate} min="2005-01-01" max="2022-12-31" onChange={(e) => setBirthDate(e.target.value)} />
+            <input
+              type="date"
+              className={inputCls}
+              value={birthDate}
+              min={BIRTH_BOUNDS.min}
+              max={BIRTH_BOUNDS.max}
+              onChange={(e) => setBirthDate(e.target.value)}
+            />
           </Field>
           <div className="grid grid-cols-2 gap-3">
             <Field label="Номер школы">

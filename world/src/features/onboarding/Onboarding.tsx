@@ -81,6 +81,19 @@ export function Onboarding() {
     }
   };
 
+  const goRegistration = async () => {
+    setBusy(true);
+    setProblem(null);
+    try {
+      if (!hasPlayer()) await v2.ensurePlayer(name.trim() || "Ученик");
+      setStep("registration");
+    } catch (err) {
+      setProblem(err instanceof Error ? err.message : "Не получилось начать. Попробуй ещё раз.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const firstStep = 0;
   const back = () => setStep(steps[Math.max(position - 1, firstStep)]);
 
@@ -144,7 +157,7 @@ export function Onboarding() {
                   value={name}
                   maxLength={24}
                   onChange={(e) => setName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("registration")}
+                  onKeyDown={(e) => e.key === "Enter" && name.trim() && !busy && void goRegistration()}
                   placeholder="Имя"
                   className="h-16 rounded-2xl bg-[#fffaf0] px-5 text-[22px] font-bold text-ink shadow-[inset_0_3px_6px_rgb(92_60_30/0.25),0_0_0_2px_#c9a86a] outline-none focus:shadow-[inset_0_3px_6px_rgb(92_60_30/0.25),0_0_0_3px_#3fae98]"
                 />
@@ -211,7 +224,11 @@ export function Onboarding() {
 
       <footer className="glass-dusk sticky bottom-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 lg:bottom-10 lg:mx-auto lg:w-full lg:max-w-xl lg:rounded-[28px] lg:pb-4">
         <div className="mx-auto max-w-xl">
-          {step === "name" && <Button block disabled={!name.trim()} onClick={() => setStep("registration")}>Дальше</Button>}
+          {step === "name" && (
+            <Button block disabled={!name.trim() || busy} onClick={() => void goRegistration()}>
+              {busy ? "Готовим…" : "Дальше"}
+            </Button>
+          )}
           {step === "grade" && <Button block disabled={!book} onClick={() => setStep("module")}>Дальше</Button>}
           {step === "module" && <Button block disabled={!moduleId} onClick={() => setStep("goal")}>Дальше</Button>}
           {step === "goal" && (
