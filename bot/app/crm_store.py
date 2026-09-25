@@ -864,6 +864,23 @@ def get_customer(customer_id: int) -> dict | None:
         " JOIN customer_tags ct ON ct.tag_id = t.id WHERE ct.customer_id = ?",
         (customer_id,),
     ))
+    # Согласия пишутся на пару (канал, внешний id) в consents.record, а не на
+    # customer_id — у клиента может быть несколько идентичностей (TG/MAX),
+    # поэтому берём последнюю запись каждого типа по ВСЕМ его идентичностям.
+    latest_by_type: dict[str, dict] = {}
+    for ident in customer["identities"]:
+        for row in conn.execute(
+            "SELECT type, accepted, legal_version, channel, default_checked, created_at"
+            " FROM consents WHERE platform = ? AND user_id = ? ORDER BY id",
+            (ident["channel"], ident["external_id"]),
+        ):
+            item = dict(row)
+            item["accepted"] = bool(item["accepted"])
+            item["default_checked"] = bool(item["default_checked"])
+            prev = latest_by_type.get(item["type"])
+            if prev is None or item["created_at"] >= prev["created_at"]:
+                latest_by_type[item["type"]] = item
+    customer["consents"] = list(latest_by_type.values())
     customer["counts"] = {
         "messages": conn.execute(
             "SELECT COUNT(*) c FROM crm_messages WHERE customer_id = ?", (customer_id,)

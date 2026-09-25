@@ -742,6 +742,8 @@ function schoolSectionHtml(d) {
   return html + `</div>`;
 }
 
+const CONSENT_NAMES = { pd_child: "ПД ребёнка", privacy: "Политика конф.", marketing: "Рассылки" };
+
 function customerCardHtml(c, notes, tasks, crm360) {
   const channels = (c.identities || []).map((i) =>
     `${channelPill(i.channel)} <span class="muted">${esc(i.external_id)}</span>`).join("<br>");
@@ -781,6 +783,14 @@ function customerCardHtml(c, notes, tasks, crm360) {
         <dt>Имя</dt><dd><input data-field="child_name" value="${esc(c.child_name)}" /></dd>
         <dt>Возраст</dt><dd><input data-field="child_age" value="${esc(c.child_age)}" /></dd>
       </dl>
+    </div>
+    <div class="c360__section">
+      <h4>Согласия</h4>
+      ${(c.consents || []).length ? `<dl class="kv">${c.consents.map((k) => `
+        <dt>${esc(CONSENT_NAMES[k.type] || k.type)}</dt>
+        <dd>${k.accepted ? "✅ да" : "— нет"}${k.default_checked ? " <span class=\"muted\">(галочка стояла по умолчанию)</span>" : ""}
+          <div class="muted">${esc(fmtTime(k.created_at))} · версия ${esc(k.legal_version)}</div></dd>`).join("")}</dl>`
+        : `<span class="muted">Анкета с согласиями ещё не заполнена</span>`}
     </div>
     <div class="c360__section">
       <h4>Статус</h4>

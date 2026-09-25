@@ -91,3 +91,15 @@ async def test_handle_start_fresh_client_gets_default_greeting():
     reply = await handle_start(uid)
     assert "возвращением" not in reply.lower()
     assert "Фокси" in reply
+
+
+def test_customer_card_shows_consents():
+    from app import consents, crm_store
+    crm_store.reset()
+    cid = crm_store.upsert_customer_for_identity("telegram", "tg:9", name="Анна")
+    consents.record("telegram", "tg:9", {"pd_child": True, "privacy": True, "marketing": True}, channel="miniapp")
+    card = crm_store.get_customer(cid)
+    kinds = {c["type"]: c for c in card["consents"]}
+    assert kinds["pd_child"]["accepted"] is True
+    assert kinds["marketing"]["default_checked"] is True
+    crm_store.reset()
