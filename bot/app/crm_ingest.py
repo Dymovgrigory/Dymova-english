@@ -33,8 +33,12 @@ def ingest_inbound(
     last_name: str = "",
     username: str = "",
     phone: str = "",
+    payload: dict | None = None,
 ) -> dict | None:
     """Входящее сообщение: событие, клиент, диалог, сообщение.
+
+    payload — произвольные данные сообщения (например, путь к фото ДЗ),
+    прокидывается в crm_store.add_message как есть.
 
     Возвращает контекст для ingest_outbound или None (дубликат события или
     сбой записи — в обоих случаях исходящее логировать не привязываясь).
@@ -60,7 +64,7 @@ def ingest_inbound(
         conversation_id = crm_store.get_or_create_conversation(customer_id, channel, external_user_id)
         message_id, _ = crm_store.add_message(
             conversation_id, customer_id, channel, "in", "customer", text,
-            external_message_id=external_message_id,
+            external_message_id=external_message_id, payload=payload,
         )
         return {
             "event_id": event_id,

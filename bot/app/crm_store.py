@@ -246,6 +246,25 @@ CREATE TABLE IF NOT EXISTS consents (
 );
 CREATE INDEX IF NOT EXISTS idx_consents_user ON consents(platform, user_id, type, id);
 
+CREATE TABLE IF NOT EXISTS homework_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    platform TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    customer_id INTEGER REFERENCES customers(id),
+    conversation_id INTEGER REFERENCES crm_conversations(id),
+    channel TEXT NOT NULL DEFAULT '',
+    mode TEXT NOT NULL DEFAULT 'explain',
+    input_type TEXT NOT NULL DEFAULT 'text',
+    image_path TEXT NOT NULL DEFAULT '',
+    audio_transcript TEXT NOT NULL DEFAULT '',
+    task_text TEXT NOT NULL DEFAULT '',
+    reply TEXT NOT NULL DEFAULT '',
+    critic_notes TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_homework_requests_created ON homework_requests(created_at);
+CREATE INDEX IF NOT EXISTS idx_homework_requests_mode ON homework_requests(mode, created_at);
+
 CREATE TABLE IF NOT EXISTS crm_meta (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL DEFAULT ''
@@ -2258,6 +2277,67 @@ REQUEST_STATUSES = ("new", "in_progress", "contacted", "waiting", "resolved", "c
 _REQUEST_CLOSED = ("resolved", "cancelled")
 # Поля, которые менеджер может менять через update_callback_request.
 _REQUEST_EDITABLE = ("status", "manager", "notes", "priority")
+
+
+# --------- Обращения за помощью с ДЗ ---------
+
+
+def record_homework_request(
+    *, platform: str, user_id: str, conversation_id: int | None, channel: str,
+    mode: str, input_type: str, customer_id: int | None = None, image_path: str = "",
+    audio_transcript: str = "", task_text: str = "", reply: str = "",
+    critic_notes: str = "",
+) -> int:
+    """Пишет обращение за помощью с ДЗ в отдельную таблицу (для админки —
+    отдельный список заявок, в отличие от общей переписки crm_messages)."""
+    conn = get_conn()
+    now = _now()
+    with _tx(conn):
+        cur = conn.execute(
+            "INSERT INTO homework_requests (platform, user_id, customer_id, conversation_id,"
+            " channel, mode, input_type, image_path, audio_transcript, task_text, reply,"
+            " critic_notes, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (platform, user_id, customer_id, conversation_id, channel, mode, input_type,
+             image_path, audio_transcript, task_text[:4000], reply[:8000],
+             critic_notes[:2000], now),
+        )
+        return int(cur.lastrowid)
+
+
+_HOMEWORK_SELECT = (
+    "SELECT h.*, c.name AS customer_name, c.phone AS customer_phone"
+    " FROM homework_requests h LEFT JOIN customers c ON c.id = h.customer_id"
+)
+
+
+def get_homework_request(request_id: int) -> dict | None:
+    row = get_conn().execute(
+        _HOMEWORK_SELECT + " WHERE h.id = ?", (request_id,)
+    ).fetchone()
+    return dict(row) if row else None
+
+
+def list_homework_requests(
+    mode: str | None = None, date_from: str | None = None, date_to: str | None = None,
+    limit: int = 50, offset: int = 0,
+) -> list[dict]:
+    sql = _HOMEWORK_SELECT
+    where: list[str] = []
+    params: list = []
+    if mode:
+        where.append("h.mode = ?")
+        params.append(mode)
+    if date_from:
+        where.append("h.created_at >= ?")
+        params.append(date_from)
+    if date_to:
+        where.append("h.created_at <= ?")
+        params.append(date_to)
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY h.id DESC LIMIT ? OFFSET ?"
+    params.extend([max(1, min(int(limit), 200)), max(0, int(offset))])
+    return _rows(get_conn().execute(sql, params))
 
 
 def create_callback_request(

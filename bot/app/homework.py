@@ -9,8 +9,22 @@ from __future__ import annotations
 
 import base64
 import re
+import uuid
+from pathlib import Path
 
 from app.llm_gateway import ROLE_CRITIC, ROLE_REASONING, get_gateway
+
+HOMEWORK_IMAGE_DIR = "data/homework"
+
+
+def save_homework_image(image_bytes: bytes, ext: str = "jpg") -> str:
+    """Сохраняет фото задания на диск. Возвращает относительный путь вида
+    "homework/<uuid>.<ext>" — так же, как ссылки на другие данные в /app/data."""
+    directory = Path(HOMEWORK_IMAGE_DIR)
+    directory.mkdir(parents=True, exist_ok=True)
+    filename = f"{uuid.uuid4().hex}.{ext}"
+    (directory / filename).write_bytes(image_bytes)
+    return f"homework/{filename}"
 
 
 def _homework_system_prompt() -> str:
