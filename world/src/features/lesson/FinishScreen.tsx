@@ -48,7 +48,7 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
   const failed = (result.kind === "module_test" && !result.passed) || (result.kind === "trial" && !result.trial_passed);
   return (
     <div className="study flex min-h-dvh flex-col">
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center gap-6 px-4 pb-8 pt-10 text-center"><div className="mat-parchment flex w-full flex-col items-center gap-6 rounded-[28px] px-5 pb-6 pt-4">
+      <main className="fox-pad-top mx-auto flex w-full max-w-xl flex-1 flex-col items-center gap-6 px-4 pb-8 text-center"><div className="mat-parchment flex w-full flex-col items-center gap-6 rounded-[28px] px-5 pb-6 pt-4">
         <motion.div
           initial={reduce ? false : { scale: 0.6, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
