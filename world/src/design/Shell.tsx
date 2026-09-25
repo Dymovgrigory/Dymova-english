@@ -17,6 +17,10 @@ const TABS: { href: string; label: string; icon: IconName }[] = [
 /** Каркас разделов: нижнее меню на телефоне, левая колонка на широком экране. */
 export function Shell({ children, top }: { children: ReactNode; top?: ReactNode }) {
   const pathname = usePathname();
+  // Если есть свой sticky-top (Путь) — отступ на шапке; иначе опускаем весь контент.
+  const contentTop = top
+    ? "flex min-w-0 flex-1 flex-col pb-[calc(5.75rem+var(--fox-safe-bottom))] lg:pb-0 lg:pl-60"
+    : "flex min-w-0 flex-1 flex-col pt-[var(--fox-safe-top)] pb-[calc(5.75rem+var(--fox-safe-bottom))] lg:pt-0 lg:pb-0 lg:pl-60";
   return (
     <div className="study flex min-h-dvh">
       <nav
@@ -49,7 +53,7 @@ export function Shell({ children, top }: { children: ReactNode; top?: ReactNode 
           })}
         </ul>
       </nav>
-      <div className="flex min-w-0 flex-1 flex-col pb-[calc(5.75rem+var(--fox-safe-bottom))] lg:pb-0 lg:pl-60">
+      <div className={contentTop}>
         {top}
         <main className="flex-1">{children}</main>
       </div>

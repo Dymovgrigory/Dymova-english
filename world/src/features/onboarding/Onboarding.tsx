@@ -119,7 +119,7 @@ export function Onboarding() {
 
   return (
     <div className="study flex min-h-dvh flex-col">
-      <header className="mx-auto flex w-full max-w-xl items-center gap-4 px-4 pt-[max(1.25rem,var(--fox-safe-top))]">
+      <header className="mx-auto flex w-full max-w-xl items-center gap-4 px-4 pt-[var(--fox-safe-top)]">
         <button
           type="button"
           onClick={back}

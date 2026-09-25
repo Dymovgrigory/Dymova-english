@@ -76,7 +76,7 @@ describe("detectMessenger", () => {
 });
 
 describe("syncMessengerSafeArea", () => {
-  it("суммирует safe + content insets в --fox-safe-*", () => {
+  it("суммирует insets и добавляет воздух, не ниже пола 128px", () => {
     const props: Record<string, string> = {};
     globalThis.window = {
       Telegram: {
@@ -93,11 +93,32 @@ describe("syncMessengerSafeArea", () => {
       },
     };
     syncMessengerSafeArea();
-    expect(props["--fox-safe-top"]).toBe("68px");
+    // 20+48+40 = 108 → пол 128
+    expect(props["--fox-safe-top"]).toBe("128px");
     expect(props["--fox-safe-bottom"]).toBe("10px");
   });
 
-  it("без insets — минимум 56px сверху под шапку TG", () => {
+  it("большие insets — top + 40 воздуха", () => {
+    const props: Record<string, string> = {};
+    globalThis.window = {
+      Telegram: {
+        WebApp: {
+          initData: "tg",
+          safeAreaInset: { top: 59, bottom: 34, left: 0, right: 0 },
+          contentSafeAreaInset: { top: 56, bottom: 0, left: 0, right: 0 },
+        },
+      },
+    };
+    globalThis.document = {
+      documentElement: {
+        style: { setProperty: (k: string, v: string) => { props[k] = v; } },
+      },
+    };
+    syncMessengerSafeArea();
+    expect(props["--fox-safe-top"]).toBe("155px"); // 59+56+40
+  });
+
+  it("без insets — пол 128px сверху", () => {
     const props: Record<string, string> = {};
     globalThis.window = { Telegram: { WebApp: { initData: "tg" } } };
     globalThis.document = {
@@ -106,7 +127,7 @@ describe("syncMessengerSafeArea", () => {
       },
     };
     syncMessengerSafeArea();
-    expect(props["--fox-safe-top"]).toBe("56px");
+    expect(props["--fox-safe-top"]).toBe("128px");
     expect(props["--fox-safe-bottom"]).toBe("12px");
   });
 });

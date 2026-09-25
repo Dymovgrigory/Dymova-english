@@ -103,7 +103,7 @@ export function FittingRoom({
         emblem={emblem}
         onOpen={() => undefined}
       />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-4">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 px-4 pb-2 pt-[var(--fox-safe-top)]">
         <p className="rounded-full bg-[#1a1230]/70 px-4 py-2 text-[14px] font-extrabold text-[#f6efe2]">
           Примерка: выбор виден сразу, покупка — на месте
         </p>

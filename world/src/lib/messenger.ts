@@ -70,7 +70,8 @@ export function requestTelegramContact(): Promise<boolean> {
 
 /**
  * Пишет CSS-переменные --fox-safe-* из inset'ов Telegram.
- * Без API — минимум под шапку TG (~56px), иначе крестик и заголовки уезжают под системную полосу.
+ * Сверху всегда большой запас: шапка TG + статус-бар + воздух, чтобы
+ * заголовки и кнопки не прятались под системную полосу.
  */
 export function syncMessengerSafeArea(): void {
   if (typeof window === "undefined" || typeof document === "undefined") return;
@@ -85,8 +86,10 @@ export function syncMessengerSafeArea(): void {
   const left = Math.max(0, Number(safe.left) || 0) + Math.max(0, Number(content.left) || 0);
   const right = Math.max(0, Number(safe.right) || 0) + Math.max(0, Number(content.right) || 0);
 
-  // Пока клиент не отдал insets (старые клиенты / до события) — запас под шапку TG.
-  const topPx = top > 0 ? top : 56;
+  // Пол: ~статус + шапка TG; +воздух поверх измеренных inset'ов.
+  const TOP_FLOOR = 128;
+  const TOP_EXTRA = 40;
+  const topPx = Math.max(top + TOP_EXTRA, TOP_FLOOR);
   const bottomPx = bottom > 0 ? bottom : 12;
 
   root.style.setProperty("--fox-safe-top", `${topPx}px`);
