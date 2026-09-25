@@ -1011,6 +1011,25 @@
       .finally(startChatPolling);
   }
 
+  /** Миниатюра фото ДЗ из истории отдаётся только по подписанному initData
+   *  (см. /api/miniapp/homework/image/{filename}) — обычный <img src> не
+   *  умеет послать заголовок, поэтому грузим её запросом и подставляем
+   *  локальный blob-URL. Свежепойманное фото из pickHomeworkPhoto — уже
+   *  blob:-URL с устройства, ему авторизованный запрос не нужен. */
+  function fetchImageBlobUrl(url) {
+    var headers = {};
+    if (initData()) {
+      headers["X-Miniapp-Init-Data"] = initData();
+      headers["X-Miniapp-Platform"] = PLATFORM;
+    }
+    return fetch(url, { headers: headers }).then(function (response) {
+      if (!response.ok) throw new Error("image " + response.status);
+      return response.blob();
+    }).then(function (blob) {
+      return URL.createObjectURL(blob);
+    });
+  }
+
   function addMessage(role, text, imageUrl) {
     var log = $("#chat-log");
     var bubble = document.createElement("div");
@@ -1018,9 +1037,15 @@
     if (imageUrl) {
       var img = document.createElement("img");
       img.className = "bubble__thumb";
-      img.src = imageUrl;
       img.alt = "";
       img.loading = "lazy";
+      if (imageUrl.indexOf("/api/miniapp/homework/image/") === 0) {
+        fetchImageBlobUrl(imageUrl)
+          .then(function (blobUrl) { img.src = blobUrl; })
+          .catch(function () { img.remove(); });
+      } else {
+        img.src = imageUrl;
+      }
       bubble.appendChild(img);
     }
     if (text) {
@@ -1033,9 +1058,15 @@
     return bubble;
   }
 
+  // Общий замок на кнопки помощи с ДЗ (фото и голос): без него двойной тап
+  // во время отправки/распознавания шлёт запрос дважды. Отдельный от
+  // state.chatBusy — тот занят обычным текстовым чатом, а не этими кнопками.
+  var homeworkBusy = false;
+
   /** Разбор/проверка задания по фото — та же ручка, что раньше открывалась
    *  отдельным листом; теперь фото сразу уходит из чата. */
   function submitHomeworkFile(file, note, checkMode) {
+    homeworkBusy = true;
     var typing = addMessage("bot", "…");
     typing.classList.add("bubble--typing");
     var form = new FormData();
@@ -1050,14 +1081,22 @@
           return;
         }
         addMessage("bot", data.explanation || data.error || "Не удалось разобрать задание.");
+        // Ответ уже показан локально — сервер записал его же в CRM, поэтому
+        // просто двигаем курсор поллинга, чтобы через несколько секунд он
+        // не приехал вторым пузырём (та же схема, что у sendChat).
+        pollChatMessages(true);
       })
       .catch(function () {
         typing.remove();
         addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+      })
+      .finally(function () {
+        homeworkBusy = false;
       });
   }
 
   function pickHomeworkPhoto(checkMode) {
+    if (homeworkBusy) return;
     var input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
@@ -1072,10 +1111,27 @@
 
   var mediaRecorder = null;
   var mediaChunks = [];
+  var mediaStopTimer = null;
 
   /** Голосовое сообщение с заданием: запись в браузере, распознавание и
-   *  разбор — на сервере (см. /api/miniapp/homework/voice). */
+   *  разбор — на сервере (см. /api/miniapp/homework/voice).
+   *
+   *  Кнопка — переключатель, а не «запустить и забыть»: первый тап
+   *  начинает запись и меняет подпись кнопки на «Остановить», второй тап
+   *  (пока идёт запись) сразу останавливает её и отправляет — раньше
+   *  единственным способом остановить запись был 5-минутный таймер, и всё
+   *  это время микрофон оставался включён без какой-либо подсказки в
+   *  интерфейсе. */
   function startVoiceHomework() {
+    var button = $("#chat-voice-btn");
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      // Повторный тап во время записи — команда «стоп», а не новая запись
+      // поверх старой (иначе старый поток микрофона утекает, а буфер
+      // стирается на середине записи предыдущего голосового).
+      mediaRecorder.stop();
+      return;
+    }
+    if (homeworkBusy) return;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       addMessage("bot", "Голосовые здесь не поддерживаются — напишите задание текстом.");
       return;
@@ -1083,23 +1139,46 @@
     navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
       mediaChunks = [];
       mediaRecorder = new MediaRecorder(stream);
+      if (button) {
+        button.textContent = "Остановить";
+        button.classList.add("is-recording");
+      }
       mediaRecorder.addEventListener("dataavailable", function (e) {
         if (e.data && e.data.size) mediaChunks.push(e.data);
       });
       mediaRecorder.addEventListener("stop", function () {
+        clearTimeout(mediaStopTimer);
+        mediaStopTimer = null;
         stream.getTracks().forEach(function (t) { t.stop(); });
-        var blob = new Blob(mediaChunks, { type: "audio/webm" });
+        if (button) {
+          button.textContent = "Голосом";
+          button.classList.remove("is-recording");
+        }
+        // Реальный согласованный браузером формат берём с самого рекордера:
+        // на iOS в WKWebView (Telegram и MAX) это audio/mp4, а не webm, и
+        // сервер распознавания не разбирает запись с неверным контейнером.
+        var mimeType = mediaRecorder.mimeType || "audio/webm";
+        var chunks = mediaChunks;
+        mediaRecorder = null;
+        if (!chunks.length) return; // отменили запись, ничего не сказав
+        var blob = new Blob(chunks, { type: mimeType });
+        if (!blob.size) return; // пустая запись — не тратим STT впустую
+        var ext = mimeType.indexOf("mp4") >= 0 ? "m4a" : "webm";
+        homeworkBusy = true;
         addMessage("me", "Голосовое сообщение");
         var typing = addMessage("bot", "…");
         typing.classList.add("bubble--typing");
         var form = new FormData();
-        form.append("audio", blob, "voice.webm");
+        form.append("audio", blob, "voice." + ext);
         request("/api/miniapp/homework/voice", { method: "POST", body: form, timeout: 90000 })
           .then(function (data) {
             typing.remove();
             if (data.ok) {
               addMessage("bot", "Услышал: «" + data.transcript + "»");
               addMessage("bot", data.explanation);
+              // Как и в submitHomeworkFile: ответ сервер уже записал в CRM,
+              // локально он уже показан — двигаем только курсор поллинга.
+              pollChatMessages(true);
             } else {
               addMessage("bot", data.error || "Не расслышала запись.");
             }
@@ -1107,11 +1186,14 @@
           .catch(function () {
             typing.remove();
             addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+          })
+          .finally(function () {
+            homeworkBusy = false;
           });
       });
       mediaRecorder.start();
       haptic("light");
-      setTimeout(function () {
+      mediaStopTimer = setTimeout(function () {
         if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
       }, 5 * 60 * 1000); // лимит 5 минут — тот же, что у голосовых в чате бота
     }).catch(function () {

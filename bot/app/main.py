@@ -642,11 +642,30 @@ async def api_homework(
     if not image_bytes:
         return JSONResponse({"detail": "Пустой файл"}, status_code=400)
 
-    explanation = await explain_homework_image(image_bytes, content_type, note)
+    explanation = await homework.explain_homework_image(image_bytes, content_type, note)
     if not explanation:
         explanation = (
             "Не удалось разобрать фото задания. Попробуйте снять его при "
             "хорошем свете — или опишите текстом, что нужно сделать."
+        )
+
+    # Заявка должна попадать в CRM и в отдельный журнал ДЗ так же, как это
+    # уже делают /homework/check и /homework/voice — иначе самый частый путь
+    # («разбери задание» по фото) не виден ни в переписке, ни в админке.
+    if identity is not None:
+        image_path = homework.save_homework_image(image_bytes, ext="jpg")
+        crm_ctx = crm_ingest.ingest_inbound(
+            identity.platform, identity.user_id, f"[фото задания] {note}".strip(),
+            external_event_id=f"miniapp-hw-explain:{uuid.uuid4().hex}",
+            payload={"image_path": image_path},
+        )
+        crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL)
+        crm_store.record_homework_request(
+            platform=identity.platform, user_id=identity.user_id,
+            customer_id=crm_ctx.get("customer_id") if crm_ctx else None,
+            conversation_id=crm_ctx.get("conversation_id") if crm_ctx else None,
+            channel=identity.platform, mode="explain", input_type="image",
+            image_path=image_path, task_text=note, reply=explanation,
         )
 
     return {
@@ -691,11 +710,21 @@ async def miniapp_chat_history(request: Request, limit: int = 50) -> dict:
 @app.get("/api/miniapp/homework/image/{filename}")
 async def miniapp_homework_image(request: Request, filename: str) -> FileResponse:
     """Миниатюры фото задания в истории чата. Только по подписанному
-    initData — на фото могут быть личные данные ребёнка."""
+    initData — на фото могут быть личные данные ребёнка.
+
+    Подписанной личности мало: она доказывает, что это какой-то
+    зарегистрированный человек, а не то, что фото — его. Без проверки
+    владения (по заявке в homework_requests) один ученик мог бы открыть
+    фото домашки чужого ребёнка, зная только имя файла."""
     identity = _identity_from_request(request)
     if identity is None:
         return JSONResponse({"detail": "unauthorized"}, status_code=401)
     safe_name = Path(filename).name  # без произвольных путей вроде "../.."
+    owner = crm_store.find_homework_request_by_image(f"homework/{safe_name}")
+    # "Не найдено" и "чужое" отвечаем одинаково: подтверждать существование
+    # файла человеку, которому он не принадлежит, не нужно.
+    if owner is None or owner.get("platform") != identity.platform or owner.get("user_id") != identity.user_id:
+        return JSONResponse({"detail": "not found"}, status_code=404)
     path = Path(HOMEWORK_IMAGE_DIR) / safe_name
     if not path.exists():
         return JSONResponse({"detail": "not found"}, status_code=404)
@@ -761,6 +790,8 @@ async def api_homework_voice(
     audio_bytes = await audio.read(MAX_HOMEWORK_AUDIO_BYTES + 1)
     if len(audio_bytes) > MAX_HOMEWORK_AUDIO_BYTES:
         return JSONResponse({"detail": "Запись слишком большая — до 20 МБ"}, status_code=413)
+    if not audio_bytes:
+        return JSONResponse({"detail": "Пустая запись"}, status_code=400)
     text = await speech.transcribe(audio_bytes, audio.filename or "voice.webm",
                                    (audio.content_type or "audio/webm"))
     if not text:

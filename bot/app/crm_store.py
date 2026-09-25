@@ -2317,6 +2317,16 @@ def get_homework_request(request_id: int) -> dict | None:
     return dict(row) if row else None
 
 
+def find_homework_request_by_image(image_path: str) -> dict | None:
+    """Заявка на ДЗ по пути фото — для проверки владения перед отдачей
+    миниатюры в мини-приложении (см. /api/miniapp/homework/image/{filename})."""
+    row = get_conn().execute(
+        "SELECT * FROM homework_requests WHERE image_path = ? ORDER BY id DESC LIMIT 1",
+        (image_path,),
+    ).fetchone()
+    return dict(row) if row else None
+
+
 def list_homework_requests(
     mode: str | None = None, date_from: str | None = None, date_to: str | None = None,
     limit: int = 50, offset: int = 0,

@@ -988,6 +988,20 @@ body {
   text-align: center;
 }
 
+/* Идёт запись голосового: кнопка меняет вид и подпись ("Остановить"),
+   иначе ребёнок не понимает, что микрофон уже слушает. */
+.chat-actions .chip.is-recording {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(140deg, var(--rose), var(--amber-deep));
+  animation: recording-pulse 1.4s var(--ease) infinite;
+}
+
+@keyframes recording-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 139, .35); }
+  50%      { box-shadow: 0 0 0 6px rgba(255, 107, 139, 0); }
+}
+
 .composer input {
   flex: 1;
   padding: 13px 16px;
