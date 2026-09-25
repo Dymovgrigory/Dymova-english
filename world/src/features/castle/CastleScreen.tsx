@@ -191,7 +191,7 @@ function RoomPanel({
         <div className="absolute inset-0 bg-gradient-to-b from-[#241a30]/70 via-transparent via-30% to-[#241a30]/55" />
       </div>
 
-      <header className="relative z-10 flex items-start justify-between gap-3 px-4 pb-2 pt-[var(--fox-safe-top)]">
+      <header className="fox-pad-top relative z-10 flex items-start justify-between gap-3 px-4 pb-2">
         <div>
           <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-[#7fd8c9]">Замок Фоксинбург</p>
           <h2 className="font-fairy text-[32px] font-black leading-tight text-[#ffd36e]">{spot.title}</h2>
@@ -666,8 +666,8 @@ export function CastleScreen() {
       ) : null}
 
       {/* Интерфейс поверх сцены; пустая середина пропускает клики к зданиям */}
-      <div className="pointer-events-none relative z-10 flex h-[calc(100dvh-6rem-var(--fox-safe-bottom))] flex-col lg:h-dvh">
-        <header className="pointer-events-auto flex shrink-0 flex-wrap items-start justify-between gap-3 px-4 pt-3 lg:px-8 lg:pt-4">
+      <div className="pointer-events-none relative z-10 flex h-[calc(100dvh-6rem-var(--fox-safe-bottom)-var(--fox-safe-top))] flex-col lg:h-dvh">
+        <header className="pointer-events-auto flex shrink-0 flex-wrap items-start justify-between gap-3 px-4 pt-2 lg:px-8 lg:pt-3">
           <div className="max-w-xl">
             <h1 className="font-fairy text-[28px] font-black leading-tight text-[#ffd36e] drop-shadow-[0_2px_10px_rgb(0_0_0/0.6)] lg:text-[40px]">
               Замок Фоксинбург

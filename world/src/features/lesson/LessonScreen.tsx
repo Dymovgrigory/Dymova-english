@@ -292,7 +292,7 @@ export function LessonScreen({ nodeId }: { nodeId: string }) {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgb(21_15_31/0.25)_0%,rgb(21_15_31/0.8)_75%)]" />
         </div>
       )}
-      <header className="relative z-10 mx-auto flex w-full max-w-2xl items-center gap-4 px-4 pt-[var(--fox-safe-top)]">
+      <header className="fox-pad-top relative z-10 mx-auto flex w-full max-w-2xl items-center gap-4 px-4">
         <button
           type="button"
           aria-label="Выйти из урока"

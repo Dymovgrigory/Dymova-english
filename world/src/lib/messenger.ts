@@ -70,14 +70,16 @@ export function requestTelegramContact(): Promise<boolean> {
 
 /**
  * Пишет CSS-переменные --fox-safe-* из inset'ов Telegram.
- * Сверху всегда большой запас: шапка TG + статус-бар + воздух, чтобы
- * заголовки и кнопки не прятались под системную полосу.
+ * Класс html.fox-messenger + пол ~200px: иначе на широком WebView lg:pt-0
+ * обнулял отступ, и шапка TG перекрывала кнопки/заголовки.
  */
 export function syncMessengerSafeArea(): void {
   if (typeof window === "undefined" || typeof document === "undefined") return;
   const root = document.documentElement;
   const tg = window.Telegram?.WebApp;
-  if (!tg?.initData) return;
+  if (!tg) return;
+
+  root.classList.add("fox-messenger");
 
   const safe = tg.safeAreaInset ?? {};
   const content = tg.contentSafeAreaInset ?? {};
@@ -86,11 +88,10 @@ export function syncMessengerSafeArea(): void {
   const left = Math.max(0, Number(safe.left) || 0) + Math.max(0, Number(content.left) || 0);
   const right = Math.max(0, Number(safe.right) || 0) + Math.max(0, Number(content.right) || 0);
 
-  // Пол: ~статус + шапка TG; +воздух поверх измеренных inset'ов.
-  const TOP_FLOOR = 128;
-  const TOP_EXTRA = 40;
+  const TOP_FLOOR = 200;
+  const TOP_EXTRA = 56;
   const topPx = Math.max(top + TOP_EXTRA, TOP_FLOOR);
-  const bottomPx = bottom > 0 ? bottom : 12;
+  const bottomPx = Math.max(bottom, 16);
 
   root.style.setProperty("--fox-safe-top", `${topPx}px`);
   root.style.setProperty("--fox-safe-bottom", `${bottomPx}px`);
@@ -118,9 +119,10 @@ export function prepareMessengerUi(): void {
     } catch {
       /* старый клиент без onEvent */
     }
-    // Insets часто появляются через тик после expand.
+    // Insets и initData часто появляются после expand / загрузки bridge.
     window.setTimeout(resync, 50);
     window.setTimeout(resync, 300);
+    window.setTimeout(resync, 1000);
     return;
   }
   const max = window.WebApp;

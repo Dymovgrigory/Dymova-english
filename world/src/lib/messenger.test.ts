@@ -76,8 +76,9 @@ describe("detectMessenger", () => {
 });
 
 describe("syncMessengerSafeArea", () => {
-  it("суммирует insets и добавляет воздух, не ниже пола 128px", () => {
+  it("ставит класс fox-messenger и пол не ниже 200px", () => {
     const props: Record<string, string> = {};
+    const classes = new Set<string>();
     globalThis.window = {
       Telegram: {
         WebApp: {
@@ -89,16 +90,18 @@ describe("syncMessengerSafeArea", () => {
     };
     globalThis.document = {
       documentElement: {
+        classList: { add: (c: string) => classes.add(c) },
         style: { setProperty: (k: string, v: string) => { props[k] = v; } },
       },
     };
     syncMessengerSafeArea();
-    // 20+48+40 = 108 → пол 128
-    expect(props["--fox-safe-top"]).toBe("128px");
-    expect(props["--fox-safe-bottom"]).toBe("10px");
+    expect(classes.has("fox-messenger")).toBe(true);
+    // 20+48+56 = 124 → пол 200
+    expect(props["--fox-safe-top"]).toBe("200px");
+    expect(props["--fox-safe-bottom"]).toBe("16px");
   });
 
-  it("большие insets — top + 40 воздуха", () => {
+  it("большие insets — top + 56 воздуха", () => {
     const props: Record<string, string> = {};
     globalThis.window = {
       Telegram: {
@@ -111,24 +114,27 @@ describe("syncMessengerSafeArea", () => {
     };
     globalThis.document = {
       documentElement: {
+        classList: { add: () => undefined },
         style: { setProperty: (k: string, v: string) => { props[k] = v; } },
       },
     };
     syncMessengerSafeArea();
-    expect(props["--fox-safe-top"]).toBe("155px"); // 59+56+40
+    expect(props["--fox-safe-top"]).toBe("200px"); // 59+56+56=171 → пол 200
+    expect(props["--fox-safe-bottom"]).toBe("34px");
   });
 
-  it("без insets — пол 128px сверху", () => {
+  it("без insets — пол 200px; достаточно наличия WebApp", () => {
     const props: Record<string, string> = {};
-    globalThis.window = { Telegram: { WebApp: { initData: "tg" } } };
+    globalThis.window = { Telegram: { WebApp: {} } };
     globalThis.document = {
       documentElement: {
+        classList: { add: () => undefined },
         style: { setProperty: (k: string, v: string) => { props[k] = v; } },
       },
     };
     syncMessengerSafeArea();
-    expect(props["--fox-safe-top"]).toBe("128px");
-    expect(props["--fox-safe-bottom"]).toBe("12px");
+    expect(props["--fox-safe-top"]).toBe("200px");
+    expect(props["--fox-safe-bottom"]).toBe("16px");
   });
 });
 

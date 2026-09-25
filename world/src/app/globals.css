@@ -43,6 +43,24 @@
   --fox-safe-right: env(safe-area-inset-right, 0px);
 }
 
+/*
+ * Telegram Mini App: WebView часто шире 1024px → Tailwind lg:pt-0 съедал весь верхний отступ.
+ * Класс вешает prepareMessengerUi; !important бьёт lg: и любые короткие pt-*.
+ */
+html.fox-messenger {
+  --fox-safe-top: 200px;
+  --fox-safe-bottom: 16px;
+}
+
+html.fox-messenger .fox-pad-top {
+  padding-top: max(12.5rem, var(--fox-safe-top)) !important;
+}
+
+/* Вне Telegram класс не активен — лёгкий запас только из env/safe-area. */
+.fox-pad-top {
+  padding-top: max(0.75rem, var(--fox-safe-top, 0px));
+}
+
 html,
 body {
   background: var(--world-purple-dark);
