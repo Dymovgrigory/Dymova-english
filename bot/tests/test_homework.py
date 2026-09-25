@@ -6,6 +6,11 @@ from app import llm_gateway
 
 
 class FakeVisionLLM:
+    # Критик домашки (app/homework._critic_check) читает gateway.enabled,
+    # которое читает get_llm().enabled — без атрибута заглушка падала бы
+    # AttributeError вместо штатного «критик недоступен».
+    enabled = True
+
     def __init__(self, reply: str | None = ""):
         self.reply = reply
         self.calls = []

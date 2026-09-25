@@ -133,6 +133,11 @@ async def test_explain_homework_text_uses_gateway(monkeypatch):
     calls = []
 
     class FakeGateway:
+        # _critic_check читает gateway.enabled до вызова structured —
+        # без атрибута заглушка падала бы AttributeError вместо штатного
+        # «критик недоступен» (structured тут нет вовсе, критик не нужен).
+        enabled = False
+
         async def complete(self, role, messages, *, temperature=None, max_tokens=None, vault=None):
             calls.append((role, messages, temperature, max_tokens))
             return "Правило: глагол to be..."
@@ -194,13 +199,42 @@ def test_trim_emoji_removes_variation_selector():
 def test_format_tutor_reply_splits_sections():
     from app.homework import _format_tutor_reply
 
-    raw = "📘 Правило Текст правила. ✏️ Похожий пример Давай рассмотрим. ✅ План для твоего задания 1) шаг 💡 Подсказка Обрати внимание. ❓ Что получилось?"
+    raw = "📘 Правило Текст правила. ✏️ Похожий пример Давай рассмотрим. ✅ План для твоего задания 1) шаг ❓ Что получилось?"
     out = _format_tutor_reply(raw)
     assert "\n\n✏️" in out
     assert "\n\n✅" in out
-    assert "\n\n💡" in out
     assert "📘 Правило\nТекст правила." in out
-    assert "💡 Подсказка\nОбрати внимание." in out
+
+
+def test_format_tutor_reply_splits_multiple_per_item_sections():
+    """🔎 Пункт N повторяется на каждый пункт задания — регэксп обязан
+    расставлять переносы перед каждым вхождением по отдельности, а не только
+    перед первым (номер в заголовке переменный, это не буквальная строка)."""
+    from app.homework import _format_tutor_reply
+
+    raw = (
+        "📘 Правило Текст правила. 🔎 Пункт 1 Смотри на число. "
+        "🔎 Пункт 2 Смотри на лицо глагола. ✏️ Похожий пример Давай "
+        "рассмотрим. ✅ План для твоего задания 1) шаг ❓ Что получилось?"
+    )
+    out = _format_tutor_reply(raw)
+    assert "\n\n🔎 Пункт 1" in out
+    assert "\n\n🔎 Пункт 2" in out
+    assert "🔎 Пункт 1\nСмотри на число." in out
+    assert "🔎 Пункт 2\nСмотри на лицо глагола." in out
+    assert "\n\n✏️" in out
+
+
+def test_format_template_demonstrates_per_item_breakdown_and_drops_hint():
+    """_FORMAT_TEMPLATE — образец, на который модель ориентируется сильнее
+    прозы, обязан показывать структуру из системного промпта: блок 🔎 Пункт N
+    (минимум дважды, чтобы паттерн «один блок на пункт» был однозначен), и не
+    должен противоречиво показывать 💡 Подсказка — этого маркера больше нет
+    в списке заголовков системного промпта."""
+    from app.homework import _FORMAT_TEMPLATE
+
+    assert _FORMAT_TEMPLATE.count("🔎 Пункт") >= 2
+    assert "💡" not in _FORMAT_TEMPLATE
 
 
 def test_prompt_requires_single_example_in_task_language():
@@ -246,6 +280,8 @@ async def test_explain_homework_text_regenerates_once_when_critic_flags_issue():
         gw.structured = AsyncMock(side_effect=[_CRITIC_BAD, _CRITIC_OK])
         result = await homework.explain_homework_text("I ... nine")
     assert gw.complete.await_count == 2  # одна перегенерация
+    # Критик проверяет только первый вариант — перегенерацию не перепроверяет.
+    assert gw.structured.await_count == 1
     assert "готовый ответ дан" not in result
 
 
@@ -260,6 +296,9 @@ async def test_explain_homework_text_returns_first_reply_if_regeneration_also_fl
         result = await homework.explain_homework_text("задание")
     assert result is not None
     assert gw.complete.await_count == 2
+    # Критик не запускается повторно на перегенерации — «одна попытка»
+    # означает ровно один вызов критика на весь _with_critic_pass.
+    assert gw.structured.await_count == 1
 
 
 @pytest.mark.asyncio
