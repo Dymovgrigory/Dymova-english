@@ -948,10 +948,18 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             confirmed = contact.get("user_id") is not None and contact.get("user_id") == from_id
             reply = identify.handle_contact(conv, str(contact["phone_number"]), confirmed=confirmed)
             if not identify.needs_gate(conv) and not registration.is_registered(conv):
-                reply = f"{reply}\n\n{registration.start_registration(conv)}"
+                # Шаринг контакта может прийти, пока человек ещё заполняет
+                # анкету в мини-приложении (Telegram шлёт requestContact
+                # независимо от формы) — не подсовываем старый опрос
+                # вопрос-за-вопросом там, где анкета уже есть в виде формы.
+                if registration.uses_form(TELEGRAM_PLATFORM):
+                    reply = f"{reply}\n\n{registration.FORM_INVITE}"
+                else:
+                    reply = f"{reply}\n\n{registration.start_registration(conv)}"
             conv.add("assistant", reply)
             get_store().save(conv)
-            await _send_tg_logged(telegram, chat_id, reply, crm_ctx)
+            await _send_tg_logged(telegram, chat_id, reply, crm_ctx,
+                                  buttons=_telegram_buttons("", reply) or None)
             return
 
         # Подпись к остальным вложениям лежит в caption, не в text.
@@ -1552,9 +1560,11 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             get_store().save(conv)
             await _send_max_logged(max_client, user_id, identify.ASK_PHONE_TEXT_MAX, crm_ctx)
         elif user_id and payload in _CALLBACK_TEXT:
-            reply = await handle_message(user_id, _CALLBACK_TEXT[payload])
+            text = _CALLBACK_TEXT[payload]
+            reply = await handle_message(user_id, text)
             if reply:  # пустой ответ — AI на паузе/у менеджера, молчим
-                await _send_max_logged(max_client, user_id, reply, crm_ctx)
+                await _send_max_logged(max_client, user_id, reply, crm_ctx,
+                                       buttons=_link_button_rows(text, reply) or None)
         return
 
 

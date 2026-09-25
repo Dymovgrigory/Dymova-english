@@ -582,8 +582,13 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
             reply = identify.gate_reply(conv)
         if not identify.needs_gate(conv) and not registration.is_registered(conv):
             # Идентификация завершилась новым лидом — сразу открываем анкету
-            # (шаг «телефон» она пропустит: номер уже известен).
-            reply = f"{reply}\n\n{registration.start_registration(conv)}"
+            # (шаг «телефон» она пропустит: номер уже известен). Там, где
+            # анкета — форма в мини-приложении, шлём приглашение на неё, а
+            # не старый пошаговый опрос вопрос-за-вопросом в чате.
+            if registration.uses_form(platform):
+                reply = f"{reply}\n\n{registration.FORM_INVITE}"
+            else:
+                reply = f"{reply}\n\n{registration.start_registration(conv)}"
         conv.add("assistant", reply)
         store.save(conv)
         convlog.log_turn(user_id, text, reply, "", conv.stage, "identify_gate")
