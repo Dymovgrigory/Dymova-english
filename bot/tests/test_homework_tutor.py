@@ -324,3 +324,37 @@ async def test_critic_check_returns_structured_verdict():
     gw.structured.assert_awaited_once()
     call = gw.structured.await_args
     assert call.args[0] == homework.ROLE_CRITIC if hasattr(homework, "ROLE_CRITIC") else True
+
+
+def test_check_homework_system_prompt_forbids_giving_correct_answer():
+    prompt = homework._check_homework_system_prompt()
+    assert "не называй" in prompt.lower() or "не давай правильный" in prompt.lower()
+
+
+@pytest.mark.asyncio
+async def test_check_homework_image_returns_finalized_reply():
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.vision = AsyncMock(return_value="🔎 Пункт 1\nВерно!\n\n🔎 Пункт 2\nПосмотри на подлежащее — оно во множественном числе.")
+        gw.structured = AsyncMock(return_value={"ok": True, "issues": []})
+        result = await homework.check_homework_image(b"fake-image-bytes", "image/jpeg")
+    assert result is not None
+    assert "Пункт 1" in result
+    gw.vision.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_check_homework_image_regenerates_when_critic_flags_leaked_answer():
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.vision = AsyncMock(side_effect=[
+            "Правильный вариант — are, ты написал is",
+            "Посмотри на подлежащее — множественное число, какой глагол ему нужен?",
+        ])
+        gw.structured = AsyncMock(side_effect=[
+            {"ok": False, "issues": ["назван правильный ответ вместо ученика"]},
+            {"ok": True, "issues": []},
+        ])
+        result = await homework.check_homework_image(b"bytes", "image/jpeg")
+    assert gw.vision.await_count == 2
+    assert "are" not in result or "Правильный вариант" not in result
