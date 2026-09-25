@@ -154,13 +154,17 @@ def _minutes_since(iso_ts: str | None) -> float | None:
 
 
 def check_schedule_freshness(max_age_min: int | None = None) -> bool:
-    """True — данные о группах и уроках свежие. Отсутствие данных вовсе
-    (last_synced_at=None) тоже считается несвежим: значит синхронизация
-    ещё ни разу не прошла успешно."""
+    """True — группы и уроки синхронизировались успешно недавно.
+
+    Смотрим на sync_runs (факт успешного прогона), а не на synced_at строк
+    в bb_groups/bb_lessons: инкрементальная синхронизация запрашивает
+    updated_since и честно ничего не трогает, если в BigBen ничего не
+    изменилось (например ночью) — тогда synced_at месяцами не двигается
+    у совершенно здоровой синхронизации, и старая версия этой проверки
+    поднимала ложную тревогу примерно раз в час даже когда всё работает."""
     limit = max_age_min if max_age_min is not None else max(15, settings.BIGBEN_SYNC_INTERVAL_MIN) * 4
-    fresh = bb_store.freshness()
     for kind in ("groups", "lessons"):
-        age = _minutes_since(fresh.get(kind, {}).get("last_synced_at"))
+        age = _minutes_since(_last_success(kind))
         if age is None or age > limit:
             return False
     return True
