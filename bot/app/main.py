@@ -14,6 +14,7 @@ import hashlib
 import hmac
 import json
 import logging
+import re
 import time
 import uuid
 from urllib.parse import urlsplit
@@ -49,6 +50,7 @@ from app import registration_form
 from app import runtime
 from app import sales
 from app import scheduler
+from app import speech
 from app import watchdog
 from app.homework import (
     HOMEWORK_INVITE,
@@ -56,8 +58,10 @@ from app.homework import (
     _homework_task_text,
     _homework_text_user_prompt,
     _strip_markdown,
+    check_homework_image,
     explain_homework_image,
     explain_homework_text,
+    save_homework_image,
 )
 from app.knowledge import team_sync
 from app.knowledge.kb import get_kb
@@ -595,6 +599,17 @@ async def miniapp_manager_call(request: Request) -> dict:
 # вполне: UploadFile.read() без лимита читает всё тело в память.
 MAX_HOMEWORK_IMAGE_BYTES = 8 * 1024 * 1024
 
+# Голосовое до 5 минут — примерно 20 МБ в ogg/opus с запасом.
+MAX_HOMEWORK_AUDIO_BYTES = 20 * 1024 * 1024
+
+_CHECK_STEM_RE = re.compile(r"\bпровер", re.IGNORECASE)
+
+
+def _looks_like_check_request(text: str) -> bool:
+    """«Проверь», «проверка», «провери» — просьба проверить решение, а не
+    объяснить задание заново."""
+    return bool(_CHECK_STEM_RE.search(text or ""))
+
 
 @app.post("/api/miniapp/homework")
 async def api_homework(
@@ -930,9 +945,21 @@ async def _process_telegram_update(update: dict, telegram) -> None:
         if message.get("photo"):
             caption = str(message.get("caption") or "").strip()
             caption_intent = I.detect_intent(caption) if caption else I.HOMEWORK
-            if caption_intent in (I.QUESTION, I.HOMEWORK):
-                await _handle_telegram_photo(message, chat_id, telegram)
+            # «Проверь» в подписи — явная просьба проверить решение. Пустая
+            # подпись сразу после разбора задания (homework_check_context) —
+            # тоже решение, которое прислали в ответ, а не новое задание.
+            # Пустая подпись без такого контекста — обычное фото задания.
+            conv_for_photo = get_store().get(f"tg:{chat_id}", platform=TELEGRAM_PLATFORM)
+            wants_check = _looks_like_check_request(caption) or (
+                not caption and conv_for_photo.homework_check_context
+            )
+            if caption_intent in (I.QUESTION, I.HOMEWORK) or wants_check:
+                await _handle_telegram_photo(message, chat_id, telegram, check_mode=wants_check)
                 return
+
+        if message.get("voice") or message.get("audio"):
+            await _handle_telegram_voice(message, chat_id, telegram)
+            return
 
         # Контакт (кнопка «Поделиться номером») — не медиа и не текст:
         # обрабатываем до ветки «голосовые и файлы», иначе он в неё провалится.
@@ -1065,8 +1092,71 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             logger.exception("telegram: failed to send fallback error message")
 
 
-async def _handle_telegram_photo(message: dict, chat_id, telegram) -> None:
-    """Фото задания из чата: скачиваем и разбираем тем же vision, что и в кабинете."""
+async def _handle_telegram_voice(message: dict, chat_id, telegram) -> None:
+    """Голосовое/аудио с заданием: скачиваем, распознаём, разбираем тем же
+    тьютором, что и текст."""
+    media = message.get("voice") or message.get("audio") or {}
+    file_id = media.get("file_id")
+    if not file_id:
+        return
+    mime_type = str(media.get("mime_type") or "audio/ogg")
+    user_id = f"tg:{chat_id}"
+    voice_message_id = str(message.get("message_id") or "") or None
+    sender = message.get("from") or {}
+    crm_ctx = crm_ingest.ingest_inbound(
+        TELEGRAM_PLATFORM, user_id, "[голосовое]",
+        external_event_id=voice_message_id,
+        external_message_id=voice_message_id,
+        first_name=str(sender.get("first_name") or ""),
+        last_name=str(sender.get("last_name") or ""),
+        username=str(sender.get("username") or ""),
+    )
+    download = getattr(telegram, "download_file", None)
+    if not callable(download):
+        # Клиент без скачивания файлов — не повод отвечать пользователю ошибкой.
+        await telegram.send_message(
+            chat_id, "Пока не могу скачать голосовое здесь. Напишите, пожалуйста, текстом."
+        )
+        return
+    audio = await download(file_id, MAX_HOMEWORK_AUDIO_BYTES)
+    if not audio:
+        await telegram.send_message(
+            chat_id, "Не получилось скачать голосовое. Попробуйте ещё раз или напишите текстом."
+        )
+        return
+    text = await _reply_while_alive(
+        telegram, chat_id, lambda: speech.transcribe(audio, "voice.ogg", mime_type)
+    )
+    if not text:
+        await telegram.send_message(
+            chat_id,
+            "Не расслышала голосовое 🙏 Попробуйте ещё раз при тишине — или "
+            "напишите задание текстом.",
+        )
+        return
+    await telegram.send_message(chat_id, f"Услышал: «{text}»")
+    explanation = await _reply_while_alive(
+        telegram, chat_id, lambda: homework.explain_homework_text(text)
+    )
+    explanation = explanation or HOMEWORK_TEXT_FALLBACK
+    ok = await telegram.send_message(chat_id, explanation)
+    crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL, ok=bool(ok))
+    if crm_ctx:
+        crm_store.record_homework_request(
+            platform=TELEGRAM_PLATFORM, user_id=user_id,
+            customer_id=crm_ctx.get("customer_id"),
+            conversation_id=crm_ctx.get("conversation_id"), channel=TELEGRAM_PLATFORM,
+            mode="explain", input_type="voice", audio_transcript=text,
+            task_text=text, reply=explanation,
+        )
+    conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+    conv.homework_check_context = True
+    get_store().save(conv)
+
+
+async def _handle_telegram_photo(message: dict, chat_id, telegram, check_mode: bool = False) -> None:
+    """Фото задания из чата: разбор или проверка решения — тем же vision,
+    что и в кабинете."""
     sizes = message.get("photo") or []
     if not isinstance(sizes, list) or not sizes:
         return
@@ -1078,18 +1168,9 @@ async def _handle_telegram_photo(message: dict, chat_id, telegram) -> None:
         return
 
     note = str(message.get("caption") or "").strip()
-    # Фото — тоже сообщение клиента: пишем в CRM, чтобы в админке было видно,
-    # что человек прислал задание (раньше такие обращения терялись).
     photo_message_id = str(message.get("message_id") or "") or None
     sender = message.get("from") or {}
-    crm_ctx = crm_ingest.ingest_inbound(
-        TELEGRAM_PLATFORM, f"tg:{chat_id}", f"[фото] {note}".strip(),
-        external_event_id=photo_message_id,
-        external_message_id=photo_message_id,
-        first_name=str(sender.get("first_name") or ""),
-        last_name=str(sender.get("last_name") or ""),
-        username=str(sender.get("username") or ""),
-    )
+    user_id = f"tg:{chat_id}"
     download = getattr(telegram, "download_file", None)
     if not callable(download):
         # Клиент без скачивания файлов (старая сборка, урезанный адаптер) —
@@ -1109,18 +1190,58 @@ async def _handle_telegram_photo(message: dict, chat_id, telegram) -> None:
         )
         return
 
-    explanation = await _reply_while_alive(
-        telegram, chat_id, lambda: explain_homework_image(image, "image/jpeg", note)
+    image_path = save_homework_image(image, ext="jpg")
+    # Фото — тоже сообщение клиента: пишем в CRM, чтобы в админке было видно,
+    # что человек прислал задание (раньше такие обращения терялись). Путь к
+    # сохранённому файлу летит в payload — педагог из карточки CRM открывает
+    # тот же снимок, что видела модель.
+    crm_ctx = crm_ingest.ingest_inbound(
+        TELEGRAM_PLATFORM, user_id, f"[фото] {note}".strip(),
+        external_event_id=photo_message_id,
+        external_message_id=photo_message_id,
+        first_name=str(sender.get("first_name") or ""),
+        last_name=str(sender.get("last_name") or ""),
+        username=str(sender.get("username") or ""),
+        payload={"image_path": image_path},
     )
-    if not explanation:
-        await telegram.send_message(
-            chat_id,
-            "Не смог разобрать задание по фото. Напишите, пожалуйста, текстом, "
-            "что именно нужно сделать — помогу разобраться.",
+
+    if check_mode:
+        explanation = await _reply_while_alive(
+            telegram, chat_id, lambda: check_homework_image(image, "image/jpeg", note)
         )
+        mode = "check"
+    else:
+        explanation = await _reply_while_alive(
+            telegram, chat_id, lambda: explain_homework_image(image, "image/jpeg", note)
+        )
+        mode = "explain"
+
+    if not explanation:
+        hint = (
+            "Не смог разобрать фото решения. Пришлите, пожалуйста, более "
+            "чёткий снимок — так смогу проверить."
+            if check_mode else
+            "Не смог разобрать задание по фото. Напишите, пожалуйста, текстом, "
+            "что именно нужно сделать — помогу разобраться."
+        )
+        await telegram.send_message(chat_id, hint)
         return
     ok = await telegram.send_message(chat_id, explanation)
     crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL, ok=bool(ok))
+    if crm_ctx:
+        crm_store.record_homework_request(
+            platform=TELEGRAM_PLATFORM, user_id=user_id,
+            customer_id=crm_ctx.get("customer_id"),
+            conversation_id=crm_ctx.get("conversation_id"), channel=TELEGRAM_PLATFORM,
+            mode=mode, input_type="image", image_path=image_path,
+            task_text=note, reply=explanation,
+        )
+    # После разбора — следующее фото без подписи считаем решением ученика
+    # (см. wants_check в _process_telegram_update); после проверки — это уже
+    # не действует, иначе повторная проверка того же фото зациклится.
+    conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+    conv.homework_check_context = not check_mode
+    get_store().save(conv)
 
 
 def _schedule_telegram_update(update: dict, telegram) -> bool:
@@ -1449,7 +1570,19 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
         user_id = str(sender.get("user_id")) if sender.get("user_id") else None
         if not user_id:
             return
-        text = (message.get("body") or {}).get("text", "").strip()
+        body = message.get("body") or {}
+        text = body.get("text", "").strip()
+        # Голосовое/аудио — не текст: у него своя ветка распознавания до
+        # общего "нет текста — нечего обрабатывать".
+        attachments = body.get("attachments") or []
+        audio_att = next(
+            (a for a in attachments if isinstance(a, dict) and a.get("type") == "audio"), None
+        )
+        if not text and audio_att:
+            url = (audio_att.get("payload") or {}).get("url", "")
+            if url:
+                await _handle_max_voice(url, user_id, message, update, max_client)
+            return
         if not text:
             return
         _remember_sender(user_id, sender)
@@ -1605,6 +1738,55 @@ def _max_message_external_id(message: dict) -> str | None:
             if value:
                 return str(value)
     return None
+
+
+async def _handle_max_voice(url: str, user_id: str, message: dict, update: dict, max_client) -> None:
+    """Голосовое вложение MAX с заданием: скачиваем по прямой ссылке из
+    payload.url, распознаём, разбираем тем же тьютором, что и текст."""
+    sender = message.get("sender") or {}
+    crm_ctx = crm_ingest.ingest_inbound(
+        PLATFORM, user_id, "[голосовое]",
+        external_event_id=_extract_update_id(update),
+        external_message_id=_max_message_external_id(message),
+        name=str(sender.get("name") or ""),
+        username=str(sender.get("username") or ""),
+    )
+    download = getattr(max_client, "download_file", None)
+    if not callable(download):
+        await max_client.send_message(user_id, "Пока не могу скачать голосовое здесь. Напишите текстом.")
+        return
+    audio = await download(url, MAX_HOMEWORK_AUDIO_BYTES)
+    if not audio:
+        await max_client.send_message(
+            user_id, "Не получилось скачать голосовое. Попробуйте ещё раз или напишите текстом."
+        )
+        return
+    text = await _reply_while_alive(
+        max_client, user_id, lambda: speech.transcribe(audio, "voice.ogg", "audio/ogg")
+    )
+    if not text:
+        await max_client.send_message(
+            user_id, "Не расслышала голосовое 🙏 Попробуйте ещё раз или напишите задание текстом."
+        )
+        return
+    await max_client.send_message(user_id, f"Услышал: «{text}»")
+    explanation = await _reply_while_alive(
+        max_client, user_id, lambda: homework.explain_homework_text(text)
+    )
+    explanation = explanation or HOMEWORK_TEXT_FALLBACK
+    ok = await max_client.send_message(user_id, explanation)
+    crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL, ok=bool(ok))
+    if crm_ctx:
+        crm_store.record_homework_request(
+            platform=PLATFORM, user_id=user_id,
+            customer_id=crm_ctx.get("customer_id"),
+            conversation_id=crm_ctx.get("conversation_id"), channel=PLATFORM,
+            mode="explain", input_type="voice", audio_transcript=text,
+            task_text=text, reply=explanation,
+        )
+    conv = get_store().get(user_id, platform=PLATFORM)
+    conv.homework_check_context = True
+    get_store().save(conv)
 
 
 async def _send_max_logged(max_client, user_id: str, text: str, crm_ctx: dict | None,

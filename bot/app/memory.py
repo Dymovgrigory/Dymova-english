@@ -126,6 +126,9 @@ class Conversation:
     # текстовое сообщение без слов-триггеров считаем самим заданием и сразу
     # разбираем в режиме тьютора, а не общей консультацией.
     awaiting_homework: bool = False
+    # Последний ответ был разбором задания — если следующим придёт фото,
+    # это уже решение ученика, его нужно проверять, а не объяснять заново.
+    homework_check_context: bool = False
     # Идентификация по номеру телефона (разделы 2/6 спеки approach-1):
     # student_id — ученик из read-model BigBen, к которому привязан номер;
     # identify_state — шаг сценария ("await_contact" | "await_child_name" |
@@ -407,6 +410,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         reg_nudges=d.get("reg_nudges", 0),
         lead_submitted_at=d.get("lead_submitted_at", ""),
         awaiting_homework=d.get("awaiting_homework", False),
+        homework_check_context=d.get("homework_check_context", False),
         student_id=int(d.get("student_id") or 0),
         identify_state=d.get("identify_state", ""),
         identify_candidates=d.get("identify_candidates", []) or [],

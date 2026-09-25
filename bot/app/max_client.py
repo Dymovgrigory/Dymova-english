@@ -315,6 +315,24 @@ class MaxClient:
         result = await self._request("POST", "/subscriptions", json_body=body, attempts=2)
         return result is not None
 
+    async def download_file(self, url: str, max_bytes: int) -> bytes | None:
+        """Скачивает вложение MAX по прямой ссылке из payload.url. None — не
+        удалось или файл больше лимита."""
+        try:
+            async with httpx.AsyncClient(timeout=60) as client:
+                response = await client.get(url)
+                if response.status_code != 200:
+                    logger.warning("max: скачивание вложения ответило %s", response.status_code)
+                    return None
+                content = response.content
+                if len(content) > max_bytes:
+                    logger.warning("max: вложение больше лимита %s байт", max_bytes)
+                    return None
+                return content
+        except Exception:
+            logger.warning("max: сбой скачивания вложения", exc_info=True)
+            return None
+
     def verify_init_data(self, init_data: str) -> Optional[dict]:
         """Проверяет подпись initData из MAX Mini App и возвращает user.id."""
         if not self.token or not init_data:
