@@ -1,4 +1,10 @@
 """Парсер блока команды с сайта dymova-english.ru."""
+import json
+
+import httpx
+import pytest
+
+from app.config import settings
 from app.knowledge import team_sync
 
 # Вырезка реальной разметки #fxb-team (сайт, 2026-09-25), с намеренно
@@ -144,3 +150,76 @@ def test_is_teacher_matches_role_variants():
 
 def test_empty_html_returns_empty_list():
     assert team_sync.parse_team_html("<html></html>", ORIGIN) == []
+
+
+@pytest.fixture(autouse=True)
+def _reset_team_cache():
+    team_sync._TEAM_CACHE = None
+    yield
+    team_sync._TEAM_CACHE = None
+
+
+def test_get_team_falls_back_to_yaml_when_nothing_synced_yet(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "TEAM_SNAPSHOT_PATH", str(tmp_path / "missing.json"))
+    people = team_sync.get_team()
+    # data.yaml реально существует в репозитории и содержит команду —
+    # значит фолбэк не пустой.
+    assert len(people) > 0
+    assert all("name" in p for p in people)
+
+
+def test_get_team_reads_snapshot_from_disk_after_restart(tmp_path, monkeypatch):
+    snapshot = tmp_path / "team_snapshot.json"
+    snapshot.write_text(json.dumps([{"name": "Тест Тестов", "role": "Педагог",
+                                     "about": "", "photo": "", "video_intro": "",
+                                     "video_lesson": ""}]), encoding="utf-8")
+    monkeypatch.setattr(settings, "TEAM_SNAPSHOT_PATH", str(snapshot))
+    people = team_sync.get_team()
+    assert people == [{"name": "Тест Тестов", "role": "Педагог", "about": "",
+                       "photo": "", "video_intro": "", "video_lesson": ""}]
+
+
+@pytest.mark.asyncio
+async def test_sync_once_writes_snapshot_and_updates_cache(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "TEAM_SYNC_URL", "https://dymova-english.ru")
+    monkeypatch.setattr(settings, "TEAM_SNAPSHOT_PATH", str(tmp_path / "team_snapshot.json"))
+
+    async def fake_get(self, url, **kwargs):
+        return httpx.Response(200, text=FIXTURE_HTML, request=httpx.Request("GET", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "get", fake_get)
+    count = await team_sync.sync_once()
+    assert count == 5
+    assert json.loads((tmp_path / "team_snapshot.json").read_text(encoding="utf-8"))
+    assert team_sync.get_team()[0]["name"] == "Саляхова Алина"
+
+
+@pytest.mark.asyncio
+async def test_sync_once_network_failure_keeps_previous_snapshot(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "TEAM_SNAPSHOT_PATH", str(tmp_path / "team_snapshot.json"))
+    team_sync._TEAM_CACHE = [{"name": "Старые Данные", "role": "", "about": "",
+                              "photo": "", "video_intro": "", "video_lesson": ""}]
+
+    async def fake_get(self, url, **kwargs):
+        raise httpx.ConnectError("сеть недоступна", request=httpx.Request("GET", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "get", fake_get)
+    count = await team_sync.sync_once()
+    assert count == 0
+    assert team_sync.get_team()[0]["name"] == "Старые Данные"
+
+
+@pytest.mark.asyncio
+async def test_sync_once_empty_parse_keeps_previous_snapshot(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "TEAM_SNAPSHOT_PATH", str(tmp_path / "team_snapshot.json"))
+    team_sync._TEAM_CACHE = [{"name": "Старые Данные", "role": "", "about": "",
+                              "photo": "", "video_intro": "", "video_lesson": ""}]
+
+    async def fake_get(self, url, **kwargs):
+        return httpx.Response(200, text="<html>совсем не та страница</html>",
+                              request=httpx.Request("GET", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "get", fake_get)
+    count = await team_sync.sync_once()
+    assert count == 0
+    assert team_sync.get_team()[0]["name"] == "Старые Данные"

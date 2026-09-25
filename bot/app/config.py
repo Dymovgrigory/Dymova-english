@@ -262,6 +262,12 @@ class Settings(BaseSettings):
     SITE_SYNC_URLS: str = ""  # список URL через запятую; пусто = главная сайта
     SITE_SYNC_INTERVAL_MIN: int = 60
 
+    # --- Живая синхронизация команды с сайта ---
+    TEAM_SYNC_ENABLED: bool = True
+    TEAM_SYNC_URL: str = "https://dymova-english.ru"
+    TEAM_SYNC_INTERVAL_MIN: int = 60
+    TEAM_SNAPSHOT_PATH: str = "./data/team_snapshot.json"
+
     # --- Telegram ---
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_PROXY_URL: str = ""

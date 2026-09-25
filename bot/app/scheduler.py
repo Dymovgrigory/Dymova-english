@@ -142,6 +142,16 @@ async def _site_sync_loop() -> None:
         await asyncio.sleep(max(5, settings.SITE_SYNC_INTERVAL_MIN) * 60)
 
 
+async def _team_sync_loop() -> None:
+    from app.knowledge import team_sync
+    while True:
+        try:
+            await team_sync.sync_once()
+        except Exception:
+            logger.exception("team_sync: ошибка синхронизации команды")
+        await asyncio.sleep(max(5, settings.TEAM_SYNC_INTERVAL_MIN) * 60)
+
+
 async def _sources_sync_loop() -> None:
     """Синхронизация внешних источников (VK, Яндекс.Карты, Telegram)."""
     from app.knowledge import sources
@@ -199,6 +209,10 @@ def start() -> list[asyncio.Task]:
         tasks.append(asyncio.create_task(_sources_sync_loop()))
     else:
         logger.info("site_sync: синхронизация с сайтом выключена (SITE_SYNC_ENABLED=false)")
+    if settings.TEAM_SYNC_ENABLED:
+        tasks.append(asyncio.create_task(_team_sync_loop()))
+    else:
+        logger.info("team_sync: синхронизация команды выключена (TEAM_SYNC_ENABLED=false)")
     tasks.append(asyncio.create_task(_group_meta_sync_loop()))
     if settings.BILLING_RECONCILE_ENABLED:
         tasks.append(asyncio.create_task(_payment_reconcile_loop()))

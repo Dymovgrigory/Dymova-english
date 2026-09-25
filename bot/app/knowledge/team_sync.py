@@ -2,7 +2,16 @@
 from __future__ import annotations
 
 import html as html_mod
+import json
+import logging
 import re
+from pathlib import Path
+
+import httpx
+
+from app.config import settings
+
+logger = logging.getLogger(__name__)
 
 # Раздел команды на сайте — от своего id до следующего соседнего блока
 # `<div id="fxb-...">`, который всегда открывается в начале строки (после `\n`).
@@ -84,3 +93,74 @@ def parse_team_html(html: str, origin: str) -> list[dict]:
         if person:
             people.append(person)
     return people
+
+
+_TEAM_CACHE: list[dict] | None = None
+
+
+def _snapshot_path() -> Path:
+    return Path(settings.TEAM_SNAPSHOT_PATH)
+
+
+def _load_snapshot() -> list[dict]:
+    path = _snapshot_path()
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.warning("team_sync: снимок на диске повреждён — игнорирую")
+        return []
+
+
+def _save_snapshot(people: list[dict]) -> None:
+    path = _snapshot_path()
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(people, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        logger.warning("team_sync: не удалось сохранить снимок на диск", exc_info=True)
+
+
+def _yaml_fallback() -> list[dict]:
+    """Последняя линия обороны: список из data.yaml, если ни разу не
+    удалось синхронизироваться и снимка на диске нет (холодный старт без
+    сети)."""
+    from app.knowledge.kb import get_kb
+
+    return list(get_kb().raw.get("team", []))
+
+
+def get_team() -> list[dict]:
+    """Текущий список команды: память → снимок на диске → data.yaml."""
+    global _TEAM_CACHE
+    if _TEAM_CACHE is not None:
+        return _TEAM_CACHE
+    from_disk = _load_snapshot()
+    if from_disk:
+        _TEAM_CACHE = from_disk
+        return _TEAM_CACHE
+    return _yaml_fallback()
+
+
+async def sync_once() -> int:
+    """Скачивает и обновляет команду. Возвращает число людей (0 — сбой,
+    прежний снимок не трогаем, мини-приложение не остаётся пустым)."""
+    global _TEAM_CACHE
+    url = settings.TEAM_SYNC_URL.rstrip("/")
+    try:
+        async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
+            resp = await client.get(url)
+            resp.raise_for_status()
+    except Exception as exc:
+        logger.warning("team_sync: не удалось скачать %s: %s", url, exc)
+        return 0
+    people = parse_team_html(resp.text, url)
+    if not people:
+        logger.warning("team_sync: на странице %s не нашлось карточек команды — оставляю прежние", url)
+        return 0
+    _TEAM_CACHE = people
+    _save_snapshot(people)
+    logger.info("team_sync: обновлено %s карточек команды", len(people))
+    return len(people)

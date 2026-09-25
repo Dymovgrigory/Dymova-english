@@ -59,6 +59,7 @@ from app.homework import (
     explain_homework_image,
     explain_homework_text,
 )
+from app.knowledge import team_sync
 from app.knowledge.kb import get_kb
 from app.observability import init_sentry
 from app.llm import get_llm
@@ -1666,7 +1667,7 @@ async def miniapp_info(request: Request, user_id: str = "") -> dict:
         # лежали в базе знаний, но в мини-приложение не попадали ни разу.
         # Это самое ценное, что школа может показать: живой педагог на видео
         # убеждает сильнее любого текста о методике.
-        "team": kb.raw.get("team", []),
+        "team": team_sync.get_team(),
         "enrollment_steps": kb.raw.get("enrollment_steps", []),
         "summer_academy": kb.raw.get("summer_academy", {}),
         "promos": kb.raw.get("promos", []),
