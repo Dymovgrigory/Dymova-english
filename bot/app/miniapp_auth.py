@@ -102,6 +102,12 @@ def verify_telegram_init_data(init_data: str, token: str | None = None) -> MiniA
             len(parsed), len(init_data), value_lengths,
             len(check_string), fingerprint, "+" in init_data,
         )
+        # РАЗОВАЯ точечная диагностика по явному разрешению владельца
+        # (2026-09-28) — удалить сразу после находки. Предыдущие шаги
+        # доказали, что хэш из УЖЕ РАЗОБРАННЫХ полей верен побайтово — это
+        # не говорит о том, не исказил ли сам parse_qs сырую строку ДО
+        # разбора. Логируем сырой init_data целиком один раз для сравнения.
+        logger.warning("miniapp: RAW init_data (временно) = %r", init_data)
         return None
     if not _auth_date_fresh(parsed):
         logger.warning("miniapp: просроченный auth_date в Telegram initData")
