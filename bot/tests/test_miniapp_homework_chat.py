@@ -67,6 +67,37 @@ def test_check_endpoint_returns_explanation():
     assert "Пункт 1" in body["explanation"]
 
 
+def test_check_endpoint_rejects_anonymous_before_saving_or_calling_model():
+    """Финальное ревью, важное #7: `_miniapp_access_state["locked"]` гейтит
+    только УЖЕ распознанную личность — анонимный вызов проходил дальше и до
+    этого фикса успевал сохранить фото на диск и вызвать платный vision ДО
+    какой-либо проверки идентификации."""
+    client = TestClient(main_module.app)
+    vision = AsyncMock(return_value="не должно вызваться")
+    with patch("app.homework.check_homework_image", new=vision), \
+         patch("app.homework.save_homework_image") as save_image:
+        resp = client.post(
+            "/api/miniapp/homework/check",
+            files={"image": ("t.jpg", b"fake-bytes", "image/jpeg")},
+        )
+    assert resp.status_code == 401
+    vision.assert_not_called()
+    save_image.assert_not_called()
+    assert crm_store.list_homework_requests(mode="check", limit=10) == []
+
+
+def test_voice_endpoint_rejects_anonymous_before_calling_stt():
+    client = TestClient(main_module.app)
+    transcribe = AsyncMock(return_value="не должно вызваться")
+    with patch("app.speech.transcribe", new=transcribe):
+        resp = client.post(
+            "/api/miniapp/homework/voice",
+            files={"audio": ("v.ogg", b"fake-audio", "audio/ogg")},
+        )
+    assert resp.status_code == 401
+    transcribe.assert_not_called()
+
+
 def test_voice_endpoint_transcribes_and_explains():
     client = TestClient(main_module.app)
     with patch("app.speech.transcribe", new=AsyncMock(return_value="Вставь is или are")), \

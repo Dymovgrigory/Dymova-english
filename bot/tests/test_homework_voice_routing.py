@@ -69,6 +69,155 @@ async def test_telegram_voice_transcription_failure_asks_to_retype(monkeypatch):
     assert "не расслышала" in text.lower() or "текстом" in text.lower()
 
 
+@pytest.mark.asyncio
+async def test_telegram_voice_non_homework_intent_routes_to_chat_not_homework():
+    """Финальное ревью, важное #8б: раньше ЛЮБОЕ голосовое безусловно
+    считалось домашкой — родитель, спрашивающий голосом про пробное занятие,
+    получал разбор задания вместо ответа по существу. После распознавания
+    текста намерение проверяется тем же способом, что и у текстовых веток
+    этого файла: явно другая тема (здесь — ABOUT, «пробное занятие») уходит
+    в обычный чат (handle_message), а не в explain_homework_text."""
+    telegram = AsyncMock()
+    telegram.download_file = AsyncMock(return_value=b"fake-ogg-bytes")
+    telegram.send_message = AsyncMock(return_value=True)
+    message = {
+        "voice": {"file_id": "voice-1", "mime_type": "audio/ogg"},
+        "chat": {"id": 555},
+        "message_id": 10,
+        "from": {"id": 555, "first_name": "Аня"},
+    }
+    explain_mock = AsyncMock(return_value="разбор — не должен был вызваться")
+    handle_message_mock = AsyncMock(return_value="Пробное занятие в субботу в 11:00.")
+    with patch("app.speech.transcribe", new=AsyncMock(return_value="Когда у вас пробное занятие?")), \
+         patch("app.homework.explain_homework_text", new=explain_mock), \
+         patch("app.main.handle_message", new=handle_message_mock), \
+         patch("app.crm_ingest.ingest_inbound", return_value={"conversation_id": 1, "customer_id": 1}):
+        await main_module._handle_telegram_voice(message, 555, telegram)
+    explain_mock.assert_not_awaited()
+    handle_message_mock.assert_awaited_once()
+    sent_texts = [call.args[1] for call in telegram.send_message.await_args_list]
+    assert any("Пробное занятие" in t for t in sent_texts)
+
+
+def test_homework_check_context_expires_after_ttl():
+    """Финальное ревью, важное #8а: homework_check_context без TTL жил
+    вечно — случайное фото без подписи спустя дни после разбора уходило в
+    режим проверки решения вместо обычного разбора нового задания."""
+    from datetime import datetime, timedelta, timezone
+
+    conv = Conversation(user_id="tg:1")
+    conv.homework_check_context = True
+    fresh = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    stale = (
+        datetime.now(timezone.utc)
+        - timedelta(minutes=main_module.HOMEWORK_CHECK_CONTEXT_TTL_MIN + 1)
+    ).isoformat(timespec="seconds")
+
+    conv.homework_check_context_at = fresh
+    assert main_module._homework_check_context_active(conv) is True
+
+    conv.homework_check_context_at = stale
+    assert main_module._homework_check_context_active(conv) is False
+
+    # Записи до этого фикса — без метки времени вообще: не терять молча уже
+    # выставленный на проде контекст, считаем активным один раз.
+    conv.homework_check_context_at = ""
+    assert main_module._homework_check_context_active(conv) is True
+
+    conv.homework_check_context = False
+    conv.homework_check_context_at = fresh
+    assert main_module._homework_check_context_active(conv) is False
+
+
+@pytest.mark.asyncio
+async def test_stale_homework_check_context_does_not_force_photo_check_mode():
+    """Продолжение #8а на реальном пути: фото без подписи после истёкшего
+    homework_check_context должно уйти в обычный разбор (explain), а не в
+    режим проверки решения (check)."""
+    from datetime import datetime, timedelta, timezone
+
+    from app import memory as memory_module
+
+    memory_module._store = None
+    try:
+        telegram = AsyncMock()
+        telegram.download_file = AsyncMock(return_value=b"img-bytes")
+        telegram.send_message = AsyncMock(return_value=True)
+
+        conv = memory_module.get_store().get("tg:900", platform=main_module.TELEGRAM_PLATFORM)
+        conv.homework_check_context = True
+        conv.homework_check_context_at = (
+            datetime.now(timezone.utc)
+            - timedelta(minutes=main_module.HOMEWORK_CHECK_CONTEXT_TTL_MIN + 5)
+        ).isoformat(timespec="seconds")
+        memory_module.get_store().save(conv)
+
+        update = {
+            "update_id": 42,
+            "message": {"chat": {"id": 900}, "photo": [{"file_id": "f1", "file_size": 10}]},
+        }
+        explain_mock = AsyncMock(return_value="📘 Правило")
+        check_mock = AsyncMock(return_value="🔎 Пункт 1")
+        with patch("app.main.explain_homework_image", new=explain_mock), \
+             patch("app.main.check_homework_image", new=check_mock), \
+             patch("app.crm_ingest.ingest_inbound", return_value=None):
+            await main_module._process_telegram_update(update, telegram)
+
+        explain_mock.assert_awaited_once()
+        check_mock.assert_not_awaited()
+    finally:
+        memory_module._store = None
+
+
+@pytest.mark.asyncio
+async def test_telegram_voice_dedup_key_is_global_not_per_chat():
+    """Финальное ревью, важное #6: message_id Telegram уникален только
+    внутри одного чата, а не глобально. _handle_telegram_voice раньше
+    использовал его как external_event_id — второе голосовое ДРУГОГО
+    пользователя с тем же (маленьким, последовательным) message_id тихо
+    считалось дублем в inbound_events (UNIQUE(channel, external_event_id)):
+    ingest_inbound возвращал None, и `if crm_ctx:` молча терял запись в
+    homework_requests. Тест намеренно НЕ мокает ingest_inbound — мок скрывал
+    бы именно этот баг, как и было в остальных тестах этого файла."""
+    from app import crm_store
+    from app import memory as memory_module
+
+    crm_store.reset()
+    memory_module._store = None
+    try:
+        telegram = AsyncMock()
+        telegram.download_file = AsyncMock(return_value=b"fake-ogg-bytes")
+        telegram.send_message = AsyncMock(return_value=True)
+
+        message_a = {
+            "voice": {"file_id": "voice-a", "mime_type": "audio/ogg"},
+            "chat": {"id": 100},
+            "message_id": 7,
+            "from": {"id": 100, "first_name": "Аня"},
+        }
+        update_a = {"update_id": 5001, "message": message_a}
+        message_b = {
+            "voice": {"file_id": "voice-b", "mime_type": "audio/ogg"},
+            "chat": {"id": 200},
+            "message_id": 7,  # тот же message_id, ДРУГОЙ чат — раньше коллизия
+            "from": {"id": 200, "first_name": "Боря"},
+        }
+        update_b = {"update_id": 5002, "message": message_b}
+
+        with patch("app.speech.transcribe", new=AsyncMock(return_value="Вставь is или are")), \
+             patch("app.homework.explain_homework_text", new=AsyncMock(return_value="📘 Правило...")):
+            await main_module._handle_telegram_voice(message_a, 100, telegram, update_a)
+            await main_module._handle_telegram_voice(message_b, 200, telegram, update_b)
+
+        rows = crm_store.list_homework_requests(limit=10)
+        user_ids = {r["user_id"] for r in rows}
+        assert user_ids == {"tg:100", "tg:200"}
+        assert len(rows) == 2
+    finally:
+        crm_store.reset()
+        memory_module._store = None
+
+
 class _FakeStreamResponse:
     """Имитирует httpx.Response в режиме стрима — отдаёт чанки по одному,
     а не всё тело сразу, как настоящий client.stream()."""

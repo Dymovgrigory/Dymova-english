@@ -56,6 +56,40 @@ async def test_homework_intent_routes_to_miniapp_button(monkeypatch):
     assert button["url"].endswith("#homework")
 
 
+@pytest.mark.asyncio
+async def test_max_text_homework_with_task_records_to_crm_and_sets_check_context(monkeypatch):
+    """Финальное ревью, важное #5: та же дыра, что у Telegram — текстовая
+    домашка в MAX (в отличие от голосовой и фото) никогда не попадала ни в
+    homework_requests, ни в homework_check_context."""
+    from app import crm_store
+
+    async def fake_tutor(task_text):
+        return "Правило: глагол to be..."
+
+    monkeypatch.setattr(main_module, "explain_homework_text", fake_tutor)
+    crm_store.reset()
+    fake_client = FakeMaxClient()
+    update = {
+        "type": "message_created",
+        "message": {
+            "sender": {"user_id": "502"},
+            "body": {"text": "Помоги с домашкой по английскому: вставь am/is/are — I __ nine"},
+        },
+    }
+    try:
+        await main_module._process_update(update, "message_created", fake_client)
+        rows = crm_store.list_homework_requests(mode="explain", limit=10)
+        assert any(
+            r["input_type"] == "text" and "am/is/are" in (r["task_text"] or "")
+            for r in rows
+        )
+        conv = memory_module.get_store().get("502", platform="max")
+        assert conv.homework_check_context is True
+        assert conv.homework_check_context_at
+    finally:
+        crm_store.reset()
+
+
 def test_convlog_and_digest_reflect_dialogues(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "CONV_LOG_FILE", str(tmp_path / "conversations.jsonl"), raising=False)
     monkeypatch.setattr(settings, "STATE_FILE", str(tmp_path / "state.json"), raising=False)

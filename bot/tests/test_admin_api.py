@@ -296,3 +296,24 @@ def test_homework_list_and_detail(client):
 def test_homework_detail_404_for_missing(client):
     resp = client.get("/admin/api/homework/999999", headers=AUTH)
     assert resp.status_code == 404
+
+
+def test_homework_image_requires_auth(client):
+    """Финальное ревью, важное #4: `<img src="...">` в админке не умеет
+    послать X-Admin-Token, поэтому фото ДЗ никогда не отображались (401).
+    Фронтенд-часть фикса (blob-URL через fetch с заголовком, как уже сделано
+    для миниатюр мини-приложения) не тестируется юнит-тестами этого набора —
+    здесь пиним контракт бэкенда, на который фронтенд опирается: ручка
+    остаётся защищённой и без заголовка честно отвечает 401, а не отдаёт
+    файл или падает 500."""
+    req_id = crm_store.record_homework_request(
+        platform="telegram", user_id="tg:1", conversation_id=None,
+        channel="telegram", mode="explain", input_type="image",
+        image_path="homework/does-not-exist.jpg", reply="r",
+    )
+    resp = client.get(f"/admin/api/homework/{req_id}/image")
+    assert resp.status_code == 401
+    resp = client.get(f"/admin/api/homework/{req_id}/image", headers=AUTH)
+    # С заголовком авторизация проходит — дальше падает уже на отсутствующем
+    # файле на диске (404), а не на авторизации.
+    assert resp.status_code == 404

@@ -2310,10 +2310,25 @@ async function openHomeworkRequest(id) {
   });
 }
 
+/* Фото ДЗ отдаётся только тем, у кого есть заголовок X-Admin-Token (см.
+ * _authorize в admin_api.py) — обычный <img src="..."> заголовок послать
+ * не умеет, поэтому голый src на защищённую ручку всегда получал бы 401
+ * (тот же класс бага, что чинили для миниатюр мини-приложения в
+ * tgapp/app.js: там своя авторизация через initData, здесь — свой api()
+ * с X-Admin-Token, поэтому переиспользуем локальный fetch с заголовком,
+ * а не копируем чужой паттерн). Грузим байты запросом с заголовком и
+ * подставляем локальный blob-URL. */
+async function fetchAdminImageBlobUrl(path) {
+  const resp = await fetch(path, { headers: { "X-Admin-Token": TOKEN } });
+  if (!resp.ok) throw new Error(`Сервер ответил ${resp.status}`);
+  const blob = await resp.blob();
+  return URL.createObjectURL(blob);
+}
+
 function renderHomeworkDetail(h) {
   const name = h.customer_name || h.customer_phone || `Клиент #${h.customer_id || "—"}`;
   const imageBlock = h.image_path
-    ? `<img class="hw-detail__image" src="/admin/api/homework/${h.id}/image" alt="" />`
+    ? `<img class="hw-detail__image" id="hw-detail-image" alt="" />`
     : "";
   const transcriptBlock = h.audio_transcript
     ? `<div class="hw-detail__block"><h4>Распознанный голос</h4><p>${esc(h.audio_transcript)}</p></div>`
@@ -2330,6 +2345,17 @@ function renderHomeworkDetail(h) {
       <div class="hw-detail__block"><h4>Задание</h4><p>${esc(h.task_text || "—")}</p></div>
       <div class="hw-detail__block"><h4>Ответ Фокси</h4><p>${esc(h.reply || "—")}</p></div>
     </div>`;
+  if (h.image_path) {
+    fetchAdminImageBlobUrl(`/admin/api/homework/${h.id}/image`)
+      .then((blobUrl) => {
+        const img = $("hw-detail-image");
+        if (img) img.src = blobUrl;
+      })
+      .catch(() => {
+        const img = $("hw-detail-image");
+        if (img) img.remove();
+      });
+  }
 }
 
 /* --- старт ------------------------------------------------------------------ */

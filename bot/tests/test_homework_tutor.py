@@ -91,6 +91,41 @@ async def test_ai_core_routes_homework_to_tutor(monkeypatch):
     assert conv.awaiting_homework is False
 
 
+@pytest.mark.asyncio
+async def test_ai_core_route_records_text_homework_to_crm(monkeypatch):
+    """Финальное ревью, важное #5: заявки «разбери задание», распознанные по
+    смыслу через общий чат (ai_core._route, без явного «домашка»/«дз» в
+    тексте — main.py явно перехватывает такой текст раньше), не попадали ни
+    в homework_requests, ни в homework_check_context. crm_messages сюда не
+    пишем — это уже делает обёртка вокруг handle_message в main.py."""
+    from app import ai_core, crm_store, homework
+    from app import intent as I
+    from app.memory import Conversation
+
+    crm_store.reset()
+    try:
+        monkeypatch.setattr(
+            homework, "explain_homework_text",
+            AsyncMock(return_value="📘 Правило: глагол to be..."),
+        )
+        conv = Conversation(user_id="miniapp:crm-test", platform="telegram")
+        reply = await ai_core._route(
+            conv, "Вставь am/is/are: I __ nine.", None, I.HOMEWORK
+        )
+        assert reply.startswith("📘")
+        assert conv.homework_check_context is True
+        assert conv.homework_check_context_at
+
+        rows = crm_store.list_homework_requests(mode="explain", limit=10)
+        assert any(
+            r["user_id"] == "miniapp:crm-test" and r["input_type"] == "text"
+            and r["reply"] == reply
+            for r in rows
+        )
+    finally:
+        crm_store.reset()
+
+
 def test_user_prompt_forbids_solving():
     p = _homework_user_prompt("").lower()
     assert "не давай готовые ответы" in p
@@ -107,6 +142,22 @@ def test_text_user_prompt_includes_task_and_forbids_solving():
     assert "вставь am/is/are" in p
     assert "не давай готовые ответы" in p
     assert "не решай за ребёнка" in p
+
+
+def test_text_user_prompt_one_example_rule_does_not_forbid_per_item_breakdown():
+    """Финальное ревью (важное #2): «Пример строго ОДИН... Не разбирай все
+    пункты» в исходной формулировке можно было прочитать двояко — как
+    запрет придумывать пример на каждый пункт (верно) ИЛИ как запрет
+    разбирать пункты САМОГО задания (противоречило бы системному промпту,
+    который требует 🔎 Пункт N на каждый пункт). Формулировка уточнена:
+    «один пример-иллюстрация» + явное указание разбирать каждый пункт
+    задания отдельно. Пин проверяет, что оба смысла явно разведены."""
+    p = _homework_text_user_prompt("Вставь am/is/are: I __ nine.").lower()
+    assert "пример" in p and "один" in p
+    # Явно сказано не путать пример с разбором пунктов, и что каждый пункт
+    # задания разбирается отдельно — а не общий запрет разбора по пунктам.
+    assert "каждый пункт" in p
+    assert "разбери отдельно" in p or "разбор" in p
 
 
 def test_task_text_extracts_real_task():
@@ -270,6 +321,64 @@ async def test_explain_homework_text_passes_through_when_critic_ok():
 
 
 @pytest.mark.asyncio
+async def test_explain_homework_text_critic_sees_task_text():
+    """Важное #3 финального ревью: раньше критик видел только ответ тьютора
+    и не мог реально проверить «пропущен ли пункт» или «совпадает ли пример
+    с заданием» — без текста задания эти проверки были нерабочими по факту."""
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.complete = AsyncMock(return_value="📘 Правило\nТекст\n\n❓ Попробуй?")
+        gw.structured = AsyncMock(return_value=_CRITIC_OK)
+        await homework.explain_homework_text("Вставь am/is/are: I __ nine.")
+    critic_messages = gw.structured.await_args.args[1]
+    user_content = critic_messages[1]["content"]
+    assert "ЗАДАНИЕ УЧЕНИКА" in user_content
+    assert "Вставь am/is/are: I __ nine." in user_content
+    assert "ОТВЕТ ТЬЮТОРА" in user_content
+
+
+@pytest.mark.asyncio
+async def test_explain_homework_image_critic_sees_note_as_task_context():
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.vision = AsyncMock(return_value="📘 Правило\nТекст\n\n❓ Попробуй?")
+        gw.structured = AsyncMock(return_value=_CRITIC_OK)
+        await homework.explain_homework_image(b"fake-bytes", "image/jpeg", note="Задание 4, стр. 12")
+    critic_messages = gw.structured.await_args.args[1]
+    user_content = critic_messages[1]["content"]
+    assert "ЗАДАНИЕ УЧЕНИКА" in user_content
+    assert "Задание 4, стр. 12" in user_content
+
+
+@pytest.mark.asyncio
+async def test_check_homework_image_critic_sees_note_as_task_context():
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.vision = AsyncMock(return_value="🔎 Пункт 1\nВерно!")
+        gw.structured = AsyncMock(return_value=_CRITIC_OK)
+        await homework.check_homework_image(b"fake-bytes", "image/jpeg", note="Упражнение 7")
+    critic_messages = gw.structured.await_args.args[1]
+    user_content = critic_messages[1]["content"]
+    assert "ЗАДАНИЕ УЧЕНИКА" in user_content
+    assert "Упражнение 7" in user_content
+
+
+@pytest.mark.asyncio
+async def test_critic_check_without_task_context_keeps_old_message_shape():
+    """Пустой task_context (например, фото без подписи) не должен добавлять
+    пустой блок «ЗАДАНИЕ УЧЕНИКА» — старое поведение для этого случая
+    сохраняется."""
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.structured = AsyncMock(return_value=_CRITIC_OK)
+        await homework._critic_check("ответ", kind="explain")
+    critic_messages = gw.structured.await_args.args[1]
+    user_content = critic_messages[1]["content"]
+    assert "ЗАДАНИЕ УЧЕНИКА" not in user_content
+    assert user_content == "ОТВЕТ ТЬЮТОРА:\nответ"
+
+
+@pytest.mark.asyncio
 async def test_explain_homework_text_regenerates_once_when_critic_flags_issue():
     with patch("app.homework.get_gateway") as get_gw:
         gw = get_gw.return_value
@@ -347,11 +456,35 @@ def test_check_homework_prompts_forbid_indirect_leak_via_deciding_feature():
         assert "a/an" in prompt
 
 
+def test_explain_homework_prompts_forbid_indirect_leak_via_deciding_feature():
+    """Критический фикс финального ревью (Task 8): у режима РАЗБОРА (explain)
+    не было защиты от косвенной утечки ответа вовсе — только у режима
+    проверки (check). А разбор — самый частый режим всей фичи. Пин, как у
+    check-версии этого теста: system-промпт разбора, шаблон формата разбора
+    по пунктам (_FORMAT_TEMPLATE, используется в обоих user-промптах — текст
+    и фото) и критик kind="explain" должны явно запрещать называть признак,
+    который в задании с двумя вариантами (is/are, a/an) однозначно
+    определяет ответ через исключение второго — не только грамматический, но
+    и звуковой (a/an). Все три места используют общую константу
+    `_DECIDING_FEATURE_HINT`, поэтому пин на «звук»/«a/an» защищает от
+    правки, которая случайно сузит формулировку или забудет её скопировать."""
+    system_prompt = homework._homework_system_prompt().lower()
+    format_template = homework._FORMAT_TEMPLATE.lower()
+    critic_prompt = homework._CRITIC_PROMPT["explain"].lower()
+    for prompt in (system_prompt, format_template, critic_prompt):
+        assert "звук" in prompt
+        assert "a/an" in prompt
+
+
 @pytest.mark.asyncio
 async def test_check_homework_image_returns_finalized_reply():
     with patch("app.homework.get_gateway") as get_gw:
         gw = get_gw.return_value
-        gw.vision = AsyncMock(return_value="🔎 Пункт 1\nВерно!\n\n🔎 Пункт 2\nПосмотри на подлежащее — оно во множественном числе.")
+        # Фикстура намеренно НЕ называет решающий признак (см. финальное
+        # ревью Task 8): «посмотри на подлежащее» без «во множественном
+        # числе» — иначе сам пример в тесте демонстрировал бы утечку ответа,
+        # которую проверяет test_check_homework_prompts_forbid_indirect_leak_via_deciding_feature.
+        gw.vision = AsyncMock(return_value="🔎 Пункт 1\nВерно!\n\n🔎 Пункт 2\nПосмотри ещё раз на подлежащее в этом предложении и вспомни правило спряжения глагола to be.")
         gw.structured = AsyncMock(return_value={"ok": True, "issues": []})
         result = await homework.check_homework_image(b"fake-image-bytes", "image/jpeg")
     assert result is not None

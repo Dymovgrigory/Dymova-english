@@ -129,6 +129,12 @@ class Conversation:
     # Последний ответ был разбором задания — если следующим придёт фото,
     # это уже решение ученика, его нужно проверять, а не объяснять заново.
     homework_check_context: bool = False
+    # Когда выставлен homework_check_context (ISO UTC) — без TTL флаг жил
+    # бесконечно: случайное фото без подписи спустя дни после разбора
+    # уходило в режим проверки вместо обычного разбора нового задания
+    # (финальное ревью, важное #8а). См. HOMEWORK_CHECK_CONTEXT_TTL_MIN
+    # в main.py — там и проверяется актуальность по этому времени.
+    homework_check_context_at: str = ""
     # Идентификация по номеру телефона (разделы 2/6 спеки approach-1):
     # student_id — ученик из read-model BigBen, к которому привязан номер;
     # identify_state — шаг сценария ("await_contact" | "await_child_name" |
@@ -411,6 +417,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         lead_submitted_at=d.get("lead_submitted_at", ""),
         awaiting_homework=d.get("awaiting_homework", False),
         homework_check_context=d.get("homework_check_context", False),
+        homework_check_context_at=d.get("homework_check_context_at", ""),
         student_id=int(d.get("student_id") or 0),
         identify_state=d.get("identify_state", ""),
         identify_candidates=d.get("identify_candidates", []) or [],

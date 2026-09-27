@@ -199,6 +199,48 @@ async def test_telegram_homework_task_after_invite_goes_to_tutor(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_telegram_text_homework_records_to_crm_and_sets_check_context(monkeypatch):
+    """Финальное ревью, важное #5: явные текстовые ветки «домашка: <текст>»
+    и «жду задание после приглашения» никогда не попадали ни в
+    homework_requests, ни в homework_check_context — тот же учёт, что уже
+    есть у голоса/фото, теперь есть и у текста."""
+    from app import crm_store
+
+    monkeypatch.setattr(ai_core, "get_llm", lambda: DisabledLLM())
+
+    async def fake_tutor(task_text):
+        return "Правило: глагол to be..."
+
+    monkeypatch.setattr(main_module, "explain_homework_text", fake_tutor)
+    crm_store.reset()
+    memory_module._store = None
+    telegram = FakeTelegramClient()
+    try:
+        await main_module._process_telegram_update(
+            {
+                "update_id": 3001,
+                "message": {
+                    "chat": {"id": 91},
+                    "text": "Помоги с домашкой по английскому: вставь am/is/are — I __ nine",
+                    "from": {"id": 91, "first_name": "Оля"},
+                },
+            },
+            telegram,
+        )
+        rows = crm_store.list_homework_requests(mode="explain", limit=10)
+        assert any(
+            r["input_type"] == "text" and "am/is/are" in (r["task_text"] or "")
+            for r in rows
+        )
+        conv = memory_module.get_store().get("tg:91", platform=main_module.TELEGRAM_PLATFORM)
+        assert conv.homework_check_context is True
+        assert conv.homework_check_context_at
+    finally:
+        crm_store.reset()
+        memory_module._store = None
+
+
+@pytest.mark.asyncio
 async def test_telegram_non_text_message_gets_reply_not_silence(monkeypatch):
     """Голосовое/фото/стикер раньше молча отбрасывались — бот выглядел зависшим."""
     telegram = FakeTelegramClient()

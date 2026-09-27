@@ -18,7 +18,7 @@ import re
 import time
 import uuid
 from urllib.parse import urlsplit
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
@@ -616,6 +616,62 @@ def _looks_like_check_request(text: str) -> bool:
     return bool(_CHECK_STEM_RE.search(text or ""))
 
 
+# Финальное ревью, важное #8а: homework_check_context раньше не истекал
+# никогда — случайное фото без подписи спустя дни после разбора уходило в
+# режим проверки решения вместо обычного разбора нового задания. Похожего
+# готового TTL-параметра под эту задачу в проекте нет (MANAGER_AUTO_RESUME_MIN
+# в crm_store — про другое: авто-возврат диалога боту после паузы менеджера).
+# 30 минут — с запасом больше обычной паузы «получил разбор → сфотографировал
+# тетрадь», но достаточно мало, чтобы не путать с фото по совсем другому
+# поводу через день-два.
+HOMEWORK_CHECK_CONTEXT_TTL_MIN = 30
+
+
+def _homework_check_context_active(conv) -> bool:
+    """Актуален ли ещё контекст «жду решение на проверку» — с учётом TTL."""
+    if not conv.homework_check_context:
+        return False
+    at_raw = conv.homework_check_context_at
+    if not at_raw:
+        # Запись до этого фикса, метки времени ещё нет — не терять молча
+        # уже выставленный на проде контекст, считаем актуальным один раз.
+        return True
+    try:
+        at = datetime.fromisoformat(at_raw)
+    except ValueError:
+        return True
+    if at.tzinfo is None:
+        at = at.replace(tzinfo=timezone.utc)
+    return datetime.now(timezone.utc) - at <= timedelta(minutes=HOMEWORK_CHECK_CONTEXT_TTL_MIN)
+
+
+def _mark_homework_check_context(conv) -> None:
+    conv.homework_check_context = True
+    conv.homework_check_context_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _clear_homework_check_context(conv) -> None:
+    conv.homework_check_context = False
+    conv.homework_check_context_at = ""
+
+
+def _record_text_homework_request(
+    platform: str, user_id: str, crm_ctx: dict | None, task_text: str, reply: str
+) -> None:
+    """Заявка на ДЗ текстом — в тот же журнал homework_requests, что и у
+    голосовых/фото-обработчиков (финальное ревью, важное #5: явные текстовые
+    ветки «домашка»/«дз» и «жду задание после приглашения» никогда не писали
+    ни в homework_requests, ни homework_check_context)."""
+    if not crm_ctx:
+        return
+    crm_store.record_homework_request(
+        platform=platform, user_id=user_id,
+        customer_id=crm_ctx.get("customer_id"),
+        conversation_id=crm_ctx.get("conversation_id"), channel=platform,
+        mode="explain", input_type="text", task_text=task_text, reply=reply,
+    )
+
+
 @app.post("/api/miniapp/homework")
 async def api_homework(
     request: Request,
@@ -739,6 +795,13 @@ async def api_homework_check(
     image: UploadFile | None = File(default=None),
 ) -> dict:
     identity = _identity_from_request(request, init_data=init_data)
+    # _miniapp_access_state гейтит "locked" только для УЖЕ распознанной
+    # личности (has_identity=True) — анонимный вызов (identity=None) её
+    # условие вообще не задевает и проходит дальше. Без этой явной проверки
+    # анонимный запрос доходил до сохранения файла на диск и до платного
+    # vision-вызова ДО какой-либо идентификации (финальное ревью, важное #7).
+    if identity is None:
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
     access = _miniapp_access_state(identity)
     if access["locked"]:
         return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
@@ -782,6 +845,11 @@ async def api_homework_voice(
     audio: UploadFile | None = File(default=None),
 ) -> dict:
     identity = _identity_from_request(request, init_data=init_data)
+    # См. тот же комментарий в api_homework_check: без явной проверки
+    # анонимный вызов доходил до платного STT и до explain_homework_text ещё
+    # до какой-либо идентификации (финальное ревью, важное #7).
+    if identity is None:
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
     access = _miniapp_access_state(identity)
     if access["locked"]:
         return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
@@ -1122,14 +1190,16 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             caption_is_clearly_other = caption_intent not in (None, I.QUESTION, I.HOMEWORK)
             wants_check = not caption_is_clearly_other and (
                 _looks_like_check_request(caption)
-                or (not caption and conv_for_photo.homework_check_context)
+                or (not caption and _homework_check_context_active(conv_for_photo))
             )
             if caption_intent in (I.QUESTION, I.HOMEWORK) or wants_check:
-                await _handle_telegram_photo(message, chat_id, telegram, check_mode=wants_check)
+                await _handle_telegram_photo(
+                    message, chat_id, telegram, check_mode=wants_check, update=update
+                )
                 return
 
         if message.get("voice") or message.get("audio"):
-            await _handle_telegram_voice(message, chat_id, telegram)
+            await _handle_telegram_voice(message, chat_id, telegram, update)
             return
 
         # Контакт (кнопка «Поделиться номером») — не медиа и не текст:
@@ -1220,6 +1290,12 @@ async def _process_telegram_update(update: dict, telegram) -> None:
                 reply = await _reply_while_alive(
                     telegram, chat_id, lambda: explain_homework_text(task_text)
                 ) or HOMEWORK_TEXT_FALLBACK
+                # Финальное ревью, важное #5: текстовая домашка никогда не
+                # попадала ни в homework_requests, ни в контекст ожидания
+                # проверки — тот же учёт, что уже есть у голоса/фото.
+                _record_text_homework_request(TELEGRAM_PLATFORM, user_id, crm_ctx, task_text, reply)
+                _mark_homework_check_context(conv)
+                get_store().save(conv)
             else:
                 conv.awaiting_homework = True
                 get_store().save(conv)
@@ -1236,6 +1312,9 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             reply = await _reply_while_alive(
                 telegram, chat_id, lambda: explain_homework_text(text)
             ) or HOMEWORK_TEXT_FALLBACK
+            _record_text_homework_request(TELEGRAM_PLATFORM, user_id, crm_ctx, text, reply)
+            _mark_homework_check_context(conv)
+            get_store().save(conv)
             await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_buttons(text, reply) or None)
             return
 
@@ -1263,9 +1342,11 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             logger.exception("telegram: failed to send fallback error message")
 
 
-async def _handle_telegram_voice(message: dict, chat_id, telegram) -> None:
-    """Голосовое/аудио с заданием: скачиваем, распознаём, разбираем тем же
-    тьютором, что и текст."""
+async def _handle_telegram_voice(message: dict, chat_id, telegram, update: dict | None = None) -> None:
+    """Голосовое/аудио: скачиваем, распознаём и либо разбираем тем же
+    тьютором, что и текст (если это похоже на домашку), либо отвечаем
+    обычным чатом (финальное ревью, важное #8б — раньше ЛЮБОЕ голосовое
+    безусловно улетало в разбор задания, даже «когда пробное занятие»)."""
     media = message.get("voice") or message.get("audio") or {}
     file_id = media.get("file_id")
     if not file_id:
@@ -1273,10 +1354,18 @@ async def _handle_telegram_voice(message: dict, chat_id, telegram) -> None:
     mime_type = str(media.get("mime_type") or "audio/ogg")
     user_id = f"tg:{chat_id}"
     voice_message_id = str(message.get("message_id") or "") or None
+    # message_id уникален только ВНУТРИ одного чата Telegram — как ключ
+    # дедупликации (UNIQUE(channel, external_event_id) в inbound_events) он
+    # сталкивал голосовые разных пользователей с одинаковым (маленьким,
+    # последовательным) message_id: второй вызов ingest_inbound тихо считался
+    # дублем, и CRM/homework_requests теряли запись (финальное ревью, важное
+    # #6). update_id уникален глобально — тот же приём уже используют
+    # текстовые обработчики этого файла (см. _telegram_inbound_ctx).
+    update_id = str((update or {}).get("update_id") or "") or None
     sender = message.get("from") or {}
     crm_ctx = crm_ingest.ingest_inbound(
         TELEGRAM_PLATFORM, user_id, "[голосовое]",
-        external_event_id=voice_message_id,
+        external_event_id=update_id,
         external_message_id=voice_message_id,
         first_name=str(sender.get("first_name") or ""),
         last_name=str(sender.get("last_name") or ""),
@@ -1306,6 +1395,19 @@ async def _handle_telegram_voice(message: dict, chat_id, telegram) -> None:
         )
         return
     await telegram.send_message(chat_id, f"Услышал: «{text}»")
+
+    # Тот же критерий «это похоже на домашку», что и у текстовых обработчиков
+    # этого файла (ср. `I.detect_intent(text) in (None, I.QUESTION,
+    # I.HOMEWORK)` в _process_telegram_update): явно другая тема (цена,
+    # контакты, запись и т.п.) уходит в обычный чат, а не в разбор задания.
+    if I.detect_intent(text) not in (None, I.QUESTION, I.HOMEWORK):
+        reply = await _reply_while_alive(
+            telegram, chat_id, lambda: handle_message(user_id, text, platform=TELEGRAM_PLATFORM)
+        )
+        ok = await telegram.send_message(chat_id, reply)
+        crm_ingest.ingest_outbound(crm_ctx, reply, ai_model=settings.LLM_MODEL, ok=bool(ok))
+        return
+
     explanation = await _reply_while_alive(
         telegram, chat_id, lambda: homework.explain_homework_text(text)
     )
@@ -1321,11 +1423,13 @@ async def _handle_telegram_voice(message: dict, chat_id, telegram) -> None:
             task_text=text, reply=explanation,
         )
     conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
-    conv.homework_check_context = True
+    _mark_homework_check_context(conv)
     get_store().save(conv)
 
 
-async def _handle_telegram_photo(message: dict, chat_id, telegram, check_mode: bool = False) -> None:
+async def _handle_telegram_photo(
+    message: dict, chat_id, telegram, check_mode: bool = False, update: dict | None = None
+) -> None:
     """Фото задания из чата: разбор или проверка решения — тем же vision,
     что и в кабинете."""
     sizes = message.get("photo") or []
@@ -1340,6 +1444,11 @@ async def _handle_telegram_photo(message: dict, chat_id, telegram, check_mode: b
 
     note = str(message.get("caption") or "").strip()
     photo_message_id = str(message.get("message_id") or "") or None
+    # Тот же баг, что и у голосовых (финальное ревью, важное #6): message_id
+    # уникален только внутри одного чата, а не глобально — как ключ дедупа
+    # (external_event_id) он сталкивал фото разных пользователей и тихо
+    # ронял вторую запись. update_id — глобально уникален.
+    update_id = str((update or {}).get("update_id") or "") or None
     sender = message.get("from") or {}
     user_id = f"tg:{chat_id}"
     download = getattr(telegram, "download_file", None)
@@ -1368,7 +1477,7 @@ async def _handle_telegram_photo(message: dict, chat_id, telegram, check_mode: b
     # тот же снимок, что видела модель.
     crm_ctx = crm_ingest.ingest_inbound(
         TELEGRAM_PLATFORM, user_id, f"[фото] {note}".strip(),
-        external_event_id=photo_message_id,
+        external_event_id=update_id,
         external_message_id=photo_message_id,
         first_name=str(sender.get("first_name") or ""),
         last_name=str(sender.get("last_name") or ""),
@@ -1411,7 +1520,10 @@ async def _handle_telegram_photo(message: dict, chat_id, telegram, check_mode: b
     # (см. wants_check в _process_telegram_update); после проверки — это уже
     # не действует, иначе повторная проверка того же фото зациклится.
     conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
-    conv.homework_check_context = not check_mode
+    if check_mode:
+        _clear_homework_check_context(conv)
+    else:
+        _mark_homework_check_context(conv)
     get_store().save(conv)
 
 
@@ -1798,6 +1910,12 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 reply = await _reply_while_alive(
                     max_client, user_id, lambda: explain_homework_text(task_text)
                 ) or HOMEWORK_TEXT_FALLBACK
+                # Финальное ревью, важное #5: та же дыра, что и у Telegram —
+                # текстовая домашка в MAX не попадала ни в homework_requests,
+                # ни в контекст ожидания проверки.
+                _record_text_homework_request(PLATFORM, user_id, crm_ctx, task_text, reply)
+                _mark_homework_check_context(conv)
+                get_store().save(conv)
             else:
                 conv.awaiting_homework = True
                 get_store().save(conv)
@@ -1812,6 +1930,9 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             reply = await _reply_while_alive(
                 max_client, user_id, lambda: explain_homework_text(text)
             ) or HOMEWORK_TEXT_FALLBACK
+            _record_text_homework_request(PLATFORM, user_id, crm_ctx, text, reply)
+            _mark_homework_check_context(conv)
+            get_store().save(conv)
             await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_link_button_rows(text, reply) or None)
         elif low in ("/menu", "меню"):
             await _send_max_logged(max_client, user_id, "Чем помочь? 😊", crm_ctx, buttons=_main_menu(user_id))
@@ -1948,6 +2069,19 @@ async def _handle_max_voice(url: str, user_id: str, message: dict, update: dict,
         )
         return
     await max_client.send_message(user_id, f"Услышал: «{text}»")
+
+    # Тот же критерий, что и у текстовой домашки MAX (`I.detect_intent(text)
+    # == I.HOMEWORK` / `in (None, I.QUESTION)` выше в этом файле): явно
+    # другая тема уходит в обычный чат, а не в разбор задания (финальное
+    # ревью, важное #8б — раньше ЛЮБОЕ голосовое безусловно считалось ДЗ).
+    if I.detect_intent(text) not in (None, I.QUESTION, I.HOMEWORK):
+        reply = await _reply_while_alive(
+            max_client, user_id, lambda: handle_message(user_id, text, platform=PLATFORM)
+        )
+        ok = await max_client.send_message(user_id, reply)
+        crm_ingest.ingest_outbound(crm_ctx, reply, ai_model=settings.LLM_MODEL, ok=bool(ok))
+        return
+
     explanation = await _reply_while_alive(
         max_client, user_id, lambda: homework.explain_homework_text(text)
     )
@@ -1963,7 +2097,7 @@ async def _handle_max_voice(url: str, user_id: str, message: dict, update: dict,
             task_text=text, reply=explanation,
         )
     conv = get_store().get(user_id, platform=PLATFORM)
-    conv.homework_check_context = True
+    _mark_homework_check_context(conv)
     get_store().save(conv)
 
 

@@ -896,6 +896,41 @@ def reset_conversation_locks() -> None:
     runtime.reset_locks()
 
 
+def _record_text_homework(conv: Conversation, task_text: str, reply: str) -> None:
+    """Заявка на ДЗ в отдельный журнал + флаг «жду решение на проверку».
+
+    Раньше этот маршрут (общий чат → intent HOMEWORK, без явного триггера
+    «домашка»/«дз» в тексте — тот перехватывается раньше, в вебхуках
+    main.py) не попадал ни в homework_requests, ни в контекст ожидания
+    проверки: заявки «разбери задание», распознанные по смыслу, были
+    невидимы в админке (финальное ревью, важное #5).
+
+    crm_messages (сама переписка) сюда НЕ пишем: её уже создаёт обёртка
+    вокруг `handle_message` в main.py через crm_ingest.ingest_inbound/
+    outbound для ВСЕХ сообщений этого маршрута — повторная запись здесь
+    была бы дублем. Пишем только то, чего не хватает: специфичную запись
+    заявки на ДЗ и отметку диалога. conv сохраняет вызывающий код
+    (_handle_message_locked) — здесь только меняем поля.
+    """
+    conv.homework_check_context = True
+    conv.homework_check_context_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    try:
+        from app import crm_store
+
+        row = crm_store.find_conversation(conv.platform, conv.user_id)
+        crm_store.record_homework_request(
+            platform=conv.platform, user_id=conv.user_id,
+            customer_id=(row or {}).get("customer_id"),
+            conversation_id=(row or {}).get("id"),
+            channel=conv.platform, mode="explain", input_type="text",
+            task_text=task_text, reply=reply,
+        )
+    except Exception:
+        logger.exception(
+            "ai_core: не удалось записать заявку на ДЗ user_id=%s", conv.user_id
+        )
+
+
 async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     max_client = get_max()
     bigben = get_bigben()
@@ -974,7 +1009,9 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
         if task_text or conv.awaiting_homework:
             conv.awaiting_homework = False
             reply = await homework.explain_homework_text(task_text or text)
-            return reply or homework.HOMEWORK_TEXT_FALLBACK
+            reply = reply or homework.HOMEWORK_TEXT_FALLBACK
+            _record_text_homework(conv, task_text or text, reply)
+            return reply
         conv.awaiting_homework = True
         return homework.HOMEWORK_INVITE
 
