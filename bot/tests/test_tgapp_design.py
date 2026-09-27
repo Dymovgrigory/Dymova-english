@@ -173,13 +173,23 @@ def test_actions_open_as_sheets():
 
 
 def test_homework_help_lives_inside_chat():
-    """Разбор задания, проверка решения и голосовое — кнопки в чате."""
-    for element_id in ("chat-explain-btn", "chat-check-btn", "chat-voice-btn"):
+    """Разбор задания, проверка решения и голосовое (запись и файлом) — кнопки в чате."""
+    for element_id in (
+        "chat-explain-btn", "chat-check-btn", "chat-voice-btn", "chat-voice-file-btn",
+    ):
         assert f'id="{element_id}"' in HTML, f"нет кнопки #{element_id}"
     assert "/api/miniapp/homework/check" in JS
     assert "/api/miniapp/homework/voice" in JS
     assert "/api/miniapp/chat/history" in JS
     assert "MediaRecorder" in JS
+
+
+def test_homework_401_shows_clear_message_not_fake_ai_failure():
+    """Открытие ссылки не через кнопку бота даёт 401 (нет подписанной
+    личности) — это не должно тонуть в тексте "не удалось разобрать"/"не
+    расслышала", как будто ИИ реально не справился."""
+    assert "NOT_SIGNED_IN_MESSAGE" in JS
+    assert JS.count("data.__status === 401") >= 2
 
 
 def test_sheet_forms_are_built_in_js_with_escaping():

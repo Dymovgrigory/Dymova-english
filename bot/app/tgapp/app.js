@@ -1065,6 +1065,15 @@
 
   /** Разбор/проверка задания по фото — та же ручка, что раньше открывалась
    *  отдельным листом; теперь фото сразу уходит из чата. */
+  // Открылись не через кнопку бота (например, прямая ссылка вставлена в
+  // обычный браузер) — initData() пуст, сервер честно отвечает 401, но
+  // раньше это тонуло в общем "не удалось разобрать" — человек думал, что
+  // сломался разбор, а не то, что он не авторизован.
+  var NOT_SIGNED_IN_MESSAGE =
+    "Не получилось подтвердить личность. Откройте это мини-приложение " +
+    "кнопкой в чате Telegram или MAX — по прямой ссылке в обычном браузере " +
+    "вход не работает.";
+
   function submitHomeworkFile(file, note, checkMode) {
     homeworkBusy = true;
     var typing = addMessage("bot", "…");
@@ -1076,6 +1085,10 @@
     request(path, { method: "POST", body: form, timeout: 90000 })
       .then(function (data) {
         typing.remove();
+        if (data.__status === 401) {
+          addMessage("bot", NOT_SIGNED_IN_MESSAGE);
+          return;
+        }
         if (data.__status === 403) {
           addMessage("bot", data.error || "Раздел откроется после регистрации.");
           return;
@@ -1112,6 +1125,61 @@
   var mediaRecorder = null;
   var mediaChunks = [];
   var mediaStopTimer = null;
+
+  /** Отправка голосового — общая для записи с микрофона и для файла,
+   *  выбранного через «Прикрепить аудио» (submitHomeworkAudioFile ниже). */
+  function submitHomeworkAudio(blob, filename) {
+    homeworkBusy = true;
+    addMessage("me", "Голосовое сообщение");
+    var typing = addMessage("bot", "…");
+    typing.classList.add("bubble--typing");
+    var form = new FormData();
+    form.append("audio", blob, filename);
+    request("/api/miniapp/homework/voice", { method: "POST", body: form, timeout: 90000 })
+      .then(function (data) {
+        typing.remove();
+        if (data.__status === 401) {
+          addMessage("bot", NOT_SIGNED_IN_MESSAGE);
+          return;
+        }
+        if (data.__status === 403) {
+          addMessage("bot", data.error || "Раздел откроется после регистрации.");
+          return;
+        }
+        if (data.ok) {
+          addMessage("bot", "Услышал: «" + data.transcript + "»");
+          addMessage("bot", data.explanation);
+          // Как и в submitHomeworkFile: ответ сервер уже записал в CRM,
+          // локально он уже показан — двигаем только курсор поллинга.
+          pollChatMessages(true);
+        } else {
+          addMessage("bot", data.error || "Не расслышала запись.");
+        }
+      })
+      .catch(function () {
+        typing.remove();
+        addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+      })
+      .finally(function () {
+        homeworkBusy = false;
+      });
+  }
+
+  /** Голосовое из файла — на случай, если запись с микрофона недоступна
+   *  (браузер без разрешения, десктоп без встроенного мика) или ученик уже
+   *  записал голосовое в другом приложении и хочет прислать его как файл. */
+  function pickHomeworkAudioFile() {
+    if (homeworkBusy) return;
+    var input = document.createElement("input");
+    input.type = "file";
+    input.accept = "audio/*";
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      submitHomeworkAudio(file, file.name || "voice.m4a");
+    });
+    input.click();
+  }
 
   /** Голосовое сообщение с заданием: запись в браузере, распознавание и
    *  разбор — на сервере (см. /api/miniapp/homework/voice).
@@ -1164,32 +1232,7 @@
         var blob = new Blob(chunks, { type: mimeType });
         if (!blob.size) return; // пустая запись — не тратим STT впустую
         var ext = mimeType.indexOf("mp4") >= 0 ? "m4a" : "webm";
-        homeworkBusy = true;
-        addMessage("me", "Голосовое сообщение");
-        var typing = addMessage("bot", "…");
-        typing.classList.add("bubble--typing");
-        var form = new FormData();
-        form.append("audio", blob, "voice." + ext);
-        request("/api/miniapp/homework/voice", { method: "POST", body: form, timeout: 90000 })
-          .then(function (data) {
-            typing.remove();
-            if (data.ok) {
-              addMessage("bot", "Услышал: «" + data.transcript + "»");
-              addMessage("bot", data.explanation);
-              // Как и в submitHomeworkFile: ответ сервер уже записал в CRM,
-              // локально он уже показан — двигаем только курсор поллинга.
-              pollChatMessages(true);
-            } else {
-              addMessage("bot", data.error || "Не расслышала запись.");
-            }
-          })
-          .catch(function () {
-            typing.remove();
-            addMessage("bot", "Нет связи. Попробуйте ещё раз.");
-          })
-          .finally(function () {
-            homeworkBusy = false;
-          });
+        submitHomeworkAudio(blob, "voice." + ext);
       });
       mediaRecorder.start();
       haptic("light");
@@ -1842,6 +1885,7 @@
     on("#chat-explain-btn", "click", function () { pickHomeworkPhoto(false); });
     on("#chat-check-btn", "click", function () { pickHomeworkPhoto(true); });
     on("#chat-voice-btn", "click", startVoiceHomework);
+    on("#chat-voice-file-btn", "click", pickHomeworkAudioFile);
 
     on("#chat-manager-call", "click", function () {
       // Кнопка «Позвать менеджера»: заявка админам + режим менеджера.
