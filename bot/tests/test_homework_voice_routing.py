@@ -72,11 +72,18 @@ async def test_telegram_voice_transcription_failure_asks_to_retype(monkeypatch):
 @pytest.mark.asyncio
 async def test_telegram_voice_non_homework_intent_routes_to_chat_not_homework():
     """Финальное ревью, важное #8б: раньше ЛЮБОЕ голосовое безусловно
-    считалось домашкой — родитель, спрашивающий голосом про пробное занятие,
-    получал разбор задания вместо ответа по существу. После распознавания
-    текста намерение проверяется тем же способом, что и у текстовых веток
-    этого файла: явно другая тема (здесь — ABOUT, «пробное занятие») уходит
-    в обычный чат (handle_message), а не в explain_homework_text."""
+    считалось домашкой — родитель, записывающий ребёнка на пробное занятие
+    голосом, получал разбор задания вместо ответа по существу. После
+    распознавания текста намерение проверяется через _voice_diverts_to_chat:
+    явно другая тема (здесь — WANT_SIGNUP, «хочу записать») уходит в обычный
+    чат (handle_message), а не в explain_homework_text.
+
+    Фраза намеренно НЕ «Когда у вас пробное занятие?» (использовалась в
+    первой версии этого теста) — при доработке #8б (см. регресс ниже,
+    test_voice_courses_keyword_does_not_divert_from_tutor) эта фраза стала
+    ABOUT с «похожим на задание» текстом по эвристике _homework_task_text и
+    больше не разворачивается однозначно — WANT_SIGNUP разворачивается
+    всегда, это надёжный пример «точно не домашка»."""
     telegram = AsyncMock()
     telegram.download_file = AsyncMock(return_value=b"fake-ogg-bytes")
     telegram.send_message = AsyncMock(return_value=True)
@@ -87,8 +94,8 @@ async def test_telegram_voice_non_homework_intent_routes_to_chat_not_homework():
         "from": {"id": 555, "first_name": "Аня"},
     }
     explain_mock = AsyncMock(return_value="разбор — не должен был вызваться")
-    handle_message_mock = AsyncMock(return_value="Пробное занятие в субботу в 11:00.")
-    with patch("app.speech.transcribe", new=AsyncMock(return_value="Когда у вас пробное занятие?")), \
+    handle_message_mock = AsyncMock(return_value="Записала на пробное занятие в субботу в 11:00.")
+    with patch("app.speech.transcribe", new=AsyncMock(return_value="Хочу записать ребёнка на пробное занятие")), \
          patch("app.homework.explain_homework_text", new=explain_mock), \
          patch("app.main.handle_message", new=handle_message_mock), \
          patch("app.crm_ingest.ingest_inbound", return_value={"conversation_id": 1, "customer_id": 1}):
@@ -96,7 +103,63 @@ async def test_telegram_voice_non_homework_intent_routes_to_chat_not_homework():
     explain_mock.assert_not_awaited()
     handle_message_mock.assert_awaited_once()
     sent_texts = [call.args[1] for call in telegram.send_message.await_args_list]
-    assert any("Пробное занятие" in t for t in sent_texts)
+    assert any("Записала на пробное занятие" in t for t in sent_texts)
+
+
+@pytest.mark.asyncio
+async def test_voice_courses_keyword_does_not_divert_from_tutor():
+    """Финальное ревью: регресс из первой версии #8б. `I.detect_intent`
+    матчит COURSES-ключевые слова школы английского («английск», «грамматик»,
+    «уровень», «группа») РАНЬШЕ QUESTION/HOMEWORK — а «задание по
+    английскому: вставь is или are» это самая обычная формулировка
+    голосового задания. Deny-list первой версии уводил такие сообщения в
+    консультацию по курсам вместо разбора задания. Пин: этот транскрипт
+    по-прежнему доходит до explain_homework_text, а не до handle_message."""
+    telegram = AsyncMock()
+    telegram.download_file = AsyncMock(return_value=b"fake-ogg-bytes")
+    telegram.send_message = AsyncMock(return_value=True)
+    message = {
+        "voice": {"file_id": "voice-2", "mime_type": "audio/ogg"},
+        "chat": {"id": 556},
+        "message_id": 11,
+        "from": {"id": 556, "first_name": "Боря"},
+    }
+    explain_mock = AsyncMock(return_value="📘 Правило: is/are...")
+    handle_message_mock = AsyncMock(return_value="консультация по курсам — не должна была вызваться")
+    with patch(
+        "app.speech.transcribe",
+        new=AsyncMock(return_value="Задание по английскому: вставь is или are"),
+    ), \
+         patch("app.homework.explain_homework_text", new=explain_mock), \
+         patch("app.main.handle_message", new=handle_message_mock), \
+         patch("app.crm_ingest.ingest_inbound", return_value={"conversation_id": 1, "customer_id": 1}), \
+         patch("app.crm_store.record_homework_request", return_value=1):
+        await main_module._handle_telegram_voice(message, 556, telegram)
+    handle_message_mock.assert_not_awaited()
+    explain_mock.assert_awaited_once()
+
+
+def test_voice_diverts_to_chat_matches_finding1_examples():
+    """Юнит на саму функцию (используется и Telegram-, и MAX-обработчиком) —
+    все три фразы из ревью, которые раньше ошибочно уводились в COURSES, и
+    контрпримеры однозначно других тем."""
+    from app.main import _voice_diverts_to_chat
+
+    # Раньше ошибочно разворачивались (COURSES) — теперь остаются в тьюторе.
+    assert _voice_diverts_to_chat("Задание по английскому: вставь is или are") is False
+    assert _voice_diverts_to_chat(
+        "Помоги с упражнением по английскому, надо вставить a или an"
+    ) is False
+    assert _voice_diverts_to_chat("Помоги с грамматикой, present simple") is False
+
+    # Однозначно другие темы — разворачиваются всегда.
+    assert _voice_diverts_to_chat("Сколько стоит абонемент?") is True
+    assert _voice_diverts_to_chat("Хочу записать ребёнка на пробное занятие") is True
+    assert _voice_diverts_to_chat("Позовите, пожалуйста, администратора") is True
+
+    # CONTACTS/ABOUT без похожего на задание текста — разворачиваются;
+    # с похожим на задание текстом — остаются в тьюторе.
+    assert _voice_diverts_to_chat("Адрес") is True
 
 
 def test_homework_check_context_expires_after_ttl():

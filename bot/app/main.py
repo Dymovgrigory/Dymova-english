@@ -672,6 +672,37 @@ def _record_text_homework_request(
     )
 
 
+# Финальное ревью (регресс из #8б): голосовые обработчики раньше просто
+# проверяли `I.detect_intent(text) not in (None, I.QUESTION, I.HOMEWORK)` —
+# это deny-list, который разворачивал в обычный чат ВСЁ, кроме явной
+# домашки/вопроса. Но `detect_intent` матчит ключевые слова COURSES
+# («английск», «грамматик», «уровень», «группа») РАНЬШЕ QUESTION/HOMEWORK —
+# а «задание по английскому: вставь is или are» это самая обычная
+# формулировка голосового задания в школе английского языка. Deny-list
+# уводил такие сообщения в консультацию по курсам вместо разбора задания —
+# хуже, чем вообще не фильтровать (что и было проблемой #8б). Поэтому
+# список сделан ОБРАТНЫМ: allow-list тем, которые ОДНОЗНАЧНО не домашка —
+# при любом сомнении (включая COURSES и GREETING) уходим в тьютора.
+_VOICE_DIVERT_INTENTS = frozenset(
+    {I.PRICE, I.SCHEDULE, I.WANT_SIGNUP, I.HANDOFF, I.REGISTER, I.OBJECTION}
+)
+# CONTACTS/ABOUT разворачиваем в чат, только если в тексте вообще нет
+# похожего на задание содержимого — «а как к вам добраться» не должно
+# уйти в тьютора, а «отметь is или are, кстати как к вам добраться» — с
+# заданием внутри — всё равно должно разбираться.
+_VOICE_DIVERT_IF_NO_TASK_INTENTS = frozenset({I.CONTACTS, I.ABOUT})
+
+
+def _voice_diverts_to_chat(text: str) -> bool:
+    """Голосовое явно НЕ про домашку — тогда обычный чат, а не тьютор."""
+    intent = I.detect_intent(text)
+    if intent in _VOICE_DIVERT_INTENTS:
+        return True
+    if intent in _VOICE_DIVERT_IF_NO_TASK_INTENTS:
+        return not homework._homework_task_text(text)
+    return False
+
+
 @app.post("/api/miniapp/homework")
 async def api_homework(
     request: Request,
@@ -1403,16 +1434,19 @@ async def _handle_telegram_voice(message: dict, chat_id, telegram, update: dict 
         return
     await telegram.send_message(chat_id, f"Услышал: «{text}»")
 
-    # Тот же критерий «это похоже на домашку», что и у текстовых обработчиков
-    # этого файла (ср. `I.detect_intent(text) in (None, I.QUESTION,
-    # I.HOMEWORK)` в _process_telegram_update): явно другая тема (цена,
-    # контакты, запись и т.п.) уходит в обычный чат, а не в разбор задания.
-    if I.detect_intent(text) not in (None, I.QUESTION, I.HOMEWORK):
+    # Голосовое явно НЕ про домашку (см. _voice_diverts_to_chat) — уходит в
+    # обычный чат, а не в разбор задания. При любом сомнении (в том числе
+    # COURSES/GREETING) остаёмся в тьюторе — deny-list здесь уводил обычные
+    # формулировки задания («по английскому», «грамматика») в консультацию
+    # по курсам (финальное ревью, регресс из #8б).
+    if _voice_diverts_to_chat(text):
         reply = await _reply_while_alive(
             telegram, chat_id, lambda: handle_message(user_id, text, platform=TELEGRAM_PLATFORM)
         )
-        ok = await telegram.send_message(chat_id, reply)
-        crm_ingest.ingest_outbound(crm_ctx, reply, ai_model=settings.LLM_MODEL, ok=bool(ok))
+        # _send_tg_logged (а не голый send_message) — пустой reply (AI на
+        # паузе/у менеджера) не должен уйти пустым сообщением в Telegram API
+        # и пустой записью в CRM (финальное ревью, Minor #2).
+        await _send_tg_logged(telegram, chat_id, reply, crm_ctx)
         return
 
     explanation = await _reply_while_alive(
@@ -2077,16 +2111,19 @@ async def _handle_max_voice(url: str, user_id: str, message: dict, update: dict,
         return
     await max_client.send_message(user_id, f"Услышал: «{text}»")
 
-    # Тот же критерий, что и у текстовой домашки MAX (`I.detect_intent(text)
-    # == I.HOMEWORK` / `in (None, I.QUESTION)` выше в этом файле): явно
-    # другая тема уходит в обычный чат, а не в разбор задания (финальное
-    # ревью, важное #8б — раньше ЛЮБОЕ голосовое безусловно считалось ДЗ).
-    if I.detect_intent(text) not in (None, I.QUESTION, I.HOMEWORK):
+    # Голосовое явно НЕ про домашку (см. _voice_diverts_to_chat) — уходит в
+    # обычный чат, а не в разбор задания. При любом сомнении (в том числе
+    # COURSES/GREETING) остаёмся в тьюторе — deny-list здесь уводил обычные
+    # формулировки задания («по английскому», «грамматика») в консультацию
+    # по курсам (финальное ревью, регресс из #8б).
+    if _voice_diverts_to_chat(text):
         reply = await _reply_while_alive(
             max_client, user_id, lambda: handle_message(user_id, text, platform=PLATFORM)
         )
-        ok = await max_client.send_message(user_id, reply)
-        crm_ingest.ingest_outbound(crm_ctx, reply, ai_model=settings.LLM_MODEL, ok=bool(ok))
+        # _send_max_logged (а не голый send_message) — пустой reply (AI на
+        # паузе/у менеджера) не должен уйти пустым сообщением и пустой
+        # записью в CRM (финальное ревью, Minor #2).
+        await _send_max_logged(max_client, user_id, reply, crm_ctx)
         return
 
     explanation = await _reply_while_alive(

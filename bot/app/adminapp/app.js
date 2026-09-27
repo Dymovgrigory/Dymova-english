@@ -943,13 +943,21 @@ $("chat-customer-btn").addEventListener("click", () => {
 /* --- drawer и полная история ---------------------------------------------- */
 
 function openDrawer(title, loader) {
+  // Уходящий drawer мог держать blob-URL фото ДЗ (см. renderHomeworkDetail
+  // ниже) — освобождаем его здесь же, а не только при явном закрытии:
+  // переключение между карточками без закрытия drawer иначе копило бы
+  // непрочитанные blob-URL в памяти вкладки.
+  _revokeHwDetailImageBlobUrl();
   $("drawer").hidden = false;
   $("drawer-title").textContent = title;
   $("drawer-body").innerHTML = `<div class="empty">Загружаю…</div>`;
   loader();
 }
 
-function closeDrawer() { $("drawer").hidden = true; }
+function closeDrawer() {
+  _revokeHwDetailImageBlobUrl();
+  $("drawer").hidden = true;
+}
 $("drawer-close").addEventListener("click", closeDrawer);
 $("drawer-backdrop").addEventListener("click", closeDrawer);
 
@@ -2325,6 +2333,19 @@ async function fetchAdminImageBlobUrl(path) {
   return URL.createObjectURL(blob);
 }
 
+// blob-URL текущего открытого фото ДЗ в drawer — createObjectURL держит
+// память байтов файла, пока URL не отозван явно (finding #3 финального
+// ревью: раньше не отзывался никогда). Освобождается в openDrawer/
+// closeDrawer (переключение/закрытие drawer) и перед созданием нового.
+let _hwDetailImageBlobUrl = null;
+
+function _revokeHwDetailImageBlobUrl() {
+  if (_hwDetailImageBlobUrl) {
+    URL.revokeObjectURL(_hwDetailImageBlobUrl);
+    _hwDetailImageBlobUrl = null;
+  }
+}
+
 function renderHomeworkDetail(h) {
   const name = h.customer_name || h.customer_phone || `Клиент #${h.customer_id || "—"}`;
   const imageBlock = h.image_path
@@ -2349,7 +2370,15 @@ function renderHomeworkDetail(h) {
     fetchAdminImageBlobUrl(`/admin/api/homework/${h.id}/image`)
       .then((blobUrl) => {
         const img = $("hw-detail-image");
-        if (img) img.src = blobUrl;
+        if (img) {
+          _hwDetailImageBlobUrl = blobUrl;
+          img.src = blobUrl;
+        } else {
+          // Drawer успел переключиться на другую карточку, пока грузилось
+          // фото, — элемента уже нет и отслеживать URL для будущего
+          // openDrawer/closeDrawer некому: отзываем сразу же.
+          URL.revokeObjectURL(blobUrl);
+        }
       })
       .catch(() => {
         const img = $("hw-detail-image");
