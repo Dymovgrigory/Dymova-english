@@ -84,18 +84,23 @@ def verify_telegram_init_data(init_data: str, token: str | None = None) -> MiniA
         secret, _data_check_string(parsed).encode(), hashlib.sha256
     ).hexdigest()
     if not hmac.compare_digest(computed, received_hash):
-        # Временная диагностика (2026-09-11): у части сессий подпись не
-        # сходится. Логируем контекст без самих подписей: кто, когда открыта
-        # сессия и сколько полей пришло — чтобы отличить «чужой бот» от
-        # «битая строка».
+        # Временная диагностика (2026-09-11, расширена 2026-09-28): у части
+        # сессий подпись не сходится. Логируем СТРУКТУРУ (ключи, длины,
+        # безобратимый отпечаток check_string), а не сами значения — там
+        # настоящее имя/username пользователя из initData, и не сами хэши
+        # (даже усечённые) — незачем ослаблять HMAC частичной утечкой байт,
+        # когда для диагностики достаточно знать, что они разные.
         user = _parse_user(parsed)
+        check_string = _data_check_string(parsed)
+        fingerprint = hashlib.sha256(check_string.encode()).hexdigest()[:16]
+        value_lengths = {key: [len(v) for v in parsed[key]] for key in sorted(parsed)}
         logger.warning(
             "miniapp: неверная подпись Telegram initData "
-            "(user_id=%s, auth_date=%s, полей=%s, длина=%s, ключи=%s, "
-            "check_string=%r, hash_recv=%s, hash_calc=%s)",
+            "(user_id=%s, auth_date=%s, полей=%s, длина=%s, длины_значений=%s, "
+            "check_string_len=%s, check_string_sha256=%s, содержит_плюс=%s)",
             user.get("id"), parsed.get("auth_date", [""])[0],
-            len(parsed), len(init_data), sorted(parsed.keys()),
-            _data_check_string(parsed), received_hash[:12], computed[:12],
+            len(parsed), len(init_data), value_lengths,
+            len(check_string), fingerprint, "+" in init_data,
         )
         return None
     if not _auth_date_fresh(parsed):
