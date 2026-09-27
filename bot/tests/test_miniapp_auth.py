@@ -45,6 +45,21 @@ def test_tampered_signature_is_rejected():
     assert miniapp_auth.verify_telegram_init_data(init_data, TOKEN) is None
 
 
+def test_real_telegram_client_with_signature_field_is_accepted():
+    """Регрессия 2026-09-28: сервер отклонял ЛЮБОЙ настоящий Telegram-клиент
+    (initData реального клиента почти всегда содержит Ed25519 `signature`),
+    потому что старый код исключал `signature` из data-check-string — а
+    реальный Telegram его туда включает. Синтетический initData в тестах до
+    этой правки signature не добавлял вовсе, поэтому баг остался незамеченным."""
+    identity = miniapp_auth.verify_telegram_init_data(
+        make_telegram_init_data(TOKEN, telegram_user_id=777, include_signature=True),
+        TOKEN,
+    )
+
+    assert identity is not None
+    assert identity.user_id == "tg:777"
+
+
 def test_init_data_signed_with_another_token_is_rejected():
     """Подпись чужим токеном не должна открывать наш кабинет."""
     init_data = make_telegram_init_data("someone-elses-token", telegram_user_id=777)

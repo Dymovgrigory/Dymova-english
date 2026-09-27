@@ -9,6 +9,13 @@ initData от платформы. Открытый `?user_id=` из запрос
     secret_key   = HMAC_SHA256(key="WebAppData", msg=bot_token)
     data_check   = "\\n".join(sorted("key=value" для всех полей, кроме hash))
     valid        = HMAC_SHA256(key=secret_key, msg=data_check).hex() == hash
+
+`signature` (Ed25519, третьесторонняя проверка) в data_check ВХОДИТ, если он
+присутствует в initData — так реально считает hash сам Telegram. Старая
+версия документации (и более старые её копии) описывала signature как
+исключаемое поле наравне с hash; это ломало проверку для каждого реального
+Telegram-клиента (тесты этого не ловили — синтетический initData в тестах
+signature не добавлял вовсе). Разбор живого расхождения — 2026-09-28.
 """
 from __future__ import annotations
 
@@ -76,38 +83,20 @@ def verify_telegram_init_data(init_data: str, token: str | None = None) -> MiniA
     received_hash = parsed.pop("hash", [""])[0]
     if not received_hash:
         return None
-    # signature — поле третьесторонней (Ed25519) проверки, в HMAC не входит.
-    parsed.pop("signature", None)
+    # signature (Ed25519) остаётся в data_check_string — см. docstring модуля:
+    # реальный Telegram включает его в hash, несмотря на более старые версии
+    # документации, описывавшие его как исключаемое поле наравне с hash.
 
     secret = hmac.new(b"WebAppData", bot_token.encode(), hashlib.sha256).digest()
     computed = hmac.new(
         secret, _data_check_string(parsed).encode(), hashlib.sha256
     ).hexdigest()
     if not hmac.compare_digest(computed, received_hash):
-        # Временная диагностика (2026-09-11, расширена 2026-09-28): у части
-        # сессий подпись не сходится. Логируем СТРУКТУРУ (ключи, длины,
-        # безобратимый отпечаток check_string), а не сами значения — там
-        # настоящее имя/username пользователя из initData, и не сами хэши
-        # (даже усечённые) — незачем ослаблять HMAC частичной утечкой байт,
-        # когда для диагностики достаточно знать, что они разные.
         user = _parse_user(parsed)
-        check_string = _data_check_string(parsed)
-        fingerprint = hashlib.sha256(check_string.encode()).hexdigest()[:16]
-        value_lengths = {key: [len(v) for v in parsed[key]] for key in sorted(parsed)}
         logger.warning(
-            "miniapp: неверная подпись Telegram initData "
-            "(user_id=%s, auth_date=%s, полей=%s, длина=%s, длины_значений=%s, "
-            "check_string_len=%s, check_string_sha256=%s, содержит_плюс=%s)",
-            user.get("id"), parsed.get("auth_date", [""])[0],
-            len(parsed), len(init_data), value_lengths,
-            len(check_string), fingerprint, "+" in init_data,
+            "miniapp: неверная подпись Telegram initData (user_id=%s, auth_date=%s, полей=%s)",
+            user.get("id"), parsed.get("auth_date", [""])[0], len(parsed),
         )
-        # РАЗОВАЯ точечная диагностика по явному разрешению владельца
-        # (2026-09-28) — удалить сразу после находки. Предыдущие шаги
-        # доказали, что хэш из УЖЕ РАЗОБРАННЫХ полей верен побайтово — это
-        # не говорит о том, не исказил ли сам parse_qs сырую строку ДО
-        # разбора. Логируем сырой init_data целиком один раз для сравнения.
-        logger.warning("miniapp: RAW init_data (временно) = %r", init_data)
         return None
     if not _auth_date_fresh(parsed):
         logger.warning("miniapp: просроченный auth_date в Telegram initData")

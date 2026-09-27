@@ -19,11 +19,18 @@ def make_telegram_init_data(
     first_name: str = "Аня",
     auth_date: int | None = None,
     tamper: bool = False,
+    include_signature: bool = True,
 ) -> str:
     """Собирает подписанный Telegram initData — как его отдаёт настоящий клиент.
 
     Нужен, чтобы тесты API мини-приложения работали с настоящей подписью, а не
     с доверием к открытому `user_id`.
+
+    `include_signature=True` по умолчанию: реальный Telegram почти всегда
+    добавляет поле Ed25519-подписи `signature`, и оно ВХОДИТ в data-check-string
+    для основного `hash` (разбор реального расхождения 2026-09-28 — раньше
+    этот хелпер signature вообще не добавлял, поэтому тесты не ловили баг,
+    из-за которого сервер отклонял подпись каждого настоящего клиента).
     """
     fields = {
         "auth_date": str(int(auth_date if auth_date is not None else time.time())),
@@ -34,12 +41,14 @@ def make_telegram_init_data(
             ensure_ascii=False,
         ),
     }
+    if include_signature:
+        fields["signature"] = "test-ed25519-signature-placeholder"
     data_check = "\n".join(f"{k}={fields[k]}" for k in sorted(fields))
     secret = hmac.new(b"WebAppData", token.encode(), hashlib.sha256).digest()
-    signature = hmac.new(secret, data_check.encode(), hashlib.sha256).hexdigest()
+    signature_hash = hmac.new(secret, data_check.encode(), hashlib.sha256).hexdigest()
     if tamper:
-        signature = "0" * len(signature)
-    return urllib.parse.urlencode({**fields, "hash": signature})
+        signature_hash = "0" * len(signature_hash)
+    return urllib.parse.urlencode({**fields, "hash": signature_hash})
 
 
 @pytest.fixture(autouse=True)
