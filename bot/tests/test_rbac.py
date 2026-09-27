@@ -86,6 +86,8 @@ def test_role_matrix(client):
     assert client.get("/admin/api/broadcasts", headers=mgr).status_code == 403
     assert client.get("/admin/api/kb", headers=mgr).status_code == 403
     assert client.get("/admin/api/export/customers.csv", headers=mgr).status_code == 403
+    # manager: раздел ДЗ — можно.
+    assert client.get("/admin/api/homework", headers=mgr).status_code == 200
 
     # marketing: рассылки/аналитика/экспорт — можно; KB и промпты — 403.
     assert client.get("/admin/api/broadcasts", headers=mkt).status_code == 200
@@ -94,6 +96,8 @@ def test_role_matrix(client):
     assert client.get("/admin/api/kb", headers=mkt).status_code == 403
     assert client.get("/admin/api/ai/prompts", headers=mkt).status_code == 403
     assert client.get("/admin/api/system", headers=mkt).status_code == 403
+    # marketing: ДЗ не по их профилю — 403.
+    assert client.get("/admin/api/homework", headers=mkt).status_code == 403
 
     # support: inbox/customers/reply/stats — можно; всё остальное — 403.
     assert client.get("/admin/api/inbox", headers=sup).status_code == 200
@@ -101,6 +105,8 @@ def test_role_matrix(client):
     assert client.get("/admin/api/analytics", headers=sup).status_code == 403
     assert client.get("/admin/api/broadcasts", headers=sup).status_code == 403
     assert client.get("/admin/api/admin-users", headers=sup).status_code == 403
+    # support: раздел ДЗ — можно.
+    assert client.get("/admin/api/homework", headers=sup).status_code == 200
 
 
 def test_legacy_token_is_super_admin(client):

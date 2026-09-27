@@ -202,14 +202,15 @@ function showSection(name, options = {}) {
   document.querySelectorAll(".nav-item[data-section]").forEach((el) =>
     el.classList.toggle("nav-item--active", el.dataset.section === name));
   const sectionPerms = {
-    dashboard: "stats", inbox: "inbox", requests: "inbox", customers: "customers",
+    dashboard: "stats", inbox: "inbox", requests: "inbox", homework: "homework",
+    customers: "customers",
     pipeline: "pipeline", broadcast: "broadcasts", insights: "stats",
     analytics: "analytics", kb: "kb", ai: "prompts", errors: "errors",
     users: "users", settings: "system", platform: "stats",
   };
   if (!hasPerm(sectionPerms[name] || "stats")) name = "inbox";
   SECTION = name;
-  ["dashboard", "inbox", "requests", "customers", "pipeline", "broadcast", "insights",
+  ["dashboard", "inbox", "requests", "homework", "customers", "pipeline", "broadcast", "insights",
    "analytics", "kb", "ai", "errors", "users", "settings", "platform"].forEach((s) => {
     $(`page-${s}`).hidden = s !== name;
   });
@@ -218,6 +219,7 @@ function showSection(name, options = {}) {
   if (name === "dashboard") loadDashboard();
   if (name === "inbox") loadInbox();
   if (name === "requests") loadRequests();
+  if (name === "homework") loadHomework();
   if (name === "customers") loadCustomers();
   if (name === "pipeline") loadPipeline();
   if (name === "broadcast") loadBroadcastCenter();
@@ -2241,6 +2243,94 @@ $("au-list").addEventListener("click", async (event) => {
     }
   }
 });
+
+/* --- домашние задания ------------------------------------------------------- */
+
+const HOMEWORK_MODE_LABELS = { explain: "Объясни", check: "Проверь решение" };
+
+async function loadHomework() {
+  try {
+    const params = new URLSearchParams();
+    const mode = $("homework-mode").value;
+    const dateFrom = $("homework-date-from").value;
+    const dateTo = $("homework-date-to").value;
+    if (mode) params.set("mode", mode);
+    if (dateFrom) params.set("date_from", dateFrom);
+    if (dateTo) params.set("date_to", dateTo);
+    params.set("limit", "100");
+    const data = await api(`/admin/api/homework?${params.toString()}`);
+    renderHomeworkList(data.items || []);
+  } catch (err) {
+    if (err.message === "unauthorized") showGate("Токен больше не подходит");
+    else toast(err.message);
+  }
+}
+
+$("homework-filter-apply").addEventListener("click", () => loadHomework());
+
+function renderHomeworkList(items) {
+  $("homework-list").innerHTML = items.length
+    ? items.map(homeworkRowHtml).join("")
+    : `<div class="empty">Обращений нет</div>`;
+}
+
+function homeworkRowHtml(h) {
+  const name = h.customer_name || h.customer_phone || `Клиент #${h.customer_id || "—"}`;
+  const preview = (h.task_text || h.audio_transcript || "").slice(0, 90);
+  return `
+    <button class="customer-row req-row" data-hw="${h.id}">
+      <span class="avatar avatar--${esc(h.channel || "web")}">${esc(initials(name))}</span>
+      <span class="customer-row__main">
+        <span class="customer-row__name">
+          <span class="muted">#${esc(h.id)}</span> ${esc(name)}
+          <span class="pill">${esc(HOMEWORK_MODE_LABELS[h.mode] || h.mode)}</span>
+        </span>
+        <span class="customer-row__meta">
+          ${channelPill(h.channel)} ${esc(fmtTime(h.created_at))}
+          ${preview ? " · " + esc(preview) + (preview.length === 90 ? "…" : "") : ""}
+        </span>
+      </span>
+    </button>`;
+}
+
+$("homework-list").addEventListener("click", (event) => {
+  const row = event.target.closest("[data-hw]");
+  if (row) openHomeworkRequest(Number(row.dataset.hw));
+});
+
+async function openHomeworkRequest(id) {
+  if (!id) return;
+  openDrawer(`Домашка #${id}`, async () => {
+    try {
+      const data = await api(`/admin/api/homework/${id}`);
+      renderHomeworkDetail(data.item || {});
+    } catch (err) {
+      $("drawer-body").innerHTML = `<div class="empty">${esc(err.message)}</div>`;
+    }
+  });
+}
+
+function renderHomeworkDetail(h) {
+  const name = h.customer_name || h.customer_phone || `Клиент #${h.customer_id || "—"}`;
+  const imageBlock = h.image_path
+    ? `<img class="hw-detail__image" src="/admin/api/homework/${h.id}/image" alt="" />`
+    : "";
+  const transcriptBlock = h.audio_transcript
+    ? `<div class="hw-detail__block"><h4>Распознанный голос</h4><p>${esc(h.audio_transcript)}</p></div>`
+    : "";
+  $("drawer-body").innerHTML = `
+    <div class="hw-detail">
+      <div class="hw-detail__meta">
+        ${channelPill(h.channel)} <span class="pill">${esc(HOMEWORK_MODE_LABELS[h.mode] || h.mode)}</span>
+        <span class="muted">${esc(fmtTime(h.created_at))}</span>
+      </div>
+      <div class="hw-detail__block"><h4>Клиент</h4><p>${esc(name)}</p></div>
+      ${imageBlock}
+      ${transcriptBlock}
+      <div class="hw-detail__block"><h4>Задание</h4><p>${esc(h.task_text || "—")}</p></div>
+      <div class="hw-detail__block"><h4>Ответ Фокси</h4><p>${esc(h.reply || "—")}</p></div>
+    </div>`;
+}
 
 /* --- старт ------------------------------------------------------------------ */
 

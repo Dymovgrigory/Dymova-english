@@ -17,6 +17,7 @@ import logging
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import FileResponse
 
 from app import crm_store
 from app.config import settings
@@ -43,15 +44,15 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
     # admin — всё, кроме управления пользователями и AI-промптов.
     "admin": {"inbox", "customers", "pipeline", "reply", "ai_mode", "stats",
               "health", "broadcasts", "segments", "analytics", "export",
-              "kb", "errors", "system", "requests"},
+              "kb", "errors", "system", "requests", "homework"},
     # manager — операционная работа: диалоги, клиенты, воронка, ответы, пауза AI.
     "manager": {"inbox", "customers", "pipeline", "reply", "ai_mode", "stats",
-                "health", "requests"},
+                "health", "requests", "homework"},
     # marketing — рассылки, сегменты, аналитика, экспорт; отвечать может.
     "marketing": {"broadcasts", "segments", "analytics", "export", "inbox",
                   "customers", "reply", "stats", "health"},
     # support — минимум: диалоги, клиенты, ответы, сводка, заявки.
-    "support": {"inbox", "customers", "reply", "stats", "health", "requests"},
+    "support": {"inbox", "customers", "reply", "stats", "health", "requests", "homework"},
 }
 
 # Rate-limit логина: 5 попыток в минуту по IP (защита от перебора пароля).
@@ -415,6 +416,47 @@ async def request_notes(request: Request, request_id: int, data: dict) -> dict:
             request_id, {"notes": str(data.get("notes", ""))}, actor=actor):
         raise HTTPException(status_code=404, detail="request not found")
     return {"ok": True, "request": crm_store.get_callback_request(request_id)}
+
+
+# --------- Домашние задания (homework_requests) ---------
+
+
+@router.get("/homework")
+async def homework_list(request: Request, mode: str = "", date_from: str = "",
+                        date_to: str = "", limit: int = 50, offset: int = 0) -> dict:
+    _authorize(request, "homework")
+    return {
+        "items": crm_store.list_homework_requests(
+            mode=mode or None, date_from=date_from or None, date_to=date_to or None,
+            limit=limit, offset=offset,
+        )
+    }
+
+
+@router.get("/homework/{request_id}")
+async def homework_detail(request: Request, request_id: int) -> dict:
+    _authorize(request, "homework")
+    item = crm_store.get_homework_request(request_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="homework request not found")
+    return {"item": item}
+
+
+@router.get("/homework/{request_id}/image")
+async def homework_image(request: Request, request_id: int) -> FileResponse:
+    _authorize(request, "homework")
+    item = crm_store.get_homework_request(request_id)
+    if item is None or not item.get("image_path"):
+        raise HTTPException(status_code=404, detail="no image for this request")
+    from pathlib import Path
+
+    from app.homework import HOMEWORK_IMAGE_DIR
+
+    filename = Path(item["image_path"]).name
+    path = Path(HOMEWORK_IMAGE_DIR) / filename
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="image file missing")
+    return FileResponse(str(path))
 
 
 # --------- Customer 360 ---------

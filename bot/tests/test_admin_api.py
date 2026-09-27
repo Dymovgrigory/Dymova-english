@@ -271,3 +271,28 @@ def test_old_admin_endpoints_still_work(client, monkeypatch):
     resp = client.get("/admin/users", headers=AUTH)
     assert resp.status_code == 200 and "rows" in resp.json()
     assert client.get("/admin/users").status_code == 401
+
+
+def test_homework_list_requires_auth(client):
+    resp = client.get("/admin/api/homework")
+    assert resp.status_code == 401
+
+
+def test_homework_list_and_detail(client):
+    req_id = crm_store.record_homework_request(
+        platform="telegram", user_id="tg:1", conversation_id=None,
+        channel="telegram", mode="explain", input_type="text",
+        task_text="I ... nine", reply="📘 Правило",
+    )
+    resp = client.get("/admin/api/homework", headers=AUTH)
+    assert resp.status_code == 200
+    assert len(resp.json()["items"]) == 1
+
+    detail = client.get(f"/admin/api/homework/{req_id}", headers=AUTH)
+    assert detail.status_code == 200
+    assert detail.json()["item"]["task_text"] == "I ... nine"
+
+
+def test_homework_detail_404_for_missing(client):
+    resp = client.get("/admin/api/homework/999999", headers=AUTH)
+    assert resp.status_code == 404

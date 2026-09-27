@@ -42,6 +42,9 @@
       <button class="nav-item" data-section="requests" data-perm="inbox">
         <svg viewBox="0 0 16 16"><path d="M3 14V2h8l-2 3 2 3H3"/></svg>
         Заявки <span class="nav-badge" id="nav-requests" hidden></span></button>
+      <button class="nav-item" data-section="homework" data-perm="homework">
+        <svg viewBox="0 0 16 16"><path d="M3 2h8l2 2v10H3z"/><path d="M6 6h6M6 9h6M6 12h4"/></svg>
+        Домашние задания</button>
       <button class="nav-item" data-section="customers" data-perm="customers">
         <svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 15c0-3 3-5 6-5s6 2 6 5"/></svg>
         Клиенты</button>
@@ -193,6 +196,21 @@
     <section class="page" id="page-requests" hidden>
       <div class="req-tabs" id="req-tabs"></div>
       <div class="customers-list" id="requests-list"></div>
+    </section>
+
+    <!-- Домашние задания -->
+    <section class="page" id="page-homework" hidden>
+      <div class="toolbar">
+        <select id="homework-mode">
+          <option value="">Любой режим</option>
+          <option value="explain">Объясни</option>
+          <option value="check">Проверь решение</option>
+        </select>
+        <input type="date" id="homework-date-from" />
+        <input type="date" id="homework-date-to" />
+        <button class="btn btn--ghost btn--sm" id="homework-filter-apply">Применить</button>
+      </div>
+      <div class="customers-list" id="homework-list"></div>
     </section>
 
     <!-- Клиенты -->

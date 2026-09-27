@@ -536,3 +536,9 @@ h1, h2, h3 { margin: 0 0 8px; }
 
 /* --- статусы сообщений --- */
 .bubble__status .btn { margin-left: 6px; padding: 1px 8px; font-size: 11px; }
+
+/* --- карточка домашнего задания --- */
+.hw-detail__image { display: block; max-width: 100%; border-radius: 12px; margin: 8px 0 16px; }
+.hw-detail__block { margin-bottom: 14px; }
+.hw-detail__block h4 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; opacity: .6; }
+.hw-detail__meta { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
