@@ -19,8 +19,10 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import hmac
+import ipaddress
 import json
 import logging
+import socket
 import urllib.parse
 from typing import Optional
 
@@ -125,6 +127,33 @@ def _max_error_description(resp: httpx.Response) -> str:
         if text:
             return f"HTTP {resp.status_code}: {text}"[:300]
     return f"HTTP {resp.status_code}"
+
+
+def _is_safe_download_url(url: str) -> bool:
+    """https-only и хост не резолвится в приватный/loopback/link-local адрес.
+
+    Защита от SSRF: заблокировать попытку скачать вложение с адреса вроде
+    http://169.254.169.254/... (metadata облака) или http://127.0.0.1:6379.
+    """
+    try:
+        parsed = urllib.parse.urlsplit(url)
+    except ValueError:
+        return False
+    if parsed.scheme != "https" or not parsed.hostname:
+        return False
+    try:
+        infos = socket.getaddrinfo(parsed.hostname, None)
+    except socket.gaierror:
+        return False
+    for info in infos:
+        addr = info[4][0]
+        try:
+            ip = ipaddress.ip_address(addr)
+        except ValueError:
+            return False
+        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast:
+            return False
+    return True
 
 
 class MaxClient:
@@ -317,12 +346,22 @@ class MaxClient:
 
     async def download_file(self, url: str, max_bytes: int) -> bytes | None:
         """Скачивает вложение MAX по прямой ссылке из payload.url. None — не
-        удалось или файл больше лимита.
+        удалось, файл больше лимита, или ссылка ведёт на внутренний адрес.
 
         Стримим, а не читаем ответ целиком: как и в telegram_client, без
         этого большая присылка (или чужой сервер, отвечающий гигабайтами)
         полностью буферизуется в памяти процесса ещё до проверки лимита.
+
+        В отличие от Telegram (где мы сами резолвим file_id через getFile на
+        api.telegram.org), здесь URL приходит прямо из тела вебхука — даже
+        при включённом MAX_WEBHOOK_SECRET это делает `url` значением, чью
+        честность мы не полностью контролируем. Проверяем схему и что хост
+        не резолвится в приватный/локальный адрес (SSRF на внутреннюю сеть
+        или metadata-эндпоинт облака).
         """
+        if not _is_safe_download_url(url):
+            logger.warning("max: скачивание вложения с небезопасным URL заблокировано")
+            return None
         try:
             async with httpx.AsyncClient(timeout=60) as client:
                 async with client.stream("GET", url) as response:

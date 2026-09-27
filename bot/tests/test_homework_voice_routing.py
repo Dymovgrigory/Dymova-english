@@ -308,11 +308,22 @@ class _FakeStreamCtx:
         return False
 
 
+def _resolve_to_public_ip(monkeypatch, module):
+    """Подменяет DNS-резолв в _is_safe_download_url на публичный адрес,
+    чтобы тесты не зависели от реальной сети/DNS."""
+    monkeypatch.setattr(
+        module.socket, "getaddrinfo",
+        lambda host, port: [(None, None, None, None, ("93.184.216.34", 0))],
+    )
+
+
 @pytest.mark.asyncio
 async def test_max_download_file_streams_from_payload_url(monkeypatch):
     import httpx
+    from app import max_client as max_client_module
     from app.max_client import MaxClient
 
+    _resolve_to_public_ip(monkeypatch, max_client_module)
     client = MaxClient()
 
     def fake_stream(self, method, url, **kwargs):
@@ -329,8 +340,10 @@ async def test_max_download_file_too_large_returns_none(monkeypatch):
     """Большой файл обрывается по ходу стрима, а не после полной загрузки в
     память — проверяем это по числу принятых чанков, а не только по итогу."""
     import httpx
+    from app import max_client as max_client_module
     from app.max_client import MaxClient
 
+    _resolve_to_public_ip(monkeypatch, max_client_module)
     client = MaxClient()
     seen_chunks: list[bytes] = []
 
@@ -351,6 +364,44 @@ async def test_max_download_file_too_large_returns_none(monkeypatch):
     # Лимит 10 байт — обрыв должен случиться на первом же чанке (100 байт),
     # а не после того, как все 5 чанков (500 байт) уже прочитаны.
     assert len(seen_chunks) == 1
+
+
+@pytest.mark.asyncio
+async def test_max_download_file_blocks_private_ip(monkeypatch):
+    """SSRF-защита: хост, резолвящийся во внутренний адрес (metadata облака,
+    localhost и т.п.), не должен скачиваться — запрос даже не уходит."""
+    import httpx
+    from app import max_client as max_client_module
+    from app.max_client import MaxClient
+
+    monkeypatch.setattr(
+        max_client_module.socket, "getaddrinfo",
+        lambda host, port: [(None, None, None, None, ("169.254.169.254", 0))],
+    )
+    client = MaxClient()
+
+    called = False
+
+    def fake_stream(self, method, url, **kwargs):
+        nonlocal called
+        called = True
+        return _FakeStreamCtx(_FakeStreamResponse(200, [b"leak"]))
+
+    monkeypatch.setattr(httpx.AsyncClient, "stream", fake_stream)
+    data = await client.download_file("https://internal.example/steal", 1024)
+    assert data is None
+    assert called is False
+
+
+@pytest.mark.asyncio
+async def test_max_download_file_blocks_non_https(monkeypatch):
+    from app import max_client as max_client_module
+    from app.max_client import MaxClient
+
+    _resolve_to_public_ip(monkeypatch, max_client_module)
+    client = MaxClient()
+    data = await client.download_file("http://example.max.ru/file/1", 1024)
+    assert data is None
 
 
 @pytest.mark.asyncio
