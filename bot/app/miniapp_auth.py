@@ -91,9 +91,11 @@ def verify_telegram_init_data(init_data: str, token: str | None = None) -> MiniA
         user = _parse_user(parsed)
         logger.warning(
             "miniapp: неверная подпись Telegram initData "
-            "(user_id=%s, auth_date=%s, полей=%s, длина=%s)",
+            "(user_id=%s, auth_date=%s, полей=%s, длина=%s, ключи=%s, "
+            "check_string=%r, hash_recv=%s, hash_calc=%s)",
             user.get("id"), parsed.get("auth_date", [""])[0],
-            len(parsed), len(init_data),
+            len(parsed), len(init_data), sorted(parsed.keys()),
+            _data_check_string(parsed), received_hash[:12], computed[:12],
         )
         return None
     if not _auth_date_fresh(parsed):
