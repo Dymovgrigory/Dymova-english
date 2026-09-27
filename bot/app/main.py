@@ -681,6 +681,13 @@ async def api_homework(
     image: UploadFile | None = File(default=None),
 ) -> dict:
     identity = _identity_from_request(request, init_data=init_data, fallback_user_id=user_id)
+    # См. тот же комментарий в api_homework_check/api_homework_voice: без
+    # явной проверки анонимный вызов доходил до платного vision и до
+    # сохранения файла на диск ещё до какой-либо идентификации (финальное
+    # ревью, важное #7 — эта, самая старая из трёх ручек ДЗ мини-приложения,
+    # осталась незакрытой в первом проходе фикса).
+    if identity is None:
+        return JSONResponse({"detail": "unauthorized"}, status_code=401)
     access = _miniapp_access_state(identity)
     if access["locked"]:
         return JSONResponse({"ok": False, "error": access["message"]}, status_code=403)
