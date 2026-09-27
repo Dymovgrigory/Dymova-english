@@ -1082,7 +1082,13 @@
     form.append("image", file);
     if (note) form.append("note", note);
     var path = checkMode ? "/api/miniapp/homework/check" : "/api/miniapp/homework";
-    request(path, { method: "POST", body: form, timeout: 90000 })
+    // Разбор фото (vision) с критиком и одной перегенерацией может занимать
+    // до ~2 таймаутов LLM-каскада подряд (см. app/llm.py: _budget_seconds()*2
+    // на сам разбор + ещё бюджет на критика и перегенерацию) — 90 с клиенту
+    // не хватало при сетевых заминках до основного провайдера LLM, хотя
+    // сервер честно доводил разбор до конца (см. пользовательский отчёт
+    // 2026-09-28: "нет связи", а следом всё же пришёл настоящий ответ).
+    request(path, { method: "POST", body: form, timeout: 240000 })
       .then(function (data) {
         typing.remove();
         if (data.__status === 401) {
@@ -1101,7 +1107,12 @@
       })
       .catch(function () {
         typing.remove();
-        addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+        // Обрыв здесь чаще значит "клиент устал ждать" (см. timeout выше),
+        // а не разрыв связи: сервер мог продолжить разбор и всё равно
+        // записать ответ — обычный поллинг чата (pollChatMessages по
+        // таймеру) его подхватит через несколько секунд сам, повторно жать
+        // кнопку не нужно.
+        addMessage("bot", "Ответ задерживается — сервер мог всё же обработать разбор, подождите немного, он появится в чате сам. Если через пару минут ничего нет — попробуйте ещё раз.");
       })
       .finally(function () {
         homeworkBusy = false;
@@ -1135,7 +1146,9 @@
     typing.classList.add("bubble--typing");
     var form = new FormData();
     form.append("audio", blob, filename);
-    request("/api/miniapp/homework/voice", { method: "POST", body: form, timeout: 90000 })
+    // Распознавание + разбор с критиком — тот же запас времени, что и у
+    // фото (см. комментарий в submitHomeworkFile).
+    request("/api/miniapp/homework/voice", { method: "POST", body: form, timeout: 240000 })
       .then(function (data) {
         typing.remove();
         if (data.__status === 401) {
@@ -1158,7 +1171,9 @@
       })
       .catch(function () {
         typing.remove();
-        addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+        // См. тот же комментарий в submitHomeworkFile — сервер мог всё же
+        // доработать и записать ответ, обычный поллинг чата его подхватит.
+        addMessage("bot", "Ответ задерживается — сервер мог всё же обработать запись, подождите немного, он появится в чате сам. Если через пару минут ничего нет — попробуйте ещё раз.");
       })
       .finally(function () {
         homeworkBusy = false;
