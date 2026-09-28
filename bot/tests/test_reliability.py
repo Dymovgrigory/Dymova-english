@@ -292,3 +292,44 @@ async def test_unreachable_primary_still_leaves_budget_for_fallback(monkeypatch)
     reply = await client.complete([{"role": "user", "content": "hi"}])
 
     assert reply == "fallback ok"
+
+
+@pytest.mark.asyncio
+async def test_hanging_primary_read_still_leaves_budget_for_fallback(monkeypatch):
+    """Живой инцидент 2026-09-28, второй заход: короткий connect-таймаут
+    чинит только зависшее СОЕДИНЕНИЕ — на бою вживую поймали и
+    httpcore.ReadTimeout (соединение установилось, ответ так и не пришёл
+    почти всю длину бюджета). Отдавая основному провайдеру ВЕСЬ бюджет на
+    все его попытки, ретраи такого зависания всё равно съедали бюджет
+    целиком — фолбэк пропускался. Фикс: делить оставшийся бюджет на
+    провайдеров, а не отдавать его целиком первому (_provider_share_deadline)."""
+    monkeypatch.setattr(llm_module, "_INITIAL_BACKOFF", 0.01, raising=False)
+    monkeypatch.setattr(settings, "LLM_API_KEY", "primary-key", raising=False)
+    monkeypatch.setattr(settings, "LLM_BASE_URL", "https://primary.example/v1", raising=False)
+    monkeypatch.setattr(settings, "LLM_MODEL", "primary-model", raising=False)
+    monkeypatch.setattr(
+        settings,
+        "LLM_FALLBACKS",
+        '[{"base_url":"https://fallback.example/v1","api_key":"k","model":"fallback-model"}]',
+        raising=False,
+    )
+    monkeypatch.setattr(settings, "LLM_TOTAL_BUDGET_SEC", 0.4, raising=False)
+    monkeypatch.setattr(settings, "LLM_TIMEOUT", 40, raising=False)
+
+    class RoutingClient:
+        async def post(self, url, headers=None, json=None, timeout=None):
+            if "primary" in url:
+                # Соединение "устанавливается" мгновенно, но ответа нет до
+                # самого read-таймаута — тот самый ReadTimeout с прода, а не
+                # ConnectTimeout из предыдущего теста.
+                await asyncio.sleep(timeout.read)
+                raise httpx.ReadTimeout("no response", request=httpx.Request("POST", url))
+            return _response(200, {"choices": [{"message": {"content": "fallback ok"}}]})
+
+    llm_module._client = RoutingClient()
+    llm_module._llm = None
+
+    client = llm_module.get_llm()
+    reply = await client.complete([{"role": "user", "content": "hi"}])
+
+    assert reply == "fallback ok"

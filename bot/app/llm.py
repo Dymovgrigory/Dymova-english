@@ -41,6 +41,26 @@ def _remaining(deadline: float | None) -> float | None:
     return deadline - asyncio.get_running_loop().time()
 
 
+def _provider_share_deadline(deadline: float, providers_left: int) -> float:
+    """Дедлайн ОДНОГО провайдера — равная доля от того, что ещё осталось до
+    общего бюджета, а не весь остаток целиком.
+
+    Живой инцидент 2026-09-28: короткий connect-таймаут (см. _CONNECT_TIMEOUT)
+    чинит только зависшее СОЕДИНЕНИЕ — а понаблюдали и httpcore.ReadTimeout
+    (соединение установилось, ответ так и не пришёл). Отдав основному
+    провайдеру весь общий бюджет на все его попытки, ретраи одного
+    нестабильного провайдера всё равно съедали бюджет целиком, и запасной
+    провайдер (который в это время реально отвечал) пропускался как «бюджет
+    времени исчерпан», ни разу не будучи вызван. Тьютор отвечал «не смог
+    разобрать» не потому что не смог, а потому что не попробовал. Пересчёт
+    на каждой итерации (не единоразовое деление всего бюджета вначале)
+    означает: провайдер, упавший быстро, оставляет остальным БОЛЬШЕ, а не
+    заранее фиксированный маленький кусок."""
+    now = asyncio.get_running_loop().time()
+    remaining = max(0.0, deadline - now)
+    return now + remaining / max(1, providers_left)
+
+
 @dataclass(frozen=True)
 class ProviderConfig:
     base_url: str
@@ -293,6 +313,7 @@ class LLMClient:
                 provider = ProviderConfig(
                     base_url=provider.base_url, api_key=provider.api_key, model=model
                 )
+            provider_deadline = _provider_share_deadline(deadline, len(self.providers) - index)
             reply = await _complete_with_provider(
                 client,
                 provider,
@@ -300,7 +321,7 @@ class LLMClient:
                 target_temperature,
                 max_tokens=max_tokens,
                 allow_english=raw,
-                deadline=deadline,
+                deadline=provider_deadline,
                 extra_payload=extra_payload,
                 raw=raw,
             )
@@ -331,12 +352,13 @@ class LLMClient:
         client = await _get_client()
         # Картинки обрабатываются дольше текста — даём каскаду двойной бюджет.
         deadline = asyncio.get_running_loop().time() + _budget_seconds() * 2
-        for provider in self.providers:
+        for index, provider in enumerate(self.providers):
             if _remaining(deadline) <= 0:
                 break
+            provider_deadline = _provider_share_deadline(deadline, len(self.providers) - index)
             reply = await _complete_with_provider(
                 client, provider, messages, temperature, max_tokens=max_tokens,
-                allow_english=True, deadline=deadline,
+                allow_english=True, deadline=provider_deadline,
             )
             if reply:
                 return reply
