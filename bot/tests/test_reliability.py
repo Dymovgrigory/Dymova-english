@@ -245,3 +245,50 @@ async def test_llm_cascade_stops_when_time_budget_is_exhausted(monkeypatch):
     assert reply is None
     assert elapsed < 2.0, "каскад обязан уложиться в бюджет, а не перебирать всё подряд"
     assert len(calls) <= 2, f"после исчерпания бюджета новые запросы не шлются: {calls}"
+
+
+@pytest.mark.asyncio
+async def test_unreachable_primary_still_leaves_budget_for_fallback(monkeypatch):
+    """Живой инцидент 2026-09-28: connect-таймаут раньше был равен ПОЛНОМУ
+    оставшемуся бюджету каскада (min(LLM_TIMEOUT, remaining)) — провайдер,
+    до которого не достучаться (ConnectTimeout), сжирал весь бюджет за 1-2
+    попытки, и запасной провайдер (который реально отвечал) пропускался как
+    «бюджет времени исчерпан», хотя ни разу не был вызван. Тьютор отвечал
+    «не смог разобрать» не потому что не смог, а потому что не попробовал
+    рабочий запасной провайдер. Короткий отдельный connect-таймаут чинит
+    это: недоступность обнаруживается быстро, оставляя бюджет фолбэку."""
+    monkeypatch.setattr(llm_module, "_CONNECT_TIMEOUT", 0.05, raising=False)
+    monkeypatch.setattr(llm_module, "_INITIAL_BACKOFF", 0.01, raising=False)
+    monkeypatch.setattr(settings, "LLM_API_KEY", "primary-key", raising=False)
+    monkeypatch.setattr(settings, "LLM_BASE_URL", "https://primary.example/v1", raising=False)
+    monkeypatch.setattr(settings, "LLM_MODEL", "primary-model", raising=False)
+    monkeypatch.setattr(
+        settings,
+        "LLM_FALLBACKS",
+        '[{"base_url":"https://fallback.example/v1","api_key":"k","model":"fallback-model"}]',
+        raising=False,
+    )
+    # Бюджет с большим запасом над 3×_CONNECT_TIMEOUT+бэкоффы (~0.2 с), но
+    # НАМНОГО меньше старого поведения (timeout.connect == remaining ≈ сам
+    # бюджет) — если фикс не применён, первая же попытка проспит почти весь
+    # бюджет и фолбэк не получит шанса.
+    monkeypatch.setattr(settings, "LLM_TOTAL_BUDGET_SEC", 1.0, raising=False)
+    monkeypatch.setattr(settings, "LLM_TIMEOUT", 40, raising=False)
+
+    class RoutingClient:
+        async def post(self, url, headers=None, json=None, timeout=None):
+            if "primary" in url:
+                # Настоящая асинхронная задержка на длину connect-таймаута —
+                # так тест реально проверяет, каким его вычислил код, а не
+                # просто читает атрибут.
+                await asyncio.sleep(timeout.connect)
+                raise httpx.ConnectTimeout("unreachable", request=httpx.Request("POST", url))
+            return _response(200, {"choices": [{"message": {"content": "fallback ok"}}]})
+
+    llm_module._client = RoutingClient()
+    llm_module._llm = None
+
+    client = llm_module.get_llm()
+    reply = await client.complete([{"role": "user", "content": "hi"}])
+
+    assert reply == "fallback ok"

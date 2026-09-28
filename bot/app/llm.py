@@ -20,6 +20,18 @@ logger = logging.getLogger(__name__)
 
 _MAX_ATTEMPTS_PER_PROVIDER = 3
 _INITIAL_BACKOFF = 0.25
+# TCP-хендшейк до живого сервера занимает доли секунды; если провайдер
+# недоступен (как это регулярно наблюдалось у shprotoness-ai.jq9gfk.workers.dev
+# в этой же сессии), ConnectTimeout всё равно ждал ПОЛНЫЙ LLM_TIMEOUT (40 с)
+# на каждую из 3 попыток — 2 попытки уже съедали весь общий бюджет каскада
+# (`_budget_seconds()`), и запасной провайдер (который в это время реально
+# отвечал) пропускался как «бюджет времени исчерпан», не получив ни одной
+# попытки. Разбор живого инцидента — 2026-09-28: тьютор отвечал «не смог
+# разобрать» не потому что не смог, а потому что вообще не пробовал
+# запасного провайдера. Короткий connect-таймаут не трогает время ОТВЕТА
+# уже установленного соединения — только скорость обнаружения «сервер
+# недоступен вообще».
+_CONNECT_TIMEOUT = 8.0
 
 
 def _remaining(deadline: float | None) -> float | None:
@@ -157,15 +169,16 @@ async def _complete_with_provider(
             logger.warning("LLM provider=%s бюджет времени исчерпан", provider.label)
             return None
         try:
-            request_timeout = (
-                httpx.Timeout(min(float(settings.LLM_TIMEOUT), remaining))
+            bounded = (
+                min(float(settings.LLM_TIMEOUT), remaining)
                 if remaining is not None
-                else None
+                else float(settings.LLM_TIMEOUT)
             )
-            if request_timeout is None:
-                resp = await client.post(url, headers=headers, json=payload)
-            else:
-                resp = await client.post(url, headers=headers, json=payload, timeout=request_timeout)
+            # connect отдельно и коротко (см. _CONNECT_TIMEOUT) — общий
+            # bounded остаётся бюджетом на сам ответ уже установленного
+            # соединения.
+            request_timeout = httpx.Timeout(bounded, connect=min(_CONNECT_TIMEOUT, bounded))
+            resp = await client.post(url, headers=headers, json=payload, timeout=request_timeout)
         except httpx.RequestError:
             logger.warning(
                 "LLM provider=%s attempt=%s network/timeout error",

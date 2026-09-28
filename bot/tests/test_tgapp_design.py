@@ -187,19 +187,34 @@ def test_homework_help_lives_inside_chat():
 def test_homework_401_shows_clear_message_not_fake_ai_failure():
     """Открытие ссылки не через кнопку бота даёт 401 (нет подписанной
     личности) — это не должно тонуть в тексте "не удалось разобрать"/"не
-    расслышала", как будто ИИ реально не справился."""
+    расслышала", как будто ИИ реально не справился. Владелец, 2026-09-28:
+    обычный текстовый чат (sendChat) страдал тем же — добавлена и туда."""
     assert "NOT_SIGNED_IN_MESSAGE" in JS
-    assert JS.count("data.__status === 401") >= 2
+    assert JS.count("data.__status === 401") >= 3
+
+
+def test_chat_send_has_generous_timeout_for_llm_replies():
+    """Владелец, 2026-09-28: «постоянно отвечает сети нет» — обычное
+    сообщение в чате (может уйти тьютору, в т.ч. продолжение разбора
+    задания) уходило по умолчанию за 15 с, хотя ответ с LLM+критиком
+    занимает больше в обычном режиме, не говоря о сетевых заминках."""
+    assert 'postJSON("/api/miniapp/chat", { text: text }, 240000)' in JS
 
 
 def test_chat_opens_scrolled_to_latest_messages():
-    """Владелец, 2026-09-28: чат должен открываться сразу внизу на последних
-    сообщениях, без ручной прокрутки. Миниатюры ДЗ в истории грузятся
-    асинхронно и меняют высоту уже после первого scrollTop=scrollHeight —
-    нужен довес после их загрузки, а не только сразу при вставке."""
-    assert "isChatNearBottom" in JS
+    """Владелец, 2026-09-28 (дважды): чат должен открываться сразу внизу на
+    последних сообщениях, без ручной прокрутки. #chat-log сам по себе не
+    прокручивается — .screen--chat задаёт только min-height, поэтому .chat
+    растягивается по контенту и overflow-y:auto у него не срабатывает;
+    реально скроллится вся страница (как и везде в приложении, см.
+    window.scrollTo в goTab) — первая версия фикса двигала log.scrollTop и
+    ничего не меняла на практике."""
+    assert "scrollChatToBottom" in JS
+    assert "window.scrollTo(0, document.documentElement.scrollHeight)" in JS
+    assert "isPageNearBottom" in JS
     assert "requestAnimationFrame" in JS
-    assert JS.count("log.scrollTop = log.scrollHeight") >= 2
+    # Не должно остаться старой, фактически неработающей прокрутки контейнера.
+    assert "log.scrollTop = log.scrollHeight" not in JS
 
 
 def test_sheet_forms_are_built_in_js_with_escaping():

@@ -203,12 +203,14 @@
       });
   }
 
-  function postJSON(path, body) {
-    return request(path, {
+  function postJSON(path, body, timeoutMs) {
+    var options = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    });
+    };
+    if (timeoutMs) options.timeout = timeoutMs;
+    return request(path, options);
   }
 
   /* -------------------------------------------------------------- разделы */
@@ -1015,7 +1017,7 @@
         // реальную высоту только со следующего кадра, и scrollHeight на
         // момент вставки последнего сообщения истории мог быть занижен.
         requestAnimationFrame(function () {
-          log.scrollTop = log.scrollHeight;
+          scrollChatToBottom();
         });
         startChatPolling();
       });
@@ -1040,11 +1042,24 @@
     });
   }
 
-  /** Считаем «у низа», а не «ровно у низа» — иначе крошечная погрешность
+  /** #chat-log — не самостоятельная прокручиваемая область: .screen--chat
+   *  задаёт только min-height, поэтому .chat растягивается по контенту, а
+   *  overflow-y:auto у него фактически никогда не срабатывает — скроллится
+   *  вся СТРАНИЦА (так устроено во всём приложении, см. window.scrollTo в
+   *  goTab). Прежняя версия этого фикса двигала log.scrollTop — элемент,
+   *  который никогда не был реальной точкой прокрутки, поэтому «автоскролл
+   *  не работал» (владелец, 2026-09-28). Скроллим window.
+   *
+   *  Считаем «у низа», а не «ровно у низа» — иначе крошечная погрешность
    *  округления при вычислении высоты после вставки картинки постоянно
    *  сбивала бы флаг. */
-  function isChatNearBottom(log) {
-    return log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+  function isPageNearBottom() {
+    var doc = document.documentElement;
+    return doc.scrollHeight - window.scrollY - window.innerHeight < 80;
+  }
+
+  function scrollChatToBottom() {
+    window.scrollTo(0, document.documentElement.scrollHeight);
   }
 
   function addMessage(role, text, imageUrl) {
@@ -1054,19 +1069,18 @@
     // Миниатюры ДЗ грузятся асинхронно (лениво, и/или через
     // fetchImageBlobUrl) — высота бабла на момент вставки ещё не
     // окончательная. Без довеса после загрузки картинки чат при открытии
-    // (или при истории с фото) оставался прокручен «не до конца» —
-    // владелец, 2026-09-28: «чат должен открываться сразу внизу на
-    // последних сообщениях». Довеска сработает только если до вставки
-    // этого сообщения человек и так был у низа — не дёргаем того, кто
-    // специально пролистал вверх читать историю.
-    var wasNearBottom = isChatNearBottom(log);
+    // (или при истории с фото) оставался прокручен «не до конца». Довеска
+    // сработает только если до вставки этого сообщения человек и так был
+    // у низа страницы — не дёргаем того, кто специально пролистал вверх
+    // читать историю.
+    var wasNearBottom = isPageNearBottom();
     if (imageUrl) {
       var img = document.createElement("img");
       img.className = "bubble__thumb";
       img.alt = "";
       img.loading = "lazy";
       var rescroll = function () {
-        if (wasNearBottom) log.scrollTop = log.scrollHeight;
+        if (wasNearBottom) scrollChatToBottom();
       };
       img.addEventListener("load", rescroll);
       img.addEventListener("error", rescroll);
@@ -1085,7 +1099,7 @@
       bubble.appendChild(span);
     }
     log.appendChild(bubble);
-    log.scrollTop = log.scrollHeight;
+    scrollChatToBottom();
     return bubble;
   }
 
@@ -1335,9 +1349,18 @@
     var typing = addMessage("bot", "…");
     typing.classList.add("bubble--typing");
 
-    postJSON("/api/miniapp/chat", { text: text })
+    // Обычное текстовое сообщение может уйти тьютору (в т.ч. продолжение
+    // разбора задания) — тот же критик-пайплайн, что и у фото/голоса, тот
+    // же запас времени (см. комментарий в submitHomeworkFile). Прежние 15 с
+    // по умолчанию были рассчитаны на короткие серверные ответы без LLM —
+    // владелец, 2026-09-28: «постоянно отвечает сети нет».
+    postJSON("/api/miniapp/chat", { text: text }, 240000)
       .then(function (data) {
         typing.remove();
+        if (data.__status === 401) {
+          addMessage("bot", NOT_SIGNED_IN_MESSAGE);
+          return;
+        }
         if (data.__status === 403) {
           addMessage("bot", data.error || "Чат откроется после регистрации.");
           return;
@@ -1349,7 +1372,9 @@
       })
       .catch(function () {
         typing.remove();
-        addMessage("bot", "Нет связи. Попробуйте ещё раз.");
+        // См. тот же комментарий в submitHomeworkFile — сервер мог всё же
+        // доработать и записать ответ, обычный поллинг чата его подхватит.
+        addMessage("bot", "Ответ задерживается — попробуйте подождать немного, он может прийти сам. Если через пару минут ничего нет — напишите ещё раз.");
       })
       .finally(function () {
         state.chatBusy = false;
