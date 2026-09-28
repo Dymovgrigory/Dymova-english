@@ -42,7 +42,9 @@ from app.memory import (
     STAGE_HANDOFF,
     STAGE_LEAD,
     STAGE_OBJECTION,
+    active_homework_context,
     get_store,
+    set_active_homework_context,
 )
 from app import insights
 from app import sales
@@ -914,6 +916,7 @@ def _record_text_homework(conv: Conversation, task_text: str, reply: str) -> Non
     """
     conv.homework_check_context = True
     conv.homework_check_context_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    set_active_homework_context(conv, task_text, reply)
     try:
         from app import crm_store
 
@@ -1014,6 +1017,24 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             return reply
         conv.awaiting_homework = True
         return homework.HOMEWORK_INVITE
+
+    # 3а-2. Продолжение обсуждения уже показанного/проверенного задания:
+    #       ученик задаёт уточняющий вопрос или комментирует прошлый разбор
+    #       без явного нового задания в тексте — тьютор отвечает с
+    #       контекстом прошлого ответа, а не общей консультацией (владелец,
+    #       2026-09-28: «если продолжаешь задавать вопросы в чате, он не
+    #       продолжает диалог»). Intent ограничен тем же безопасным
+    #       подмножеством (None/""/QUESTION), что и awaiting_homework выше —
+    #       явную смену темы (цена, запись, оператор и т.п.) не перехватываем.
+    active_ctx = active_homework_context(conv)
+    if active_ctx is not None and intent in (None, "", I.QUESTION):
+        task_ctx, prior_reply = active_ctx
+        reply = await homework.explain_homework_followup(task_ctx, prior_reply, text)
+        if reply:
+            _record_text_homework(conv, task_ctx or text, reply)
+            return reply
+        # Модель не ответила — не молчим и не выдаём фолбэк-заглушку молча,
+        # проваливаемся в обычную консультацию ниже (без return).
 
     # 4. Возражение — отрабатываем по сценарию и подталкиваем к диагностике.
     if intent == I.OBJECTION:

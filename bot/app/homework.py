@@ -350,6 +350,82 @@ async def explain_homework_text(task_text: str) -> str | None:
     return await _with_critic_pass(produce, kind="explain", task_context=task_text)
 
 
+def _followup_system_prompt() -> str:
+    return (
+        "Ты — Фокси, педагог-наставник. Ученик уже получил от тебя разбор "
+        "или проверку школьного задания (текст задания и твой прошлый ответ "
+        "даны ниже) и теперь продолжает разговор об ЭТОМ ЖЕ задании: "
+        "задаёт уточняющий вопрос, просит объяснить конкретный пункт ещё "
+        "раз другими словами, спорит с формулировкой, или комментирует, что "
+        "у него получилось. Главное правило то же, что и в разборе: не "
+        "называй готовый ответ и не решай задание за него самого — только "
+        "объясняй и подсказывай, куда смотреть. Если пункт — выбор из двух "
+        "вариантов, не называй " + _DECIDING_FEATURE_HINT + ".\n"
+        "Если новое сообщение ученика НЕ имеет отношения к прошлому "
+        "заданию (сменил тему — спрашивает про цену, расписание и т.п.) — "
+        "коротко напиши, что это лучше обсудить отдельно, не пытайся "
+        "притянуть ответ к старому заданию.\n"
+        "Отвечай по-русски, на «ты», тон дружелюбный, для ребёнка 7–15 лет, "
+        "2–5 коротких абзацев, без markdown (без **, ##, `, таблиц)."
+    )
+
+
+def _followup_user_prompt(task_context: str, prior_reply: str, user_message: str) -> str:
+    task_block = f"ЗАДАНИЕ:\n«{task_context}»\n\n" if task_context else ""
+    return (
+        f"{task_block}"
+        f"ТВОЙ ПРОШЛЫЙ ОТВЕТ ПО ЭТОМУ ЗАДАНИЮ:\n«{prior_reply}»\n\n"
+        f"НОВОЕ СООБЩЕНИЕ УЧЕНИКА:\n«{user_message}»"
+    )
+
+
+async def explain_homework_followup(
+    task_context: str, prior_reply: str, user_message: str
+) -> str | None:
+    """Продолжение разговора об уже показанном задании — уточняющий вопрос,
+    просьба объяснить пункт ещё раз, комментарий к прошлому ответу. None —
+    модель не смогла помочь (вызывающий код решает, что делать: например,
+    откатиться к обычной консультации).
+
+    Тот же критик и тот же запрет на готовый ответ, что и у самого разбора
+    (`_with_critic_pass`, kind="explain") — продолжение обсуждения не должно
+    быть более слабым местом для утечки, чем исходный разбор.
+    """
+
+    async def produce(extra_note: str) -> str | None:
+        note = f" Дополнительная заметка: {extra_note}." if extra_note else ""
+        messages = [
+            {"role": "system", "content": _followup_system_prompt()},
+            {
+                "role": "user",
+                "content": _followup_user_prompt(task_context, prior_reply, user_message) + note,
+            },
+        ]
+        return await get_gateway().complete(
+            ROLE_REASONING, messages, temperature=0.3, max_tokens=1000
+        )
+
+    return await _with_critic_pass(
+        produce, kind="explain", task_context=task_context or prior_reply
+    )
+
+
+def with_continuation_hint(task_context: str, prior_reply: str, note: str) -> str:
+    """Подмешивает в заметку к фото/голосу подсказку, что это может быть
+    продолжение уже обсуждаемого задания (например, следующая страница или
+    ещё один пункт) — вместо того, чтобы тьютор считал каждое новое фото
+    отдельным, не связанным вопросом, пока ученик ещё разбирает предыдущее."""
+    if not task_context and not prior_reply:
+        return note
+    hint = (
+        "Возможно, это продолжение уже обсуждаемого задания (предыдущий "
+        f"контекст: «{(task_context or prior_reply)[:200]}»). Если по "
+        "содержанию видно, что это та же тема — считай частью того же "
+        "задания; если нет — отвечай на это фото как на новое."
+    )
+    return f"{hint} {note}".strip()
+
+
 async def explain_homework_image(
     image_bytes: bytes, content_type: str, note: str = ""
 ) -> str | None:

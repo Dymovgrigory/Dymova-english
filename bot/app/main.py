@@ -77,7 +77,13 @@ from app.llm_gateway import (
 )
 from app.max_client import callback_button, get_max, link_button
 from app import miniapp_auth
-from app.memory import Lead, STAGE_HANDOFF, get_store
+from app.memory import (
+    Lead,
+    STAGE_HANDOFF,
+    active_homework_context,
+    get_store,
+    set_active_homework_context,
+)
 from app.slack import notify_slack
 from app.telegram_client import get_telegram
 
@@ -736,7 +742,12 @@ async def api_homework(
     if not image_bytes:
         return JSONResponse({"detail": "Пустой файл"}, status_code=400)
 
-    explanation = await homework.explain_homework_image(image_bytes, content_type, note)
+    # Если ученик уже обсуждает задание, новое фото может быть его
+    # продолжением (следующая страница/пункт) — подсказываем это модели,
+    # не заставляя её считать каждое фото отдельным вопросом с нуля.
+    active_ctx = active_homework_context(get_store().get(identity.user_id, platform=identity.platform))
+    note_with_hint = homework.with_continuation_hint(*(active_ctx or ("", "")), note)
+    explanation = await homework.explain_homework_image(image_bytes, content_type, note_with_hint)
     if not explanation:
         explanation = (
             "Не удалось разобрать фото задания. Попробуйте снять его при "
@@ -761,6 +772,11 @@ async def api_homework(
             channel=identity.platform, mode="explain", input_type="image",
             image_path=image_path, task_text=note, reply=explanation,
         )
+        # Чтобы «Разбери задание» → следом обычный текстовый вопрос в чате
+        # продолжал разговор об ЭТОМ задании, а не терялся в консультации.
+        conv = get_store().get(identity.user_id, platform=identity.platform)
+        set_active_homework_context(conv, note, explanation)
+        get_store().save(conv)
 
     return {
         "ok": True,
@@ -853,7 +869,9 @@ async def api_homework_check(
         return JSONResponse({"detail": "Фото слишком большое — пришлите снимок до 8 МБ"}, status_code=413)
     if not image_bytes:
         return JSONResponse({"detail": "Пустой файл"}, status_code=400)
-    explanation = await homework.check_homework_image(image_bytes, content_type, note)
+    active_ctx = active_homework_context(get_store().get(identity.user_id, platform=identity.platform))
+    note_with_hint = homework.with_continuation_hint(*(active_ctx or ("", "")), note)
+    explanation = await homework.check_homework_image(image_bytes, content_type, note_with_hint)
     if not explanation:
         explanation = "Не удалось разобрать фото. Попробуйте снять его при хорошем свете."
     image_path = homework.save_homework_image(image_bytes, ext="jpg")
@@ -872,6 +890,9 @@ async def api_homework_check(
             channel=identity.platform, mode="check", input_type="image",
             image_path=image_path, task_text=note, reply=explanation,
         )
+        conv = get_store().get(identity.user_id, platform=identity.platform)
+        set_active_homework_context(conv, note, explanation)
+        get_store().save(conv)
     return {"ok": True, "explanation": explanation}
 
 
@@ -919,6 +940,9 @@ async def api_homework_voice(
             channel=identity.platform, mode="explain", input_type="voice",
             audio_transcript=text, task_text=text, reply=explanation,
         )
+        conv = get_store().get(identity.user_id, platform=identity.platform)
+        set_active_homework_context(conv, text, explanation)
+        get_store().save(conv)
     return {"ok": True, "transcript": text, "explanation": explanation}
 
 
@@ -1333,6 +1357,7 @@ async def _process_telegram_update(update: dict, telegram) -> None:
                 # проверки — тот же учёт, что уже есть у голоса/фото.
                 _record_text_homework_request(TELEGRAM_PLATFORM, user_id, crm_ctx, task_text, reply)
                 _mark_homework_check_context(conv)
+                set_active_homework_context(conv, task_text, reply)
                 get_store().save(conv)
             else:
                 conv.awaiting_homework = True
@@ -1352,6 +1377,7 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             ) or HOMEWORK_TEXT_FALLBACK
             _record_text_homework_request(TELEGRAM_PLATFORM, user_id, crm_ctx, text, reply)
             _mark_homework_check_context(conv)
+            set_active_homework_context(conv, text, reply)
             get_store().save(conv)
             await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_telegram_buttons(text, reply) or None)
             return
@@ -1465,6 +1491,7 @@ async def _handle_telegram_voice(message: dict, chat_id, telegram, update: dict 
         )
     conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
     _mark_homework_check_context(conv)
+    set_active_homework_context(conv, text, explanation)
     get_store().save(conv)
 
 
@@ -1526,14 +1553,16 @@ async def _handle_telegram_photo(
         payload={"image_path": image_path},
     )
 
+    active_ctx = active_homework_context(get_store().get(user_id, platform=TELEGRAM_PLATFORM))
+    note_with_hint = homework.with_continuation_hint(*(active_ctx or ("", "")), note)
     if check_mode:
         explanation = await _reply_while_alive(
-            telegram, chat_id, lambda: check_homework_image(image, "image/jpeg", note)
+            telegram, chat_id, lambda: check_homework_image(image, "image/jpeg", note_with_hint)
         )
         mode = "check"
     else:
         explanation = await _reply_while_alive(
-            telegram, chat_id, lambda: explain_homework_image(image, "image/jpeg", note)
+            telegram, chat_id, lambda: explain_homework_image(image, "image/jpeg", note_with_hint)
         )
         mode = "explain"
 
@@ -1565,6 +1594,7 @@ async def _handle_telegram_photo(
         _clear_homework_check_context(conv)
     else:
         _mark_homework_check_context(conv)
+    set_active_homework_context(conv, note, explanation)
     get_store().save(conv)
 
 
@@ -1956,6 +1986,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 # ни в контекст ожидания проверки.
                 _record_text_homework_request(PLATFORM, user_id, crm_ctx, task_text, reply)
                 _mark_homework_check_context(conv)
+                set_active_homework_context(conv, task_text, reply)
                 get_store().save(conv)
             else:
                 conv.awaiting_homework = True
@@ -1973,6 +2004,7 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             ) or HOMEWORK_TEXT_FALLBACK
             _record_text_homework_request(PLATFORM, user_id, crm_ctx, text, reply)
             _mark_homework_check_context(conv)
+            set_active_homework_context(conv, text, reply)
             get_store().save(conv)
             await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_link_button_rows(text, reply) or None)
         elif low in ("/menu", "меню"):
@@ -2142,6 +2174,7 @@ async def _handle_max_voice(url: str, user_id: str, message: dict, update: dict,
         )
     conv = get_store().get(user_id, platform=PLATFORM)
     _mark_homework_check_context(conv)
+    set_active_homework_context(conv, text, explanation)
     get_store().save(conv)
 
 

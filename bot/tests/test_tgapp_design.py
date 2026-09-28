@@ -192,6 +192,16 @@ def test_homework_401_shows_clear_message_not_fake_ai_failure():
     assert JS.count("data.__status === 401") >= 2
 
 
+def test_chat_opens_scrolled_to_latest_messages():
+    """Владелец, 2026-09-28: чат должен открываться сразу внизу на последних
+    сообщениях, без ручной прокрутки. Миниатюры ДЗ в истории грузятся
+    асинхронно и меняют высоту уже после первого scrollTop=scrollHeight —
+    нужен довес после их загрузки, а не только сразу при вставке."""
+    assert "isChatNearBottom" in JS
+    assert "requestAnimationFrame" in JS
+    assert JS.count("log.scrollTop = log.scrollHeight") >= 2
+
+
 def test_sheet_forms_are_built_in_js_with_escaping():
     """Формы листов собираются скриптом — значит там же и экранирование."""
     for element_id in ("lf-parent", "lf-phone", "lead-status", "age", "age-value",

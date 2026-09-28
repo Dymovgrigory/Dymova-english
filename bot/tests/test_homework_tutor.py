@@ -507,3 +507,57 @@ async def test_check_homework_image_regenerates_when_critic_flags_leaked_answer(
         result = await homework.check_homework_image(b"bytes", "image/jpeg")
     assert gw.vision.await_count == 2
     assert "are" not in result or "Правильный вариант" not in result
+
+
+# --- продолжение обсуждения уже показанного задания -----------------------
+
+
+@pytest.mark.asyncio
+async def test_explain_homework_followup_uses_task_and_prior_reply_context():
+    """Владелец, 2026-09-28: после разбора задания нужно уметь продолжать
+    обсуждение в чате (уточняющий вопрос) — не терять контекст."""
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.complete = AsyncMock(return_value="Смотри ещё раз на подлежащее — оно во множественном числе.")
+        gw.structured = AsyncMock(return_value={"ok": True, "issues": []})
+        result = await homework.explain_homework_followup(
+            "Вставь is/are: They ... happy.",
+            "📘 Правило\n...\n\n🔎 Пункт 1\nПосмотри на подлежащее.",
+            "А почему не is?",
+        )
+    assert result is not None
+    user_content = gw.complete.await_args.args[1][1]["content"]
+    assert "They ... happy" in user_content
+    assert "Посмотри на подлежащее" in user_content
+    assert "А почему не is?" in user_content
+
+
+@pytest.mark.asyncio
+async def test_explain_homework_followup_still_protected_by_critic_leak_guard():
+    """Продолжение разговора — не более слабое место для утечки ответа, чем
+    исходный разбор: критик и перегенерация работают точно так же."""
+    with patch("app.homework.get_gateway") as get_gw:
+        gw = get_gw.return_value
+        gw.complete = AsyncMock(side_effect=[
+            "Ответ — are, ты ошибся.",
+            "Посмотри на подлежащее ещё раз и вспомни правило.",
+        ])
+        gw.structured = AsyncMock(side_effect=[
+            {"ok": False, "issues": ["назван готовый ответ"]},
+            {"ok": True, "issues": []},
+        ])
+        result = await homework.explain_homework_followup(
+            "Вставь is/are: They ... happy.", "🔎 Пункт 1\n...", "Почему не так?"
+        )
+    assert gw.complete.await_count == 2
+    assert "are, ты ошибся" not in result
+
+
+def test_with_continuation_hint_adds_context_when_active():
+    note = homework.with_continuation_hint("Задание про is/are", "🔎 Пункт 1...", "вот ещё")
+    assert "Задание про is/are" in note
+    assert "вот ещё" in note
+
+
+def test_with_continuation_hint_noop_when_no_active_context():
+    assert homework.with_continuation_hint("", "", "просто заметка") == "просто заметка"

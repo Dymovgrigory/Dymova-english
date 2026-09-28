@@ -9,7 +9,7 @@ import json
 import sqlite3
 import threading
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from app.config import settings
@@ -135,6 +135,17 @@ class Conversation:
     # (финальное ревью, важное #8а). См. HOMEWORK_CHECK_CONTEXT_TTL_MIN
     # в main.py — там и проверяется актуальность по этому времени.
     homework_check_context_at: str = ""
+    # Активно обсуждаемое задание: текст (или заметка/подпись, если задание
+    # было по фото/голосом без чистого текста) и последний ответ тьютора —
+    # чтобы следующее сообщение в чате («а почему?», «вот ещё страница»)
+    # понималось как продолжение ЭТОГО задания, а не терялось в общей
+    # консультации. TTL — тот же HOMEWORK_CHECK_CONTEXT_TTL_MIN в main.py,
+    # намеренно отдельные поля от homework_check_context: тот флаг узкий
+    # (решает, считать ли СЛЕДУЮЩЕЕ фото решением на проверку), а этот —
+    # про то, продолжает ли ученик разговор о том же задании текстом.
+    active_homework_task: str = ""
+    active_homework_reply: str = ""
+    active_homework_at: str = ""
     # Идентификация по номеру телефона (разделы 2/6 спеки approach-1):
     # student_id — ученик из read-model BigBen, к которому привязан номер;
     # identify_state — шаг сценария ("await_contact" | "await_child_name" |
@@ -418,10 +429,53 @@ def _conv_from_dict(d: dict) -> Conversation:
         awaiting_homework=d.get("awaiting_homework", False),
         homework_check_context=d.get("homework_check_context", False),
         homework_check_context_at=d.get("homework_check_context_at", ""),
+        active_homework_task=d.get("active_homework_task", ""),
+        active_homework_reply=d.get("active_homework_reply", ""),
+        active_homework_at=d.get("active_homework_at", ""),
         student_id=int(d.get("student_id") or 0),
         identify_state=d.get("identify_state", ""),
         identify_candidates=d.get("identify_candidates", []) or [],
     )
+
+
+# TTL — тот же смысл, что у HOMEWORK_CHECK_CONTEXT_TTL_MIN в main.py (не
+# импортируем оттуда: main.py сам импортирует app.ai_core, а ai_core тоже
+# нуждается в этих хелперах — общее место без цикла импорта — memory.py,
+# который оба и так уже импортируют).
+ACTIVE_HOMEWORK_CONTEXT_TTL_MIN = 30
+
+
+def active_homework_context(conv: Conversation) -> tuple[str, str] | None:
+    """(task_text, prior_reply) активно обсуждаемого задания — или None, если
+    контекста нет или он истёк. task_text может быть пустым (задание было
+    по фото/голосом без чистого текста) — prior_reply в этом случае всё
+    равно даёт достаточно контекста для продолжения разговора."""
+    if not conv.active_homework_reply:
+        return None
+    at_raw = conv.active_homework_at
+    if not at_raw:
+        return None
+    try:
+        at = datetime.fromisoformat(at_raw)
+    except ValueError:
+        return None
+    if at.tzinfo is None:
+        at = at.replace(tzinfo=timezone.utc)
+    if datetime.now(timezone.utc) - at > timedelta(minutes=ACTIVE_HOMEWORK_CONTEXT_TTL_MIN):
+        return None
+    return conv.active_homework_task, conv.active_homework_reply
+
+
+def set_active_homework_context(conv: Conversation, task_text: str, reply: str) -> None:
+    conv.active_homework_task = task_text
+    conv.active_homework_reply = reply
+    conv.active_homework_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def clear_active_homework_context(conv: Conversation) -> None:
+    conv.active_homework_task = ""
+    conv.active_homework_reply = ""
+    conv.active_homework_at = ""
 
 
 def _resolve_db_path() -> str:

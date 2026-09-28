@@ -1008,7 +1008,17 @@
       .catch(function () {
         addMessage("bot", "Спросите что угодно: программы, цены, расписание, как проходят занятия.");
       })
-      .finally(startChatPolling);
+      .finally(function () {
+        // Довеска сверх той, что уже делает каждый addMessage: вкладка
+        // могла быть только что показана (section.hidden снят прямо перед
+        // greetInChat) — на некоторых устройствах браузер досчитывает её
+        // реальную высоту только со следующего кадра, и scrollHeight на
+        // момент вставки последнего сообщения истории мог быть занижен.
+        requestAnimationFrame(function () {
+          log.scrollTop = log.scrollHeight;
+        });
+        startChatPolling();
+      });
   }
 
   /** Миниатюра фото ДЗ из истории отдаётся только по подписанному initData
@@ -1030,19 +1040,40 @@
     });
   }
 
+  /** Считаем «у низа», а не «ровно у низа» — иначе крошечная погрешность
+   *  округления при вычислении высоты после вставки картинки постоянно
+   *  сбивала бы флаг. */
+  function isChatNearBottom(log) {
+    return log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+  }
+
   function addMessage(role, text, imageUrl) {
     var log = $("#chat-log");
     var bubble = document.createElement("div");
     bubble.className = "bubble bubble--" + role;
+    // Миниатюры ДЗ грузятся асинхронно (лениво, и/или через
+    // fetchImageBlobUrl) — высота бабла на момент вставки ещё не
+    // окончательная. Без довеса после загрузки картинки чат при открытии
+    // (или при истории с фото) оставался прокручен «не до конца» —
+    // владелец, 2026-09-28: «чат должен открываться сразу внизу на
+    // последних сообщениях». Довеска сработает только если до вставки
+    // этого сообщения человек и так был у низа — не дёргаем того, кто
+    // специально пролистал вверх читать историю.
+    var wasNearBottom = isChatNearBottom(log);
     if (imageUrl) {
       var img = document.createElement("img");
       img.className = "bubble__thumb";
       img.alt = "";
       img.loading = "lazy";
+      var rescroll = function () {
+        if (wasNearBottom) log.scrollTop = log.scrollHeight;
+      };
+      img.addEventListener("load", rescroll);
+      img.addEventListener("error", rescroll);
       if (imageUrl.indexOf("/api/miniapp/homework/image/") === 0) {
         fetchImageBlobUrl(imageUrl)
           .then(function (blobUrl) { img.src = blobUrl; })
-          .catch(function () { img.remove(); });
+          .catch(function () { img.remove(); rescroll(); });
       } else {
         img.src = imageUrl;
       }
