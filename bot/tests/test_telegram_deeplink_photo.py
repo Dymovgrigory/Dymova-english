@@ -102,7 +102,7 @@ async def test_photo_is_sent_to_vision(monkeypatch):
     """Бот сам просит прислать фото — значит, обязан его разобрать."""
     seen = {}
 
-    async def fake_explain(image_bytes, content_type, note=""):
+    async def fake_explain(image_bytes, content_type, note="", prior_images=()):
         seen["note"] = note
         seen["bytes"] = image_bytes
         return "Смотри: здесь нужно поставить am/is/are по лицу подлежащего."

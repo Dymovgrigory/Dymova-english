@@ -43,6 +43,7 @@ from app.memory import (
     STAGE_LEAD,
     STAGE_OBJECTION,
     active_homework_context,
+    clear_active_homework_context,
     get_store,
     set_active_homework_context,
 )
@@ -934,6 +935,44 @@ def _record_text_homework(conv: Conversation, task_text: str, reply: str) -> Non
         )
 
 
+async def try_continue_active_homework(conv: Conversation, text: str) -> str | None:
+    """Если задание уже активно обсуждается (active_homework_context) —
+    пытается продолжить именно ЕГО, а не дать сообщению уехать в разбор
+    «с нуля». Общая точка для web/miniapp (_route), Telegram и MAX —
+    раньше в каждом из трёх мест было своё «это новое домашнее задание» по
+    ключевым словам/intent, которое срабатывало РАНЬШЕ проверки активного
+    контекста — стоило ученику упомянуть «дз»/«домашка» в продолжении
+    разговора, и бот терял нить (владелец, 2026-09-29: «бот не понял что мы
+    обсуждаем задание которое я уже прислал а не новое задание»).
+
+    Возвращает готовый ответ — вызывающему коду остаётся только сохранить
+    conv (и, если нужно, записать исходящее в CRM). None означает: либо
+    активного задания нет, либо модель сама решила, что тема сменилась
+    ([NEW_TOPIC] — активный контекст уже очищен здесь) — вызывающий код
+    продолжает свою обычную обработку, в том числе попытку начать НОВОЕ
+    задание по ключевым словам/intent.
+    """
+    active_ctx = active_homework_context(conv)
+    if active_ctx is None:
+        return None
+    task_ctx, prior_reply = active_ctx
+    raw_reply = await homework.explain_homework_followup(task_ctx, prior_reply, text)
+    if raw_reply is None:
+        # Модель/критик недоступны — не молчим и не выдаём фолбэк-заглушку
+        # молча, проваливаемся в обычную обработку у вызывающего кода.
+        return None
+    reply, new_topic, done = homework.parse_followup_reply(raw_reply)
+    if new_topic:
+        clear_active_homework_context(conv)
+        return None
+    if not reply:
+        return None
+    _record_text_homework(conv, task_ctx or text, reply)
+    if done:
+        clear_active_homework_context(conv)
+    return reply
+
+
 async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     max_client = get_max()
     bigben = get_bigben()
@@ -1002,9 +1041,28 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             return ("Не смогла загрузить расписание — передам вопрос "
                     "администратору, он подскажет точно.")
 
+    # 3а-2. Продолжение обсуждения уже показанного/проверенного задания —
+    #       ПЕРЕД классификацией «новое задание»: иначе сообщение, в
+    #       котором просто упомянуто «дз»/«домашка» («а в этом дз есть ещё
+    #       пример») или которое классификатор посчитал новым заданием по
+    #       смыслу, уводило разговор в разбор с нуля вместо продолжения
+    #       ЭТОГО ЖЕ задания (владелец, 2026-09-29: «бот не понял что мы
+    #       обсуждаем задание которое я уже прислал а не новое задание»).
+    #       Intent ограничен безопасным подмножеством (None/""/QUESTION/
+    #       HOMEWORK) — явную смену темы (цена, запись, оператор и т.п.) не
+    #       перехватываем, там дальше уже разберётся модель сама через
+    #       [NEW_TOPIC] в try_continue_active_homework.
+    if intent in (None, "", I.QUESTION, I.HOMEWORK):
+        followup_reply = await try_continue_active_homework(conv, text)
+        if followup_reply is not None:
+            return followup_reply
+
     # 3а. Домашка — единый тьютор (мини-приложение, виджет, мессенджеры).
     #     Раньше эта ветка жила только в вебхуках MAX/Telegram, а мини-апп
     #     отвечал общей консультацией с markdown-мусором (сессия 78).
+    #     Срабатывает, когда активного задания нет (или try_continue выше
+    #     его уже очистил как [NEW_TOPIC]) — то есть это ДЕЙСТВИТЕЛЬНО
+    #     новое задание, а не продолжение старого.
     if intent == I.HOMEWORK or (
         conv.awaiting_homework and intent in (None, "", I.QUESTION, I.HOMEWORK)
     ):
@@ -1017,24 +1075,6 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
             return reply
         conv.awaiting_homework = True
         return homework.HOMEWORK_INVITE
-
-    # 3а-2. Продолжение обсуждения уже показанного/проверенного задания:
-    #       ученик задаёт уточняющий вопрос или комментирует прошлый разбор
-    #       без явного нового задания в тексте — тьютор отвечает с
-    #       контекстом прошлого ответа, а не общей консультацией (владелец,
-    #       2026-09-28: «если продолжаешь задавать вопросы в чате, он не
-    #       продолжает диалог»). Intent ограничен тем же безопасным
-    #       подмножеством (None/""/QUESTION), что и awaiting_homework выше —
-    #       явную смену темы (цена, запись, оператор и т.п.) не перехватываем.
-    active_ctx = active_homework_context(conv)
-    if active_ctx is not None and intent in (None, "", I.QUESTION):
-        task_ctx, prior_reply = active_ctx
-        reply = await homework.explain_homework_followup(task_ctx, prior_reply, text)
-        if reply:
-            _record_text_homework(conv, task_ctx or text, reply)
-            return reply
-        # Модель не ответила — не молчим и не выдаём фолбэк-заглушку молча,
-        # проваливаемся в обычную консультацию ниже (без return).
 
     # 4. Возражение — отрабатываем по сценарию и подталкиваем к диагностике.
     if intent == I.OBJECTION:

@@ -82,6 +82,7 @@ from app.memory import (
     STAGE_HANDOFF,
     active_homework_context,
     get_store,
+    remember_homework_image,
     set_active_homework_context,
 )
 from app.slack import notify_slack
@@ -709,6 +710,22 @@ def _voice_diverts_to_chat(text: str) -> bool:
     return False
 
 
+def _load_prior_homework_images(conv) -> list[tuple[bytes, str]]:
+    """Байты последних фото активного задания (пути — см.
+    memory.remember_homework_image) — чтобы «вот ещё страница» ушла в
+    vision вместе с уже показанными фото того же задания, а не как
+    отдельный вопрос с нуля. Файл мог не сохраниться или потеряться —
+    тогда просто пропускаем его, а не роняем текущий запрос."""
+    images: list[tuple[bytes, str]] = []
+    for rel_path in conv.active_homework_image_paths:
+        full_path = Path(HOMEWORK_IMAGE_DIR).parent / rel_path
+        try:
+            images.append((full_path.read_bytes(), "image/jpeg"))
+        except OSError:
+            continue
+    return images
+
+
 @app.post("/api/miniapp/homework")
 async def api_homework(
     request: Request,
@@ -743,11 +760,17 @@ async def api_homework(
         return JSONResponse({"detail": "Пустой файл"}, status_code=400)
 
     # Если ученик уже обсуждает задание, новое фото может быть его
-    # продолжением (следующая страница/пункт) — подсказываем это модели,
-    # не заставляя её считать каждое фото отдельным вопросом с нуля.
-    active_ctx = active_homework_context(get_store().get(identity.user_id, platform=identity.platform))
+    # продолжением (следующая страница/пункт) — подсказываем это модели
+    # текстом И прикладываем предыдущие фото ЭТОГО задания (например,
+    # вопросы на одной странице и опорный текст на другой), а не заставляем
+    # модель считать каждое фото отдельным вопросом с нуля.
+    conv = get_store().get(identity.user_id, platform=identity.platform)
+    active_ctx = active_homework_context(conv)
     note_with_hint = homework.with_continuation_hint(*(active_ctx or ("", "")), note)
-    explanation = await homework.explain_homework_image(image_bytes, content_type, note_with_hint)
+    prior_images = _load_prior_homework_images(conv) if active_ctx is not None else []
+    explanation = await homework.explain_homework_image(
+        image_bytes, content_type, note_with_hint, prior_images=prior_images
+    )
     if not explanation:
         explanation = (
             "Не удалось разобрать фото задания. Попробуйте снять его при "
@@ -774,8 +797,8 @@ async def api_homework(
         )
         # Чтобы «Разбери задание» → следом обычный текстовый вопрос в чате
         # продолжал разговор об ЭТОМ задании, а не терялся в консультации.
-        conv = get_store().get(identity.user_id, platform=identity.platform)
         set_active_homework_context(conv, note, explanation)
+        remember_homework_image(conv, image_path)
         get_store().save(conv)
 
     return {
@@ -1343,6 +1366,21 @@ async def _process_telegram_update(update: dict, telegram) -> None:
                 await _send_tg_logged(telegram, chat_id, reply, crm_ctx, buttons=_branch_admin_buttons())
             return
 
+        # Продолжение уже активного задания — ПЕРЕД классификацией «новое
+        # задание» по словам «домаш»/«дз» ниже: иначе сообщение вроде «а в
+        # этом дз точно они?» про уже обсуждаемое задание запускало разбор
+        # с нуля вместо продолжения (владелец, 2026-09-29, прод-лог
+        # tg:749445545: «бот не понял что мы обсуждаем задание которое я
+        # уже прислал а не новое задание»). intent тем же безопасным
+        # подмножеством, что и ниже — явную смену темы не перехватываем.
+        if I.detect_intent(text) in (None, "", I.QUESTION, I.HOMEWORK):
+            conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+            followup_reply = await ai_core.try_continue_active_homework(conv, text)
+            if followup_reply is not None:
+                get_store().save(conv)
+                await _send_tg_logged(telegram, chat_id, followup_reply, crm_ctx)
+                return
+
         if "домаш" in low or "дз" in low:
             conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
             task_text = _homework_task_text(text)
@@ -1553,7 +1591,8 @@ async def _handle_telegram_photo(
         payload={"image_path": image_path},
     )
 
-    active_ctx = active_homework_context(get_store().get(user_id, platform=TELEGRAM_PLATFORM))
+    conv_for_photo = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+    active_ctx = active_homework_context(conv_for_photo)
     note_with_hint = homework.with_continuation_hint(*(active_ctx or ("", "")), note)
     if check_mode:
         explanation = await _reply_while_alive(
@@ -1561,8 +1600,13 @@ async def _handle_telegram_photo(
         )
         mode = "check"
     else:
+        # Дозасылка страниц того же задания (вопросы на одной, опорный
+        # текст на другой) — предыдущие фото уходят в vision вместе с этим.
+        prior_images = _load_prior_homework_images(conv_for_photo) if active_ctx is not None else []
         explanation = await _reply_while_alive(
-            telegram, chat_id, lambda: explain_homework_image(image, "image/jpeg", note_with_hint)
+            telegram,
+            chat_id,
+            lambda: explain_homework_image(image, "image/jpeg", note_with_hint, prior_images=prior_images),
         )
         mode = "explain"
 
@@ -1595,6 +1639,8 @@ async def _handle_telegram_photo(
     else:
         _mark_homework_check_context(conv)
     set_active_homework_context(conv, note, explanation)
+    if not check_mode:
+        remember_homework_image(conv, image_path)
     get_store().save(conv)
 
 
@@ -1955,6 +2001,26 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             username=str(sender.get("username") or ""),
         )
         low = text.lower()
+        # Продолжение уже активного задания — ПЕРЕД веткой «новое задание»
+        # ниже (`elif ... == I.HOMEWORK`): та не смотрела на активный
+        # контекст вообще, и сообщение вроде «а в этом дз точно они?» про
+        # уже обсуждаемое задание запускало разбор с нуля вместо
+        # продолжения (владелец, 2026-09-29: «бот не понял что мы
+        # обсуждаем задание которое я уже прислал а не новое задание»).
+        # intent тем же безопасным подмножеством, что и ветки ниже — явную
+        # смену темы (/start, HANDOFF и т.п.) не перехватываем.
+        if low not in ("/start", "start") and I.detect_intent(text) in (
+            None, "", I.QUESTION, I.HOMEWORK,
+        ):
+            conv = get_store().get(user_id)
+            followup_reply = await ai_core.try_continue_active_homework(conv, text)
+            if followup_reply is not None:
+                get_store().save(conv)
+                await _send_max_logged(
+                    max_client, user_id, followup_reply, crm_ctx,
+                    buttons=_link_button_rows(text, followup_reply) or None,
+                )
+                return
         if low in ("/start", "start"):
             reply = await handle_start(user_id)
             await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_start_buttons(user_id, PLATFORM))

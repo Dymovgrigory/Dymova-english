@@ -139,13 +139,18 @@ class Conversation:
     # было по фото/голосом без чистого текста) и последний ответ тьютора —
     # чтобы следующее сообщение в чате («а почему?», «вот ещё страница»)
     # понималось как продолжение ЭТОГО задания, а не терялось в общей
-    # консультации. TTL — тот же HOMEWORK_CHECK_CONTEXT_TTL_MIN в main.py,
-    # намеренно отдельные поля от homework_check_context: тот флаг узкий
-    # (решает, считать ли СЛЕДУЮЩЕЕ фото решением на проверку), а этот —
-    # про то, продолжает ли ученик разговор о том же задании текстом.
+    # консультации. TTL — ACTIVE_HOMEWORK_CONTEXT_TTL_MIN ниже, намеренно
+    # отдельные поля от homework_check_context: тот флаг узкий (решает,
+    # считать ли СЛЕДУЮЩЕЕ фото решением на проверку), а этот — про то,
+    # продолжает ли ученик разговор о том же задании текстом.
     active_homework_task: str = ""
     active_homework_reply: str = ""
     active_homework_at: str = ""
+    # Пути (relative, как в save_homework_image) к последним фото активного
+    # задания — чтобы «вот ещё страница» можно было отправить в vision ВМЕСТЕ
+    # с предыдущим фото (например, вопросы на одной странице и текст-опора
+    # на другой), а не только с текстовой подсказкой о прошлом ответе.
+    active_homework_image_paths: list[str] = field(default_factory=list)
     # Идентификация по номеру телефона (разделы 2/6 спеки approach-1):
     # student_id — ученик из read-model BigBen, к которому привязан номер;
     # identify_state — шаг сценария ("await_contact" | "await_child_name" |
@@ -432,17 +437,22 @@ def _conv_from_dict(d: dict) -> Conversation:
         active_homework_task=d.get("active_homework_task", ""),
         active_homework_reply=d.get("active_homework_reply", ""),
         active_homework_at=d.get("active_homework_at", ""),
+        active_homework_image_paths=d.get("active_homework_image_paths", []) or [],
         student_id=int(d.get("student_id") or 0),
         identify_state=d.get("identify_state", ""),
         identify_candidates=d.get("identify_candidates", []) or [],
     )
 
 
-# TTL — тот же смысл, что у HOMEWORK_CHECK_CONTEXT_TTL_MIN в main.py (не
-# импортируем оттуда: main.py сам импортирует app.ai_core, а ai_core тоже
-# нуждается в этих хелперах — общее место без цикла импорта — memory.py,
-# который оба и так уже импортируют).
-ACTIVE_HOMEWORK_CONTEXT_TTL_MIN = 30
+# Окно тишины, после которого следующее сообщение считается новым заданием
+# само по себе (без явной смены темы) — владелец, 2026-09-29: «переключение
+# на новое задание только по истечению 10 минут молчания». Не путать с
+# HOMEWORK_CHECK_CONTEXT_TTL_MIN в main.py — тот управляет режимом
+# «следующее фото без подписи = решение на проверку», а не продолжением
+# разговора (не импортируем оттуда: main.py сам импортирует app.ai_core, а
+# ai_core тоже нуждается в этих хелперах — общее место без цикла импорта —
+# memory.py, который оба и так уже импортируют).
+ACTIVE_HOMEWORK_CONTEXT_TTL_MIN = 10
 
 
 def active_homework_context(conv: Conversation) -> tuple[str, str] | None:
@@ -472,10 +482,24 @@ def set_active_homework_context(conv: Conversation, task_text: str, reply: str) 
     conv.active_homework_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def remember_homework_image(conv: Conversation, image_path: str, limit: int = 2) -> None:
+    """Запоминает фото активного задания — до `limit` последних, чтобы
+    следующее фото («вот ещё страница») ушло в vision вместе с предыдущими,
+    а не только с текстовой подсказкой о прошлом ответе. Вызывать ПОСЛЕ
+    set_active_homework_context, пока задание ещё активно (иначе фото
+    предыдущего, уже неактуального задания попадёт в список)."""
+    if not image_path:
+        return
+    paths = [p for p in conv.active_homework_image_paths if p]
+    paths.append(image_path)
+    conv.active_homework_image_paths = paths[-limit:]
+
+
 def clear_active_homework_context(conv: Conversation) -> None:
     conv.active_homework_task = ""
     conv.active_homework_reply = ""
     conv.active_homework_at = ""
+    conv.active_homework_image_paths = []
 
 
 def _resolve_db_path() -> str:
