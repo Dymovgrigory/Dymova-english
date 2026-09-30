@@ -980,6 +980,24 @@ def feed_page(p):
     return "\n".join(h)
 
 
+# Волна 28: внутренняя перелинковка на /online-zanyatiya со всех статей об
+# английском — так читатель из любого города России видит формат "онлайн".
+# Статьи о других языках/предметах исключены — ссылка на англ. курс там
+# не по теме.
+_ONLINE_CTA_EXCLUDE_KW = ("nemeck", "kitaj", "ispan", "russk", "matematik", "gramot", "bilingv")
+
+
+def _with_online_cta(p, related):
+    alias = p.get("alias", "")
+    if not alias.startswith(("blog-", "novosti-")):
+        return related
+    if any(kw in alias for kw in _ONLINE_CTA_EXCLUDE_KW):
+        return related
+    if any(href == "/online-zanyatiya" for _, href in related):
+        return related
+    return list(related) + [("Английский онлайн — по всей России", "/online-zanyatiya")]
+
+
 def article_page(p):
     h = []
     h.append('<div id="fxb-page" class="fxb-blog-page" data-fxb-glow="' + p.get("glow", "pink") + '">')
@@ -1004,9 +1022,10 @@ def article_page(p):
         else:
             prose_html = fig_html + "\n" + prose_html
     h.append(prose_html)
-    if p.get("related"):
+    related = _with_online_cta(p, p.get("related") or [])
+    if related:
         h.append('<div class="fxb-related"><h2>Читайте также</h2><div class="fxb-related-list">')
-        for label, href in p["related"]:
+        for label, href in related:
             h.append('<a href="' + escape(href, quote=True) + '">' + escape(label) + '</a>')
         h.append('</div></div>')
     h.append('</div></section>')
