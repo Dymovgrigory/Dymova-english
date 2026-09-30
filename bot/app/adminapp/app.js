@@ -721,19 +721,15 @@ function schoolSectionHtml(d) {
   if (students.length) {
     html += students.map((st) => `<dl class="kv">
       <dt>Ученик</dt><dd>${esc(st.fio)} <span class="muted">#${st.id}</span></dd>
+      ${st.parentname ? `<dt>Родитель</dt><dd>${esc(st.parentname)}</dd>` : ""}
+      ${st.age ? `<dt>Возраст</dt><dd>${esc(st.age)}</dd>` : ""}
       <dt>Баланс</dt><dd>${rub(st.balance_kopecks)}</dd>
     </dl>`).join("");
   } else {
     const why = d.bb_reason === "no_phone"
-      ? "У клиента нет телефона — попросите поделиться номером или впишите вручную."
-      : "Этого номера нет в BigBen. Возможно, ребёнок записан на другой номер.";
+      ? "У клиента нет телефона — попросите поделиться номером (кнопка в боте) или впишите его в карточку."
+      : "Этого номера нет в BigBen. Если ребёнок записан на другой номер — впишите его в карточку.";
     html += `<div class="muted">${esc(why)}</div>`;
-    const cands = d.bb_candidates || [];
-    if (cands.length) {
-      html += `<h4>Возможные совпадения</h4>` + cands.map((c) =>
-        `<div class="note">${esc(c.fio)} <span class="muted">${esc(c.phone_hint)}</span>
-         <button class="btn btn--small" data-bblink="${c.id}">Привязать</button></div>`).join("");
-    }
   }
   if (d.bookings && d.bookings.length) {
     html += `<h4>Заявки на пробное</h4>` + d.bookings.slice(0, 5).map((b) =>
@@ -903,16 +899,6 @@ document.addEventListener("click", async (event) => {
     const card = untag.closest("[data-customer]");
     await api(`/admin/api/customers/${card.dataset.customer}/tags/${encodeURIComponent(untag.dataset.untag)}`,
       { method: "DELETE" }).catch((err) => toast(err.message));
-    loadCustomerCard(Number(card.dataset.customer));
-    return;
-  }
-  const bbLink = event.target.closest("[data-bblink]");
-  if (bbLink) {
-    const card = bbLink.closest("[data-customer]");
-    await api(`/admin/api/customers/${card.dataset.customer}/bigben-link`, {
-      method: "POST",
-      body: JSON.stringify({ student_id: Number(bbLink.dataset.bblink) }),
-    }).catch((err) => toast(err.message));
     loadCustomerCard(Number(card.dataset.customer));
     return;
   }

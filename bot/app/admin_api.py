@@ -22,7 +22,7 @@ from fastapi.responses import FileResponse
 from app import crm_store, customer_sync
 from app.config import settings
 from app.max_client import get_max
-from app.platform import analytics as platform_analytics, billing, bb_store
+from app.platform import analytics as platform_analytics, billing, bb_cards, bb_store
 from app.telegram_client import get_telegram
 
 logger = logging.getLogger(__name__)
@@ -492,9 +492,10 @@ async def customer_timeline(request: Request, customer_id: int, limit: int = 200
 async def customer_crm360(request: Request, customer_id: int) -> dict:
     """Customer 360: карточка CRM + ученики BigBen + заявки + платежи + таймлайн.
 
-    Связка — по телефону карточки (последние 10 цифр) и по ручной привязке
-    менеджера. При открытии пустые поля карточки дополняются из BigBen.
-    Если ученика нет — отдаём причину и возможных кандидатов по имени.
+    Связка — только по телефону карточки (последние 10 цифр): подходит любой
+    из телефонов ученика или родителя, все ученики на номере — семья.
+    При открытии пустые поля карточки дополняются из BigBen. Если ученика
+    нет — отдаём причину, а не догадки по имени.
     """
     actor = _authorize(request, "customers")
     _customer_or_404(customer_id)
@@ -505,42 +506,30 @@ async def customer_crm360(request: Request, customer_id: int) -> dict:
     customer = _customer_or_404(customer_id)
     phone = (customer.get("phone") or "").strip()
     status = customer_sync.bigben_status(customer_id)
-    students = status["students"]
-    student = students[0] if students else None
+    students = [_student_view(st) for st in status["students"]]
     return {
         "customer": customer,
         "bb_student": (
-            {"id": student["id"], "fio": student["fio"],
-             "balance_kopecks": student["balance_kopecks"],
-             "email": student["email"]} if student else None),
-        "bb_students": [
-            {"id": st["id"], "fio": st["fio"],
-             "balance_kopecks": st["balance_kopecks"], "email": st["email"]}
-            for st in students],
+            {"id": students[0]["id"], "fio": students[0]["fio"],
+             "balance_kopecks": students[0]["balance_kopecks"],
+             "email": students[0]["email"]} if students else None),
+        "bb_students": students,
         "bb_reason": status["reason"],
-        "bb_candidates": (
-            customer_sync.bb_candidates(customer_id) if not students else []),
         "bookings": bb_store.list_bookings_by_phone(phone) if phone else [],
         "bb_payments": [
             p for st in students for p in bb_store.list_payments_by_student(st["id"])],
         "billing_payments": billing.list_payments_by_phone(phone) if phone else [],
         "timeline": crm_store.customer_timeline(customer_id, limit=100),
-        "freshness": bb_store.freshness(),
+        "freshness": {**bb_store.freshness(), "cards": {
+            "count": bb_cards.count(), "last_synced_at": bb_cards.last_synced_at()}},
     }
 
 
-@router.post("/customers/{customer_id}/bigben-link")
-async def customer_bigben_link(request: Request, customer_id: int, data: dict) -> dict:
-    """Ручная привязка карточки к ученику BigBen (когда телефон не совпал)."""
-    actor = _authorize(request, "customers")
-    _customer_or_404(customer_id)
-    try:
-        student_id = int(data.get("student_id"))
-    except (TypeError, ValueError):
-        raise HTTPException(status_code=400, detail="student_id обязателен")
-    if not customer_sync.link_bigben(customer_id, student_id, actor=actor):
-        raise HTTPException(status_code=404, detail="Ученик BigBen не найден")
-    return {"ok": True}
+def _student_view(card: dict) -> dict:
+    """Карточка ученика для админки: данные пульта + баланс из публичного API."""
+    rows = bb_store._rows("SELECT balance_kopecks FROM bb_students WHERE id = ?", (card["id"],))
+    balance = rows[0]["balance_kopecks"] if rows else card.get("balance_rub", 0) * 100
+    return {**card, "balance_kopecks": balance}
 
 
 @router.patch("/customers/{customer_id}")
