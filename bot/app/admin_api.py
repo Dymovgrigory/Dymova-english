@@ -532,6 +532,31 @@ def _student_view(card: dict) -> dict:
     return {**card, "balance_kopecks": balance}
 
 
+@router.post("/customers/{customer_id}/max-contact-card")
+async def customer_max_contact_card(request: Request, customer_id: int) -> dict:
+    """Присылает администраторам в MAX карточку контакта клиента (кнопка «Чат»).
+
+    Работает по MAX-ID, поэтому годится, когда номера нет и найти человека
+    поиском нельзя: менеджер открывает чат из карточки и пишет сам.
+    """
+    actor = _authorize(request, "customers")
+    customer = _customer_or_404(customer_id)
+    max_ids = [i["external_id"] for i in customer["identities"]
+               if i["channel"] == "max" and str(i["external_id"]).isdigit()]
+    if not max_ids:
+        raise HTTPException(status_code=400, detail="У клиента нет аккаунта MAX")
+    if not settings.admin_ids:
+        raise HTTPException(status_code=409, detail="ADMIN_MAX_IDS не настроен")
+    name = customer.get("name") or customer.get("first_name") or "Клиент"
+    client = get_max()
+    sent = 0
+    for admin_id in settings.admin_ids:
+        if await client.send_contact_card(admin_id, int(max_ids[0]), name):
+            sent += 1
+    crm_store.audit(actor, "max_contact_card", "customer", customer_id, after={"sent": sent})
+    return {"ok": sent > 0, "sent": sent}
+
+
 @router.patch("/customers/{customer_id}")
 async def customer_update(request: Request, customer_id: int, data: dict) -> dict:
     actor = _authorize(request, "customers")
