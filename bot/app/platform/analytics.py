@@ -38,6 +38,9 @@ PUBLIC_EVENTS = frozenset({
 SERVER_EVENTS = frozenset({
     "booking_completed", "booking_failed", "lead_created",
     "payment_started", "payment_success",
+    # Воронка бота (TG/MAX): старт → ответ → форма открыта → отправлена.
+    "bot_start", "bot_reply", "miniapp_opened", "form_submitted", "form_rejected",
+    "chat_phone_lead",
 })
 
 _MAX_META_BYTES = 2000

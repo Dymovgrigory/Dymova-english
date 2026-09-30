@@ -34,6 +34,7 @@ from app import consents
 from app import crm_ingest
 from app import crm_store
 from app.bigben import get_bigben
+from app.platform import analytics
 from app.config import settings
 from app.course_selector import recommend
 from app.email_notify import send_lead_email
@@ -2287,7 +2288,10 @@ async def miniapp_info(request: Request, user_id: str = "") -> dict:
     и без авторизации, чтобы мини-приложение открывалось мгновенно.
     """
     kb = get_kb()
-    access = _miniapp_access_state(_identity_from_request(request, fallback_user_id=user_id))
+    identity = _identity_from_request(request, fallback_user_id=user_id)
+    access = _miniapp_access_state(identity)
+    if identity is not None and identity.verified:
+        analytics.track("miniapp_opened", source=identity.platform, anon_id=identity.user_id)
     return {
         "company": kb.company,
         "branches": kb.branches,
@@ -2593,7 +2597,12 @@ async def miniapp_register(request: Request, data: dict) -> dict:
         return {"ok": True, "access": _miniapp_access_state(identity)}
     form, errors = registration_form.validate(data if isinstance(data, dict) else {})
     if errors:
+        analytics.track(
+            "form_rejected", source=identity.platform, anon_id=identity.user_id,
+            meta={"fields": sorted(errors)},
+        )
         return JSONResponse({"ok": False, "errors": errors}, status_code=400)
+    analytics.track("form_submitted", source=identity.platform, anon_id=identity.user_id)
     # Журнал согласий пишем первым: если он упадёт, conv ещё не помечен
     # зарегистрированным и человек может просто повторить отправку. Если бы
     # порядок был обратным, ошибка после store.save оставляла бы диалог
