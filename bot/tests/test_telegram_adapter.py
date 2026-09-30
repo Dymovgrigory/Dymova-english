@@ -503,7 +503,8 @@ async def test_telegram_get_updates_uses_proxy_and_parses_result(monkeypatch):
     kwargs = FakeHttpxAsyncClient.created_kwargs[-1]
     assert kwargs["proxy"] == "http://host:3128"
     assert isinstance(kwargs["timeout"], telegram_module.httpx.Timeout)
-    assert kwargs["timeout"].connect == 40
+    assert kwargs["timeout"].connect == telegram_module.CONNECT_TIMEOUT_SEC
+    assert kwargs["timeout"].read == 40
     post = FakeHttpxAsyncClient.posted[-1]
     assert post["url"].endswith("/getUpdates")
     assert post["data"]["offset"] == "9"
