@@ -247,6 +247,10 @@ for _a in [
     "blog-kak-vybrat-onlajn-shkolu-anglijskogo",
     "blog-rki-s-chego-nachat",
     "novosti-rki-russkij-kak-inostrannyj",
+    "blog-onlajn-repetitor-ili-onlajn-shkola",
+    "blog-skolko-stoyat-onlajn-zanyatiya-anglijskim",
+    "blog-otzyvy-ob-onlajn-shkolah-anglijskogo",
+    "blog-onlajn-anglijskij-chasovye-poyasa",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 

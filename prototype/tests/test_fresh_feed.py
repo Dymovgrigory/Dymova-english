@@ -18,11 +18,15 @@ def test_only_last_eight_days_and_required_fields():
     assert root.tag == "rss"
     assert root.attrib["version"] == "2.0"
     items = root.findall("./channel/item")
-    assert len(items) == 7
+    assert len(items) == 11
     aliases = {item.find("link").text.rsplit("/", 1)[-1] for item in items}
     assert "blog-kak-vybrat-onlajn-shkolu-anglijskogo" in aliases
     assert "novosti-rki-russkij-kak-inostrannyj" in aliases
     assert "blog-onlajn-diagnostika-anglijskogo" in aliases
+    assert "blog-onlajn-repetitor-ili-onlajn-shkola" in aliases
+    assert "blog-skolko-stoyat-onlajn-zanyatiya-anglijskim" in aliases
+    assert "blog-otzyvy-ob-onlajn-shkolah-anglijskogo" in aliases
+    assert "blog-onlajn-anglijskij-chasovye-poyasa" in aliases
     for item in items:
         title = item.find("title").text
         assert title and not title.endswith(".")
