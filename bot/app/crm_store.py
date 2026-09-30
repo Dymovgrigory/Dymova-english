@@ -1324,6 +1324,30 @@ _CUSTOMER_EDITABLE = (
 )
 
 
+def fill_customer_empty(customer_id: int, **fields: str) -> None:
+    """Публичная обёртка: дописывает только пустые поля карточки."""
+    conn = get_conn()
+    with _tx(conn):
+        _fill_empty_fields(conn, customer_id, **fields)
+
+
+def set_customer_metadata(customer_id: int, key: str, value: object) -> None:
+    """Точечно меняет один ключ служебного metadata карточки."""
+    conn = get_conn()
+    with _tx(conn):
+        row = conn.execute(
+            "SELECT metadata_json FROM customers WHERE id = ?", (customer_id,)
+        ).fetchone()
+        if row is None:
+            return
+        meta = json.loads(row["metadata_json"] or "{}")
+        meta[key] = value
+        conn.execute(
+            "UPDATE customers SET metadata_json = ?, updated_at = ? WHERE id = ?",
+            (json.dumps(meta, ensure_ascii=False), _now(), customer_id),
+        )
+
+
 def update_customer(customer_id: int, fields: dict, actor: str = "admin") -> bool:
     """Точечное редактирование карточки. Только поля из белого списка."""
     conn = get_conn()

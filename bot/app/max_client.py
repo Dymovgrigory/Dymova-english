@@ -24,6 +24,7 @@ import json
 import logging
 import socket
 import urllib.parse
+import re
 from typing import Optional
 
 import httpx
@@ -45,6 +46,47 @@ def link_button(text: str, url: str) -> dict:
 
 def callback_button(text: str, payload: str) -> dict:
     return {"type": "callback", "text": text, "payload": payload}
+
+
+def contact_button(text: str) -> dict:
+    """Кнопка «Поделиться номером»: MAX сам присылает контакт нажавшего."""
+    return {"type": "request_contact", "text": text}
+
+
+_TEL_RE = re.compile(r"^TEL[^:\n]*:(.+)$", re.IGNORECASE | re.MULTILINE)
+
+
+def _contact_payloads(attachments: list | None) -> list[dict]:
+    return [
+        a.get("payload") or {}
+        for a in (attachments or [])
+        if isinstance(a, dict) and a.get("type") == "contact"
+    ]
+
+
+def phone_from_contact_attachment(attachments: list | None) -> str:
+    """Номер из вложения-контакта MAX в виде +7XXXXXXXXXX ('' — номера нет).
+
+    Формат вложения в документации скупой, поэтому читаем оба места, где
+    номер может лежать: строку vCard (TEL:…) и поле max_info.phone.
+    """
+    for payload in _contact_payloads(attachments):
+        candidates = [m.group(1) for m in _TEL_RE.finditer(str(payload.get("vcf_info") or ""))]
+        candidates.append(str((payload.get("max_info") or {}).get("phone") or ""))
+        for raw in candidates:
+            digits = "".join(c for c in raw if c.isdigit())
+            if len(digits) >= 10:
+                return f"+7{digits[-10:]}"
+    return ""
+
+
+def contact_belongs_to(attachments: list | None, user_id: str) -> bool:
+    """Контакт прислан пользователем о самом себе (нажал кнопку), а не
+    переслал чужую визитку — только тогда номер считаем подтверждённым."""
+    return any(
+        str((p.get("max_info") or {}).get("user_id") or "") == str(user_id)
+        for p in _contact_payloads(attachments)
+    )
 
 
 def keyboard(rows: list[list[dict]]) -> list[dict]:

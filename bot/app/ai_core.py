@@ -22,7 +22,7 @@ from app import registration
 from app import convlog
 from app.bigben import get_bigben
 from app.platform import analytics
-from app import school_sites
+from app import customer_sync, school_sites
 from app.config import settings
 from app.knowledge.kb import get_kb, _stem, _tokens
 from app.llm import get_llm
@@ -473,6 +473,7 @@ async def handle_message(user_id: str, text: str, platform: str = "max") -> str:
             "error", platform, user_id,
             {"reason": status, "text": text[:200], "request_id": request_id},
         )
+    _sync_customer_card(user_id, platform)
     elapsed = time.monotonic() - started
     runtime.log_event(
         "RESPONSE_READY",
@@ -488,6 +489,16 @@ async def handle_message(user_id: str, text: str, platform: str = "max") -> str:
         meta={"ms": int(elapsed * 1000), "status": status},
     )
     return reply
+
+
+def _sync_customer_card(user_id: str, platform: str) -> None:
+    """Переносит новые данные диалога в карточку клиента (ФИО, ребёнок,
+    телефон) и подтягивает пустые поля из BigBen. Сбой здесь не должен
+    отражаться на ответе клиенту."""
+    try:
+        customer_sync.sync_conversation(get_store().get(user_id, platform=platform))
+    except Exception:
+        logger.exception("customer_sync: сбой переноса в карточку user_id=%s", user_id)
 
 
 def _record_fallback(user_id: str, text: str, platform: str, reply: str) -> str:
