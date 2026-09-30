@@ -89,6 +89,15 @@ def contact_belongs_to(attachments: list | None, user_id: str) -> bool:
     )
 
 
+def contact_card_attachment(contact_user_id: int, name: str) -> list[dict]:
+    """Вложение-«визитка» пользователя MAX по его ID.
+
+    У получателя это карточка контакта с кнопкой «Чат» — писать можно,
+    даже когда номер телефона у человека скрыт.
+    """
+    return [{"type": "contact", "payload": {"name": name, "contact_id": int(contact_user_id)}}]
+
+
 def keyboard(rows: list[list[dict]]) -> list[dict]:
     """Собирает attachment inline-клавиатуры из строк кнопок."""
     return [{"type": "inline_keyboard", "payload": {"buttons": rows}}]
@@ -328,6 +337,20 @@ class MaxClient:
     ) -> bool:
         ok, _external_id, _error = await self.send_message_ext(user_id, text, buttons)
         return ok
+
+    async def send_contact_card(
+        self, to_user_id: str, contact_user_id: int, name: str, text: str = ""
+    ) -> bool:
+        """Присылает пользователю to_user_id карточку контакта contact_user_id."""
+        body: dict = {"attachments": contact_card_attachment(contact_user_id, name or "Клиент")}
+        if text:
+            body["text"] = text
+        result, error = await self._request_ext(
+            "POST", "/messages", params={"user_id": to_user_id}, json_body=body
+        )
+        if result is None:
+            logger.warning("MAX: карточка контакта не отправлена to=%s: %s", to_user_id, error)
+        return result is not None
 
     async def send_message_ext(
         self,

@@ -825,6 +825,12 @@ function customerCardHtml(c, notes, tasks, crm360) {
     ? `<a class="hchip" href="tel:${esc(String(c.phone).replace(/[^+\d]/g, ""))}">📞 ${esc(fmtPhone(c.phone))}</a>`
     : `<span class="hchip hchip--warn">📵 нет телефона</span>`;
   const emailChip = c.email ? `<span class="hchip">✉ ${esc(c.email)}</span>` : "";
+  // Связь без номера: MAX присылает менеджеру карточку контакта с кнопкой «Чат»,
+  // Telegram открывает профиль по ID.
+  const hasMax = (c.identities || []).some((i) => i.channel === "max" && /^\d+$/.test(String(i.external_id)));
+  const tgIdentity = (c.identities || []).find((i) => i.channel === "telegram" && /^(tg:)?\d+$/.test(String(i.external_id)));
+  const reachChips = (hasMax ? `<button class="hchip hchip--btn" data-action="max-card" title="Бот пришлёт вам в MAX карточку клиента с кнопкой «Чат»">📇 Контакт мне в MAX</button>` : "")
+    + (tgIdentity ? `<a class="hchip" href="tg://user?id=${esc(String(tgIdentity.external_id).replace("tg:", ""))}">✈ Открыть в Telegram</a>` : "");
   const childLine = [c.child_name, c.child_age ? `${c.child_age} лет` : ""].filter(Boolean).join(" · ");
   return `
   <div class="c360" data-customer="${c.id}">
@@ -836,7 +842,7 @@ function customerCardHtml(c, notes, tasks, crm360) {
           <div class="muted">${childLine ? `Ребёнок: ${esc(childLine)}` : "Ребёнок пока не указан"}</div>
         </div>
       </div>
-      <div class="c360-hero__chips">${phoneChip}${emailChip}${channelChips}</div>
+      <div class="c360-hero__chips">${phoneChip}${emailChip}${channelChips}${reachChips}</div>
     </div>
     <div class="c360-stats">
       <div class="c360-stat"><b>${esc(c.counts.messages)}</b><span>сообщений</span></div>
@@ -982,7 +988,11 @@ document.addEventListener("click", async (event) => {
   if (!action) return;
   const card = action.closest("[data-customer]");
   const id = Number(card.dataset.customer);
-  if (action.dataset.action === "timeline") {
+  if (action.dataset.action === "max-card") {
+    api(`/admin/api/customers/${id}/max-contact-card`, { method: "POST" })
+      .then((r) => toast(r.sent ? "Карточка контакта отправлена вам в MAX — откройте и нажмите «Чат»" : "Не удалось отправить карточку"))
+      .catch((err) => toast(err.message));
+  } else if (action.dataset.action === "timeline") {
     openTimeline(id);
   } else if (action.dataset.action === "archive") {
     if (!confirm("Отправить клиента в архив? Данные сохранятся.")) return;

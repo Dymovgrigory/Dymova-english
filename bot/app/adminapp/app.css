@@ -441,6 +441,8 @@ a { color: var(--indigo); }
   color: #fff;
   text-decoration: none;
 }
+.hchip--btn { border: none; cursor: pointer; font: inherit; font-size: 12px; font-weight: 600; background: rgba(255, 190, 90, 0.95); color: #2a1600; }
+.hchip--btn:hover { filter: brightness(1.05); }
 .hchip--warn { background: rgba(255, 190, 90, 0.95); color: #2a1600; }
 .c360-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 14px; margin-top: -26px; position: relative; }
 .c360-stat { background: #fff; border-radius: 14px; padding: 9px 12px; box-shadow: var(--shadow); text-align: center; }
