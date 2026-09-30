@@ -76,3 +76,55 @@ def test_crm360_unknown_customer_404(client):
     r = client.get("/admin/api/customers/9999/crm360",
                    headers={"X-Admin-Token": "admintoken"})
     assert r.status_code == 404
+
+
+def _h():
+    return {"X-Admin-Token": "admintoken"}
+
+
+def test_crm360_reason_no_phone(client):
+    cid = crm_store.upsert_customer_for_identity(channel="max", external_id="np1", first_name="Аноним")
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert data["bb_student"] is None
+    assert data["bb_reason"] == "no_phone"
+
+
+def test_crm360_reason_phone_not_in_bigben(client):
+    cid = crm_store.upsert_customer_for_identity(channel="max", external_id="np2", phone="+79990001122")
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert data["bb_reason"] == "phone_not_in_bigben"
+
+
+def _seed_cards(*raws):
+    from app.platform import bb_cards
+
+    base = {"parentname": "", "phone": "", "main_phone": "", "phone1": "", "parent_phone": None,
+            "phone_comment": "", "phone1_comment": "", "email": "", "ages": None,
+            "filial": {"id": 1, "name": "Лихачевский"}, "active_groups": [], "is_active": True,
+            "archived": False, "deleted": False}
+    bb_cards.replace_all([bb_cards.from_api({**base, **r}) for r in raws])
+
+
+def test_crm360_enriches_card_and_lists_all_siblings(client):
+    _seed_cards(
+        {"id": 1, "fio": "Сидоров Пётр", "parentname": "Ольга", "phone": "89251112233",
+         "email": "s@x.ru", "ages": 11.2},
+        {"id": 2, "fio": "Сидорова Соня", "parentname": "Ольга", "phone": "89251112233", "ages": 8.9},
+    )
+    cid = _customer_id()
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert data["bb_reason"] == "linked"
+    assert {s["id"] for s in data["bb_students"]} == {1, 2}
+    first = next(s for s in data["bb_students"] if s["id"] == 1)
+    assert first["parentname"] == "Ольга" and first["age"] == "11" and first["filial"] == "Лихачевский"
+    assert data["customer"]["child_name"] == "Сидоров Пётр, Сидорова Соня"
+    assert data["customer"]["email"] == "s@x.ru"
+    assert "bb_candidates" not in data
+
+
+def test_crm360_never_offers_name_based_guesses(client):
+    _seed_cards({"id": 5, "fio": "Морозова Маша", "phone": "89253334455"})
+    cid = crm_store.upsert_customer_for_identity(channel="max", external_id="c1", child_name="Маша")
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert data["bb_reason"] == "no_phone"
+    assert data["bb_students"] == []

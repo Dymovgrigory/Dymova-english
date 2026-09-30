@@ -19,10 +19,10 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
 
-from app import crm_store
+from app import crm_store, customer_sync
 from app.config import settings
 from app.max_client import get_max
-from app.platform import analytics as platform_analytics, billing, bb_store
+from app.platform import analytics as platform_analytics, billing, bb_cards, bb_store
 from app.telegram_client import get_telegram
 
 logger = logging.getLogger(__name__)
@@ -490,28 +490,71 @@ async def customer_timeline(request: Request, customer_id: int, limit: int = 200
 
 @router.get("/customers/{customer_id}/crm360")
 async def customer_crm360(request: Request, customer_id: int) -> dict:
-    """Customer 360: карточка CRM + ученик BigBen + заявки + платежи + таймлайн.
+    """Customer 360: карточка CRM + ученики BigBen + заявки + платежи + таймлайн.
 
-    Связка — по телефону (нормализация по последним 10 цифрам), никаких
-    внешних id от клиента. Данные BigBen — из read-model со пометкой свежести.
+    Связка — только по телефону карточки (последние 10 цифр): подходит любой
+    из телефонов ученика или родителя, все ученики на номере — семья.
+    При открытии пустые поля карточки дополняются из BigBen. Если ученика
+    нет — отдаём причину, а не догадки по имени.
     """
     actor = _authorize(request, "customers")
+    _customer_or_404(customer_id)
+    try:
+        customer_sync.enrich_from_bigben(customer_id)
+    except Exception:
+        logger.exception("crm360: не удалось подтянуть данные BigBen customer=%s", customer_id)
     customer = _customer_or_404(customer_id)
     phone = (customer.get("phone") or "").strip()
-    student = bb_store.find_student_by_phone(phone) if phone else None
+    status = customer_sync.bigben_status(customer_id)
+    students = [_student_view(st) for st in status["students"]]
     return {
         "customer": customer,
         "bb_student": (
-            {"id": student["id"], "fio": student["fio"],
-             "balance_kopecks": student["balance_kopecks"],
-             "email": student["email"]} if student else None),
+            {"id": students[0]["id"], "fio": students[0]["fio"],
+             "balance_kopecks": students[0]["balance_kopecks"],
+             "email": students[0]["email"]} if students else None),
+        "bb_students": students,
+        "bb_reason": status["reason"],
         "bookings": bb_store.list_bookings_by_phone(phone) if phone else [],
-        "bb_payments": (
-            bb_store.list_payments_by_student(student["id"]) if student else []),
+        "bb_payments": [
+            p for st in students for p in bb_store.list_payments_by_student(st["id"])],
         "billing_payments": billing.list_payments_by_phone(phone) if phone else [],
         "timeline": crm_store.customer_timeline(customer_id, limit=100),
-        "freshness": bb_store.freshness(),
+        "freshness": {**bb_store.freshness(), "cards": {
+            "count": bb_cards.count(), "last_synced_at": bb_cards.last_synced_at()}},
     }
+
+
+def _student_view(card: dict) -> dict:
+    """Карточка ученика для админки: данные пульта + баланс из публичного API."""
+    rows = bb_store._rows("SELECT balance_kopecks FROM bb_students WHERE id = ?", (card["id"],))
+    balance = rows[0]["balance_kopecks"] if rows else card.get("balance_rub", 0) * 100
+    return {**card, "balance_kopecks": balance}
+
+
+@router.post("/customers/{customer_id}/max-contact-card")
+async def customer_max_contact_card(request: Request, customer_id: int) -> dict:
+    """Присылает администраторам в MAX карточку контакта клиента (кнопка «Чат»).
+
+    Работает по MAX-ID, поэтому годится, когда номера нет и найти человека
+    поиском нельзя: менеджер открывает чат из карточки и пишет сам.
+    """
+    actor = _authorize(request, "customers")
+    customer = _customer_or_404(customer_id)
+    max_ids = [i["external_id"] for i in customer["identities"]
+               if i["channel"] == "max" and str(i["external_id"]).isdigit()]
+    if not max_ids:
+        raise HTTPException(status_code=400, detail="У клиента нет аккаунта MAX")
+    if not settings.admin_ids:
+        raise HTTPException(status_code=409, detail="ADMIN_MAX_IDS не настроен")
+    name = customer.get("name") or customer.get("first_name") or "Клиент"
+    client = get_max()
+    sent = 0
+    for admin_id in settings.admin_ids:
+        if await client.send_contact_card(admin_id, int(max_ids[0]), name):
+            sent += 1
+    crm_store.audit(actor, "max_contact_card", "customer", customer_id, after={"sent": sent})
+    return {"ok": sent > 0, "sent": sent}
 
 
 @router.patch("/customers/{customer_id}")

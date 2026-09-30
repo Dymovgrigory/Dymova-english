@@ -34,6 +34,7 @@ from app import consents
 from app import crm_ingest
 from app import crm_store
 from app.bigben import get_bigben
+from app.platform import analytics
 from app.config import settings
 from app.course_selector import recommend
 from app.email_notify import send_lead_email
@@ -75,8 +76,15 @@ from app.llm_gateway import (
     ROLE_VISION,
     get_gateway,
 )
-from app.max_client import callback_button, get_max, link_button
-from app import miniapp_auth
+from app.max_client import (
+    callback_button,
+    contact_belongs_to,
+    contact_button,
+    get_max,
+    link_button,
+    phone_from_contact_attachment,
+)
+from app import customer_sync, miniapp_auth
 from app.memory import (
     Lead,
     STAGE_HANDOFF,
@@ -1056,14 +1064,26 @@ def _start_buttons(user_id: str, platform: str) -> list[list[dict]]:
     menu = _main_menu(user_id)
     if identify.needs_gate(get_store().get(user_id, platform=platform)):
         return [[callback_button(identify.SHARE_BUTTON_TEXT, identify.SHARE_BUTTON_PAYLOAD)]] + menu
-    if not registration.is_registered(get_store().get(user_id, platform=platform)) and registration.uses_form(platform):
-        return _register_button_rows(platform)
+    conv = get_store().get(user_id, platform=platform)
+    if not registration.is_registered(conv) and registration.uses_form(platform):
+        rows = _register_button_rows(platform)
+        if platform != TELEGRAM_PLATFORM and not conv.lead.phone:
+            # В MAX номер можно отдать одним нажатием (у Telegram своя
+            # клавиатура запроса контакта).
+            rows = [[contact_button(identify.SHARE_BUTTON_TEXT)]] + rows
+        return rows
     return menu
 
 
 async def _maybe_send_tg_contact_request(telegram, chat_id, user_id: str) -> None:
     """Reply-клавиатура «Поделиться номером», если диалог ещё под гейтом."""
-    if not identify.needs_gate(get_store().get(user_id, platform=TELEGRAM_PLATFORM)):
+    conv = get_store().get(user_id, platform=TELEGRAM_PLATFORM)
+    wants_phone = (
+        not conv.lead.phone
+        and not registration.is_registered(conv)
+        and registration.uses_form(TELEGRAM_PLATFORM)
+    )
+    if not (identify.needs_gate(conv) or wants_phone):
         return
     try:
         await telegram.send_contact_request(
@@ -1301,6 +1321,10 @@ async def _process_telegram_update(update: dict, telegram) -> None:
             from_id = (message.get("from") or {}).get("id")
             confirmed = contact.get("user_id") is not None and contact.get("user_id") == from_id
             reply = identify.handle_contact(conv, str(contact["phone_number"]), confirmed=confirmed)
+            try:
+                customer_sync.sync_conversation(conv)
+            except Exception:
+                logger.exception("customer_sync: сбой после контакта Telegram user=%s", user_id)
             if not identify.needs_gate(conv) and not registration.is_registered(conv):
                 # Шаринг контакта может прийти, пока человек ещё заполняет
                 # анкету в мини-приложении (Telegram шлёт requestContact
@@ -1990,6 +2014,21 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                     user_id, "Не получилось открыть голосовое. Напишите, пожалуйста, текстом."
                 )
             return
+        contact_phone = phone_from_contact_attachment(attachments)
+        if not text and not contact_phone and any(
+            isinstance(a, dict) and a.get("type") == "contact" for a in attachments
+        ):
+            # Формат вложения в документации MAX скупой: если номер не
+            # разобрался, в логе останутся ключи, чтобы поправить парсер.
+            logger.warning("MAX: контакт без номера, payload=%s", [
+                sorted((a.get("payload") or {}).keys()) for a in attachments if isinstance(a, dict)
+            ])
+        if not text and contact_phone:
+            await _handle_max_contact(
+                user_id, contact_phone, contact_belongs_to(attachments, user_id),
+                sender, message, update, max_client,
+            )
+            return
         if not text:
             return
         _remember_sender(user_id, sender)
@@ -2126,7 +2165,8 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
             reply = await _request_manager(user_id, PLATFORM)
             await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=_main_menu(user_id))
         elif user_id and payload == identify.SHARE_BUTTON_PAYLOAD:
-            # У MAX Bot API нет кнопки request_contact — просим номер текстом.
+            # Кнопка request_contact в MAX есть (см. _start_buttons); этот путь —
+            # для старых сообщений с callback-кнопкой: просим номер текстом.
             conv = get_store().get(user_id)
             conv.identify_state = identify.STATE_AWAIT_CONTACT
             get_store().save(conv)
@@ -2156,6 +2196,42 @@ def _extract_update_id(update: dict):
         if value:
             return str(value)
     return None
+
+
+CONTACT_SAVED_TEXT = "Спасибо, номер сохранила ✅"
+
+
+async def _handle_max_contact(
+    user_id: str, phone: str, own: bool, sender: dict, message: dict, update: dict, max_client,
+) -> None:
+    """Клиент отдал номер кнопкой «Поделиться номером» (или переслал визитку).
+
+    Номер уходит в диалог и в карточку клиента; подтверждённым он считается
+    только когда контакт принадлежит самому отправителю.
+    """
+    _remember_sender(user_id, sender)
+    crm_ctx = crm_ingest.ingest_inbound(
+        PLATFORM, user_id, "[поделился номером телефона]",
+        external_event_id=_extract_update_id(update),
+        external_message_id=_max_message_external_id(message),
+        name=str(sender.get("name") or ""),
+        phone=phone,
+    )
+    conv = get_store().get(user_id)
+    conv.add("user", "[поделился номером телефона]")
+    conv.lead.set_phone(phone, confirmed=own)
+    reply = CONTACT_SAVED_TEXT
+    buttons = None
+    if not registration.is_registered(conv) and registration.uses_form(PLATFORM):
+        reply = f"{CONTACT_SAVED_TEXT}\n\n{registration.FORM_INVITE}"
+        buttons = _register_button_rows(PLATFORM)
+    conv.add("assistant", reply)
+    get_store().save(conv)
+    try:
+        customer_sync.sync_conversation(conv)
+    except Exception:
+        logger.exception("customer_sync: сбой после контакта user=%s", user_id)
+    await _send_max_logged(max_client, user_id, reply, crm_ctx, buttons=buttons)
 
 
 def _remember_sender(user_id: str, sender: dict) -> None:
@@ -2287,7 +2363,10 @@ async def miniapp_info(request: Request, user_id: str = "") -> dict:
     и без авторизации, чтобы мини-приложение открывалось мгновенно.
     """
     kb = get_kb()
-    access = _miniapp_access_state(_identity_from_request(request, fallback_user_id=user_id))
+    identity = _identity_from_request(request, fallback_user_id=user_id)
+    access = _miniapp_access_state(identity)
+    if identity is not None and identity.verified:
+        analytics.track("miniapp_opened", source=identity.platform, anon_id=identity.user_id)
     return {
         "company": kb.company,
         "branches": kb.branches,
@@ -2593,7 +2672,12 @@ async def miniapp_register(request: Request, data: dict) -> dict:
         return {"ok": True, "access": _miniapp_access_state(identity)}
     form, errors = registration_form.validate(data if isinstance(data, dict) else {})
     if errors:
+        analytics.track(
+            "form_rejected", source=identity.platform, anon_id=identity.user_id,
+            meta={"fields": sorted(errors)},
+        )
         return JSONResponse({"ok": False, "errors": errors}, status_code=400)
+    analytics.track("form_submitted", source=identity.platform, anon_id=identity.user_id)
     # Журнал согласий пишем первым: если он упадёт, conv ещё не помечен
     # зарегистрированным и человек может просто повторить отправку. Если бы
     # порядок был обратным, ошибка после store.save оставляла бы диалог
@@ -2616,6 +2700,10 @@ async def miniapp_register(request: Request, data: dict) -> dict:
     except Exception:
         logger.exception("miniapp: не удалось обновить карточку клиента в CRM")
     platform_name = "Telegram" if identity.platform == TELEGRAM_PLATFORM else "MAX"
+    try:
+        customer_sync.sync_conversation(conv)
+    except Exception:
+        logger.exception("customer_sync: сбой после анкеты user=%s", identity.user_id)
     await registration._submit_registration(
         conv, get_bigben(),
         source=f"{platform_name} мини-приложение — анкета",

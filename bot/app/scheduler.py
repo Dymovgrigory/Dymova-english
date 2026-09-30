@@ -179,6 +179,19 @@ async def _group_meta_sync_loop() -> None:
         await asyncio.sleep(max(30, settings.GROUP_META_SYNC_INTERVAL_MIN) * 60)
 
 
+async def _student_cards_sync_loop() -> None:
+    """Карточки учеников с родителями и всеми телефонами — для точного
+    сопоставления клиентов бота с BigBen."""
+    from app.platform import student_cards_sync
+    while True:
+        try:
+            if settings.BIGBEN_INTERNAL_TOKEN:
+                await student_cards_sync.sync_student_cards()
+        except Exception:
+            logger.exception("student_cards: ошибка синхронизации карточек учеников")
+        await asyncio.sleep(max(5, settings.STUDENT_CARDS_SYNC_INTERVAL_MIN) * 60)
+
+
 async def _payment_reconcile_loop() -> None:
     """Сверка оплат с провайдером — деньги не должны теряться, если клиент
     ушёл со страницы, а нотификация из ЛК банка не пришла."""
@@ -214,6 +227,7 @@ def start() -> list[asyncio.Task]:
     else:
         logger.info("team_sync: синхронизация команды выключена (TEAM_SYNC_ENABLED=false)")
     tasks.append(asyncio.create_task(_group_meta_sync_loop()))
+    tasks.append(asyncio.create_task(_student_cards_sync_loop()))
     if settings.BILLING_RECONCILE_ENABLED:
         tasks.append(asyncio.create_task(_payment_reconcile_loop()))
     else:

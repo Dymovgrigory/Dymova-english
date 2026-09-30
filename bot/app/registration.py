@@ -66,10 +66,26 @@ FORM_PLATFORMS = ("telegram", "max")
 
 FORM_INVITE = (
     "Привет! 🦊 Я — Фокси из языковой школы «Фоксинбург».\n\n"
-    "Заполните, пожалуйста, короткую анкету — 30 секунд, и всё откроется: "
-    "подбор курса, расписание, запись и помощь с домашкой 😊\n\n"
+    "Спрашивайте прямо здесь: цены, расписание, группы, домашка. А чтобы "
+    "я подобрал группу под вашего ребёнка и записал на бесплатную "
+    "диагностику, заполните короткую анкету — 30 секунд 😊\n\n"
     f"Нажмите кнопку «{FORM_INVITE_MARK}» ниже 👇"
 )
+
+# Короткая приписка под ответом по существу: анкета — следующий шаг, а не
+# условие ответа. Разбор прода 29.09: жёсткий гейт «сначала анкета» отсёк
+# 26 из 28 пришедших в MAX.
+FORM_NUDGE = (
+    f"Чтобы подобрать группу и записать на диагностику — «{FORM_INVITE_MARK}» "
+    "(30 секунд) 👇"
+)
+
+# Сколько раз за разговор приписываем анкету под ответом. Дальше не дёргаем:
+# человек уже видел кнопку и сам решит.
+MAX_FORM_NUDGES = 3
+
+# Намерения, при которых форма — прямой следующий шаг, а не назойливость.
+_FORM_NATURAL_INTENTS = (INTENT_WANT_SIGNUP,)
 
 
 def uses_form(platform: str) -> bool:
@@ -400,6 +416,45 @@ async def _submit_registration(
         logger.info("registration: lead submitted for user=%s", conv.user_id)
     except Exception:
         logger.exception("registration: failed to submit lead for user=%s", conv.user_id)
+
+
+def should_nudge_form(conv: Conversation) -> bool:
+    return getattr(conv, "reg_nudges", 0) < MAX_FORM_NUDGES
+
+
+def wants_form_now(intent: str) -> bool:
+    """Человек хочет записаться — отвечаем формой, а не консультацией."""
+    return intent in _FORM_NATURAL_INTENTS
+
+
+async def submit_chat_phone_lead(conv: Conversation, bigben: BigBenClient) -> None:
+    """Лид по номеру, присланному в чате без анкеты.
+
+    Человек, который сам написал телефон, уже оставил заявку — терять его
+    из-за незаполненной формы нельзя. Уходит один раз за разговор.
+    """
+    if conv.phone_lead_sent or not conv.lead.phone:
+        return
+    conv.phone_lead_sent = True
+    from app.platform import analytics
+
+    analytics.track("chat_phone_lead", source=conv.platform, anon_id=conv.user_id)
+    who = conv.client_name or conv.lead.fio_parent
+    note = (
+        "Анкета не заполнена: номер прислан в чате."
+        + (f" Имя в мессенджере: {who}." if who else "")
+        + f" Телефон: {conv.lead.phone}."
+    )
+    utm = {**(conv.utm or {})}
+    utm.setdefault("utm_source", "max")
+    utm.setdefault("utm_medium", "bot")
+    try:
+        await bigben.create_lead(
+            conv.lead, source="MAX-бот Фоксинбург — номер из чата", note=note, utm=utm
+        )
+        logger.info("registration: chat phone lead submitted user=%s", conv.user_id)
+    except Exception:
+        logger.exception("registration: chat phone lead failed user=%s", conv.user_id)
 
 
 def is_registered(conv: Conversation) -> bool:

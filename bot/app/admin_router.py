@@ -88,4 +88,18 @@ async def hand_off(max_client: MaxClient, conv: Conversation, reason: str = "") 
     for admin_id in settings.admin_ids:
         ok = await max_client.send_message(admin_id, message)
         ok_any = ok_any or ok
+        await _send_contact_card(max_client, admin_id, conv)
     return ok_any
+
+
+async def _send_contact_card(max_client: MaxClient, admin_id: str, conv: Conversation) -> None:
+    """Карточка клиента MAX с кнопкой «Чат»: администратор пишет клиенту сам,
+    даже когда номер скрыт и username нет. Сбой не мешает передаче диалога."""
+    if conv.platform != "max" or not conv.user_id.isdigit():
+        return
+    try:
+        await max_client.send_contact_card(
+            admin_id, int(conv.user_id), conv.client_name or conv.lead.fio_parent or "Клиент"
+        )
+    except Exception:
+        logger.exception("hand_off: не удалось отправить карточку контакта user=%s", conv.user_id)

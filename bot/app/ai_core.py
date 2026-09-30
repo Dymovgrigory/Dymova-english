@@ -21,6 +21,8 @@ from app import runtime
 from app import registration
 from app import convlog
 from app.bigben import get_bigben
+from app.platform import analytics
+from app import customer_sync, school_sites
 from app.config import settings
 from app.knowledge.kb import get_kb, _stem, _tokens
 from app.llm import get_llm
@@ -471,14 +473,32 @@ async def handle_message(user_id: str, text: str, platform: str = "max") -> str:
             "error", platform, user_id,
             {"reason": status, "text": text[:200], "request_id": request_id},
         )
+    _sync_customer_card(user_id, platform)
+    elapsed = time.monotonic() - started
     runtime.log_event(
         "RESPONSE_READY",
         user_id=user_id,
         platform=platform,
         status=status,
-        took=f"{time.monotonic() - started:.2f}s",
+        took=f"{elapsed:.2f}s",
+    )
+    # Время ответа — в БД, а не только в логах контейнера: при рестарте логи
+    # теряются, и «бот долго отвечает» нечем было проверить.
+    analytics.track(
+        "bot_reply", source=platform, anon_id=user_id,
+        meta={"ms": int(elapsed * 1000), "status": status},
     )
     return reply
+
+
+def _sync_customer_card(user_id: str, platform: str) -> None:
+    """Переносит новые данные диалога в карточку клиента (ФИО, ребёнок,
+    телефон) и подтягивает пустые поля из BigBen. Сбой здесь не должен
+    отражаться на ответе клиенту."""
+    try:
+        customer_sync.sync_conversation(get_store().get(user_id, platform=platform))
+    except Exception:
+        logger.exception("customer_sync: сбой переноса в карточку user_id=%s", user_id)
 
 
 def _record_fallback(user_id: str, text: str, platform: str, reply: str) -> str:
@@ -602,14 +622,8 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     _remember_dialogue_state(conv, text, intent)
 
     if not registration.is_registered(conv):
-        if registration.uses_form(platform) and intent != I.HANDOFF:
-            # Анкета — форма в мини-приложении: вопросы по одному в чате
-            # занимали несколько минут, люди бросали на середине.
-            reply = registration.FORM_INVITE
-            conv.add("assistant", reply)
-            store.save(conv)
-            convlog.log_turn(user_id, text, reply, intent, conv.stage, "registration_form_invite")
-            return reply
+        if registration.uses_form(platform):
+            return await _reply_with_soft_form(conv, text, kb, intent)
         started = conv.stage != registration.STAGE_REGISTRATION
         # start_registration склеивает приветствие и первый вопрос анкеты.
         welcome = registration.start_registration(conv) if started else ""
@@ -674,6 +688,43 @@ async def _handle_message_locked(user_id: str, text: str, platform: str) -> str:
     conv.add("assistant", reply)
     store.save(conv)
     convlog.log_turn(user_id, text, reply, intent, conv.stage, "ok")
+    return reply
+
+
+async def _reply_with_soft_form(
+    conv: Conversation, text: str, kb, intent: str
+) -> str:
+    """TG/MAX без анкеты: отвечаем по существу, анкету предлагаем следом.
+
+    Раньше на любой вопрос уходило одно приглашение на форму — из ~28
+    пришедших в MAX за день анкету заполнили двое, остальные не получили
+    даже цены. Теперь форма — следующий шаг после ответа, а не условие.
+    """
+    store = get_store()
+    result = "ok_unregistered"
+    # Номер, присланный в чате, — уже заявка: сохраняем, не дожидаясь формы.
+    await registration.submit_chat_phone_lead(conv, get_bigben())
+
+    if intent == I.HANDOFF:
+        await hand_off(get_max(), conv, reason="запрос оператора")
+        reply = _handoff_reply()
+        result = "handoff"
+    elif registration.wants_form_now(intent) or (
+        intent == I.GREETING and len(text.split()) < 4
+    ):
+        reply = registration.FORM_INVITE
+        result = "registration_form_invite"
+    else:
+        await _fold_memory(conv)
+        reply = await _route(conv, text, kb, intent)
+        reply = await _review(conv, text, reply)
+        if registration.should_nudge_form(conv):
+            reply = f"{reply}\n\n{registration.FORM_NUDGE}"
+            conv.reg_nudges += 1
+
+    conv.add("assistant", reply)
+    store.save(conv)
+    convlog.log_turn(conv.user_id, text, reply, intent, conv.stage, result)
     return reply
 
 
@@ -1030,6 +1081,14 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
         await hand_off(max_client, conv, reason="запрос оператора")
         return _handoff_reply()
 
+    # 3а-0. Занятия на базе гимназии 13 и школы 14: своя цена, расписание —
+    #       у администратора. Раньше уходило в общий список групп филиалов.
+    if school_sites.mentions_school_site(text) and intent in (
+        None, "", I.SCHEDULE, I.PRICE, I.QUESTION, I.COURSES, I.GREETING, I.CONTACTS,
+    ):
+        await hand_off(max_client, conv, reason="расписание на базе школы (гимназия 13 / школа 14)")
+        return school_sites.REPLY
+
     # 3б. Расписание и свободные места — только живые данные BigBen,
     #     без LLM: детерминированный ответ из read-model (анти-галлюцинации).
     if intent == I.SCHEDULE:
@@ -1338,6 +1397,7 @@ async def handle_start(user_id: str, platform: str = "max") -> str:
         conv.add("assistant", reply)
         store.save(conv)
         return reply
+    analytics.track("bot_start", source=platform, anon_id=user_id)
     if not registration.is_registered(conv):
         reply = (registration.FORM_INVITE if registration.uses_form(platform)
                  else registration.start_registration(conv))

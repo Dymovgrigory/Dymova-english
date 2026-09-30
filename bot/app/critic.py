@@ -76,7 +76,7 @@ MAX_EMOJI = 2
 REPEAT_RATIO = 0.92
 
 # Проблемы, которые можно устранить прямо в тексте.
-FIXABLE = frozenset({"canned_phrase", "too_many_emoji", "leaked_marker"})
+FIXABLE = frozenset({"canned_phrase", "too_many_emoji", "leaked_marker", "too_many_questions"})
 
 
 def _sentences(text: str) -> list[str]:
@@ -148,6 +148,8 @@ def repair(reply: str, issues: list[str]) -> str:
         fixed = _LEAK_RE.sub("", fixed)
     if "too_many_emoji" in issues:
         fixed = _trim_emoji(fixed, MAX_EMOJI)
+    if "too_many_questions" in issues:
+        fixed = _trim_questions(fixed, MAX_QUESTIONS)
     # Чистим следы вырезанного: двойные пробелы, пробел перед знаком и
     # осиротевшую пунктуацию. Без этого вырезанный токен оставлял дыру:
     # «А сколько лет ?» вместо «А сколько лет Маше?».
@@ -161,6 +163,24 @@ def repair(reply: str, issues: list[str]) -> str:
         # вызывающий (обычно это означает регенерацию).
         return reply.strip()
     return fixed[0].upper() + fixed[1:] if fixed[0].islower() else fixed
+
+
+def _trim_questions(text: str, keep: int) -> str:
+    """Оставляет последние `keep` вопросов, ранние предложения-вопросы режет.
+
+    Последний вопрос — обычно цель реплики (или шаг анкеты, дописанный после
+    ответа), поэтому лишние срезаются с начала.
+    """
+    sentences = re.split(r"(?<=[.!?…])\s+", text)
+    total = sum(1 for s in sentences if s.rstrip().endswith("?"))
+    to_drop = max(0, total - keep)
+    kept: list[str] = []
+    for sentence in sentences:
+        if to_drop and sentence.rstrip().endswith("?"):
+            to_drop -= 1
+            continue
+        kept.append(sentence)
+    return " ".join(kept)
 
 
 def _trim_emoji(text: str, keep: int) -> str:

@@ -97,8 +97,14 @@ def _normalize_buttons(buttons: list[list[dict]] | None) -> list[list[dict]]:
     return rows
 
 
+# К закреплённому IP api.telegram.org новое соединение не устанавливается
+# примерно в каждой четвёртой попытке. Ждать 30–40 секунд ради заведомо
+# «мёртвой» попытки нельзя: сообщение клиента всё это время висит без ответа.
+CONNECT_TIMEOUT_SEC = 4.0
+
+
 def _client_kwargs(timeout: int = 30) -> dict:
-    kwargs: dict = {"timeout": timeout}
+    kwargs: dict = {"timeout": httpx.Timeout(timeout, connect=CONNECT_TIMEOUT_SEC)}
     proxy_url = settings.TELEGRAM_PROXY_URL.strip()
     if proxy_url:
         kwargs["proxy"] = proxy_url
@@ -368,7 +374,7 @@ class TelegramClient:
         if offset is not None:
             data["offset"] = str(offset)
         kwargs = _client_kwargs(timeout + 15)
-        kwargs["timeout"] = httpx.Timeout(timeout + 15)
+        kwargs["timeout"] = httpx.Timeout(timeout + 15, connect=CONNECT_TIMEOUT_SEC)
         try:
             async with httpx.AsyncClient(**kwargs) as client:
                 resp = await client.post(f"{self.base}/getUpdates", data=data)

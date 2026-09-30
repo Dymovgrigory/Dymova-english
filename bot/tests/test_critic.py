@@ -160,7 +160,9 @@ def test_repair_leaves_unfixable_issues_to_the_caller():
 def test_needs_rewrite_only_for_unfixable():
     assert not critic.needs_rewrite(["canned_phrase", "too_many_emoji"])
     assert critic.needs_rewrite(["premature_sales"])
-    assert critic.needs_rewrite(["too_many_questions"])
+    # Лишние вопросы срезаются текстом: переписывание моделью стоило клиенту
+    # до 8 секунд ожидания ради того, что чинится за миллисекунды.
+    assert not critic.needs_rewrite(["too_many_questions"])
 
 
 def test_feedback_is_plain_russian_not_codes():
@@ -258,3 +260,13 @@ def test_repair_leaves_no_hole_where_a_token_was():
     """Вырезанный токен оставлял «А сколько лет ?» — дыру перед знаком."""
     fixed = critic.repair("А сколько лет {{CHILD_NAME}}?", ["leaked_marker"])
     assert fixed == "А сколько лет?"
+
+
+def test_extra_questions_are_trimmed_without_model():
+    reply = "Подберу группу. Сколько лет ребёнку? Какой уровень? Когда удобно заниматься?"
+    issues = critic.inspect(reply, _conv(), True)
+    fixed = critic.repair(reply, issues)
+    assert fixed.count("?") == critic.MAX_QUESTIONS
+    assert fixed.startswith("Подберу группу.")
+    assert fixed.endswith("Когда удобно заниматься?")
+    assert "too_many_questions" not in critic.inspect(fixed, _conv(), True)

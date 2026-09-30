@@ -118,6 +118,9 @@ class Conversation:
     # ответов. По достижении registration.MAX_REG_NUDGES перестаём дёргать
     # человека анкетой в каждом сообщении.
     reg_nudges: int = 0
+    # Ушёл ли в CRM лид по номеру, который человек прислал в чате, не заполнив
+    # анкету. Нужен, чтобы не создавать дубли при каждом следующем сообщении.
+    phone_lead_sent: bool = False
     # Когда заявка ушла в CRM. Нужен кабинету («Мои заявки» — дата), а не
     # воронке: без него датой заявки пришлось бы называть updated_at, который
     # меняется с каждым сообщением.
@@ -430,6 +433,7 @@ def _conv_from_dict(d: dict) -> Conversation:
         dropped=d.get("dropped", []) or [],
         recommended_program=d.get("recommended_program", ""),
         reg_nudges=d.get("reg_nudges", 0),
+        phone_lead_sent=d.get("phone_lead_sent", False),
         lead_submitted_at=d.get("lead_submitted_at", ""),
         awaiting_homework=d.get("awaiting_homework", False),
         homework_check_context=d.get("homework_check_context", False),

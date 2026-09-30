@@ -97,6 +97,17 @@ function aiPill(mode) {
   return `<span class="pill pill--${esc(mode)}">${esc(AI_LABELS[mode] || mode)}</span>`;
 }
 
+function fmtPhone(raw) {
+  const d = String(raw || "").replace(/\D/g, "").slice(-10);
+  if (d.length < 10) return String(raw || "");
+  return `+7 ${d.slice(0, 3)} ${d.slice(3, 6)}-${d.slice(6, 8)}-${d.slice(8)}`;
+}
+
+function fmtDay(iso) {
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
+}
+
 function initials(name, fallback) {
   const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
   if (!parts.length) return (fallback || "?").slice(0, 2).toUpperCase();
@@ -531,9 +542,7 @@ function messageHtml(msg) {
       statusLine = `<div class="bubble__status">✓</div>`;
     }
   }
-  return `<div class="bubble bubble--${cls}" data-mid="${msg.id}">
-    <div class="bubble__meta"><b>${esc(who)}</b><span>${esc(fmtTime(msg.created_at))}</span></div>
-    ${esc(msg.text)}${statusLine}</div>`;
+  return `<div class="bubble bubble--${cls}" data-mid="${msg.id}"><div class="bubble__meta"><b>${esc(who)}</b><span>${esc(fmtTime(msg.created_at))}</span></div><div class="bubble__text">${esc(msg.text)}</div>${statusLine}</div>`;
 }
 
 async function loadMessages(convId, options = {}) {
@@ -706,7 +715,8 @@ async function loadCustomerCard(customerId, target) {
       // при ошибке показываем карточку без секции школы.
       api(`/admin/api/customers/${customerId}/crm360`).catch(() => null),
     ]);
-    container.innerHTML = customerCardHtml(customer, notes.items || [], tasks.items || [], crm360);
+    // crm360 уже дополнил пустые поля карточки данными BigBen — берём её версию.
+    container.innerHTML = customerCardHtml((crm360 && crm360.customer) || customer, notes.items || [], tasks.items || [], crm360);
   } catch (err) {
     container.innerHTML = `<div class="customer-empty">${esc(err.message)}</div>`;
   }
@@ -714,34 +724,78 @@ async function loadCustomerCard(customerId, target) {
 
 function schoolSectionHtml(d) {
   if (!d) return "";
-  const rub = (k) => `${(Number(k || 0) / 100).toLocaleString("ru-RU")} ₽`;
-  const st = { pending: "в обработке", confirmed: "подтверждена", failed: "ошибка" };
-  let html = `<div class="c360__section"><h4>Школа (BigBen)</h4>`;
-  if (d.bb_student) {
-    html += `<dl class="kv">
-      <dt>Ученик</dt><dd>${esc(d.bb_student.fio)} <span class="muted">#${d.bb_student.id}</span></dd>
-      <dt>Баланс</dt><dd>${rub(d.bb_student.balance_kopecks)}</dd>
-    </dl>`;
+  const rub = (k) => `${Math.round(Number(k || 0) / 100).toLocaleString("ru-RU")} ₽`;
+  const students = d.bb_students && d.bb_students.length ? d.bb_students : (d.bb_student ? [d.bb_student] : []);
+  const fresh = (d.freshness && d.freshness.cards && d.freshness.cards.last_synced_at)
+    || (d.freshness && d.freshness.students && d.freshness.students.last_synced_at);
+  const freshHtml = fresh ? `<div class="school__fresh">Данные школы обновлены ${esc(fmtTime(fresh))}</div>` : "";
+  let html = "";
+
+  if (!students.length) {
+    const why = d.bb_reason === "no_phone"
+      ? "У клиента нет телефона, поэтому найти его в школе нельзя. Попросите нажать «Поделиться номером» в боте или впишите номер в карточку."
+      : "Этого номера нет в BigBen — похоже, это новый клиент. Если ребёнок записан на другой номер, впишите его в карточку.";
+    html = `<div class="c360__section school"><h4>🎓 Школа · BigBen</h4>
+      <div class="school__empty"><div class="school__empty-ico">${d.bb_reason === "no_phone" ? "📵" : "🆕"}</div><div>${esc(why)}</div></div>${freshHtml}</div>`;
   } else {
-    html += `<div class="muted">Ученик с таким телефоном в BigBen не найден</div>`;
+    // Семья: один или несколько детей на общем номере, общий родитель.
+    const parents = [...new Set(students.map((st) => st.parentname).filter(Boolean))];
+    const seen = new Set();
+    const phones = [];
+    students.forEach((st) => (st.phones || []).forEach((p) => {
+      const key = String(p.phone).replace(/\D/g, "").slice(-10);
+      if (!seen.has(key)) { seen.add(key); phones.push(p); }
+    }));
+    const former = students.every((st) => st.archived);
+    const parentHtml = (parents.length || phones.length) ? `<div class="school__parent">
+      ${parents.length ? `<div>Родитель: <b>${esc(parents.join(", "))}</b></div>` : ""}
+      ${phones.length ? `<div class="school__phones">${phones.map((p) =>
+        `<div><a href="tel:${esc(String(p.phone).replace(/[^+\d]/g, ""))}">${esc(fmtPhone(p.phone))}</a>${p.comment ? ` <span class="muted">· ${esc(p.comment)}</span>` : ""}</div>`).join("")}</div>` : ""}
+    </div>` : "";
+    const childHtml = students.map((st) => {
+      const status = st.archived ? `<span class="chip">В архиве</span>`
+        : (st.is_active ? `<span class="chip chip--ok">Учится</span>` : `<span class="chip">Не занимается</span>`);
+      const groups = (st.groups || []).map((g) =>
+        `<span class="chip ${g.is_debtor ? "chip--bad" : "chip--group"}" title="с ${esc(g.start_date || "")}">${g.is_debtor ? "⚠ " : ""}${esc(g.name)}</span>`).join("");
+      const money = [];
+      if (st.balance_kopecks) money.push(`<span class="chip chip--money">Баланс ${rub(st.balance_kopecks)}</span>`);
+      if (st.debt_rub) money.push(`<span class="chip chip--bad">Долг ${Number(st.debt_rub).toLocaleString("ru-RU")} ₽</span>`);
+      return `<div class="child">
+        <div class="child__top">
+          <div class="child__ava">${esc(initials(st.fio, "?"))}</div>
+          <div style="flex:1;min-width:0">
+            <div class="child__name">${esc(st.fio)}</div>
+            <div class="child__sub">${st.age ? `${esc(st.age)} лет · ` : ""}#${st.id}${st.email ? ` · ${esc(st.email)}` : ""}</div>
+          </div>${status}
+        </div>
+        <div class="chips">${st.filial ? `<span class="chip chip--branch">📍 ${esc(st.filial)}</span>` : ""}${groups}${money.join("")}</div>
+        ${st.important_comment ? `<div class="child__note">💬 ${esc(st.important_comment)}</div>` : ""}
+      </div>`;
+    }).join("");
+    html = `<div class="c360__section school">
+      <div class="school__head"><h4 style="margin:0">🎓 Школа · BigBen</h4>
+        <span class="chip ${former ? "" : "chip--ok"}">${former ? "Бывший ученик" : (students.length > 1 ? `Семья · ${students.length} детей` : "Ученик школы")}</span></div>
+      ${parentHtml}${childHtml}${freshHtml}</div>`;
   }
+
+  const st = { pending: "в обработке", confirmed: "подтверждена", failed: "ошибка" };
+  const extra = [];
   if (d.bookings && d.bookings.length) {
-    html += `<h4>Заявки на пробное</h4>` + d.bookings.slice(0, 5).map((b) =>
+    extra.push(`<h4>Заявки на пробное</h4>` + d.bookings.slice(0, 5).map((b) =>
       `<div class="note">${esc(b.child_name || "Ребёнок")} · ${esc(st[b.status] || b.status)}
-       <div class="note__meta">${esc(fmtTime(b.created_at))}${b.error ? ` · ${esc(b.error)}` : ""}</div></div>`).join("");
+       <div class="note__meta">${esc(fmtTime(b.created_at))}${b.error ? ` · ${esc(b.error)}` : ""}</div></div>`).join(""));
   }
   if (d.bb_payments && d.bb_payments.length) {
-    html += `<h4>Платежи (BigBen)</h4>` + d.bb_payments.slice(0, 5).map((p) =>
-      `<div class="note">${rub(p.amount_kopecks)}<div class="note__meta">${esc(fmtTime(p.paid_at))}</div></div>`).join("");
+    extra.push(`<h4>Платежи (BigBen)</h4>` + d.bb_payments.slice(0, 5).map((p) =>
+      `<div class="note">${rub(p.amount_kopecks)}<div class="note__meta">${esc(fmtTime(p.paid_at))}</div></div>`).join(""));
   }
   if (d.billing_payments && d.billing_payments.length) {
-    html += `<h4>Онлайн-оплаты</h4>` + d.billing_payments.slice(0, 5).map((p) =>
+    extra.push(`<h4>Онлайн-оплаты</h4>` + d.billing_payments.slice(0, 5).map((p) =>
       `<div class="note">${rub(p.amount_kopecks)} · ${esc(p.status)}
-       <div class="note__meta">${esc(fmtTime(p.paid_at || p.created_at))}</div></div>`).join("");
+       <div class="note__meta">${esc(fmtTime(p.paid_at || p.created_at))}</div></div>`).join(""));
   }
-  const fresh = d.freshness && d.freshness.students && d.freshness.students.last_synced_at;
-  if (fresh) html += `<div class="muted">Данные школы обновлены ${esc(fmtTime(fresh))}</div>`;
-  return html + `</div>`;
+  if (extra.length) html += `<div class="c360__section">${extra.join("")}</div>`;
+  return html;
 }
 
 const CONSENT_NAMES = { pd_child: "ПД ребёнка", privacy: "Политика конф.", marketing: "Рассылки" };
@@ -764,12 +818,38 @@ function customerCardHtml(c, notes, tasks, crm360) {
       ${t.status === "open" ? ` · <a href="#" data-task-done="${t.id}">выполнено</a>` : ""}</div>
     </div>`).join("");
   const archived = c.status === "archived";
+  const ch = ((c.identities || [])[0] || {}).channel || "web";
+  const channelChips = (c.identities || []).map((i) =>
+    `<span class="hchip">${esc(CHANNEL_LABEL[i.channel] || i.channel)} · ${esc(i.external_id)}</span>`).join("");
+  const phoneChip = c.phone
+    ? `<a class="hchip" href="tel:${esc(String(c.phone).replace(/[^+\d]/g, ""))}">📞 ${esc(fmtPhone(c.phone))}</a>`
+    : `<span class="hchip hchip--warn">📵 нет телефона</span>`;
+  const emailChip = c.email ? `<span class="hchip">✉ ${esc(c.email)}</span>` : "";
+  // Связь без номера: MAX присылает менеджеру карточку контакта с кнопкой «Чат»,
+  // Telegram открывает профиль по ID.
+  const hasMax = (c.identities || []).some((i) => i.channel === "max" && /^\d+$/.test(String(i.external_id)));
+  const tgIdentity = (c.identities || []).find((i) => i.channel === "telegram" && /^(tg:)?\d+$/.test(String(i.external_id)));
+  const reachChips = (hasMax ? `<button class="hchip hchip--btn" data-action="max-card" title="Бот пришлёт вам в MAX карточку клиента с кнопкой «Чат»">📇 Контакт мне в MAX</button>` : "")
+    + (tgIdentity ? `<a class="hchip" href="tg://user?id=${esc(String(tgIdentity.external_id).replace("tg:", ""))}">✈ Открыть в Telegram</a>` : "");
+  const childLine = [c.child_name, c.child_age ? `${c.child_age} лет` : ""].filter(Boolean).join(" · ");
   return `
   <div class="c360" data-customer="${c.id}">
-    <div>
-      <div class="c360__name">${esc(c.name || "Без имени")}</div>
-      <div class="muted">${esc(c.counts.messages)} сообщ. · ${esc(c.counts.conversations)} диалог. · с ${esc(fmtTime(c.first_seen_at))}</div>
+    <div class="c360-hero">
+      <div class="c360-hero__top">
+        <div class="avatar avatar--${esc(ch)}">${esc(initials(c.name, "?"))}</div>
+        <div style="min-width:0">
+          <div class="c360__name">${esc(c.name || "Без имени")}</div>
+          <div class="muted">${childLine ? `Ребёнок: ${esc(childLine)}` : "Ребёнок пока не указан"}</div>
+        </div>
+      </div>
+      <div class="c360-hero__chips">${phoneChip}${emailChip}${channelChips}${reachChips}</div>
     </div>
+    <div class="c360-stats">
+      <div class="c360-stat"><b>${esc(c.counts.messages)}</b><span>сообщений</span></div>
+      <div class="c360-stat"><b>${esc(c.counts.conversations)}</b><span>диалогов</span></div>
+      <div class="c360-stat"><b>${esc(fmtDay(c.first_seen_at))}</b><span>первый контакт</span></div>
+    </div>
+    ${schoolSectionHtml(crm360)}
     <div class="c360__section">
       <h4>Контакты</h4>
       <dl class="kv">
@@ -806,7 +886,6 @@ function customerCardHtml(c, notes, tasks, crm360) {
       <h4>Каналы</h4>
       ${channels || `<span class="muted">—</span>`}
     </div>
-    ${schoolSectionHtml(crm360)}
     <div class="c360__section">
       <h4>Теги</h4>
       <div class="tag-row">${tags}</div>
@@ -909,7 +988,11 @@ document.addEventListener("click", async (event) => {
   if (!action) return;
   const card = action.closest("[data-customer]");
   const id = Number(card.dataset.customer);
-  if (action.dataset.action === "timeline") {
+  if (action.dataset.action === "max-card") {
+    api(`/admin/api/customers/${id}/max-contact-card`, { method: "POST" })
+      .then((r) => toast(r.sent ? "Карточка контакта отправлена вам в MAX — откройте и нажмите «Чат»" : "Не удалось отправить карточку"))
+      .catch((err) => toast(err.message));
+  } else if (action.dataset.action === "timeline") {
     openTimeline(id);
   } else if (action.dataset.action === "archive") {
     if (!confirm("Отправить клиента в архив? Данные сохранятся.")) return;

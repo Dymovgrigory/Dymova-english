@@ -24,6 +24,7 @@ import json
 import logging
 import socket
 import urllib.parse
+import re
 from typing import Optional
 
 import httpx
@@ -45,6 +46,56 @@ def link_button(text: str, url: str) -> dict:
 
 def callback_button(text: str, payload: str) -> dict:
     return {"type": "callback", "text": text, "payload": payload}
+
+
+def contact_button(text: str) -> dict:
+    """Кнопка «Поделиться номером»: MAX сам присылает контакт нажавшего."""
+    return {"type": "request_contact", "text": text}
+
+
+_TEL_RE = re.compile(r"^TEL[^:\n]*:(.+)$", re.IGNORECASE | re.MULTILINE)
+
+
+def _contact_payloads(attachments: list | None) -> list[dict]:
+    return [
+        a.get("payload") or {}
+        for a in (attachments or [])
+        if isinstance(a, dict) and a.get("type") == "contact"
+    ]
+
+
+def phone_from_contact_attachment(attachments: list | None) -> str:
+    """Номер из вложения-контакта MAX в виде +7XXXXXXXXXX ('' — номера нет).
+
+    Формат вложения в документации скупой, поэтому читаем оба места, где
+    номер может лежать: строку vCard (TEL:…) и поле max_info.phone.
+    """
+    for payload in _contact_payloads(attachments):
+        candidates = [m.group(1) for m in _TEL_RE.finditer(str(payload.get("vcf_info") or ""))]
+        candidates.append(str((payload.get("max_info") or {}).get("phone") or ""))
+        for raw in candidates:
+            digits = "".join(c for c in raw if c.isdigit())
+            if len(digits) >= 10:
+                return f"+7{digits[-10:]}"
+    return ""
+
+
+def contact_belongs_to(attachments: list | None, user_id: str) -> bool:
+    """Контакт прислан пользователем о самом себе (нажал кнопку), а не
+    переслал чужую визитку — только тогда номер считаем подтверждённым."""
+    return any(
+        str((p.get("max_info") or {}).get("user_id") or "") == str(user_id)
+        for p in _contact_payloads(attachments)
+    )
+
+
+def contact_card_attachment(contact_user_id: int, name: str) -> list[dict]:
+    """Вложение-«визитка» пользователя MAX по его ID.
+
+    У получателя это карточка контакта с кнопкой «Чат» — писать можно,
+    даже когда номер телефона у человека скрыт.
+    """
+    return [{"type": "contact", "payload": {"name": name, "contact_id": int(contact_user_id)}}]
 
 
 def keyboard(rows: list[list[dict]]) -> list[dict]:
@@ -286,6 +337,20 @@ class MaxClient:
     ) -> bool:
         ok, _external_id, _error = await self.send_message_ext(user_id, text, buttons)
         return ok
+
+    async def send_contact_card(
+        self, to_user_id: str, contact_user_id: int, name: str, text: str = ""
+    ) -> bool:
+        """Присылает пользователю to_user_id карточку контакта contact_user_id."""
+        body: dict = {"attachments": contact_card_attachment(contact_user_id, name or "Клиент")}
+        if text:
+            body["text"] = text
+        result, error = await self._request_ext(
+            "POST", "/messages", params={"user_id": to_user_id}, json_body=body
+        )
+        if result is None:
+            logger.warning("MAX: карточка контакта не отправлена to=%s: %s", to_user_id, error)
+        return result is not None
 
     async def send_message_ext(
         self,
