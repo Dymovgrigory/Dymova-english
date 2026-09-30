@@ -94,6 +94,8 @@ class Settings(BaseSettings):
     BIGBEN_INTERNAL_TOKEN: str = ""
     # Как часто догружать педагогов/периоды/цены из пульта (минуты).
     GROUP_META_SYNC_INTERVAL_MIN: int = 60
+    # Карточки учеников (родитель, все телефоны) из внутреннего API пульта.
+    STUDENT_CARDS_SYNC_INTERVAL_MIN: int = 30
     # Полная (не инкрементальная) выгрузка CRM — страховка от пропущенных
     # updated_since изменений, чтобы read-model не расходилась с CRM.
     BIGBEN_FULL_SYNC_INTERVAL_MIN: int = 360

@@ -543,4 +543,3 @@ h1, h2, h3 { margin: 0 0 8px; }
 .hw-detail__block h4 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; opacity: .6; }
 .hw-detail__meta { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
 
-.btn--small { padding: 3px 10px; font-size: 12px; margin-left: 6px; }

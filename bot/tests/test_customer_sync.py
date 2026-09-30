@@ -4,7 +4,7 @@ import pytest
 from app import crm_store, customer_sync
 from app.config import settings
 from app.memory import Conversation, Lead
-from app.platform import bb_store
+from app.platform import bb_cards, bb_store
 
 
 @pytest.fixture(autouse=True)
@@ -13,14 +13,24 @@ def stores(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "STATE_FILE", "")
     crm_store.reset()
     bb_store._local.conn = None
+    _CARDS.clear()
     yield
     crm_store.reset()
     bb_store._local.conn = None
 
 
-def _student(sid, fio, phone, email=""):
-    bb_store.upsert_student({"id": sid, "fio": fio, "phone": phone, "email": email,
-                             "balance_kopecks": 0})
+_CARDS: list[dict] = []
+
+
+def _student(sid, fio, phone, email="", parent="", age=None, **extra):
+    """Ученик в справочнике BigBen (карточки внутреннего API)."""
+    raw = {"id": sid, "fio": fio, "parentname": parent, "phone": phone, "main_phone": "",
+           "phone1": "", "parent_phone": None, "phone_comment": "", "phone1_comment": "",
+           "email": email, "ages": age, "filial": {"id": 1, "name": "Лихачевский"},
+           "active_groups": [], "is_active": True, "archived": False, "deleted": False}
+    raw.update(extra)
+    _CARDS.append(bb_cards.from_api(raw))
+    bb_cards.replace_all(list(_CARDS))
 
 
 def _conv(user_id="777", platform="max", **lead):
@@ -102,24 +112,49 @@ def test_status_reasons():
     assert status["reason"] == "linked" and status["students"][0]["id"] == 9
 
 
-def test_candidates_by_child_name_and_manual_link_fills_phone():
-    _student(5, "Морозова Маша", "89253334455", "m@x.ru")
-    _student(6, "Волков Иван", "89256667788")
-    cid = _customer(child_name="Маша", name="Морозова Елена")
-    found = customer_sync.bb_candidates(cid)
-    assert [c["id"] for c in found] == [5]
-    assert "3334455"[-4:] in found[0]["phone_hint"]  # только последние цифры
-    assert customer_sync.link_bigben(cid, 5, actor="admin")
+def test_parent_name_age_and_email_come_from_bigben():
+    _student(42, "Петров Миша", "89251112233", "mama@x.ru", parent="Ольга", age=8.3)
+    cid = _customer(phone="+79251112233")
+    customer_sync.enrich_from_bigben(cid)
     card = crm_store.get_customer(cid)
-    assert card["phone"].endswith("9253334455") or card["phone"] == "89253334455"
-    assert card["metadata"]["bb_linked_ids"] == [5]
-    assert customer_sync.bigben_status(cid)["reason"] == "linked"
+    assert card["name"] == "Ольга"
+    assert card["child_age"] == "8"
+    assert card["child_name"] == "Петров Миша"
 
 
-def test_candidates_empty_without_names_and_link_unknown_student():
-    cid = _customer()
-    assert customer_sync.bb_candidates(cid) == []
-    assert customer_sync.link_bigben(cid, 12345, actor="admin") is False
+def test_siblings_get_all_ages_and_one_parent():
+    _student(1, "Сидоров Пётр", "89251112233", parent="Ольга", age=11.2)
+    _student(2, "Сидорова Соня", "89251112233", parent="Ольга", age=8.9)
+    cid = _customer(phone="+79251112233")
+    customer_sync.enrich_from_bigben(cid)
+    card = crm_store.get_customer(cid)
+    assert card["name"] == "Ольга"
+    assert card["child_age"] == "11, 8"
+
+
+def test_no_guessing_by_name_only():
+    """Имя без номера — это не совпадение: карточка остаётся несвязанной."""
+    _student(5, "Морозова Маша", "89253334455", parent="Елена")
+    cid = _customer(child_name="Маша", name="Елена")
+    assert customer_sync.enrich_from_bigben(cid) == []
+    assert customer_sync.bigben_status(cid)["reason"] == "no_phone"
+
+
+def test_former_student_is_tagged_differently():
+    _student(8, "Бывший Ученик", "89250009988", archived=True, is_active=False)
+    cid = _customer(phone="+79250009988")
+    customer_sync.enrich_from_bigben(cid)
+    names = [t["name"] for t in crm_store.get_customer(cid)["tags"]]
+    assert "бывший ученик" in names and "ученик школы" not in names
+
+
+def test_falls_back_to_public_api_rows_when_cards_not_synced():
+    bb_store.upsert_student({"id": 3, "fio": "Публичный Ученик", "phone": "89257776655",
+                             "email": "p@x.ru", "balance_kopecks": 0})
+    cid = _customer(phone="+79257776655")
+    students = customer_sync.enrich_from_bigben(cid)
+    assert [s["id"] for s in students] == [3]
+    assert crm_store.get_customer(cid)["child_name"] == "Публичный Ученик"
 
 
 def test_backfill_walks_conversations(monkeypatch):
