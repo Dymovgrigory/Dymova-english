@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<yml_catalog date="2026-08-22 20:00">
+<yml_catalog date="2026-09-30 18:00">
   <shop>
     <name>Языковая школа «Фоксинбург»</name>
     <company>ИП Дымова Вероника Александровна</company>
@@ -57,24 +57,6 @@
         <param name="Сайт работодателя">https://dymova-english.ru/</param>
         <sales_notes>в месяц</sales_notes>
         <description>Филиал на пр. Ракетостроителей 9к3 или Лихачевский 76к1. Встреча клиентов, консультирование по программам, документооборот и расписание, коммуникация с родителями. Зарплата 55 000–70 000 ₽ в месяц + бонусы.</description>
-      </offer>
-      <offer id="vac-teacher-french">
-        <name>Преподаватель французского языка</name>
-        <vendor>Языковая школа «Фоксинбург»</vendor>
-        <url>https://dymova-english.ru/vakansii#teacher-french</url>
-        <categoryId>1</categoryId>
-        <set-ids>s-vacancies</set-ids>
-        <picture>https://dymova-english.ru/gallery/class-light.webp</picture>
-        <price from="true">50000</price>
-        <currencyId>RUR</currencyId>
-        <param name="Конверсия">10</param>
-        <param name="Тип зарплаты">гросс</param>
-        <param name="График работы">Гибкий график</param>
-        <param name="Тип занятости">Частичная</param>
-        <param name="Регион">Московская область, Долгопрудный</param>
-        <param name="Сайт работодателя">https://dymova-english.ru/</param>
-        <sales_notes>в месяц</sales_notes>
-        <description>Занятия французским языком для детей и подростков в языковой школе «Фоксинбург». Официальное трудоустройство, дружный коллектив и поддержка методиста. Зарплата 50 000–120 000 ₽ в месяц, зависит от нагрузки.</description>
       </offer>
     </offers>
   </shop>

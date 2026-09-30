@@ -410,6 +410,7 @@ ENGLISH_TEACHERS = [
 ]
 GERMAN_TEACHERS = [
     {"name": "Саляхова Алина", "role": "Педагог немецкого языка", "photo": TEAM_MEDIA + "salyahova.webp", "video": TEAM_MEDIA + "salyahova.mp4", "lesson": TEAM_MEDIA + "salyahova_lesson.mp4"},
+    {"name": "Кир Анджела", "role": "Педагог немецкого языка", "photo": TEAM_MEDIA + "kir.webp", "video": TEAM_MEDIA + "kir.mp4"},
 ]
 CHINESE_TEACHERS = [
     {"name": "Шевченко Дарья", "role": "Педагог китайского языка", "photo": TEAM_MEDIA + "shevchenko.webp", "video": TEAM_MEDIA + "shevchenko.mp4"},
@@ -657,8 +658,12 @@ def landing_page(p):
         h.append('<h1 class="fxb-h1">' + p["h1"] + '</h1>')
         h.append('<p class="fxb-sub">' + p["sub"] + '</p>')
         h.append('<div class="fxb-hero-btns">')
-        h.append('<a data-fxb-zayavka data-fxb-subject="' + p["lead_subject"] + '" data-fxb-window="' + p["lead_hero_window"] + '" role="button" tabindex="0" class="fxb-btn-main">' + p["cta_label"] + '</a>')
-        h.append('<a href="#fxb-program" class="fxb-btn-sec">Подробнее о программе</a>')
+        h.append('<a data-fxb-zayavka data-fxb-subject="' + escape(p["lead_subject"]) + '" data-fxb-window="' + escape(p["lead_hero_window"]) + '" role="button" tabindex="0" class="fxb-btn-main">' + p["cta_label"] + '</a>')
+        if p.get("hero_alt"):
+            alt_label, alt_subject, alt_window = p["hero_alt"]
+            h.append('<a data-fxb-zayavka data-fxb-subject="' + escape(alt_subject) + '" data-fxb-window="' + escape(alt_window) + '" role="button" tabindex="0" class="fxb-btn-sec">' + alt_label + '</a>')
+        else:
+            h.append('<a href="#fxb-program" class="fxb-btn-sec">Подробнее о программе</a>')
         h.append('</div></div></section>')
     if p.get("figure"):
         # Волна 12: фирменная иллюстрация сразу после hero на лендингах
@@ -682,6 +687,9 @@ def landing_page(p):
     for f in p["facts"]:
         h.append(fact(*f))
     h.append('</div></div></section>')
+    if p.get("mid_sections"):
+        for section_html in p["mid_sections"]:
+            h.append(section_html)
     if p.get("advantages"):
         h.append(card_grid_section(p.get("adv_kicker", "Почему мы"), p["adv_title"], p.get("adv_lead"), p["advantages"], light=False))
     if p.get("teachers"):
@@ -727,7 +735,12 @@ def landing_page(p):
     h.append('<div class="fxb-cta-bg"><img src="' + DECOR_FOX + '" alt="" loading="lazy"></div>')
     h.append('<div class="fxb-cta-box"><h2>' + p["cta_title"] + '</h2><p>' + p["cta_text"] + '</p>')
     h.append('<div class="fxb-cta-btns">')
-    h.append('<a data-fxb-zayavka data-fxb-subject="' + p["lead_subject"] + '" data-fxb-window="' + p["lead_final_window"] + '" role="button" tabindex="0" class="fxb-btn-main">Оставить заявку на сайте</a>')
+    if p.get("cta_buttons"):
+        for label, subject, window, kind in p["cta_buttons"]:
+            cls = "fxb-btn-main" if kind == "main" else "fxb-btn-sec"
+            h.append('<a data-fxb-zayavka data-fxb-subject="' + escape(subject) + '" data-fxb-window="' + escape(window) + '" role="button" tabindex="0" class="' + cls + '">' + label + '</a>')
+    else:
+        h.append('<a data-fxb-zayavka data-fxb-subject="' + escape(p["lead_subject"]) + '" data-fxb-window="' + escape(p["lead_final_window"]) + '" role="button" tabindex="0" class="fxb-btn-main">Оставить заявку на сайте</a>')
     h.append('<a href="' + MAX_BOT + '" target="_blank" rel="noopener" class="fxb-btn-max">' + svg("chat") + 'Написать в Max</a>')
     h.append('</div></div></section>')
     h.append(zayavka_unit())
@@ -749,6 +762,8 @@ def landing_page(p):
     if p.get("article_css") or p.get("figure"):
         h.append(ARTICLE_CSS)
     h.append(JS)
+    if p.get("extra_js"):
+        h.append(p["extra_js"])
     return "\n".join(h)
 
 
@@ -1320,41 +1335,315 @@ PAGES["page_letnyaya_akademiya.html"] = {
     "cta_text": "Напомним о старте записи — и вы первыми узнаете расписание смен и свободные места.",
 }
 
+def online_program_picker():
+    """Интерактивный маршрут онлайн-программ: фильтр по ступени, запись на диагностику."""
+    levels = [
+        ("5", "Старт онлайн", "5 лет", "Pre-A1",
+         "Игровое занятие для пятилеток: слух, первые фразы, привычка к уроку. Когда ребёнок готов к школьной линейке, он переходит на My Level в той же школе."),
+        ("ml", "My Level 1", "6–8 лет", "Pre-A1",
+         "Первый год: алфавит, фоника, первые фразы и чтение по Read with Richie. Группу берём по уровню, не по номеру класса."),
+        ("ml", "My Level 2", "8–9 лет", "Pre-A1 → A1",
+         "Больше лексики и грамматики, чтение с Richie's Adventures. Ребёнок уже отвечает фразами, а не отдельными словами."),
+        ("ml", "My Level 3", "9–10 лет", "A1",
+         "Уверенное чтение и грамматика, лексика по Move It 1. Школьные темы перестают быть «чёрным ящиком»."),
+        ("ml", "My Level 4", "10–11 лет", "A1 → A2",
+         "Тексты и грамматика по Move It 2, мягкий выход к следующему учебнику. После этой ступени — Get Involved."),
+        ("gi", "Get Involved A1+", "подростки", "A1+",
+         "Старт подростковой линейки: знакомые темы, короткие высказывания, привычка говорить на уроке вслух."),
+        ("gi", "Get Involved A2", "подростки", "A2",
+         "Понимание знакомых тем и переход к самостоятельной речи: вопросы, ответы, короткие истории."),
+        ("gi", "Get Involved A2+", "подростки", "A2+",
+         "Развёрнутые высказывания, обсуждения и проекты. Уровень подтверждаем на диагностике, не по возрасту."),
+        ("gi", "Get Involved B1", "подростки", "B1",
+         "Аргументация и дискуссии. Ребёнок держит мысль на английском, а не переводит с русского пословно."),
+        ("gi", "Get Involved B1+", "подростки", "B1+",
+         "Сложнее тексты и устная часть. Подходит тем, кто уже уверенно говорит и хочет плотность, а не повторение базы."),
+        ("gi", "Get Involved B2", "подростки", "B2",
+         "Верх маршрута: обсуждение, мнение, академические темы. Сюда попадают после диагностики, а не «по классу в школе»."),
+    ]
+    buttons = [
+        ("all", "Все уровни"),
+        ("5", "5 лет"),
+        ("ml", "My Level"),
+        ("gi", "Get Involved"),
+    ]
+    parts = [
+        '<section class="fxb-section" id="fxb-track"><div class="fxb-wrap">',
+        '<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Программы</span>',
+        '<h2 class="fxb-h2">Выберите уровень — <span class="fxb-accent">покажем маршрут</span></h2>',
+        '<p class="fxb-lead">С 5 лет до Get Involved B2. На каждой ступени один ритм: 2 занятия в неделю по 60 минут.</p></div>',
+        '<div class="fxb-ages" role="tablist" aria-label="Ступень программы">',
+    ]
+    for key, label in buttons:
+        pressed = "true" if key == "all" else "false"
+        parts.append(
+            '<button type="button" data-fxb-age="' + key + '" aria-pressed="' + pressed + '">' + label + '</button>'
+        )
+    parts.append('</div><div class="fxb-ol-grid">')
+    for key, title, age, cefr, text in levels:
+        subject = "Онлайн-диагностика: " + title
+        parts.append(
+            '<article class="fxb-level" data-fxb-level="' + key + '">'
+            '<span class="fxb-badge">' + escape(cefr) + '</span>'
+            '<b>' + escape(title) + '</b>'
+            '<span class="fxb-age-note">' + escape(age) + ' · 2×60 минут</span>'
+            '<p>' + escape(text) + '</p>'
+            '<a class="fxb-card-cta" data-fxb-zayavka data-fxb-subject="' + escape(subject) +
+            '" data-fxb-window="Маршрут программ" role="button" tabindex="0">Записаться на диагностику</a>'
+            '</article>'
+        )
+    parts.append('</div></div></section>')
+    return "\n".join(parts)
+
+
+ONLINE_PICKER_JS = """
+<script>
+(function () {
+  var root = document.getElementById('fxb-track');
+  if (!root) return;
+  var buttons = root.querySelectorAll('[data-fxb-age]');
+  var cards = root.querySelectorAll('[data-fxb-level]');
+  function apply(age) {
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-fxb-age') === age ? 'true' : 'false');
+    });
+    cards.forEach(function (card) {
+      var show = age === 'all' || card.getAttribute('data-fxb-level') === age;
+      card.hidden = !show;
+    });
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-fxb-age')); });
+  });
+})();
+</script>
+"""
+
+ONLINE_PICKER_CSS = """
+<style>
+#fxb-page .fxb-ages{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 28px}
+#fxb-page .fxb-ages button{font-family:inherit;font-weight:800;font-size:14px;border-radius:999px;border:1px solid rgba(57,40,82,.16);background:#fff;color:var(--ink);padding:10px 16px;cursor:pointer}
+#fxb-page .fxb-ages button[aria-pressed="true"]{background:var(--purple);color:#fff;border-color:transparent}
+#fxb-page .fxb-ol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+#fxb-page .fxb-level{background:#fff;border:1px solid rgba(57,40,82,.08);border-radius:22px;padding:22px 22px 18px;box-shadow:0 16px 36px -22px rgba(57,40,82,.4);display:flex;flex-direction:column;gap:8px;text-align:left}
+#fxb-page .fxb-level[hidden]{display:none}
+#fxb-page .fxb-level b{font-size:18px;line-height:1.25}
+#fxb-page .fxb-badge{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--purple-2)}
+#fxb-page .fxb-age-note{font-size:13px;font-weight:700;color:var(--orange)}
+#fxb-page .fxb-level p{color:var(--muted);font-size:14.5px;line-height:1.5}
+#fxb-page .fxb-level .fxb-card-cta{margin-top:auto;text-align:center}
+#fxb-page .fxb-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;text-align:left}
+#fxb-page .fxb-step{background:#fff;border-radius:18px;padding:18px 16px;border:1px solid rgba(57,40,82,.08)}
+#fxb-page .fxb-step span{display:block;font-weight:900;color:var(--purple-2);margin-bottom:6px}
+#fxb-page .fxb-step b{display:block;margin-bottom:6px}
+#fxb-page .fxb-step p{color:var(--muted);font-size:14px;line-height:1.45}
+@media(max-width:860px){#fxb-page .fxb-ol-grid{grid-template-columns:1fr 1fr}#fxb-page .fxb-steps{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){#fxb-page .fxb-ol-grid,#fxb-page .fxb-steps{grid-template-columns:1fr}}
+</style>
+"""
+
+
 PAGES["page_online_zanyatiya.html"] = {
+    "page_class": "fxb-online",
+    "article_css": True,
     "hero_grad": "linear-gradient(135deg,#392852 0%,#6237a2 55%,#8a4fb8 100%)",
-    "eyebrow": "Летние программы · Онлайн",
-    "h1": 'Онлайн <span class="fxb-accent">занятия</span>',
-    "sub": "Тот же сильный английский Фоксинбург — из любой точки. Живые уроки с педагогом в небольших группах.",
-    "cta_label": "Записаться онлайн",
+    "eyebrow": "Онлайн · вся Россия",
+    "h1": 'Онлайн занятия английским <span class="fxb-accent">для детей</span>',
+    "sub": "С 5 лет до уровня B2. Живые уроки с педагогом школы: My Level и Get Involved. 2 раза в неделю по 60 минут — из любого города.",
+    "cta_label": "Записаться на диагностику",
+    "hero_alt": ("Записаться на занятия", "Запись на онлайн-занятия", "Блок героя"),
+    "figure": {
+        "img": "/assets/maps-products/online-1x1.jpg",
+        "alt": "Фокси, маскот школы Фоксинбург, на карточке онлайн-занятий английским",
+        "caption": "Онлайн-группа для детей — 9 000 ₽ в месяц, два урока в неделю по 60 минут.",
+    },
     "feat_kicker": "Формат",
-    "feat_title": "Как проходят онлайн-уроки",
-    "feat_lead": "Полноценные интерактивные занятия — не запись, а живое общение с преподавателем.",
+    "feat_title": "Живой урок, а не запись в записи",
+    "feat_lead": "Ребёнок подключается к педагогу в Zoom. Спрашивает, отвечает и слышит поправку в ту же минуту.",
     "features": [
-        ("monitor", "Живые видеоуроки", "Занятия в реальном времени с педагогом — вопросы и практика прямо на уроке."),
-        ("palette", "Интерактивная доска", "Игры, задания и материалы на онлайн-доске удерживают внимание ребёнка."),
-        ("group", "Мини-группы", "Небольшие группы по уровню — каждый успевает говорить и получать обратную связь."),
-        ("globe", "Из любой точки", "Удобно на даче, в поездке или в другом городе — нужен только интернет."),
+        ("monitor", "Урок в реальном времени", "Не вебинар и не приложение без человека. Педагог ведёт занятие и видит, кто молчит."),
+        ("palette", "Доска, игры, задания", "На уроке ребёнок делает, а не только слушает: карточки, доска, короткие игры на внимание."),
+        ("group", "Мини-группа до 7 человек", "Каждый успевает сказать свою фразу. Группу собираем по уровню, не по «всем одного возраста»."),
+        ("globe", "Любой город России", "Нужны интернет, камера и тихий угол. Дорога до филиала в Долгопрудном не нужна."),
     ],
-    "facts_title": "Коротко о занятиях",
+    "facts_title": "Один ритм на всех ступенях",
     "facts": [
-        ("calendar", "2 раза / нед", "Стабильный ритм обучения"),
-        ("clock", "45–60 минут", "Длительность по возрасту"),
-        ("monitor", "Zoom / онлайн", "Подключение по ссылке"),
-        ("group", "Мини-группы", "По уровню и возрасту"),
+        ("calendar", "2 раза в неделю", "Так язык не выветривается между уроками"),
+        ("clock", "60 минут", "Полноценный урок, с 5 лет и до B2"),
+        ("cap", "С 5 лет", "Старт, My Level, Get Involved"),
+        ("group", "До 7 человек", "Или индивидуально, если группе рано"),
+    ],
+    "mid_sections": [online_program_picker()],
+    "adv_kicker": "Почему Фоксинбург",
+    "adv_title": 'Что получает семья, <span class="fxb-accent">кроме урока</span>',
+    "adv_lead": "Онлайн здесь — та же школа, только без дороги. Ниже то, что уже входит в обучение.",
+    "advantages": [
+        ("shield", "Лицензия школы", "Лицензия № Л035-01255-50/01387611. Можно оплатить материнским капиталом и оформить налоговый вычет 13%."),
+        ("trophy", "Площадка олимпиады Hippo", "Школа — официальная площадка международной олимпиады по английскому. Сильным ученикам есть куда расти."),
+        ("group", "Мини-группа, не поток", "До 7 человек. Педагог слышит каждого, а ребёнок говорит на каждом занятии."),
+        ("book", "Маршрут на несколько лет", "С 5 лет, My Level 1–4, затем Get Involved от A1+ до B2. Не набор случайных тем на месяц."),
+        ("chart", "Прогресс видно родителям", "Еженедельные видео-отчёты, открытые уроки и тестирования — без визита в филиал."),
+        ("star", "Интерес между уроками", "В приложении «Твоя школа» — игры, стикеры и монетки, которые меняются на подарки."),
+        ("check", "Сначала диагностика", "Бесплатно с методистом: называем ступень и группу. Пробный урок, если хотите увидеть занятие, — 1 125 ₽."),
+        ("rocket", "Школа с 2020 года", "Занятия ведут педагоги Фоксинбурга. Очные филиалы в Долгопрудном — рейтинг 5,0 на Яндекс Картах."),
     ],
     "prices": True,
-    "faq_title": "Частые вопросы про онлайн-занятия",
-    "faq": [
-        ("Это запись уроков или живые занятия?", "Только живые: занятия идут в реальном времени с педагогом, ребёнок задаёт вопросы и получает обратную связь прямо на уроке."),
-        ("Что нужно для подключения?", "Только интернет — уроки проходят в Zoom, подключение по ссылке. Удобно заниматься из дома, с дачи или в поездке."),
-        ("Онлайн так же эффективен, как очно?", "Да: небольшие группы по уровню, интерактивная доска с играми и заданиями — каждый успевает говорить на каждом уроке."),
-        ("Как часто проходят занятия?", "2 раза в неделю по 45–60 минут — длительность зависит от возраста ребёнка."),
+    "price_title": "Сколько стоят онлайн-занятия",
+    "price_lead": "Цена группы не зависит от города. Пробный урок — 1 125 ₽ за 60 минут. Диагностика с методистом — бесплатно.",
+    "price_cards": [
+        ("Мини-группа", "", '9 000 ₽<span>/мес</span>', "2 занятия в неделю · 60 минут · до 7 человек"),
+        ("Оплата за год", "", '8 200 ₽<span>/мес</span>', "Та же программа, если платите за учебный год"),
+        ("Индивидуально", " fxb-price-tag--orange", '2 500 ₽<span>/час</span>', "60 минут · свой график и темп"),
+        ("Диагностика", "", "0 ₽", "Уровень, программа и группа — до оплаты курса"),
     ],
-    "lead_subject": "Онлайн-занятия",
+    "extra_sections": [
+        '<section class="fxb-section fxb-bg-light"><div class="fxb-wrap">'
+        '<div class="fxb-head"><span class="fxb-kicker"><span class="fxb-dot"></span>Как записаться</span>'
+        '<h2 class="fxb-h2">От заявки до первой группы</h2>'
+        '<p class="fxb-lead">Два разных шага: диагностика ничего не стоит, занятия начинаются, когда группа подошла.</p></div>'
+        '<div class="fxb-steps">'
+        '<article class="fxb-step"><span>01</span><b>Заявка</b><p>Имя ребёнка, возраст и телефон. Напишите город — расписание подберём под ваш часовой пояс, насколько это возможно.</p></article>'
+        '<article class="fxb-step"><span>02</span><b>Диагностика</b><p>Методист смотрит, как ребёнок слышит и говорит. Для школьников — ещё чтение и школьные темы. Это не экзамен и не оценка «для портфолио».</p></article>'
+        '<article class="fxb-step"><span>03</span><b>Ступень</b><p>Называем программу: старт для 5 лет, My Level 1–4 или Get Involved от A1+ до B2. Если группе рано — предложим индивидуальные занятия.</p></article>'
+        '<article class="fxb-step"><span>04</span><b>Группа</b><p>Два урока в неделю по 60 минут в Zoom. Место закрепляем после того, как формат вам подошёл.</p></article>'
+        '</div></div></section>',
+        '<section class="fxb-section"><div class="fxb-wrap"><div class="fxb-article-body">'
+        '<h2>Почему записываются к нам, а не «на любой онлайн»</h2>'
+        '<p>Большинство объявлений про онлайн-английский — это либо запись уроков, либо репетитор без программы, либо вебинар, где ребёнка не слышно. У Фоксинбурга другой продукт: лицензированная школа, один учебный маршрут и мини-группа.</p>'
+        '<ul>'
+        '<li><b>Программа длиннее одного семестра.</b> Пятилетка начинает со старта. Школьник идёт по My Level 1, 2, 3 и 4. Подросток продолжает Get Involved — от A1+ до B2. Учебники My Level те же, что в очных группах: Read with Richie, Richie\'s Adventures, Move It.</li>'
+        '<li><b>Уровень ставят люди, а не анкета.</b> Класс в школе и уровень языка часто не совпадают. Бесплатная диагностика как раз для этого: чтобы не посадить сильного ребёнка повторять цвета и слабого — в обсуждение.</li>'
+        '<li><b>Родитель видит речь, а не отписку «всё хорошо».</b> Видео-отчёты, открытые уроки и тесты. Плюс приложение со стикерами и монетками — ребёнку есть зачем открывать английский между двумя уроками.</li>'
+        '<li><b>Деньги и документы как у школы, не как у частного репетитора.</b> Материнский капитал и вычет 13% возможны, потому что есть лицензия. Чек и договор — от ИП Дымова Вероника Александровна.</li>'
+        '</ul>'
+        '<p>Очные филиалы остаются в Долгопрудном: Лихачёвский проспект, 76к1 и проспект Ракетостроителей, 9к3. Онлайн нужен тем, кто живёт в другом городе, на даче или просто не хочет тратить вечер на дорогу. Содержание урока от этого не меняется: 60 минут, педагог, мини-группа, два раза в неделю.</p>'
+        '<p>Подробнее, как выбрать формат и что смотреть на диагностике: <a href="/blog-kak-vybrat-onlajn-shkolu-anglijskogo">как выбрать онлайн-школу и не купить только бренд</a>, <a href="/blog-onlajn-anglijskij-dlya-detej-s-5-let">как выбрать онлайн-английский с 5 лет</a>, <a href="/blog-my-level-get-involved-onlajn">маршрут My Level и Get Involved</a>, <a href="/novosti-nabor-onlajn-anglijskij-rossiya">набор на онлайн по России</a>. Если нужен русский как иностранный — это <a href="/russkij-kak-inostrannyj">отдельная страница</a>, 3 000 ₽ за 60 минут индивидуально.</p>'
+        '</div></div></section>',
+    ],
+    "books": [
+        ("My Level 1", "6–8 лет, Pre-A1. Алфавит, фоника, первые фразы, чтение по Read with Richie.", MYLEVEL + "mylevel-1.webp"),
+        ("My Level 2", "8–9 лет, Pre-A1 → A1. Лексика, грамматика и чтение с Richie's Adventures.", MYLEVEL + "mylevel-2.webp"),
+        ("My Level 3", "9–10 лет, A1. Чтение и грамматика, лексика по Move It 1.", MYLEVEL + "mylevel-3.webp"),
+        ("My Level 4", "10–11 лет, A1 → A2. Move It 2 и переход к Get Involved.", MYLEVEL + "mylevel-4.webp"),
+    ],
+    "books_title": "Учебники My Level — те же, что в школе",
+    "books_lead": "Онлайн-группы идут по тем же УМК. После My Level 4 маршрут продолжается линейкой Get Involved, от A1+ до B2.",
+    "books_note": "Комплекты учебников My Level приобретаются в школе отдельно.",
+    "faq_title": "Частые вопросы про онлайн-английский",
+    "faq": [
+        ("Сколько стоят онлайн-занятия английским для детей?", "Мини-группа — 9 000 ₽ в месяц, или 8 200 ₽ в месяц при оплате за учебный год. В месяце два занятия в неделю по 60 минут, до 7 человек. Индивидуально — 2 500 ₽ за 60 минут. Диагностика бесплатная, пробный урок — 1 125 ₽."),
+        ("Со скольки лет можно заниматься онлайн?", "С 5 лет: отдельный старт для пятилеток. Дальше — My Level 1–4 для младших школьников и Get Involved от A1+ до B2 для тех, кто уже говорит фразами и готов к подростковой программе."),
+        ("Это запись уроков или живые занятия?", "Только живые занятия в Zoom. Ребёнок отвечает педагогу на уроке. Запись курса без преподавателя мы не продаём."),
+        ("Чем онлайн отличается от репетитора?", "Есть лицензия, учебный маршрут на несколько лет, мини-группа и методист, который ставит уровень. Репетитор часто закрывает одну задачу. Здесь ребёнок идёт по программе школы: от старта и My Level до Get Involved B2."),
+        ("Как проходит бесплатная диагностика?", "Методист смотрит речь и понимание на слух, у школьников — ещё чтение и школьные темы. По итогам называем ступень и есть ли подходящая группа. Это ни к чему не обязывает. Если хотите увидеть сам урок, есть пробное занятие за 1 125 ₽."),
+        ("Можно ли заниматься из другого города?", "Да. Онлайн открыт для семей по всей России. Нужны стабильный интернет, камера и место, где ребёнка слышно. Часовой пояс напишите в заявке."),
+        ("Сколько детей в группе и как часто уроки?", "До 7 человек, 2 раза в неделю по 60 минут. На всех ступенях ритм один и тот же — меняется программа, не длина урока."),
+        ("Можно ли оплатить материнским капиталом?", "Да. Школа работает по лицензии № Л035-01255-50/01387611, поэтому доступны материнский капитал и налоговый вычет 13%."),
+    ],
+    "lead_subject": "Онлайн-диагностика",
     "lead_hero_window": "Блок героя",
     "lead_final_window": "Финальный блок",
-    "cta_title": 'Запишитесь на <span class="fxb-accent">онлайн-занятия</span>',
-    "cta_text": "Подберём удобное время и группу под уровень вашего ребёнка.",
+    "cta_buttons": [
+        ("Записаться на диагностику", "Онлайн-диагностика", "Финальный блок", "main"),
+        ("Записаться на занятия", "Запись на онлайн-занятия", "Финальный блок", "sec"),
+    ],
+    "cta_title": 'Запишитесь на онлайн — <span class="fxb-accent">из своего города</span>',
+    "cta_text": "Диагностика бесплатная. На ней скажем ступень и есть ли группа на два урока в неделю.",
+    "extra_css": ONLINE_PICKER_CSS,
+    "extra_js": ONLINE_PICKER_JS,
+}
+
+PAGES["page_russkij_kak_inostrannyj.html"] = {
+    "page_class": "fxb-rki",
+    "article_css": True,
+    "hero_grad": "linear-gradient(135deg,#2e1a47 0%,#5a2d8f 55%,#c45c26 100%)",
+    "eyebrow": "РКИ · Долгопрудный и онлайн",
+    "h1": 'Русский как иностранный <span class="fxb-accent">индивидуально</span>',
+    "sub": "60 минут с педагогом для тех, кому русский не родной. 3 000 ₽ за занятие. Очно в четырёх филиалах сети в Долгопрудном и онлайн.",
+    "cta_label": "Записаться на занятие",
+    "hero_alt": ("Подобрать уровень", "РКИ: первая встреча", "Блок героя"),
+    "figure": {
+        "img": "/assets/maps-products/rki-1x1.jpg",
+        "alt": "Фокси, маскот школы Фоксинбург, на карточке занятий русским как иностранным",
+        "caption": "Индивидуальный урок РКИ — 3 000 ₽ за 60 минут.",
+    },
+    "feat_kicker": "Формат",
+    "feat_title": "Один ученик, один час, понятная цена",
+    "feat_lead": "РКИ — это не школьный русский для носителей и не группа «для всех иностранцев». У каждого свой русский уже на входе.",
+    "features": [
+        ("chat", "Только индивидуально", "Педагог слышит одного человека весь урок. Общую группу по РКИ мы не набираем и не продаём."),
+        ("clock", "60 минут", "Полноценное занятие, не ознакомительный созвон. Цена — 3 000 ₽ за этот час."),
+        ("compass", "Четыре филиала сети", "Лихачёвский, 76к1; Ракетостроителей, 9к3; Молодёжная, 10А; Новый бульвар, 21к3."),
+        ("monitor", "Или онлайн", "Тот же индивидуальный час, если до филиала ехать не нужно. Камера и тихое место."),
+    ],
+    "facts_title": "Что уже можно сказать точно",
+    "facts": [
+        ("clock", "60 минут", "Длина одного занятия"),
+        ("star", "3 000 ₽", "Цена за занятие, не за месяц"),
+        ("cap", "Один ученик", "Без группового абонемента"),
+        ("shield", "Лицензия школы", "№ Л035-01255-50/01387611"),
+    ],
+    "formats_kicker": "Где заниматься",
+    "formats_title": "Филиал или экран",
+    "formats_lead": "Цена не меняется от адреса. Меняется только, куда вы приходите.",
+    "formats": [
+        ("compass", "Лихачёвский, 76к1", "Очный урок в филиале на Лихачёвском проспекте."),
+        ("compass", "Ракетостроителей, 9к3", "Очный урок на проспекте Ракетостроителей."),
+        ("compass", "Молодёжная, 10А", "Очный урок на Молодёжной улице, 10А."),
+        ("compass", "Новый бульвар, 21к3", "Очный урок на Новом бульваре, 21, корпус 3."),
+        ("monitor", "Онлайн", "Живой урок с педагогом, без дороги. Город напишите в заявке."),
+        ("check", "Сначала уровень", "На первой встрече смотрим, какой русский уже есть, и от этого строим час, а не «урок номер один для всех»."),
+    ],
+    "adv_kicker": "Школа",
+    "adv_title": 'РКИ внутри <span class="fxb-accent">Фоксинбурга</span>',
+    "adv_lead": "Направление новое. Школа — нет. Ниже то, что относится к занятиям в целом, без выдуманной истории «ведём русский много лет».",
+    "advantages": [
+        ("shield", "Лицензия", "№ Л035-01255-50/01387611 от 13 сентября 2024 года, Министерство образования Московской области. Занятия ведёт ИП Дымова Вероника Александровна."),
+        ("check", "Маткапитал и вычет", "У лицензированной школы можно оплатить обучение материнским капиталом и оформить налоговый вычет 13%."),
+        ("clock", "Цена до звонка", "3 000 ₽ за 60 минут. Не «оставьте номер, назовём стоимость»."),
+        ("chat", "Урок под тот русский, который уже есть", "Кто-то читает вывески и молчит. Кто-то говорит и путает падежи. Это разные занятия, поэтому формат индивидуальный."),
+        ("rocket", "Школа с 2020 года", "Английский, немецкий и китайский здесь уже идут. РКИ — отдельная запись, не замена школьному английскому."),
+        ("star", "Очные филиалы с рейтингом 5,0", "На Яндекс Картах так оценены филиалы на Лихачёвском и Ракетостроителей. К онлайн-карточкам эту оценку не относим."),
+    ],
+    "prices": True,
+    "price_title": "Сколько стоит РКИ",
+    "price_lead": "Одна цена. Месячный абонемент и групповой тариф для русского как иностранного не объявляем.",
+    "price_cards": [
+        ("Индивидуально", " fxb-price-tag--orange", '3 000 ₽<span>/занятие</span>', "60 минут · один ученик · очно или онлайн"),
+    ],
+    "extra_sections": [
+        '<section class="fxb-section"><div class="fxb-wrap"><div class="fxb-article-body">'
+        '<h2>Кому это занятие, а кому нет</h2>'
+        '<p>Занятие нужно тому, для кого русский — иностранный. Ребёнку, который приехал и теряется в саду или в классе. Взрослому, которому хватает быта и не хватает разговора. Семье, где дома другой язык, а поликлиника, работа и школа — на русском.</p>'
+        '<p>Это не подготовка к ЕГЭ по русскому для тех, кто вырос в языке, и не кружок «подтянуть грамотность» носителю. Если нужен английский ребёнку, смотрите <a href="/online-zanyatiya">онлайн-занятия английским</a>: там другая цена и другая программа.</p>'
+        '<h2>Как проходит запись</h2>'
+        '<ul>'
+        '<li>Пишете, кто будет заниматься, сколько лет и зачем русский: быт, школа, работа, переезд.</li>'
+        '<li>Выбираете филиал или онлайн.</li>'
+        '<li>На первой встрече педагог слышит, какой язык уже есть, и следующий час строится от этого, а не от абстрактного «уровня А1 для всех».</li>'
+        '</ul>'
+        '<p>Подробнее, зачем индивидуальный формат и чего мы намеренно не обещаем: <a href="/blog-rki-s-chego-nachat">с чего начать русский как иностранный</a>. Короткая новость о наборе — <a href="/novosti-rki-russkij-kak-inostrannyj">здесь</a>.</p>'
+        '</div></div></section>',
+    ],
+    "faq_title": "Частые вопросы про РКИ",
+    "faq": [
+        ("Сколько стоят занятия русским как иностранным?", "3 000 ₽ за одно занятие, 60 минут, индивидуально. Очно в Долгопрудном или онлайн. Месячной цены и группового тарифа нет."),
+        ("Это русский для школьной программы?", "Нет. Школьный русский для носителей языка мы так не называем. РКИ — для тех, кому русский не родной."),
+        ("Со скольки лет берёте?", "Возраст назовём после заявки: занятие индивидуальное, и решаем по задаче, а не по общей группе. В заявке напишите, кто будет заниматься и сколько ему лет."),
+        ("Где проходят очные уроки?", "В четырёх филиалах сети в Долгопрудном: Лихачёвский проспект, 76к1; проспект Ракетостроителей, 9к3; Молодёжная улица, 10А; Новый бульвар, 21к3."),
+        ("Можно заниматься онлайн?", "Да. Тот же час и та же цена. Нужны камера и место, где вас слышно."),
+        ("Есть ли учебник, который нужно купить?", "Отдельную линейку учебников РКИ мы не продаём «в комплекте к абонементу». Что открывать на уроке, педагог скажет после того, как услышит уровень."),
+        ("Можно оплатить материнским капиталом?", "Школа работает по лицензии № Л035-01255-50/01387611, поэтому для образовательных занятий доступны материнский капитал и налоговый вычет 13%."),
+    ],
+    "lead_subject": "РКИ: запись на занятие",
+    "lead_hero_window": "Блок героя",
+    "lead_final_window": "Финальный блок",
+    "cta_buttons": [
+        ("Записаться на занятие", "РКИ: запись на занятие", "Финальный блок", "main"),
+        ("Подобрать уровень", "РКИ: первая встреча", "Финальный блок", "sec"),
+    ],
+    "cta_title": 'Запишитесь на <span class="fxb-accent">час русского</span>',
+    "cta_text": "3 000 ₽ за 60 минут. Напишите, очно вам удобнее или онлайн, и зачем нужен язык.",
 }
 
 PAGES["page_podderzhivayushchie_online.html"] = {
@@ -7162,6 +7451,8 @@ import pages_wave22  # волна 22: как выбрать курсы, носи
 import pages_wave23  # волна 23: гео районов (Водники, Павельцево, Виноградово, Ховрино) + пробное занятие и русский/математика
 import pages_wave24  # волна 24: гео Новая Дача и Шереметьевский + ОГЭ с нуля, карточки, лексика ЕГЭ
 import pages_wave25  # волна 25: семья 5–7 класс, ВПР 5 класс, транскрипция, разговорный клуб
+import pages_wave26  # онлайн по России: набор + маршрут My Level / Get Involved + диагностика
+import pages_wave27  # как выбрать онлайн-школу + РКИ
 import pages_spotlight  # курсы Spotlight 2–5: английский по школьному учебнику
 
 pages_geo2.register_geo()
@@ -7170,8 +7461,8 @@ pages_wave24.register_wave24()
 pages_prep.register_prep_sections()
 PAGES.update(pages_spotlight.SPOTLIGHT_PAGES)
 
-EXTRA_BLOG_POSTS = pages_wave25.WAVE25_POSTS + pages_wave24.WAVE24_POSTS + pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
-EXTRA_NEWS_POSTS = pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
+EXTRA_BLOG_POSTS = pages_wave27.WAVE27_POSTS + pages_wave26.WAVE26_POSTS + pages_wave25.WAVE25_POSTS + pages_wave24.WAVE24_POSTS + pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_NEWS_POSTS = pages_wave27.WAVE27_NEWS + pages_wave26.WAVE26_NEWS + pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
     PAGES["page_" + _post["alias"].replace("-", "_") + ".html"] = _post

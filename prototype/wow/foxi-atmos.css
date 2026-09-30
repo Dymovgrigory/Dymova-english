@@ -40,7 +40,9 @@
 #fxb-policy.fxb-atmos-plain .fxb-head .fxb-eyebrow{color:#f0e8ff;background:rgba(255,255,255,.12)}
 
 /* ---------- 2. След чернил и cursor-glow ---------- */
-#fxb-atmos-trail{position:fixed;inset:0;width:100%;height:100%;z-index:900;pointer-events:none}
+/* Как на главной: чернила не должны перекрывать текст. */
+#fxb-atmos-trail{position:fixed;inset:0;width:100%;height:100%;z-index:900;pointer-events:none;opacity:.3}
+.fxb-ink-stage .fxb-hero-fluid{opacity:.42}
 .fxb-cursor-glow{position:fixed;left:0;top:0;width:560px;height:560px;z-index:1;pointer-events:none;
   border-radius:50%;opacity:0;transition:opacity .9s ease;
   background:radial-gradient(circle,rgba(var(--page-glow-rgb),.16) 0%,rgba(var(--page-glow-rgb),.06) 42%,transparent 68%)}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<yml_catalog date="2026-09-30 18:00">
+  <shop>
+    <name>Фоксинбург</name>
+    <company>ИП Дымова Вероника Александровна</company>
+    <url>https://dymova-english.ru/</url>
+    <email>school@foxinburg-edu.ru</email>
+    <picture>https://dymova-english.ru/assets/brand/fox-head-square.png</picture>
+    <description>Живые онлайн-занятия английским для детей с 5 лет. Школа в Долгопрудном, уроки по всей России.</description>
+    <currencies>
+      <currency id="RUR" rate="1" />
+    </currencies>
+    <sets>
+      <set id="s-online">
+        <name>Онлайн-занятия английским</name>
+        <url>https://dymova-english.ru/online-zanyatiya</url>
+      </set>
+    </sets>
+    <offers>
+      <offer id="course-online">
+        <name>Онлайн-занятия английским для детей</name>
+        <url>https://dymova-english.ru/online-zanyatiya</url>
+        <categoryId>20001</categoryId>
+        <set-ids>s-online</set-ids>
+        <price>0</price>
+        <currencyId>RUR</currencyId>
+        <param name="Ежемесячная цена">9000</param>
+        <description>Живые онлайн-занятия английским для детей с 5 лет по всей России: My Level 1–4 и Get Involved от A1+ до B2. 2 раза в неделю по 60 минут, мини-группы до 7 человек. 9 000 ₽ в месяц, при оплате за год 8 200 ₽ в месяц. Диагностика бесплатная.</description>
+        <param name="Формат обучения">В группе c наставником</param>
+        <param name="Ближайшая дата">2026-10-01</param>
+        <param name="Продолжительность" unit="месяц">9</param>
+        <param name="Часы в неделю">2</param>
+        <param name="План" order="1" unit="Старт и My Level" hours="24"><![CDATA[С 5 лет и линейка My Level 1–4: слух, чтение, грамматика и речь.]]></param>
+        <param name="План" order="2" unit="Get Involved A1+–B2" hours="24"><![CDATA[Подростковая линейка от первых фраз до уверенного обсуждения.]]></param>
+        <param name="План" order="3" unit="Диагностика и мини-группа" hours="24"><![CDATA[Бесплатная диагностика, затем группа до 7 человек, 2 раза в неделю.]]></param>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

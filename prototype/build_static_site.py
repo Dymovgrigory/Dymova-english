@@ -87,6 +87,7 @@ PAGE_ALIASES = {
     "page_nemeckij_yazyk.html": "nemeckij-yazyk",
     "page_kitajskij_yazyk.html": "kitajskij-yazyk",
     "page_ispanskij_yazyk.html": "ispanskij-yazyk",
+    "page_russkij_kak_inostrannyj.html": "russkij-kak-inostrannyj",
     "page_repetitor.html": "repetitor",
     "page_repetitor_nachalnaya_shkola.html": "repetitor-nachalnaya-shkola",
     "page_novosti_so_skolki_let_uchit_anglijskij.html": "novosti-so-skolki-let-uchit-anglijskij",
@@ -239,6 +240,13 @@ for _a in [
     "blog-oge-s-nulya", "blog-kartochki-anglijskij", "blog-leksika-ege",
     "blog-slova-semya-5-7-klass", "blog-vpr-anglijskij-5-klass",
     "blog-transkripciya-dlya-detej", "blog-razgovornyj-klub-anglijskij",
+    "novosti-nabor-onlajn-anglijskij-rossiya",
+    "blog-onlajn-anglijskij-dlya-detej-s-5-let",
+    "blog-my-level-get-involved-onlajn",
+    "blog-onlajn-diagnostika-anglijskogo",
+    "blog-kak-vybrat-onlajn-shkolu-anglijskogo",
+    "blog-rki-s-chego-nachat",
+    "novosti-rki-russkij-kak-inostrannyj",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 
@@ -258,7 +266,8 @@ SCHEMA_MAP = {
     "doshkolniki": ["breadcrumb_doshkolniki.html"],
     "mladshie-shkolniki": ["breadcrumb_mladshie-shkolniki.html"],
     "podrostki": ["breadcrumb_podrostki.html"],
-    "online-zanyatiya": ["breadcrumb_online-zanyatiya.html"],
+    "online-zanyatiya": ["course_online-zanyatiya.html", "breadcrumb_online-zanyatiya.html"],
+    "russkij-kak-inostrannyj": ["course_russkij-kak-inostrannyj.html", "breadcrumb_russkij-kak-inostrannyj.html"],
     "podderzhivayushchie-online": ["breadcrumb_podderzhivayushchie-online.html"],
     "standartnye-offline": ["breadcrumb_standartnye-offline.html"],
     "novosti": ["breadcrumb_novosti.html"],
@@ -503,7 +512,7 @@ WOW_SNIPPET = (
 # Подключается ТОЛЬКО на внутренних страницах: у главной своя встроенная
 # fluid-система, и она не меняется. Цвет glow — data-fxb-glow на #fxb-page.
 ATMOS_SNIPPET = (
-    '<link rel="stylesheet" href="/wow/foxi-atmos.css">\n'
+    '<link rel="stylesheet" href="/wow/foxi-atmos.css?v=20260930">\n'
     '<script src="/wow/foxi-atmos.js" defer></script>'
 )
 
@@ -868,10 +877,24 @@ def main() -> None:
     # YML-фиды Яндекс.Вебмастера (сессия 59): feed_education.xml зарегистрирован
     # в Вебмастере по адресу /feed_education.xml — должен переживать деплой
     # (rsync --delete). Источник правды — seo_schema/ в репозитории.
-    for feed in ("feed_education.xml", "feed_vacancies.xml"):
+    # RSS «Свежее и актуальное»: только материалы за последние 8 дней.
+    import fresh_feed
+    fresh_path = os.path.join(DIR, "seo_schema", "feed_fresh.xml")
+    fresh_count = fresh_feed.write(fresh_path)
+    shutil.copy(fresh_path, os.path.join(out_dir, "feed_fresh.xml"))
+    print(f"feed_fresh.xml: {fresh_count} материалов")
+
+    for feed in ("feed_education.xml", "feed_education_online.xml", "feed_vacancies.xml", "feed_services.xml"):
         feed_src = os.path.join(DIR, "seo_schema", feed)
         if os.path.exists(feed_src):
             shutil.copy(feed_src, os.path.join(out_dir, feed))
+
+    # Прайс Яндекс Карт: файл для кабинета и для ссылки /feeds/yandex-business-full.yml
+    maps_yml = os.path.join(os.path.dirname(DIR), "generated", "maps-products", "feed", "yandex-business-full.yml")
+    if os.path.exists(maps_yml):
+        feeds_dir = os.path.join(out_dir, "feeds")
+        os.makedirs(feeds_dir, exist_ok=True)
+        shutil.copy(maps_yml, os.path.join(feeds_dir, "yandex-business-full.yml"))
 
     print(f"\nСобрано страниц: {len(written)} -> {out_dir}")
     print(f"sitemap-video.xml: {video_count} роликов")

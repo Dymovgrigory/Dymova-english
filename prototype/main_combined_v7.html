@@ -101,6 +101,7 @@
             <a href="/nemeckij-yazyk">Немецкий язык</a>
             <a href="/kitajskij-yazyk">Китайский язык</a>
             <a href="/ispanskij-yazyk">Испанский язык</a>
+            <a href="/russkij-kak-inostrannyj">Русский как иностранный</a>
           </div>
         </div>
         <div class="fxb-dd">
@@ -2420,6 +2421,18 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
       </article>
 
       <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:url(/team-media/kir.webp)"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-teacher">Педагог</span>
+          <h3>Кир Анджела</h3>
+          <p>Педагог немецкого языка</p>
+          <div class="fxb-btns">
+            <button class="fxb-vbtn" type="button" data-video="/team-media/kir.mp4"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="5,3 19,12 5,21"/></svg> Видеовизитка</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="fxb-card">
         <div class="fxb-photo" style="background-image:url(/team-media/sporyhina.webp)"></div>
         <div class="fxb-body">
           <span class="fxb-role fxb-r-teacher">Педагог</span>
@@ -2492,6 +2505,15 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hid
         <div class="fxb-body">
           <span class="fxb-role fxb-r-admin">Администратор</span>
           <h3>Сушко Светлана</h3>
+          <p>Поможет с расписанием и записью</p>
+        </div>
+      </article>
+
+      <article class="fxb-card">
+        <div class="fxb-photo" style="background-image:url(/team-media/silantieva.webp)"></div>
+        <div class="fxb-body">
+          <span class="fxb-role fxb-r-admin">Администратор</span>
+          <h3>Силантьева Ирина</h3>
           <p>Поможет с расписанием и записью</p>
         </div>
       </article>
@@ -4505,6 +4527,96 @@ fxbGalleryInit();
 #fxb-seo-main p{font-size:14px;line-height:1.7;color:#6f6883;margin:0}
 </style>
 
+<!-- ===== Business Lab (отдельный проект экосистемы, не курсы) ===== -->
+<section id="fxb-bl" aria-label="Фоксинбург Business Lab">
+  <div class="fxb-bl-inner">
+    <p class="fxb-bl-kicker">Экосистема Фоксинбург · отдельный проект</p>
+    <h2 class="fxb-bl-title">Business Lab — сообщество предпринимателей</h2>
+    <p class="fxb-bl-text">
+      Для тех, кто строит компании, запускает проекты, собирает команды
+      и ищет сильное окружение в Долгопрудном / МО.
+      Это не языковые курсы — отдельная площадка для деловых связей.
+    </p>
+    <p class="fxb-bl-chain">Люди → идеи → партнёрства → проекты</p>
+    <a class="fxb-bl-cta" href="https://business.foxinburg.ru" target="_blank" rel="noopener">
+      Узнать о Business Lab
+    </a>
+    <p class="fxb-bl-note">Сначала польза. Потом продажа.</p>
+  </div>
+</section>
+<style>
+#fxb-bl{
+  font-family:'Montserrat',Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(900px 420px at 12% 0%,rgba(201,164,106,.14),transparent 55%),
+    radial-gradient(700px 380px at 92% 100%,rgba(18,36,31,.9),transparent 50%),
+    #0b1412;
+  color:#d8e0dc;
+  padding:64px 24px;
+}
+#fxb-bl *{box-sizing:border-box;margin:0;padding:0}
+#fxb-bl .fxb-bl-inner{max-width:720px;margin:0 auto}
+#fxb-bl .fxb-bl-kicker{
+  display:inline-block;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:#c9a46a;
+  margin:0 0 14px;
+}
+#fxb-bl .fxb-bl-title{
+  font-size:clamp(26px,4vw,38px);
+  line-height:1.18;
+  font-weight:800;
+  color:#f3f1eb;
+  margin:0 0 16px;
+  letter-spacing:-.02em;
+}
+#fxb-bl .fxb-bl-text{
+  font-size:16px;
+  line-height:1.65;
+  color:#a8b5af;
+  max-width:540px;
+  margin:0 0 14px;
+  font-weight:500;
+}
+#fxb-bl .fxb-bl-chain{
+  font-size:14px;
+  letter-spacing:.04em;
+  color:#c9a46a;
+  margin:0 0 28px;
+  font-weight:600;
+}
+#fxb-bl .fxb-bl-cta{
+  display:inline-block;
+  font-size:14px;
+  font-weight:700;
+  text-decoration:none;
+  color:#0b1412;
+  background:#c9a46a;
+  padding:13px 22px;
+  border-radius:12px;
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+  box-shadow:0 10px 28px -14px rgba(201,164,106,.7);
+}
+#fxb-bl .fxb-bl-cta:hover{
+  background:#d4b07a;
+  transform:translateY(-2px);
+  box-shadow:0 14px 32px -12px rgba(201,164,106,.85);
+}
+#fxb-bl .fxb-bl-note{
+  font-size:12px;
+  color:#8a9891;
+  margin:18px 0 0;
+  font-weight:500;
+}
+@media(max-width:640px){
+  #fxb-bl{padding:52px 18px}
+}
+</style>
+
 <div id="fxb-footer">
   <div class="fxb-ft-bg">
     <img class="fxb-ft-decor" src="/assets/brand/fox-head-yellow.webp" alt="" loading="lazy">
@@ -4582,6 +4694,7 @@ fxbGalleryInit();
         <a href="/nemeckij-yazyk">Немецкий</a>
         <a href="/kitajskij-yazyk">Китайский</a>
         <a href="/ispanskij-yazyk">Испанский</a>
+        <a href="/russkij-kak-inostrannyj">Русский как иностранный</a>
       </div>
 
       <!-- Колонка 5: Родителям -->
