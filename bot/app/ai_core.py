@@ -22,6 +22,7 @@ from app import registration
 from app import convlog
 from app.bigben import get_bigben
 from app.platform import analytics
+from app import school_sites
 from app.config import settings
 from app.knowledge.kb import get_kb, _stem, _tokens
 from app.llm import get_llm
@@ -1068,6 +1069,14 @@ async def _route(conv: Conversation, text: str, kb, intent: str) -> str:
     if intent == I.HANDOFF:
         await hand_off(max_client, conv, reason="запрос оператора")
         return _handoff_reply()
+
+    # 3а-0. Занятия на базе гимназии 13 и школы 14: своя цена, расписание —
+    #       у администратора. Раньше уходило в общий список групп филиалов.
+    if school_sites.mentions_school_site(text) and intent in (
+        None, "", I.SCHEDULE, I.PRICE, I.QUESTION, I.COURSES, I.GREETING, I.CONTACTS,
+    ):
+        await hand_off(max_client, conv, reason="расписание на базе школы (гимназия 13 / школа 14)")
+        return school_sites.REPLY
 
     # 3б. Расписание и свободные места — только живые данные BigBen,
     #     без LLM: детерминированный ответ из read-model (анти-галлюцинации).
