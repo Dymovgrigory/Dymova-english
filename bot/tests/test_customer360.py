@@ -76,3 +76,56 @@ def test_crm360_unknown_customer_404(client):
     r = client.get("/admin/api/customers/9999/crm360",
                    headers={"X-Admin-Token": "admintoken"})
     assert r.status_code == 404
+
+
+def _h():
+    return {"X-Admin-Token": "admintoken"}
+
+
+def test_crm360_reason_no_phone(client):
+    cid = crm_store.upsert_customer_for_identity(channel="max", external_id="np1", first_name="Аноним")
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert data["bb_student"] is None
+    assert data["bb_reason"] == "no_phone"
+
+
+def test_crm360_reason_phone_not_in_bigben(client):
+    cid = crm_store.upsert_customer_for_identity(channel="max", external_id="np2", phone="+79990001122")
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert data["bb_reason"] == "phone_not_in_bigben"
+
+
+def test_crm360_enriches_card_and_lists_all_siblings(client):
+    bb_store.upsert_student({"id": 1, "fio": "Сидоров Пётр", "phone": "89251112233",
+                             "email": "s@x.ru", "balance_kopecks": 100})
+    bb_store.upsert_student({"id": 2, "fio": "Сидорова Соня", "phone": "89251112233",
+                             "email": "", "balance_kopecks": 0})
+    cid = _customer_id()
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert data["bb_reason"] == "linked"
+    assert {s["id"] for s in data["bb_students"]} == {1, 2}
+    assert data["customer"]["child_name"] == "Сидоров Пётр, Сидорова Соня"
+    assert data["customer"]["email"] == "s@x.ru"
+
+
+def test_crm360_offers_candidates_and_link_endpoint(client):
+    bb_store.upsert_student({"id": 5, "fio": "Морозова Маша", "phone": "89253334455",
+                             "email": "m@x.ru", "balance_kopecks": 0})
+    cid = crm_store.upsert_customer_for_identity(
+        channel="max", external_id="c1", child_name="Маша")
+    data = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert [c["id"] for c in data["bb_candidates"]] == [5]
+    assert "89253334455" not in str(data["bb_candidates"])  # номер целиком не светим
+
+    r = client.post(f"/admin/api/customers/{cid}/bigben-link", json={"student_id": 5}, headers=_h())
+    assert r.status_code == 200
+    linked = client.get(f"/admin/api/customers/{cid}/crm360", headers=_h()).json()
+    assert linked["bb_reason"] == "linked"
+    assert linked["customer"]["phone"] == "89253334455"
+
+
+def test_bigben_link_unknown_student_404(client):
+    cid = _customer_id()
+    r = client.post(f"/admin/api/customers/{cid}/bigben-link", json={"student_id": 999}, headers=_h())
+    assert r.status_code == 404
+    assert client.post("/admin/api/customers/1/bigben-link", json={"student_id": 1}).status_code == 401

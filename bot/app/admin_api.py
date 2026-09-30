@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
 
-from app import crm_store
+from app import crm_store, customer_sync
 from app.config import settings
 from app.max_client import get_max
 from app.platform import analytics as platform_analytics, billing, bb_store
@@ -490,28 +490,57 @@ async def customer_timeline(request: Request, customer_id: int, limit: int = 200
 
 @router.get("/customers/{customer_id}/crm360")
 async def customer_crm360(request: Request, customer_id: int) -> dict:
-    """Customer 360: карточка CRM + ученик BigBen + заявки + платежи + таймлайн.
+    """Customer 360: карточка CRM + ученики BigBen + заявки + платежи + таймлайн.
 
-    Связка — по телефону (нормализация по последним 10 цифрам), никаких
-    внешних id от клиента. Данные BigBen — из read-model со пометкой свежести.
+    Связка — по телефону карточки (последние 10 цифр) и по ручной привязке
+    менеджера. При открытии пустые поля карточки дополняются из BigBen.
+    Если ученика нет — отдаём причину и возможных кандидатов по имени.
     """
     actor = _authorize(request, "customers")
+    _customer_or_404(customer_id)
+    try:
+        customer_sync.enrich_from_bigben(customer_id)
+    except Exception:
+        logger.exception("crm360: не удалось подтянуть данные BigBen customer=%s", customer_id)
     customer = _customer_or_404(customer_id)
     phone = (customer.get("phone") or "").strip()
-    student = bb_store.find_student_by_phone(phone) if phone else None
+    status = customer_sync.bigben_status(customer_id)
+    students = status["students"]
+    student = students[0] if students else None
     return {
         "customer": customer,
         "bb_student": (
             {"id": student["id"], "fio": student["fio"],
              "balance_kopecks": student["balance_kopecks"],
              "email": student["email"]} if student else None),
+        "bb_students": [
+            {"id": st["id"], "fio": st["fio"],
+             "balance_kopecks": st["balance_kopecks"], "email": st["email"]}
+            for st in students],
+        "bb_reason": status["reason"],
+        "bb_candidates": (
+            customer_sync.bb_candidates(customer_id) if not students else []),
         "bookings": bb_store.list_bookings_by_phone(phone) if phone else [],
-        "bb_payments": (
-            bb_store.list_payments_by_student(student["id"]) if student else []),
+        "bb_payments": [
+            p for st in students for p in bb_store.list_payments_by_student(st["id"])],
         "billing_payments": billing.list_payments_by_phone(phone) if phone else [],
         "timeline": crm_store.customer_timeline(customer_id, limit=100),
         "freshness": bb_store.freshness(),
     }
+
+
+@router.post("/customers/{customer_id}/bigben-link")
+async def customer_bigben_link(request: Request, customer_id: int, data: dict) -> dict:
+    """Ручная привязка карточки к ученику BigBen (когда телефон не совпал)."""
+    actor = _authorize(request, "customers")
+    _customer_or_404(customer_id)
+    try:
+        student_id = int(data.get("student_id"))
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=400, detail="student_id обязателен")
+    if not customer_sync.link_bigben(customer_id, student_id, actor=actor):
+        raise HTTPException(status_code=404, detail="Ученик BigBen не найден")
+    return {"ok": True}
 
 
 @router.patch("/customers/{customer_id}")
