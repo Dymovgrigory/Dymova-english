@@ -251,6 +251,11 @@ for _a in [
     "blog-skolko-stoyat-onlajn-zanyatiya-anglijskim",
     "blog-otzyvy-ob-onlajn-shkolah-anglijskogo",
     "blog-onlajn-anglijskij-chasovye-poyasa",
+    "blog-motivaciya-rebenka",
+    "blog-nyanya-s-anglijskim",
+    "blog-rebenok-stesnyaetsya",
+    "blog-samouchitel-detyam",
+    "blog-anglijskij-v-detskom-sadu",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 
