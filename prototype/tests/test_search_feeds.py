@@ -21,8 +21,8 @@ def test_online_education_is_one_live_course():
     assert offer.find("price").text == "0"
     monthly = offer.find("param[@name='Ежемесячная цена']").text
     assert monthly == "9000"
-    # латинская c, как в перечне Яндекса
-    assert offer.find("param[@name='Формат обучения']").text == "В группе c наставником"
+    # кириллическая «с» — латинская 'c' уже один раз давала PARAM_INVALID_VALUE
+    assert offer.find("param[@name='Формат обучения']").text == "В группе с наставником"
     assert len(offer.findall("param[@name='План']")) >= 3
 
 
