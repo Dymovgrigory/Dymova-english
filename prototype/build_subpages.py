@@ -4734,6 +4734,12 @@ PAGES["page_otzyvy.html"] = {
         ("chat", "100%", "Отвечаем на обратную связь"),
     ],
     "extra_sections": [
+        '<section class="fxb-section"><div class="fxb-wrap"><div class="fxb-article-body">'
+        "<h2>Оставить отзыв</h2>"
+        "<p>Если вы занимались в школе, расскажите, как прошли занятия. Отзыв в карточке школы на Яндекс.Картах помогает другим родителям выбрать программу.</p>"
+        '<p><a class="fxb-btn-main" href="https://yandex.ru/maps/org/foksinburg/162408588499/reviews/" target="_blank" rel="noopener">Оставить отзыв на Яндекс.Картах</a> '
+        '<a class="fxb-btn-sec" href="https://yandex.ru/maps/org/foksinburg/162408588499/reviews/" target="_blank" rel="noopener">Все отзывы на Яндекс.Картах</a></p>'
+        "</div></div></section>",
         media_library.video_reviews_block(),
         '<section class="fxb-section"><div class="fxb-wrap"><div class="fxb-article-body">'
         "<h2>О чём чаще всего пишут родители</h2>"
