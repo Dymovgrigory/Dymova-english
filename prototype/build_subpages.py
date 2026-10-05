@@ -7482,6 +7482,8 @@ import pages_wave30  # онлайн по всей России: тест гот�
 import pages_spotlight  # курсы Spotlight 2–5: английский по школьному учебнику
 
 pages_geo2.register_geo()
+import pages_geo_cities
+pages_geo_cities.register_geo_cities()
 pages_wave23.register_wave23()
 pages_wave24.register_wave24()
 pages_prep.register_prep_sections()

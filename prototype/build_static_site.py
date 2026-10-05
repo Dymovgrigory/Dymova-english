@@ -70,6 +70,16 @@ PAGE_ALIASES = {
     "page_preparation.html": "preparation",
     "page_kursy_v_dolgoprudnom.html": "kursy-v-dolgoprudnom",
     "page_geo_mytishchi.html": "geo/mytishchi",
+    "page_geo_moskva.html": "geo/moskva",
+    "page_geo_sankt_peterburg.html": "geo/sankt-peterburg",
+    "page_geo_novosibirsk.html": "geo/novosibirsk",
+    "page_geo_ekaterinburg.html": "geo/ekaterinburg",
+    "page_geo_kazan.html": "geo/kazan",
+    "page_geo_nizhnij_novgorod.html": "geo/nizhnij-novgorod",
+    "page_geo_chelyabinsk.html": "geo/chelyabinsk",
+    "page_geo_samara.html": "geo/samara",
+    "page_geo_omsk.html": "geo/omsk",
+    "page_geo_rostov_na_donu.html": "geo/rostov-na-donu",
     "page_online_zanyatiya.html": "online-zanyatiya",
     "page_podderzhivayushchie_online.html": "podderzhivayushchie-online",
     "page_standartnye_offline.html": "standartnye-offline",
@@ -889,6 +899,10 @@ def main() -> None:
                         ignore=shutil.ignore_patterns("*.png", "*.jpg", "*.jpeg"))
 
     # favicon → корень сайта
+    # Ключ IndexNow: файл <ключ>.txt должен лежать в корне сайта (проверка Яндексом и Bing)
+    for name in os.listdir(DIR):
+        if re.fullmatch(r"[0-9a-f]{32}\.txt", name):
+            shutil.copy(os.path.join(DIR, name), os.path.join(out_dir, name))
     favicon_src = os.path.join(DIR, "favicon.png")
     if os.path.exists(favicon_src):
         shutil.copy(favicon_src, os.path.join(out_dir, "favicon.png"))
