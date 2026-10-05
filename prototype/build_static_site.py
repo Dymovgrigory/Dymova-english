@@ -256,6 +256,16 @@ for _a in [
     "blog-rebenok-stesnyaetsya",
     "blog-samouchitel-detyam",
     "blog-anglijskij-v-detskom-sadu",
+    "blog-test-gotovnosti-k-shkole-onlajn",
+    "blog-onlajn-anglijskij-dlya-vzroslyh",
+    "blog-kak-prohodit-urok-onlajn",
+    "blog-onlajn-bezopasnost-rebenka",
+    "blog-onlajn-letnij-intensiv-dlya-shkolnikov",
+    "blog-onlajn-russkij-kak-inostrannyj",
+    "blog-onlajn-nemeckij-dlya-detej",
+    "blog-onlajn-kitajskij-dlya-shkolnikov",
+    "blog-onlajn-podgotovka-k-oge-anglijskij",
+    "blog-onlajn-ekrannoe-vremya",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 
@@ -893,7 +903,7 @@ def main() -> None:
     shutil.copy(fresh_path, os.path.join(out_dir, "feed_fresh.xml"))
     print(f"feed_fresh.xml: {fresh_count} материалов")
 
-    for feed in ("feed_education.xml", "feed_education_online.xml", "feed_vacancies.xml", "feed_services.xml"):
+    for feed in ("feed_education.xml", "feed_education_online.xml"):
         feed_src = os.path.join(DIR, "seo_schema", feed)
         if os.path.exists(feed_src):
             shutil.copy(feed_src, os.path.join(out_dir, feed))

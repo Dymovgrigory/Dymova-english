@@ -43,5 +43,6 @@ def test_only_last_eight_days_and_required_fields():
 
 
 def test_drops_posts_older_than_the_window():
-    _, root = feed(date(2026, 10, 12))
+    # Дата заведомо позже всех материалов: проверяем отсечение по окну, а не конкретные статьи
+    _, root = feed(date(2027, 1, 31))
     assert root.findall("./channel/item") == []
