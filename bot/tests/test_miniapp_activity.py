@@ -71,3 +71,15 @@ def test_admin_static_assets_are_revalidated_not_heuristically_cached(client):
     r = client.get("/admin/app.js")
     assert r.status_code == 200
     assert "no-cache" in r.headers.get("cache-control", "")
+
+
+def test_mini_app_page_script_sends_click_events():
+    """Страница, которую открывает клиент в MAX (/app/), грузит /tg/app.js:
+    именно там должен работать трекер кликов."""
+    from pathlib import Path
+
+    script = (Path(__file__).resolve().parents[1] / "app" / "tgapp" / "app.js").read_text(encoding="utf-8")
+    assert "miniapp_click" in script
+    assert "/api/miniapp/event" in script
+    page = (Path(__file__).resolve().parents[1] / "app" / "tgapp" / "index.html").read_text(encoding="utf-8")
+    assert "/tg/app.js?v=10" in page

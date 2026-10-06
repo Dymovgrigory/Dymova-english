@@ -168,6 +168,33 @@
 
   /* ------------------------------------------------------------------- сеть */
 
+  // Действия клиента: каждое нажатие кнопки или ссылки уходит на бэкенд и
+  // попадает в CRM клиента (вкладка «Активность» в админке). Личность — та же
+  // подписанная initData, что и у остальных запросов; ошибки не мешают экрану.
+  function trackClick(event) {
+    var el = event.target && event.target.closest
+      ? event.target.closest("button, a, [role='button'], [data-go]")
+      : null;
+    if (!el) return;
+    var label = (el.getAttribute("data-track") || el.getAttribute("aria-label") ||
+      el.textContent || el.id || "").replace(/\s+/g, " ").trim().slice(0, 120);
+    try {
+      request("/api/miniapp/event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event: "miniapp_click",
+          section: (location.hash || "").replace("#", ""),
+          action: label,
+        }),
+        timeout: 8000,
+      }).catch(function () {});
+    } catch (error) {
+      // аналитика не должна ломать приложение
+    }
+  }
+  document.addEventListener("click", trackClick, true);
+
   function request(path, options) {
     options = options || {};
     var controller = new AbortController();
