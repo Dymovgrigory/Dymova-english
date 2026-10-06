@@ -108,3 +108,13 @@ def test_technical_section_is_dropped_like_action():
     cleaned = a.clean_miniapp_meta("mylessons", "Курсы")
     assert cleaned == {"section": "mylessons", "action": "Курсы"}
     assert a.clean_miniapp_meta("", "Курсы") == {"section": "", "action": "Курсы"}
+
+
+def test_ip_and_user_json_never_stored_in_activity():
+    """Даже без служебных ключей: IP-адрес и JSON с данными пользователя — не
+    текст кнопки и не раздел, в ленту не попадают."""
+    from app.platform import analytics as a
+
+    assert a.clean_miniapp_meta("94.25.173.21", "Курсы") == {"section": "", "action": "Курсы"}
+    assert a.clean_miniapp_meta("mylessons", '{"id":5897,"first_name":"Аня"}') is None
+    assert a.clean_miniapp_meta("", "user: 5897 ip 94.25.173.21") is None

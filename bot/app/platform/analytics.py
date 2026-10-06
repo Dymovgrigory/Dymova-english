@@ -104,7 +104,10 @@ def funnel(date_from: str | None = None, date_to: str | None = None) -> dict:
     return {"counts": counts, "funnel": steps}
 
 
-_TECHNICAL_LABEL = re.compile(r"WebAppData|https?://|%[0-9A-Fa-f]{2}|=", re.IGNORECASE)
+_TECHNICAL_LABEL = re.compile(
+    r"WebAppData|https?://|%[0-9A-Fa-f]{2}|=|[{}\"]|\b\d{1,3}(?:\.\d{1,3}){3}\b|\buser\b|\bip\b",
+    re.IGNORECASE,
+)
 
 
 def is_technical_action_label(label: str) -> bool:
