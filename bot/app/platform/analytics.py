@@ -8,6 +8,7 @@ anonymousId, metadata. Никаких PII в metadata: телефоны/имен
 from __future__ import annotations
 
 import json
+import re
 import logging
 import sqlite3
 from datetime import datetime, timezone
@@ -103,6 +104,15 @@ def funnel(date_from: str | None = None, date_to: str | None = None) -> dict:
     return {"counts": counts, "funnel": steps}
 
 
+_TECHNICAL_LABEL = re.compile(r"WebAppData|https?://|%[0-9A-Fa-f]{2}|=", re.IGNORECASE)
+
+
+def is_technical_action_label(label: str) -> bool:
+    """Служебные строки мессенджера (WebAppData=…, ссылки, query-параметры) —
+    не текст кнопки. Такие действия в ленту клиента не попадают."""
+    return bool(_TECHNICAL_LABEL.search(label or ""))
+
+
 def client_activity(identities: list[tuple[str, str]], limit: int = 200) -> list[dict]:
     """Лента действий клиента: старт бота, ответы, открытия и клики в
     мини-приложении. identities — пары (канал, внешний id) из карточки клиента:
@@ -124,6 +134,8 @@ def client_activity(identities: list[tuple[str, str]], limit: int = 200) -> list
             meta = json.loads(row[5] or "{}")
         except ValueError:
             meta = {}
+        if row[2] == "miniapp_click" and is_technical_action_label(meta.get("action", "")):
+            continue
         items.append({"id": row[0], "ts": row[1], "event": row[2], "source": row[3],
                       "anon_id": row[4], "meta": meta})
     return items

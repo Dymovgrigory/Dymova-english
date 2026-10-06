@@ -2484,9 +2484,12 @@ async def miniapp_event(request: Request) -> dict:
     event = str(body.get("event") or "")
     if event not in analytics.MINIAPP_EVENTS:
         return {"ok": False}
+    action = str(body.get("action") or "")[:120]
+    if analytics.is_technical_action_label(action):
+        return {"ok": False}
     meta = {
         "section": str(body.get("section") or "")[:64],
-        "action": str(body.get("action") or "")[:120],
+        "action": action,
     }
     ok = analytics.track(event, source=identity.platform, anon_id=identity.user_id, meta=meta)
     return {"ok": bool(ok)}

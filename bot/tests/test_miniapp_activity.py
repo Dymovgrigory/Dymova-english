@@ -82,4 +82,17 @@ def test_mini_app_page_script_sends_click_events():
     assert "miniapp_click" in script
     assert "/api/miniapp/event" in script
     page = (Path(__file__).resolve().parents[1] / "app" / "tgapp" / "index.html").read_text(encoding="utf-8")
-    assert "/tg/app.js?v=10" in page
+    assert "/tg/app.js?v=11" in page
+
+
+def test_technical_labels_are_not_treated_as_button_text():
+    """MAX передаёт в мини-приложение служебные строки (WebAppData=ip=…&user=…):
+    это не текст нажатой кнопки и в ленте клиента их быть не должно."""
+    from app.platform import analytics as a
+
+    assert a.is_technical_action_label("WebAppData=ip%3D94.25.173.21%26user%3D%257B")
+    assert a.is_technical_action_label("https://dymova-english.ru/x")
+    assert a.is_technical_action_label("a=1")
+    assert not a.is_technical_action_label("Подобрать курс")
+    assert not a.is_technical_action_label("Мир Фоксинбурга уроки-приключения для детей")
+    assert not a.is_technical_action_label("")

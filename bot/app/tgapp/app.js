@@ -176,8 +176,10 @@
       ? event.target.closest("button, a, [role='button'], [data-go]")
       : null;
     if (!el) return;
+    var technical = /WebAppData|https?:\/\/|%[0-9A-Fa-f]{2}|=/i;
     var label = (el.getAttribute("data-track") || el.getAttribute("aria-label") ||
       el.textContent || el.id || "").replace(/\s+/g, " ").trim().slice(0, 120);
+    if (!label || technical.test(label)) return;
     try {
       request("/api/miniapp/event", {
         method: "POST",
