@@ -388,6 +388,7 @@ def init_schema(conn: sqlite3.Connection) -> None:
         init_rbac_tables(conn)
         _migrate_messages_client_id(conn)
         _migrate_sender_names(conn)
+        _migrate_messages_read_at(conn)
         try:
             conn.executescript(_FTS_SCHEMA)
             _fts5_ok = True
@@ -412,6 +413,17 @@ def _migrate_messages_client_id(conn: sqlite3.Connection) -> None:
         "CREATE UNIQUE INDEX IF NOT EXISTS idx_crm_messages_client_id"
         " ON crm_messages(client_message_id) WHERE client_message_id IS NOT NULL"
     )
+
+
+def _migrate_messages_read_at(conn: sqlite3.Connection) -> None:
+    """Догоняет старые базы: когда клиент прочитал исходящее сообщение.
+
+    MAX Bot API не присылает событие прочтения, поэтому отметку ставит
+    открытие мини-приложения (см. mark_outgoing_read). NULL — не прочитано.
+    """
+    cols = {row["name"] for row in conn.execute("PRAGMA table_info(crm_messages)")}
+    if "read_at" not in cols:
+        conn.execute("ALTER TABLE crm_messages ADD COLUMN read_at TEXT")
 
 
 def _migrate_sender_names(conn: sqlite3.Connection) -> None:
@@ -924,6 +936,23 @@ def find_conversation(channel: str, external_user_id: str) -> dict | None:
         (channel, external_user_id),
     ).fetchone()
     return dict(row) if row else None
+
+
+def mark_outgoing_read(channel: str, external_user_id: str, read_at: str) -> int:
+    """Отмечает исходящие сообщения диалога прочитанными, если они созданы не
+    позже момента read_at и ещё не отмечены. Возвращает число отмеченных."""
+    conv = find_conversation(channel, external_user_id)
+    if conv is None:
+        return 0
+    conn = get_conn()
+    cur = conn.execute(
+        "UPDATE crm_messages SET read_at = ?"
+        " WHERE conversation_id = ? AND direction = 'out'"
+        " AND read_at IS NULL AND created_at <= ?",
+        (read_at, conv["id"], read_at),
+    )
+    conn.commit()
+    return cur.rowcount
 
 
 def get_messages(conversation_id: int, before_id: int | None = None, limit: int = 50) -> list[dict]:

@@ -765,3 +765,19 @@ table { border-collapse: collapse; }
   .bubble { max-width: 88%; }
   .page { padding: 16px; }
 }
+
+/* Фото клиента в переписке (см. loadChatPhotos в app.js) */
+.bubble__photo {
+  display: block;
+  max-width: 240px;
+  width: 100%;
+  border-radius: 10px;
+  margin: 4px 0;
+  cursor: zoom-in;
+}
+
+/* Прочтение исходящего сообщения клиентом (открыл мини-приложение) */
+.bubble__status--read {
+  color: #1e88e5;
+  font-weight: 600;
+}

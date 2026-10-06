@@ -459,6 +459,24 @@ async def homework_image(request: Request, request_id: int) -> FileResponse:
     return FileResponse(str(path))
 
 
+@router.get("/media/{filename}")
+async def chat_media(request: Request, filename: str) -> FileResponse:
+    """Фото из переписки (вложение клиента MAX/Telegram), см. payload_json
+    сообщения. Имя — только базовое имя файла: без подкаталогов и «..»."""
+    _authorize(request, "inbox")
+    from pathlib import Path
+
+    from app.homework import HOMEWORK_IMAGE_DIR
+
+    safe_name = Path(filename).name
+    if safe_name != filename or safe_name in ("", ".", ".."):
+        raise HTTPException(status_code=404, detail="image not found")
+    path = Path(HOMEWORK_IMAGE_DIR) / safe_name
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="image file missing")
+    return FileResponse(str(path))
+
+
 # --------- Customer 360 ---------
 
 
@@ -486,6 +504,21 @@ async def customer_timeline(request: Request, customer_id: int, limit: int = 200
     actor = _authorize(request, "customers")
     _customer_or_404(customer_id)
     return {"items": crm_store.customer_timeline(customer_id, limit=limit)}
+
+
+@router.get("/customers/{customer_id}/activity")
+async def customer_activity(request: Request, customer_id: int, limit: int = 200) -> dict:
+    """Что клиент делал в боте и мини-приложении: старт, ответы, открытия и
+    клики по разделам. Связь с клиентом — через внешний id его личности."""
+    _authorize(request, "customers")
+    customer = _customer_or_404(customer_id)
+    ids: set[str] = set()
+    for ident in customer.get("identities") or []:
+        external = str(ident.get("external_id") or "")
+        if external:
+            ids.add(external)
+            ids.add(external.removeprefix("tg:"))
+    return {"items": platform_analytics.client_activity(sorted(ids), limit=limit)}
 
 
 @router.get("/customers/{customer_id}/crm360")

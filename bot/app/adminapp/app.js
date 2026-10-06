@@ -538,11 +538,50 @@ function messageHtml(msg) {
         <button class="btn btn--sm btn--ghost" data-msg-retry="${msg.id}">Повторить</button></div>`;
     } else if (msg.status === "pending") {
       statusLine = `<div class="bubble__status">⏳ ожидает доставки</div>`;
+    } else if (msg.read_at) {
+      // Клиент открыл мини-приложение после этого сообщения — две синие галочки.
+      statusLine = `<div class="bubble__status bubble__status--read" title="Прочитано ${esc(fmtTime(msg.read_at))}">✓✓</div>`;
     } else {
       statusLine = `<div class="bubble__status">✓</div>`;
     }
   }
-  return `<div class="bubble bubble--${cls}" data-mid="${msg.id}"><div class="bubble__meta"><b>${esc(who)}</b><span>${esc(fmtTime(msg.created_at))}</span></div><div class="bubble__text">${esc(msg.text)}</div>${statusLine}</div>`;
+  const photoName = messagePhotoName(msg);
+  const photoBlock = photoName
+    ? `<img class="bubble__photo" data-media="${esc(photoName)}" alt="Фото клиента" />`
+    : "";
+  return `<div class="bubble bubble--${cls}" data-mid="${msg.id}"><div class="bubble__meta"><b>${esc(who)}</b><span>${esc(fmtTime(msg.created_at))}</span></div>${photoBlock}<div class="bubble__text">${esc(msg.text)}</div>${statusLine}</div>`;
+}
+
+// Имя файла фото из payload_json сообщения (его кладёт бот, см. _handle_max_photo).
+function messagePhotoName(msg) {
+  try {
+    const payload = JSON.parse(msg.payload_json || "{}");
+    return payload.image_path ? String(payload.image_path).split("/").pop() : "";
+  } catch (_) {
+    return "";
+  }
+}
+
+// blob-URL фото из переписки кэшируем по имени файла: чат перерисовывается при
+// каждом обновлении, а картинку тянуть заново незачем.
+const _chatPhotoCache = new Map();
+
+async function loadChatPhotos(root) {
+  for (const img of root.querySelectorAll("img[data-media]:not([data-loaded])")) {
+    img.dataset.loaded = "1";
+    try {
+      const name = img.dataset.media;
+      if (!_chatPhotoCache.has(name)) {
+        _chatPhotoCache.set(name, fetchAdminImageBlobUrl(`/admin/api/media/${name}`));
+      }
+      img.src = await _chatPhotoCache.get(name);
+    } catch (_) {
+      _chatPhotoCache.delete(img.dataset.media);
+      img.replaceWith(Object.assign(document.createElement("span"), {
+        className: "muted", textContent: "[фото недоступно]",
+      }));
+    }
+  }
 }
 
 async function loadMessages(convId, options = {}) {
@@ -567,6 +606,7 @@ function renderMessages(items, hasMore, prepend = false) {
     more.insertAdjacentHTML("afterend", items.map(messageHtml).join(""));
     if (nearBottom || !renderMessages._touched) box.scrollTop = box.scrollHeight;
   }
+  loadChatPhotos(box);
   renderMessages._touched = true;
   more.hidden = !hasMore;
   if (items.length) INBOX.oldestMessageId = items[0].id;
@@ -707,16 +747,20 @@ async function loadCustomerCard(customerId, target) {
     return;
   }
   try {
-    const [customer, notes, tasks, crm360] = await Promise.all([
+    const [customer, notes, tasks, crm360, activity] = await Promise.all([
       api(`/admin/api/customers/${customerId}`),
       api(`/admin/api/customers/${customerId}/notes`),
       api(`/admin/api/customers/${customerId}/tasks`),
       // Customer 360: BigBen + заявки + платежи. Не критично для карточки —
       // при ошибке показываем карточку без секции школы.
       api(`/admin/api/customers/${customerId}/crm360`).catch(() => null),
+      // Активность в боте и мини-приложении — отдельная секция карточки.
+      api(`/admin/api/customers/${customerId}/activity`).catch(() => null),
     ]);
     // crm360 уже дополнил пустые поля карточки данными BigBen — берём её версию.
     container.innerHTML = customerCardHtml((crm360 && crm360.customer) || customer, notes.items || [], tasks.items || [], crm360);
+    const card = container.querySelector(".c360");
+    if (card) card.insertAdjacentHTML("beforeend", activitySectionHtml(activity ? activity.items : null));
   } catch (err) {
     container.innerHTML = `<div class="customer-empty">${esc(err.message)}</div>`;
   }
@@ -799,6 +843,32 @@ function schoolSectionHtml(d) {
 }
 
 const CONSENT_NAMES = { pd_child: "ПД ребёнка", privacy: "Политика конф.", marketing: "Рассылки" };
+
+// Подписи событий активности клиента (см. analytics.MINIAPP_EVENTS и bot_*).
+const ACTIVITY_LABELS = {
+  bot_start: "Начал диалог с ботом",
+  bot_reply: "Бот ответил",
+  miniapp_opened: "Открыл мини-приложение",
+  miniapp_section_view: "Открыл раздел",
+  miniapp_click: "Нажал",
+};
+
+function activitySectionHtml(items) {
+  if (!items) return "";
+  const rows = items.length
+    ? items.map((ev) => {
+        const label = ACTIVITY_LABELS[ev.event] || ev.event;
+        const detail = [ev.meta && ev.meta.section, ev.meta && ev.meta.action].filter(Boolean).join(" · ");
+        return `<div class="activity__row"><span class="muted">${esc(fmtTime(ev.ts))}</span>
+          <span>${esc(label)}${detail ? `: <b>${esc(detail)}</b>` : ""}</span></div>`;
+      }).join("")
+    : `<div class="muted">Действий в мини-приложении пока нет.</div>`;
+  return `<div class="c360__section activity">
+    <h4>Активность</h4>
+    <div class="muted">Разделы и кнопки мини-приложения, старт бота и ответы.</div>
+    ${rows}
+  </div>`;
+}
 
 function customerCardHtml(c, notes, tasks, crm360) {
   const channels = (c.identities || []).map((i) =>

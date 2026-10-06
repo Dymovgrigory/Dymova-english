@@ -105,7 +105,33 @@ function showScreen(name) {
   });
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
+  trackEvent("miniapp_section_view", { section: name });
 }
+
+// --- Действия клиента: разделы и нажатия. Попадают в CRM клиента в админке
+// (вкладка «Активность»). Ошибки отправки не должны мешать приложению.
+function trackEvent(event, meta) {
+  try {
+    const payload = { event, ...meta };
+    fetch(API + "/api/miniapp/event", {
+      method: "POST",
+      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  } catch (_) {
+    // аналитика не должна ломать экран
+  }
+}
+
+document.addEventListener("click", (event) => {
+  const el = event.target.closest("button, a, [data-go], [role='button']");
+  if (!el) return;
+  const label = (el.dataset.track || el.getAttribute("aria-label") || el.textContent || el.id || "")
+    .replace(/\s+/g, " ").trim().slice(0, 120);
+  const section = (location.hash || "").replace("#", "");
+  trackEvent("miniapp_click", { section, action: label });
+});
 document.querySelectorAll("[data-go]").forEach((el) => {
   el.addEventListener("click", () => {
     showScreen(el.dataset.go);

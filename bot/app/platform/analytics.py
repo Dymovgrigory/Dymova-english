@@ -34,6 +34,10 @@ PUBLIC_EVENTS = frozenset({
     "booking_started", "booking_step_completed",
 })
 
+# Действия клиента внутри мини-приложения (MAX/Telegram). Пишутся только с
+# подписанной личностью (см. POST /api/miniapp/event), а не с user_id из запроса.
+MINIAPP_EVENTS = frozenset({"miniapp_section_view", "miniapp_click"})
+
 # Серверные события (не принимаются извне).
 SERVER_EVENTS = frozenset({
     "booking_completed", "booking_failed", "lead_created",
@@ -65,7 +69,7 @@ def track(event: str, *, source: str = "site", session_id: str = "",
           anon_id: str = "", meta: dict | None = None) -> bool:
     """Пишет событие. Не бросает исключений наружу — аналитика не должна
     ломать бизнес-операции."""
-    if event not in PUBLIC_EVENTS and event not in SERVER_EVENTS:
+    if event not in PUBLIC_EVENTS and event not in SERVER_EVENTS and event not in MINIAPP_EVENTS:
         return False
     try:
         meta_json = json.dumps(meta or {}, ensure_ascii=False)[:_MAX_META_BYTES]
@@ -97,3 +101,26 @@ def funnel(date_from: str | None = None, date_to: str | None = None) -> dict:
     counts = {row["event"]: row["n"] for row in _db().execute(sql, params).fetchall()}
     steps = [{"event": e, "count": counts.get(e, 0)} for e in _FUNNEL_ORDER]
     return {"counts": counts, "funnel": steps}
+
+
+def client_activity(anon_ids: list[str], limit: int = 200) -> list[dict]:
+    """Лента действий клиента: старт бота, ответы, открытия и клики в
+    мини-приложении. anon_ids — внешние id клиента (MAX/Telegram user_id)."""
+    ids = [str(x) for x in anon_ids if x]
+    if not ids:
+        return []
+    placeholders = ",".join("?" for _ in ids)
+    rows = _db().execute(
+        "SELECT id, ts, event, source, anon_id, meta_json FROM product_events"
+        f" WHERE anon_id IN ({placeholders}) ORDER BY id DESC LIMIT ?",
+        (*ids, max(1, min(int(limit), 500))),
+    ).fetchall()
+    items = []
+    for row in rows:
+        try:
+            meta = json.loads(row[5] or "{}")
+        except ValueError:
+            meta = {}
+        items.append({"id": row[0], "ts": row[1], "event": row[2], "source": row[3],
+                      "anon_id": row[4], "meta": meta})
+    return items

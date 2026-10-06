@@ -2029,6 +2029,12 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 sender, message, update, max_client,
             )
             return
+        image_url = max_image_url(attachments)
+        if image_url:
+            # Фото (с подписью или без) — раньше без текста сообщение молча
+            # отбрасывалось, и домашка с фото до CRM и педагога не доходила.
+            await _handle_max_photo(image_url, user_id, text, message, update, max_client)
+            return
         if not text:
             return
         _remember_sender(user_id, sender)
@@ -2320,6 +2326,91 @@ async def _handle_max_voice(url: str, user_id: str, message: dict, update: dict,
     get_store().save(conv)
 
 
+def max_image_url(attachments: list) -> str | None:
+    """Прямая ссылка на первое фото-вложение MAX (type == image) или None."""
+    for att in attachments or []:
+        if isinstance(att, dict) and att.get("type") == "image":
+            url = (att.get("payload") or {}).get("url", "")
+            if url:
+                return str(url)
+    return None
+
+
+async def _handle_max_photo(
+    url: str, user_id: str, caption: str, message: dict, update: dict, max_client
+) -> None:
+    """Фото от клиента MAX: сохраняем в CRM и разбираем как задание (разбор или
+    проверка — по подписи), тем же vision, что и фото в Telegram."""
+    sender = message.get("sender") or {}
+    download = getattr(max_client, "download_file", None)
+    if not callable(download):
+        await max_client.send_message(user_id, "Вижу фото 📸 Опишите, пожалуйста, текстом, что за задание.")
+        return
+    image = await download(url, MAX_HOMEWORK_IMAGE_BYTES)
+    if not image:
+        await max_client.send_message(
+            user_id,
+            "Не получилось открыть это фото. Пришлите, пожалуйста, снимок поменьше — или опишите задание текстом.",
+        )
+        return
+
+    image_path = save_homework_image(image, ext="jpg")
+    # Фото — тоже сообщение клиента: в CRM попадает путь к файлу, и педагог в
+    # админке видит тот же снимок, что получила модель.
+    crm_ctx = crm_ingest.ingest_inbound(
+        PLATFORM, user_id, f"[фото] {caption}".strip(),
+        external_event_id=_extract_update_id(update),
+        external_message_id=_max_message_external_id(message),
+        name=str(sender.get("name") or ""),
+        username=str(sender.get("username") or ""),
+        payload={"image_path": image_path},
+    )
+
+    check_mode = _looks_like_check_request(caption)
+    conv_for_photo = get_store().get(user_id, platform=PLATFORM)
+    active_ctx = active_homework_context(conv_for_photo)
+    note_with_hint = homework.with_continuation_hint(*(active_ctx or ("", "")), caption)
+    if check_mode:
+        explanation = await _reply_while_alive(
+            max_client, user_id, lambda: check_homework_image(image, "image/jpeg", note_with_hint)
+        )
+        mode = "check"
+    else:
+        prior_images = _load_prior_homework_images(conv_for_photo) if active_ctx is not None else []
+        explanation = await _reply_while_alive(
+            max_client,
+            user_id,
+            lambda: explain_homework_image(image, "image/jpeg", note_with_hint, prior_images=prior_images),
+        )
+        mode = "explain"
+
+    if not explanation:
+        hint = (
+            "Не смог разобрать фото решения. Пришлите, пожалуйста, более чёткий снимок — так смогу проверить."
+            if check_mode else
+            "Не смог разобрать задание по фото. Напишите, пожалуйста, текстом, что именно нужно сделать."
+        )
+        await max_client.send_message(user_id, hint)
+        return
+    ok = await max_client.send_message(user_id, explanation)
+    crm_ingest.ingest_outbound(crm_ctx, explanation, ai_model=settings.LLM_MODEL, ok=bool(ok))
+    if crm_ctx:
+        crm_store.record_homework_request(
+            platform=PLATFORM, user_id=user_id,
+            customer_id=crm_ctx.get("customer_id"),
+            conversation_id=crm_ctx.get("conversation_id"), channel=PLATFORM,
+            mode=mode, input_type="image", image_path=image_path,
+            task_text=caption, reply=explanation,
+        )
+    conv = get_store().get(user_id, platform=PLATFORM)
+    if check_mode:
+        _clear_homework_check_context(conv)
+    else:
+        _mark_homework_check_context(conv)
+    set_active_homework_context(conv, caption, explanation)
+    get_store().save(conv)
+
+
 async def _send_max_logged(max_client, user_id: str, text: str, crm_ctx: dict | None,
                            buttons: list | None = None) -> bool:
     """Отправка в MAX с записью исходящего сообщения в CRM.
@@ -2355,6 +2446,33 @@ async def miniapp_access(request: Request, user_id: str = "") -> dict:
     return _miniapp_access_state(_identity_from_request(request, fallback_user_id=user_id))
 
 
+@app.post("/api/miniapp/event")
+async def miniapp_event(request: Request) -> dict:
+    """Действие клиента в мини-приложении: открыт раздел или нажата кнопка.
+
+    Пишем только для личности, подтверждённой подписью initData (user_id из
+    тела запроса не доверяем). Имена событий — из белого списка аналитики.
+    """
+    try:
+        body = await request.json()
+    except ValueError:
+        return {"ok": False}
+    if not isinstance(body, dict):
+        return {"ok": False}
+    identity = _identity_from_request(request)
+    if identity is None or not identity.verified:
+        return {"ok": False}
+    event = str(body.get("event") or "")
+    if event not in analytics.MINIAPP_EVENTS:
+        return {"ok": False}
+    meta = {
+        "section": str(body.get("section") or "")[:64],
+        "action": str(body.get("action") or "")[:120],
+    }
+    ok = analytics.track(event, source=identity.platform, anon_id=identity.user_id, meta=meta)
+    return {"ok": bool(ok)}
+
+
 @app.get("/api/miniapp/info")
 async def miniapp_info(request: Request, user_id: str = "") -> dict:
     """Витрина: публичные данные школы + состояние доступа.
@@ -2367,6 +2485,16 @@ async def miniapp_info(request: Request, user_id: str = "") -> dict:
     access = _miniapp_access_state(identity)
     if identity is not None and identity.verified:
         analytics.track("miniapp_opened", source=identity.platform, anon_id=identity.user_id)
+        # Открытие мини-приложения — сигнал прочтения: ответы бота, отправленные
+        # до этого момента, получают две галочки в админке (MAX не присылает
+        # событие прочтения). Сбой отметки не должен ломать витрину.
+        try:
+            crm_store.mark_outgoing_read(
+                identity.platform, identity.user_id,
+                datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            )
+        except Exception:
+            logger.exception("miniapp: не удалось отметить прочтение ответов")
     return {
         "company": kb.company,
         "branches": kb.branches,
