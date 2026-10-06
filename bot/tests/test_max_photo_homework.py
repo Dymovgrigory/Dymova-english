@@ -64,3 +64,19 @@ async def test_max_photo_download_failure_asks_for_smaller_photo():
         )
     text = max_client.send_message.await_args.args[1]
     assert "фото" in text.lower()
+
+
+def test_text_with_image_attachment_keeps_normal_text_flow():
+    """Регрессия: сообщение с текстом и картинкой (скриншот, превью ссылки) не
+    должно уходить в разбор домашки вместо обычного ответа."""
+    assert main_module.max_image_url([{"type": "image", "payload": {"url": "https://x/a.jpg"}}]) is not None
+    routed = main_module.should_route_max_photo(
+        "привет, какие у вас курсы?", [{"type": "image", "payload": {"url": "https://x/a.jpg"}}]
+    )
+    assert routed is False
+
+
+def test_pure_photo_is_routed_to_homework_photo_flow():
+    assert main_module.should_route_max_photo(
+        "", [{"type": "image", "payload": {"url": "https://x/a.jpg"}}]
+    ) is True

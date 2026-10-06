@@ -2029,11 +2029,10 @@ async def _process_update(update: dict, update_type: str, max_client) -> None:
                 sender, message, update, max_client,
             )
             return
-        image_url = max_image_url(attachments)
-        if image_url:
-            # Фото (с подписью или без) — раньше без текста сообщение молча
-            # отбрасывалось, и домашка с фото до CRM и педагога не доходила.
-            await _handle_max_photo(image_url, user_id, text, message, update, max_client)
+        if should_route_max_photo(text, attachments):
+            # Чистое фото без подписи — раньше сообщение молча отбрасывалось,
+            # и домашка с фото до CRM и педагога не доходила.
+            await _handle_max_photo(max_image_url(attachments), user_id, "", message, update, max_client)
             return
         if not text:
             return
@@ -2334,6 +2333,13 @@ def max_image_url(attachments: list) -> str | None:
             if url:
                 return str(url)
     return None
+
+
+def should_route_max_photo(text: str, attachments: list) -> bool:
+    """Чистое фото без текста — в разбор домашки. Сообщение с текстом (даже с
+    картинкой-превью или скриншотом) идёт обычным диалогом: иначе вопрос клиента
+    уходил бы в разбор задания вместо ответа."""
+    return not (text or "").strip() and max_image_url(attachments) is not None
 
 
 async def _handle_max_photo(
