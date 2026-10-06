@@ -113,6 +113,19 @@ def is_technical_action_label(label: str) -> bool:
     return bool(_TECHNICAL_LABEL.search(label or ""))
 
 
+def clean_miniapp_meta(section: str, action: str) -> dict | None:
+    """Поля действия мини-приложения после очистки. None — действие целиком
+    служебное (нажатие не записываем). Служебные строки в section и action
+    отбрасываются одинаково: в них могут быть IP и данные пользователя."""
+    section = str(section or "")[:64]
+    action = str(action or "")[:120]
+    if is_technical_action_label(action):
+        return None
+    if is_technical_action_label(section):
+        section = ""
+    return {"section": section, "action": action}
+
+
 def client_activity(identities: list[tuple[str, str]], limit: int = 200) -> list[dict]:
     """Лента действий клиента: старт бота, ответы, открытия и клики в
     мини-приложении. identities — пары (канал, внешний id) из карточки клиента:
@@ -134,7 +147,8 @@ def client_activity(identities: list[tuple[str, str]], limit: int = 200) -> list
             meta = json.loads(row[5] or "{}")
         except ValueError:
             meta = {}
-        if row[2] == "miniapp_click" and is_technical_action_label(meta.get("action", "")):
+        if row[2] == "miniapp_click" and clean_miniapp_meta(
+            meta.get("section", ""), meta.get("action", "")) is None:
             continue
         items.append({"id": row[0], "ts": row[1], "event": row[2], "source": row[3],
                       "anon_id": row[4], "meta": meta})

@@ -96,3 +96,15 @@ def test_technical_labels_are_not_treated_as_button_text():
     assert not a.is_technical_action_label("Подобрать курс")
     assert not a.is_technical_action_label("Мир Фоксинбурга уроки-приключения для детей")
     assert not a.is_technical_action_label("")
+
+
+def test_technical_section_is_dropped_like_action():
+    """Поле section — такой же пользовательский вход, как action: служебные
+    строки мессенджера (с IP и данными пользователя) не сохраняются ни в одном."""
+    from app.platform import analytics as a
+
+    assert a.clean_miniapp_meta("WebAppData=ip%3D94.25.173.21", "Курсы") == {"section": "", "action": "Курсы"}
+    assert a.clean_miniapp_meta("mylessons", "WebAppData=ip%3D1") is None
+    cleaned = a.clean_miniapp_meta("mylessons", "Курсы")
+    assert cleaned == {"section": "mylessons", "action": "Курсы"}
+    assert a.clean_miniapp_meta("", "Курсы") == {"section": "", "action": "Курсы"}
