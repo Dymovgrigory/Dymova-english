@@ -26,6 +26,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+
+class RevalidatingStaticFiles(StaticFiles):
+    """Статика админки и мини-приложения: браузер каждый раз проверяет свежесть.
+
+    Без Cache-Control браузер хранит app.js по эвристике (по Last-Modified),
+    и правки интерфейса не видны до истечения этого срока.
+    """
+
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
 from app import ai_core
 from app.ai_core import handle_message, handle_start
 from app import broadcast
@@ -2976,7 +2989,7 @@ async def miniapp_index_telegram() -> HTMLResponse:
 
 # Статика мини-приложения MAX: админка и картинки (если каталог есть).
 if _MINIAPP_DIR.exists():
-    app.mount("/app", StaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
+    app.mount("/app", RevalidatingStaticFiles(directory=str(_MINIAPP_DIR), html=True), name="miniapp")
 
 if _TGAPP_DIR.exists():
     app.mount("/tg", StaticFiles(directory=str(_TGAPP_DIR), html=True), name="tgapp")
@@ -3030,4 +3043,4 @@ app.include_router(world_bridge.router)
 # Страница публична, но пустая: данные отдаются только по X-Admin-Token.
 _ADMINAPP_DIR = Path(__file__).with_name("adminapp")
 if _ADMINAPP_DIR.exists():
-    app.mount("/admin", StaticFiles(directory=str(_ADMINAPP_DIR), html=True), name="adminapp")
+    app.mount("/admin", RevalidatingStaticFiles(directory=str(_ADMINAPP_DIR), html=True), name="adminapp")

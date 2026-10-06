@@ -63,3 +63,11 @@ def test_media_served_only_when_attached_to_a_message(client, tmp_path, monkeypa
     assert client.get("/admin/api/media/abc123.jpg", headers=headers).status_code == 404
     crm_ingest.ingest_inbound("max", "42", "[фото]", payload={"image_path": "homework/abc123.jpg"})
     assert client.get("/admin/api/media/abc123.jpg", headers=headers).status_code == 200
+
+
+def test_admin_static_assets_are_revalidated_not_heuristically_cached(client):
+    """Регрессия: без Cache-Control браузер хранит старый app.js админки по
+    эвристике (Last-Modified недельной давности), и новые функции не видны."""
+    r = client.get("/admin/app.js")
+    assert r.status_code == 200
+    assert "no-cache" in r.headers.get("cache-control", "")
