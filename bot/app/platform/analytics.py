@@ -103,17 +103,20 @@ def funnel(date_from: str | None = None, date_to: str | None = None) -> dict:
     return {"counts": counts, "funnel": steps}
 
 
-def client_activity(anon_ids: list[str], limit: int = 200) -> list[dict]:
+def client_activity(identities: list[tuple[str, str]], limit: int = 200) -> list[dict]:
     """Лента действий клиента: старт бота, ответы, открытия и клики в
-    мини-приложении. anon_ids — внешние id клиента (MAX/Telegram user_id)."""
-    ids = [str(x) for x in anon_ids if x]
-    if not ids:
+    мини-приложении. identities — пары (канал, внешний id) из карточки клиента:
+    один и тот же числовой id в разных мессенджерах — разные люди, поэтому
+    сопоставляем обе части, а не только anon_id."""
+    pairs = [(str(src), str(anon)) for src, anon in identities if src and anon]
+    if not pairs:
         return []
-    placeholders = ",".join("?" for _ in ids)
+    clause = " OR ".join("(source = ? AND anon_id = ?)" for _ in pairs)
+    params = [part for pair in pairs for part in pair]
     rows = _db().execute(
         "SELECT id, ts, event, source, anon_id, meta_json FROM product_events"
-        f" WHERE anon_id IN ({placeholders}) ORDER BY id DESC LIMIT ?",
-        (*ids, max(1, min(int(limit), 500))),
+        f" WHERE {clause} ORDER BY id DESC LIMIT ?",
+        (*params, max(1, min(int(limit), 500))),
     ).fetchall()
     items = []
     for row in rows:

@@ -471,6 +471,9 @@ async def chat_media(request: Request, filename: str) -> FileResponse:
     safe_name = Path(filename).name
     if safe_name != filename or safe_name in ("", ".", ".."):
         raise HTTPException(status_code=404, detail="image not found")
+    if not crm_store.message_attaches_image(f"homework/{safe_name}"):
+        # Файл есть на диске, но ни одно сообщение переписки его не прикрепляет.
+        raise HTTPException(status_code=404, detail="image not found")
     path = Path(HOMEWORK_IMAGE_DIR) / safe_name
     if not path.is_file():
         raise HTTPException(status_code=404, detail="image file missing")
@@ -512,13 +515,11 @@ async def customer_activity(request: Request, customer_id: int, limit: int = 200
     клики по разделам. Связь с клиентом — через внешний id его личности."""
     _authorize(request, "customers")
     customer = _customer_or_404(customer_id)
-    ids: set[str] = set()
-    for ident in customer.get("identities") or []:
-        external = str(ident.get("external_id") or "")
-        if external:
-            ids.add(external)
-            ids.add(external.removeprefix("tg:"))
-    return {"items": platform_analytics.client_activity(sorted(ids), limit=limit)}
+    identities = [
+        (str(ident.get("channel") or ""), str(ident.get("external_id") or ""))
+        for ident in customer.get("identities") or []
+    ]
+    return {"items": platform_analytics.client_activity(identities, limit=limit)}
 
 
 @router.get("/customers/{customer_id}/crm360")

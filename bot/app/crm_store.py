@@ -938,6 +938,16 @@ def find_conversation(channel: str, external_user_id: str) -> dict | None:
     return dict(row) if row else None
 
 
+def message_attaches_image(relative_path: str) -> bool:
+    """Есть ли сообщение переписки, к которому прикреплено фото relative_path
+    (например, "homework/<uuid>.jpg") — только такие фото видны в админке."""
+    row = get_conn().execute(
+        "SELECT 1 FROM crm_messages WHERE payload_json LIKE ? LIMIT 1",
+        (f"%{relative_path}%",),
+    ).fetchone()
+    return row is not None
+
+
 def mark_outgoing_read(channel: str, external_user_id: str, read_at: str) -> int:
     """Отмечает исходящие сообщения диалога прочитанными, если они созданы не
     позже момента read_at и ещё не отмечены. Возвращает число отмеченных."""

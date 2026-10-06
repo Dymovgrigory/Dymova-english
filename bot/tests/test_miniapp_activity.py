@@ -29,17 +29,19 @@ def test_miniapp_events_are_whitelisted_and_readable_by_client():
     assert analytics.track("miniapp_click", source="max", anon_id="7442748",
                            meta={"section": "mylessons", "action": "Записаться"})
     assert not analytics.track("miniapp_wipe_all", source="max", anon_id="7442748")
-    items = analytics.client_activity(["7442748"])
+    items = analytics.client_activity([("max", "7442748")])
     assert [i["event"] for i in items] == ["miniapp_click", "miniapp_section_view"]
     assert items[0]["meta"]["action"] == "Записаться"
-    assert analytics.client_activity(["someone-else"]) == []
+    assert analytics.client_activity([("max", "someone-else")]) == []
+    # Тот же числовой id в другом канале — не тот же клиент.
+    assert analytics.client_activity([("telegram", "7442748")]) == []
 
 
 def test_miniapp_event_endpoint_ignores_unsigned_requests(client):
     r = client.post("/api/miniapp/event", json={"event": "miniapp_click", "user_id": "7442748"})
     assert r.status_code == 200
     assert r.json() == {"ok": False}
-    assert analytics.client_activity(["7442748"]) == []
+    assert analytics.client_activity([("max", "7442748")]) == []
 
 
 def test_media_endpoint_refuses_paths_outside_homework_dir(client):
@@ -47,3 +49,17 @@ def test_media_endpoint_refuses_paths_outside_homework_dir(client):
     assert r.status_code == 404
     r = client.get("/admin/api/media/missing.jpg", headers={"X-Admin-Token": "admintoken"})
     assert r.status_code == 404
+
+
+def test_media_served_only_when_attached_to_a_message(client, tmp_path, monkeypatch):
+    from app import crm_ingest, crm_store
+    from app import homework as homework_module
+
+    monkeypatch.setattr(homework_module, "HOMEWORK_IMAGE_DIR", str(tmp_path))
+    crm_store._conn = None
+    (tmp_path / "abc123.jpg").write_bytes(b"jpeg")
+    headers = {"X-Admin-Token": "admintoken"}
+    # Файл лежит на диске, но ни одно сообщение его не ссылается — не отдаём.
+    assert client.get("/admin/api/media/abc123.jpg", headers=headers).status_code == 404
+    crm_ingest.ingest_inbound("max", "42", "[фото]", payload={"image_path": "homework/abc123.jpg"})
+    assert client.get("/admin/api/media/abc123.jpg", headers=headers).status_code == 200
