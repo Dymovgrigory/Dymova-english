@@ -276,6 +276,8 @@ for _a in [
     "blog-onlajn-kitajskij-dlya-shkolnikov",
     "blog-onlajn-podgotovka-k-oge-anglijskij",
     "blog-onlajn-ekrannoe-vremya",
+    "blog-probely-po-anglijskomu-10-klass",
+    "blog-probely-po-anglijskomu-11-klass",
 ]:
     PAGE_ALIASES["page_" + _a.replace("/", "_").replace("-", "_") + ".html"] = _a
 

@@ -7407,6 +7407,8 @@ BLOG_POST_35 = dict(BLOG_FEED, **{
             "<a href=\"/blog-probely-po-anglijskomu-7-klass\">Пробелы по английскому в 7 классе</a> — Past Simple, более длинные тексты, падает мотивация;",
             "<a href=\"/blog-probely-po-anglijskomu-8-klass\">Пробелы по английскому в 8 классе</a> — грамматика, письмо и аудирование перед ОГЭ-дистанцией;",
             "<a href=\"/blog-probely-po-anglijskomu-9-klass\">Пробелы по английскому в 9 классе</a> — последняя проверка перед самим ОГЭ.",
+            "<a href=\"/blog-probely-po-anglijskomu-10-klass\">Пробелы по английскому в 10 классе</a> — грамматика в связке, чтение и письмо перед ЕГЭ;",
+            "<a href=\"/blog-probely-po-anglijskomu-11-klass\">Пробелы по английскому в 11 классе</a> — где теряют больше всего баллов и как успеть за оставшиеся месяцы.",
         ]),
         ("h2", "Как закрывать пробелы: рабочий план на 2–3 месяца"),
         ("p", "Главный принцип — не читать учебник «от корки до корки», а идти от найденных дыр. Порядок такой:"),
@@ -7485,6 +7487,7 @@ import pages_wave27  # как выбрать онлайн-школу + РКИ
 import pages_wave28  # онлайн по России: репетитор vs школа, цена рынка, отзывы, часовые пояса
 import pages_wave29  # мотивация, няня с английским, стеснение, самоучитель, английский в садике
 import pages_wave30  # онлайн по всей России: тест готовности, взрослые, урок, безопасность, интенсив, РКИ, немецкий, китайский, ОГЭ, экран
+import pages_wave31  # пробелы по английскому в 10 и 11 классе (запросы без отдельной страницы)
 import pages_spotlight  # курсы Spotlight 2–5: английский по школьному учебнику
 
 pages_geo2.register_geo()
@@ -7495,7 +7498,7 @@ pages_wave24.register_wave24()
 pages_prep.register_prep_sections()
 PAGES.update(pages_spotlight.SPOTLIGHT_PAGES)
 
-EXTRA_BLOG_POSTS = pages_wave30.WAVE30_POSTS + pages_wave29.WAVE29_POSTS +pages_wave28.WAVE28_POSTS + pages_wave27.WAVE27_POSTS + pages_wave26.WAVE26_POSTS + pages_wave25.WAVE25_POSTS + pages_wave24.WAVE24_POSTS + pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
+EXTRA_BLOG_POSTS = pages_wave31.WAVE31_POSTS + pages_wave30.WAVE30_POSTS + pages_wave29.WAVE29_POSTS +pages_wave28.WAVE28_POSTS + pages_wave27.WAVE27_POSTS + pages_wave26.WAVE26_POSTS + pages_wave25.WAVE25_POSTS + pages_wave24.WAVE24_POSTS + pages_wave22.WAVE22_POSTS + pages_wave21.WAVE21_POSTS + pages_wave20.WAVE20_POSTS + pages_wave19.WAVE19_POSTS + pages_wave18.WAVE18_POSTS + pages_wave17.WAVE17_POSTS + pages_wave16.WAVE16_POSTS + pages_wave11.WAVE11_POSTS + pages_wave10.WAVE10_POSTS + pages_wave7.WAVE7_POSTS + pages_wave5.WAVE5_POSTS + pages_drafts.DRAFT_POSTS + pages_prep.PREP_POSTS + pages_lang_news.LANG_POSTS + pages_lang_news.BLOG_MISC_POSTS
 EXTRA_NEWS_POSTS = pages_wave27.WAVE27_NEWS + pages_wave26.WAVE26_NEWS + pages_wave9.WAVE9_POSTS + pages_lang_news.NEWS2_POSTS
 
 for _post in EXTRA_BLOG_POSTS + EXTRA_NEWS_POSTS:
