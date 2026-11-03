@@ -1,4 +1,83 @@
 
+### Сессия — Kimi: Личный кабинет — Этап 4: Мир Фоксинбурга в ЛК — SSO + прогресс (2026-11-03, НЕ задеплоено)
+
+**Продолжение Этапов 1–3 (см. ниже).** Проверено вживую: API 127.0.0.1:8010, UI http://localhost:7100, Мир на http://localhost:3002 (dev, после проверки остановлен), e2e-SSO end-to-end, 0 ошибок консоли.
+
+**Сделано:**
+- `world-backend/app/lk/world_link.py` (новый): `world_session(token, student_id)` — детерминированный внешний ключ игрока Мира `lk-crm-<student_id>` (гость: `lk-guest-<account_id>`, student_id=0) → `core.get_or_create_player` → создание `player_identity` (parent_phone из аккаунта ЛК, `phone_verified_at=now` — телефон уже подтверждён в ЛК через ботов, поэтому гейт Мира пропускает без анкеты; first_name=child_name, остальные NOT NULL пустые/0) → `issue_session` → wses-токен. `world_progress(token, student_id)` — players (level, xp, coins, streak_days), треки из `titles` (track, level), лига из `league_weeks` (week_start = понедельник текущей недели). Возвращает `{linked: bool, child_name, ...}`.
+- Эндпоинты `world-backend/app/lk/api.py`: `POST /api/lk/world/session` (body `{student_id}`, Bearer), `GET /api/lk/world/progress?student_id=N` (Bearer). Импорт `world_link` добавлен в общую строку импорта.
+- Тесты `world-backend/tests/test_lk_world.py` — 6 passed: SSO-создание игрока, стабильность ключа lk-crm (повторный вызов тот же игрок), гостевой lk-guest, чужой student_id 404/403, прогресс до/после создания, лига текущей недели.
+- Мир `world/src/features/gate/SsoTokenCapture.tsx` (новый, client) — принимает `?world_token=` + `?world_key=` из URL, `rememberPlayerToken` (v2-клиент Мира), чистит URL через `router.replace`. Подключён в `world/src/app/layout.tsx` в `<Suspense>` ПЕРЕД AppGate (Suspense обязателен: useSearchParams в статическом prerender без него роняет сборку).
+- Фронт ЛК: `lk/lib/api.ts` — типы `WorldProgress`/`WorldSession`, константа `WORLD_URL = process.env.NEXT_PUBLIC_WORLD_URL || "http://localhost:3000"` (**при деплое задать на реальный домен Мира!**), методы `worldSession`, `worldProgress`. Страница `lk/app/world/page.tsx` (стат-карточки уровень/XP/монеты/серия, «Башни Мира» из треков, «Лига недели» с местом и XP, герой-блок «Войти в Мир Фоксинбурга» → `api.worldSession` → `window.open(WORLD_URL + ?world_token=…&world_key=…)` без пароля), CSS в `lk/app/globals.css` (блок «Мир Фоксинбурга (Этап 4)»). Виджет дашборда «Мир Фоксинбурга» → тег «Готово» + ссылка `/world`.
+- E2E `lk/scripts/e2e-world-shots.cjs` (playwright): вход в ЛК → `/world` → клик «Войти в Мир» (popup) → Мир с wses-токеном редиректит на `/onboarding` → выбор класса/модуля/цели → **первый урок `/lesson/sp1.m1.n1` открылся**. URL-цепочка подтверждена, 0 ошибок консоли. Скриншоты: `/tmp/lk_world_desktop.png`, `/tmp/lk_world_mobile.png`, `/tmp/world_onboarding.png`, `/tmp/world_onboarding_goal.png`, `/tmp/world_after_sso.png`.
+- Полный прогон world-backend: **460 passed + 1 pre-existing** `test_castle_league_weeks::test_closing_pays_by_rank_and_only_once` (дата-зависимо, падает и на чистом дереве). `tests/test_isolation.py` — зелёный (world_link.py в разрешённом префиксе `app/lk/`).
+
+**Принятое поведение (зафиксировано):** новый игрок Мира после SSO попадает на онбординг-выбор класса (`/onboarding`, экран «В каком ты классе? Откроем твой учебник Spotlight»), а не сразу в Мир — регистрация при этом пропускается (анкета не требуется, `is_registered`). Ребёнок один раз выбирает класс → модуль → цель → первый урок. Это осознанный UX Мира, менять не стали.
+
+**Pre-existing замечание (не Этап 4):** в dev-консоли Мира есть hydration-warning на `<html style>` (`--tg-viewport-height` прописывает Telegram-скрипт до гидрации) — существует и на чистых заходах без SSO, на функционал не влияет.
+
+**Открыто (Этап 5 / деплой):** `NEXT_PUBLIC_WORLD_URL` при деплое ЛК на домен Мира (`world.dymova-english.ru` из DEPLOY.md — DNS пока нет); EN-интерфейс; деплой всего ЛК на `lms.dymova-english.ru`; исторические привязки групп через `BIGBEN_INTERNAL_TOKEN`; картинки слов.
+
+---
+
+### Сессия — Kimi: Личный кабинет — Этап 3: тренажёр слов (2026-11-02, НЕ задеплоено)
+
+**Продолжение Этапов 1–2 (см. ниже).** Проверено вживую: API 127.0.0.1:8010, UI http://localhost:7100, скриншоты десктоп/390px, 0 ошибок консоли.
+
+**Сделано:**
+- world-backend `app/lk/words.py` (новый домен): словари `lk_word_sets` (kind level|book|topic, cefr, position — «словарь по порядку», is_public), слова `lk_words` (en/ru/транскрипция/image_url/audio_url/примеры/position), назначения `lk_word_assignments` (kind group|student|all; age_from/age_to заложены — возраст из публичного API CRM недоступен, ждут внутренний токен), прогресс `lk_word_progress` (SRS сила 0–5, интервалы 1,1,3,7,14,30 как в Мире; ошибка возвращает слово сегодня; ключ ученика `crm:<student_id>` / `guest:<account_id>`).
+- Доступность: публичные наборы всем; книжные/тематические — по назначению (группа из `lk_group_members`, student_id, all). Сид: уровни Pre-A1…B1 (публичные, у Pre-A1/A1 по 8 стартовых слов) + заготовки под My Level / Get Involved / Super Minds / Spotlight (пустые, заполняются методистом). Сид идемпотентный, вызов в `main.py::_seed`.
+- Тренировка: `start_training` = до 12 повторяемых (due≤сегодня) + до 8 новых по position; карточки без ответов, ответы и дистракторы отдельно (3 дистрактора из своего набора). `answer` двигает SRS. Гости тренируются (student_id=0 → гостевой профиль аккаунта).
+- Эндпоинты `/api/lk/words/`: sets, sets/{id}, train, answer, stats, tts (Bearer → FileResponse, тот же кэш synth_english, что и в Мире), import + assign (заголовок X-Import-Key, секрет `LK_IMPORT_KEY` — добавлен в `.env.local` и dev-api.sh; без ключа 401).
+- Баги по пути: `NOT IN (NULL)` блокировал новые слова при пустом review; «новые» теперь = слова вообще без прогресса; `_profile(student_id=0)` ищет гостевой профиль.
+- Фронт: `/words` (статистика сверху: выучено/к повтору/точность; карточки наборов с прогресс-баром и «Тренировать →»), `/words/train/[setId]` (прогресс-бар, задания «выбор перевода» из 4 вариантов + «ввод слова» для встреченных слов, автоозвучка при смене карточки — audio_url или TTS через fetch→blob (audio-тег не шлёт Bearer), подсветка верного/неверного, итог «N из M верно» + «Ещё раз»). Виджет на дашборде → «Готово».
+- Тесты: `world-backend/tests/test_lk_words.py` — 13 passed (доступность/назначения, порядок новых, SRS-переходы, гостевой ключ, импорт: создание/замена/дедуп/невалид, bad_kind, чужой student_id). Полный прогон world-backend: 454 passed + 1 pre-existing `test_castle_league_weeks`.
+- Smoke: импорт набора с ключом (200) и без (401); TTS отдаёт mp3; ответ двигает due.
+
+**Открыто (следующие шаги):** картинки слов (решение владельца — искать в онлайн-словарях; поле image_url готово, нужен наполнитель); полные списки слов учебников (методист импортирует JSON'ами через /api/lk/words/import); возрастной таргетинг (assignment kind='age' — после появления дат рождения из CRM); Мир в ЛК (Этап 4).
+
+---
+
+### Сессия — Kimi: Личный кабинет — Этап 2: расписание + посещаемость + привязки к группам (2026-11-02, НЕ задеплоено)
+
+**Продолжение Этапа 1 (см. ниже).** Сделано локально, проверено вживую на `http://localhost:7100` (API на 127.0.0.1:8010).
+
+**Ключевая находка разведки API:** публичный API BigBen v1 НЕ отдаёт составы групп: `active_groups` у всех 1759 учеников пуст (`null`/`[]`), фильтры `student_id`/`group_id`/`student_ids[]` в `GET /lessons` молча игнорируются (возвращаются все занятия школы за окно), вложенных эндпоинтов (`/students/{id}/lessons` и т.п.) нет — 404. Вывод: персональное расписание возможно только через накопление привязок ученик↔группа из вебхуков + полную синхронизацию из внутреннего API пульта (токен `BIGBEN_INTERNAL_TOKEN` у бота есть, у world-backend в проде надо прокинуть; эндпоинт состава группы подсмотреть в XHR пульта).
+
+**Сделано:**
+- `world-backend/app/lk/bigben.py`: `lessons(date_from, date_to)` — GET /lessons, кэш 10 мин, максимум 20 окон, `invalidate_cache()`. Реальный формат занятия: `{id, date, starts_at/ends_at (ISO UTC), group{id,caption}, filial{id,caption}}` — педагогов/тем нет.
+- `world-backend/app/lk/service.py`: `schedule()` — валидация (401/409 `bad_dates`/`window_too_large` >62 дней/`profile_not_found`), фильтр занятий по группам ученика, join с `lk_attendance`. Группы ученика = union(`active_groups` профиля, `lk_group_members` со статусом active). `record_attendance`, `ingest_attendance` (relay от бота: HMAC `WORLD_BRIDGE_SECRET` по `{student_id}\n{lesson_id}\n{status}\n{ts}`, свежесть ±300 с), аналогично `record_membership`/`ingest_membership` для вебхука `group.enrolled`.
+- `world-backend/app/world/db.py`: таблицы `lk_attendance` (PK student_id+lesson_id, upsert) и `lk_group_members` (PK student_id+group_id, status active|left). ВАЖНО: слово «bigben» в этом файле запрещено isolation-тестом — в комментариях писать «CRM».
+- `world-backend/app/lk/api.py`: `GET /api/lk/schedule` (Bearer; student_id, date_from, date_to), `POST /api/lk/attendance` и `POST /api/lk/group-members` (внутренние relay).
+- Бот `app/platform/webhooks.py`: relay вебхуков в ЛК — `lesson.completed` → `_relay_attendance` (маппинг `visit_status==1 → visited`, иначе `missed`; грубо, коды статусов кроме 1 неизвестны — зафиксировано в ТЗ), `group.enrolled` → `_relay_membership` (group_id из payload или вложенного `group.id`). Fire-and-forget `asyncio.create_task`, сбой relay не роняет обработку вебхука; `LK_INTERNAL_URL` env (default `http://world-api:8010`, контейнеры в общей сети).
+- Фронт `lk/`: страница `/schedule` (неделя Пн–Вс, навигация назад/текущая/вперёд, переключатель профилей детей, карточки занятий с локальным временем из UTC, бейджи `✓ был`/`пропуск`/`нет отметки`, бейдж «сегодня»), CSS-классы в `globals.css` (мобильная адаптация ≤480px: бейдж и время в строку, группа/филиал ниже), `api.schedule` в `lib/api.ts`, на дашборде виджет «Расписание и посещаемость» → ссылка «Открыть расписание →», тег «Готово».
+- Тесты: `world-backend/tests/test_lk_schedule.py` 16 passed (фильтр по группам, сортировка, чужой student_id, bad_dates, window_too_large, join посещаемости, ingest happy/bad_signature/stale/relay_disabled, membership feeds/left/bad_status); бот `tests/test_lk_relay.py` 8 passed. Полный прогон world-backend: 441 passed + 1 pre-existing `test_castle_league_weeks` (падает и на чистом дереве, дата-зависимо). Бот: 35 passed по затронутым модулям. `tests/test_isolation.py` — зелёный.
+- Smoke вживую: API перезапущен (`lk/scripts/dev-api.sh`), вход по тестовому номеру → `/api/lk/schedule` отдаёт занятия, `window_too_large` и 401 работают; Playwright-скриншоты (`lk/scripts/e2e-schedule-shots.cjs`): десктоп + 390px, 0 ошибок консоли. Демо-данные: демо-ученику 299967 в локальную sqlite добавлена группа 184785 и 2 отметки «visited» — только для демонстрации UI.
+- Замечание: `lk/scripts/e2e-smoke.cjs` был сломан (тексты кнопок «Войти»/«Проверить подтверждение» не совпадали) — исправлен.
+
+**Блокер для прод-расписания:** исторические привязки ученик↔группа вебхуки не восстановят — нужна разовая полная синхронизация через `BIGBEN_INTERNAL_TOKEN` (взять из localStorage пульта lk.bigbencrm.ru) после деплоя. До неё расписание в ЛК заполнится только новыми зачислениями.
+
+**Следующий шаг:** Этап 3 (тренажёр слов: словари Spotlight/My Level/Get Involved/Super Minds, уровневые от Pre-A1, картинки+озвучка, выдача по группам/возрасту) или деплой Этапов 1–2 на `lms.dymova-english.ru`.
+
+---
+
+### Сессия — Kimi: Личный кабинет (ЛК) — Этап 1: регистрация по телефону + профили детей (2026-11-02, НЕ задеплоено)
+
+**Запрос владельца:** развернуть на сайте ЛК (дэшборд + обучающая платформа + Мир Фоксинбурга), 100% двусторонняя синхронизация с BigBen и «Твоей школой» (одна система с CRM), тренажёр слов, подтверждение телефона через ботов MAX/TG. Сначала — ТЗ + пул вопросов; затем «начинай!».
+
+**ТЗ:** `docs/LK_MASTER_PROMPT.md` — утверждено владельцем (28 решений в таблице), открытия по документации BigBen (публичный API v1: нет посещаемости/DЗ/педагогов → посещаемость через вебхук `lesson.completed` с `visit_status`, ДЗ — своя БД, педагоги — внутренний токен пульта). Ключи: BigBen v1 (`BIGBEN_API_KEY_V1`) и Meshy — в корневом `.env.local` (вне git), оба проверены вживую. Размещение: поддомен `lms.dymova-english.ru` (замена старого LMS; кнопки на сайте уже ведут туда).
+
+**Этап 1 сделано (локально, без деплоя):**
+- `world-backend/app/lk/` — модуль ЛК: таблицы `lk_accounts/lk_sessions/lk_profiles/lk_auth_attempts` (в `app/world/db.py` SCHEMA), сервис auth (pending → подтверждение через ботов → сессия 30 дней → профили детей из BigBen по номеру, телефон ребёнка = родителя, гостевой режим), клиент BigBen Public API v1 (`app/lk/bigben.py`, кэш 15 мин), мост `app/lk/bridge.py`. Роутер `/api/lk/*` смонтирован в `main.py`.
+- Бот: `/world-bridge/phone-status` (HMAC, отдаёт только факт подтверждения + платформы) в `app/world_bridge.py`; `MemoryStore.find_confirmed_phone` в `app/memory.py` (LIKE по DEF-коду + точная сверка нормализованных номеров — форматированные «8 (900) …» не матчатся длинным хвостом).
+- Фронт: новое приложение `lk/` — Next.js 16.3.5 + React 19 (те же версии, что у `world/`). Экраны `/auth` (телефон с маской + имя + согласия), `/auth/confirm` (кнопки MAX/TG, автопроверка раз в 7 с), `/dashboard` (переключатель профилей детей, гостевой баннер, виджеты-заглушки Этапов 2–4). Фирменная палитра, адаптив 360px+, `noindex` (ТЗ §9). Прокси `/api/lk/*` → `WORLD_API` (default 127.0.0.1:8010). Важно: в `next.config.ts` добавлен `allowedDevOrigins: ['127.0.0.1']` — без него Turbopack блокирует HMR по 127.0.0.1 и не гидрируется клиент (форма шла нативным GET).
+- Тесты: `world-backend/tests/test_lk_auth.py` 22 passed; бот `tests/test_world_bridge.py` +7 phone-status. Полный прогон world-backend: 425 passed, 1 pre-existing падение `test_castle_league_weeks::test_closing_pays_by_rank_and_only_once` — падает и на чистом дереве (проверено через git stash), дата-зависимо (сегодня понедельник), к правкам отношения не имеет. Бот: 143 passed по затронутым модулям (store/memory/bridge/identify/contact); полный прогон бота зависает на сетевых тестах — так было и раньше.
+- UI-e2e `lk/scripts/e2e-smoke.cjs` (playwright из `world/node_modules`): регистрация → confirm → дашборд, 0 ошибок консоли, скриншоты десктоп/мобайл чистые.
+
+**Осталось / следующий шаг:** Этап 2 (дашборд + расписание + посещаемость из BigBen, ДЗ, уведомления). Деплой Этапа 1 на `lms.` — только после решения владельца (нужны: прокидывание `BIGBEN_PUBLIC_API_KEY` в world-backend, пересборка бота с новым мостом, сборка и публикация `lk/` на поддомен вместо старого LMS).
+
+---
+
 ### Сессия — Claude: GSC — почему видео не индексируются + волна 29 (5 статей) + оптимизация 10 страниц (2026-10-01)
 
 **Запрос владельца:** «новые 15 статей! Проверь почему у меня в гугл консоле видео не индексируются! И 2!» (после фикса фидов и карточки филиала).
@@ -6722,3 +6801,24 @@ tgapp-экран «Мои занятия», страница /schedule на са
 **Финальная правка титула:** по уточнению владельца полностью убрано размытое продолжение фотографии сверху и снизу. Исходный кадр показывается целиком внутри аккуратной карточки с тонкой тёплой рамкой, скруглением и мягкой тенью; люди и маскот не обрезаны. PDF повторно собран и первый слайд проверен в полном размере.
 
 **Уточнение рамки титула:** по следующей обратной связи удалена полупрозрачная тёмная тень вокруг фотографии. Остались только светлая тонкая рамка и скругление; фон вокруг карточки теперь однородный. PDF повторно собран, первый слайд проверен по PNG-рендеру.
+
+
+## 2026-10-26 — навыки проекта
+
+- Установлены навыки: `.agents/skills/web-design-craft`, `.agents/skills/image-to-threejs` (+ симлинки в `.claude/skills/`). Вариант главной v8 (тёмный фон, другой 3D-лис) владелец отклонил — файлы удалены. Правило: дизайн, тексты, расположение блоков и маскот не менять, только добавлять анимации поверх.
+
+## 2026-10-26 — второй слой WOW на главной (foxi-motion)
+
+- Новые файлы: `prototype/wow/foxi-motion.js`, `prototype/wow/foxi-motion.css`; подключаются только на главной (`MOTION_SNIPPET` в `build_static_site.py`, после `WOW_SNIPPET`).
+- Вёрстка, тексты, цвета и маскот не меняются — только анимация существующих элементов: объёмные кнопки (глубина, нажатие, блик, рябь, вылет букв), заголовки h2 поднимаются по словам, плашки-«глазки» выпрыгивают, 3D-вход карточек, подсветка и наклон карточек под курсором, параллакс фото в рамках, раскрытие разделов из скруглённого окна, слоган шапки уплывает при прокрутке, видео-отзывы выпрямляются из наклона, счётчики цен и рейтинга (в конце возвращается исходный текст), полоса прогресса, курсор-кольцо.
+- Проверено инъекцией на живом dymova-english.ru в Chrome. prefers-reduced-motion — слой не запускается.
+- 26.10 (дополнение): с главной удалены блоки «Реальный момент · Dymova Now» и «WOW: фото-сфера» (бэкап: `backups/main_combined_v7.before-remove-sphere-2026-10-26.html`). Убрана белая рамка 8px по краям экрана на всех страницах: `html,body{margin:0;padding:0;overflow-x:clip}` в `FONT_FACE_STYLE`. Из foxi-motion убран эффект раскрытия разделов (давал белые полосы по краям).
+- 26.10 (осеннее украшение главной): картинки отрисованы в Meshy (`world-pipeline/autumn_site_art.py`, запуск — «Осенние украшения (Meshy).command»; сырые PNG в `world-pipeline/word-art/autumn-raw/`, вырезанные webp — `prototype/assets/autumn/`). Слой `wow/foxi-autumn.js/.css` (только главная, в `MOTION_SNIPPET`): падающие кленовые листья на canvas поверх страницы, тыквы в 6 блоках (клик — подпрыгивают и сыплют листья), паутина в углах, паучки на нитках (от наведения убегают). Сам включается 15.10–08.11; `?autumn=1/0` — принудительно. Слово «Хэллоуин» по просьбе владельца нигде не используется.
+- 26.10 ВАЖНО (деплой): сайт теперь на TimeWeb `root@37.252.23.189`. Caddy (контейнер `foxinburg-web`) отдаёт `/opt/foxinburg/Dymova-english/prototype/dist` как `/srv/site`. Выкладка: `rsync -az --exclude feed_fresh.xml prototype/dist_prod/ root@37.252.23.189:/opt/foxinburg/Dymova-english/prototype/dist/` (или двойной клик «Выложить сайт.command»). Старые записи про `yc-user@89.169.132.104` / `foxinburg-vm` устарели — тот сервер не отвечает по SSH.
+
+## 2026-11-03 — рассылки CRM: без лимита 20 ч, настоящие ошибки, вложения, новый интерфейс
+- broadcast_runner: убран frequency cap (решение владельца); причина ошибки берётся из send_message_ext (MAX/TG), при ошибке — запасной канал клиента; вложения через broadcast_media.MediaSender (MAX: /uploads один раз на рассылку, токен переиспользуется, ретраи attachment.not.ready; TG: sendPhoto/sendVideo/sendDocument, file_id переиспользуется).
+- admin_api: availability больше не блокирует чат (can_send всегда true); preview отдаёт полный список получателей; POST/GET /broadcasts/media; create принимает only/exclude/attachments (хранятся в segment_json).
+- crm_store.resolve_segment: групповые чаты (отрицательный chat_id) исключены; у получателя доп. поля для списка.
+- adminapp: новый раздел «Рассылки» — сообщение + вложения (drag&drop), фильтры (канал, статус, тег, активность, возраст, поиск, с телефоном), полный список получателей с крестиком/возвратом, предпросмотр, детали с KPI и человеческими причинами ошибок.
+- Выкладка: «Обновить рассылки в CRM.command» (бэкап + авто-откат). Очистка тестовых: «Удалить тестовых клиентов из CRM.command» (bot/scripts/purge_customers.py, dry-run → подтверждение → бэкап базы).

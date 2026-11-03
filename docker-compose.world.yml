@@ -31,6 +31,11 @@ services:
       # Мост к школьному боту: предзаполнение анкеты лидами из бота
       WORLD_BOT_BRIDGE_URL: ${WORLD_BOT_BRIDGE_URL:-http://bot:8000/world-bridge/profile}
       WORLD_BRIDGE_SECRET: ${WORLD_BRIDGE_SECRET:-}
+      # Личный кабинет (app/lk/): BigBen Public API v1 + импорт слов.
+      # LK_CONFIRM_BYPASS в проде НЕ задаём — подтверждение только через
+      # ботов (WORLD_BRIDGE_SECRET должен совпадать с секретом бота).
+      BIGBEN_PUBLIC_API_KEY: ${BIGBEN_PUBLIC_API_KEY:-}
+      LK_IMPORT_KEY: ${LK_IMPORT_KEY:-}
     volumes:
       - world_data:/app/data
     expose:

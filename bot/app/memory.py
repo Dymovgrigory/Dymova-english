@@ -270,6 +270,47 @@ class MemoryStore:
             self._data[key] = conv
             return conv
 
+    def find_confirmed_phone(self, phone: str) -> list[str]:
+        """Платформы, где lead с этим номером подтверждён нативным контактом.
+
+        Используется мостом /world-bridge/phone-status (подтверждение
+        регистрации в Личном кабинете через ботов MAX/Telegram).
+        """
+        import re
+
+        digits = re.sub(r"\D", "", phone or "")
+        if len(digits) == 11 and digits.startswith("7"):
+            tail = digits[1:]
+        else:
+            tail = digits[-10:] if len(digits) >= 10 else digits
+        if not tail:
+            return []
+        # Фрагмент для LIKE: 3 цифры после +7 (DEF-код). Полный хвост не
+        # подходит — номер в payload может быть отформатирован с пробелами
+        # и дефисами ("8 (900) 555-35-35"), и тогда длинная подстрока не
+        # матчится. Точную сверку делаем в Python после JSON-парсинга.
+        fragment = tail[:3]
+        providers: set[str] = set()
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT platform, payload FROM conversations WHERE payload LIKE ?",
+                (f"%{fragment}%",),
+            ).fetchall()
+        for platform, payload in rows:
+            try:
+                data = json.loads(payload)
+            except (TypeError, ValueError):
+                continue
+            lead = data.get("lead") or {}
+            ld = re.sub(r"\D", "", str(lead.get("phone") or ""))
+            if ld.startswith("8"):
+                ld = "7" + ld[1:]
+            if len(ld) == 10:
+                ld = "7" + ld
+            if ld == digits and lead.get("phone_confirmed"):
+                providers.add(str(platform))
+        return sorted(providers)
+
     def save(self, conv: Conversation) -> None:
         with self._lock:
             now = self._now()

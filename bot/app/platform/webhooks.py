@@ -18,6 +18,7 @@ import hashlib
 import hmac
 import json
 import logging
+import os
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
@@ -91,6 +92,96 @@ async def _process(event_id: int, event: str, payload: dict) -> None:
         await asyncio.to_thread(bb_store.mark_webhook_processed, event_id, error=repr(exc))
 
 
+_LK_INTERNAL_URL = os.environ.get("LK_INTERNAL_URL", "http://world-api:8010").strip()
+
+
+async def _relay_attendance(payload: dict) -> None:
+    """Переслать отметку посещаемости (lesson.completed) в ЛК.
+
+    Подпись HMAC(WORLD_BRIDGE_SECRET) по контракту world-backend
+    (app/lk/service.py ingest_attendance). Любая ошибка — только в лог:
+    ретраев нет, источник истины — следующие вебхуки и полная синхронизация.
+    """
+    import hashlib
+    import hmac
+    import time
+
+    import httpx
+
+    from app.config import settings
+
+    secret = settings.WORLD_BRIDGE_SECRET
+    student_id = payload.get("student_id")
+    lesson_id = payload.get("lesson_id") or payload.get("lesson")
+    visit_status = payload.get("visit_status")
+    if not secret or not student_id or not lesson_id:
+        return
+    status = "visited" if visit_status == 1 else "missed"
+    ts = int(time.time())
+    msg = f"{student_id}\n{lesson_id}\n{status}\n{ts}".encode()
+    sign = hmac.new(secret.encode(), msg, hashlib.sha256).hexdigest()
+    body = {
+        "student_id": int(student_id),
+        "lesson_id": int(lesson_id),
+        "status": status,
+        "ts": ts,
+        "sign": sign,
+        "raw": payload,
+    }
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            r = await client.post(f"{_LK_INTERNAL_URL}/api/lk/attendance", json=body)
+        if r.status_code != 200:
+            logger.warning("lk-relay: status=%s body=%s", r.status_code, r.text[:200])
+    except Exception as exc:  # noqa: BLE001 — relay не критичен
+        logger.warning("lk-relay: не удалось переслать в ЛК: %s", exc)
+
+
+async def _relay_membership(payload: dict) -> None:
+    """Переслать зачисление (group.enrolled) в ЛК: привязка ученик↔группа.
+
+    Подпись HMAC(WORLD_BRIDGE_SECRET) по контракту world-backend
+    (app/lk/service.py ingest_membership). Ошибки — только в лог.
+    """
+    import hashlib
+    import hmac
+    import time
+
+    import httpx
+
+    from app.config import settings
+
+    secret = settings.WORLD_BRIDGE_SECRET
+    student_id = payload.get("student_id")
+    group = payload.get("group") if isinstance(payload.get("group"), dict) else {}
+    group_id = payload.get("group_id") or group.get("id")
+    caption = payload.get("group_name") or group.get("caption") or ""
+    if not secret or not student_id or not group_id:
+        return
+    status = "active"
+    ts = int(time.time())
+    msg = f"{student_id}\n{group_id}\n{status}\n{ts}".encode()
+    sign = hmac.new(secret.encode(), msg, hashlib.sha256).hexdigest()
+    body = {
+        "student_id": int(student_id),
+        "group_id": int(group_id),
+        "group_caption": str(caption),
+        "status": status,
+        "ts": ts,
+        "sign": sign,
+        "raw": payload,
+    }
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            r = await client.post(f"{_LK_INTERNAL_URL}/api/lk/group-members",
+                                  json=body)
+        if r.status_code != 200:
+            logger.warning("lk-relay(members): status=%s body=%s",
+                           r.status_code, r.text[:200])
+    except Exception as exc:  # noqa: BLE001 — relay не критичен
+        logger.warning("lk-relay(members): не удалось переслать в ЛК: %s", exc)
+
+
 async def _handle(event: str, payload: dict) -> None:
     """Доменные реакции на события BigBen."""
     from app.max_client import get_max
@@ -113,6 +204,9 @@ async def _handle(event: str, payload: dict) -> None:
     if event == "group.enrolled":
         await _notify_admins(
             f"✅ Зачисление: {payload.get('student_id')} → {payload.get('group_name', '')}")
+        # Relay в ЛК (Этап 2): публичный API BigBen не отдаёт составы групп,
+        # кабинет копит привязки ученик↔группа из вебхуков.
+        asyncio.create_task(_relay_membership(payload))
         return
 
     if event == "payment.received":
@@ -128,6 +222,9 @@ async def _handle(event: str, payload: dict) -> None:
         # будущих автоматизаций; пока только логируем.
         logger.info("webhook: lesson.completed student=%s status=%s",
                     payload.get("student_id"), payload.get("visit_status"))
+        # Relay в ЛК (Этап 2): отметка посещаемости уходит в world-backend.
+        # Fire-and-forget: сбой relay не должен ронять обработку вебхука.
+        asyncio.create_task(_relay_attendance(payload))
         return
 
     logger.info("webhook: неизвестное событие %s", event)

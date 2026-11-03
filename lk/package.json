@@ -1,0 +1,23 @@
+{
+  "name": "foxinburg-lk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Личный кабинет Foxinburg — дашборд + обучающая платформа + Мир Фоксинбурга (ТЗ: docs/LK_MASTER_PROMPT.md)",
+  "scripts": {
+    "dev": "next dev -H ${HOST:-::} -p ${PORT:-7100} \"$@\"",
+    "build": "next build",
+    "start": "next start -H ${HOST:-::} -p ${PORT:-7100} \"$@\"",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.0"
+  }
+}

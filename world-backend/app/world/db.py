@@ -573,4 +573,133 @@ CREATE TABLE IF NOT EXISTS league_weeks (
     closed_at     TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (player_id, week_start)
 );
+
+-- ===== Личный кабинет (ЛК) — родительские аккаунты, Этап 1 =====
+CREATE TABLE IF NOT EXISTS lk_accounts (
+    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+    phone              TEXT NOT NULL UNIQUE,   -- нормализованный +7XXXXXXXXXX
+    parent_name        TEXT NOT NULL DEFAULT '',
+    status             TEXT NOT NULL DEFAULT 'pending',  -- pending|active
+    phone_confirmed_at TEXT,
+    confirm_attempts   INTEGER NOT NULL DEFAULT 0,
+    created_at         TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS lk_sessions (
+    token       TEXT PRIMARY KEY,
+    account_id  INTEGER NOT NULL REFERENCES lk_accounts(id),
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    expires_at  TEXT NOT NULL,
+    revoked_at  TEXT
+);
+
+CREATE TABLE IF NOT EXISTS lk_profiles (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id        INTEGER NOT NULL REFERENCES lk_accounts(id),
+    student_id        INTEGER,                 -- id ученика в CRM; NULL = гостевой
+    child_name        TEXT NOT NULL DEFAULT '',
+    source            TEXT NOT NULL DEFAULT 'crm',     -- crm|guest
+    active_groups_json TEXT NOT NULL DEFAULT '[]',
+    created_at        TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(account_id, student_id)
+);
+
+CREATE TABLE IF NOT EXISTS lk_auth_attempts (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    phone      TEXT NOT NULL,
+    kind       TEXT NOT NULL DEFAULT 'start',  -- start|confirm
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS lk_attendance (
+    student_id INTEGER NOT NULL,               -- id ученика в CRM
+    lesson_id  INTEGER NOT NULL,               -- id занятия в CRM
+    status     TEXT NOT NULL DEFAULT 'unknown', -- visited|missed|unknown
+    source     TEXT NOT NULL DEFAULT 'webhook',
+    raw_json   TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (student_id, lesson_id)
+);
+
+-- Привязки ученик↔группа: публичный API CRM не отдаёт составы групп
+-- (active_groups пуст), поэтому копим зачисления из вебхуков бота.
+-- Статус 'active' — зачислен, 'left' — отчислен (вебхука отчисления у CRM
+-- нет, отключение — через полную синхронизацию из пульта, см. DEVLOG).
+CREATE TABLE IF NOT EXISTS lk_group_members (
+    student_id   INTEGER NOT NULL,             -- id ученика в CRM
+    group_id     INTEGER NOT NULL,             -- id группы в CRM
+    group_caption TEXT NOT NULL DEFAULT '',
+    status       TEXT NOT NULL DEFAULT 'active', -- active|left
+    source       TEXT NOT NULL DEFAULT 'webhook',
+    raw_json     TEXT NOT NULL DEFAULT '{}',
+    created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (student_id, group_id)
+);
+
+-- ---------- Этап 3: тренажёр слов ----------
+
+-- Словари (наборы): уровневые (Pre-A1…) — публичные; по учебникам/темам —
+-- выдаются через lk_word_assignments конкретным группам/ученикам.
+CREATE TABLE IF NOT EXISTS lk_word_sets (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    code       TEXT NOT NULL UNIQUE,           -- 'level:pre-a1', 'book:my-level:1'
+    title      TEXT NOT NULL,
+    kind       TEXT NOT NULL DEFAULT 'level',  -- level|book|topic
+    book       TEXT NOT NULL DEFAULT '',       -- my-level|get-involved|super-minds|spotlight|''
+    cefr       TEXT NOT NULL DEFAULT '',       -- pre-a1|a1|a2|b1|b2|''
+    topic      TEXT NOT NULL DEFAULT '',
+    age_from   INTEGER,                        -- возрастной таргетинг (когда будет
+    age_to     INTEGER,                        --  дата рождения из CRM)
+    position   INTEGER NOT NULL DEFAULT 0,     -- порядок выдачи (словарь «по порядку»)
+    is_public  INTEGER NOT NULL DEFAULT 0,
+    active     INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- Слова набора. image_url/audio_url опциональны: audio_url пустой → озвучка
+-- генерируется TTS на лету (/api/lk/words/tts). image_url пустой → в тренировке
+-- вместо картинки карточка-подсказка с переводом.
+CREATE TABLE IF NOT EXISTS lk_words (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    set_id        INTEGER NOT NULL REFERENCES lk_word_sets(id),
+    text_en       TEXT NOT NULL,
+    text_ru       TEXT NOT NULL,
+    transcription TEXT NOT NULL DEFAULT '',
+    image_url     TEXT NOT NULL DEFAULT '',
+    audio_url     TEXT NOT NULL DEFAULT '',
+    example_en    TEXT NOT NULL DEFAULT '',
+    example_ru    TEXT NOT NULL DEFAULT '',
+    position      INTEGER NOT NULL DEFAULT 0,  -- словарь работает по порядку
+    active        INTEGER NOT NULL DEFAULT 1
+);
+CREATE INDEX IF NOT EXISTS idx_lk_words_set ON lk_words(set_id, position);
+
+-- Назначения набора: кому он доступен помимо публичности.
+CREATE TABLE IF NOT EXISTS lk_word_assignments (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    set_id     INTEGER NOT NULL REFERENCES lk_word_sets(id),
+    kind       TEXT NOT NULL,                  -- group|student|age|all
+    group_id   INTEGER,
+    student_id INTEGER,
+    age_from   INTEGER,
+    age_to     INTEGER,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (set_id, kind, group_id, student_id, age_from, age_to)
+);
+
+-- Прогресс ученика по словам (SRS сила 0–5, интервалы как в Мире).
+-- learner_key: 'crm:<student_id>' | 'guest:<account_id>'.
+CREATE TABLE IF NOT EXISTS lk_word_progress (
+    learner_key  TEXT NOT NULL,                -- crm:299967 | guest:7
+    word_id      INTEGER NOT NULL REFERENCES lk_words(id),
+    strength     INTEGER NOT NULL DEFAULT 0,   -- 0..5
+    due_at       TEXT NOT NULL DEFAULT '',     -- дата следующего повторения
+    seen_count   INTEGER NOT NULL DEFAULT 0,
+    correct_count INTEGER NOT NULL DEFAULT 0,
+    last_seen_at TEXT NOT NULL DEFAULT '',
+    PRIMARY KEY (learner_key, word_id)
+);
 """

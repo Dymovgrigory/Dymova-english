@@ -88,3 +88,40 @@ def world_bridge_profile(
         data = {}
 
     return JSONResponse({"found": bool(data), "lead": data or None})
+
+
+@router.get("/world-bridge/phone-status")
+def world_bridge_phone_status(
+    phone: str = "",
+    ts: str = "",
+    sign: str = "",
+) -> JSONResponse:
+    """Подтверждение регистрации ЛК: номер удостоверен ботом MAX/Telegram.
+
+    Контракт (с world-backend, app/lk/bridge.py):
+        GET /world-bridge/phone-status?phone=+7...&ts=<unix>&sign=<hex>
+        sign = HMAC_SHA256(key=WORLD_BRIDGE_SECRET,
+                           msg=f"phone-status\\n{phone}\\n{ts}").hexdigest()
+        200 {"confirmed": bool, "providers": ["max"|"telegram", ...]}
+
+    Отдаёт только факт подтверждения и платформы — никаких персональных
+    данных. Без WORLD_BRIDGE_SECRET — 404 (фича выключена).
+    """
+    secret = settings.WORLD_BRIDGE_SECRET
+    if not secret:
+        return JSONResponse({"detail": "Not Found"}, status_code=404)
+
+    try:
+        ts_int = int(ts)
+    except (TypeError, ValueError):
+        return JSONResponse({"detail": "stale"}, status_code=401)
+    if abs(time.time() - ts_int) > _MAX_SKEW_SEC:
+        return JSONResponse({"detail": "stale"}, status_code=401)
+
+    msg = f"phone-status\n{phone}\n{ts_int}".encode()
+    expected = hmac.new(secret.encode(), msg, hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected, sign):
+        return JSONResponse({"detail": "bad_signature"}, status_code=401)
+
+    providers = get_store().find_confirmed_phone(phone)
+    return JSONResponse({"confirmed": bool(providers), "providers": providers})

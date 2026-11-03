@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Montserrat, Nunito, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { AppGate } from "@/features/gate/AppGate";
+import { SsoTokenCapture } from "@/features/gate/SsoTokenCapture";
+import { Suspense } from "react";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -45,6 +47,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-full flex-col font-sans">
         {/* Официальный bridge Telegram Mini Apps (ready / expand / requestContact). */}
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+        <Suspense fallback={null}>
+          <SsoTokenCapture />
+        </Suspense>
         <AppGate>{children}</AppGate>
       </body>
     </html>

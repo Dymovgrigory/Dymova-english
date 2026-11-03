@@ -14,6 +14,7 @@ from app.identity import gate as identity_gate
 from app.identity import messenger as messenger_api
 from app.learning import api as learning_api
 from app.learning import content as learning_content
+from app.lk import api as lk_api
 from app.world import api as world_api
 from app.world import core
 
@@ -46,6 +47,7 @@ app.include_router(identity_api.router)
 app.include_router(identity_api.auth_router)
 app.include_router(messenger_api.router)
 app.include_router(admin_api.router)
+app.include_router(lk_api.router)
 
 
 @app.on_event("startup")
@@ -53,6 +55,9 @@ def _seed() -> None:
     core.seed_quests()
     admin_auth.bootstrap()
     learning_content.get_course()  # битый контент Spotlight не даёт стартовать
+    from app.lk import words as lk_words
+
+    lk_words.seed_word_sets()  # уровневые наборы и стартовые слова (идемпотентно)
 
 
 @app.get("/health")

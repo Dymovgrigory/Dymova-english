@@ -242,3 +242,80 @@ def test_set_menu_button_payload(monkeypatch):
         "text": "📱 Кабинет",
         "web_app": {"url": "https://bot.example/tg/"},
     }
+
+
+# --- /world-bridge/phone-status (подтверждение регистрации ЛК) ---------------
+
+PHONE_LK = "+79001234567"
+
+
+def _sign_phone(phone: str, ts: int) -> str:
+    """Подпись по контракту с world-backend (app/lk/bridge.py)."""
+    msg = f"phone-status\n{phone}\n{ts}".encode()
+    return hmac.new(SECRET.encode(), msg, hashlib.sha256).hexdigest()
+
+
+def _get_phone(client, phone=PHONE_LK, ts=None, sign=None):
+    ts = int(time.time()) if ts is None else ts
+    sign = _sign_phone(phone, ts) if sign is None else sign
+    return client.get(
+        "/world-bridge/phone-status",
+        params={"phone": phone, "ts": ts, "sign": sign},
+    )
+
+
+def test_phone_status_off_without_secret(client, monkeypatch):
+    monkeypatch.setattr(settings, "WORLD_BRIDGE_SECRET", "")
+    assert _get_phone(client).status_code == 404
+
+
+def test_phone_status_bad_signature(client):
+    resp = _get_phone(client, sign="0" * 64)
+    assert resp.status_code == 401
+    assert resp.json()["detail"] == "bad_signature"
+
+
+def test_phone_status_stale_ts(client):
+    assert _get_phone(client, ts=0).status_code == 401
+
+
+def test_phone_status_unknown_phone(client):
+    # Номер, которого точно нет в тестовом хранилище (DEF-код 843).
+    assert _get_phone(client, phone="+78439990011").json() == {"confirmed": False, "providers": []}
+
+
+def test_phone_status_confirmed_telegram(client):
+    phone = "+79009998877"
+    store = get_store()
+    conv = store.reset("lk-tg-1", platform="telegram")
+    conv.lead.set_phone(phone, confirmed=True)
+    store.save(conv)
+
+    resp = _get_phone(client, phone=phone)
+    assert resp.status_code == 200
+    assert resp.json() == {"confirmed": True, "providers": ["telegram"]}
+
+
+def test_phone_status_confirmed_max_and_telegram(client):
+    store = get_store()
+    phone = "+79005553535"
+    for uid, platform in (("lk-max-1", "max"), ("lk-tg-2", "telegram")):
+        conv = store.reset(uid, platform=platform)
+        conv.lead.set_phone("8 (900) 555-35-35", confirmed=True)
+        store.save(conv)
+
+    resp = _get_phone(client, phone=phone)
+    assert resp.status_code == 200
+    assert resp.json() == {"confirmed": True, "providers": ["max", "telegram"]}
+
+
+def test_phone_status_text_input_not_confirmed(client):
+    """Номер, введённый текстом (без нативного контакта), подтверждением не считается."""
+    phone = "+79001112223"
+    store = get_store()
+    conv = store.reset("lk-text-1", platform="telegram")
+    conv.lead.set_phone(phone)  # confirmed=False
+    store.save(conv)
+
+    resp = _get_phone(client, phone=phone)
+    assert resp.json() == {"confirmed": False, "providers": []}

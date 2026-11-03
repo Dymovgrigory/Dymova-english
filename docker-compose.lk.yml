@@ -1,0 +1,40 @@
+# Личный кабинет Фоксинбург — фронт (Next.js, порт 7100).
+# Бэкенд ЛК — тот же world-api:8010 (см. docker-compose.world.yml), в сети
+# bot_default; прокси /api/lk/* настраивается реврайтами next.config.ts
+# (build-arg WORLD_API).
+#
+# На VM (корень репозитория):
+#   docker compose -f docker-compose.lk.yml --env-file world/.env.production up -d --build
+#
+# Caddy (bot/deploy/Caddyfile) отдаёт домен lms.dymova-english.ru на lk-web:7100.
+name: lk
+
+services:
+  lk-web:
+    build:
+      context: ./lk
+      args:
+        WORLD_API: ${LK_WORLD_API:-http://world-api:8010}
+        NEXT_PUBLIC_WORLD_URL: ${NEXT_PUBLIC_WORLD_URL:-https://world.dymova-english.ru}
+    container_name: lk-web
+    restart: unless-stopped
+    expose:
+      - "7100"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:7100/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - bot_default
+
+networks:
+  bot_default:
+    external: true
+    name: bot_default
