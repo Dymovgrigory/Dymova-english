@@ -34,7 +34,8 @@ export function SpeakChallenge({ challenge, locked, onSkip, onHeard }: SpeakProp
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="font-fairy text-[25px] font-black leading-8 text-ink sm:text-[28px]">{challenge.instruction_ru}</h1>
+      <h1 className="font-fairy text-[25px] font-black leading-8 text-ink sm:text-[28px]">{challenge.instruction_en ?? challenge.instruction_ru}</h1>
+      {challenge.instruction_en && challenge.instruction_ru ? <p className="text-[15px] font-semibold text-ink-soft">{challenge.instruction_ru}</p> : null}
       <div className="flex items-center gap-4 mat-enamel rounded-3xl px-5 py-4">
         <Sound text={challenge.audio ?? challenge.text ?? ""} />
         <p className="font-fairy text-[30px] font-black leading-9 text-[#4a2a66]">{challenge.text}</p>

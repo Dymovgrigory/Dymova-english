@@ -186,11 +186,9 @@ export function ProfileScreen() {
                 </p>
               </div>
             </div>
-            <div className="mb-8 grid grid-cols-3 gap-3">
+            <div className="mb-8 grid grid-cols-1 gap-3">
               {[
-                { icon: "flame" as const, value: ready.home.streak_days, label: "дней подряд", tone: "text-[#ff8a3d]" },
-                { icon: "bolt" as const, value: ready.home.player.xp, label: "опыта всего", tone: "text-[#c9a400]" },
-                { icon: "coin" as const, value: ready.home.player.coins, label: "монет", tone: "text-[#d69e00]" },
+                { icon: "coin" as const, value: ready.home.player.coins, label: "монет Фоксинбурга (общие с личным кабинетом)", tone: "text-[#d69e00]" },
               ].map((stat) => (
                 <div key={stat.label} className="mat-enamel flex flex-col items-center gap-1 rounded-2xl py-4">
                   <Icon name={stat.icon} size={26} filled={stat.icon !== "coin"} className={stat.tone} />
@@ -234,7 +232,7 @@ export function ProfileScreen() {
             <section className="mat-parchment rounded-3xl p-5">
               <h2 className="text-[18px] font-extrabold text-ink">Мой класс</h2>
               <p className="mt-1 text-[16px] font-semibold text-ink-soft">
-                Сейчас в школе: {schoolModule ? `${schoolModule.title_en} (${schoolModule.title_ru})` : "—"}. Цель дня: {ready.home.daily_goal_xp} опыта.
+                Сейчас в школе: {schoolModule ? `${schoolModule.title_en} (${schoolModule.title_ru})` : "—"}.
               </p>
               <Button variant="paper" size="md" className="mt-4" onClick={() => router.push("/onboarding")}>
                 Сменить класс или модуль

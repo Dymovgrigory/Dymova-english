@@ -79,6 +79,8 @@ export type Challenge = {
   atom_id: string;
   graded: boolean;
   instruction_ru?: string;
+  /** Инструкция по-английски, как в заданиях Cambridge YLE */
+  instruction_en?: string;
   en?: string;
   ru?: string;
   text?: string;

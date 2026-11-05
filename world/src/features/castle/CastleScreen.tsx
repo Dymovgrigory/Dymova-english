@@ -226,7 +226,7 @@ function RoomPanel({
               <Foxy pose="wave" size={84} />
               <p className="text-[20px] font-extrabold text-ink">Здесь начинается путь по твоему учебнику.</p>
               <p className="text-[15px] font-semibold text-ink-soft">
-                Сейчас: {studyLabel} · цель дня {home.today_xp}/{home.daily_goal_xp} XP
+                Сейчас: {studyLabel}
               </p>
               <Button block onClick={() => onGo("/learn")}>
                 К пути обучения
@@ -322,66 +322,25 @@ function RoomPanel({
 
           {room === "glory" && (
             <div className="space-y-3">
-              <p className="font-fairy text-[22px] font-black text-[#4a2a66]">{TIER_RU[league?.tier || "bronze"] || "Лига"}</p>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="mat-enamel rounded-2xl px-3 py-3 text-center">
-                  <p className="text-[12px] font-bold text-ink-soft">Место</p>
-                  <p className="text-[22px] font-extrabold text-ink">
-                    {league?.rank ?? "—"} / {league?.size ?? "—"}
-                  </p>
-                </div>
-                <div className="mat-enamel rounded-2xl px-3 py-3 text-center">
-                  <p className="text-[12px] font-bold text-ink-soft">XP недели</p>
-                  <p className="text-[22px] font-extrabold text-ink">{league?.weekly_xp ?? 0}</p>
-                </div>
-              </div>
-              {league?.top?.length ? (
+              <p className="font-fairy text-[22px] font-black text-[#4a2a66]">Звания по учебнику</p>
+              <p className="text-[15px] font-semibold text-ink-soft">Звания растут от пройденных уроков и выученных слов твоего учебника.</p>
+              {castle?.titles?.length ? (
                 <ul className="space-y-1.5">
-                  {league.top.slice(0, 5).map((row) => (
-                    <li
-                      key={`${row.rank}-${row.display_name}`}
-                      className={`flex justify-between rounded-xl px-3 py-2 text-[14px] font-bold ${
-                        row.is_me ? "bg-[#ffd36e]/35 text-ink" : "bg-black/5 text-ink-soft"
-                      }`}
-                    >
+                  {castle.titles.map((t) => (
+                    <li key={t.track} className="mat-enamel flex items-center justify-between gap-2 rounded-2xl px-3 py-2 text-[14px] font-bold text-ink">
                       <span>
-                        {row.rank}. {row.display_name}
-                        {row.is_me && castle?.titles.find((t) => t.worn)?.title_ru ? (
-                          <span className="block text-[11px] font-bold text-ink-soft">
-                            {castle.titles.find((t) => t.worn)?.title_ru}
-                          </span>
-                        ) : null}
+                        {t.track_title_ru}
+                        <span className="block text-[12px] font-bold text-ink-soft">{t.title_ru ?? "Пока без звания"}{t.worn ? " · надето" : ""}</span>
                       </span>
-                      <span>{row.weekly_xp} XP</span>
+                      <span className="text-ink-soft">
+                        {t.value}{t.next_threshold ? ` / ${t.next_threshold}` : ""} {t.unit_ru}
+                      </span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-[15px] font-semibold text-ink-soft">Пройди урок — появишься в лиге.</p>
+                <p className="text-[15px] font-semibold text-ink-soft">Пройди первый урок — появится первое звание.</p>
               )}
-              <div className="space-y-1.5">
-                <h3 className="text-[15px] font-extrabold text-ink">Трофеи</h3>
-                {league?.history?.length ? (
-                  <ul className="space-y-1.5">
-                    {league.history.map((row) => (
-                      <li
-                        key={row.week_start}
-                        className="mat-enamel flex items-center justify-between gap-2 rounded-2xl px-3 py-2 text-[14px] font-bold text-ink"
-                      >
-                        <span>
-                          {medalForRank(row.rank) ? `${medalForRank(row.rank)} ` : ""}
-                          {row.rank} место · {formatWeekRange(row.week_start)}
-                        </span>
-                        <span className="text-ink-soft">
-                          {row.weekly_xp} XP · <span className="text-[#d69e00]">+{row.coins_awarded} монет</span>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-[14px] font-semibold text-ink-soft">Закрой неделю в лиге, и трофей появится здесь.</p>
-                )}
-              </div>
             </div>
           )}
 
@@ -432,7 +391,7 @@ function RoomPanel({
                     {player?.display_name || home.player.display_name}
                   </p>
                   <p className="text-[15px] font-semibold text-ink-soft">
-                    Уровень {player?.level ?? home.player.level} · серия {home.streak_days} дн.
+                    {studyLabel}
                   </p>
                 </div>
               </div>
@@ -673,13 +632,11 @@ export function CastleScreen() {
               Замок Фоксинбург
             </h1>
             <p className="mt-1 text-[14px] font-bold text-[#f6efe2] drop-shadow-[0_1px_6px_rgb(0_0_0/0.8)] lg:text-[16px]">
-              Загляни в здания: рейтинг, стикеры, лавка, словарь и задания дня.
+              Загляни в здания: звания, стикеры, лавка, словарь учебника и задания дня.
             </p>
           </div>
           {data ? (
             <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
-              <StatPill icon="flame" value={data.home.streak_days} label="Серия" />
-              <StatPill icon="bolt" value={data.home.player.xp} label="Опыт" />
               <StatPill icon="coin" value={data.home.player.coins} label="Монеты" />
             </div>
           ) : null}

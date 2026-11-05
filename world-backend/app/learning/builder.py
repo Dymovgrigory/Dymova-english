@@ -16,8 +16,10 @@ from .content import Atom, Course, GrammarItem, Module, Node, Phrase, Word
 from .errors import Conflict, NotFound
 
 WORD_TYPES = {
-    "starter": ("listen_pick_image", "image_pick_word", "read_word_pick_image", "translate_pick", "spell_tiles", "speak"),
-    "junior": ("listen_pick_image", "image_pick_word", "translate_pick", "spell_tiles", "type_word", "speak"),
+    # Методика Cambridge YLE: слово — через картинку и звук, без пар «слово — перевод»
+    # (translate_pick для слов убран; остаётся только для фраз).
+    "starter": ("listen_pick_image", "image_pick_word", "read_word_pick_image", "spell_tiles", "speak"),
+    "junior": ("listen_pick_image", "image_pick_word", "read_word_pick_image", "spell_tiles", "type_word", "speak"),
 }
 PHRASE_TYPES = {
     "starter": ("translate_pick", "build_phrase", "read_phrase_pick_image", "speak"),
@@ -129,7 +131,7 @@ def _words_session(ctx: _Context, node: Node) -> list[Challenge]:
             (first if attempt == 0 else later).append(challenge)
     ctx.rng.shuffle(later)
     items = first + later
-    pairs = ch.match_pairs(words, ctx.rng, "audio_image" if ctx.band == "starter" else "en_ru")
+    pairs = ch.match_pairs(words, ctx.rng, "audio_image")  # пары «звук — картинка», не «слово — перевод»
     if pairs is not None:
         items.append(pairs)
     # Фразы модуля в хвосте урока: ребёнок сразу собирает из новых слов живую речь.

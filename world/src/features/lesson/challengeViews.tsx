@@ -37,8 +37,15 @@ export function useAutoplay(challenge: Challenge) {
   }, [challenge]);
 }
 
-export function Instruction({ children }: { children: string }) {
-  return <h1 className="font-fairy text-[25px] font-black leading-8 text-ink sm:text-[28px]">{children}</h1>;
+/** Инструкция как в Cambridge YLE: по-английски крупно, русская подсказка мелко под ней. */
+export function Instruction({ children, en }: { children: string; en?: string }) {
+  if (!en) return <h1 className="font-fairy text-[25px] font-black leading-8 text-ink sm:text-[28px]">{children}</h1>;
+  return (
+    <div>
+      <h1 className="font-fairy text-[25px] font-black leading-8 text-ink sm:text-[28px]">{en}</h1>
+      {children ? <p className="mt-1 text-[15px] font-semibold text-ink-soft">{children}</p> : null}
+    </div>
+  );
 }
 
 export function selectedIndex(draft: Answer | null): number | null {
@@ -249,7 +256,7 @@ export function ChoiceChallenge(props: ViewProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <Instruction>{challenge.instruction_ru ?? ""}</Instruction>
+      <Instruction en={challenge.instruction_en}>{challenge.instruction_ru ?? ""}</Instruction>
       {prompt}
       {challenge.type === "sound_letter" ? (
         <AudioOptions {...props} />
@@ -278,7 +285,7 @@ export function TilesChallenge({ challenge, locked, onDraft }: ViewProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <Instruction>{challenge.instruction_ru ?? ""}</Instruction>
+      <Instruction en={challenge.instruction_en}>{challenge.instruction_ru ?? ""}</Instruction>
       <div className="flex items-center gap-4">
         {challenge.image && <ContentImage path={challenge.image} alt={challenge.ru ?? ""} className="size-36 overflow-hidden rounded-2xl sm:size-44 shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback={challenge.ru ?? "?"} />}
         {challenge.audio && <Sound text={challenge.audio} size={challenge.type === "listen_build" ? "lg" : "sm"} />}
@@ -383,7 +390,7 @@ export function PairsChallenge({ challenge, locked, onCheckPair, onSubmit }: Vie
 
   return (
     <div className="flex flex-col gap-5">
-      <Instruction>{challenge.instruction_ru ?? ""}</Instruction>
+      <Instruction en={challenge.instruction_en}>{challenge.instruction_ru ?? ""}</Instruction>
       <p className="-mt-3 text-[16px] font-semibold text-ink-soft">
         {pictures ? "Нажми на звук, потом на подходящую картинку." : "Нажми на слово, потом на его перевод."}
       </p>
@@ -431,7 +438,7 @@ export function TypeChallenge({ challenge, draft, locked, onDraft }: ViewProps) 
   const value = draft && "text" in draft ? draft.text : "";
   return (
     <div className="flex flex-col gap-6">
-      <Instruction>{challenge.instruction_ru ?? ""}</Instruction>
+      <Instruction en={challenge.instruction_en}>{challenge.instruction_ru ?? ""}</Instruction>
       <div className="flex items-center gap-4">
         {challenge.image && <ContentImage path={challenge.image} alt={challenge.ru ?? ""} className="size-36 overflow-hidden rounded-2xl sm:size-44 shadow-[0_0_0_4px_#c9a86a,0_8px_0_#a8844a,0_18px_28px_-10px_rgb(40_20_5/0.6)]" fallback={challenge.ru ?? "?"} />}
         {challenge.audio && <Sound text={challenge.audio} />}

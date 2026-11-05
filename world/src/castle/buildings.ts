@@ -58,7 +58,7 @@ const INFO: SpotInfo[] = [
   { id: "tower-sp4", kind: "tower", title: "Башня 4 класса", short: "4 кл.", hint: "Spotlight 4 · Башня путешественников", art: "/content/castle/tower-sp4.webp", room: "/content/castle/room-tower-sp4.webp", bookId: "sp4" },
   { id: "school", kind: "building", title: "Школа Foxy", short: "Школа", hint: "К пути обучения", art: "/content/castle/school.webp", room: "/content/castle/room-school.webp" },
   { id: "shop", kind: "building", title: "Лавка Фокси", short: "Лавка", hint: "Монеты за уроки → сердца и стикеры", art: "/content/castle/shop.webp", room: "/content/castle/room-shop.webp" },
-  { id: "glory", kind: "building", title: "Башня Славы", short: "Слава", hint: "Лига и рейтинг недели", art: "/content/castle/glory.webp", room: "/content/castle/room-glory.webp" },
+  { id: "glory", kind: "building", title: "Башня Славы", short: "Слава", hint: "Звания по учебнику", art: "/content/castle/glory.webp", room: "/content/castle/room-glory.webp" },
   { id: "lexicon", kind: "building", title: "Сокровищница слов", short: "Слова", hint: "Слова из твоих уроков", art: "/content/castle/lexicon.webp", room: "/content/castle/room-lexicon.webp" },
   { id: "stickers", kind: "building", title: "Башня стикеров", short: "Стикеры", hint: "Альбом наклеек", art: "/content/castle/stickers.webp", room: "/content/castle/room-stickers.webp" },
   { id: "nest", kind: "building", title: "Гнездо Foxy", short: "Гнездо", hint: "Уровень, серия, монеты", art: "/content/castle/nest.webp", room: "/content/castle/room-nest.webp" },

@@ -96,7 +96,7 @@ def listen_pick_image(word: Word, pool: list[Word], rng: random.Random) -> Chall
     if picked is None:
         return None
     images, index = picked
-    prompt = {"instruction_ru": "Послушай и выбери картинку", "audio": word.en,
+    prompt = {"instruction_ru": "Послушай и выбери картинку", "instruction_en": "Listen and choose the right picture.", "audio": word.en,
               "options": [{"image": image} for image in images]}
     return Challenge("listen_pick_image", word.id, prompt, _choice_solution(index, word.en))
 
@@ -108,7 +108,7 @@ def image_pick_word(word: Word, pool: list[Word], rng: random.Random) -> Challen
     if picked is None:
         return None
     labels, index = picked
-    prompt = {"instruction_ru": "Как это по-английски?", "image": word.image, "options": labels}
+    prompt = {"instruction_ru": "Как это по-английски?", "instruction_en": "Look and choose the word.", "image": word.image, "options": labels}
     return Challenge("image_pick_word", word.id, prompt, _choice_solution(index, word.en))
 
 
@@ -122,7 +122,7 @@ def translate_pick(atom: Word | Phrase, pool_en: list[str], pool_ru: list[str], 
     if picked is None:
         return None
     labels, index = picked
-    prompt = {"instruction_ru": "Выбери перевод", "text": text, "direction": direction,
+    prompt = {"instruction_ru": "Выбери перевод", "instruction_en": "Read and choose.", "text": text, "direction": direction,
               "audio": atom.en if direction == "en_ru" else None, "options": labels}
     return Challenge("translate_pick", atom.id, prompt, _choice_solution(index, correct))
 
@@ -147,7 +147,7 @@ def match_pairs(words: list[Word], rng: random.Random, mode: str) -> Challenge |
             right.append({"id": right_id, "label": word.ru})
     rng.shuffle(left)
     rng.shuffle(right)
-    prompt = {"instruction_ru": "Найди пары", "mode": mode, "left": left, "right": right}
+    prompt = {"instruction_ru": "Найди пары", "instruction_en": "Listen and match the pictures.", "mode": mode, "left": left, "right": right}
     solution = {"kind": "pairs", "pairs": pairs, "display": ", ".join(f"{w.en} — {w.ru}" for w in chosen)}
     return Challenge("match_pairs", "", prompt, solution)
 
@@ -160,20 +160,20 @@ def spell_tiles(word: Word, rng: random.Random) -> Challenge | None:
     rng.shuffle(extra)
     tiles = letters + extra[:EXTRA_TILES]
     rng.shuffle(tiles)
-    prompt = {"instruction_ru": "Собери слово из букв", "image": word.image, "audio": word.en,
+    prompt = {"instruction_ru": "Собери слово из букв", "instruction_en": "Look and spell the word.", "image": word.image, "audio": word.en,
               "ru": word.ru, "tiles": tiles}
     return Challenge("spell_tiles", word.id, prompt,
                      {"kind": "tiles", "joiner": "", "accepted": [word.en], "display": word.en})
 
 
 def type_word(word: Word) -> Challenge:
-    prompt = {"instruction_ru": "Напиши по-английски", "image": word.image, "audio": word.en, "ru": word.ru}
+    prompt = {"instruction_ru": "Напиши по-английски", "instruction_en": "Look and write the word.", "image": word.image, "audio": word.en, "ru": word.ru}
     return Challenge("type_word", word.id, prompt,
                      {"kind": "text", "accepted": [word.en, *word.accept_en], "display": word.en})
 
 
 def speak(atom: Word | Phrase) -> Challenge:
-    prompt = {"instruction_ru": "Скажи вслух", "text": atom.en, "audio": atom.en}
+    prompt = {"instruction_ru": "Скажи вслух", "instruction_en": "Listen and say.", "text": atom.en, "audio": atom.en}
     return Challenge("speak", atom.id, prompt, {"kind": "speech", "target": atom.en, "display": atom.en})
 
 
@@ -187,9 +187,9 @@ def _phrase_builder(kind: str, phrase: Phrase, distractor_words: list[str], rng:
     tiles = words + extra[:EXTRA_TILES]
     rng.shuffle(tiles)
     if kind == "build_phrase":
-        prompt = {"instruction_ru": "Собери фразу", "ru": phrase.ru, "tiles": tiles}
+        prompt = {"instruction_ru": "Собери фразу", "instruction_en": "Make the sentence.", "ru": phrase.ru, "tiles": tiles}
     else:
-        prompt = {"instruction_ru": "Послушай и собери фразу", "audio": phrase.en, "tiles": tiles}
+        prompt = {"instruction_ru": "Послушай и собери фразу", "instruction_en": "Listen and make the sentence.", "audio": phrase.en, "tiles": tiles}
     solution = {"kind": "tiles", "joiner": " ", "accepted": [phrase.en, *phrase.accept_en], "display": phrase.en}
     return Challenge(kind, phrase.id, prompt, solution)
 
@@ -206,7 +206,7 @@ def grammar_pick(item: GrammarItem, rng: random.Random) -> Challenge:
     order = list(range(len(item.options)))
     rng.shuffle(order)
     options = [item.options[i] for i in order]
-    prompt = {"instruction_ru": "Выбери правильный вариант", "sentence": item.prompt_en, "ru": item.ru,
+    prompt = {"instruction_ru": "Выбери правильный вариант", "instruction_en": "Read and choose the right answer.", "sentence": item.prompt_en, "ru": item.ru,
               "options": options}
     display = item.prompt_en.replace("___", item.options[item.answer])
     return Challenge("grammar_pick", item.id, prompt, _choice_solution(order.index(item.answer), display))
@@ -221,7 +221,7 @@ def letter_sound(grapheme: Grapheme, graphemes: list[Grapheme], rng: random.Rand
     if picked is None:
         return None
     labels, index = picked
-    prompt = {"instruction_ru": "Послушай слово. Какую букву ты слышишь?", "audio": grapheme.sound_word,
+    prompt = {"instruction_ru": "Послушай слово. Какую букву ты слышишь?", "instruction_en": "Listen. Which letter do you hear?", "audio": grapheme.sound_word,
               "options": labels}
     return Challenge("letter_sound", grapheme.id, prompt, _choice_solution(index, grapheme.grapheme))
 
@@ -232,7 +232,7 @@ def sound_letter(grapheme: Grapheme, graphemes: list[Grapheme], rng: random.Rand
     if picked is None:
         return None
     words, index = picked
-    prompt = {"instruction_ru": "В каком слове есть этот звук?", "grapheme": grapheme.grapheme,
+    prompt = {"instruction_ru": "В каком слове есть этот звук?", "instruction_en": "Which word has this sound?", "grapheme": grapheme.grapheme,
               "options": [{"audio": w} for w in words]}
     return Challenge("sound_letter", grapheme.id, prompt, _choice_solution(index, grapheme.sound_word))
 
@@ -251,7 +251,7 @@ def blend_sounds(word: Word, pool: list[Word], rng: random.Random, known: set[st
         if picked is None:
             return None
         options, index = picked
-    prompt = {"instruction_ru": "Прочитай по звукам и найди слово", "segments": segments,
+    prompt = {"instruction_ru": "Прочитай по звукам и найди слово", "instruction_en": "Read the sounds and find the word.", "segments": segments,
               "reveal_audio": word.en, "options": options}
     return Challenge("blend_sounds", word.id, prompt, _choice_solution(index, word.en))
 
@@ -264,7 +264,7 @@ def read_word_pick_image(word: Word, pool: list[Word], rng: random.Random, known
     if picked is None:
         return None
     images, index = picked
-    prompt = {"instruction_ru": "Прочитай слово и выбери картинку", "text": word.en, "reveal_audio": word.en,
+    prompt = {"instruction_ru": "Прочитай слово и выбери картинку", "instruction_en": "Read the word and choose the picture.", "text": word.en, "reveal_audio": word.en,
               "options": [{"image": image} for image in images]}
     return Challenge("read_word_pick_image", word.id, prompt, _choice_solution(index, word.en))
 
@@ -278,7 +278,7 @@ def read_phrase_pick_image(phrase: Phrase, phrases: list[Phrase], rng: random.Ra
     if picked is None:
         return None
     images, index = picked
-    prompt = {"instruction_ru": "Прочитай фразу и выбери картинку", "text": phrase.en,
+    prompt = {"instruction_ru": "Прочитай фразу и выбери картинку", "instruction_en": "Read the sentence and choose the picture.", "text": phrase.en,
               "reveal_audio": phrase.en, "options": [{"image": image} for image in images]}
     return Challenge("read_phrase_pick_image", phrase.id, prompt, _choice_solution(index, phrase.en))
 

@@ -77,7 +77,7 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
         )}
 
         <div className="flex w-full gap-3">
-          <Stat icon="bolt" value={`+${result.xp}`} label="опыт" tone="text-[#b7791f]" />
+          <Stat icon="coin" value={`+${result.coins}`} label="монет" tone="text-[#b7791f]" />
           <Stat icon="target" value={`${Math.round(result.accuracy * 100)}%`} label="точность" tone="text-[#1f6f60]" />
           <Stat icon="clock" value={formatDuration(result.duration_sec)} label="время" tone="text-[#4a2a66]" />
         </div>
@@ -85,8 +85,7 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
         <section className="mat-enamel w-full rounded-3xl px-5 py-4 text-left">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-[18px] font-extrabold text-ink">
-              <Icon name="flame" size={24} filled className="text-[#ff8a3d]" />
-              {result.streak_days} {result.streak_days === 1 ? "день" : result.streak_days < 5 ? "дня" : "дней"} подряд
+              Монеты Фоксинбурга — трать в лавке замка
             </span>
             <span className="flex items-center gap-1 text-[16px] font-extrabold text-ink-soft">
               <Icon name="coin" size={20} className="text-[#d69e00]" />+{result.coins}
@@ -97,7 +96,6 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
               {[
                 ["lesson", "урок"],
                 ["perfect", "без ошибок"],
-                ["daily_goal", "цель дня"],
                 ["practice", "тренировка"],
                 ["module_test", "контрольная"],
               ]
@@ -106,15 +104,6 @@ export function FinishScreen({ result, onContinue, onRetry }: FinishProps) {
                 .join(" · ")}
             </p>
           ) : null}
-          <div className="mt-4">
-            <div className="mb-2 flex justify-between text-[15px] font-bold text-ink-soft">
-              <span>{result.goal_reached ? "Цель дня выполнена" : "Цель дня"}</span>
-              <span className="tabular-nums">
-                {Math.min(result.today_xp, result.daily_goal_xp)} / {result.daily_goal_xp}
-              </span>
-            </div>
-            <ProgressBar value={result.today_xp / result.daily_goal_xp} label="Цель дня" />
-          </div>
         </section>
 
         {result.titles_gained.length > 0 ? (

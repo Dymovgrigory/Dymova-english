@@ -119,8 +119,6 @@ export function PathScreen() {
         </div>
         {home && (
           <div className="flex items-center gap-4">
-            <StatPill icon="flame" value={home.streak_days} label="Дней подряд" dim={home.streak_days === 0} />
-            <StatPill icon="bolt" value={`${home.today_xp}/${home.daily_goal_xp}`} label="Опыт сегодня из цели" dim={!home.goal_reached} />
             <StatPill icon="coin" value={home.player.coins} label="Монеты" />
           </div>
         )}
