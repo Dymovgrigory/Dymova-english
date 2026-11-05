@@ -18,7 +18,7 @@ const ERR_RU: Record<string, string> = {
   already_registered: "Этот телефон уже зарегистрирован. Войдите с паролем.",
   already_client: "Этот номер уже есть в базе школы. Войдите с паролем из приложения школы (он же — в «Данных для входа» у администратора). Не помните пароль — спросите администратора.",
   crm_unavailable: "Не получилось создать карточку в школе. Попробуйте через пару минут или позвоните нам.",
-  password_too_short: "Пароль должен быть не короче 6 символов.",
+  password_too_short: "Пароль должен быть не короче 4 символов.",
   daily_limit: "Слишком много попыток за сутки. Попробуйте завтра или позвоните в школу.",
   name_required: "Укажите имя родителя и ребёнка.",
   bad_phone: "Проверьте номер телефона.",
@@ -29,7 +29,7 @@ const ERR_EN: Record<string, string> = {
   already_registered: "This phone is already registered. Please log in.",
   already_client: "This number is already in the school database. Log in with your school app password, or ask the administrator.",
   crm_unavailable: "Could not create your school record. Try again in a few minutes or call us.",
-  password_too_short: "The password must be at least 6 characters.",
+  password_too_short: "The password must be at least 4 characters.",
   daily_limit: "Too many attempts today. Try tomorrow or call the school.",
   name_required: "Please enter the parent's and the child's names.",
   bad_phone: "Please check the phone number.",
@@ -60,7 +60,8 @@ export default function AuthPage() {
     e.preventDefault();
     setError("");
     if (!phoneComplete(phone)) return setError(ru ? "Введите номер полностью." : "Enter the full phone number.");
-    if (password.length < 6) return setError(errText("password_too_short"));
+    if (!password) return setError(ru ? "Введите пароль." : "Enter the password.");
+    if (mode === "register" && password.length < 4) return setError(errText("password_too_short"));
     if (mode === "register") {
       if (!parent.trim() || !child.trim()) return setError(errText("name_required"));
       if (password !== password2) return setError(ru ? "Пароли не совпадают." : "Passwords don't match.");
@@ -132,7 +133,7 @@ export default function AuthPage() {
               onChange={(e) => setPhone(formatPhoneInput(e.target.value))} />
           </label>
           <label className="field">
-            <span>{mode === "login" ? (ru ? "Пароль" : "Password") : (ru ? "Придумайте пароль (от 6 символов)" : "Create a password (6+ characters)")}</span>
+            <span>{mode === "login" ? (ru ? "Пароль" : "Password") : (ru ? "Придумайте пароль (от 4 символов)" : "Create a password (4+ characters)")}</span>
             <span className="field-pass">
               <input type={show ? "text" : "password"} autoComplete={mode === "login" ? "current-password" : "new-password"}
                 value={password} onChange={(e) => setPassword(e.target.value)} maxLength={200} />

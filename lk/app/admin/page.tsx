@@ -69,7 +69,7 @@ export default function AdminPage() {
     e.preventDefault();
     setDone(""); setErr("");
     if (!phoneComplete(phone)) return setErr("Введите телефон полностью.");
-    if (newPass.length < 6) return setErr("Пароль — от 6 символов.");
+    if (newPass.length < 4) return setErr("Пароль — от 4 символов.");
     try {
       await call("/lk/password", token, { phone, password: newPass, parent_name: name });
       setDone(`Готово. Сообщите родителю: логин ${phone}, пароль ${newPass}`);

@@ -29,7 +29,7 @@ from . import bigben, bigben_internal, service
 
 log = logging.getLogger("world.lk.password")
 
-MIN_PASSWORD = 6
+MIN_PASSWORD = 4  # в BigBen стандартный пароль — 4 символа
 LOGIN_FAILS_LIMIT = 8          # неудачных входов на номер за окно
 LOGIN_FAILS_WINDOW_MIN = 15
 REGISTER_DAILY_LIMIT = 5

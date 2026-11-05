@@ -26,7 +26,7 @@ function Account() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    if (p1.length < 6) return setMsg({ ok: false, text: ru ? "Пароль должен быть не короче 6 символов." : "At least 6 characters." });
+    if (p1.length < 4) return setMsg({ ok: false, text: ru ? "Пароль должен быть не короче 4 символов." : "At least 4 characters." });
     if (p1 !== p2) return setMsg({ ok: false, text: ru ? "Пароли не совпадают." : "Passwords don't match." });
     if (!token) return;
     setBusy(true);

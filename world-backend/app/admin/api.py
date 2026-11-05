@@ -69,7 +69,7 @@ def me(admin: dict = Depends(auth.require_admin)):
 
 class LkPasswordBody(BaseModel):
     phone: str = Field(min_length=5, max_length=40)
-    password: str = Field(min_length=6, max_length=200)
+    password: str = Field(min_length=4, max_length=200)
     parent_name: str = Field(default="", max_length=120)
 
 
