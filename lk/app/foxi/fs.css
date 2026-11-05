@@ -1,0 +1,100 @@
+
+/* ---------- «Мой Фокси»: студия персонажа (2026-11-05) ---------- */
+.fs { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.9fr); gap: 18px; align-items: stretch; min-height: calc(100dvh - 140px); }
+.fs-stage { position: relative; border-radius: 30px; overflow: hidden; min-height: 600px; isolation: isolate;
+  box-shadow: 0 18px 50px rgb(50 20 100 / 0.18), inset 0 0 0 1px rgb(255 255 255 / 0.4); }
+.fs-backdrop { position: absolute; inset: 0; z-index: -1; transition: background 0.6s ease; }
+.fs-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+.fs-canvas:active { cursor: grabbing; }
+.fs-scene-room .fs-backdrop { background:
+  radial-gradient(60% 40% at 50% 92%, rgb(255 255 255 / 0.9), transparent 70%),
+  linear-gradient(180deg, #fff3e2 0%, #ffe3c9 55%, #f6cfb0 56%, #efc2a1 100%); }
+.fs-scene-castle .fs-backdrop { background:
+  radial-gradient(40% 30% at 50% 30%, rgb(255 214 110 / 0.55), transparent 70%),
+  repeating-linear-gradient(90deg, rgb(0 0 0 / 0.06) 0 2px, transparent 2px 70px),
+  linear-gradient(180deg, #4b2f7a 0%, #6a3fc4 45%, #3a2266 56%, #2a184a 100%); }
+.fs-scene-forest .fs-backdrop { background:
+  radial-gradient(30% 22% at 80% 18%, rgb(255 250 200 / 0.9), transparent 70%),
+  radial-gradient(70% 45% at 15% 60%, #3f8f5a, transparent 70%), radial-gradient(70% 45% at 90% 62%, #2f7a4c, transparent 70%),
+  linear-gradient(180deg, #bfe9ff 0%, #dff4e6 50%, #6cbf73 56%, #4a9b56 100%); }
+.fs-scene-space .fs-backdrop { background:
+  radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent), radial-gradient(1.5px 1.5px at 70% 20%, #fff, transparent),
+  radial-gradient(2px 2px at 40% 70%, #fff, transparent), radial-gradient(1.5px 1.5px at 85% 55%, #fff, transparent),
+  radial-gradient(1.5px 1.5px at 10% 80%, #fff, transparent), radial-gradient(2px 2px at 60% 45%, #ffe7a8, transparent),
+  radial-gradient(35% 30% at 80% 25%, rgb(140 90 255 / 0.55), transparent 70%),
+  linear-gradient(180deg, #0b0a2a 0%, #1d1356 60%, #2c1a6e 100%); }
+.fs-scene-beach .fs-backdrop { background:
+  radial-gradient(18% 14% at 78% 20%, #fff6c2, transparent 70%),
+  linear-gradient(180deg, #7fd4ff 0%, #bfeaff 42%, #3fb8d8 43%, #2aa3c9 52%, #f6dca0 53%, #eccb85 100%); }
+.fs-scene-snow .fs-backdrop { background:
+  radial-gradient(2px 2px at 15% 20%, #fff, transparent), radial-gradient(2px 2px at 45% 35%, #fff, transparent),
+  radial-gradient(2px 2px at 75% 15%, #fff, transparent), radial-gradient(2px 2px at 88% 40%, #fff, transparent),
+  linear-gradient(180deg, #9fb7e8 0%, #d9e6ff 55%, #f4f8ff 56%, #e6eefc 100%); }
+.fs-loading { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px; font-weight: 800; color: #3b2a63; text-align: center; padding: 24px; }
+.fs-spinner { width: 42px; height: 42px; border-radius: 50%; border: 5px solid rgb(106 63 196 / 0.2); border-top-color: #6a3fc4; animation: fs-spin 0.9s linear infinite; }
+@keyframes fs-spin { to { transform: rotate(360deg); } }
+.fs-plate { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); }
+.fs-plate input { width: min(260px, 60vw); text-align: center; font: 900 20px/1 inherit; color: #2a1a46; border: 0; outline: 0;
+  padding: 11px 18px; border-radius: 999px; background: rgb(255 255 255 / 0.82); backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgb(40 20 80 / 0.15), inset 0 0 0 2px rgb(255 211 110 / 0.7); }
+.fs-plate input:focus { box-shadow: 0 6px 18px rgb(40 20 80 / 0.15), inset 0 0 0 3px #6a3fc4; }
+.fs-cam { position: absolute; top: 16px; right: 16px; display: grid; gap: 8px; }
+.fs-cam button { width: 42px; height: 42px; border-radius: 14px; border: 0; display: grid; place-items: center; cursor: pointer;
+  background: rgb(255 255 255 / 0.82); color: #3b2a63; backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgb(40 20 80 / 0.15); transition: transform .15s; }
+.fs-cam button:hover { transform: translateY(-1px); }
+.fs-cam button.is-on { background: #6a3fc4; color: #fff; }
+.fs-moves { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px;
+  border-radius: 22px; background: rgb(255 255 255 / 0.78); backdrop-filter: blur(10px); box-shadow: 0 10px 28px rgb(40 20 80 / 0.2); max-width: calc(100% - 24px); overflow-x: auto; }
+.fs-moves button { display: grid; justify-items: center; gap: 3px; min-width: 64px; padding: 8px 10px; border: 0; border-radius: 16px; cursor: pointer;
+  background: transparent; color: #3b2a63; font-weight: 800; font-size: 12px; transition: background .15s, transform .15s; }
+.fs-moves button:hover:not(:disabled) { background: #f1e9ff; transform: translateY(-2px); }
+.fs-moves button:active:not(:disabled) { transform: scale(0.94); }
+.fs-moves button:disabled { opacity: 0.45; }
+.fs-panel { display: grid; grid-template-columns: 84px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto auto; background: #fff;
+  border-radius: 30px; box-shadow: 0 18px 50px rgb(50 20 100 / 0.12); overflow: hidden; max-height: calc(100dvh - 140px); min-height: 600px; }
+.fs-rail { grid-row: 1 / span 3; display: flex; flex-direction: column; gap: 4px; padding: 12px 8px; background: #f6f1ff; overflow-y: auto; }
+.fs-rail button { display: grid; justify-items: center; gap: 4px; padding: 10px 4px; border: 0; border-radius: 16px; background: transparent; cursor: pointer;
+  color: #5a4a7a; font-weight: 800; font-size: 11px; line-height: 1.15; text-align: center; transition: background .15s, color .15s; }
+.fs-rail button:hover { background: #ece2ff; }
+.fs-rail button.is-on { background: #6a3fc4; color: #fff; box-shadow: 0 6px 14px rgb(106 63 196 / 0.35); }
+.fs-body { padding: 18px 20px 8px; overflow-y: auto; }
+.fs-h { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 900; letter-spacing: 0.02em; color: #5a4a7a; margin: 16px 0 10px; }
+.fs-h:first-child { margin-top: 0; }
+.fs-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.fs-swatch { position: relative; width: 42px; height: 42px; border-radius: 50%; border: 3px solid #fff; cursor: pointer;
+  box-shadow: 0 0 0 2px #e6dcfa, 0 3px 8px rgb(40 20 80 / 0.12); transition: transform .15s, box-shadow .15s; }
+.fs-swatch:hover { transform: scale(1.08); }
+.fs-swatch.is-on { box-shadow: 0 0 0 3px #6a3fc4, 0 6px 14px rgb(106 63 196 / 0.35); transform: scale(1.1); }
+.fs-swatch-custom { background: conic-gradient(#e2533c, #e2a019, #2fa86b, #22b3b0, #3a7bd5, #6a3fc4, #ef6aa8, #e2533c); overflow: hidden; }
+.fs-swatch-custom input { position: absolute; inset: -8px; opacity: 0; cursor: pointer; }
+.fs-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.fs-chip { border: 2px solid #ece4fb; background: #fff; border-radius: 14px; padding: 9px 13px; font-weight: 800; font-size: 14px; color: #3a2a5a; cursor: pointer; transition: all .15s; }
+.fs-chip:hover { border-color: #cdb8f5; transform: translateY(-1px); }
+.fs-chip.is-on { border-color: #6a3fc4; background: #f3eefc; color: #4b2a9c; box-shadow: 0 4px 10px rgb(106 63 196 / 0.18); }
+.fs-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.fs-preset { display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid #ece4fb; border-radius: 18px; background: #fff;
+  font-weight: 900; font-size: 15px; color: #2a1a46; cursor: pointer; transition: all .15s; text-align: left; }
+.fs-preset:hover { border-color: #6a3fc4; transform: translateY(-2px); box-shadow: 0 8px 18px rgb(106 63 196 / 0.15); }
+.fs-preset-dot { width: 30px; height: 30px; border-radius: 10px; flex: none; box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.6); }
+.fs-tip { font-size: 13px; color: #8a7aa8; margin: 12px 0 0; font-weight: 600; }
+.fs-toggle { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-weight: 800; color: #3a2a5a; cursor: pointer; }
+.fs-toggle input { width: 20px; height: 20px; accent-color: #6a3fc4; }
+.fs-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px 16px; border-top: 1px solid #f0eaf9; }
+.fs-btn { display: inline-flex; align-items: center; gap: 6px; border: 0; border-radius: 14px; padding: 10px 14px; font-weight: 800; font-size: 14px;
+  background: #f3eefc; color: #3b2a63; cursor: pointer; transition: transform .15s, background .15s; }
+.fs-btn:hover:not(:disabled) { background: #e8ddfc; transform: translateY(-1px); }
+.fs-btn:disabled { opacity: 0.5; }
+.fs-btn-go { background: linear-gradient(180deg, #ffcf57, #f2a91c); color: #3a2208; box-shadow: 0 6px 16px rgb(242 169 28 / 0.4); }
+.fs-btn-go:hover:not(:disabled) { background: linear-gradient(180deg, #ffd56e, #f5b02b); }
+@media (max-width: 980px) {
+  .fs { grid-template-columns: 1fr; min-height: 0; }
+  .fs-stage { min-height: 460px; height: 62dvh; }
+  .fs-panel { max-height: none; min-height: 0; grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+  .fs-rail { grid-row: auto; flex-direction: row; overflow-x: auto; padding: 8px; }
+  .fs-rail button { min-width: 74px; }
+  .fs-moves button { min-width: 56px; padding: 7px 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fs-spinner { animation: none; }
+  .fs-swatch, .fs-chip, .fs-preset, .fs-btn, .fs-moves button { transition: none; }
+}

@@ -168,6 +168,17 @@ def words_my(authorization: str | None = Header(None), student_id: int = 0):
     return _guard(words.my_words, _token(authorization), student_id)
 
 
+@router.get("/words/foxi")
+def words_foxi(authorization: str | None = Header(None), student_id: int = 0):
+    """«Создай своего Фокси»: сохранённый облик (None — ещё не создавал)."""
+    return _guard(words.get_foxi, _token(authorization), student_id)
+
+
+@router.post("/words/foxi")
+def words_foxi_save(body: dict, authorization: str | None = Header(None)):
+    return _guard(words.set_foxi, _token(authorization), int(body.get("student_id") or 0), body.get("foxi"))
+
+
 @router.get("/words/stats")
 def words_stats(authorization: str | None = Header(None), student_id: int = 0):
     return _guard(words.stats, _token(authorization), student_id)

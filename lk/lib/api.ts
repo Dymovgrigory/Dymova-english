@@ -226,6 +226,10 @@ export const api = {
       token,
       body: { student_id: studentId, kind },
     }),
+  foxi: (token: string, studentId: number) =>
+    request<{ foxi: FoxiLook | null }>(`/api/lk/words/foxi?student_id=${studentId}`, { token }),
+  saveFoxi: (token: string, studentId: number, foxi: FoxiLook) =>
+    request<{ foxi: FoxiLook }>("/api/lk/words/foxi", { method: "POST", token, body: { student_id: studentId, foxi } }),
   myWords: (token: string, studentId: number) =>
     request<{ words: MyWord[]; hard_ids: number[]; learned: number; learning: number }>(
       `/api/lk/words/my?student_id=${studentId}`,
@@ -283,3 +287,10 @@ export function formatPhoneInput(raw: string): string {
 export function phoneComplete(formatted: string): boolean {
   return formatted.replace(/\D/g, "").length === 11;
 }
+
+/** «Создай своего Фокси»: облик 3D-Фокси (движок — /public/foxi3d/foxi-studio.js). */
+export type FoxiLook = {
+  fur?: string; eyes?: string; top?: string; pattern?: string; patternColor?: string; logo?: boolean;
+  bottom?: string; bag?: string; shoes?: string; hat?: string; hatColor?: string; hair?: string;
+  glasses?: string; neck?: string; neckColor?: string; back?: string; scene?: string; name?: string;
+};

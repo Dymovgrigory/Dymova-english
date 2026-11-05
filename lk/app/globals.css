@@ -1531,3 +1531,9 @@ p.t-ru-sm { padding: 0; font-weight: 700; }
 .adm-table th { font-size: 13px; color: #6b5d85; }
 .adm-sm { padding: 6px 12px; font-size: 14px; }
 @media (max-width: 760px) { .adm-table { display: block; overflow-x: auto; white-space: nowrap; } }
+
+.k-hero-foxlink { position: relative; display: block; text-decoration: none; }
+.k-hero-foxcta { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); white-space: nowrap;
+  background: #6a3fc4; color: #fff; font-weight: 800; font-size: 13px; padding: 7px 12px; border-radius: 999px;
+  box-shadow: 0 6px 16px rgb(106 63 196 / 0.35); transition: transform .15s; }
+.k-hero-foxlink:hover .k-hero-foxcta { transform: translateX(-50%) scale(1.05); }

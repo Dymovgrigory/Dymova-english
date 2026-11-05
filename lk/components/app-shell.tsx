@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation";
 import { useCabinet } from "@/lib/cabinet";
 import { useI18n } from "@/lib/i18n";
 import LangSwitch from "@/components/lang-switch";
-import { BookOpenText, CalendarDays, Castle, Coins, House, Library, Shield } from "lucide-react";
+import { BookOpenText, CalendarDays, Castle, Coins, House, Library, PawPrint, Shield } from "lucide-react";
 
 const NAV = [
   { href: "/dashboard", ru: "Главная", en: "Home", Icon: House },
   { href: "/words", ru: "Слова", en: "Words", Icon: BookOpenText },
   { href: "/words/my", ru: "Мой словарь", en: "My words", Icon: Library },
+  { href: "/foxi", ru: "Мой Фокси", en: "My Foxi", Icon: PawPrint },
   { href: "/schedule", ru: "Расписание", en: "Schedule", Icon: CalendarDays },
   { href: "/world", ru: "Мир", en: "World", Icon: Castle },
 ];

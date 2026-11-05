@@ -316,3 +316,13 @@ def test_reseed_hides_old_content_sets(lk_words_db):
     act = {r["code"]: r["active"] for r in conn.execute(
         "SELECT code, active FROM lk_word_sets WHERE code IN ('topic:animals','custom-teacher','topic:animals:1')")}
     assert act == {"topic:animals": 0, "custom-teacher": 1, "topic:animals:1": 1}
+
+
+def test_foxi_creator_saves_only_known_options(lk_words_db):
+    token = _token()
+    sid = STUDENTS[0]["id"]
+    assert words.get_foxi(token, sid) == {"foxi": None}
+    saved = words.set_foxi(token, sid, {"fur": "#9AA3AD", "hat": "crown", "top": "#22B3B0", "logo": False,
+                                        "glasses": "laser", "shoes": "red", "name": "  Рыжик  "})
+    assert saved["foxi"] == {"fur": "#9aa3ad", "hat": "crown", "top": "#22b3b0", "logo": False, "name": "Рыжик"}
+    assert words.get_foxi(token, sid)["foxi"]["hat"] == "crown"

@@ -56,7 +56,9 @@ function Inner() {
       const url = new URL(WORLD_URL);
       url.searchParams.set("world_token", s.session);
       url.searchParams.set("world_key", s.external_key);
-      window.open(url.toString(), "_blank", "noopener");
+      // Мир открывается в этой же вкладке; в Мире есть кнопка «Личный кабинет» для возврата.
+      url.searchParams.set("from", "lk");
+      window.location.assign(url.toString());
     } catch {
       setError(t.world.enterError);
     } finally {

@@ -461,6 +461,58 @@ def claim_reward(token: str, student_id: int, kind: str) -> dict:
     return rewards.claim(_learner_key(profile), profile, kind)
 
 
+FOXI_KEYS = {
+    "hat": {"none", "cap", "beanie", "wizard", "crown", "tophat", "party", "headphones", "flower", "halo"},
+    "hair": {"none", "tuft", "mohawk", "spiky", "curly"},
+    "glasses": {"none", "round", "sun", "star", "gold"},
+    "pattern": {"none", "stripes", "dots", "checks", "stars", "zigzag"},
+    "neck": {"none", "scarf", "bowtie", "medal", "tie"},
+    "back": {"none", "cape", "wings"},
+    "scene": {"room", "castle", "forest", "space", "beach", "snow"},
+}
+FOXI_COLORS = ("fur", "eyes", "top", "patternColor", "bottom", "bag", "shoes", "hatColor", "neckColor")
+
+
+def _clean_foxi(raw) -> dict:
+    """Облик Фокси из ЛК: только известные варианты и цвета #rrggbb."""
+    out: dict = {}
+    if not isinstance(raw, dict):
+        return out
+    for key, allowed in FOXI_KEYS.items():
+        if raw.get(key) in allowed:
+            out[key] = raw[key]
+    for key in FOXI_COLORS:
+        value = str(raw.get(key) or "")
+        if len(value) == 7 and value[0] == "#" and all(c in "0123456789abcdefABCDEF" for c in value[1:]):
+            out[key] = value.lower()
+    if isinstance(raw.get("logo"), bool):
+        out["logo"] = raw["logo"]
+    name = " ".join(str(raw.get("name") or "").split())[:24]
+    if name:
+        out["name"] = name
+    return out
+
+
+def get_foxi(token: str, student_id: int) -> dict:
+    _, profile = _profile(token, student_id)
+    row = get_conn().execute("SELECT foxi FROM lk_learner_prefs WHERE learner_key=?",
+                             (_learner_key(profile),)).fetchone()
+    try:
+        return {"foxi": _clean_foxi(json.loads(row["foxi"])) if row and row["foxi"] else None}
+    except ValueError:
+        return {"foxi": None}
+
+
+def set_foxi(token: str, student_id: int, raw) -> dict:
+    _, profile = _profile(token, student_id)
+    foxi = _clean_foxi(raw)
+    get_conn().execute(
+        "INSERT INTO lk_learner_prefs (learner_key, foxi) VALUES (?,?)"
+        " ON CONFLICT(learner_key) DO UPDATE SET foxi=excluded.foxi",
+        (_learner_key(profile), json.dumps(foxi, ensure_ascii=False)))
+    return {"foxi": foxi}
+
+
 def set_goal(token: str, student_id: int, goal: int) -> dict:
     _, profile = _profile(token, student_id)
     goal = max(20, min(200, int(goal or 50)))

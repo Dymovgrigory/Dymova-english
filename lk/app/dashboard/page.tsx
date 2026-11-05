@@ -111,7 +111,10 @@ function Dashboard() {
           )}
           {continueSet && <div className="k-hero-set">{continueSet.title}</div>}
         </div>
-        <img className="k-hero-fox" src="/foxi/guide.webp" alt={ru ? "Фокси" : "Foxi"} width={260} height={428} />
+        <a className="k-hero-foxlink" href="/foxi" title={ru ? "Создай своего Фокси" : "Make your own Foxi"}>
+          <img className="k-hero-fox" src="/foxi/guide.webp" alt={ru ? "Фокси" : "Foxi"} width={260} height={428} />
+          <span className="k-hero-foxcta">{ru ? "Создай своего Фокси" : "Make your Foxi"}</span>
+        </a>
       </section>
 
       {toast && <div className="k-toast" role="status">{toast}</div>}
