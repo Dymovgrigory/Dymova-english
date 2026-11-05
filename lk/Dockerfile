@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ARG WORLD_API=http://world-api:8010
-ARG NEXT_PUBLIC_WORLD_URL=https://world.dymova-english.ru
+ARG NEXT_PUBLIC_WORLD_URL=https://new.dymova-english.ru
 ENV WORLD_API=$WORLD_API
 ENV NEXT_PUBLIC_WORLD_URL=$NEXT_PUBLIC_WORLD_URL
 RUN npm run build

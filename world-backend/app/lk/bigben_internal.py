@@ -186,3 +186,30 @@ def health() -> dict:
         return {"ok": True, "mode": "login" if all(_login_creds()) else "token"}
     except BigBenInternalError as exc:
         return {"ok": False, "error": str(exc)[:80]}
+
+
+def _group_item(g) -> dict | None:
+    if isinstance(g, int) or (isinstance(g, str) and g.isdigit()):
+        return {"id": int(g), "caption": ""}
+    if isinstance(g, dict):
+        gid = g.get("id") or g.get("group_id")
+        if gid and str(gid).isdigit():
+            cap = g.get("caption") or g.get("name") or g.get("title") or g.get("group_name") or ""
+            return {"id": int(gid), "caption": str(cap)}
+    return None
+
+
+def student_groups(student_id: int) -> list[dict]:
+    """Активные группы ученика из карточки пульта (публичный API v1 их не отдаёт)."""
+    data = _request("GET", f"/user/students/{int(student_id)}")
+    st = data.get("data", data) if isinstance(data, dict) else {}
+    raw = st.get("active_groups") if isinstance(st, dict) else None
+    if isinstance(raw, dict):
+        raw = list(raw.values())
+    out, seen = [], set()
+    for g in raw or []:
+        item = _group_item(g)
+        if item and item["id"] not in seen:
+            seen.add(item["id"])
+            out.append(item)
+    return out

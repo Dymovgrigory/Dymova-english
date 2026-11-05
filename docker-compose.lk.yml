@@ -15,7 +15,7 @@ services:
       context: ./lk
       args:
         WORLD_API: ${LK_WORLD_API:-http://world-api:8010}
-        NEXT_PUBLIC_WORLD_URL: ${NEXT_PUBLIC_WORLD_URL:-https://world.dymova-english.ru}
+        NEXT_PUBLIC_WORLD_URL: ${NEXT_PUBLIC_WORLD_URL:-https://new.dymova-english.ru}
     container_name: lk-web
     restart: unless-stopped
     expose:

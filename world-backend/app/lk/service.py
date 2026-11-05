@@ -186,6 +186,14 @@ def _sync_profiles(account, *, force: bool = False) -> list[dict]:
                         students.append({"id": int(st["id"]), "fio": st.get("fio") or "Ученик", "active_groups": []})
             except bigben_internal.BigBenInternalError as exc:
                 log.warning("sync_profiles: пульт BigBen недоступен: %s", exc)
+            # Группы ученика для расписания: публичный API их не отдаёт — берём из карточки пульта.
+            for st in students:
+                if st.get("active_groups"):
+                    continue
+                try:
+                    st["active_groups"] = bigben_internal.student_groups(int(st["id"]))
+                except bigben_internal.BigBenInternalError as exc:
+                    log.warning("sync_profiles: группы ученика %s не получены: %s", st.get("id"), exc)
     if students:
         for s in students:
             conn.execute(

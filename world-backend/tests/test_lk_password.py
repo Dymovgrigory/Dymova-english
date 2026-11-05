@@ -192,3 +192,26 @@ def test_bigben_session_relogin_on_expired_token(monkeypatch):
     state["valid"] = set()                 # пульт отозвал токен
     assert bi.health()["ok"] and state["logins"] == 2  # вошли заново сами
     bi._session.update(token="", refresh="", expires=0.0)
+
+
+def test_crm_groups_from_card_fill_schedule_groups(crm, monkeypatch):
+    """Расписание: группы ученика берутся из карточки пульта (публичный API их не отдаёт)."""
+    from app.lk import bigben_internal
+
+    crm["cards"].append({"id": 301, "fio": "Иванова Маша", "phone": "89161234567", "password_raw": "1234",
+                         "parent_phone": "", "parent_password": "", "parentname": "Ольга"})
+    monkeypatch.setattr(bigben_internal, "student_groups", lambda sid: [{"id": 7, "caption": "SP1 Группа А"}])
+    out = password_auth.login(PHONE, "1234")  # 4 символа — стандарт BigBen
+    prof = out["profiles"][0]
+    assert prof["student_id"] == 301 and [g["id"] for g in prof["active_groups"]] == [7]
+    row = get_conn().execute("SELECT * FROM lk_profiles WHERE student_id=301").fetchone()
+    assert service._student_group_ids(row) == {7}
+
+
+def test_group_item_parsing():
+    from app.lk.bigben_internal import _group_item
+
+    assert _group_item({"id": 5, "name": "Starters"}) == {"id": 5, "caption": "Starters"}
+    assert _group_item({"group_id": "9", "caption": "A1"}) == {"id": 9, "caption": "A1"}
+    assert _group_item(12) == {"id": 12, "caption": ""}
+    assert _group_item({"name": "без id"}) is None
