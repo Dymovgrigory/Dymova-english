@@ -1,0 +1,272 @@
+#jobs
+job|работа
+work|работа; работать
+doctor|врач
+nurse|медсестра
+dentist|стоматолог
+teacher|учитель
+farmer|фермер
+cook|повар; готовить
+chef|шеф-повар
+waiter|официант
+waitress|официантка
+driver|водитель
+pilot|пилот
+police officer|полицейский
+firefighter|пожарный
+engineer|инженер
+scientist|учёный
+astronaut|космонавт
+artist|художник
+painter|художник
+singer|певец
+dancer|танцор
+musician|музыкант
+actor|актёр
+writer|писатель
+photographer|фотограф
+journalist|журналист
+reporter|репортёр
+builder|строитель
+mechanic|механик
+shop assistant|продавец
+cleaner|уборщик
+secretary|секретарь
+manager|менеджер
+businessman|бизнесмен
+lawyer|юрист
+vet|ветеринар
+sailor|моряк
+soldier|солдат
+fisherman|рыбак
+clown|клоун
+king|король
+queen|королева
+prince|принц
+princess|принцесса
+#sport
+sport|спорт
+football|футбол
+basketball|баскетбол
+volleyball|волейбол
+tennis|теннис
+table tennis|настольный теннис
+badminton|бадминтон
+baseball|бейсбол
+hockey|хоккей
+golf|гольф
+rugby|регби
+swimming|плавание
+running|бег
+cycling|езда на велосипеде
+skating|катание на коньках
+skiing|катание на лыжах
+snowboarding|сноубординг
+skateboarding|катание на скейтборде
+surfing|сёрфинг
+sailing|парусный спорт
+climbing|скалолазание
+dancing|танцы
+gymnastics|гимнастика
+karate|карате
+chess|шахматы
+team|команда
+player|игрок
+coach|тренер
+match|матч
+goal|гол; цель
+winner|победитель
+medal|медаль
+race|гонка
+racket|ракетка
+win|побеждать
+lose|проигрывать
+kick|бить ногой
+throw|бросать
+catch|ловить
+jump|прыгать
+run|бегать
+swim|плавать
+skate|кататься на коньках
+ski|кататься на лыжах
+#hobbies
+hobby|хобби
+music|музыка
+song|песня
+dance|танец; танцевать
+sing|петь
+film|фильм
+movie|фильм
+cartoon|мультфильм
+book|книга
+comic|комикс
+magazine|журнал
+photo|фотография
+painting|картина
+drawing|рисунок
+reading|чтение
+camping|поход с палатками
+fishing|рыбалка
+hiking|пеший поход
+shopping|покупки
+collection|коллекция
+concert|концерт
+festival|фестиваль
+holiday|каникулы; праздник
+weekend|выходные
+free time|свободное время
+band|музыкальная группа
+instrument|музыкальный инструмент
+drum|барабан
+#colours
+colour|цвет
+red|красный
+orange|оранжевый
+yellow|жёлтый
+green|зелёный
+blue|синий
+purple|фиолетовый
+pink|розовый
+brown|коричневый
+black|чёрный
+white|белый
+grey|серый
+gold|золотой
+silver|серебряный
+colourful|разноцветный
+dark|тёмный
+light|светлый
+#numbers
+number|число
+zero|ноль
+one|один
+two|два
+three|три
+four|четыре
+five|пять
+six|шесть
+seven|семь
+eight|восемь
+nine|девять
+ten|десять
+eleven|одиннадцать
+twelve|двенадцать
+thirteen|тринадцать
+fourteen|четырнадцать
+fifteen|пятнадцать
+sixteen|шестнадцать
+seventeen|семнадцать
+eighteen|восемнадцать
+nineteen|девятнадцать
+twenty|двадцать
+thirty|тридцать
+forty|сорок
+fifty|пятьдесят
+sixty|шестьдесят
+seventy|семьдесят
+eighty|восемьдесят
+ninety|девяносто
+hundred|сто
+thousand|тысяча
+million|миллион
+first|первый
+second|второй
+third|третий
+last|последний
+half|половина
+double|двойной
+#time
+time|время
+day|день
+night|ночь
+morning|утро
+afternoon|день (после полудня)
+evening|вечер
+midnight|полночь
+midday|полдень
+today|сегодня
+tomorrow|завтра
+yesterday|вчера
+tonight|сегодня вечером
+week|неделя
+month|месяц
+year|год
+century|век
+hour|час
+minute|минута
+second|секунда
+moment|момент
+o'clock|ровно (о часах)
+quarter|четверть
+calendar|календарь
+date|дата
+Monday|понедельник
+Tuesday|вторник
+Wednesday|среда
+Thursday|четверг
+Friday|пятница
+Saturday|суббота
+Sunday|воскресенье
+January|январь
+February|февраль
+March|март
+April|апрель
+May|май
+June|июнь
+July|июль
+August|август
+September|сентябрь
+October|октябрь
+November|ноябрь
+December|декабрь
+early|рано; ранний
+late|поздно; поздний
+now|сейчас
+soon|скоро
+then|потом; тогда
+later|позже
+before|до; перед
+after|после
+always|всегда
+usually|обычно
+often|часто
+sometimes|иногда
+never|никогда
+again|снова
+ago|назад
+already|уже
+yet|ещё; уже
+#feelings
+feeling|чувство
+happy|счастливый
+sad|грустный
+angry|сердитый
+afraid|испуганный
+scared|напуганный
+tired|уставший
+sleepy|сонный
+bored|скучающий
+excited|взволнованный
+surprised|удивлённый
+worried|обеспокоенный
+nervous|нервный
+upset|расстроенный
+lonely|одинокий
+shy|застенчивый
+proud|гордый
+calm|спокойный
+glad|довольный
+pleased|довольный
+hungry|голодный
+love|любовь; любить
+like|нравиться
+hate|ненавидеть
+smile|улыбка
+laugh|смеяться
+cry|плакать
+hug|обнимать
+kiss|поцелуй
+joy|радость
+fear|страх
+hope|надежда
+dream|мечта; сон

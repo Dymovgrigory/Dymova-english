@@ -11,7 +11,10 @@
 """
 from __future__ import annotations
 
+import json
+import os
 import random
+import uuid
 from datetime import datetime, timedelta, timezone
 
 from app.world import core
@@ -44,56 +47,81 @@ _SEED_BOOKS = [
     ("book:spotlight", "Spotlight — словарь к учебнику", "spotlight", 80),
 ]
 
-# Стартовые слова уровней (методист догружает полные списки через импорт).
-_SEED_WORDS = {
-    "level:pre-a1": [
-        ("hello", "привет", "хэллоу"), ("goodbye", "до свидания", "гудбай"),
-        ("cat", "кот", "кэт"), ("dog", "собака", "дог"),
-        ("apple", "яблоко", "эпл"), ("red", "красный", "рэд"),
-        ("one", "один", "уан"), ("two", "два", "ту:"),
-    ],
-    "level:a1": [
-        ("family", "семья", "фэмили"), ("house", "дом", "хаус"),
-        ("school", "школа", "скул"), ("friend", "друг", "фрэнд"),
-        ("water", "вода", "уотэ"), ("eat", "есть", "ит"),
-        ("run", "бежать", "ран"), ("book", "книга", "бук"),
-    ],
-}
+# База слов школы: content/words.json (собирается content/build_content.py:
+# CEFR-J + IPA + картинки Fluent Emoji 3D + переводы школы). ~2000 слов,
+# наборы по темам и уровням. Сид идемпотентный: слова обновляются по
+# (набор, английское слово), id и прогресс учеников сохраняются.
+_CONTENT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "content", "words.json")
+_CONTENT: dict | None = None
+
+
+def content() -> dict:
+    global _CONTENT
+    if _CONTENT is None:
+        try:
+            with open(_CONTENT_PATH, encoding="utf-8") as fh:
+                _CONTENT = json.load(fh)
+        except (OSError, ValueError):
+            _CONTENT = {"version": "", "topics": {}, "sets": []}
+    return _CONTENT
+
+
+def set_meta(code: str) -> dict:
+    """Иконка и цвет набора для красивой библиотеки."""
+    for s in content()["sets"]:
+        if s["code"] == code:
+            return {"icon": s.get("icon", "📘"), "color": s.get("color", "#5b4bdb")}
+    if code.startswith("book:"):
+        return {"icon": "📗", "color": "#10ac84"}
+    return {"icon": "📘", "color": "#5b4bdb"}
 
 
 def seed_word_sets() -> None:
-    """Идемпотентный сид наборов и стартовых слов (вызывается при старте)."""
+    """Идемпотентный сид наборов и слов из content/words.json (вызывается при старте)."""
     conn = get_conn()
-    for code, title, cefr, pos in _SEED_LEVELS:
-        conn.execute(
-            "INSERT OR IGNORE INTO lk_word_sets (code, title, kind, book, cefr,"
-            " position, is_public) VALUES (?,?,?,?,?,?,1)",
-            (code, title, "level", "", cefr, pos),
-        )
     for code, title, book, pos in _SEED_BOOKS:
         conn.execute(
             "INSERT OR IGNORE INTO lk_word_sets (code, title, kind, book, cefr,"
             " position, is_public) VALUES (?,?,?,?,?,?,0)",
             (code, title, "book", book, "", pos),
         )
-    for code, words in _SEED_WORDS.items():
-        row = conn.execute(
-            "SELECT id FROM lk_word_sets WHERE code=?", (code,)
-        ).fetchone()
-        if row is None:
-            continue
-        set_id = row["id"]
-        count = conn.execute(
-            "SELECT COUNT(*) AS c FROM lk_words WHERE set_id=?", (set_id,)
-        ).fetchone()["c"]
-        if count:
-            continue
-        for i, (en, ru, tr) in enumerate(words):
-            conn.execute(
-                "INSERT INTO lk_words (set_id, text_en, text_ru, transcription,"
-                " position) VALUES (?,?,?,?,?)",
-                (set_id, en, ru, tr, i + 1),
-            )
+    data = content()
+    codes = set()
+    for s in data["sets"]:
+        codes.add(s["code"])
+        conn.execute(
+            "INSERT INTO lk_word_sets (code, title, kind, book, cefr, topic, position, is_public, active)"
+            " VALUES (?,?,?,?,?,?,?,1,1) ON CONFLICT(code) DO UPDATE SET title=excluded.title,"
+            " kind=excluded.kind, cefr=excluded.cefr, topic=excluded.topic,"
+            " position=excluded.position, is_public=1, active=1",
+            (s["code"], s["title"], s["kind"], "", s.get("cefr", ""), s.get("topic", ""), s["position"]),
+        )
+        set_id = int(conn.execute("SELECT id FROM lk_word_sets WHERE code=?", (s["code"],)).fetchone()["id"])
+        existing = {r["text_en"].lower(): int(r["id"]) for r in conn.execute(
+            "SELECT id, text_en FROM lk_words WHERE set_id=?", (set_id,)).fetchall()}
+        keep = set()
+        for i, w in enumerate(s["words"], 1):
+            key = w["en"].lower()
+            vals = (w["en"], w["ru"], w.get("ipa", ""), w.get("img", ""), w.get("ex", ""), i)
+            if key in existing:
+                conn.execute(
+                    "UPDATE lk_words SET text_en=?, text_ru=?, transcription=?, image_url=?, example_en=?, position=?,"
+                    " active=1 WHERE id=?", vals + (existing[key],))
+                keep.add(existing[key])
+            else:
+                cur = conn.execute(
+                    "INSERT INTO lk_words (set_id, text_en, text_ru, transcription, image_url, example_en, position)"
+                    " VALUES (?,?,?,?,?,?,?)", (set_id,) + vals)
+                keep.add(int(cur.lastrowid))
+        stale = [wid for wid in existing.values() if wid not in keep]
+        for wid in stale:
+            conn.execute("UPDATE lk_words SET active=0 WHERE id=?", (wid,))
+    # наборы прошлых версий контента (например topic:animals до разбивки на части
+    # или level:b1) прячем: их слова уже есть в новых наборах; прогресс не удаляется
+    for r in conn.execute("SELECT id, code FROM lk_word_sets WHERE kind IN ('level','topic')").fetchall():
+        code = r["code"] or ""
+        if code not in codes and (code.startswith("topic:") or code.startswith("level:")):
+            conn.execute("UPDATE lk_word_sets SET active=0 WHERE id=?", (r["id"],))
 
 
 # ---------- доступность и выборка ----------
@@ -212,6 +240,10 @@ def list_sets(token: str, student_id: int) -> dict:
             "topic": r["topic"],
             "is_public": bool(r["is_public"]),
             "progress": progress,
+            **set_meta(r["code"]),
+            "preview": [x["image_url"] for x in get_conn().execute(
+                "SELECT image_url FROM lk_words WHERE set_id=? AND active=1 AND image_url!=''"
+                " ORDER BY position LIMIT 4", (sid,)).fetchall()],
         })
     return {"student_id": student_id, "child_name": profile["child_name"],
             "sets": sets}
@@ -224,6 +256,7 @@ def _word_out(row, progress=None, with_answer: bool = True) -> dict:
         "transcription": row["transcription"],
         "image_url": row["image_url"],
         "audio_url": row["audio_url"],
+        "example_en": row["example_en"] or "",
         "position": int(row["position"]),
     }
     if with_answer:
@@ -262,9 +295,87 @@ def set_words(token: str, student_id: int, set_id: int) -> dict:
     }
 
 
+HARD_SQL = ("SELECT w.*, p.strength, p.seen_count, p.correct_count FROM lk_words w"
+            " JOIN lk_word_progress p ON p.word_id=w.id"
+            " WHERE p.learner_key=? AND w.active=1 AND p.seen_count>p.correct_count AND p.strength<4"
+            " ORDER BY (p.seen_count-p.correct_count) DESC, p.last_seen_at DESC LIMIT ?")
+
+
+def _far_pool(conn, exclude_set: int, own: set[str]) -> list[dict]:
+    """Слова из других тем: варианты для пропусков и картинок без двусмысленности
+    (в «Their ___ is a student» не должны подходить два варианта сразу)."""
+    rows = conn.execute(
+        "SELECT w.id, w.text_en, w.text_ru, w.image_url, w.example_en FROM lk_words w"
+        " JOIN lk_word_sets s ON s.id = w.set_id"
+        " WHERE w.set_id != ? AND w.active=1 AND s.active=1 AND s.kind='topic'"
+        " AND w.image_url != '' AND w.example_en != ''"
+        " ORDER BY RANDOM() LIMIT 40", (exclude_set,)).fetchall()
+    return [{"id": -int(r["id"]), "text_en": r["text_en"], "text_ru": r["text_ru"],
+             "image_url": r["image_url"], "example_en": r["example_en"]}
+            for r in rows if r["text_en"].lower() not in own]
+
+
+def _pool_item(r) -> dict:
+    return {"id": int(r["id"]), "text_en": r["text_en"], "text_ru": r["text_ru"],
+            "image_url": r["image_url"], "example_en": r["example_en"] or ""}
+
+
+def _hard_training(profile) -> dict:
+    """Урок «Трудные слова»: слова, в которых ученик ошибался."""
+    learner = _learner_key(profile)
+    conn = get_conn()
+    rows = conn.execute(HARD_SQL, (learner, 12)).fetchall()
+    cards = [_word_out(r, with_answer=False) for r in rows]
+    for c in cards:
+        c["distractors"] = []
+    set_ids = {int(r["set_id"]) for r in rows}
+    pool = [_pool_item(r) for r in rows]
+    if set_ids:
+        extra = conn.execute(
+            "SELECT id, text_en, text_ru, image_url, example_en FROM lk_words WHERE active=1 AND set_id IN (%s)"
+            " ORDER BY RANDOM() LIMIT 30" % ",".join("?" for _ in set_ids), tuple(set_ids)).fetchall()
+        seen = {p["id"] for p in pool}
+        pool += [_pool_item(r) for r in extra if int(r["id"]) not in seen]
+    random.shuffle(cards)
+    return {
+        "code": "hard", "title": "Трудные слова", "topic": "", "pool": pool,
+        "pool_far": _far_pool(conn, -1, {p["text_en"].lower() for p in pool}),
+        "icon": "target", "color": "#E5484D", "set_id": 0, "child_name": profile["child_name"],
+        "cards": cards, "answers": {int(r["id"]): r["text_ru"] for r in rows},
+        "review_count": len(cards), "new_count": 0,
+    }
+
+
+def my_words(token: str, student_id: int) -> dict:
+    """«Мой словарь»: выученные слова, слова в процессе и трудные."""
+    _, profile = _profile(token, student_id)
+    learner = _learner_key(profile)
+    conn = get_conn()
+    rows = conn.execute(
+        "SELECT w.*, p.strength, p.seen_count, p.correct_count, p.last_seen_at FROM lk_words w"
+        " JOIN lk_word_progress p ON p.word_id=w.id"
+        " WHERE p.learner_key=? AND w.active=1 ORDER BY p.last_seen_at DESC", (learner,)).fetchall()
+    out, seen = [], set()
+    for r in rows:
+        k = r["text_en"].lower()
+        if k in seen:
+            continue
+        seen.add(k)
+        item = _word_out(r, with_answer=True)
+        item["strength"] = int(r["strength"])
+        item["mistakes"] = max(0, int(r["seen_count"]) - int(r["correct_count"]))
+        out.append(item)
+    hard = [int(r["id"]) for r in conn.execute(HARD_SQL, (learner, 50)).fetchall()]
+    return {"words": out, "hard_ids": hard,
+            "learned": sum(1 for w in out if w["strength"] >= 2),
+            "learning": sum(1 for w in out if w["strength"] < 2)}
+
+
 def start_training(token: str, student_id: int, set_id: int) -> dict:
     """Подборка тренировки: повторяемые по сроку SRS + новые по порядку."""
     _, profile = _profile(token, student_id)
+    if set_id == 0:
+        return _hard_training(profile)
     _check_set_access(profile, set_id)
     learner = _learner_key(profile)
     conn = get_conn()
@@ -302,7 +413,22 @@ def start_training(token: str, student_id: int, set_id: int) -> dict:
         random.shuffle(wrong)
         c["distractors"] = wrong[:3]
     random.shuffle(cards)
+    # Пул слов набора для заданий (выбери картинку/перевод, пары, на слух).
+    pool_rows = conn.execute(
+        "SELECT id, text_en, text_ru, image_url, example_en FROM lk_words WHERE set_id=? AND active=1"
+        " ORDER BY RANDOM() LIMIT 40", (set_id,)).fetchall()
+    pool = [_pool_item(r) for r in pool_rows]
+    pool_far = _far_pool(conn, set_id, {p["text_en"].lower() for p in pool})
+    set_row = conn.execute("SELECT code, title, topic FROM lk_word_sets WHERE id=?", (set_id,)).fetchone()
+    meta = set_meta(set_row["code"])
     return {
+        "code": set_row["code"],
+        "title": set_row["title"],
+        "topic": set_row["topic"],
+        "pool": pool,
+        "pool_far": pool_far,
+        "icon": meta["icon"],
+        "color": meta["color"],
         "set_id": set_id,
         "child_name": profile["child_name"],
         "cards": cards,
@@ -312,8 +438,47 @@ def start_training(token: str, student_id: int, set_id: int) -> dict:
     }
 
 
-def answer(token: str, student_id: int, word_id: int, correct: bool) -> dict:
-    """Ответ ученика: двигаем силу слова по SRS."""
+
+def _msk_day(offset: int = 0) -> str:
+    return (datetime.now(timezone(timedelta(hours=3))) + timedelta(days=offset)).strftime("%Y-%m-%d")
+
+
+def finish_session(token: str, student_id: int, set_id: int, correct: int, total: int) -> dict:
+    """Конец урока: монеты за урок (+ за урок без ошибок) и итоги для экрана результата."""
+    from . import rewards
+    _, profile = _profile(token, student_id)
+    learner = _learner_key(profile)
+    perfect = bool(total and correct == total)
+    bonus = rewards.COIN_LESSON + (rewards.COIN_PERFECT if perfect else 0)
+    rewards.add_day(learner, coins=bonus, sessions=1, perfect=1 if perfect else 0)
+    rewards.give_world_coins(profile, bonus, f"lk:{learner}:finish:{uuid.uuid4().hex}")
+    return {"status": "ok", "bonus_coins": bonus, "perfect": perfect, **_game_stats(learner, profile)}
+
+
+def claim_reward(token: str, student_id: int, kind: str) -> dict:
+    from . import rewards
+    _, profile = _profile(token, student_id)
+    return rewards.claim(_learner_key(profile), profile, kind)
+
+
+def set_goal(token: str, student_id: int, goal: int) -> dict:
+    _, profile = _profile(token, student_id)
+    goal = max(20, min(200, int(goal or 50)))
+    get_conn().execute(
+        "INSERT INTO lk_learner_prefs (learner_key, daily_goal) VALUES (?,?)"
+        " ON CONFLICT(learner_key) DO UPDATE SET daily_goal=excluded.daily_goal",
+        (_learner_key(profile), goal))
+    return {"status": "ok", "daily_goal": goal}
+
+
+def _game_stats(learner: str, profile) -> dict:
+    """Награды ученика (см. rewards.py): монеты, звание, календарь, задание дня, коллекция."""
+    from . import rewards
+    return rewards.summary(learner, profile)
+
+
+def answer(token: str, student_id: int, word_id: int, correct: bool, mode: str = "") -> dict:
+    """Ответ ученика: двигаем силу слова по SRS и начисляем XP."""
     _, profile = _profile(token, student_id)
     learner = _learner_key(profile)
     conn = get_conn()
@@ -345,7 +510,11 @@ def answer(token: str, student_id: int, word_id: int, correct: bool) -> dict:
         (learner, word_id, strength, due, seen + 1, ok + (1 if correct else 0),
          datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")),
     )
-    return {"status": "ok", "strength": strength, "due_at": due}
+    from . import rewards
+    coins = (rewards.COIN_CORRECT + (rewards.COIN_HARD if mode in ("type", "listen", "speak") else 0)) if correct else 0
+    rewards.add_day(learner, coins=coins, answers=1, correct=1 if correct else 0, new_words=1 if row is None else 0)
+    rewards.give_world_coins(profile, coins, f"lk:{learner}:answer:{uuid.uuid4().hex}")
+    return {"status": "ok", "strength": strength, "due_at": due, "coins": coins}
 
 
 def stats(token: str, student_id: int) -> dict:
@@ -374,6 +543,7 @@ def stats(token: str, student_id: int) -> dict:
         "due_today": int(due),
         "answers_total": int(row["answers"] or 0),
         "answers_correct": int(row["correct"] or 0),
+        **_game_stats(learner, profile),
     }
 
 

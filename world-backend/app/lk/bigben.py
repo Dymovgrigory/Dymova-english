@@ -137,3 +137,16 @@ def invalidate_cache() -> None:
     global _students_cache
     _students_cache = None
     _lessons_cache.clear()
+
+
+def create_lead(name: str, phone: str, comment: str = "", source: str = "Личный кабинет") -> int | None:
+    """Заявка в BigBen (POST /leads, public API v1). Возвращает id лида."""
+    import uuid
+
+    body = {"name": name[:255], "phone": phone[:50], "source": source[:255], "comment": comment[:800]}
+    with _client() as client:
+        r = client.post("/leads", json=body, headers={"Idempotency-Key": uuid.uuid4().hex})
+    if r.status_code >= 400:
+        raise BigBenUnavailable(f"BigBen /leads: HTTP {r.status_code}")
+    data = (r.json() or {}).get("data") or {}
+    return data.get("id")

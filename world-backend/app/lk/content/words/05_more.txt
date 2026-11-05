@@ -1,0 +1,170 @@
+#health
+health|здоровье
+healthy|здоровый
+ill|больной
+sick|больной
+doctor|врач
+hospital|больница
+medicine|лекарство
+pill|таблетка
+cold|простуда
+cough|кашель
+fever|жар
+headache|головная боль
+toothache|зубная боль
+stomachache|боль в животе
+pain|боль
+hurt|болеть; ушибить
+accident|несчастный случай
+ambulance|скорая помощь
+plaster|пластырь
+diet|диета
+exercise|упражнение
+sleep|сон
+#travel
+travel|путешествие
+trip|поездка
+journey|путешествие
+holiday|отпуск
+tourist|турист
+map|карта
+passport|паспорт
+suitcase|чемодан
+luggage|багаж
+ticket|билет
+hotel|гостиница
+camp|лагерь
+tent|палатка
+beach|пляж
+seaside|морское побережье
+sightseeing|осмотр достопримечательностей
+guidebook|путеводитель
+flight|рейс
+country|страна
+capital|столица
+abroad|за границей
+foreign|иностранный
+north|север
+south|юг
+east|восток
+west|запад
+left|левый; налево
+right|правый; направо
+straight on|прямо
+near|рядом
+far|далеко
+#shopping
+money|деньги
+coin|монета
+price|цена
+cost|стоить
+cash|наличные
+credit card|кредитная карта
+shop assistant|продавец
+customer|покупатель
+receipt|чек
+sale|распродажа
+size|размер
+bag|пакет; сумка
+basket|корзина
+list|список
+bill|счёт
+cheap|дешёвый
+expensive|дорогой
+#technology
+technology|технология
+computer|компьютер
+laptop|ноутбук
+tablet|планшет
+mobile phone|мобильный телефон
+smartphone|смартфон
+screen|экран
+keyboard|клавиатура
+mouse|компьютерная мышь
+printer|принтер
+internet|интернет
+website|сайт
+email|электронное письмо
+message|сообщение
+password|пароль
+app|приложение
+video|видео
+photo|фото
+camera|камера
+battery|батарейка
+headphones|наушники
+robot|робот
+machine|машина (механизм)
+download|скачивать
+click|нажимать (мышкой)
+online|онлайн
+#people
+name|имя
+first name|имя
+surname|фамилия
+age|возраст
+address|адрес
+kind|добрый
+friendly|дружелюбный
+clever|умный
+smart|сообразительный
+funny|забавный
+polite|вежливый
+rude|грубый
+brave|смелый
+lazy|ленивый
+honest|честный
+patient|терпеливый
+careful|осторожный
+helpful|готовый помочь
+creative|творческий
+quiet|тихий
+noisy|шумный
+naughty|непослушный
+good-looking|привлекательный
+blonde|светловолосый
+curly|кудрявый
+beard|борода
+moustache|усы
+hero|герой
+#space
+space|космос
+planet|планета
+star|звезда
+moon|луна
+sun|солнце
+rocket|ракета
+astronaut|космонавт
+alien|инопланетянин
+earth|Земля
+globe|глобус
+sky|небо
+science|наука
+experiment|эксперимент
+magnet|магнит
+energy|энергия
+metal|металл
+plastic|пластик
+glass|стекло
+wood|дерево (материал)
+paper|бумага
+gold|золото
+diamond|алмаз
+#fairy
+fairy|фея
+ghost|привидение
+witch|ведьма
+wizard|волшебник
+dragon|дракон
+monster|чудовище
+pirate|пират
+treasure|сокровище
+castle|замок
+crown|корона
+magic|волшебство
+angel|ангел
+spy|шпион
+superhero|супергерой
+unicorn|единорог
+mermaid|русалка
+giant|великан

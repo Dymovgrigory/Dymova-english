@@ -1,0 +1,795 @@
+#general
+ability|способность
+about|о; около
+above|над; выше
+accept|принимать
+account|аккаунт; счёт
+achieve|достигать
+across|через
+act|поступок; действовать
+action|действие
+activity|занятие
+actually|на самом деле
+addition|добавление
+adjective|прилагательное
+admire|восхищаться
+admit|признавать
+advanced|продвинутый
+advantage|преимущество
+adventure|приключение
+advertisement|реклама
+advice|совет
+advise|советовать
+ahead|впереди
+alarm clock|будильник
+album|альбом
+alive|живой
+all right|в порядке
+allow|разрешать
+along|вдоль
+amused|позабавленный
+anniversary|годовщина
+annoying|раздражающий
+anxious|тревожный
+anyway|в любом случае
+anywhere|где угодно
+apologise|извиняться
+appear|появляться
+appearance|внешность
+apply|подавать заявку
+appointment|встреча (по записи)
+appreciate|ценить
+apron|фартук
+architecture|архитектура
+area|район; область
+argue|спорить
+argument|спор
+around|вокруг
+article|статья
+artificial|искусственный
+asleep|спящий
+assistant|помощник
+athlete|спортсмен
+attack|нападение; нападать
+attention|внимание
+attitude|отношение
+attractive|привлекательный
+audience|зрители
+author|автор
+automatic|автоматический
+average|средний
+avoid|избегать
+awake|бодрствующий
+award|награда
+away|прочь; далеко
+background|фон
+barbecue|барбекю
+barber|парикмахер (мужской)
+bargain|выгодная покупка
+basic|основной
+beauty|красота
+become|становиться
+beginner|новичок
+beginning|начало
+behaviour|поведение
+bell|колокольчик; звонок
+belong|принадлежать
+below|ниже; под
+bench|скамейка
+bend|сгибать
+best|лучший
+better|лучше
+birth|рождение
+bit|кусочек
+bite|кусать; укус
+blank|пустой (незаполненный)
+blow|дуть
+boiled|варёный
+bookshelf|книжная полка
+bookshop|книжный магазин
+boss|начальник
+both|оба
+bother|беспокоить
+bottom|дно; низ
+brake|тормоз
+branch|ветка
+brand|бренд
+breathe|дышать
+breeze|ветерок
+bride|невеста
+bright|яркий
+broken|сломанный
+budget|бюджет
+bulb|лампочка
+burn|жечь; ожог
+bus station|автовокзал
+business|бизнес
+businesswoman|бизнесвумен
+cafeteria|столовая
+campus|кампус
+capital letter|заглавная буква
+captain|капитан
+card|открытка; карточка
+care|забота
+case|случай; футляр
+cause|вызывать; причина
+celebration|празднование
+cent|цент
+centimetre|сантиметр
+certain|определённый; уверенный
+certainly|конечно
+chain|цепь
+challenge|испытание
+championship|чемпионат
+chance|шанс
+chapter|глава
+character|персонаж; характер
+chart|диаграмма
+chat|болтать
+cheer|подбадривать
+childhood|детство
+chilli|острый перец
+choice|выбор
+circle|круг
+citizen|гражданин
+classic|классический
+classical music|классическая музыка
+clear|ясный
+clearly|ясно
+clerk|служащий
+cloth|ткань
+club|клуб; кружок
+clue|подсказка
+coast|побережье
+code|код
+column|колонка
+comfortable|удобный
+common|обычный; общий
+communicate|общаться
+communication|общение
+company|компания
+competition|соревнование
+complain|жаловаться
+complete|полный; завершать
+composer|композитор
+concentrate|сосредоточиться
+condition|условие
+confident|уверенный в себе
+confused|сбитый с толку
+consider|рассматривать
+contact|связь; связываться
+container|контейнер
+contest|конкурс
+continent|континент
+continue|продолжать
+control|управление
+convenient|удобный
+conversation|разговор
+cooking|готовка
+copy|копия; копировать
+correct|правильный
+correctly|правильно
+couch|диван
+couple|пара
+course|курс
+cover|обложка; накрывать
+crazy|сумасшедший
+create|создавать
+creativity|творчество
+cricket|крикет
+cross|пересекать; крест
+crowd|толпа
+crowded|переполненный
+culture|культура
+custom|обычай
+daily|ежедневный
+danger|опасность
+daylight|дневной свет
+dear|дорогой (обращение)
+debate|дебаты
+degree|градус; степень
+delay|задержка
+department store|универмаг
+depend|зависеть
+description|описание
+design|дизайн
+destroy|разрушать
+detail|деталь
+develop|развивать
+diary|дневник
+difference|разница
+differently|по-другому
+difficulty|трудность
+dig|копать
+digital camera|цифровой фотоаппарат
+direction|направление
+director|режиссёр; директор
+disappear|исчезать
+disappointed|разочарованный
+disco|дискотека
+discover|открывать (находить)
+discuss|обсуждать
+discussion|обсуждение
+dislike|не любить
+display|выставка; показ
+disturb|мешать
+divide|делить
+dizzy|с головокружением
+dollar|доллар
+doubt|сомнение
+drama|драма
+dressed|одетый
+dust|пыль
+earn|зарабатывать
+earthquake|землетрясение
+easily|легко
+education|образование
+educational|образовательный
+effect|эффект
+effort|усилие
+elderly|пожилой
+electric|электрический
+elevator|лифт
+else|ещё; кроме
+embarrassing|неловкий
+emergency|чрезвычайная ситуация
+encourage|поощрять
+end|конец; заканчивать
+endangered|находящийся под угрозой
+ending|концовка
+energetic|энергичный
+enjoy|получать удовольствие
+enormous|огромный
+enough|достаточно
+enter|входить
+entertainment|развлечения
+entrance|вход
+envelope|конверт
+episode|серия (эпизод)
+error|ошибка
+escalator|эскалатор
+escape|побег; убегать
+especially|особенно
+essay|сочинение
+euro|евро
+even|даже
+event|событие
+ever|когда-либо
+everyday|повседневный
+everywhere|везде
+exactly|точно
+exchange|обмен
+exhibition|выставка
+exist|существовать
+expect|ожидать
+experience|опыт
+expert|эксперт
+explanation|объяснение
+explore|исследовать
+expression|выражение
+extra|дополнительный
+extremely|чрезвычайно
+fact|факт
+fail|проваливать
+fair|честный; ярмарка
+fairly|довольно
+familiar|знакомый
+fan|болельщик; вентилятор
+fancy|причудливый
+fascinating|увлекательный
+fashion|мода
+fast food|фастфуд
+fault|вина
+favour|одолжение
+feed|кормить
+female|женский
+fiction|художественная литература
+fight|драка; бороться
+figure|фигура; цифра
+file|файл; папка
+final|финал; последний
+finally|наконец
+fine|прекрасный; в порядке
+fit|подходить; в форме
+flag|флаг
+flood|наводнение
+focus|сосредоточиться
+folder|папка
+following|следующий
+footballer|футболист
+foreigner|иностранец
+forever|навсегда
+form|форма; бланк
+fortunately|к счастью
+forward|вперёд
+frame|рамка
+freedom|свобода
+freeze|замерзать
+fried|жареный
+friendship|дружба
+frightened|испуганный
+frightening|пугающий
+front|перед; передний
+future|будущее
+garbage|мусор
+gas|газ
+gather|собирать(ся)
+generation|поколение
+gentle|нежный
+golden|золотой
+government|правительство
+grade|оценка; класс
+gradually|постепенно
+graduate|оканчивать (учебное заведение)
+gram|грамм
+granddad|дедуля
+grateful|благодарный
+greedy|жадный
+greet|приветствовать
+grilled|жаренный на гриле
+ground|земля (поверхность)
+group|группа
+guard|охранник
+habit|привычка
+haircut|стрижка
+handle|ручка (двери)
+happen|случаться
+happily|счастливо
+happiness|счастье
+hardly|едва
+harmful|вредный
+harvest|урожай
+heat|жара
+heating|отопление
+hey|эй
+high school|старшая школа
+highway|шоссе
+hike|поход
+hole|дыра; нора
+hometown|родной город
+honour|честь
+horror|ужас
+host|хозяин (принимающий гостей)
+however|однако
+human|человек; человеческий
+hunter|охотник
+hurry|спешить
+ID card|удостоверение личности
+idea|идея
+ideal|идеальный
+image|изображение
+imagination|воображение
+impatient|нетерпеливый
+importance|важность
+impossible|невозможный
+impress|впечатлять
+inch|дюйм
+include|включать
+increase|увеличивать
+independence|независимость
+indoor|в помещении
+information|информация
+injure|ранить
+insect|насекомое
+inspiration|вдохновение
+instead|вместо
+intelligent|умный
+interest|интерес
+interested|заинтересованный
+international|международный
+interview|интервью
+introduce|представлять (знакомить)
+invent|изобретать
+invention|изобретение
+item|предмет
+jet|реактивный самолёт
+jewellery|украшения
+join|присоединяться
+joke|шутка
+judge|судья; судить
+junior|младший
+kilo|килограмм
+kilometre|километр
+kingdom|королевство
+kit|набор
+knowledge|знания
+lamp|лампа
+land|земля; приземляться
+landscape|пейзаж
+lane|переулок; дорожка
+latest|последний (новейший)
+law|закон
+leader|лидер
+learner|учащийся
+leather|кожа (материал)
+leisure|досуг
+less|меньше
+let|позволять
+level|уровень
+lie|лгать; лежать
+life|жизнь
+lifestyle|образ жизни
+likely|вероятный
+line|линия; очередь
+litre|литр
+lively|оживлённый
+local|местный
+lock|замок; запирать
+lost|потерянный
+lot|много
+loudly|громко
+luck|удача
+luckily|к счастью
+lucky|удачливый
+lunchtime|обеденное время
+mad|безумный
+mail|почта
+main course|основное блюдо
+mainly|в основном
+make-up|макияж
+male|мужской
+manage|справляться
+manner|манера
+mark|отметка; оценка
+married|женатый; замужняя
+marry|жениться; выходить замуж
+material|материал
+matter|иметь значение
+mean|значить
+meaning|значение
+medical|медицинский
+meeting|встреча
+member|участник
+memory|память; воспоминание
+mention|упоминать
+merry|весёлый
+method|способ
+metre|метр
+middle|середина
+mind|разум; возражать
+miss|скучать; пропускать
+missing|пропавший
+mobile|мобильный
+model|модель
+mood|настроение
+mostly|в основном
+motorway|автомагистраль
+musical|музыкальный
+mysterious|таинственный
+mystery|тайна
+nation|нация
+national|национальный
+nationality|национальность
+native|родной
+natural|естественный
+nearly|почти
+necessary|необходимый
+negative|отрицательный
+news|новости
+newspaper|газета
+next|следующий
+noise|шум
+noon|полдень
+normal|обычный
+note|записка; заметка
+notice|замечать
+noun|существительное
+novel|роман
+nowadays|в наше время
+oak|дуб
+off|выключенный
+offer|предлагать
+officer|офицер
+official|официальный
+Olympics|Олимпийские игры
+once|однажды; один раз
+opera|опера
+opinion|мнение
+opportunity|возможность
+opposite|напротив; противоположный
+order|заказывать; порядок
+organise|организовывать
+original|оригинальный
+out|снаружи; вне
+own|собственный
+owner|владелец
+pack|упаковывать
+pair|пара
+pants|штаны
+paragraph|абзац
+pardon|простите (переспросить)
+part|часть
+partner|партнёр
+pass|передавать; сдавать
+past|прошлое
+path|тропинка
+peace|мир (покой)
+peaceful|мирный
+pen friend|друг по переписке
+perfect|идеальный
+perform|выступать
+performance|выступление
+perfume|духи
+perhaps|возможно
+period|период
+permission|разрешение
+personal|личный
+personality|личность
+petrol|бензин
+petrol station|заправка
+photographer|фотограф
+photography|фотография (занятие)
+physical|физический
+pick|выбирать; срывать
+piece|кусок
+pile|куча
+pity|жалость
+playful|игривый
+pleasant|приятный
+pleasure|удовольствие
+plenty|множество
+plural|множественное число
+police|полиция
+pollute|загрязнять
+pollution|загрязнение
+pool|бассейн
+pop|поп-музыка
+popular|популярный
+population|население
+portrait|портрет
+position|положение
+possible|возможный
+possibly|возможно
+post|отправлять почтой
+poster|плакат
+power|сила; энергия
+powerful|мощный
+practice|практика
+predict|предсказывать
+prefer|предпочитать
+pretend|притворяться
+prevent|предотвращать
+pride|гордость
+print|печатать
+private|частный
+probably|вероятно
+problem|проблема
+produce|производить
+product|продукт
+professional|профессиональный
+programme|программа; передача
+promise|обещание; обещать
+pronounce|произносить
+pronunciation|произношение
+public|общественный
+publish|публиковать
+punctuation|пунктуация
+purpose|цель
+quality|качество
+quietly|тихо
+quiz|викторина
+raise|поднимать
+rap|рэп
+rather|скорее
+raw|сырой
+reach|достигать
+reader|читатель
+realise|осознавать
+reason|причина
+recent|недавний
+recently|недавно
+receptionist|администратор
+record|записывать
+recycle|перерабатывать
+reflect|отражать
+regular|регулярный
+regularly|регулярно
+relax|отдыхать
+relaxed|расслабленный
+remind|напоминать
+rent|аренда; снимать
+replace|заменять
+reply|ответ; отвечать
+report|доклад
+request|просьба
+research|исследование
+result|результат
+return|возвращаться
+review|отзыв; повторение
+rhythm|ритм
+ribbon|лента
+roast|жарить (в духовке)
+role|роль
+roll|булочка; катить
+romantic|романтичный
+rope|верёвка
+roundabout|круговое движение
+row|ряд
+royal|королевский
+rule|правило
+ruler|линейка; правитель
+runner|бегун
+rush|спешка
+sadly|грустно; к сожалению
+sample|образец
+sandy|песчаный
+scene|сцена
+scenery|пейзаж
+schedule|расписание
+schoolchild|школьник
+schoolwork|школьные задания
+scientific|научный
+scream|кричать
+screen|экран
+script|сценарий
+search|поиск; искать
+seat|место (сиденье)
+secret|секрет
+section|раздел
+seem|казаться
+senior|старший
+sense|чувство; смысл
+separate|отдельный
+seriously|серьёзно
+serve|обслуживать; подавать
+set|набор; ставить
+sew|шить
+shade|тень
+shadow|тень (от предмета)
+shake|трясти
+shape|форма
+shock|шок
+shore|берег
+shut|закрывать
+side|сторона
+sight|зрение; достопримечательность
+sign|знак; подписывать
+silence|тишина
+silly|глупый
+similar|похожий
+simple|простой
+simply|просто
+singing|пение
+single|единственный
+sitting room|гостиная
+situation|ситуация
+skill|навык
+slice|ломтик
+slide|горка
+slim|стройный
+smooth|гладкий
+soccer|футбол
+social|социальный
+society|общество
+soft drink|безалкогольный напиток
+softly|мягко
+software|программное обеспечение
+solution|решение
+solve|решать (задачу)
+someday|когда-нибудь
+somewhere|где-то
+sound|звук; звучать
+speaker|динамик; говорящий
+speech|речь
+speed|скорость
+spill|проливать
+splash|брызгать
+spot|пятно; место
+spread|распространять; намазывать
+stage|сцена
+stamp|марка
+statue|статуя
+steal|красть
+step|шаг
+store|магазин
+stove|плита
+stranger|незнакомец
+strength|сила
+strict|строгий
+string|верёвка; струна
+structure|структура
+stuff|вещи
+style|стиль
+succeed|добиваться успеха
+success|успех
+successful|успешный
+sudden|внезапный
+suggest|предлагать
+suggestion|предложение
+suit|костюм; подходить
+suitable|подходящий
+sum|сумма
+summary|краткое содержание
+sunlight|солнечный свет
+sunshine|солнечный свет
+super|супер
+superstar|суперзвезда
+support|поддержка
+sure|уверенный
+surprise|сюрприз
+surprising|удивительный
+survey|опрос
+survive|выживать
+swallow|глотать
+symbol|символ
+system|система
+talent|талант
+tap|кран
+tape|скотч; лента
+target|цель
+task|задание
+tear|слеза
+teenage|подростковый
+telephone|телефон
+text|текст
+text message|СМС-сообщение
+thank|благодарить
+therefore|поэтому
+thick|толстый
+thief|вор
+thing|вещь
+thought|мысль
+tight|тесный
+tip|кончик; совет
+title|название
+tool|инструмент
+top|верх
+topic|тема
+tour|экскурсия
+tour guide|экскурсовод
+track|трасса; дорожка
+tradition|традиция
+traditional|традиционный
+training|тренировка
+trap|ловушка
+traveller|путешественник
+trick|фокус; трюк
+trouble|беда
+trust|доверять
+truth|правда
+tune|мелодия
+turkey|индейка
+twice|дважды
+type|тип; печатать
+uncomfortable|неудобный
+underline|подчёркивать
+underwater|подводный
+unfair|несправедливый
+unforgettable|незабываемый
+unfortunately|к сожалению
+unhappy|несчастный
+unhealthy|нездоровый
+unit|раздел (учебника)
+unknown|неизвестный
+unusual|необычный
+useful|полезный
+usual|обычный
+vacation|каникулы
+value|ценность
+vase|ваза
+verb|глагол
+view|вид
+visitor|посетитель
+voice|голос
+vote|голосовать
+walking|ходьба
+wander|бродить
+way|путь; способ
+weekday|будний день
+weekly|еженедельный
+weigh|весить
+weight|вес
+well-known|известный
+wheelchair|инвалидная коляска
+whole|целый
+wise|мудрый
+wisdom|мудрость
+wooden|деревянный
+wool|шерсть
+worker|рабочий
+worse|хуже
+worst|худший
+writing|письмо (навык)
+yard|двор
+youth|молодость
+zone|зона

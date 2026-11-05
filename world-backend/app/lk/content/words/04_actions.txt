@@ -1,0 +1,255 @@
+#actions
+be|быть
+have|иметь
+do|делать
+make|делать; создавать
+go|идти; ехать
+come|приходить
+get|получать
+give|давать
+take|брать
+bring|приносить
+carry|нести
+put|класть
+find|находить
+lose|терять
+look|смотреть
+see|видеть
+watch|смотреть (наблюдать)
+hear|слышать
+listen|слушать
+say|сказать
+tell|рассказывать
+talk|разговаривать
+speak|говорить
+ask|спрашивать
+answer|отвечать
+call|звать; звонить
+know|знать
+think|думать
+understand|понимать
+remember|помнить
+forget|забывать
+learn|учить; узнавать
+teach|учить (кого-то)
+read|читать
+write|писать
+draw|рисовать
+paint|рисовать красками
+colour|раскрашивать
+cut|резать
+open|открывать
+close|закрывать
+start|начинать
+begin|начинать
+finish|заканчивать
+stop|останавливать(ся)
+wait|ждать
+help|помогать
+try|пытаться
+want|хотеть
+need|нуждаться
+like|любить; нравиться
+love|любить
+eat|есть
+drink|пить
+cook|готовить
+bake|печь
+wash|мыть
+clean|убирать
+tidy|наводить порядок
+sleep|спать
+wake up|просыпаться
+get up|вставать
+sit|сидеть
+stand|стоять
+walk|идти пешком
+run|бежать
+jump|прыгать
+climb|карабкаться
+fly|летать
+swim|плавать
+ride|ехать верхом или на велосипеде
+drive|водить машину
+dance|танцевать
+sing|петь
+play|играть
+hide|прятаться
+find out|выяснять
+throw|бросать
+catch|ловить
+kick|пинать
+hit|ударять
+push|толкать
+pull|тянуть
+pick up|поднимать
+drop|ронять
+hold|держать
+touch|трогать
+smell|нюхать; пахнуть
+taste|пробовать на вкус
+feel|чувствовать
+show|показывать
+choose|выбирать
+buy|покупать
+sell|продавать
+pay|платить
+spend|тратить
+send|отправлять
+receive|получать
+build|строить
+break|ломать
+fix|чинить
+repair|ремонтировать
+grow|расти; выращивать
+live|жить
+die|умирать
+travel|путешествовать
+visit|посещать
+arrive|прибывать
+leave|уходить; оставлять
+stay|оставаться
+move|двигаться; переезжать
+turn|поворачивать
+follow|следовать
+meet|встречать
+invite|приглашать
+celebrate|праздновать
+win|побеждать
+share|делиться
+borrow|брать взаймы
+lend|давать взаймы
+keep|хранить
+save|спасать; копить
+use|использовать
+change|менять
+collect|собирать
+count|считать
+add|добавлять
+mix|смешивать
+fill|наполнять
+pour|наливать
+boil|кипятить
+fry|жарить
+check|проверять
+explain|объяснять
+describe|описывать
+compare|сравнивать
+decide|решать
+plan|планировать
+prepare|готовить(ся)
+practise|тренироваться
+improve|улучшать
+believe|верить
+guess|угадывать
+imagine|представлять
+wonder|интересоваться
+agree|соглашаться
+disagree|не соглашаться
+worry|волноваться
+hope|надеяться
+wish|желать
+laugh|смеяться
+smile|улыбаться
+cry|плакать
+shout|кричать
+whisper|шептать
+point|указывать
+wave|махать
+clap|хлопать
+knock|стучать
+ring|звонить (о звонке)
+shine|светить
+rain|идти (о дожде)
+snow|идти (о снеге)
+fall|падать
+#describing
+big|большой
+small|маленький
+little|маленький
+large|крупный
+huge|огромный
+tall|высокий
+short|короткий; невысокий
+long|длинный
+high|высокий
+low|низкий
+wide|широкий
+thin|тонкий; худой
+fat|толстый
+heavy|тяжёлый
+light|лёгкий
+fast|быстрый
+quick|быстрый
+slow|медленный
+good|хороший
+bad|плохой
+great|отличный
+nice|приятный
+beautiful|красивый
+pretty|симпатичный
+handsome|красивый (о мужчине)
+ugly|некрасивый
+cute|милый
+lovely|чудесный
+wonderful|замечательный
+excellent|превосходный
+fantastic|фантастический
+amazing|потрясающий
+brilliant|блестящий
+awful|ужасный
+terrible|ужасный
+new|новый
+old|старый
+young|молодой
+modern|современный
+ancient|древний
+hot|горячий
+cold|холодный
+easy|лёгкий (простой)
+difficult|трудный
+hard|твёрдый; трудный
+soft|мягкий
+clean|чистый
+dirty|грязный
+full|полный
+empty|пустой
+open|открытый
+closed|закрытый
+right|правильный; правый
+wrong|неправильный
+true|правдивый
+false|ложный
+same|одинаковый
+different|разный
+loud|громкий
+quiet|тихий
+noisy|шумный
+rich|богатый
+poor|бедный
+cheap|дешёвый
+expensive|дорогой
+strong|сильный
+weak|слабый
+safe|безопасный
+dangerous|опасный
+busy|занятой
+free|свободный; бесплатный
+ready|готовый
+important|важный
+interesting|интересный
+boring|скучный
+exciting|захватывающий
+famous|знаменитый
+favourite|любимый
+special|особенный
+strange|странный
+real|настоящий
+round|круглый
+square|квадратный
+straight|прямой
+deep|глубокий
+sweet|сладкий
+fresh|свежий
+wild|дикий
+magic|волшебный

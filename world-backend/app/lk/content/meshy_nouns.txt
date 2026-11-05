@@ -1,0 +1,802 @@
+# слово|описание для картинки («-» — не рисовать, будет карточка-надпись). Без строки — «a <слово>».
+animal|a group of farm animals: cow, sheep and horse in a meadow
+pet|a boy cuddling his pet dog at home
+fish|a goldfish in water
+bird|a small songbird on a branch
+mouse|a small grey mouse
+bat|a bat animal flying at dusk
+fly|a housefly insect close-up
+bug|a ladybird beetle on a leaf
+insect|a grasshopper insect on a leaf
+flea|-
+creature|-
+tail|a fox with a big fluffy tail seen from behind
+wing|a bird's open wing close-up
+shell|a seashell on sand
+zoo|a zoo entrance with animals behind a fence
+farm|a farm with a red barn and a tractor
+food|a table full of healthy food
+orange|an orange fruit
+pepper|a red bell pepper
+bean|green beans on a plate
+corn|a corn cob
+salad|a bowl of green salad
+butter|a block of butter on a dish
+cream|a jug of cream
+chicken soup|a bowl of chicken noodle soup
+soup|a bowl of tomato soup
+fish and chips|fish and chips on a plate
+chips|a bowl of french fries
+crisps|a bowl of potato crisps
+toast|a slice of toast
+cereal|a bowl of cereal with milk
+jelly|a colourful fruit jelly dessert
+oil|a bottle of sunflower oil
+sauce|a bowl of ketchup sauce
+biscuit|a plate of biscuits
+sweet|colourful sweets
+candy|colourful candies
+dessert|a dessert with fruit and cream
+snack|a snack plate with crackers and fruit
+seafood|a plate of shrimps and mussels
+drink|a glass of orange drink with a straw
+water|a glass of water
+tea|a cup of tea
+coffee|a cup of coffee
+cola|a glass of cola with ice
+mineral water|a bottle of mineral water
+breakfast|a breakfast plate with eggs, toast and juice
+lunch|a lunch box with a sandwich and fruit
+dinner|a family dinner table with plates of food
+supper|a light evening supper on a table
+meal|a plate with a hot meal
+picnic|a family picnic on a blanket in a park
+menu|a restaurant menu card on a table
+hungry|a hungry boy looking at a pizza
+thirsty|a thirsty girl drinking water
+delicious|a girl enjoying a delicious cake
+fresh|fresh vegetables with water drops
+family|a happy family: mother, father, son and daughter
+mother|a mother holding her little daughter
+mum|a smiling mum reading a book to her son
+father|a father carrying his son on his shoulders
+dad|a dad playing football with his son
+parent|parents walking with their child
+brother|two brothers playing together
+sister|two sisters hugging
+baby|a smiling baby
+child|a smiling child
+kid|a kid with a backpack
+son|a father and his little son
+daughter|a mother and her little daughter
+grandmother|a grandmother knitting
+grandma|a grandma baking with her granddaughter
+granny|a smiling granny
+grandfather|a grandfather with glasses reading
+grandpa|a grandpa fishing with his grandson
+grandparent|grandparents sitting on a bench
+grandchild|grandparents with their grandchild
+grandson|a grandfather and his grandson
+granddaughter|a grandmother and her granddaughter
+uncle|a smiling uncle with his nephew
+aunt|a smiling aunt with her niece
+cousin|two cousins playing in a garden
+husband|a husband and wife, the man in focus
+wife|a husband and wife, the woman in focus
+boy|a smiling boy
+girl|a smiling girl
+man|a smiling man
+woman|a smiling woman
+lady|an elegant lady with a hat
+people|a group of people in a park
+person|one person standing
+friend|two friends laughing together
+best friend|two best friends with arms around each other
+neighbour|a neighbour waving over a garden fence
+guest|guests arriving at a door with a cake
+teenager|a teenager with headphones
+adult|an adult woman at work
+twins|twin sisters in matching clothes
+birthday|a birthday party with a cake and candles
+wedding|a bride and groom at a wedding
+body|a boy doing a star jump, whole body visible
+head|a child's head in profile
+face|a smiling child's face
+hair|a girl with long hair
+eye|a close-up of a human eye
+ear|a close-up of a human ear
+nose|a close-up of a child's nose
+mouth|a smiling mouth close-up
+tooth|a white tooth close-up
+teeth|a child's smile showing teeth
+lip|smiling lips close-up
+tongue|a child sticking out the tongue
+cheek|a child's rosy cheek
+chin|a man touching his chin
+neck|a woman's neck with a scarf
+shoulder|a hand on a shoulder
+arm|a child's arm showing a muscle
+hand|an open hand
+finger|a finger pointing
+leg|a child's legs walking
+knee|a knee with a plaster
+foot|a bare foot
+feet|two bare feet on the grass
+toe|toes close-up
+ankle|an ankle with a sock
+back|a boy's back with a backpack
+chest|a man's chest in a t-shirt
+belly|a child's belly
+stomach|a child holding his stomach
+heart|a red heart shape made with hands
+brain|a model of a human brain
+bone|a white bone
+blood|a red blood drop
+skin|a hand with soft skin close-up
+clothes|clothes on hangers
+pyjamas|children's pyjamas
+swimsuit|a swimsuit
+uniform|a school uniform
+wear|a girl putting on a coat
+glasses|eyeglasses
+ring|a gold ring
+pocket|a jeans pocket
+house|a family house with a garden
+home|a cosy home with lights in the windows
+flat|an apartment building
+apartment|a modern apartment interior
+room|a bright room
+hall|an entrance hall with coats
+garden|a flower garden
+stairs|a staircase
+upstairs|a child walking upstairs
+downstairs|a child walking downstairs
+light|a ceiling light
+picture|a framed picture on a wall
+board|a whiteboard in a classroom
+TV|a television
+phone|a telephone
+glass|a drinking glass
+dish|a dish with food
+pan|a frying pan
+brush|a hairbrush
+school|a school building
+classroom|a classroom with desks
+class|a class of pupils
+lesson|a lesson in a classroom
+teacher|a teacher in a classroom
+student|a student with books
+pupil|a pupil at a desk
+classmate|two classmates at a desk
+headteacher|a headteacher in an office
+rubber|an eraser
+glue|a glue stick
+paper|a sheet of paper
+page|an open book page
+homework|a child doing homework
+test|a pupil writing a test
+exam|students writing an exam
+question|a big question mark
+answer|a pupil raising a hand to answer
+word|-
+sentence|-
+letter|a letter in an envelope
+story|a mother reading a story to a child
+poem|a poem book
+picture book|a colourful picture book
+subject|-
+English|an English textbook with a British flag
+maths|maths numbers on a blackboard
+science|a science lesson with test tubes
+history|a history book with a castle
+geography|a globe and a map
+art|a child painting at an easel
+music|a music lesson with a piano
+PE|a PE lesson in a gym
+language|-
+grammar|-
+vocabulary|-
+spelling|-
+mistake|a red cross on homework
+example|-
+library|a library with bookshelves
+playground|a children's playground
+break|children playing at school break
+timetable|a school timetable on a wall
+university|a university building
+college|a college building
+learn|a child learning at a desk
+study|a teenager studying with books
+read|a girl reading a book
+write|a hand writing in a notebook
+draw|a child drawing with crayons
+count|a child counting on fingers
+spell|-
+listen|a child listening with headphones
+repeat|-
+toy|a box of toys
+game|children playing a game
+block|wooden toy blocks
+paint|paint pots and a brush
+present|a wrapped present
+gift|a gift box with a bow
+party|a children's party with balloons
+play|children playing in a park
+fun|children having fun on a slide
+funny|a funny clown face
+nature|a beautiful nature landscape
+wood|wooden logs
+park|a city park
+field|a green field
+countryside|countryside with fields and farms
+sky|a blue sky with white clouds
+earth|planet Earth from space
+world|a world globe
+fire|a campfire
+air|a kite flying in the air
+seed|seeds in a palm
+root|tree roots
+weather|weather: sun and clouds
+sunny|a sunny day at the beach
+cloudy|a cloudy sky
+rainy|a rainy street with umbrellas
+windy|a windy day with trees bending
+snowy|a snowy street
+foggy|a foggy forest
+storm|a stormy sea
+ice|ice cubes
+hot|a hot sunny desert
+cold|a child in a winter coat shivering
+warm|a child under a warm blanket
+cool|a cool breeze in a park
+wet|a wet dog
+dry|dry towels
+temperature|a thermometer
+season|four seasons of a tree
+transport|cars, buses and trains in a city
+bike|a bicycle
+underground|a metro train in a station
+subway|a metro train in a station
+rocket|a space rocket launching
+spaceship|a spaceship in space
+driver|a bus driver
+passenger|passengers on a bus
+traffic|a traffic jam
+drive|a woman driving a car
+ride|a boy riding a bike
+city|a big city skyline
+town|a small town street
+place|-
+building|a tall building
+shop|a small shop
+square|a city square
+corner|a street corner
+centre|a city centre
+office|an office with desks
+job|a person working at a desk
+work|people working in an office
+doctor|a doctor with a stethoscope
+nurse|a nurse in a hospital
+cook|a cook in a kitchen
+waiter|a waiter with a tray
+waitress|a waitress with a tray
+engineer|an engineer with a helmet and plans
+scientist|a scientist in a lab
+artist|an artist painting
+painter|a painter painting a wall
+singer|a singer with a microphone
+dancer|a ballet dancer
+musician|a musician playing a guitar
+actor|an actor on stage
+writer|a writer typing a book
+photographer|a photographer with a camera
+journalist|a journalist with a notebook
+reporter|a TV reporter with a microphone
+builder|a builder with a helmet
+mechanic|a mechanic repairing a car
+shop assistant|a shop assistant at a counter
+cleaner|a cleaner with a mop
+secretary|a secretary at a desk with a phone
+manager|a manager in a meeting
+businessman|a businessman in a suit
+lawyer|a lawyer in a court
+vet|a vet with a puppy
+sailor|a sailor on a ship
+soldier|a soldier in uniform
+fisherman|a fisherman with a fishing rod
+clown|a circus clown
+king|a king with a crown
+queen|a queen with a crown
+prince|a young prince
+princess|a princess in a dress
+sport|sports balls and equipment
+team|a children's football team
+player|a basketball player
+coach|a sports coach with a whistle
+match|a football match
+goal|a football goal net with a ball
+winner|a winner holding a trophy
+race|a running race
+win|a team celebrating a win
+lose|a sad team after losing a game
+kick|a boy kicking a ball
+throw|a girl throwing a ball
+catch|a boy catching a ball
+jump|a girl jumping on a trampoline
+run|a boy running
+swim|a girl swimming in a pool
+skate|a child ice skating
+ski|a child skiing
+hobby|hobbies: guitar, paints and a football
+song|a girl singing a song
+dance|children dancing
+sing|a boy singing
+film|a cinema screen with a film
+movie|a family watching a movie
+cartoon|-
+comic|a comic book
+photo|a printed photo
+painting|a painting in a museum
+drawing|a child's drawing
+reading|a boy reading in bed
+collection|a collection of stamps
+concert|a concert with a crowd
+festival|a summer festival with lights
+holiday|a family on holiday at the beach
+weekend|a family relaxing at the weekend in a park
+free time|a teenager relaxing in free time with a book
+band|a music band on stage
+instrument|musical instruments
+gold|gold bars
+space|stars and planets in space
+alien|a toy alien figure
+globe|a globe
+experiment|a child doing a science experiment
+energy|-
+metal|metal pipes
+plastic|plastic bottles
+sleep|a child sleeping in bed
+health|-
+healthy|a girl eating an apple
+ill|a sick child in bed with a thermometer
+sick|a sick boy with a cold
+medicine|a bottle of medicine and a spoon
+cough|a child coughing
+fever|a child with a fever and a thermometer
+headache|a woman with a headache
+toothache|a boy with a toothache holding his cheek
+stomachache|a girl with a stomachache
+pain|a boy holding his painful knee
+hurt|a child with a hurt knee
+accident|a minor car accident
+plaster|a sticking plaster on a finger
+diet|a healthy plate of vegetables
+exercise|children doing morning exercises
+travel|a family travelling with suitcases
+right|a road sign arrow pointing right
+left|a road sign arrow pointing left
+trip|a family on a car trip
+journey|a train journey through mountains
+tourist|a tourist with a camera
+map|a map
+passport|a passport
+camp|a summer camp with tents
+seaside|the seaside with a beach
+sightseeing|tourists sightseeing in a city
+guidebook|a travel guidebook
+flight|a plane in flight
+country|-
+capital|-
+abroad|-
+foreign|-
+north|a compass pointing north
+south|-
+east|-
+west|-
+straight on|a road going straight on
+near|-
+far|-
+quiet|a quiet library
+noisy|a noisy classroom
+name|a name badge
+first name|-
+surname|-
+age|a birthday cake with number candles
+address|an address on an envelope
+kind|a girl helping an old woman
+friendly|a friendly smiling boy waving
+clever|a clever girl solving a puzzle
+smart|a smart boy with a book
+polite|a polite boy holding the door
+rude|a rude boy sticking out his tongue
+brave|a brave firefighter
+lazy|a lazy cat sleeping on a sofa
+honest|-
+patient|a patient girl waiting calmly
+careful|a boy carefully carrying a cup
+helpful|a boy helping his mum carry bags
+creative|a creative girl making crafts
+naughty|a naughty puppy chewing a shoe
+good-looking|a good-looking young man smiling
+blonde|a girl with blonde hair
+curly|a boy with curly hair
+beard|a man with a beard
+moustache|a man with a moustache
+hero|a firefighter rescuing a cat
+cheap|a price tag with a low price
+expensive|an expensive diamond ring
+money|money: coins and banknotes
+price|a price tag
+cost|-
+cash|banknotes
+customer|a customer at a shop till
+sale|a sale sign in a shop window
+size|clothes in different sizes
+list|a shopping list
+bill|a restaurant bill
+magic|a magician with a wand
+fairy|a fairy costume with wings on a girl
+ghost|a child in a white ghost costume
+witch|a child in a witch costume
+wizard|a child in a wizard costume
+dragon|a dragon toy figure
+monster|a cute monster toy
+pirate|a child in a pirate costume
+treasure|a treasure chest with gold
+angel|a child in an angel costume
+spy|a child dressed as a spy with a magnifying glass
+superhero|a child in a superhero costume
+unicorn|a unicorn toy
+mermaid|a mermaid doll
+giant|a very tall man next to a small child
+technology|modern gadgets: laptop, phone and tablet
+screen|a computer screen
+internet|-
+website|a website on a laptop screen
+email|an email on a laptop screen
+message|a text message on a phone
+password|a password field on a screen
+app|apps on a smartphone screen
+video|a video on a tablet
+machine|-
+download|-
+click|a hand clicking a computer mouse
+online|a girl having an online lesson on a laptop
+# --- general
+account|-
+act|-
+action|a boy jumping in action
+activity|children doing activities in a classroom
+adventure|kids exploring a forest with a map
+advertisement|a big advertising billboard
+alarm clock|an alarm clock
+album|a photo album
+apron|a kitchen apron
+article|a newspaper article
+assistant|-
+athlete|an athlete running on a track
+attack|-
+author|an author signing books
+average|-
+award|an award trophy
+barbecue|a barbecue grill with sausages
+barber|a barber cutting hair
+bargain|-
+beginner|a beginner learning to ride a bike
+bell|a school bell
+bench|a park bench
+bend|a bend in a road
+bite|an apple with a bite
+blow|a girl blowing bubbles
+bookshelf|a bookshelf
+bookshop|a bookshop
+boss|-
+bother|-
+bottom|-
+brake|a bicycle brake
+branch|a tree branch
+brand|-
+breeze|curtains moving in a breeze
+bride|a bride in a white dress
+budget|-
+bulb|a light bulb
+burn|-
+bus station|a bus station
+business|-
+businesswoman|a businesswoman in a suit
+cafeteria|a school cafeteria
+campus|a university campus
+capital letter|-
+captain|a ship captain
+card|a greeting card
+cent|a cent coin
+centimetre|a ruler showing centimetres
+chain|a metal chain
+challenge|-
+championship|a championship cup
+chart|a bar chart
+chat|two friends chatting
+childhood|-
+chilli|a red chilli pepper
+circle|a red circle shape
+citizen|-
+classic|-
+classical music|an orchestra playing classical music
+clerk|-
+cloth|a piece of cloth
+club|-
+clue|a magnifying glass on footprints
+coast|a rocky sea coast
+code|-
+column|a stone column
+communication|-
+company|-
+competition|a children's drawing competition
+composer|-
+contact|-
+container|a plastic food container
+contest|-
+continent|a world map of continents
+conversation|two people having a conversation
+cooking|a family cooking together
+copy|-
+couch|a couch
+couple|an elderly couple holding hands
+cover|a book cover
+cricket|a cricket bat and ball
+cross|-
+crowd|a crowd of people at a concert
+dear|-
+debate|-
+department store|a department store
+diary|a diary with a lock
+dig|a child digging sand with a spade
+digital camera|a digital camera
+director|a film director with a megaphone
+disco|a disco ball
+dislike|-
+display|a shop window display
+divide|-
+dollar|a dollar banknote
+dust|dust on a shelf
+earthquake|a crack in the ground after an earthquake
+elevator|an elevator with open doors
+emergency|an ambulance with flashing lights
+end|-
+entrance|a building entrance
+envelope|an envelope
+episode|-
+escalator|an escalator in a mall
+escape|-
+essay|-
+euro|a euro coin
+event|-
+exchange|-
+exhibition|an art exhibition
+expert|-
+extra|-
+fair|a fun fair with a ferris wheel
+fan|an electric fan
+fancy|-
+fast food|fast food: burger, fries and cola
+feed|a girl feeding ducks
+female|-
+fight|-
+file|a paper file folder
+final|-
+fine|-
+fit|-
+flag|a flag on a pole
+flood|a flooded street
+folder|a folder with papers
+footballer|a footballer with a ball
+foreigner|-
+frame|a picture frame
+front|-
+garbage|a garbage bin
+gas|a gas stove flame
+grade|-
+graduate|a graduate in a cap and gown
+gram|-
+granddad|a granddad with his grandchildren
+ground|-
+group|a group of children
+guard|a security guard
+haircut|a boy getting a haircut
+handle|a door handle
+harvest|a harvest of pumpkins and apples
+heating|a radiator
+high school|a high school building
+highway|a highway with cars
+hike|a family hiking in the mountains
+hole|a hole in the ground
+hometown|-
+host|-
+human|-
+hunter|-
+hurry|a man in a hurry looking at his watch
+inch|-
+increase|-
+interview|-
+invention|-
+jet|a jet plane
+jewellery|jewellery: necklace and bracelet
+joke|-
+judge|a judge with a gavel
+kilo|weighing scales showing one kilo
+kilometre|a road sign showing kilometres
+kingdom|-
+kit|a first aid kit
+land|-
+landscape|a mountain landscape
+lane|a country lane
+leader|-
+learner|-
+leather|a leather bag
+lie|-
+line|a queue of people in a line
+litre|a one litre bottle of water
+lock|a padlock
+lot|-
+lunchtime|children eating lunch at school
+mail|letters in a mailbox
+main course|a main course plate with meat and vegetables
+make-up|make-up brushes and lipstick
+male|-
+mark|-
+mean|-
+meeting|-
+member|-
+mention|-
+metre|a tape measure
+middle|-
+miss|-
+mobile|a mobile phone
+model|a model airplane
+motorway|a motorway
+musical|-
+nation|-
+nationality|-
+news|a TV news studio
+newspaper|a newspaper
+noon|-
+note|a sticky note
+novel|a novel book
+oak|an oak tree
+offer|-
+officer|-
+official|-
+Olympics|the Olympic rings flag
+opera|an opera house stage
+opposite|-
+original|-
+owner|-
+pack|-
+pair|a pair of shoes
+pants|trousers
+paragraph|-
+pardon|-
+partner|-
+pass|-
+path|a forest path
+pen friend|a child writing a letter to a pen friend
+perfume|a perfume bottle
+petrol|-
+petrol station|a petrol station
+photography|-
+pick|-
+piece|a piece of cake
+pile|a pile of books
+police|a police car
+pollution|-
+pool|a swimming pool
+pop|-
+portrait|a portrait painting
+post|-
+poster|a poster on a wall
+print|-
+product|-
+professional|-
+programme|-
+promise|-
+public|-
+quiz|-
+rap|-
+reach|-
+reader|-
+receptionist|a hotel receptionist
+rent|-
+reply|-
+report|-
+return|-
+ribbon|a red ribbon bow
+roll|a bread roll
+rope|a rope
+roundabout|a roundabout with cars
+row|a row of chairs
+runner|a runner on a track
+scenery|beautiful mountain scenery
+schedule|-
+schoolchild|a schoolchild with a backpack
+schoolwork|-
+scream|-
+script|-
+search|-
+seat|a seat in a cinema
+secret|-
+section|-
+senior|-
+shade|people resting in the shade of a tree
+shadow|a child's shadow on the ground
+shake|-
+shape|geometric shapes: circle, square, triangle
+shore|a lake shore
+sign|a road sign
+singing|a choir singing
+single|-
+sitting room|a sitting room
+slice|a slice of watermelon
+slide|a playground slide
+soccer|a soccer ball
+soft drink|a soft drink can
+software|-
+sound|-
+speaker|a loudspeaker
+speech|a girl giving a speech
+splash|a splash of water
+spot|-
+stage|a theatre stage
+stamp|a postage stamp
+statue|a statue in a park
+step|-
+store|a store
+stove|a kitchen stove
+stranger|-
+string|a ball of string
+suggestion|-
+suit|a man's suit
+sum|-
+sunlight|sunlight through trees
+sunshine|bright sunshine
+superstar|-
+surprise|a surprise party
+survey|-
+symbol|-
+tap|a water tap
+tape|a roll of tape
+target|a dartboard target
+tear|a tear on a cheek
+telephone|a telephone
+text|-
+text message|a text message on a phone
+thief|-
+tip|-
+title|-
+tool|tools: hammer and screwdriver
+top|-
+topic|-
+tour|a city bus tour
+tour guide|a tour guide with a flag
+track|a running track
+training|a football training session
+trap|-
+traveller|a traveller with a backpack
+trust|-
+tune|-
+turkey|a turkey bird
+underline|-
+vacation|a family on vacation
+vase|a vase with flowers
+visitor|visitors in a museum
+voice|-
+vote|-
+walking|people walking in a park
+weekday|-
+wheelchair|a wheelchair
+whole|-
+wool|balls of wool
+worker|a factory worker
+worse|-
+worst|-
+writing|a hand writing with a pen
+yard|a back yard

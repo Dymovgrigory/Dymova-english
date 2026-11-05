@@ -67,6 +67,30 @@ def me(admin: dict = Depends(auth.require_admin)):
     return {"login": admin["login"], "role": admin["role"]}
 
 
+class LkPasswordBody(BaseModel):
+    phone: str = Field(min_length=5, max_length=40)
+    password: str = Field(min_length=6, max_length=200)
+    parent_name: str = Field(default="", max_length=120)
+
+
+@router.get("/lk/accounts")
+def lk_accounts(q: str = Query(default="", max_length=80), admin: dict = Depends(auth.require_admin)):
+    """Родители в личном кабинете: есть ли пароль, подтверждён ли номер."""
+    from app.lk import password_auth
+    return password_auth.admin_accounts(q)
+
+
+@router.post("/lk/password")
+def lk_password(body: LkPasswordBody, admin: dict = Depends(auth.require_admin)):
+    """Администратор задаёт родителю пароль для входа в ЛК (телефон = логин)."""
+    from app.lk import password_auth
+    try:
+        out = _guard(password_auth.admin_set_password, body.phone, body.password, body.parent_name)
+    except ValueError:
+        raise HTTPException(422, "bad_phone") from None
+    return out
+
+
 @router.get("/students")
 def students(admin: dict = Depends(auth.require_admin),
              q: str | None = Query(None),

@@ -1,0 +1,318 @@
+#home
+house|дом
+home|дом (родной)
+flat|квартира
+apartment|квартира
+room|комната
+bedroom|спальня
+bathroom|ванная
+kitchen|кухня
+living room|гостиная
+dining room|столовая
+hall|прихожая
+garden|сад
+garage|гараж
+balcony|балкон
+roof|крыша
+wall|стена
+floor|пол
+door|дверь
+window|окно
+stairs|лестница
+upstairs|наверху
+downstairs|внизу
+gate|ворота
+fence|забор
+table|стол
+chair|стул
+armchair|кресло
+sofa|диван
+bed|кровать
+lamp|лампа
+light|свет
+clock|часы (настенные)
+mirror|зеркало
+picture|картинка
+shelf|полка
+bookcase|книжный шкаф
+cupboard|шкаф (для посуды)
+drawer|ящик (стола)
+carpet|ковёр
+blanket|одеяло
+pillow|подушка
+towel|полотенце
+bath|ванна
+shower|душ
+toilet|туалет
+sink|раковина
+soap|мыло
+shampoo|шампунь
+toothbrush|зубная щётка
+comb|расчёска
+brush|щётка
+fridge|холодильник
+cooker|плита
+oven|духовка
+washing machine|стиральная машина
+television|телевизор
+TV|телевизор
+radio|радио
+phone|телефон
+computer|компьютер
+key|ключ
+box|коробка
+basket|корзина
+bucket|ведро
+bottle|бутылка
+cup|чашка
+mug|кружка
+glass|стакан
+plate|тарелка
+bowl|миска
+dish|блюдо
+knife|нож
+fork|вилка
+spoon|ложка
+pan|сковорода
+napkin|салфетка
+furniture|мебель
+#school
+school|школа
+classroom|класс (комната)
+class|класс; урок
+lesson|урок
+teacher|учитель
+student|ученик
+pupil|ученик
+classmate|одноклассник
+headteacher|директор школы
+book|книга
+textbook|учебник
+notebook|тетрадь
+dictionary|словарь
+pen|ручка
+pencil|карандаш
+rubber|ластик
+ruler|линейка
+scissors|ножницы
+glue|клей
+paper|бумага
+page|страница
+desk|парта
+board|доска
+blackboard|классная доска
+schoolbag|школьный рюкзак
+homework|домашнее задание
+test|тест
+exam|экзамен
+question|вопрос
+answer|ответ; отвечать
+word|слово
+sentence|предложение
+letter|буква; письмо
+story|рассказ
+poem|стихотворение
+picture book|книжка с картинками
+subject|предмет
+English|английский язык
+maths|математика
+science|наука; естествознание
+history|история
+geography|география
+art|рисование; искусство
+music|музыка
+PE|физкультура
+language|язык
+grammar|грамматика
+vocabulary|словарный запас
+spelling|правописание
+mistake|ошибка
+example|пример
+library|библиотека
+playground|игровая площадка
+break|перемена
+timetable|расписание
+uniform|школьная форма
+university|университет
+college|колледж
+learn|учить
+study|учиться
+read|читать
+write|писать
+draw|рисовать
+count|считать
+spell|произносить по буквам
+listen|слушать
+repeat|повторять
+#toys
+toy|игрушка
+doll|кукла
+ball|мяч
+teddy bear|плюшевый мишка
+robot|робот
+kite|воздушный змей
+balloon|воздушный шарик
+game|игра
+board game|настольная игра
+video game|видеоигра
+puzzle|пазл
+car|машина
+train|поезд
+block|кубик
+drum|барабан
+guitar|гитара
+piano|пианино
+violin|скрипка
+crayon|мелок
+paint|краска; рисовать красками
+camera|фотоаппарат
+present|подарок
+gift|подарок
+party|праздник; вечеринка
+play|играть
+fun|веселье
+funny|смешной
+#nature
+nature|природа
+tree|дерево
+flower|цветок
+rose|роза
+sunflower|подсолнух
+lily|лилия
+grass|трава
+leaf|лист
+plant|растение
+bush|куст
+forest|лес
+wood|лес; дерево (материал)
+park|парк
+garden|сад
+river|река
+lake|озеро
+sea|море
+ocean|океан
+beach|пляж
+island|остров
+mountain|гора
+hill|холм
+valley|долина
+desert|пустыня
+field|поле
+countryside|сельская местность
+village|деревня
+sky|небо
+sun|солнце
+moon|луна
+star|звезда
+planet|планета
+earth|Земля
+world|мир
+stone|камень
+rock|скала
+sand|песок
+water|вода
+fire|огонь
+air|воздух
+seed|семя
+root|корень
+#weather
+weather|погода
+sunny|солнечный
+cloudy|облачный
+rainy|дождливый
+windy|ветреный
+snowy|снежный
+foggy|туманный
+rain|дождь
+snow|снег
+wind|ветер
+cloud|облако
+storm|буря
+thunderstorm|гроза
+fog|туман
+ice|лёд
+rainbow|радуга
+hot|жаркий
+cold|холодный
+warm|тёплый
+cool|прохладный
+wet|мокрый
+dry|сухой
+temperature|температура
+season|время года
+spring|весна
+summer|лето
+autumn|осень
+winter|зима
+#transport
+transport|транспорт
+car|машина
+bus|автобус
+train|поезд
+plane|самолёт
+helicopter|вертолёт
+bike|велосипед
+bicycle|велосипед
+motorbike|мотоцикл
+boat|лодка
+ship|корабль
+taxi|такси
+truck|грузовик
+lorry|грузовик
+tram|трамвай
+underground|метро
+subway|метро
+rocket|ракета
+spaceship|космический корабль
+wheel|колесо
+driver|водитель
+pilot|пилот
+passenger|пассажир
+ticket|билет
+road|дорога
+street|улица
+bridge|мост
+traffic|дорожное движение
+traffic light|светофор
+bus stop|автобусная остановка
+station|станция; вокзал
+airport|аэропорт
+drive|водить машину
+ride|ехать верхом или на велосипеде
+fly|летать
+#city
+city|город (большой)
+town|город
+place|место
+building|здание
+shop|магазин
+supermarket|супермаркет
+market|рынок
+bank|банк
+post office|почта
+hospital|больница
+pharmacy|аптека
+police station|полицейский участок
+fire station|пожарная часть
+restaurant|ресторан
+cafe|кафе
+hotel|гостиница
+cinema|кинотеатр
+theatre|театр
+museum|музей
+gallery|галерея
+castle|замок
+palace|дворец
+tower|башня
+church|церковь
+square|площадь
+corner|угол
+centre|центр
+zoo|зоопарк
+swimming pool|бассейн
+stadium|стадион
+sports centre|спортивный центр
+factory|завод
+office|офис
+mall|торговый центр
+car park|парковка

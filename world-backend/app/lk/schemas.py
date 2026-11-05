@@ -70,3 +70,23 @@ class SessionOut(BaseModel):
 class MeOut(BaseModel):
     account: dict
     profiles: list[ProfileOut]
+
+
+class LoginIn(BaseModel):
+    """Вход по телефону и паролю."""
+    phone: str = Field(min_length=5, max_length=40)
+    password: str = Field(min_length=1, max_length=200)
+
+
+class RegisterIn(BaseModel):
+    """Регистрация нового клиента: родитель, ребёнок, телефон, пароль, согласия."""
+    phone: str = Field(min_length=5, max_length=40)
+    password: str = Field(min_length=1, max_length=200)
+    parent_name: str = Field(min_length=1, max_length=120)
+    child_name: str = Field(min_length=1, max_length=120)
+    child_age: str = Field(default="", max_length=20)
+    consents: list[ConsentIn] = Field(default_factory=list)
+
+
+class PasswordIn(BaseModel):
+    password: str = Field(min_length=1, max_length=200)

@@ -38,6 +38,39 @@ export type WordSet = {
   topic: string;
   is_public: boolean;
   progress: WordSetProgress;
+  icon?: string;
+  color?: string;
+  preview?: string[];
+};
+export type PoolWord = { id: number; text_en: string; text_ru: string; image_url: string; example_en?: string };
+export type Rank = { index: number; total: number; title: string; from: number; to: number; next_title: string; learned: number };
+export type Quest = { code: string; title: string; progress: number; target: number; done: boolean; claimed: boolean; reward: number };
+export type Postcard = { topic: string; title: string; set_id: number; total: number; learned: number; cover: string; percent: number; unlocked: boolean };
+export type CambridgeMedal = { code: string; name: string; cefr: string; set_id: number; total: number; learned: number; percent: number; earned: boolean };
+/** Награды «Фоксинбурга»: монеты Мира, звание, календарь, сундук недели, задание дня, коллекция. */
+export type GameStats = {
+  coins_today: number;
+  coins_earned: number;
+  wallet: number;
+  learned_words: number;
+  rank: Rank;
+  days_total: number;
+  month: { year: number; month: number; days: { day: string; active: boolean; coins: number }[]; active_days: number };
+  week: { days: { day: string; active: boolean }[]; active_days: number; need: number; chest_ready: boolean; chest_claimed: boolean; reward: number };
+  quest: Quest;
+  postcards: Postcard[];
+  postcards_unlocked: number;
+  medals: CambridgeMedal[];
+};
+export type MyWord = SetWord & { strength: number; mistakes: number };
+export type SetWord = {
+  id: number;
+  text_en: string;
+  text_ru: string;
+  example_en?: string;
+  transcription: string;
+  image_url: string;
+  strength?: number | null;
 };
 export type WordCard = {
   id: number;
@@ -45,6 +78,7 @@ export type WordCard = {
   transcription: string;
   image_url: string;
   audio_url: string;
+  example_en?: string;
   position: number;
   strength?: number | null;
   distractors: string[];
@@ -56,6 +90,13 @@ export type Training = {
   answers: Record<number, string>;
   review_count: number;
   new_count: number;
+  pool?: PoolWord[];
+  pool_far?: PoolWord[];
+  icon?: string;
+  color?: string;
+  code?: string;
+  title?: string;
+  topic?: string;
 };
 export type WordStats = {
   seen_words: number;
@@ -63,7 +104,7 @@ export type WordStats = {
   due_today: number;
   answers_total: number;
   answers_correct: number;
-};
+} & Partial<GameStats>;
 export type WorldProgress = {
   linked: boolean;
   child_name: string;
@@ -132,6 +173,12 @@ export const api = {
       method: "POST",
       body: { phone },
     }),
+  login: (phone: string, password: string) =>
+    request<SessionOut>("/api/lk/auth/login", { method: "POST", body: { phone, password } }),
+  register: (body: { phone: string; password: string; parent_name: string; child_name: string; child_age: string; consents: Consent[] }) =>
+    request<SessionOut & { crm_lead?: boolean }>("/api/lk/auth/register", { method: "POST", body }),
+  setPassword: (token: string, password: string) =>
+    request<{ status: string }>("/api/lk/auth/password", { method: "POST", token, body: { password } }),
   me: (token: string) =>
     request<{ account: Record<string, unknown>; profiles: Profile[] }>("/api/lk/me", {
       token,
@@ -155,12 +202,40 @@ export const api = {
       token,
       body: { student_id: studentId, set_id: setId },
     }),
-  wordAnswer: (token: string, studentId: number, wordId: number, correct: boolean) =>
-    request<{ status: string; strength: number }>("/api/lk/words/answer", {
+  wordAnswer: (token: string, studentId: number, wordId: number, correct: boolean, mode = "") =>
+    request<{ status: string; strength: number; coins?: number }>("/api/lk/words/answer", {
       method: "POST",
       token,
-      body: { student_id: studentId, word_id: wordId, correct },
+      body: { student_id: studentId, word_id: wordId, correct, mode },
     }),
+  wordFinish: (token: string, studentId: number, setId: number, correct: number, total: number) =>
+    request<GameStats & { bonus_coins: number; perfect: boolean }>("/api/lk/words/finish", {
+      method: "POST",
+      token,
+      body: { student_id: studentId, set_id: setId, correct, total },
+    }),
+  wordGoal: (token: string, studentId: number, goal: number) =>
+    request<{ daily_goal: number }>("/api/lk/words/goal", {
+      method: "POST",
+      token,
+      body: { student_id: studentId, goal },
+    }),
+  wordClaim: (token: string, studentId: number, kind: "quest" | "chest") =>
+    request<GameStats & { coins: number }>("/api/lk/words/claim", {
+      method: "POST",
+      token,
+      body: { student_id: studentId, kind },
+    }),
+  myWords: (token: string, studentId: number) =>
+    request<{ words: MyWord[]; hard_ids: number[]; learned: number; learning: number }>(
+      `/api/lk/words/my?student_id=${studentId}`,
+      { token },
+    ),
+  setWords: (token: string, studentId: number, setId: number) =>
+    request<{ set_id: number; words: SetWord[] }>(
+      `/api/lk/words/sets/${setId}?student_id=${studentId}`,
+      { token },
+    ),
   // ---------- Мир Фоксинбурга (Этап 4) ----------
   worldSession: (token: string, studentId: number) =>
     request<WorldSession>("/api/lk/world/session", {

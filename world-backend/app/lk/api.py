@@ -6,8 +6,8 @@ from fastapi.responses import JSONResponse
 
 from app.world import core
 
-from . import bridge, service, words, world_link
-from .schemas import ConfirmBot, MeOut, StartAuth
+from . import bridge, password_auth, service, words, world_link
+from .schemas import ConfirmBot, LoginIn, MeOut, PasswordIn, RegisterIn, StartAuth
 
 router = APIRouter(prefix="/api/lk", tags=["lk"])
 
@@ -46,6 +46,41 @@ def auth_status(phone: str):
     except ValueError:
         raise HTTPException(422, "bad phone") from None
     return service.get_status(phone_n)
+
+
+def _phone_guard(fn, *a, **kw):
+    try:
+        return _guard(fn, *a, **kw)
+    except ValueError:
+        raise HTTPException(422, "bad_phone") from None
+
+
+@router.get("/health/crm")
+def health_crm():
+    """Есть ли доступ к пульту BigBen (вход по «Данным для входа», карточки при регистрации)."""
+    from . import bigben_internal
+    out = bigben_internal.health()
+    return {"ok": out["ok"], "mode": out.get("mode", "")}
+
+
+@router.post("/auth/login")
+def auth_login(body: LoginIn):
+    """Вход по телефону и паролю."""
+    return _phone_guard(password_auth.login, body.phone, body.password)
+
+
+@router.post("/auth/register")
+def auth_register(body: RegisterIn, request: Request):
+    """Регистрация нового клиента: аккаунт с паролем + заявка в CRM."""
+    ip, _ = _client_meta(request)
+    return _phone_guard(password_auth.register, body.phone, body.password, body.parent_name,
+                        body.child_name, body.child_age, body.consents, ip)
+
+
+@router.post("/auth/password")
+def auth_password(body: PasswordIn, authorization: str | None = Header(None)):
+    """Задать или сменить пароль из кабинета."""
+    return _guard(password_auth.set_password, _token(authorization), body.password)
 
 
 @router.post("/auth/confirm-bot")
@@ -106,7 +141,32 @@ def words_train(body: dict, authorization: str | None = Header(None)):
 def words_answer(body: dict, authorization: str | None = Header(None)):
     return _guard(words.answer, _token(authorization),
                   int(body.get("student_id") or 0), int(body.get("word_id") or 0),
-                  bool(body.get("correct")))
+                  bool(body.get("correct")), str(body.get("mode") or ""))
+
+
+@router.post("/words/finish")
+def words_finish(body: dict, authorization: str | None = Header(None)):
+    return _guard(words.finish_session, _token(authorization), int(body.get("student_id") or 0),
+                  int(body.get("set_id") or 0), int(body.get("correct") or 0), int(body.get("total") or 0))
+
+
+@router.post("/words/goal")
+def words_goal(body: dict, authorization: str | None = Header(None)):
+    return _guard(words.set_goal, _token(authorization), int(body.get("student_id") or 0),
+                  int(body.get("goal") or 50))
+
+
+@router.post("/words/claim")
+def words_claim(body: dict, authorization: str | None = Header(None)):
+    """Забрать награду: задание дня (kind=quest) или сундук недели (kind=chest)."""
+    return _guard(words.claim_reward, _token(authorization), int(body.get("student_id") or 0),
+                  str(body.get("kind") or ""))
+
+
+@router.get("/words/my")
+def words_my(authorization: str | None = Header(None), student_id: int = 0):
+    """«Мой словарь»: слова ученика по силе знания и трудные слова."""
+    return _guard(words.my_words, _token(authorization), student_id)
 
 
 @router.get("/words/stats")

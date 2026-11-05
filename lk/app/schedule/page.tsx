@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { api, Profile } from "@/lib/api";
 import { clearSession, getToken } from "@/lib/session";
 import { fmt, useI18n } from "@/lib/i18n";
-import LangSwitch from "@/components/lang-switch";
+import CabinetPage from "@/components/cabinet-page";
+import { useCabinet } from "@/lib/cabinet";
 
 type Lesson = {
   id: number;
@@ -44,10 +45,20 @@ function fmtTime(iso: string, locale: string): string {
 }
 
 export default function SchedulePage() {
+  return (
+    <CabinetPage>
+      <Inner />
+    </CabinetPage>
+  );
+}
+
+function Inner() {
   const router = useRouter();
   const { t, lang } = useI18n();
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const cab = useCabinet();
+  const profiles: Profile[] = cab.me?.profiles ?? [];
+  const activeId = cab.active?.id ?? null;
+  const setActiveId = cab.setActiveId;
   const [weekStart, setWeekStart] = useState<Date>(() => mondayOf(new Date()));
   const [data, setData] = useState<Schedule | null>(null);
   const [error, setError] = useState("");
@@ -55,22 +66,6 @@ export default function SchedulePage() {
   const token = getToken();
   const active = profiles.find((p) => p.id === activeId) ?? profiles[0];
 
-  useEffect(() => {
-    if (!token) {
-      router.replace("/auth");
-      return;
-    }
-    api
-      .me(token)
-      .then((me) => {
-        setProfiles(me.profiles);
-        setActiveId(me.profiles[0]?.id ?? null);
-      })
-      .catch(() => {
-        clearSession();
-        router.replace("/auth");
-      });
-  }, [token, router]);
 
   const load = useCallback(async () => {
     if (!token || !active?.student_id) return;
@@ -123,21 +118,8 @@ export default function SchedulePage() {
 
   return (
     <>
-      <header className="topbar">
-        <div className="topbar-inner">
-          <a className="brand" href="/dashboard">
-            {t.common.brand}
-            <span className="brand-badge">{t.common.lkBadge}</span>
-          </a>
-          <div className="topbar-spacer" />
-          <LangSwitch />
-          <button className="btn btn-light btn-sm" onClick={onLogout}>
-            {t.common.logout}
-          </button>
-        </div>
-      </header>
 
-      <main className="shell-main">
+      <div className="k-legacy">
         <div className="dashboard-head">
           <div>
             <h1 className="dashboard-title">{t.schedule.title}</h1>
@@ -146,7 +128,7 @@ export default function SchedulePage() {
             </p>
           </div>
           <div className="topbar-spacer" />
-          {profiles.length > 1 && (
+          {false && profiles.length > 1 && (
             <div className="profile-switch" role="tablist" aria-label={t.common.profilesAria}>
               {profiles.map((p) => (
                 <button
@@ -227,7 +209,7 @@ export default function SchedulePage() {
             })}
           </div>
         )}
-      </main>
+      </div>
     </>
   );
 }

@@ -61,10 +61,12 @@ def test_library_lists_public_level_sets(lk_words_db):
     token = _token()
     out = words.list_sets(token, STUDENTS[0]["id"])
     codes = [s["code"] for s in out["sets"]]
-    assert "level:pre-a1" in codes and "level:b1" in codes
+    assert "level:pre-a1" in codes and "level:a1" in codes and "level:a2" in codes
+    assert "topic:animals:1" in codes  # темы с картинками — публичные
     assert "book:my-level" not in codes  # книги — только по назначению
     pre = next(s for s in out["sets"] if s["code"] == "level:pre-a1")
-    assert pre["progress"]["total"] == 8
+    assert pre["progress"]["total"] >= 100
+    assert pre["icon"] and pre["color"].startswith("#") and len(pre["preview"]) == 4
 
 
 def test_book_set_requires_assignment(lk_words_db):
@@ -109,12 +111,25 @@ def test_training_new_words_in_order(lk_words_db):
     out = words.start_training(token, STUDENTS[0]["id"], sid)
     assert out["new_count"] == 8 and out["review_count"] == 0
     assert len(out["cards"]) == 8
-    # новые по порядку position: первое сидовое слово — hello
+    # новые по порядку position: первое слово набора из базы слов
     by_pos = sorted(out["cards"], key=lambda c: c["position"])
-    assert by_pos[0]["text_en"] == "hello"
+    first = words.content()["sets"]
+    first = next(x for x in first if x["code"] == "level:pre-a1")["words"][0]
+    assert by_pos[0]["text_en"] == first["en"]
+    assert by_pos[0]["image_url"] == first["img"]  # фото Meshy (/w/…) или пусто — тогда плитка в ЛК
+    # методика Cambridge: у каждого слова есть предложение-пример со словом внутри
+    assert first["en"].lower() in by_pos[0]["example_en"].lower()
+    assert all(c["example_en"] for c in out["cards"])
+    assert all(p.get("example_en") for p in out["pool"])
+    # варианты из других тем — для однозначных заданий (пропуски, картинки)
+    assert len(out["pool_far"]) >= 10
+    own = {p["text_en"].lower() for p in out["pool"]}
+    assert all(p["id"] < 0 and p["image_url"] and p["example_en"] and p["text_en"].lower() not in own for p in out["pool_far"])
+    assert by_pos[0]["transcription"] and not any("а" <= ch <= "я" for ch in by_pos[0]["transcription"])
     # без перевода в карточке, но ответы отдельно
     assert "text_ru" not in out["cards"][0]
-    assert out["answers"][by_pos[0]["id"]] == "привет"
+    assert out["answers"][by_pos[0]["id"]] == first["ru"]
+    assert len(out["pool"]) >= 4 and out["icon"]
     # дистракторы для выбора перевода
     assert len(out["cards"][0]["distractors"]) == 3
 
@@ -219,3 +234,85 @@ def test_foreign_student_no_access(lk_words_db):
     with pytest.raises(core.Conflict) as ei:
         words.start_training(token, 999999, _set_id("level:pre-a1"))
     assert "profile_not_found" in str(ei.value)
+
+
+
+# ---------- игровая статистика ----------
+
+def test_rewards_coins_world_wallet_quest_and_chest(lk_words_db):
+    from app.lk import rewards
+    token = _token()
+    sid = _set_id("level:pre-a1")
+    out = words.start_training(token, STUDENTS[0]["id"], sid)
+    r = words.answer(token, STUDENTS[0]["id"], out["cards"][0]["id"], True, "type")
+    assert r["coins"] == rewards.COIN_CORRECT + rewards.COIN_HARD
+    assert words.answer(token, STUDENTS[0]["id"], out["cards"][1]["id"], False)["coins"] == 0
+    fin = words.finish_session(token, STUDENTS[0]["id"], sid, 1, 2)
+    assert fin["bonus_coins"] == rewards.COIN_LESSON and not fin["perfect"]
+    st = words.stats(token, STUDENTS[0]["id"])
+    earned = rewards.COIN_CORRECT + rewards.COIN_HARD + rewards.COIN_LESSON
+    assert st["coins_today"] == earned
+    # монеты попадают в кошелёк Мира — их можно тратить на замок
+    assert st["wallet"] == earned
+    assert st["rank"]["title"] and st["rank"]["learned"] == st["learned_words"]
+    assert len(st["month"]["days"]) >= 28 and st["month"]["active_days"] == 1
+    assert len(st["week"]["days"]) == 7 and st["week"]["active_days"] == 1 and not st["week"]["chest_ready"]
+    assert st["quest"]["title"] and st["quest"]["target"] >= 1
+    assert st["postcards"] and all("percent" in c for c in st["postcards"])
+    assert {m["name"] for m in st["medals"]} == {"Starters", "Movers", "Flyers"}
+    # сундук закрыт, пока нет 5 дней из 7; задание дня — пока не выполнено
+    with pytest.raises(core.Conflict):
+        words.claim_reward(token, STUDENTS[0]["id"], "chest")
+    learner = f"crm:{STUDENTS[0]['id']}"
+    get_conn().execute("UPDATE lk_learner_days SET new_words=99, correct=99, sessions=9, perfect=9"
+                       " WHERE learner_key=?", (learner,))
+    got = words.claim_reward(token, STUDENTS[0]["id"], "quest")
+    assert got["coins"] == rewards.QUEST_COINS and got["quest"]["claimed"]
+    assert got["wallet"] == earned + rewards.QUEST_COINS
+    with pytest.raises(core.Conflict):
+        words.claim_reward(token, STUDENTS[0]["id"], "quest")  # один раз в день
+
+
+def test_rank_by_learned_words():
+    from app.lk import rewards
+    assert rewards.rank_for(0)["title"] == "Гость Фоксинбурга"
+    r = rewards.rank_for(35)
+    assert r["title"] == "Юный следопыт" and r["from"] == 30 and r["to"] == 60 and r["next_title"] == "Следопыт"
+    assert rewards.rank_for(5000)["next_title"] == ""
+
+
+def test_hard_words_training_and_my_words(lk_words_db):
+    token = _token()
+    sid = _set_id("level:pre-a1")
+    out = words.start_training(token, STUDENTS[0]["id"], sid)
+    bad = out["cards"][0]["id"]
+    words.answer(token, STUDENTS[0]["id"], bad, False)
+    words.answer(token, STUDENTS[0]["id"], out["cards"][1]["id"], True)
+    hard = words.start_training(token, STUDENTS[0]["id"], 0)
+    assert hard["code"] == "hard" and [c["id"] for c in hard["cards"]] == [bad]
+    assert hard["answers"][bad] and hard["pool"]
+    my = words.my_words(token, STUDENTS[0]["id"])
+    assert len(my["words"]) == 2 and my["hard_ids"] == [bad]
+    assert all("example_en" in w for w in my["words"])
+
+
+def test_reseed_keeps_word_ids(lk_words_db):
+    sid = _set_id("topic:animals:1")
+    before = {r["text_en"]: r["id"] for r in get_conn().execute(
+        "SELECT id, text_en FROM lk_words WHERE set_id=?", (sid,)).fetchall()}
+    words.seed_word_sets()
+    after = {r["text_en"]: r["id"] for r in get_conn().execute(
+        "SELECT id, text_en FROM lk_words WHERE set_id=?", (sid,)).fetchall()}
+    assert before == after and len(after) >= 20
+
+
+def test_reseed_hides_old_content_sets(lk_words_db):
+    conn = get_conn()
+    conn.execute("INSERT INTO lk_word_sets (code, title, kind, position, is_public, active)"
+                 " VALUES ('topic:animals', 'Животные', 'topic', 1, 1, 1)")
+    conn.execute("INSERT INTO lk_word_sets (code, title, kind, position, is_public, active)"
+                 " VALUES ('custom-teacher', 'Свой набор', 'topic', 1, 1, 1)")
+    words.seed_word_sets()
+    act = {r["code"]: r["active"] for r in conn.execute(
+        "SELECT code, active FROM lk_word_sets WHERE code IN ('topic:animals','custom-teacher','topic:animals:1')")}
+    assert act == {"topic:animals": 0, "custom-teacher": 1, "topic:animals:1": 1}

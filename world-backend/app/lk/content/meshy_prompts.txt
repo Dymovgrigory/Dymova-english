@@ -1,0 +1,186 @@
+# слово|что нарисовать (реалистичное фото, ребёнок/предмет крупно)
+happy|a happy smiling girl
+sad|a sad little boy with a frown
+angry|an angry boy with crossed arms
+afraid|a frightened child hiding behind a pillow
+scared|a scared child covering eyes
+tired|a tired yawning girl
+sleepy|a sleepy child rubbing eyes in pyjamas
+bored|a bored boy resting chin on hand at a desk
+excited|an excited girl jumping with arms up
+surprised|a surprised child with wide eyes and open mouth
+worried|a worried child biting nails
+nervous|a nervous boy holding a paper before a test
+upset|an upset girl looking down
+lonely|a lonely child sitting alone on a bench
+shy|a shy girl hiding behind her hands
+proud|a proud boy holding a medal
+calm|a calm girl meditating with closed eyes
+glad|a glad smiling grandmother
+pleased|a pleased boy giving thumbs up
+love|a mother hugging her child with love
+like|a child giving a thumbs up to an ice cream
+hate|a child refusing broccoli with disgust
+smile|a close-up of a child's big smile
+laugh|two kids laughing loudly
+cry|a crying toddler with tears
+hug|two children hugging
+kiss|a mother kissing a baby on the cheek
+dream|a child sleeping and dreaming in bed under stars
+make|a child making a paper airplane
+go|a child walking to school with a backpack
+come|a dog running towards its owner
+give|a child giving a present to a friend
+take|a hand taking a cookie from a plate
+bring|a boy bringing a cup of tea
+carry|a girl carrying a big box
+put|a hand putting a book on a shelf
+find|a child finding a lost toy under the sofa
+look|a girl looking through binoculars
+see|a close-up of a child's eye
+watch|a family watching TV on a sofa
+hear|a child cupping a hand to the ear
+say|a girl saying something, speech bubble shape without text
+tell|a grandmother telling a story to children
+talk|two friends talking
+speak|a boy speaking into a microphone
+ask|a pupil raising a hand to ask a question
+call|a girl calling on a mobile phone
+think|a boy thinking with a finger on his chin
+teach|a teacher teaching children at a whiteboard
+cut|scissors cutting paper
+open|a hand opening a door
+close|a hand closing a window
+start|a runner at the start line
+begin|a child opening the first page of a book
+finish|a runner crossing a finish line ribbon
+stop|a red stop sign on a street
+wait|a child waiting at a bus stop
+help|a child helping grandma carry bags
+try|a kid trying to tie shoelaces
+eat|a child eating a sandwich
+bake|a girl baking cookies with flour on her hands
+wash|a child washing hands with soap
+clean|a boy cleaning a table with a cloth
+tidy|a tidy kids room with toys in boxes
+wake up|a child waking up and stretching in bed
+get up|a boy getting out of bed in the morning
+sit|a girl sitting on a chair
+stand|a boy standing straight
+walk|a child walking in a park
+climb|a child climbing a climbing wall
+hide|a kid hiding behind a tree
+hit|a bat hitting a baseball
+push|a child pushing a toy car
+pull|a child pulling a rope
+pick up|a child picking up a ball from the floor
+drop|a glass falling from a hand
+hold|a child holding a puppy
+touch|a finger touching a soap bubble
+smell|a girl smelling a flower
+taste|a child tasting soup from a spoon
+show|a boy showing his drawing
+choose|a child choosing between two apples
+buy|a mother buying fruit at a market
+sell|a seller at a fruit stall
+pay|a hand paying with coins at a till
+spend|a child spending money in a toy shop
+send|a hand putting a letter into a postbox
+receive|a child receiving a parcel at the door
+build|a child building a tower of wooden blocks
+fix|a man fixing a bicycle with a wrench
+repair|a hand repairing a toy with a screwdriver
+grow|a small plant growing in a pot
+visit|grandparents visiting family at the door
+arrive|a train arriving at a station
+leave|a family leaving home with suitcases
+stay|a cat staying at home on a windowsill
+move|movers carrying a sofa into a house
+turn|a car turning at a road bend
+follow|ducklings following their mother
+meet|two friends meeting and shaking hands
+invite|a child giving a party invitation card
+celebrate|children celebrating a birthday with balloons
+share|two kids sharing a pizza
+borrow|a child borrowing a book in a library
+lend|a girl lending a pencil to a classmate
+keep|a child keeping coins in a piggy bank
+save|a coin going into a piggy bank
+use|a child using a computer mouse
+change|a child changing a light bulb with dad
+collect|a boy collecting shells on a beach
+add|a hand adding sugar to tea
+mix|a spoon mixing batter in a bowl
+fill|filling a glass with water
+pour|pouring milk into a cup
+boil|water boiling in a pot
+fry|eggs frying in a pan
+check|a teacher checking homework with a red pen
+explain|a teacher explaining at a board
+describe|a girl describing a picture to a friend
+compare|two apples of different sizes side by side
+plan|a child planning on a calendar with stickers
+prepare|kids preparing a salad in a kitchen
+practise|a girl practising the violin
+improve|a child proudly showing an A+ test
+imagine|a child imagining with a cardboard rocket
+agree|two people nodding and shaking hands
+disagree|two kids arguing with crossed arms
+worry|a worried mother looking at a clock
+wish|a child blowing birthday candles making a wish
+shout|a boy shouting with hands around mouth
+whisper|a girl whispering into a friend's ear
+point|a child pointing at something
+wave|a child waving hello
+clap|hands clapping
+knock|a hand knocking on a wooden door
+shine|the sun shining in a blue sky
+fall|autumn leaves falling
+big|a big elephant
+small|a small mouse
+little|a little kitten in a palm
+large|a large pumpkin
+huge|a huge whale
+tall|a tall giraffe
+short|a short pencil next to a long pencil
+long|a long train
+high|a high mountain peak
+low|a low wooden fence
+wide|a wide river
+thin|a thin noodle
+fat|a fat cat
+heavy|a heavy dumbbell
+fast|a fast cheetah running
+quick|a quick rabbit jumping
+slow|a slow snail
+beautiful|a beautiful flower garden
+pretty|a pretty pink dress
+handsome|a handsome young man smiling
+ugly|an ugly old boot
+cute|a cute puppy
+new|a new shiny bicycle
+old|an old rusty car
+young|a young baby
+modern|a modern glass skyscraper
+ancient|ancient Greek ruins
+easy|a simple puzzle with two pieces
+difficult|a very hard puzzle with many pieces
+hard|a hard rock
+soft|a soft fluffy pillow
+dirty|a dirty muddy boot
+full|a full glass of juice
+empty|an empty glass
+closed|a closed shop with a closed door
+loud|a loud drum and a child covering ears
+rich|a treasure chest full of gold coins
+poor|an empty wallet
+strong|a strong man lifting weights
+weak|a weak wilted flower
+safe|a child wearing a bike helmet
+dangerous|a danger sign near a cliff
+busy|a busy city street with many people
+round|a round orange
+straight|a straight road
+deep|deep blue sea water
+wild|a wild wolf in a forest
+different|two different socks

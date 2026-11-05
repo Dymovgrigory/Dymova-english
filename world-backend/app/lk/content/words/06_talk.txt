@@ -1,0 +1,111 @@
+#phrases
+hello|привет
+hi|привет
+goodbye|до свидания
+bye|пока
+good morning|доброе утро
+good afternoon|добрый день
+good evening|добрый вечер
+good night|спокойной ночи
+please|пожалуйста
+thank you|спасибо
+thanks|спасибо
+sorry|извините
+excuse me|простите
+welcome|добро пожаловать
+yes|да
+no|нет
+OK|хорошо
+of course|конечно
+maybe|может быть
+see you|увидимся
+happy birthday|с днём рождения
+well done|молодец
+#little-words
+I|я
+you|ты; вы
+he|он
+she|она
+it|оно
+we|мы
+they|они
+me|меня; мне
+him|его; ему
+her|её; ей
+us|нас; нам
+them|их; им
+my|мой
+your|твой; ваш
+his|его
+its|его (о предмете)
+our|наш
+their|их
+this|этот
+that|тот
+these|эти
+those|те
+here|здесь
+there|там
+who|кто
+what|что
+where|где
+when|когда
+why|почему
+how|как
+which|который
+how many|сколько (штук)
+how much|сколько
+and|и
+but|но
+or|или
+because|потому что
+so|поэтому
+if|если
+with|с
+without|без
+in|в
+on|на
+under|под
+over|над
+next to|рядом с
+behind|позади
+in front of|перед
+between|между
+near|около
+inside|внутри
+outside|снаружи
+up|вверх
+down|вниз
+from|из; от
+to|к; в
+very|очень
+too|тоже; слишком
+also|также
+only|только
+all|все
+some|несколько
+many|много
+much|много
+more|больше
+most|больше всего
+every|каждый
+each|каждый
+other|другой
+another|ещё один
+something|что-то
+everything|всё
+nothing|ничего
+someone|кто-то
+everyone|все
+nobody|никто
+together|вместе
+alone|один (в одиночестве)
+really|действительно
+just|просто; только что
+still|всё ещё
+almost|почти
+quickly|быстро
+slowly|медленно
+well|хорошо
+badly|плохо
+carefully|осторожно

@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -20,6 +21,8 @@ from app.world.db import get_conn
 
 from . import bigben, bridge
 from app.identity.schemas import mask_phone
+
+log = logging.getLogger("world.lk.service")
 
 CONSENT_VERSION = "2026-11-02"
 REQUIRED_CONSENTS = ("pd_child", "privacy")
@@ -166,10 +169,23 @@ def _sync_profiles(account, *, force: bool = False) -> list[dict]:
     """Профили детей аккаунта по BigBen; гостевой профиль, если номера нет в CRM."""
     conn = get_conn()
     account_id = account["id"]
-    if bigben.configured():
-        students = bigben.students_by_phone(account["phone"])
-    else:
-        students = []
+    # Детей из CRM показываем только при подтверждённом номере (бот или администратор):
+    # самостоятельная регистрация с чужим номером не должна открывать чужого ребёнка.
+    students: list[dict] = []
+    if account["phone_confirmed_at"]:
+        if bigben.configured():
+            students = bigben.students_by_phone(account["phone"])
+        # Пульт BigBen ищет и по телефону родителя и видит только что созданные карточки
+        # (публичный список кэшируется на 15 минут) — объединяем.
+        from . import bigben_internal
+        if bigben_internal.configured():
+            try:
+                known = {int(s["id"]) for s in students}
+                for st in bigben_internal.find_students_by_phone(account["phone"]):
+                    if st.get("id") and int(st["id"]) not in known and not st.get("archived"):
+                        students.append({"id": int(st["id"]), "fio": st.get("fio") or "Ученик", "active_groups": []})
+            except bigben_internal.BigBenInternalError as exc:
+                log.warning("sync_profiles: пульт BigBen недоступен: %s", exc)
     if students:
         for s in students:
             conn.execute(

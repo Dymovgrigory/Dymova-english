@@ -23,6 +23,11 @@ const config: NextConfig = {
         source: "/api/lk/:path*",
         destination: `${WORLD_API}/api/lk/:path*`,
       },
+      // Админка школы (вход сотрудника, пароли родителей для ЛК)
+      {
+        source: "/api/v2/admin/:path*",
+        destination: `${WORLD_API}/api/v2/admin/:path*`,
+      },
     ];
   },
 };

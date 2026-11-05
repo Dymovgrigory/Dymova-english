@@ -1,0 +1,107 @@
+[
+ {
+  "id": "x000",
+  "words": [
+   "bank",
+   "post office",
+   "hospital",
+   "pharmacy",
+   "police station",
+   "fire station",
+   "restaurant",
+   "cafe",
+   "hotel"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one real street-level photograph of a real building in a European town, shot with a camera at eye level, natural daylight, blue sky, photorealistic, NOT a miniature, NOT isometric, NOT a 3D render, NOT a toy model. Cells from left to right, top to bottom: 1) the front of a bank building with columns. 2) the front of a post office with a red post box outside. 3) a modern hospital building with ambulance at the entrance. 4) a pharmacy shop front with a green cross sign. 5) a police station building with a police car parked outside. 6) a fire station with a red fire engine in the open garage door. 7) a restaurant with tables on the terrace. 8) a small cosy street cafe with chairs outside. 9) a hotel building entrance with a doorman."
+ },
+ {
+  "id": "x001",
+  "words": [
+   "cinema",
+   "theatre",
+   "museum",
+   "corner",
+   "centre",
+   "swimming pool",
+   "gallery",
+   "castle",
+   "palace"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one real street-level photograph of a real building in a European town, shot with a camera at eye level, natural daylight, blue sky, photorealistic, NOT a miniature, NOT isometric, NOT a 3D render, NOT a toy model. Cells from left to right, top to bottom: 1) a cinema entrance with a queue of people. 2) a classical theatre building. 3) a museum building with columns and wide steps. 4) a street corner with a crossing and shops. 5) a busy city centre street with people. 6) an indoor swimming pool with children swimming. 7) people looking at paintings in an art gallery. 8) a real medieval stone castle on a hill. 9) a grand royal palace with gardens."
+ },
+ {
+  "id": "x002",
+  "words": [
+   "stadium",
+   "sports centre",
+   "factory",
+   "tower",
+   "church",
+   "square",
+   "office",
+   "mall",
+   "car park"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one real street-level photograph of a real building in a European town, shot with a camera at eye level, natural daylight, blue sky, photorealistic, NOT a miniature, NOT isometric, NOT a 3D render, NOT a toy model. Cells from left to right, top to bottom: 1) a football stadium full of fans. 2) a modern sports centre building. 3) a factory with chimneys. 4) an old stone tower. 5) an old church with a bell tower. 6) a town square with a fountain and people. 7) a bright modern office with people working at desks. 8) a big shopping mall entrance with people. 9) a car park full of cars, seen from above."
+ },
+ {
+  "id": "x003",
+  "words": [
+   "grape",
+   "mum",
+   "son",
+   "person",
+   "soldier",
+   "mistake",
+   "sun",
+   "star",
+   "summer"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly, photorealistic, NOT cartoon, NOT 3D render. Cells from left to right, top to bottom: 1) a bunch of purple grapes. 2) a real smiling young mother hugging her little son, real people. 3) a real father with his little son on his shoulders, both smiling, real people. 4) one real smiling adult person standing, full body. 5) a smiling soldier in a smart dress uniform with a cap, saluting, no weapon. 6) a school notebook page with a big red cross next to one wrong sum, a pencil and an eraser. 7) the bright sun shining in a clear blue sky over a green meadow. 8) bright stars shining in the night sky. 9) children playing on a sunny summer beach."
+ },
+ {
+  "id": "x004",
+  "words": [
+   "sing",
+   "speak",
+   "hit",
+   "use",
+   "comic",
+   "smart",
+   "polite",
+   "brave",
+   "careful"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly, photorealistic, NOT cartoon, NOT 3D render. Cells from left to right, top to bottom: 1) a real girl singing happily into a microphone. 2) a real boy speaking into a microphone in a classroom. 3) a real boy hitting a baseball with a bat in a park. 4) a real girl using a computer mouse at a desk. 5) an open comic book with colourful drawn panels of a cat and a dog. 6) a real boy with glasses reading a thick book. 7) a real boy politely holding a door open for an old lady. 8) a real child in a firefighter costume standing proudly. 9) a real boy carefully carrying a full cup of tea with both hands."
+ },
+ {
+  "id": "x005",
+  "words": [
+   "creative",
+   "superhero",
+   "hurry",
+   "sunshine",
+   "ambulance",
+   "cough",
+   "fever",
+   "headache",
+   "toothache"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly, photorealistic, NOT cartoon, NOT 3D render. Cells from left to right, top to bottom: 1) a real girl making colourful paper crafts at a table. 2) a real boy in a homemade green superhero costume with a mask and a cape. 3) a real man in a suit hurrying along a street, looking at his watch. 4) warm sunshine through the leaves of a tree in a park. 5) a white ambulance car on a street. 6) a real child coughing into her elbow. 7) a real child in bed with a thermometer in his mouth. 8) a real woman holding her head with a headache. 9) a real boy holding his cheek because of a toothache."
+ },
+ {
+  "id": "x006",
+  "words": [
+   "stomachache",
+   "pain",
+   "hurt",
+   "accident",
+   "actor",
+   "cheap",
+   "singer",
+   "dream",
+   "lonely"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly, photorealistic, NOT cartoon, NOT 3D render. Cells from left to right, top to bottom: 1) a real girl holding her tummy because of a stomachache. 2) a real boy sitting and holding his knee. 3) a real child with a colourful plaster on her knee. 4) two toy cars bumped into each other on a toy road. 5) a real actor in a costume performing on a theatre stage. 6) a small toy car with a little price tag. 7) a real woman singer singing on a stage with a microphone. 8) a real child sleeping peacefully and smiling in bed. 9) a real boy sitting alone on a bench, looking sad."
+ }
+]

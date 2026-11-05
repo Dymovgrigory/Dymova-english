@@ -35,6 +35,11 @@ services:
       # LK_CONFIRM_BYPASS в проде НЕ задаём — подтверждение только через
       # ботов (WORLD_BRIDGE_SECRET должен совпадать с секретом бота).
       BIGBEN_PUBLIC_API_KEY: ${BIGBEN_PUBLIC_API_KEY:-}
+      # внутренний API пульта BigBen: «Данные для входа» ученика и создание карточки при регистрации в ЛК
+      BIGBEN_INTERNAL_TOKEN: ${BIGBEN_INTERNAL_TOKEN:-}
+      # учётная запись сотрудника пульта: ЛК сам входит и продлевает сессию — токен не «протухает»
+      BIGBEN_LK_LOGIN: ${BIGBEN_LK_LOGIN:-}
+      BIGBEN_LK_PASSWORD: ${BIGBEN_LK_PASSWORD:-}
       LK_IMPORT_KEY: ${LK_IMPORT_KEY:-}
     volumes:
       - world_data:/app/data

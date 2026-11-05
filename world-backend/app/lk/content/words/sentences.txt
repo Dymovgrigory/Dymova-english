@@ -1,0 +1,2064 @@
+animal|A lion is a big animal.
+cat|The cat is sleeping on the sofa.
+dog|My dog likes to run in the park.
+pet|I have a pet rabbit.
+fish|The fish is swimming in the water.
+bird|A little bird is singing in the tree.
+horse|The horse is brown.
+cow|The cow is eating grass.
+pig|The pig is pink and fat.
+sheep|The sheep is white.
+chicken|The chicken has got two eggs.
+rabbit|The rabbit has got long ears.
+mouse|A small mouse is under the bed.
+rat|The rat has got a long tail.
+frog|The frog is green.
+snake|The snake is very long.
+lion|The lion is the king of animals.
+tiger|The tiger is orange and black.
+bear|The bear is big and brown.
+monkey|The monkey is eating a banana.
+hippo|The hippo is in the river.
+panda|The panda is black and white.
+shark|The shark lives in the sea.
+octopus|An octopus has got eight legs.
+lizard|The lizard is on the rock.
+bee|The bee is on the flower.
+butterfly|The butterfly has got beautiful wings.
+fly|There is a fly on the window.
+bat|A bat can fly at night.
+squirrel|The squirrel is in the tree.
+hedgehog|The hedgehog is small.
+zoo|We can see lions at the zoo.
+farm|There are cows on the farm.
+kitten|The kitten is playing with a ball.
+puppy|My puppy is very funny.
+goat|The goat is eating grass.
+duck|The duck is swimming on the lake.
+elephant|The elephant is very big.
+giraffe|The giraffe has got a long neck.
+zebra|The zebra is black and white.
+crocodile|The crocodile has got big teeth.
+kangaroo|The kangaroo can jump very high.
+fox|The fox has got a long orange tail.
+wolf|The wolf lives in the forest.
+owl|The owl is awake at night.
+parrot|The parrot can talk.
+penguin|The penguin can swim but it can't fly.
+dolphin|The dolphin is jumping out of the water.
+whale|The whale is the biggest animal in the sea.
+crab|The crab is on the beach.
+turtle|The turtle is very slow.
+spider|The spider has got eight legs.
+insect|A bee is an insect.
+bug|There is a little bug on the leaf.
+camel|The camel lives in the desert.
+deer|The deer is in the forest.
+dinosaur|The dinosaur is very old and very big.
+chimpanzee|The chimpanzee is eating fruit.
+robin|The robin has got a red chest.
+tail|The dog is wagging its tail.
+wing|The bird has got two wings.
+wing|The bird has got two wings.
+feather|This feather is very soft.
+shell|I found a shell on the beach.
+flea|The dog has got a flea.
+creature|A dragon is a strange creature.
+food|We need food and water.
+apple|I eat an apple every day.
+banana|The monkey likes the banana.
+orange|I have an orange for lunch.
+grape|These grapes are sweet.
+watermelon|The watermelon is green outside and red inside.
+fruit|I like fruit.
+vegetable|A carrot is a vegetable.
+potato|I like potato soup.
+tomato|The tomato is red.
+bean|Green beans are good for you.
+corn|The corn is yellow.
+salad|Mum is making a salad.
+bread|We buy bread every morning.
+butter|I put butter on my bread.
+cheese|The mouse likes cheese.
+egg|I have an egg for breakfast.
+milk|The cat is drinking milk.
+cream|I like strawberries with cream.
+yogurt|I eat yogurt for breakfast.
+rice|We have rice for dinner.
+pizza|Let's have pizza!
+burger|I want a burger, please.
+hamburger|The hamburger is big.
+sandwich|I've got a cheese sandwich.
+meat|Lions eat meat.
+beef|We have beef for dinner.
+chicken soup|Grandma makes chicken soup.
+soup|The soup is hot.
+fish and chips|We have fish and chips on Friday.
+chips|I like chips with my fish.
+crisps|Can I have some crisps, please?
+sugar|Do you want sugar in your tea?
+cake|Here is your birthday cake!
+biscuit|Can I have a biscuit?
+cookie|This cookie is very good.
+chocolate|I love chocolate.
+candy|Don't eat too much candy.
+sweet|This cake is very sweet.
+ice cream|I want strawberry ice cream.
+drink|I drink water every day.
+water|Can I have some water, please?
+juice|I like orange juice.
+tea|Grandpa drinks tea with milk.
+coffee|Dad drinks coffee in the morning.
+breakfast|I have breakfast at eight o'clock.
+lunch|We have lunch at school.
+dinner|We have dinner at seven.
+meal|Breakfast is my favourite meal.
+picnic|We have a picnic in the park.
+hungry|I'm hungry. Can I have a sandwich?
+delicious|This pizza is delicious!
+pear|The pear is green.
+lemon|The lemon is yellow.
+melon|The melon is sweet.
+strawberry|The strawberry is red.
+cherry|The cherry is small and red.
+pineapple|The pineapple is big and yellow.
+peach|The peach is soft.
+carrot|The rabbit is eating a carrot.
+onion|The onion is in the soup.
+garlic|Garlic has got a strong smell.
+pea|Peas are small and green.
+mushroom|I found a mushroom in the forest.
+pepper|The pepper is red.
+pasta|We have pasta for lunch.
+spaghetti|I like spaghetti with tomato sauce.
+sausage|Dad is cooking sausages.
+ham|I want a ham sandwich.
+steak|The steak is on the plate.
+toast|I have toast and jam.
+cereal|I eat cereal with milk.
+honey|Bears like honey.
+jam|I like strawberry jam.
+jelly|The jelly is red and green.
+salt|Can you pass the salt, please?
+oil|Mum puts oil in the pan.
+flour|We need flour for the cake.
+sauce|I like pasta with tomato sauce.
+dessert|What's for dessert?
+snack|An apple is a good snack.
+omelette|I make an omelette with eggs.
+pancake|I eat pancakes with honey.
+seafood|Seafood comes from the sea.
+curry|The curry is very hot.
+lemonade|It's hot. Let's drink lemonade.
+cola|Can I have a cola, please?
+mineral water|A bottle of mineral water, please.
+supper|We have supper at eight.
+menu|Can I see the menu, please?
+thirsty|I'm thirsty. Can I have some water?
+fresh|The bread is fresh.
+family|I love my family.
+mother|My mother is a doctor.
+mum|Mum is in the kitchen.
+father|My father is tall.
+dad|Dad is reading a book.
+parent|My parents are at work.
+brother|My brother is ten.
+sister|My sister has got long hair.
+baby|The baby is sleeping.
+child|The child is playing.
+kid|The kids are in the garden.
+son|Their son is a student.
+daughter|They have got a daughter.
+grandmother|My grandmother makes cakes.
+grandma|Grandma lives in the village.
+grandfather|My grandfather has got a dog.
+grandpa|Grandpa likes fishing.
+grandparent|My grandparents live near us.
+uncle|My uncle is a pilot.
+aunt|My aunt has got a cat.
+cousin|My cousin is my best friend.
+husband|Her husband is a teacher.
+wife|His wife is a doctor.
+boy|The boy is playing football.
+girl|The girl is reading a book.
+man|The man is tall.
+woman|The woman is smiling.
+lady|The lady has got a hat.
+people|There are many people in the park.
+person|She is a very nice person.
+friend|Tom is my friend.
+best friend|Anna is my best friend.
+neighbour|Our neighbour has got a big dog.
+guest|We have a guest for dinner.
+twins|The twins look the same.
+birthday|Happy birthday!
+granny|Granny is knitting a scarf.
+grandchild|Grandma loves her grandchild.
+grandson|He is their grandson.
+granddaughter|She is their granddaughter.
+teenager|My brother is a teenager.
+adult|Children and adults can play this game.
+wedding|My aunt's wedding is in May.
+body|Exercise is good for your body.
+head|I've got a hat on my head.
+face|She has got a happy face.
+hair|My hair is brown.
+eye|My eyes are blue.
+ear|The rabbit has got long ears.
+nose|The clown has got a red nose.
+mouth|Open your mouth, please.
+tooth|The baby has got one tooth.
+teeth|I brush my teeth every day.
+neck|The giraffe has got a long neck.
+shoulder|The parrot is on my shoulder.
+arm|I've got two arms.
+hand|Put up your hand.
+leg|The table has got four legs.
+knee|I've got a plaster on my knee.
+feet|My feet are cold.
+back|I'm carrying a bag on my back.
+heart|Your heart is in your chest.
+brain|We think with our brain.
+bone|The dog has got a bone.
+lip|She has got red lips.
+tongue|The dog is showing its tongue.
+cheek|The baby has got pink cheeks.
+chin|He has got a beard on his chin.
+finger|I've got ten fingers.
+foot|I can stand on one foot.
+toe|I've got ten toes.
+ankle|My sock covers my ankle.
+chest|He has got a big chest.
+belly|The puppy has got a round belly.
+stomach|My stomach hurts.
+blood|Blood is red.
+skin|Wear a hat to protect your skin from the sun.
+clothes|I put my clothes in the cupboard.
+shirt|Dad is wearing a white shirt.
+T-shirt|I've got a blue T-shirt.
+dress|She is wearing a pink dress.
+skirt|Her skirt is red.
+trousers|My trousers are black.
+jeans|I like my jeans.
+jacket|Put on your jacket. It's cold.
+coat|It's winter. Wear your coat.
+hat|The man has got a black hat.
+cap|The boy is wearing a cap.
+shoe|I can't find my shoe.
+trainers|I run in my trainers.
+glasses|Grandma wears glasses.
+bag|My bag is heavy.
+umbrella|Take an umbrella. It's raining.
+ring|She has got a gold ring.
+button|My coat has got big buttons.
+pocket|I've got a key in my pocket.
+wear|I wear a uniform at school.
+shorts|In summer I wear shorts.
+sweater|This sweater is warm.
+jumper|Grandma made this jumper.
+scarf|My scarf is long and red.
+glove|I've lost a glove.
+sock|Where is my other sock?
+boot|I wear boots in the snow.
+belt|Dad has got a brown belt.
+tie|Dad is wearing a blue tie.
+uniform|We wear a school uniform.
+raincoat|Put on your raincoat.
+pyjamas|I sleep in my pyjamas.
+swimsuit|She has got a new swimsuit.
+tights|The girl is wearing tights.
+sunglasses|I wear sunglasses in summer.
+handbag|Mum's keys are in her handbag.
+wallet|His wallet is in his pocket.
+earring|She has got a gold earring.
+house|This is my house.
+home|I go home at three o'clock.
+flat|We live in a flat.
+room|My room is small.
+bedroom|There is a bed in the bedroom.
+bathroom|The bathroom is upstairs.
+kitchen|Mum is cooking in the kitchen.
+living room|We watch TV in the living room.
+dining room|We have dinner in the dining room.
+hall|My coat is in the hall.
+garden|There are flowers in the garden.
+wall|There is a picture on the wall.
+floor|The cat is on the floor.
+door|Please close the door.
+window|Open the window, please.
+stairs|I go up the stairs.
+table|The book is on the table.
+chair|Sit on the chair, please.
+sofa|The cat is sleeping on the sofa.
+bed|I go to bed at nine.
+light|Turn on the light, please.
+clock|The clock is on the wall.
+picture|Look at the picture.
+shelf|The books are on the shelf.
+towel|Here is a clean towel.
+bath|The baby is in the bath.
+shower|I have a shower every morning.
+toilet|Where is the toilet?
+brush|I need a brush for my hair.
+television|The television is in the living room.
+TV|I watch TV after school.
+radio|Grandpa listens to the radio.
+phone|My phone is in my bag.
+computer|I play games on my computer.
+key|I can't find my key.
+box|The toys are in the box.
+bucket|I've got a bucket and a spade.
+bottle|There is water in the bottle.
+cup|Can I have a cup of tea?
+glass|A glass of milk, please.
+bowl|I eat soup from a bowl.
+dish|This dish is delicious.
+knife|Cut the bread with a knife.
+apartment|They live in a big apartment.
+garage|The car is in the garage.
+balcony|There are flowers on the balcony.
+roof|The cat is on the roof.
+upstairs|My bedroom is upstairs.
+downstairs|The kitchen is downstairs.
+gate|Close the gate, please.
+fence|The dog is behind the fence.
+armchair|Grandpa is sitting in the armchair.
+lamp|The lamp is on the desk.
+mirror|She is looking in the mirror.
+bookcase|The bookcase is full of books.
+cupboard|The cups are in the cupboard.
+drawer|My socks are in the drawer.
+carpet|There is a red carpet on the floor.
+blanket|This blanket is warm.
+pillow|My pillow is soft.
+sink|Wash your hands in the sink.
+soap|Wash your hands with soap.
+shampoo|I wash my hair with shampoo.
+toothbrush|My toothbrush is blue.
+comb|I've got a comb in my bag.
+fridge|The milk is in the fridge.
+cooker|The soup is on the cooker.
+oven|The cake is in the oven.
+washing machine|The clothes are in the washing machine.
+basket|There are apples in the basket.
+mug|I drink hot chocolate from a big mug.
+plate|Put the cake on the plate.
+fork|I eat with a knife and fork.
+spoon|I eat soup with a spoon.
+pan|Dad is cooking eggs in a pan.
+napkin|Here is a napkin.
+furniture|We have new furniture.
+school|I go to school by bus.
+classroom|Our classroom is big.
+class|There are twenty children in my class.
+lesson|The English lesson starts at nine.
+teacher|Our teacher is very kind.
+student|He is a good student.
+classmate|Ben is my classmate.
+book|I'm reading a book.
+notebook|Write it in your notebook.
+dictionary|Look in the dictionary.
+pen|Can I borrow your pen?
+pencil|I draw with a pencil.
+ruler|I've got a long ruler.
+glue|I need some glue.
+paper|Draw on this paper.
+page|Open your book at page ten.
+desk|My book is on my desk.
+board|The teacher is writing on the board.
+schoolbag|My schoolbag is heavy.
+homework|I do my homework after school.
+test|We have a test today.
+question|Can I ask a question?
+answer|I know the answer!
+letter|A is the first letter.
+story|Grandma tells me a story.
+poem|We learn a poem in class.
+picture book|My little sister likes picture books.
+English|I'm learning English.
+maths|I like maths.
+science|We do experiments in science.
+history|We learn about kings in history.
+art|We paint pictures in art.
+music|I like music.
+PE|We play football in PE.
+library|I get books from the library.
+break|We play outside at break.
+college|My sister goes to college.
+learn|I learn new words every day.
+study|I study English at school.
+read|I can read in English.
+write|Write your name, please.
+draw|I like to draw animals.
+listen|Listen to the teacher.
+word|What does this word mean?
+sentence|Write a sentence.
+subject|My favourite subject is art.
+language|English is a language.
+grammar|We learn grammar in English lessons.
+example|Here is an example.
+spell|How do you spell your name?
+repeat|Listen and repeat.
+pupil|There are twenty pupils in the class.
+headteacher|The headteacher is in her office.
+textbook|Open your textbook.
+rubber|Can I borrow your rubber?
+scissors|Cut the paper with scissors.
+blackboard|The teacher writes on the blackboard.
+exam|I have an exam tomorrow.
+geography|We study maps in geography.
+mistake|Sorry, it's my mistake.
+playground|We play in the playground.
+timetable|Look at the timetable.
+university|My brother is at university.
+count|Let's count to ten.
+vocabulary|We learn new vocabulary every week.
+spelling|Check your spelling.
+toy|This is my favourite toy.
+doll|My doll has got a pink dress.
+ball|Kick the ball!
+teddy bear|I sleep with my teddy bear.
+kite|We fly a kite in the park.
+game|Let's play a game!
+car|Dad's car is red.
+train|The train is fast.
+block|The baby is playing with blocks.
+drum|My brother plays the drum.
+guitar|I can play the guitar.
+piano|She plays the piano very well.
+crayon|I draw with a green crayon.
+paint|Let's paint a picture!
+camera|I take photos with my camera.
+present|This present is for you.
+gift|Thank you for the gift!
+party|Come to my birthday party!
+play|The children play in the garden.
+fun|The party is great fun!
+funny|The clown is very funny.
+robot|My robot can walk and talk.
+balloon|I've got a red balloon.
+board game|Let's play a board game.
+video game|My brother likes video games.
+puzzle|This puzzle has got a hundred pieces.
+violin|She is learning the violin.
+tree|There is a bird in the tree.
+flower|This flower is yellow.
+rose|The rose is red.
+lily|The lily is white.
+grass|The grass is green.
+leaf|The leaf is falling from the tree.
+park|We play football in the park.
+river|There are fish in the river.
+sea|We swim in the sea in summer.
+beach|Let's go to the beach!
+island|There are palm trees on the island.
+mountain|The mountain is very high.
+hill|Our house is on a hill.
+field|There are cows in the field.
+sky|The sky is blue.
+sun|The sun is hot.
+moon|The moon is in the sky at night.
+star|I can see a star.
+world|There are many countries in the world.
+stone|I've got a stone in my shoe.
+fire|The fire is hot.
+nature|I love nature.
+sunflower|The sunflower is very tall.
+plant|Water the plant, please.
+bush|The cat is under the bush.
+forest|There are many trees in the forest.
+wood|The table is made of wood.
+lake|We swim in the lake.
+ocean|The ocean is very big.
+valley|There is a river in the valley.
+desert|It's very hot in the desert.
+countryside|We live in the countryside.
+village|My grandma lives in a village.
+planet|Earth is our planet.
+earth|We live on the earth.
+rock|The boy is sitting on a rock.
+sand|The children are playing in the sand.
+air|Birds fly in the air.
+seed|Put the seed in the ground.
+root|The tree has got long roots.
+weather|What's the weather like today?
+sunny|It's sunny today.
+cloudy|It's cloudy and grey.
+rainy|It's a rainy day.
+snowy|It's snowy outside.
+foggy|It's foggy this morning.
+rain|I like walking in the rain.
+snow|Let's make a snowman in the snow!
+wind|The wind is strong today.
+cloud|There is a big cloud in the sky.
+ice|There is ice on the lake.
+hot|It's very hot today.
+cold|It's cold in winter.
+warm|My jumper is warm.
+cool|It's cool in the evening.
+dry|My hair is dry now.
+spring|Flowers grow in spring.
+summer|We go to the sea in summer.
+autumn|The leaves are yellow in autumn.
+winter|It snows in winter.
+windy|It's windy today. Let's fly a kite!
+storm|There is a storm at sea.
+thunderstorm|I'm afraid of thunderstorms.
+fog|I can't see in the fog.
+rainbow|Look at the rainbow!
+wet|My shoes are wet.
+temperature|The temperature is twenty degrees.
+season|Summer is my favourite season.
+bus|I go to school by bus.
+plane|The plane is in the sky.
+bike|I ride my bike to the park.
+bicycle|My bicycle is blue.
+boat|We go fishing in a boat.
+ship|The ship is on the sea.
+taxi|Let's take a taxi.
+truck|The truck is very big.
+subway|We take the subway to the city.
+wheel|A car has got four wheels.
+driver|The bus driver is friendly.
+ticket|I've got a ticket for the train.
+street|I live on this street.
+bridge|The bridge is over the river.
+station|The train is at the station.
+airport|We go to the airport by taxi.
+drive|My mum can drive a car.
+ride|I can ride a horse.
+transport|Buses and trains are public transport.
+helicopter|The helicopter is flying over the city.
+motorbike|My uncle has got a motorbike.
+lorry|The lorry is carrying boxes.
+tram|We go to work by tram.
+underground|We take the underground in London.
+rocket|The rocket is going to the moon.
+spaceship|The spaceship is flying to Mars.
+pilot|The pilot flies the plane.
+passenger|There are fifty passengers on the bus.
+road|Don't play on the road.
+traffic|There is a lot of traffic today.
+traffic light|Stop at the red traffic light.
+bus stop|I'm waiting at the bus stop.
+city|London is a big city.
+town|I live in a small town.
+building|This building is very tall.
+shop|I buy bread at the shop.
+supermarket|We buy food at the supermarket.
+bank|Dad is at the bank.
+hospital|The doctor works at the hospital.
+restaurant|Let's have dinner at a restaurant.
+cafe|We have ice cream at the cafe.
+hotel|We stay at a hotel on holiday.
+cinema|Let's go to the cinema!
+theatre|We see a play at the theatre.
+palace|The queen lives in a palace.
+tower|The tower is very tall.
+church|There is an old church in the village.
+corner|The shop is on the corner.
+swimming pool|We swim in the swimming pool.
+factory|My dad works in a factory.
+office|Mum works in an office.
+place|This is a nice place.
+market|We buy fruit at the market.
+post office|I send a letter from the post office.
+pharmacy|You can buy medicine at the pharmacy.
+police station|The police station is next to the bank.
+fire station|There are fire engines at the fire station.
+museum|We see dinosaurs at the museum.
+gallery|There are paintings in the gallery.
+castle|The king lives in a castle.
+square|There is a fountain in the square.
+centre|The shops are in the town centre.
+stadium|We watch football at the stadium.
+sports centre|I go swimming at the sports centre.
+mall|We go shopping at the mall.
+car park|The car is in the car park.
+job|My dad has got a new job.
+work|My mum goes to work by car.
+doctor|The doctor helps sick people.
+nurse|The nurse works at the hospital.
+farmer|The farmer has got cows and sheep.
+cook|My dad can cook very well.
+waiter|The waiter brings our food.
+waitress|The waitress is very kind.
+engineer|An engineer builds bridges.
+scientist|The scientist works in a lab.
+singer|She is a famous singer.
+musician|He is a good musician.
+actor|The actor is on the stage.
+writer|She is a writer. She writes books.
+reporter|The reporter is talking on TV.
+sailor|The sailor works on a ship.
+king|The king has got a crown.
+prince|The prince lives in a castle.
+princess|The princess has got a long dress.
+dentist|I go to the dentist twice a year.
+chef|The chef is cooking in the restaurant.
+police officer|The police officer helps people.
+firefighter|The firefighter is very brave.
+astronaut|The astronaut is in space.
+artist|The artist is painting a picture.
+painter|The painter is painting the wall.
+dancer|She is a ballet dancer.
+photographer|The photographer is taking photos.
+journalist|The journalist writes for a newspaper.
+builder|The builder is building a house.
+mechanic|The mechanic is fixing the car.
+shop assistant|The shop assistant is helping me.
+cleaner|The cleaner cleans the office.
+secretary|The secretary is answering the phone.
+manager|She is the manager of the shop.
+businessman|The businessman has got a meeting.
+lawyer|The lawyer works in an office.
+vet|The vet helps sick animals.
+soldier|The soldier is wearing a uniform.
+fisherman|The fisherman has got a big fish.
+clown|The clown is very funny.
+queen|The queen has got a crown.
+sport|My favourite sport is tennis.
+football|Let's play football!
+basketball|He is good at basketball.
+volleyball|We play volleyball on the beach.
+tennis|I play tennis on Saturdays.
+baseball|They play baseball in America.
+swimming|I go swimming every week.
+dancing|She loves dancing.
+karate|My brother does karate.
+team|Our team is the best!
+player|He is a football player.
+coach|The coach helps the team.
+match|We are watching a football match.
+goal|He scores a goal!
+win|I want to win the race.
+kick|Kick the ball to me!
+throw|Throw the ball, please.
+catch|Can you catch the ball?
+jump|The frog can jump.
+run|I can run very fast.
+swim|Fish can swim.
+table tennis|Let's play table tennis.
+badminton|I play badminton with my sister.
+hockey|They play hockey on ice.
+golf|Grandpa plays golf.
+rugby|Rugby is a popular sport in England.
+running|Running is good for you.
+cycling|I like cycling in the park.
+skating|We go skating in winter.
+skiing|We go skiing in the mountains.
+snowboarding|My brother loves snowboarding.
+skateboarding|He goes skateboarding in the park.
+surfing|They go surfing in the sea.
+sailing|We go sailing in summer.
+climbing|Climbing is exciting.
+gymnastics|She does gymnastics after school.
+chess|Can you play chess?
+winner|She is the winner!
+medal|He has got a gold medal.
+race|Who wins the race?
+racket|I need a tennis racket.
+lose|I don't like to lose.
+skate|Can you skate?
+ski|I can ski.
+hobby|My hobby is drawing.
+song|Let's sing a song!
+dance|Can you dance?
+sing|Birds sing in the morning.
+movie|Let's watch a movie.
+magazine|Mum is reading a magazine.
+photo|Look at this photo!
+painting|This is a beautiful painting.
+reading|I love reading.
+fishing|Grandpa likes fishing.
+shopping|Mum goes shopping on Saturday.
+collection|I've got a stamp collection.
+concert|We are going to a concert.
+festival|There is a music festival in summer.
+holiday|We are on holiday!
+weekend|What do you do at the weekend?
+free time|I play the guitar in my free time.
+band|My brother plays in a band.
+cartoon|I watch cartoons on Sunday.
+film|This film is very funny.
+comic|I'm reading a comic.
+drawing|This is my drawing of a cat.
+camping|We go camping in the forest.
+hiking|We go hiking in the mountains.
+instrument|The piano is my favourite instrument.
+gold|The crown is gold.
+colour|What colour is it?
+red|The apple is red.
+yellow|The banana is yellow.
+green|The grass is green.
+blue|The sky is blue.
+purple|The grapes are purple.
+pink|The pig is pink.
+brown|The bear is brown.
+black|The cat is black.
+white|The snow is white.
+grey|The elephant is grey.
+dark|It's dark at night.
+silver|She has got a silver ring.
+colourful|The parrot is colourful.
+number|What's your phone number?
+zero|Zero plus one is one.
+one|I've got one brother.
+two|A bird has got two wings.
+three|I've got three pencils.
+four|A cat has got four legs.
+five|I've got five fingers on my hand.
+six|There are six eggs in the box.
+seven|There are seven days in a week.
+eight|A spider has got eight legs.
+nine|My sister is nine.
+ten|I can count to ten.
+eleven|There are eleven players in a football team.
+twelve|There are twelve months in a year.
+thirteen|My cousin is thirteen.
+fourteen|There are fourteen children in my class.
+fifteen|My brother is fifteen.
+sixteen|She is sixteen years old.
+seventeen|There are seventeen books on the shelf.
+eighteen|He is eighteen.
+nineteen|There are nineteen apples in the basket.
+twenty|There are twenty children in my class.
+thirty|There are thirty days in June.
+forty|My dad is forty.
+fifty|There are fifty pages in my notebook.
+sixty|There are sixty minutes in an hour.
+seventy|My grandpa is seventy.
+eighty|My great-grandma is eighty.
+ninety|There are ninety seats in the cinema.
+first|Monday is the first day of the week.
+second|This is my second ice cream today.
+half|I eat half of the apple.
+hundred|There are a hundred people here.
+thousand|There are a thousand books in the library.
+million|A million stars are in the sky.
+third|March is the third month.
+last|December is the last month of the year.
+double|I've got a double bed.
+time|What time is it?
+day|Have a nice day!
+night|Good night!
+morning|Good morning!
+afternoon|Good afternoon!
+evening|Good evening!
+today|It's sunny today.
+tomorrow|See you tomorrow!
+yesterday|I was at school yesterday.
+tonight|What are we doing tonight?
+week|There are seven days in a week.
+month|My birthday is next month.
+year|Happy New Year!
+hour|The lesson is one hour long.
+minute|Wait a minute, please.
+moment|Just a moment, please.
+o'clock|It's three o'clock.
+quarter|It's a quarter past two.
+date|What's the date today?
+Monday|I have English on Monday.
+Tuesday|I go swimming on Tuesday.
+Wednesday|We have art on Wednesday.
+Thursday|I visit Grandma on Thursday.
+Friday|We have pizza on Friday.
+Saturday|I play football on Saturday.
+Sunday|We go to the park on Sunday.
+January|It's cold in January.
+February|My birthday is in February.
+March|Spring starts in March.
+April|It often rains in April.
+May|Flowers grow in May.
+June|School finishes in June.
+July|We go to the sea in July.
+August|It's hot in August.
+September|School starts in September.
+October|The leaves are yellow in October.
+November|It's cold and wet in November.
+December|We have a New Year tree in December.
+early|I get up early.
+late|Don't be late for school!
+now|Let's go now!
+soon|See you soon!
+then|I have breakfast, then I go to school.
+later|See you later!
+before|Wash your hands before dinner.
+after|I play after school.
+always|I always brush my teeth.
+usually|I usually walk to school.
+often|We often go to the park.
+never|I never eat fish.
+again|Say it again, please.
+ago|I saw him two days ago.
+already|I have already finished my homework.
+yet|I haven't eaten yet.
+midnight|It's twelve o'clock. It's midnight.
+midday|We have lunch at midday.
+century|This castle is from the twelfth century.
+calendar|Look at the calendar.
+sometimes|I sometimes walk to school.
+happy|I'm happy today!
+sad|The girl is sad.
+angry|Dad is angry.
+afraid|I'm afraid of spiders.
+tired|I'm tired. I want to sleep.
+excited|I'm excited about my party!
+lonely|The boy is lonely.
+shy|She is a little shy.
+glad|I'm glad to see you!
+love|I love my mum.
+like|I like ice cream.
+smile|She has got a nice smile.
+laugh|The children laugh at the clown.
+cry|The baby is starting to cry.
+kiss|Mum gives me a kiss.
+dream|I have a dream about flying.
+feeling|Happiness is a good feeling.
+hope|I hope you are well.
+scared|The cat is scared of the dog.
+sleepy|I'm sleepy. Good night!
+bored|I'm bored. Let's play a game!
+surprised|She is surprised.
+worried|Mum is worried.
+nervous|I'm nervous before the test.
+upset|He is upset.
+proud|I'm proud of you!
+calm|The sea is calm today.
+pleased|The teacher is pleased with us.
+hate|I hate rainy days.
+hug|Give me a hug!
+joy|She jumps with joy.
+fear|I have a fear of the dark.
+make|Let's make a cake!
+go|I go to school every day.
+come|Come here, please!
+give|Give me the ball, please.
+take|Take an apple.
+bring|Bring your book tomorrow.
+carry|Can you carry this bag?
+put|Put your books on the desk.
+find|I can't find my pen.
+look|Look at the board, please.
+see|I can see a bird.
+watch|We watch TV in the evening.
+hear|Can you hear the music?
+say|Say hello to Grandma.
+tell|Tell me a story, please.
+talk|We talk on the phone.
+speak|I can speak English.
+ask|Ask the teacher.
+call|I call my grandma every day.
+think|I think it's a cat.
+teach|Mrs Brown teaches English.
+cut|Cut the paper in half.
+open|Open the door, please.
+close|Close your books.
+start|The film starts at six.
+begin|Let's begin the lesson.
+finish|I finish school at three.
+stop|Stop! The light is red.
+wait|Wait for me!
+help|Can you help me, please?
+try|Try again!
+eat|I eat an apple every day.
+wash|Wash your hands, please.
+clean|I clean my room on Saturday.
+sleep|The baby is sleeping.
+wake up|I wake up at seven.
+get up|I get up early.
+sit|Sit down, please.
+stand|Stand up, please.
+walk|I walk to school.
+climb|The cat can climb trees.
+hide|The cat likes to hide under the bed.
+push|Push the door.
+pick up|Pick up your toys, please.
+drop|Don't drop the glass!
+hold|Hold my hand.
+touch|Don't touch the cake!
+smell|The flowers smell nice.
+show|Show me your picture.
+choose|Choose a colour.
+buy|I want to buy a new book.
+sell|They sell fruit at the market.
+pay|I pay for the ice cream.
+spend|I spend my money on books.
+build|Let's build a sandcastle.
+grow|Plants grow in the sun.
+travel|I love to travel.
+visit|We visit Grandma on Sunday.
+arrive|The train arrives at five.
+leave|We leave home at eight.
+stay|Stay here, please.
+move|We move to a new house next week.
+turn|Turn left at the bank.
+meet|Nice to meet you!
+celebrate|We celebrate New Year with our family.
+share|Share your toys with your friends.
+borrow|Can I borrow your pencil?
+keep|I keep my toys in a box.
+save|I save my money in a piggy bank.
+use|Can I use your phone?
+change|Change your clothes, please.
+collect|I collect stickers.
+add|Add some sugar.
+fill|Fill the glass with water.
+check|Check your answers.
+describe|Describe your best friend.
+plan|We plan a party.
+practise|I practise the piano every day.
+imagine|Imagine you can fly!
+agree|I agree with you.
+worry|Don't worry!
+wish|I wish you a happy birthday!
+point|Point to the window.
+be|I want to be a doctor.
+have|I have a dog.
+do|I do my homework in the evening.
+get|I get a present on my birthday.
+know|I know the answer.
+remember|I remember your name.
+forget|Don't forget your bag!
+want|I want an ice cream.
+need|I need a pencil.
+find out|Let's find out the answer.
+feel|I feel happy today.
+live|I live in a big city.
+believe|I believe you.
+guess|Guess what I've got!
+bake|Let's bake a cake.
+tidy|Tidy your room, please.
+hit|He hits the ball with a bat.
+pull|Pull the rope!
+taste|Taste this soup.
+send|I send a letter to my friend.
+receive|I receive a lot of presents.
+fix|Dad can fix my bike.
+repair|They repair cars.
+follow|Follow me!
+invite|I invite my friends to my party.
+lend|Can you lend me your pen?
+mix|Mix the eggs and the flour.
+pour|Pour the milk into the glass.
+boil|Boil the water for the tea.
+fry|Fry the eggs in the pan.
+explain|Can you explain this word?
+compare|Compare the two pictures.
+prepare|Mum prepares dinner.
+improve|I want to improve my English.
+disagree|I disagree with you.
+shout|Don't shout, please!
+whisper|She whispers a secret.
+wave|Wave goodbye!
+clap|Clap your hands!
+knock|Knock on the door.
+shine|The sun shines in summer.
+fall|The leaves fall in autumn.
+understand|I understand the question.
+die|Plants die without water.
+decide|I can't decide.
+wonder|I wonder what's in the box.
+big|The elephant is big.
+small|The mouse is small.
+little|I've got a little sister.
+large|I want a large pizza.
+tall|My dad is tall.
+short|My pencil is short.
+long|The snake is long.
+high|The mountain is high.
+thin|The book is thin.
+fat|The cat is fat.
+heavy|My bag is heavy.
+fast|The cheetah is very fast.
+slow|The snail is slow.
+beautiful|What a beautiful flower!
+pretty|She has got a pretty dress.
+handsome|The prince is handsome.
+ugly|This old boot is ugly.
+cute|The puppy is very cute.
+new|I've got a new bike.
+old|The car is old.
+young|My mum is young.
+easy|This game is easy.
+difficult|This question is difficult.
+hard|The test is hard.
+dirty|My shoes are dirty.
+full|The glass is full.
+closed|The shop is closed.
+right|Your answer is right.
+different|These socks are different.
+quiet|Be quiet, please.
+rich|The king is rich.
+poor|The poor man has got no money.
+expensive|This car is expensive.
+strong|My dad is strong.
+busy|Mum is busy.
+straight|The road is straight.
+good|This is a good book.
+bad|The weather is bad today.
+great|That's a great idea!
+nice|Have a nice day!
+lovely|What a lovely day!
+wonderful|We have a wonderful time.
+excellent|Excellent work!
+terrible|The weather is terrible.
+wrong|Sorry, that's wrong.
+true|Is it true?
+false|True or false?
+same|We have got the same bag.
+free|Are you free on Saturday?
+ready|Are you ready?
+important|Water is important.
+interesting|This book is interesting.
+boring|This film is boring.
+exciting|The game is exciting.
+famous|She is a famous singer.
+favourite|Blue is my favourite colour.
+special|Today is a special day.
+strange|What a strange animal!
+real|Is the dragon real?
+huge|The whale is huge.
+low|The table is low.
+wide|The river is wide.
+quick|Be quick!
+modern|This building is modern.
+ancient|This is an ancient castle.
+soft|The pillow is soft.
+empty|The box is empty.
+loud|The music is loud.
+noisy|The classroom is noisy.
+cheap|This toy is cheap.
+weak|The baby bird is weak.
+safe|The park is safe.
+dangerous|Sharks are dangerous.
+round|The ball is round.
+deep|The lake is deep.
+wild|Lions are wild animals.
+magic|The wizard has got a magic hat.
+fantastic|The show is fantastic!
+amazing|That's amazing!
+brilliant|What a brilliant idea!
+awful|The food is awful.
+healthy|Fruit is healthy.
+sick|I'm sick today.
+medicine|Take this medicine.
+fever|The child has got a fever.
+headache|I've got a headache.
+plaster|Put a plaster on your knee.
+exercise|Exercise is good for you.
+health|Fruit is good for your health.
+hurt|My leg hurts.
+ill|She is ill in bed.
+pill|Take one pill a day.
+cough|He has got a cough.
+toothache|I've got a toothache.
+stomachache|I've got a stomachache.
+ambulance|The ambulance goes to the hospital.
+diet|A good diet has got lots of fruit.
+pain|I've got a pain in my leg.
+accident|There is an accident on the road.
+trip|We go on a school trip.
+map|Look at the map.
+camp|We stay at a summer camp.
+left|Turn left here.
+straight on|Go straight on.
+foreign|She speaks a foreign language.
+near|The school is near my house.
+journey|The journey is long.
+tourist|There are many tourists in the city.
+passport|Don't forget your passport!
+suitcase|My suitcase is heavy.
+luggage|Our luggage is in the car.
+tent|We sleep in a tent.
+seaside|We go to the seaside in summer.
+sightseeing|We go sightseeing in Paris.
+guidebook|The guidebook is in my bag.
+flight|Our flight is at ten.
+north|It's cold in the north.
+country|Russia is a big country.
+capital|London is the capital of England.
+abroad|We go abroad on holiday.
+south|It's warm in the south.
+east|The sun rises in the east.
+west|The sun sets in the west.
+far|The school is far from my house.
+money|I've got some money.
+price|What's the price of this book?
+credit card|Can I pay by credit card?
+sale|The shoes are on sale.
+size|What size are your shoes?
+list|Here is my shopping list.
+coin|I've got a coin in my pocket.
+cash|Can I pay in cash?
+customer|The customer is buying shoes.
+receipt|Here is your receipt.
+bill|Can we have the bill, please?
+cost|How much does it cost?
+technology|I like new technology.
+mobile phone|Where is my mobile phone?
+smartphone|My sister has got a new smartphone.
+email|I write an email to my friend.
+message|I send a message to Mum.
+app|This app is for learning English.
+video|Let's watch a video.
+headphones|I listen to music with headphones.
+internet|I find information on the internet.
+machine|This machine makes coffee.
+laptop|Dad works on his laptop.
+tablet|I read books on my tablet.
+screen|Look at the screen.
+keyboard|I type on the keyboard.
+printer|The printer is next to the computer.
+website|Visit our website.
+password|Don't tell anyone your password!
+battery|My phone needs a new battery.
+click|Click on the picture.
+online|We have lessons online.
+download|Download the app.
+name|What's your name?
+age|What's your age?
+address|What's your address?
+kind|She is very kind.
+clever|My brother is clever.
+smart|You are very smart!
+rude|Don't be rude.
+lazy|The cat is lazy.
+careful|Be careful! It's hot.
+friendly|Our dog is friendly.
+polite|Be polite to everyone.
+brave|The firefighter is brave.
+patient|My teacher is very patient.
+helpful|Thank you, you are very helpful.
+creative|My sister is very creative.
+naughty|The puppy is naughty.
+good-looking|The actor is good-looking.
+blonde|She has got blonde hair.
+curly|I've got curly hair.
+beard|Grandpa has got a white beard.
+moustache|The man has got a moustache.
+hero|My dad is my hero.
+first name|My first name is Anna.
+surname|What's your surname?
+honest|He is an honest boy.
+alien|The alien is green.
+magnet|The magnet picks up the nails.
+space|The astronaut is in space.
+globe|Find Russia on the globe.
+experiment|We do an experiment in science.
+metal|The spoon is made of metal.
+plastic|The bottle is plastic.
+diamond|The ring has got a diamond.
+energy|The sun gives us energy.
+fairy|The fairy has got wings.
+ghost|There is a ghost in the castle!
+witch|The witch has got a black cat.
+dragon|The dragon is flying over the castle.
+spy|The spy has got a secret.
+superhero|The superhero can fly.
+unicorn|The unicorn is white.
+mermaid|The mermaid lives in the sea.
+wizard|The wizard has got a magic stick.
+monster|The monster is big and green.
+pirate|The pirate has got a ship.
+treasure|The pirates are looking for treasure.
+crown|The queen is wearing a crown.
+angel|The angel has got white wings.
+giant|The giant is very tall.
+hello|Hello! How are you?
+hi|Hi, Tom!
+goodbye|Goodbye! See you tomorrow.
+bye|Bye, Mum!
+good morning|Good morning, children!
+good afternoon|Good afternoon, Mrs Smith.
+good evening|Good evening, everyone.
+good night|Good night, sleep well.
+please|Can I have some water, please?
+thank you|Thank you for the present!
+thanks|Thanks a lot!
+sorry|I'm sorry.
+excuse me|Excuse me, where is the station?
+welcome|Welcome to our school!
+yes|Yes, I can.
+no|No, thank you.
+OK|OK, let's go!
+of course|Of course you can!
+maybe|Maybe tomorrow.
+see you|See you on Monday!
+happy birthday|Happy birthday, Sam!
+well done|Well done! That's right.
+I|I am a student.
+you|Are you happy?
+he|He is my brother.
+she|She is my sister.
+it|It is a cat.
+we|We are friends.
+they|They are at school.
+me|Help me, please.
+him|I like him.
+her|I play with her.
+us|Come with us!
+them|I see them every day.
+my|This is my bag.
+your|Is this your pen?
+his|This is his car.
+its|The cat is eating its food.
+our|This is our house.
+their|This is their dog.
+this|This is my brother.
+that|That is my school.
+these|These are my books.
+those|Those are my friends.
+here|Come here!
+there|The cat is over there.
+who|Who is that?
+what|What is this?
+where|Where is my bag?
+when|When is your birthday?
+why|Why are you sad?
+how|How are you?
+which|Which colour do you like?
+how many|How many apples are there?
+how much|How much is this?
+and|I've got a cat and a dog.
+but|I like apples but I don't like pears.
+or|Tea or coffee?
+because|I'm happy because it's my birthday.
+so|It's cold, so I wear a coat.
+if|If it rains, we stay at home.
+with|I go to school with my friend.
+in|The cat is in the box.
+on|The book is on the table.
+under|The ball is under the chair.
+over|The plane is flying over the house.
+behind|The dog is behind the door.
+in front of|The car is in front of the house.
+between|The cat is between the two dogs.
+inside|Let's go inside.
+outside|The children are playing outside.
+up|Look up!
+down|Sit down, please.
+from|I'm from Russia.
+to|I go to school.
+very|It's very cold.
+too|I like it too.
+also|She also plays the piano.
+only|I've got only one brother.
+all|All the children are here.
+some|I want some milk.
+many|There are many birds in the tree.
+much|I haven't got much time.
+more|Can I have more cake?
+most|Most children like ice cream.
+every|I read every day.
+each|Each child has got a book.
+other|Where is the other shoe?
+another|Can I have another cookie?
+something|I want something to eat.
+everything|Everything is ready.
+nothing|There is nothing in the box.
+someone|Someone is at the door.
+everyone|Everyone is here.
+together|Let's play together.
+alone|The boy is alone in the room.
+really|I really like this song.
+just|I'm just looking.
+still|It's still raining.
+almost|It's almost nine o'clock.
+quickly|Come here quickly!
+well|She sings very well.
+carefully|Carry the cup carefully.
+without|I can't sleep without my teddy.
+next to|The bank is next to the shop.
+nobody|Nobody is at home.
+slowly|The turtle walks slowly.
+badly|I slept badly.
+action|Let's do the action together.
+activity|Swimming is my favourite activity.
+album|Look at my photo album.
+apron|The cook is wearing an apron.
+article|I'm reading an article about animals.
+bell|The school bell is ringing.
+blow|Blow out the candles!
+card|I make a birthday card for Mum.
+circle|Draw a circle.
+cloth|Clean the table with a cloth.
+conversation|We have a conversation in English.
+couch|The dog is on the couch.
+cover|The book has got a red cover.
+dig|The dog likes to dig in the garden.
+dollar|This book costs ten dollars.
+fair|That's not fair!
+fan|I'm a football fan.
+feed|Let's feed the ducks.
+file|Save the file on the computer.
+flag|The flag is red, white and blue.
+garbage|Put the garbage in the bin.
+group|We work in a group.
+haircut|I need a haircut.
+hole|The rabbit is in its hole.
+hurry|Hurry up! We are late.
+jet|The jet is very fast.
+jewellery|She has got beautiful jewellery.
+judge|The judge is in the court.
+line|Draw a line.
+mail|Is there any mail for me?
+mobile|What's your mobile number?
+news|Dad watches the news.
+newspaper|Grandpa reads the newspaper.
+note|I write a note to Mum.
+Olympics|She wants to win at the Olympics.
+opera|We go to the opera.
+pair|I need a new pair of shoes.
+pants|He is wearing blue pants.
+piece|Can I have a piece of cake?
+pool|Let's swim in the pool.
+poster|There is a poster on my wall.
+ribbon|She has got a red ribbon in her hair.
+row|We sit in the first row.
+seat|Is this seat free?
+sign|Look at the sign.
+soccer|Soccer is popular in America.
+speech|The teacher makes a speech.
+stage|The actors are on the stage.
+store|The store opens at nine.
+sunshine|The cat is sleeping in the sunshine.
+surprise|I've got a surprise for you!
+telephone|The telephone is ringing.
+tool|A hammer is a tool.
+turkey|We have turkey for dinner.
+vacation|We go on vacation in July.
+vase|The flowers are in a vase.
+worker|The worker is wearing a helmet.
+yard|The children play in the yard.
+about|This book is about animals.
+above|The picture is above the bed.
+all right|Are you all right?
+along|We walk along the river.
+around|We walk around the lake.
+awake|The baby is awake.
+away|Go away!
+become|I want to become a doctor.
+below|The cat is below the table.
+best|You are my best friend.
+better|I feel better today.
+birth|The date of my birth is in May.
+blank|Write in the blank space.
+both|Both my sisters are tall.
+bottom|The fish is at the bottom of the lake.
+breathe|Breathe in slowly.
+bright|The sun is bright.
+broken|My toy is broken.
+business|My dad has got his own business.
+care|Take care!
+case|Put your glasses in the case.
+celebration|We have a big celebration.
+character|Who is your favourite character?
+club|I go to the chess club.
+code|What's the secret code?
+contest|She wins the singing contest.
+copy|Copy the words into your notebook.
+correct|Your answer is correct.
+course|I'm doing an English course.
+culture|We learn about English culture.
+dear|Dear Grandma, how are you?
+design|I like the design of this T-shirt.
+difference|Find the difference between the pictures.
+discuss|Let's discuss this in class.
+drama|We have drama on Friday.
+else|What else do you need?
+end|This is the end of the story.
+enjoy|Enjoy your meal!
+event|The concert is a big event.
+everyday|Brushing teeth is an everyday habit.
+everywhere|There are flowers everywhere.
+fight|Don't fight!
+fine|I'm fine, thank you.
+focus|Focus on your work.
+following|Answer the following questions.
+foreigner|He is a foreigner.
+form|Fill in the form.
+front|Sit at the front of the class.
+future|What do you want to be in the future?
+grade|I've got a good grade in maths.
+greet|We greet our teacher.
+ground|The apple is on the ground.
+habit|Reading is a good habit.
+happen|What happens next?
+hometown|My hometown is small.
+idea|That's a good idea!
+ideal|It's an ideal place for a picnic.
+information|I need some information.
+interested|I'm interested in animals.
+interview|We have an interview today.
+introduce|Let me introduce my friend.
+item|There are ten items on the list.
+join|Join our club!
+leader|She is the team leader.
+let|Let me help you.
+life|Life is beautiful.
+lot|I've got a lot of friends.
+luck|Good luck!
+lucky|I'm lucky today!
+matter|It doesn't matter.
+mean|What does this word mean?
+meeting|Mum has got a meeting.
+memory|I have a good memory.
+merry|Merry Christmas!
+middle|The cat is in the middle.
+mind|Never mind!
+miss|I miss my friends.
+nationality|What's your nationality?
+noise|What's that noise?
+off|Turn off the light.
+officer|The officer is helping people.
+once|Once upon a time there was a king.
+order|I'd like to order a pizza.
+out|The cat is out.
+own|I've got my own room.
+owner|Who is the owner of this dog?
+paragraph|Read the first paragraph.
+pardon|Pardon? Can you say it again?
+partner|Work with your partner.
+past|We learn about the past.
+peace|We want peace.
+period|The lesson period is forty minutes.
+personal|This is my personal diary.
+pick|Pick a card.
+pleasure|It's a pleasure to meet you.
+pollution|Pollution is bad for the planet.
+pop|I like pop music.
+post|I post a letter.
+practice|Practice makes perfect.
+problem|No problem!
+programme|My favourite TV programme is on now.
+reader|She is a good reader.
+reason|What's the reason?
+result|Here are the test results.
+review|Let's review the new words.
+role|Play the role of the teacher.
+rule|Listen to the rules.
+section|Read this section.
+set|I've got a set of pencils.
+shake|Shake the bottle.
+side|Walk on the left side.
+sight|The tower is a famous sight.
+skill|Reading is an important skill.
+social|Humans are social animals.
+solve|Can you solve this problem?
+spot|The dog has got black spots.
+step|Take one step forward.
+strict|Our teacher is strict.
+successful|She is a successful writer.
+suggestion|Do you have a suggestion?
+sum|Do this sum: two plus two.
+super|That's super!
+sure|Are you sure?
+survey|We do a survey in class.
+thank|I thank my teacher.
+thick|This book is very thick.
+thing|What's this thing?
+tight|These shoes are tight.
+top|The cat is on top of the cupboard.
+topic|Today's topic is animals.
+type|Type your name.
+underline|Underline the new words.
+vote|We vote for the class leader.
+way|This is the way to the park.
+adventure|We have a big adventure.
+advertisement|There is an advertisement on TV.
+alarm clock|My alarm clock rings at seven.
+athlete|She is a fast athlete.
+author|Who is the author of this book?
+award|He gets an award.
+barbecue|We have a barbecue in the garden.
+barber|The barber cuts my hair.
+beginner|I'm a beginner at chess.
+bench|Let's sit on the bench.
+bend|Bend your knees.
+bite|Does your dog bite?
+bookshelf|The bookshelf is full.
+bookshop|I buy books at the bookshop.
+brake|Use the brake on your bike.
+branch|The bird is on the branch.
+breeze|There is a cool breeze.
+bride|The bride has got a white dress.
+bulb|The light bulb is broken.
+bus station|The bus station is in the centre.
+businesswoman|She is a businesswoman.
+cafeteria|We eat lunch in the cafeteria.
+campus|The university campus is big.
+captain|The captain is on the ship.
+cent|It costs fifty cents.
+centimetre|The pencil is fifteen centimetres long.
+chain|The bike has got a chain.
+championship|Our team wins the championship.
+chart|Look at the chart.
+chat|We chat after school.
+chilli|The chilli is very hot.
+classical music|Grandma likes classical music.
+clue|Give me a clue!
+coast|We live on the coast.
+column|Write the words in the column.
+competition|I want to win the competition.
+container|Put the food in a container.
+continent|Africa is a continent.
+cooking|My dad likes cooking.
+couple|The old couple is walking in the park.
+cricket|They play cricket in England.
+crowd|There is a big crowd at the concert.
+department store|We go to the department store.
+diary|I write in my diary every day.
+digital camera|I've got a new digital camera.
+director|The director of the film is famous.
+disco|There is a disco at school.
+display|Look at the display in the window.
+dust|There is dust on the shelf.
+earthquake|The earthquake shakes the house.
+elevator|Take the elevator to the fifth floor.
+emergency|Call the doctor! It's an emergency!
+entrance|The entrance is on the left.
+envelope|Put the letter in the envelope.
+escalator|Take the escalator.
+euro|It costs five euros.
+exhibition|We go to an art exhibition.
+fast food|Don't eat too much fast food.
+flood|There is a flood in the town.
+folder|Put the papers in the folder.
+footballer|He is a famous footballer.
+frame|The photo is in a frame.
+gas|We cook on gas.
+graduate|My sister graduates this year.
+granddad|My granddad is funny.
+guard|The guard is at the door.
+handle|Turn the handle.
+harvest|The farmers bring in the harvest.
+heating|Turn on the heating.
+high school|My brother goes to high school.
+highway|The highway is busy.
+hike|We go for a hike.
+kilo|A kilo of apples, please.
+kilometre|The school is one kilometre away.
+kit|I've got a first aid kit.
+landscape|What a beautiful landscape!
+lane|We walk down the lane.
+leather|My bag is made of leather.
+litre|A litre of milk, please.
+lock|Lock the door.
+lunchtime|It's lunchtime!
+main course|What's the main course?
+make-up|Mum is putting on her make-up.
+metre|The pool is twenty-five metres long.
+model|I'm making a model plane.
+motorway|The motorway is very busy.
+novel|She is reading a novel.
+oak|The oak is a big tree.
+path|We walk along the path.
+pen friend|I've got a pen friend in England.
+perfume|Mum's perfume smells nice.
+petrol station|We stop at the petrol station.
+pile|There is a pile of books on the desk.
+police|Call the police!
+portrait|This is a portrait of the queen.
+receptionist|The receptionist gives us the key.
+roll|I have a roll with butter.
+rope|Hold the rope.
+roundabout|Turn left at the roundabout.
+runner|He is a fast runner.
+scenery|The scenery is beautiful.
+schoolchild|Every schoolchild has got a bag.
+shade|Let's sit in the shade.
+shadow|Look at my shadow!
+shape|A circle is a shape.
+shore|We walk on the shore.
+singing|I like singing.
+sitting room|We sit in the sitting room.
+slice|Can I have a slice of pizza?
+slide|The children go down the slide.
+soft drink|Would you like a soft drink?
+speaker|The speaker is very loud.
+splash|The children splash in the water.
+stamp|Put a stamp on the envelope.
+statue|There is a statue in the park.
+stove|The pan is on the stove.
+string|The kite has got a long string.
+suit|Dad is wearing a suit.
+sunlight|Plants need sunlight.
+tap|Turn off the tap.
+tape|Fix it with tape.
+target|Hit the target!
+tear|There is a tear on her cheek.
+text message|I send a text message to my friend.
+tour|We go on a tour of the city.
+tour guide|The tour guide shows us the castle.
+track|The runners are on the track.
+training|I have football training on Monday.
+traveller|The traveller has got a big bag.
+visitor|We have a visitor today.
+walking|Walking is good for you.
+wheelchair|My grandpa uses a wheelchair.
+wool|This jumper is made of wool.
+writing|My writing is neat.
+ability|She has got the ability to sing well.
+accept|Please accept this present.
+account|I've got an account on this website.
+achieve|You can achieve your dream.
+across|Walk across the road.
+act|He likes to act in plays.
+actually|Actually, I like it.
+addition|We learn addition in maths.
+adjective|"Big" is an adjective.
+admire|I admire my teacher.
+admit|I admit I was wrong.
+advanced|This is an advanced class.
+advantage|Living near the school is an advantage.
+advice|Can you give me some advice?
+advise|The doctor advises me to rest.
+ahead|Go straight ahead.
+alive|The fish is still alive.
+allow|Dogs are not allowed in the shop.
+amused|The children are amused by the clown.
+anniversary|Today is my parents' anniversary.
+annoying|The noise is annoying.
+anxious|I feel anxious before exams.
+anyway|Anyway, let's go!
+anywhere|You can sit anywhere.
+apologise|I apologise for being late.
+appear|A rabbit appears from the hat.
+appearance|She changed her appearance.
+apply|I want to apply for this club.
+appointment|I have an appointment with the dentist.
+appreciate|I appreciate your help.
+architecture|I like old architecture.
+area|This area is quiet.
+argue|Don't argue with your sister.
+argument|They have an argument.
+artificial|These flowers are artificial.
+asleep|The baby is asleep.
+assistant|She is the teacher's assistant.
+attack|The dog doesn't attack people.
+attention|Pay attention, please!
+attitude|She has got a good attitude.
+attractive|The town is very attractive.
+audience|The audience claps.
+automatic|The doors are automatic.
+average|He is of average height.
+avoid|Avoid sweets before dinner.
+background|There are mountains in the background.
+bargain|This coat is a bargain!
+basic|I know basic English.
+beauty|The beauty of nature is amazing.
+beginning|This is the beginning of the story.
+behaviour|Your behaviour is very good.
+belong|This bag belongs to me.
+bit|Can I have a bit of cake?
+boiled|I like boiled eggs.
+boss|My mum is the boss.
+bother|Sorry to bother you.
+brand|What brand are your trainers?
+budget|We have a small budget.
+burn|Be careful, don't burn your hand.
+capital letter|Start a sentence with a capital letter.
+cause|Rain can cause floods.
+certain|I'm certain it's true.
+certainly|I will certainly come.
+challenge|This puzzle is a challenge.
+chance|Give me one more chance.
+chapter|Read the first chapter.
+cheer|We cheer for our team.
+childhood|I had a happy childhood.
+choice|It's your choice.
+citizen|She is a citizen of Russia.
+classic|This is a classic film.
+clear|The water is clear.
+clearly|Speak clearly, please.
+clerk|The clerk works in the bank.
+comfortable|This chair is comfortable.
+common|Smith is a common name.
+communicate|We communicate in English.
+communication|Communication is important.
+company|My dad works for a big company.
+complain|Don't complain!
+complete|Complete the sentences.
+composer|Mozart is a famous composer.
+concentrate|I can't concentrate.
+condition|The car is in good condition.
+confident|She is confident.
+confused|I'm confused.
+consider|Consider all the answers.
+contact|Contact me by email.
+continue|Continue reading.
+control|Keep your dog under control.
+convenient|Is five o'clock convenient for you?
+correctly|Answer correctly.
+crazy|That's a crazy idea!
+create|Let's create a poster.
+creativity|Art helps creativity.
+cross|Cross the road carefully.
+crowded|The bus is crowded.
+custom|It's a local custom.
+daily|I read the daily news.
+danger|Danger! Keep out!
+daylight|We work in daylight.
+debate|We have a class debate.
+degree|It's twenty degrees today.
+delay|The train has a delay.
+depend|It depends on the weather.
+description|Write a description of your room.
+destroy|The storm can destroy houses.
+detail|Look at every detail.
+develop|Reading helps develop your mind.
+differently|We think differently.
+difficulty|I have difficulty with maths.
+direction|Which direction is the station?
+disappear|The rabbit can disappear!
+disappointed|I'm disappointed.
+discover|We discover a cave.
+discussion|We have a discussion in class.
+dislike|I dislike cold weather.
+disturb|Don't disturb the baby.
+divide|Divide the cake into four pieces.
+dizzy|I feel dizzy.
+doubt|I have no doubt.
+dressed|Get dressed quickly!
+earn|She earns money.
+easily|I can do it easily.
+education|Education is important.
+educational|This is an educational game.
+effect|The medicine has a good effect.
+effort|Make an effort!
+elderly|We help elderly people.
+electric|This is an electric car.
+embarrassing|That was embarrassing!
+encourage|My parents encourage me.
+endangered|Pandas are endangered animals.
+ending|The film has a happy ending.
+energetic|The puppy is energetic.
+enormous|The elephant is enormous.
+enough|I've got enough money.
+enter|Please enter the room.
+entertainment|TV is entertainment.
+episode|I watch one episode a day.
+error|There is an error in your work.
+escape|The bird escapes from the cage.
+especially|I like fruit, especially apples.
+essay|Write an essay about your summer.
+even|Even my grandma likes this game.
+ever|Have you ever seen a whale?
+exactly|That's exactly right!
+exchange|We exchange presents.
+exist|Do dragons exist?
+expect|I expect a letter.
+experience|It's a great experience.
+expert|She is an expert on animals.
+explanation|Thank you for the explanation.
+explore|Let's explore the forest!
+expression|Learn this expression.
+extra|Can I have an extra cookie?
+extremely|It's extremely hot.
+fact|Here is an interesting fact.
+fail|Don't fail the test!
+fairly|The test is fairly easy.
+familiar|This song sounds familiar.
+fancy|She has got a fancy dress.
+fascinating|The book is fascinating.
+fashion|She likes fashion.
+fault|It's not my fault!
+favour|Can you do me a favour?
+female|A female lion has got no mane.
+fiction|I like reading fiction.
+figure|Write the figure on the board.
+final|This is the final question.
+finally|Finally, we are home!
+fit|These shoes fit me.
+forever|Friends forever!
+fortunately|Fortunately, it didn't rain.
+forward|Take one step forward.
+freedom|Birds have freedom.
+freeze|Water freezes in winter.
+fried|I like fried eggs.
+friendship|Friendship is very important.
+frightened|The kitten is frightened.
+frightening|The film is frightening.
+gather|We gather in the hall.
+generation|The young generation loves technology.
+gentle|Be gentle with the kitten.
+golden|She has got golden hair.
+government|The government makes laws.
+gradually|It gradually gets dark.
+gram|Add a hundred grams of sugar.
+grateful|I'm grateful for your help.
+greedy|Don't be greedy!
+grilled|I like grilled fish.
+happily|They lived happily ever after.
+happiness|Happiness is important.
+hardly|I can hardly hear you.
+harmful|Smoking is harmful.
+heat|I don't like the heat.
+hey|Hey, look at this!
+honour|It's an honour to meet you.
+horror|I don't watch horror films.
+host|The host welcomes the guests.
+however|It's cold. However, it's sunny.
+human|Humans can talk.
+hunter|The hunter is in the forest.
+ID card|Show your ID card, please.
+image|Look at the image.
+imagination|You have a great imagination!
+impatient|Don't be impatient.
+importance|We know the importance of sleep.
+impossible|Nothing is impossible!
+impress|The singer impresses everyone.
+inch|It's ten inches long.
+include|The price includes breakfast.
+increase|The price will increase.
+independence|Teenagers want independence.
+indoor|We have an indoor pool.
+injure|Be careful, don't injure yourself.
+inspiration|Nature is my inspiration.
+instead|Let's walk instead.
+intelligent|Dolphins are intelligent.
+interest|I have an interest in music.
+international|It's an international school.
+invent|Who invented the telephone?
+invention|The computer is a great invention.
+joke|Tell me a joke!
+junior|She plays in the junior team.
+kingdom|The king rules the kingdom.
+knowledge|Books give us knowledge.
+land|The plane lands at ten.
+latest|This is the latest model.
+law|We must follow the law.
+learner|She is a fast learner.
+leisure|What do you do in your leisure time?
+less|Eat less sugar.
+level|What's your English level?
+lie|Don't lie to me!
+lifestyle|We have a healthy lifestyle.
+likely|It's likely to rain.
+lively|The city is lively.
+local|We go to the local shop.
+lost|I'm lost!
+loudly|Don't speak so loudly.
+luckily|Luckily, I found my key.
+mad|That's a mad idea!
+mainly|I mainly eat fruit.
+male|A male lion has got a mane.
+manage|I can manage it.
+manner|She speaks in a friendly manner.
+mark|I got a good mark.
+married|My aunt is married.
+marry|They marry in June.
+material|Wood is a natural material.
+meaning|What's the meaning of this word?
+medical|She is a medical student.
+member|I'm a member of the club.
+mention|Don't mention it.
+method|This is a good method.
+missing|My cat is missing.
+mood|I'm in a good mood.
+mostly|It's mostly sunny.
+musical|She is very musical.
+mysterious|The house is mysterious.
+mystery|It's a mystery!
+nation|The whole nation celebrates.
+national|This is the national flag.
+native|English is her native language.
+natural|This juice is natural.
+nearly|It's nearly lunchtime.
+necessary|Water is necessary for life.
+negative|Don't be so negative!
+next|See you next week!
+noon|We meet at noon.
+normal|It's a normal day.
+notice|I notice a mistake.
+noun|"Cat" is a noun.
+nowadays|Nowadays everyone has a phone.
+offer|Can I offer you some tea?
+official|This is the official website.
+opinion|What's your opinion?
+opportunity|This is a great opportunity.
+opposite|The bank is opposite the park.
+organise|Let's organise a party!
+original|What an original idea!
+pack|Pack your bag.
+part|This is the best part of the film.
+pass|Pass me the salt, please.
+peaceful|The village is peaceful.
+perfect|Your English is perfect!
+perform|The children perform a play.
+performance|What a great performance!
+perhaps|Perhaps it will rain.
+permission|Ask for permission.
+personality|She has got a great personality.
+petrol|The car needs petrol.
+photography|My hobby is photography.
+physical|Physical exercise is good for you.
+pity|What a pity!
+playful|The kitten is playful.
+pleasant|It's a pleasant day.
+plenty|We have plenty of time.
+plural|The plural of "child" is "children".
+pollute|Cars pollute the air.
+popular|This song is very popular.
+population|What's the population of Moscow?
+position|Change your position.
+possible|Is it possible?
+possibly|It's possibly the best film ever.
+power|The storm cut off the power.
+powerful|The lion is powerful.
+predict|Can you predict the weather?
+prefer|I prefer tea to coffee.
+pretend|Let's pretend we are pirates!
+prevent|Wash your hands to prevent illness.
+pride|She looks at her picture with pride.
+print|Print the photo, please.
+private|This is a private garden.
+probably|It will probably rain.
+produce|Bees produce honey.
+product|This is a new product.
+professional|He is a professional footballer.
+promise|I promise!
+pronounce|How do you pronounce this word?
+pronunciation|Your pronunciation is good.
+public|This is a public park.
+publish|They publish books for children.
+punctuation|Check your punctuation.
+purpose|What's the purpose of this game?
+quality|This is good quality.
+quietly|Talk quietly in the library.
+quiz|Let's do a quiz!
+raise|Raise your hand.
+rap|My brother likes rap.
+rather|I'd rather stay at home.
+raw|Don't eat raw meat.
+reach|I can't reach the top shelf.
+realise|I realise my mistake.
+recent|This is a recent photo.
+recently|I recently moved house.
+record|Record your voice.
+recycle|We recycle paper.
+reflect|The lake reflects the trees.
+regular|I do regular exercise.
+regularly|I visit my grandma regularly.
+relax|Let's relax.
+relaxed|I feel relaxed.
+remind|Remind me tomorrow.
+rent|We rent a flat.
+replace|Replace the old battery.
+reply|Please reply to my email.
+report|I write a report about frogs.
+request|I have a request.
+research|We do research on the internet.
+return|I return the book to the library.
+rhythm|Clap to the rhythm.
+roast|Mum roasts a chicken.
+romantic|It's a romantic film.
+royal|This is the royal palace.
+rush|Don't rush!
+sadly|Sadly, the shop is closed.
+sample|Try a sample.
+sandy|We walk on the sandy beach.
+scene|This is my favourite scene.
+schedule|What's your schedule today?
+schoolwork|I finish my schoolwork.
+scientific|This is a scientific book.
+scream|Don't scream!
+script|Read the script.
+search|Search for the answer.
+secret|Can you keep a secret?
+seem|You seem happy.
+senior|My grandpa is a senior citizen.
+sense|That makes sense.
+separate|Put them in separate boxes.
+seriously|Take it seriously.
+serve|The waiter serves the food.
+sew|Grandma can sew.
+shock|It was a big shock.
+shut|Shut the door, please.
+silence|Silence, please!
+silly|Don't be silly!
+similar|Our bags are similar.
+simple|This is a simple question.
+simply|Simply press the button.
+single|There isn't a single cloud in the sky.
+situation|This is a difficult situation.
+slim|She is tall and slim.
+smooth|The stone is smooth.
+society|We live in a modern society.
+softly|She speaks softly.
+software|Install the new software.
+solution|I have a solution.
+someday|Someday I will fly to the moon.
+somewhere|My keys are somewhere here.
+sound|I hear a strange sound.
+speed|The car is at full speed.
+spill|Don't spill the milk!
+spread|Spread butter on the bread.
+steal|Don't steal!
+stranger|Don't talk to strangers.
+strength|The lion has got great strength.
+structure|The bridge is a big structure.
+stuff|Put your stuff in your bag.
+style|I like your style.
+succeed|You can succeed!
+success|Good luck and success!
+sudden|There is a sudden noise.
+suggest|I suggest we go to the park.
+suitable|This film is suitable for children.
+summary|Write a summary of the story.
+superstar|She is a superstar.
+support|Thank you for your support.
+surprising|The ending is surprising.
+survive|Plants can't survive without water.
+swallow|Swallow the pill.
+symbol|The heart is a symbol of love.
+system|The school has a new system.
+talent|She has a talent for music.
+task|Do this task.
+teenage|She is a teenage girl.
+text|Read the text.
+therefore|It's raining, therefore we stay inside.
+thief|The thief stole a bike.
+thought|That's a nice thought.
+tip|Here's a tip for you.
+title|What's the title of the book?
+tradition|It's a family tradition.
+traditional|This is a traditional dance.
+trap|The mouse is in a trap.
+trick|I can do a magic trick.
+trouble|I'm in trouble!
+trust|I trust you.
+truth|Tell the truth.
+tune|I know this tune.
+twice|I brush my teeth twice a day.
+uncomfortable|This chair is uncomfortable.
+underwater|We swim underwater.
+unfair|That's unfair!
+unforgettable|It was an unforgettable day.
+unfortunately|Unfortunately, it's raining.
+unhappy|The boy is unhappy.
+unhealthy|Fast food is unhealthy.
+unit|Open your book at Unit Five.
+unknown|The singer is unknown.
+unusual|What an unusual animal!
+useful|This dictionary is useful.
+usual|I get up at the usual time.
+value|What's the value of this coin?
+verb|"Run" is a verb.
+view|What a beautiful view!
+voice|She has got a beautiful voice.
+wander|We wander around the town.
+weekday|I go to school on weekdays.
+weekly|We have a weekly test.
+weigh|How much do you weigh?
+weight|What's the weight of the box?
+well-known|She is a well-known writer.
+whole|I ate the whole pizza.
+wise|The owl is wise.
+wisdom|Grandpa has got a lot of wisdom.
+wooden|I've got a wooden box.
+worse|The weather is worse today.
+worst|This is the worst day ever.
+youth|In his youth he played football.
+zone|This is a quiet zone.

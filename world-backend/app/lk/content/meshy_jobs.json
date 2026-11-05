@@ -1,0 +1,1952 @@
+[
+ {
+  "id": "s000",
+  "words": [
+   "cat",
+   "dog",
+   "fish",
+   "bird",
+   "duck",
+   "cow",
+   "pig",
+   "horse",
+   "sheep"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a cat. 2) a dog. 3) a goldfish in water. 4) a small songbird on a branch. 5) a duck. 6) a cow. 7) a pig. 8) a horse. 9) a sheep."
+ },
+ {
+  "id": "s001",
+  "words": [
+   "rabbit",
+   "mouse",
+   "frog",
+   "lion",
+   "tiger",
+   "elephant",
+   "monkey",
+   "giraffe",
+   "zebra"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a rabbit. 2) a small grey mouse. 3) a frog. 4) a lion. 5) a tiger. 6) a elephant. 7) a monkey. 8) a giraffe. 9) a zebra."
+ },
+ {
+  "id": "s002",
+  "words": [
+   "bear",
+   "panda",
+   "apple",
+   "banana",
+   "orange",
+   "pear",
+   "grape",
+   "cake",
+   "ice cream"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a bear. 2) a panda. 3) a apple. 4) a banana. 5) an orange fruit. 6) a pear. 7) a grape. 8) a cake. 9) a ice cream."
+ },
+ {
+  "id": "s003",
+  "words": [
+   "milk",
+   "juice",
+   "water",
+   "bread",
+   "cheese",
+   "egg",
+   "pizza",
+   "chocolate",
+   "mum"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a milk. 2) a juice. 3) a glass of water. 4) a bread. 5) a cheese. 6) a egg. 7) a pizza. 8) a chocolate. 9) a smiling mum reading a book to her son."
+ },
+ {
+  "id": "s004",
+  "words": [
+   "dad",
+   "brother",
+   "sister",
+   "baby",
+   "grandma",
+   "grandpa",
+   "boy",
+   "girl",
+   "head"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a dad playing football with his son. 2) two brothers playing together. 3) two sisters hugging. 4) a smiling baby. 5) a grandma baking with her granddaughter. 6) a grandpa fishing with his grandson. 7) a smiling boy. 8) a smiling girl. 9) a child's head in profile."
+ },
+ {
+  "id": "s005",
+  "words": [
+   "eye",
+   "ear",
+   "nose",
+   "mouth",
+   "hand",
+   "leg",
+   "foot",
+   "hair",
+   "tooth"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a close-up of a human eye. 2) a close-up of a human ear. 3) a close-up of a child's nose. 4) a smiling mouth close-up. 5) an open hand. 6) a child's legs walking. 7) a bare foot. 8) a girl with long hair. 9) a white tooth close-up."
+ },
+ {
+  "id": "s006",
+  "words": [
+   "ball",
+   "doll",
+   "teddy bear",
+   "robot",
+   "kite",
+   "balloon",
+   "car",
+   "bus",
+   "train"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a ball. 2) a doll. 3) a teddy bear. 4) a robot. 5) a kite. 6) a balloon. 7) a car. 8) a bus. 9) a train."
+ },
+ {
+  "id": "s007",
+  "words": [
+   "plane",
+   "boat",
+   "bike",
+   "house",
+   "door",
+   "window",
+   "table",
+   "chair",
+   "bed"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a plane. 2) a boat. 3) a bicycle. 4) a family house with a garden. 5) a door. 6) a window. 7) a table. 8) a chair. 9) a bed."
+ },
+ {
+  "id": "s008",
+  "words": [
+   "book",
+   "pen",
+   "pencil",
+   "bag",
+   "teacher",
+   "school",
+   "sun",
+   "moon",
+   "star"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a book. 2) a pen. 3) a pencil. 4) a bag. 5) a teacher in a classroom. 6) a school building. 7) a sun. 8) a moon. 9) a star."
+ },
+ {
+  "id": "s009",
+  "words": [
+   "tree",
+   "flower",
+   "rain",
+   "snow",
+   "cloud",
+   "hat",
+   "cap",
+   "shoe",
+   "sock"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a tree. 2) a flower. 3) a rain. 4) a snow. 5) a cloud. 6) a hat. 7) a cap. 8) a shoe. 9) a sock."
+ },
+ {
+  "id": "s010",
+  "words": [
+   "dress",
+   "jacket",
+   "happy",
+   "sad",
+   "big",
+   "small",
+   "hot",
+   "cold",
+   "animal"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a dress. 2) a jacket. 3) a happy smiling girl. 4) a sad little boy with a frown. 5) a big elephant. 6) a small mouse. 7) a hot sunny desert. 8) a child in a winter coat shivering. 9) a group of farm animals: cow, sheep and horse in a meadow."
+ },
+ {
+  "id": "s011",
+  "words": [
+   "kitten",
+   "puppy",
+   "pet",
+   "goat",
+   "chicken",
+   "rat",
+   "snake",
+   "hippo",
+   "crocodile"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a kitten. 2) a puppy. 3) a boy cuddling his pet dog at home. 4) a goat. 5) a chicken. 6) a rat. 7) a snake. 8) a hippo. 9) a crocodile."
+ },
+ {
+  "id": "s012",
+  "words": [
+   "kangaroo",
+   "fox",
+   "wolf",
+   "owl",
+   "parrot",
+   "penguin",
+   "dolphin",
+   "whale",
+   "shark"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a kangaroo. 2) a fox. 3) a wolf. 4) a owl. 5) a parrot. 6) a penguin. 7) a dolphin. 8) a whale. 9) a shark."
+ },
+ {
+  "id": "s013",
+  "words": [
+   "octopus",
+   "crab",
+   "turtle",
+   "lizard",
+   "spider",
+   "bee",
+   "butterfly",
+   "insect",
+   "bug"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a octopus. 2) a crab. 3) a turtle. 4) a lizard. 5) a spider. 6) a bee. 7) a butterfly. 8) a grasshopper insect on a leaf. 9) a ladybird beetle on a leaf."
+ },
+ {
+  "id": "s014",
+  "words": [
+   "fly",
+   "bat",
+   "camel",
+   "deer",
+   "squirrel",
+   "hedgehog",
+   "dinosaur",
+   "chimpanzee",
+   "robin"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a housefly insect close-up. 2) a bat animal flying at dusk. 3) a camel. 4) a deer. 5) a squirrel. 6) a hedgehog. 7) a dinosaur. 8) a chimpanzee. 9) a robin."
+ },
+ {
+  "id": "s015",
+  "words": [
+   "tail",
+   "wing",
+   "feather",
+   "shell",
+   "zoo",
+   "farm",
+   "food",
+   "lemon",
+   "melon"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a fox with a big fluffy tail seen from behind. 2) a bird's open wing close-up. 3) a feather. 4) a seashell on sand. 5) a zoo entrance with animals behind a fence. 6) a farm with a red barn and a tractor. 7) a table full of healthy food. 8) a lemon. 9) a melon."
+ },
+ {
+  "id": "s016",
+  "words": [
+   "watermelon",
+   "strawberry",
+   "cherry",
+   "pineapple",
+   "peach",
+   "fruit",
+   "vegetable",
+   "potato",
+   "tomato"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a watermelon. 2) a strawberry. 3) a cherry. 4) a pineapple. 5) a peach. 6) a fruit. 7) a vegetable. 8) a potato. 9) a tomato."
+ },
+ {
+  "id": "s017",
+  "words": [
+   "carrot",
+   "onion",
+   "garlic",
+   "pea",
+   "bean",
+   "corn",
+   "mushroom",
+   "pepper",
+   "salad"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a carrot. 2) a onion. 3) a garlic. 4) a pea. 5) green beans on a plate. 6) a corn cob. 7) a mushroom. 8) a red bell pepper. 9) a bowl of green salad."
+ },
+ {
+  "id": "s018",
+  "words": [
+   "butter",
+   "cream",
+   "yogurt",
+   "rice",
+   "pasta",
+   "spaghetti",
+   "burger",
+   "hamburger",
+   "sandwich"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a block of butter on a dish. 2) a jug of cream. 3) a yogurt. 4) a rice. 5) a pasta. 6) a spaghetti. 7) a burger. 8) a hamburger. 9) a sandwich."
+ },
+ {
+  "id": "s019",
+  "words": [
+   "sausage",
+   "meat",
+   "beef",
+   "ham",
+   "steak",
+   "chicken soup",
+   "soup",
+   "fish and chips",
+   "chips"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a sausage. 2) a meat. 3) a beef. 4) a ham. 5) a steak. 6) a bowl of chicken noodle soup. 7) a bowl of tomato soup. 8) fish and chips on a plate. 9) a bowl of french fries."
+ },
+ {
+  "id": "s020",
+  "words": [
+   "crisps",
+   "toast",
+   "cereal",
+   "honey",
+   "jam",
+   "jelly",
+   "sugar",
+   "salt",
+   "oil"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a bowl of potato crisps. 2) a slice of toast. 3) a bowl of cereal with milk. 4) a honey. 5) a jam. 6) a colourful fruit jelly dessert. 7) a sugar. 8) a salt. 9) a bottle of sunflower oil."
+ },
+ {
+  "id": "s021",
+  "words": [
+   "flour",
+   "sauce",
+   "biscuit",
+   "cookie",
+   "candy",
+   "sweet",
+   "dessert",
+   "snack",
+   "omelette"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a flour. 2) a bowl of ketchup sauce. 3) a plate of biscuits. 4) a cookie. 5) colourful candies. 6) colourful sweets. 7) a dessert with fruit and cream. 8) a snack plate with crackers and fruit. 9) a omelette."
+ },
+ {
+  "id": "s022",
+  "words": [
+   "pancake",
+   "seafood",
+   "curry",
+   "drink",
+   "tea",
+   "coffee",
+   "lemonade",
+   "cola",
+   "mineral water"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a pancake. 2) a plate of shrimps and mussels. 3) a curry. 4) a glass of orange drink with a straw. 5) a cup of tea. 6) a cup of coffee. 7) a lemonade. 8) a glass of cola with ice. 9) a bottle of mineral water."
+ },
+ {
+  "id": "s023",
+  "words": [
+   "breakfast",
+   "lunch",
+   "dinner",
+   "supper",
+   "meal",
+   "picnic",
+   "menu",
+   "hungry",
+   "thirsty"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a breakfast plate with eggs, toast and juice. 2) a lunch box with a sandwich and fruit. 3) a family dinner table with plates of food. 4) a light evening supper on a table. 5) a plate with a hot meal. 6) a family picnic on a blanket in a park. 7) a restaurant menu card on a table. 8) a hungry boy looking at a pizza. 9) a thirsty girl drinking water."
+ },
+ {
+  "id": "s024",
+  "words": [
+   "delicious",
+   "fresh",
+   "family",
+   "mother",
+   "father",
+   "parent",
+   "child",
+   "kid",
+   "son"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a girl enjoying a delicious cake. 2) fresh vegetables with water drops. 3) a happy family: mother, father, son and daughter. 4) a mother holding her little daughter. 5) a father carrying his son on his shoulders. 6) parents walking with their child. 7) a smiling child. 8) a kid with a backpack. 9) a father and his little son."
+ },
+ {
+  "id": "s025",
+  "words": [
+   "daughter",
+   "grandmother",
+   "granny",
+   "grandfather",
+   "grandparent",
+   "grandchild",
+   "grandson",
+   "granddaughter",
+   "uncle"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a mother and her little daughter. 2) a grandmother knitting. 3) a smiling granny. 4) a grandfather with glasses reading. 5) grandparents sitting on a bench. 6) grandparents with their grandchild. 7) a grandfather and his grandson. 8) a grandmother and her granddaughter. 9) a smiling uncle with his nephew."
+ },
+ {
+  "id": "s026",
+  "words": [
+   "aunt",
+   "cousin",
+   "husband",
+   "wife",
+   "man",
+   "woman",
+   "lady",
+   "people",
+   "person"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a smiling aunt with her niece. 2) two cousins playing in a garden. 3) a husband and wife, the man in focus. 4) a husband and wife, the woman in focus. 5) a smiling man. 6) a smiling woman. 7) an elegant lady with a hat. 8) a group of people in a park. 9) one person standing."
+ },
+ {
+  "id": "s027",
+  "words": [
+   "friend",
+   "best friend",
+   "neighbour",
+   "guest",
+   "teenager",
+   "adult",
+   "twins",
+   "birthday",
+   "wedding"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) two friends laughing together. 2) two best friends with arms around each other. 3) a neighbour waving over a garden fence. 4) guests arriving at a door with a cake. 5) a teenager with headphones. 6) an adult woman at work. 7) twin sisters in matching clothes. 8) a birthday party with a cake and candles. 9) a bride and groom at a wedding."
+ },
+ {
+  "id": "s028",
+  "words": [
+   "body",
+   "face",
+   "teeth",
+   "lip",
+   "tongue",
+   "cheek",
+   "chin",
+   "neck",
+   "shoulder"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a boy doing a star jump, whole body visible. 2) a smiling child's face. 3) a child's smile showing teeth. 4) smiling lips close-up. 5) a child sticking out the tongue. 6) a child's rosy cheek. 7) a man touching his chin. 8) a woman's neck with a scarf. 9) a hand on a shoulder."
+ },
+ {
+  "id": "s029",
+  "words": [
+   "arm",
+   "finger",
+   "knee",
+   "feet",
+   "toe",
+   "ankle",
+   "back",
+   "chest",
+   "belly"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child's arm showing a muscle. 2) a finger pointing. 3) a knee with a plaster. 4) two bare feet on the grass. 5) toes close-up. 6) an ankle with a sock. 7) a boy's back with a backpack. 8) a man's chest in a t-shirt. 9) a child's belly."
+ },
+ {
+  "id": "s030",
+  "words": [
+   "stomach",
+   "heart",
+   "brain",
+   "bone",
+   "blood",
+   "skin",
+   "clothes",
+   "shirt",
+   "T-shirt"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child holding his stomach. 2) a red heart shape made with hands. 3) a model of a human brain. 4) a white bone. 5) a red blood drop. 6) a hand with soft skin close-up. 7) clothes on hangers. 8) a shirt. 9) a T-shirt."
+ },
+ {
+  "id": "s031",
+  "words": [
+   "skirt",
+   "trousers",
+   "jeans",
+   "shorts",
+   "coat",
+   "sweater",
+   "jumper",
+   "scarf",
+   "glove"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a skirt. 2) a trousers. 3) a jeans. 4) a shorts. 5) a coat. 6) a sweater. 7) a jumper. 8) a scarf. 9) a glove."
+ },
+ {
+  "id": "s032",
+  "words": [
+   "boot",
+   "trainers",
+   "belt",
+   "tie",
+   "uniform",
+   "raincoat",
+   "pyjamas",
+   "swimsuit",
+   "tights"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a boot. 2) a trainers. 3) a belt. 4) a tie. 5) a school uniform. 6) a raincoat. 7) children's pyjamas. 8) a swimsuit. 9) a tights."
+ },
+ {
+  "id": "s033",
+  "words": [
+   "glasses",
+   "sunglasses",
+   "handbag",
+   "wallet",
+   "umbrella",
+   "ring",
+   "earring",
+   "button",
+   "pocket"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) eyeglasses. 2) a sunglasses. 3) a handbag. 4) a wallet. 5) a umbrella. 6) a gold ring. 7) a earring. 8) a button. 9) a jeans pocket."
+ },
+ {
+  "id": "s034",
+  "words": [
+   "wear",
+   "toy",
+   "game",
+   "board game",
+   "video game",
+   "puzzle",
+   "block",
+   "drum",
+   "guitar"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a girl putting on a coat. 2) a box of toys. 3) children playing a game. 4) a board game. 5) a video game. 6) a puzzle. 7) wooden toy blocks. 8) a drum. 9) a guitar."
+ },
+ {
+  "id": "s035",
+  "words": [
+   "piano",
+   "violin",
+   "crayon",
+   "paint",
+   "camera",
+   "present",
+   "gift",
+   "party",
+   "play"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a piano. 2) a violin. 3) a crayon. 4) paint pots and a brush. 5) a camera. 6) a wrapped present. 7) a gift box with a bow. 8) a children's party with balloons. 9) children playing in a park."
+ },
+ {
+  "id": "s036",
+  "words": [
+   "fun",
+   "funny",
+   "home",
+   "flat",
+   "apartment",
+   "room",
+   "bedroom",
+   "bathroom",
+   "kitchen"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) children having fun on a slide. 2) a funny clown face. 3) a cosy home with lights in the windows. 4) an apartment building. 5) a modern apartment interior. 6) a bright room. 7) a bedroom. 8) a bathroom. 9) a kitchen."
+ },
+ {
+  "id": "s037",
+  "words": [
+   "living room",
+   "dining room",
+   "hall",
+   "garden",
+   "garage",
+   "balcony",
+   "roof",
+   "wall",
+   "floor"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a living room. 2) a dining room. 3) an entrance hall with coats. 4) a flower garden. 5) a garage. 6) a balcony. 7) a roof. 8) a wall. 9) a floor."
+ },
+ {
+  "id": "s038",
+  "words": [
+   "stairs",
+   "upstairs",
+   "downstairs",
+   "gate",
+   "fence",
+   "armchair",
+   "sofa",
+   "lamp",
+   "light"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a staircase. 2) a child walking upstairs. 3) a child walking downstairs. 4) a gate. 5) a fence. 6) a armchair. 7) a sofa. 8) a lamp. 9) a ceiling light."
+ },
+ {
+  "id": "s039",
+  "words": [
+   "clock",
+   "mirror",
+   "picture",
+   "shelf",
+   "bookcase",
+   "cupboard",
+   "drawer",
+   "carpet",
+   "blanket"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a clock. 2) a mirror. 3) a framed picture on a wall. 4) a shelf. 5) a bookcase. 6) a cupboard. 7) a drawer. 8) a carpet. 9) a blanket."
+ },
+ {
+  "id": "s040",
+  "words": [
+   "pillow",
+   "towel",
+   "bath",
+   "shower",
+   "toilet",
+   "sink",
+   "soap",
+   "shampoo",
+   "toothbrush"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a pillow. 2) a towel. 3) a bath. 4) a shower. 5) a toilet. 6) a sink. 7) a soap. 8) a shampoo. 9) a toothbrush."
+ },
+ {
+  "id": "s041",
+  "words": [
+   "comb",
+   "brush",
+   "fridge",
+   "cooker",
+   "oven",
+   "washing machine",
+   "television",
+   "TV",
+   "radio"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a comb. 2) a hairbrush. 3) a fridge. 4) a cooker. 5) a oven. 6) a washing machine. 7) a television. 8) a television. 9) a radio."
+ },
+ {
+  "id": "s042",
+  "words": [
+   "phone",
+   "computer",
+   "key",
+   "box",
+   "basket",
+   "bucket",
+   "bottle",
+   "cup",
+   "mug"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a telephone. 2) a computer. 3) a key. 4) a box. 5) a basket. 6) a bucket. 7) a bottle. 8) a cup. 9) a mug."
+ },
+ {
+  "id": "s043",
+  "words": [
+   "glass",
+   "plate",
+   "bowl",
+   "dish",
+   "knife",
+   "fork",
+   "spoon",
+   "pan",
+   "napkin"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a drinking glass. 2) a plate. 3) a bowl. 4) a dish with food. 5) a knife. 6) a fork. 7) a spoon. 8) a frying pan. 9) a napkin."
+ },
+ {
+  "id": "s044",
+  "words": [
+   "furniture",
+   "classroom",
+   "class",
+   "lesson",
+   "student",
+   "pupil",
+   "classmate",
+   "headteacher",
+   "textbook"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a furniture. 2) a classroom with desks. 3) a class of pupils. 4) a lesson in a classroom. 5) a student with books. 6) a pupil at a desk. 7) two classmates at a desk. 8) a headteacher in an office. 9) a textbook."
+ },
+ {
+  "id": "s045",
+  "words": [
+   "notebook",
+   "dictionary",
+   "rubber",
+   "ruler",
+   "scissors",
+   "glue",
+   "paper",
+   "page",
+   "desk"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a notebook. 2) a dictionary. 3) an eraser. 4) a ruler. 5) a scissors. 6) a glue stick. 7) a sheet of paper. 8) an open book page. 9) a desk."
+ },
+ {
+  "id": "s046",
+  "words": [
+   "board",
+   "blackboard",
+   "schoolbag",
+   "homework",
+   "test",
+   "exam",
+   "question",
+   "answer",
+   "letter"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a whiteboard in a classroom. 2) a blackboard. 3) a schoolbag. 4) a child doing homework. 5) a pupil writing a test. 6) students writing an exam. 7) a big question mark. 8) a pupil raising a hand to answer. 9) a letter in an envelope."
+ },
+ {
+  "id": "s047",
+  "words": [
+   "story",
+   "poem",
+   "picture book",
+   "English",
+   "maths",
+   "science",
+   "history",
+   "geography",
+   "art"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a mother reading a story to a child. 2) a poem book. 3) a colourful picture book. 4) an English textbook with a British flag. 5) maths numbers on a blackboard. 6) a science lesson with test tubes. 7) a history book with a castle. 8) a globe and a map. 9) a child painting at an easel."
+ },
+ {
+  "id": "s048",
+  "words": [
+   "music",
+   "PE",
+   "mistake",
+   "library",
+   "playground",
+   "break",
+   "timetable",
+   "university",
+   "college"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a music lesson with a piano. 2) a PE lesson in a gym. 3) a red cross on homework. 4) a library with bookshelves. 5) a children's playground. 6) children playing at school break. 7) a school timetable on a wall. 8) a university building. 9) a college building."
+ },
+ {
+  "id": "s049",
+  "words": [
+   "learn",
+   "study",
+   "read",
+   "write",
+   "draw",
+   "count",
+   "listen",
+   "nature",
+   "rose"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child learning at a desk. 2) a teenager studying with books. 3) a girl reading a book. 4) a hand writing in a notebook. 5) a child drawing with crayons. 6) a child counting on fingers. 7) a child listening with headphones. 8) a beautiful nature landscape. 9) a rose."
+ },
+ {
+  "id": "s050",
+  "words": [
+   "sunflower",
+   "lily",
+   "grass",
+   "leaf",
+   "plant",
+   "bush",
+   "forest",
+   "wood",
+   "park"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a sunflower. 2) a lily. 3) a grass. 4) a leaf. 5) a plant. 6) a bush. 7) a forest. 8) wooden logs. 9) a city park."
+ },
+ {
+  "id": "s051",
+  "words": [
+   "river",
+   "lake",
+   "sea",
+   "ocean",
+   "beach",
+   "island",
+   "mountain",
+   "hill",
+   "valley"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a river. 2) a lake. 3) a sea. 4) a ocean. 5) a beach. 6) a island. 7) a mountain. 8) a hill. 9) a valley."
+ },
+ {
+  "id": "s052",
+  "words": [
+   "desert",
+   "field",
+   "countryside",
+   "village",
+   "sky",
+   "planet",
+   "earth",
+   "world",
+   "stone"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a desert. 2) a green field. 3) countryside with fields and farms. 4) a village. 5) a blue sky with white clouds. 6) a planet. 7) planet Earth from space. 8) a world globe. 9) a stone."
+ },
+ {
+  "id": "s053",
+  "words": [
+   "rock",
+   "sand",
+   "fire",
+   "air",
+   "seed",
+   "root",
+   "weather",
+   "sunny",
+   "cloudy"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a rock. 2) a sand. 3) a campfire. 4) a kite flying in the air. 5) seeds in a palm. 6) tree roots. 7) weather: sun and clouds. 8) a sunny day at the beach. 9) a cloudy sky."
+ },
+ {
+  "id": "s054",
+  "words": [
+   "rainy",
+   "windy",
+   "snowy",
+   "foggy",
+   "wind",
+   "storm",
+   "thunderstorm",
+   "fog",
+   "ice"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a rainy street with umbrellas. 2) a windy day with trees bending. 3) a snowy street. 4) a foggy forest. 5) a wind. 6) a stormy sea. 7) a thunderstorm. 8) a fog. 9) ice cubes."
+ },
+ {
+  "id": "s055",
+  "words": [
+   "rainbow",
+   "warm",
+   "cool",
+   "wet",
+   "dry",
+   "temperature",
+   "season",
+   "spring",
+   "summer"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a rainbow. 2) a child under a warm blanket. 3) a cool breeze in a park. 4) a wet dog. 5) dry towels. 6) a thermometer. 7) four seasons of a tree. 8) a spring. 9) a summer."
+ },
+ {
+  "id": "s056",
+  "words": [
+   "autumn",
+   "winter",
+   "transport",
+   "helicopter",
+   "bicycle",
+   "motorbike",
+   "ship",
+   "taxi",
+   "truck"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a autumn. 2) a winter. 3) cars, buses and trains in a city. 4) a helicopter. 5) a bicycle. 6) a motorbike. 7) a ship. 8) a taxi. 9) a truck."
+ },
+ {
+  "id": "s057",
+  "words": [
+   "lorry",
+   "tram",
+   "underground",
+   "subway",
+   "rocket",
+   "spaceship",
+   "wheel",
+   "driver",
+   "pilot"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a lorry. 2) a tram. 3) a metro train in a station. 4) a metro train in a station. 5) a space rocket launching. 6) a spaceship in space. 7) a wheel. 8) a bus driver. 9) a pilot."
+ },
+ {
+  "id": "s058",
+  "words": [
+   "passenger",
+   "ticket",
+   "road",
+   "street",
+   "bridge",
+   "traffic",
+   "traffic light",
+   "bus stop",
+   "station"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) passengers on a bus. 2) a ticket. 3) a road. 4) a street. 5) a bridge. 6) a traffic jam. 7) a traffic light. 8) a bus stop. 9) a station."
+ },
+ {
+  "id": "s059",
+  "words": [
+   "airport",
+   "drive",
+   "ride",
+   "city",
+   "town",
+   "building",
+   "shop",
+   "supermarket",
+   "market"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a airport. 2) a woman driving a car. 3) a boy riding a bike. 4) a big city skyline. 5) a small town street. 6) a tall building. 7) a small shop. 8) a supermarket. 9) a market."
+ },
+ {
+  "id": "s060",
+  "words": [
+   "bank",
+   "post office",
+   "hospital",
+   "pharmacy",
+   "police station",
+   "fire station",
+   "restaurant",
+   "cafe",
+   "hotel"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a bank. 2) a post office. 3) a hospital. 4) a pharmacy. 5) a police station. 6) a fire station. 7) a restaurant. 8) a cafe. 9) a hotel."
+ },
+ {
+  "id": "s061",
+  "words": [
+   "cinema",
+   "theatre",
+   "museum",
+   "gallery",
+   "castle",
+   "palace",
+   "tower",
+   "church",
+   "square"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a cinema. 2) a theatre. 3) a museum. 4) a gallery. 5) a castle. 6) a palace. 7) a tower. 8) a church. 9) a city square."
+ },
+ {
+  "id": "s062",
+  "words": [
+   "corner",
+   "centre",
+   "swimming pool",
+   "stadium",
+   "sports centre",
+   "factory",
+   "office",
+   "mall",
+   "car park"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a street corner. 2) a city centre. 3) a swimming pool. 4) a stadium. 5) a sports centre. 6) a factory. 7) an office with desks. 8) a mall. 9) a car park."
+ },
+ {
+  "id": "s063",
+  "words": [
+   "job",
+   "work",
+   "doctor",
+   "nurse",
+   "dentist",
+   "farmer",
+   "cook",
+   "chef",
+   "waiter"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a person working at a desk. 2) people working in an office. 3) a doctor with a stethoscope. 4) a nurse in a hospital. 5) a dentist. 6) a farmer. 7) a cook in a kitchen. 8) a chef. 9) a waiter with a tray."
+ },
+ {
+  "id": "s064",
+  "words": [
+   "waitress",
+   "police officer",
+   "firefighter",
+   "engineer",
+   "scientist",
+   "astronaut",
+   "artist",
+   "painter",
+   "singer"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a waitress with a tray. 2) a police officer. 3) a firefighter. 4) an engineer with a helmet and plans. 5) a scientist in a lab. 6) a astronaut. 7) an artist painting. 8) a painter painting a wall. 9) a singer with a microphone."
+ },
+ {
+  "id": "s065",
+  "words": [
+   "dancer",
+   "musician",
+   "actor",
+   "writer",
+   "photographer",
+   "journalist",
+   "reporter",
+   "builder",
+   "mechanic"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a ballet dancer. 2) a musician playing a guitar. 3) an actor on stage. 4) a writer typing a book. 5) a photographer with a camera. 6) a journalist with a notebook. 7) a TV reporter with a microphone. 8) a builder with a helmet. 9) a mechanic repairing a car."
+ },
+ {
+  "id": "s066",
+  "words": [
+   "shop assistant",
+   "cleaner",
+   "secretary",
+   "manager",
+   "businessman",
+   "lawyer",
+   "vet",
+   "sailor",
+   "soldier"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a shop assistant at a counter. 2) a cleaner with a mop. 3) a secretary at a desk with a phone. 4) a manager in a meeting. 5) a businessman in a suit. 6) a lawyer in a court. 7) a vet with a puppy. 8) a sailor on a ship. 9) a soldier in uniform."
+ },
+ {
+  "id": "s067",
+  "words": [
+   "fisherman",
+   "clown",
+   "king",
+   "queen",
+   "prince",
+   "princess",
+   "sport",
+   "football",
+   "basketball"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a fisherman with a fishing rod. 2) a circus clown. 3) a king with a crown. 4) a queen with a crown. 5) a young prince. 6) a princess in a dress. 7) sports balls and equipment. 8) a football. 9) a basketball."
+ },
+ {
+  "id": "s068",
+  "words": [
+   "volleyball",
+   "tennis",
+   "table tennis",
+   "badminton",
+   "baseball",
+   "hockey",
+   "golf",
+   "rugby",
+   "swimming"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a volleyball. 2) a tennis. 3) a table tennis. 4) a badminton. 5) a baseball. 6) a hockey. 7) a golf. 8) a rugby. 9) a swimming."
+ },
+ {
+  "id": "s069",
+  "words": [
+   "running",
+   "cycling",
+   "skating",
+   "skiing",
+   "snowboarding",
+   "skateboarding",
+   "surfing",
+   "sailing",
+   "climbing"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a running. 2) a cycling. 3) a skating. 4) a skiing. 5) a snowboarding. 6) a skateboarding. 7) a surfing. 8) a sailing. 9) a climbing."
+ },
+ {
+  "id": "s070",
+  "words": [
+   "dancing",
+   "gymnastics",
+   "karate",
+   "chess",
+   "team",
+   "player",
+   "coach",
+   "match",
+   "goal"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a dancing. 2) a gymnastics. 3) a karate. 4) a chess. 5) a children's football team. 6) a basketball player. 7) a sports coach with a whistle. 8) a football match. 9) a football goal net with a ball."
+ },
+ {
+  "id": "s071",
+  "words": [
+   "winner",
+   "medal",
+   "race",
+   "racket",
+   "win",
+   "lose",
+   "kick",
+   "throw",
+   "catch"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a winner holding a trophy. 2) a medal. 3) a running race. 4) a racket. 5) a team celebrating a win. 6) a sad team after losing a game. 7) a boy kicking a ball. 8) a girl throwing a ball. 9) a boy catching a ball."
+ },
+ {
+  "id": "s072",
+  "words": [
+   "jump",
+   "run",
+   "swim",
+   "skate",
+   "ski",
+   "hobby",
+   "song",
+   "dance",
+   "sing"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a girl jumping on a trampoline. 2) a boy running. 3) a girl swimming in a pool. 4) a child ice skating. 5) a child skiing. 6) hobbies: guitar, paints and a football. 7) a girl singing a song. 8) children dancing. 9) a boy singing."
+ },
+ {
+  "id": "s073",
+  "words": [
+   "film",
+   "movie",
+   "comic",
+   "magazine",
+   "photo",
+   "painting",
+   "drawing",
+   "reading",
+   "camping"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a cinema screen with a film. 2) a family watching a movie. 3) a comic book. 4) a magazine. 5) a printed photo. 6) a painting in a museum. 7) a child's drawing. 8) a boy reading in bed. 9) a camping."
+ },
+ {
+  "id": "s074",
+  "words": [
+   "fishing",
+   "hiking",
+   "shopping",
+   "collection",
+   "concert",
+   "festival",
+   "holiday",
+   "weekend",
+   "free time"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a fishing. 2) a hiking. 3) a shopping. 4) a collection of stamps. 5) a concert with a crowd. 6) a summer festival with lights. 7) a family on holiday at the beach. 8) a family relaxing at the weekend in a park. 9) a teenager relaxing in free time with a book."
+ },
+ {
+  "id": "s075",
+  "words": [
+   "band",
+   "instrument",
+   "angry",
+   "afraid",
+   "scared",
+   "tired",
+   "sleepy",
+   "bored",
+   "excited"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a music band on stage. 2) musical instruments. 3) an angry boy with crossed arms. 4) a frightened child hiding behind a pillow. 5) a scared child covering eyes. 6) a tired yawning girl. 7) a sleepy child rubbing eyes in pyjamas. 8) a bored boy resting chin on hand at a desk. 9) an excited girl jumping with arms up."
+ },
+ {
+  "id": "s076",
+  "words": [
+   "surprised",
+   "worried",
+   "nervous",
+   "upset",
+   "lonely",
+   "shy",
+   "proud",
+   "calm",
+   "glad"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a surprised child with wide eyes and open mouth. 2) a worried child biting nails. 3) a nervous boy holding a paper before a test. 4) an upset girl looking down. 5) a lonely child sitting alone on a bench. 6) a shy girl hiding behind her hands. 7) a proud boy holding a medal. 8) a calm girl meditating with closed eyes. 9) a glad smiling grandmother."
+ },
+ {
+  "id": "s077",
+  "words": [
+   "pleased",
+   "love",
+   "like",
+   "hate",
+   "smile",
+   "laugh",
+   "cry",
+   "hug",
+   "kiss"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a pleased boy giving thumbs up. 2) a mother hugging her child with love. 3) a child giving a thumbs up to an ice cream. 4) a child refusing broccoli with disgust. 5) a close-up of a child's big smile. 6) two kids laughing loudly. 7) a crying toddler with tears. 8) two children hugging. 9) a mother kissing a baby on the cheek."
+ },
+ {
+  "id": "s078",
+  "words": [
+   "dream",
+   "make",
+   "go",
+   "come",
+   "give",
+   "take",
+   "bring",
+   "carry",
+   "put"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child sleeping and dreaming in bed under stars. 2) a child making a paper airplane. 3) a child walking to school with a backpack. 4) a dog running towards its owner. 5) a child giving a present to a friend. 6) a hand taking a cookie from a plate. 7) a boy bringing a cup of tea. 8) a girl carrying a big box. 9) a hand putting a book on a shelf."
+ },
+ {
+  "id": "s079",
+  "words": [
+   "find",
+   "look",
+   "see",
+   "watch",
+   "hear",
+   "say",
+   "tell",
+   "talk",
+   "speak"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child finding a lost toy under the sofa. 2) a girl looking through binoculars. 3) a close-up of a child's eye. 4) a family watching TV on a sofa. 5) a child cupping a hand to the ear. 6) a girl saying something, speech bubble shape without text. 7) a grandmother telling a story to children. 8) two friends talking. 9) a boy speaking into a microphone."
+ },
+ {
+  "id": "s080",
+  "words": [
+   "ask",
+   "call",
+   "think",
+   "teach",
+   "cut",
+   "open",
+   "close",
+   "start",
+   "begin"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a pupil raising a hand to ask a question. 2) a girl calling on a mobile phone. 3) a boy thinking with a finger on his chin. 4) a teacher teaching children at a whiteboard. 5) scissors cutting paper. 6) a hand opening a door. 7) a hand closing a window. 8) a runner at the start line. 9) a child opening the first page of a book."
+ },
+ {
+  "id": "s081",
+  "words": [
+   "finish",
+   "stop",
+   "wait",
+   "help",
+   "try",
+   "eat",
+   "bake",
+   "wash",
+   "clean"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a runner crossing a finish line ribbon. 2) a red stop sign on a street. 3) a child waiting at a bus stop. 4) a child helping grandma carry bags. 5) a kid trying to tie shoelaces. 6) a child eating a sandwich. 7) a girl baking cookies with flour on her hands. 8) a child washing hands with soap. 9) a boy cleaning a table with a cloth."
+ },
+ {
+  "id": "s082",
+  "words": [
+   "tidy",
+   "wake up",
+   "get up",
+   "sit",
+   "stand",
+   "walk",
+   "climb",
+   "hide",
+   "hit"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a tidy kids room with toys in boxes. 2) a child waking up and stretching in bed. 3) a boy getting out of bed in the morning. 4) a girl sitting on a chair. 5) a boy standing straight. 6) a child walking in a park. 7) a child climbing a climbing wall. 8) a kid hiding behind a tree. 9) a bat hitting a baseball."
+ },
+ {
+  "id": "s083",
+  "words": [
+   "push",
+   "pull",
+   "pick up",
+   "drop",
+   "hold",
+   "touch",
+   "smell",
+   "taste",
+   "show"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child pushing a toy car. 2) a child pulling a rope. 3) a child picking up a ball from the floor. 4) a glass falling from a hand. 5) a child holding a puppy. 6) a finger touching a soap bubble. 7) a girl smelling a flower. 8) a child tasting soup from a spoon. 9) a boy showing his drawing."
+ },
+ {
+  "id": "s084",
+  "words": [
+   "choose",
+   "buy",
+   "sell",
+   "pay",
+   "spend",
+   "send",
+   "receive",
+   "build",
+   "fix"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child choosing between two apples. 2) a mother buying fruit at a market. 3) a seller at a fruit stall. 4) a hand paying with coins at a till. 5) a child spending money in a toy shop. 6) a hand putting a letter into a postbox. 7) a child receiving a parcel at the door. 8) a child building a tower of wooden blocks. 9) a man fixing a bicycle with a wrench."
+ },
+ {
+  "id": "s085",
+  "words": [
+   "repair",
+   "grow",
+   "visit",
+   "arrive",
+   "leave",
+   "stay",
+   "move",
+   "turn",
+   "follow"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a hand repairing a toy with a screwdriver. 2) a small plant growing in a pot. 3) grandparents visiting family at the door. 4) a train arriving at a station. 5) a family leaving home with suitcases. 6) a cat staying at home on a windowsill. 7) movers carrying a sofa into a house. 8) a car turning at a road bend. 9) ducklings following their mother."
+ },
+ {
+  "id": "s086",
+  "words": [
+   "meet",
+   "invite",
+   "celebrate",
+   "share",
+   "borrow",
+   "lend",
+   "keep",
+   "save",
+   "use"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) two friends meeting and shaking hands. 2) a child giving a party invitation card. 3) children celebrating a birthday with balloons. 4) two kids sharing a pizza. 5) a child borrowing a book in a library. 6) a girl lending a pencil to a classmate. 7) a child keeping coins in a piggy bank. 8) a coin going into a piggy bank. 9) a child using a computer mouse."
+ },
+ {
+  "id": "s087",
+  "words": [
+   "change",
+   "collect",
+   "add",
+   "mix",
+   "fill",
+   "pour",
+   "boil",
+   "fry",
+   "check"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child changing a light bulb with dad. 2) a boy collecting shells on a beach. 3) a hand adding sugar to tea. 4) a spoon mixing batter in a bowl. 5) filling a glass with water. 6) pouring milk into a cup. 7) water boiling in a pot. 8) eggs frying in a pan. 9) a teacher checking homework with a red pen."
+ },
+ {
+  "id": "s088",
+  "words": [
+   "explain",
+   "describe",
+   "compare",
+   "plan",
+   "prepare",
+   "practise",
+   "improve",
+   "imagine",
+   "agree"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a teacher explaining at a board. 2) a girl describing a picture to a friend. 3) two apples of different sizes side by side. 4) a child planning on a calendar with stickers. 5) kids preparing a salad in a kitchen. 6) a girl practising the violin. 7) a child proudly showing an A+ test. 8) a child imagining with a cardboard rocket. 9) two people nodding and shaking hands."
+ },
+ {
+  "id": "s089",
+  "words": [
+   "disagree",
+   "worry",
+   "wish",
+   "shout",
+   "whisper",
+   "point",
+   "wave",
+   "clap",
+   "knock"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) two kids arguing with crossed arms. 2) a worried mother looking at a clock. 3) a child blowing birthday candles making a wish. 4) a boy shouting with hands around mouth. 5) a girl whispering into a friend's ear. 6) a child pointing at something. 7) a child waving hello. 8) hands clapping. 9) a hand knocking on a wooden door."
+ },
+ {
+  "id": "s090",
+  "words": [
+   "shine",
+   "fall",
+   "little",
+   "large",
+   "huge",
+   "tall",
+   "short",
+   "long",
+   "high"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) the sun shining in a blue sky. 2) autumn leaves falling. 3) a little kitten in a palm. 4) a large pumpkin. 5) a huge whale. 6) a tall giraffe. 7) a short pencil next to a long pencil. 8) a long train. 9) a high mountain peak."
+ },
+ {
+  "id": "s091",
+  "words": [
+   "low",
+   "wide",
+   "thin",
+   "fat",
+   "heavy",
+   "fast",
+   "quick",
+   "slow",
+   "beautiful"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a low wooden fence. 2) a wide river. 3) a thin noodle. 4) a fat cat. 5) a heavy dumbbell. 6) a fast cheetah running. 7) a quick rabbit jumping. 8) a slow snail. 9) a beautiful flower garden."
+ },
+ {
+  "id": "s092",
+  "words": [
+   "pretty",
+   "handsome",
+   "ugly",
+   "cute",
+   "new",
+   "old",
+   "young",
+   "modern",
+   "ancient"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a pretty pink dress. 2) a handsome young man smiling. 3) an ugly old boot. 4) a cute puppy. 5) a new shiny bicycle. 6) an old rusty car. 7) a young baby. 8) a modern glass skyscraper. 9) ancient Greek ruins."
+ },
+ {
+  "id": "s093",
+  "words": [
+   "easy",
+   "difficult",
+   "hard",
+   "soft",
+   "dirty",
+   "full",
+   "empty",
+   "closed",
+   "different"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a simple puzzle with two pieces. 2) a very hard puzzle with many pieces. 3) a hard rock. 4) a soft fluffy pillow. 5) a dirty muddy boot. 6) a full glass of juice. 7) an empty glass. 8) a closed shop with a closed door. 9) two different socks."
+ },
+ {
+  "id": "s094",
+  "words": [
+   "loud",
+   "rich",
+   "poor",
+   "strong",
+   "weak",
+   "safe",
+   "dangerous",
+   "busy",
+   "round"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a loud drum and a child covering ears. 2) a treasure chest full of gold coins. 3) an empty wallet. 4) a strong man lifting weights. 5) a weak wilted flower. 6) a child wearing a bike helmet. 7) a danger sign near a cliff. 8) a busy city street with many people. 9) a round orange."
+ },
+ {
+  "id": "s095",
+  "words": [
+   "straight",
+   "deep",
+   "wild",
+   "sleep",
+   "healthy",
+   "ill",
+   "sick",
+   "medicine",
+   "pill"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a straight road. 2) deep blue sea water. 3) a wild wolf in a forest. 4) a child sleeping in bed. 5) a girl eating an apple. 6) a sick child in bed with a thermometer. 7) a sick boy with a cold. 8) a bottle of medicine and a spoon. 9) a pill."
+ },
+ {
+  "id": "s096",
+  "words": [
+   "cough",
+   "fever",
+   "headache",
+   "toothache",
+   "stomachache",
+   "pain",
+   "hurt",
+   "accident",
+   "ambulance"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a child coughing. 2) a child with a fever and a thermometer. 3) a woman with a headache. 4) a boy with a toothache holding his cheek. 5) a girl with a stomachache. 6) a boy holding his painful knee. 7) a child with a hurt knee. 8) a minor car accident. 9) a ambulance."
+ },
+ {
+  "id": "s097",
+  "words": [
+   "plaster",
+   "diet",
+   "exercise",
+   "magic",
+   "fairy",
+   "ghost",
+   "witch",
+   "wizard",
+   "dragon"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a sticking plaster on a finger. 2) a healthy plate of vegetables. 3) children doing morning exercises. 4) a magician with a wand. 5) a fairy costume with wings on a girl. 6) a child in a white ghost costume. 7) a child in a witch costume. 8) a child in a wizard costume. 9) a dragon toy figure."
+ },
+ {
+  "id": "s098",
+  "words": [
+   "monster",
+   "pirate",
+   "treasure",
+   "crown",
+   "angel",
+   "spy",
+   "superhero",
+   "unicorn",
+   "mermaid"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a cute monster toy. 2) a child in a pirate costume. 3) a treasure chest with gold. 4) a crown. 5) a child in an angel costume. 6) a child dressed as a spy with a magnifying glass. 7) a child in a superhero costume. 8) a unicorn toy. 9) a mermaid doll."
+ },
+ {
+  "id": "s099",
+  "words": [
+   "giant",
+   "gold",
+   "space",
+   "alien",
+   "globe",
+   "experiment",
+   "magnet",
+   "metal",
+   "plastic"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a very tall man next to a small child. 2) gold bars. 3) stars and planets in space. 4) a toy alien figure. 5) a globe. 6) a child doing a science experiment. 7) a magnet. 8) metal pipes. 9) plastic bottles."
+ },
+ {
+  "id": "s100",
+  "words": [
+   "diamond",
+   "travel",
+   "right",
+   "trip",
+   "journey",
+   "tourist",
+   "map",
+   "passport",
+   "suitcase"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a diamond. 2) a family travelling with suitcases. 3) a road sign arrow pointing right. 4) a family on a car trip. 5) a train journey through mountains. 6) a tourist with a camera. 7) a map. 8) a passport. 9) a suitcase."
+ },
+ {
+  "id": "s101",
+  "words": [
+   "luggage",
+   "camp",
+   "tent",
+   "seaside",
+   "sightseeing",
+   "guidebook",
+   "flight",
+   "north",
+   "left"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a luggage. 2) a summer camp with tents. 3) a tent. 4) the seaside with a beach. 5) tourists sightseeing in a city. 6) a travel guidebook. 7) a plane in flight. 8) a compass pointing north. 9) a road sign arrow pointing left."
+ },
+ {
+  "id": "s102",
+  "words": [
+   "straight on",
+   "quiet",
+   "noisy",
+   "name",
+   "age",
+   "address",
+   "kind",
+   "friendly",
+   "clever"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a road going straight on. 2) a quiet library. 3) a noisy classroom. 4) a name badge. 5) a birthday cake with number candles. 6) an address on an envelope. 7) a girl helping an old woman. 8) a friendly smiling boy waving. 9) a clever girl solving a puzzle."
+ },
+ {
+  "id": "s103",
+  "words": [
+   "smart",
+   "polite",
+   "rude",
+   "brave",
+   "lazy",
+   "patient",
+   "careful",
+   "helpful",
+   "creative"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a smart boy with a book. 2) a polite boy holding the door. 3) a rude boy sticking out his tongue. 4) a brave firefighter. 5) a lazy cat sleeping on a sofa. 6) a patient girl waiting calmly. 7) a boy carefully carrying a cup. 8) a boy helping his mum carry bags. 9) a creative girl making crafts."
+ },
+ {
+  "id": "s104",
+  "words": [
+   "naughty",
+   "good-looking",
+   "blonde",
+   "curly",
+   "beard",
+   "moustache",
+   "hero",
+   "cheap",
+   "expensive"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a naughty puppy chewing a shoe. 2) a good-looking young man smiling. 3) a girl with blonde hair. 4) a boy with curly hair. 5) a man with a beard. 6) a man with a moustache. 7) a firefighter rescuing a cat. 8) a price tag with a low price. 9) an expensive diamond ring."
+ },
+ {
+  "id": "s105",
+  "words": [
+   "money",
+   "coin",
+   "price",
+   "cash",
+   "credit card",
+   "customer",
+   "receipt",
+   "sale",
+   "size"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) money: coins and banknotes. 2) a coin. 3) a price tag. 4) banknotes. 5) a credit card. 6) a customer at a shop till. 7) a receipt. 8) a sale sign in a shop window. 9) clothes in different sizes."
+ },
+ {
+  "id": "s106",
+  "words": [
+   "list",
+   "bill",
+   "technology",
+   "laptop",
+   "tablet",
+   "mobile phone",
+   "smartphone",
+   "screen",
+   "keyboard"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a shopping list. 2) a restaurant bill. 3) modern gadgets: laptop, phone and tablet. 4) a laptop. 5) a tablet. 6) a mobile phone. 7) a smartphone. 8) a computer screen. 9) a keyboard."
+ },
+ {
+  "id": "s107",
+  "words": [
+   "printer",
+   "website",
+   "email",
+   "message",
+   "password",
+   "app",
+   "video",
+   "battery",
+   "headphones"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a printer. 2) a website on a laptop screen. 3) an email on a laptop screen. 4) a text message on a phone. 5) a password field on a screen. 6) apps on a smartphone screen. 7) a video on a tablet. 8) a battery. 9) a headphones."
+ },
+ {
+  "id": "s108",
+  "words": [
+   "click",
+   "online",
+   "action",
+   "activity",
+   "adventure",
+   "advertisement",
+   "alarm clock",
+   "album",
+   "apron"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a hand clicking a computer mouse. 2) a girl having an online lesson on a laptop. 3) a boy jumping in action. 4) children doing activities in a classroom. 5) kids exploring a forest with a map. 6) a big advertising billboard. 7) an alarm clock. 8) a photo album. 9) a kitchen apron."
+ },
+ {
+  "id": "s109",
+  "words": [
+   "article",
+   "athlete",
+   "author",
+   "award",
+   "barbecue",
+   "barber",
+   "beginner",
+   "bell",
+   "bench"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a newspaper article. 2) an athlete running on a track. 3) an author signing books. 4) an award trophy. 5) a barbecue grill with sausages. 6) a barber cutting hair. 7) a beginner learning to ride a bike. 8) a school bell. 9) a park bench."
+ },
+ {
+  "id": "s110",
+  "words": [
+   "bend",
+   "bite",
+   "blow",
+   "bookshelf",
+   "bookshop",
+   "brake",
+   "branch",
+   "breeze",
+   "bride"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a bend in a road. 2) an apple with a bite. 3) a girl blowing bubbles. 4) a bookshelf. 5) a bookshop. 6) a bicycle brake. 7) a tree branch. 8) curtains moving in a breeze. 9) a bride in a white dress."
+ },
+ {
+  "id": "s111",
+  "words": [
+   "bulb",
+   "bus station",
+   "businesswoman",
+   "cafeteria",
+   "campus",
+   "captain",
+   "card",
+   "cent",
+   "centimetre"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a light bulb. 2) a bus station. 3) a businesswoman in a suit. 4) a school cafeteria. 5) a university campus. 6) a ship captain. 7) a greeting card. 8) a cent coin. 9) a ruler showing centimetres."
+ },
+ {
+  "id": "s112",
+  "words": [
+   "chain",
+   "championship",
+   "chart",
+   "chat",
+   "chilli",
+   "circle",
+   "classical music",
+   "cloth",
+   "clue"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a metal chain. 2) a championship cup. 3) a bar chart. 4) two friends chatting. 5) a red chilli pepper. 6) a red circle shape. 7) an orchestra playing classical music. 8) a piece of cloth. 9) a magnifying glass on footprints."
+ },
+ {
+  "id": "s113",
+  "words": [
+   "coast",
+   "column",
+   "competition",
+   "container",
+   "continent",
+   "conversation",
+   "cooking",
+   "couch",
+   "couple"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a rocky sea coast. 2) a stone column. 3) a children's drawing competition. 4) a plastic food container. 5) a world map of continents. 6) two people having a conversation. 7) a family cooking together. 8) a couch. 9) an elderly couple holding hands."
+ },
+ {
+  "id": "s114",
+  "words": [
+   "cover",
+   "cricket",
+   "crowd",
+   "department store",
+   "diary",
+   "dig",
+   "digital camera",
+   "director",
+   "disco"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a book cover. 2) a cricket bat and ball. 3) a crowd of people at a concert. 4) a department store. 5) a diary with a lock. 6) a child digging sand with a spade. 7) a digital camera. 8) a film director with a megaphone. 9) a disco ball."
+ },
+ {
+  "id": "s115",
+  "words": [
+   "display",
+   "dollar",
+   "dust",
+   "earthquake",
+   "elevator",
+   "emergency",
+   "entrance",
+   "envelope",
+   "escalator"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a shop window display. 2) a dollar banknote. 3) dust on a shelf. 4) a crack in the ground after an earthquake. 5) an elevator with open doors. 6) an ambulance with flashing lights. 7) a building entrance. 8) an envelope. 9) an escalator in a mall."
+ },
+ {
+  "id": "s116",
+  "words": [
+   "euro",
+   "exhibition",
+   "fair",
+   "fan",
+   "fast food",
+   "feed",
+   "file",
+   "flag",
+   "flood"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a euro coin. 2) an art exhibition. 3) a fun fair with a ferris wheel. 4) an electric fan. 5) fast food: burger, fries and cola. 6) a girl feeding ducks. 7) a paper file folder. 8) a flag on a pole. 9) a flooded street."
+ },
+ {
+  "id": "s117",
+  "words": [
+   "folder",
+   "footballer",
+   "frame",
+   "garbage",
+   "gas",
+   "graduate",
+   "granddad",
+   "group",
+   "guard"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a folder with papers. 2) a footballer with a ball. 3) a picture frame. 4) a garbage bin. 5) a gas stove flame. 6) a graduate in a cap and gown. 7) a granddad with his grandchildren. 8) a group of children. 9) a security guard."
+ },
+ {
+  "id": "s118",
+  "words": [
+   "haircut",
+   "handle",
+   "harvest",
+   "heating",
+   "high school",
+   "highway",
+   "hike",
+   "hole",
+   "hurry"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a boy getting a haircut. 2) a door handle. 3) a harvest of pumpkins and apples. 4) a radiator. 5) a high school building. 6) a highway with cars. 7) a family hiking in the mountains. 8) a hole in the ground. 9) a man in a hurry looking at his watch."
+ },
+ {
+  "id": "s119",
+  "words": [
+   "jet",
+   "jewellery",
+   "judge",
+   "kilo",
+   "kilometre",
+   "kit",
+   "landscape",
+   "lane",
+   "leather"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a jet plane. 2) jewellery: necklace and bracelet. 3) a judge with a gavel. 4) weighing scales showing one kilo. 5) a road sign showing kilometres. 6) a first aid kit. 7) a mountain landscape. 8) a country lane. 9) a leather bag."
+ },
+ {
+  "id": "s120",
+  "words": [
+   "line",
+   "litre",
+   "lock",
+   "lunchtime",
+   "mail",
+   "main course",
+   "make-up",
+   "metre",
+   "mobile"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a queue of people in a line. 2) a one litre bottle of water. 3) a padlock. 4) children eating lunch at school. 5) letters in a mailbox. 6) a main course plate with meat and vegetables. 7) make-up brushes and lipstick. 8) a tape measure. 9) a mobile phone."
+ },
+ {
+  "id": "s121",
+  "words": [
+   "model",
+   "motorway",
+   "news",
+   "newspaper",
+   "note",
+   "novel",
+   "oak",
+   "Olympics",
+   "opera"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a model airplane. 2) a motorway. 3) a TV news studio. 4) a newspaper. 5) a sticky note. 6) a novel book. 7) an oak tree. 8) the Olympic rings flag. 9) an opera house stage."
+ },
+ {
+  "id": "s122",
+  "words": [
+   "pair",
+   "pants",
+   "path",
+   "pen friend",
+   "perfume",
+   "petrol station",
+   "piece",
+   "pile",
+   "police"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a pair of shoes. 2) trousers. 3) a forest path. 4) a child writing a letter to a pen friend. 5) a perfume bottle. 6) a petrol station. 7) a piece of cake. 8) a pile of books. 9) a police car."
+ },
+ {
+  "id": "s123",
+  "words": [
+   "pool",
+   "portrait",
+   "poster",
+   "receptionist",
+   "ribbon",
+   "roll",
+   "rope",
+   "roundabout",
+   "row"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a swimming pool. 2) a portrait painting. 3) a poster on a wall. 4) a hotel receptionist. 5) a red ribbon bow. 6) a bread roll. 7) a rope. 8) a roundabout with cars. 9) a row of chairs."
+ },
+ {
+  "id": "s124",
+  "words": [
+   "runner",
+   "scenery",
+   "schoolchild",
+   "seat",
+   "shade",
+   "shadow",
+   "shape",
+   "shore",
+   "sign"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a runner on a track. 2) beautiful mountain scenery. 3) a schoolchild with a backpack. 4) a seat in a cinema. 5) people resting in the shade of a tree. 6) a child's shadow on the ground. 7) geometric shapes: circle, square, triangle. 8) a lake shore. 9) a road sign."
+ },
+ {
+  "id": "s125",
+  "words": [
+   "singing",
+   "sitting room",
+   "slice",
+   "slide",
+   "soccer",
+   "soft drink",
+   "speaker",
+   "speech",
+   "splash"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a choir singing. 2) a sitting room. 3) a slice of watermelon. 4) a playground slide. 5) a soccer ball. 6) a soft drink can. 7) a loudspeaker. 8) a girl giving a speech. 9) a splash of water."
+ },
+ {
+  "id": "s126",
+  "words": [
+   "stage",
+   "stamp",
+   "statue",
+   "store",
+   "stove",
+   "string",
+   "suit",
+   "sunlight",
+   "sunshine"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a theatre stage. 2) a postage stamp. 3) a statue in a park. 4) a store. 5) a kitchen stove. 6) a ball of string. 7) a man's suit. 8) sunlight through trees. 9) bright sunshine."
+ },
+ {
+  "id": "s127",
+  "words": [
+   "surprise",
+   "tap",
+   "tape",
+   "target",
+   "tear",
+   "telephone",
+   "text message",
+   "tool",
+   "tour"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a surprise party. 2) a water tap. 3) a roll of tape. 4) a dartboard target. 5) a tear on a cheek. 6) a telephone. 7) a text message on a phone. 8) tools: hammer and screwdriver. 9) a city bus tour."
+ },
+ {
+  "id": "s128",
+  "words": [
+   "tour guide",
+   "track",
+   "training",
+   "traveller",
+   "turkey",
+   "vacation",
+   "vase",
+   "visitor",
+   "walking"
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a tour guide with a flag. 2) a running track. 3) a football training session. 4) a traveller with a backpack. 5) a turkey bird. 6) a family on vacation. 7) a vase with flowers. 8) visitors in a museum. 9) people walking in a park."
+ },
+ {
+  "id": "s129",
+  "words": [
+   "wheelchair",
+   "wool",
+   "worker",
+   "writing",
+   "yard",
+   "",
+   "",
+   "",
+   ""
+  ],
+  "prompt": "A 3x3 grid of nine separate square photographs with thin white gutters between them. No text, no letters, no numbers, no captions, no watermarks. Every cell is one realistic, natural-looking photo, soft daylight, simple light background, the subject centred and fully visible, warm and child-friendly. Cells from left to right, top to bottom: 1) a wheelchair. 2) balls of wool. 3) a factory worker. 4) a hand writing with a pen. 5) a back yard."
+ }
+]

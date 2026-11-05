@@ -180,6 +180,9 @@ _TABLE_EXTRAS = {
         "decor_slots": "TEXT NOT NULL DEFAULT '{}'",  # JSON {item_id: slot_id}
     },
     "atom_mastery": {"learned_at": "TEXT"},  # московский день первого взятия порога силы 2
+    "lk_learner_days": {"perfect": "INTEGER NOT NULL DEFAULT 0"},
+    # вход в ЛК по паролю (pbkdf2) и номер заявки, отправленной в CRM при регистрации
+    "lk_accounts": {"password_hash": "TEXT", "crm_lead_id": "TEXT NOT NULL DEFAULT ''"},  # уроки без ошибок за день
     "player_identity": {
         "email_verified_at": "TEXT",  # email подтверждён кодом из письма / TG
         "password_hash": "TEXT",      # salt_hex$pbkdf2_hex — вход в браузере
@@ -688,6 +691,34 @@ CREATE TABLE IF NOT EXISTS lk_word_assignments (
     age_to     INTEGER,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     UNIQUE (set_id, kind, group_id, student_id, age_from, age_to)
+);
+
+-- Игровая статистика тренажёра по дням: очки опыта (XP), ответы, серия дней.
+CREATE TABLE IF NOT EXISTS lk_learner_days (
+    learner_key TEXT NOT NULL,
+    day         TEXT NOT NULL,                 -- YYYY-MM-DD (МСК)
+    xp          INTEGER NOT NULL DEFAULT 0,
+    answers     INTEGER NOT NULL DEFAULT 0,
+    correct     INTEGER NOT NULL DEFAULT 0,
+    new_words   INTEGER NOT NULL DEFAULT 0,
+    sessions    INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (learner_key, day)
+);
+
+-- Полученные награды тренажёра: задание дня, сундук недели (одна выдача на период).
+CREATE TABLE IF NOT EXISTS lk_learner_claims (
+    learner_key TEXT NOT NULL,
+    kind        TEXT NOT NULL,                 -- quest | chest
+    period      TEXT NOT NULL,                 -- день (quest) или понедельник недели (chest)
+    coins       INTEGER NOT NULL DEFAULT 0,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (learner_key, kind, period)
+);
+
+-- Настройки ученика в тренажёре (цель дня в XP).
+CREATE TABLE IF NOT EXISTS lk_learner_prefs (
+    learner_key TEXT PRIMARY KEY,
+    daily_goal  INTEGER NOT NULL DEFAULT 50
 );
 
 -- Прогресс ученика по словам (SRS сила 0–5, интервалы как в Мире).

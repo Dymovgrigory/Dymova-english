@@ -1,17 +1,29 @@
 "use client";
 
+import { Castle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api, Profile, WORLD_URL, WorldProgress } from "@/lib/api";
 import { clearSession, getToken } from "@/lib/session";
 import { fmt, useI18n } from "@/lib/i18n";
-import LangSwitch from "@/components/lang-switch";
+import CabinetPage from "@/components/cabinet-page";
+import { useCabinet } from "@/lib/cabinet";
 
 export default function WorldPage() {
+  return (
+    <CabinetPage>
+      <Inner />
+    </CabinetPage>
+  );
+}
+
+function Inner() {
   const router = useRouter();
   const { t } = useI18n();
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const cab = useCabinet();
+  const profiles: Profile[] = cab.me?.profiles ?? [];
+  const activeId = cab.active?.id ?? null;
+  const setActiveId = cab.setActiveId;
   const [progress, setProgress] = useState<WorldProgress | null>(null);
   const [error, setError] = useState("");
   const [entering, setEntering] = useState(false);
@@ -19,22 +31,6 @@ export default function WorldPage() {
   const token = getToken();
   const active = profiles.find((p) => p.id === activeId) ?? profiles[0];
 
-  useEffect(() => {
-    if (!token) {
-      router.replace("/auth");
-      return;
-    }
-    api
-      .me(token)
-      .then((me) => {
-        setProfiles(me.profiles);
-        setActiveId(me.profiles[0]?.id ?? null);
-      })
-      .catch(() => {
-        clearSession();
-        router.replace("/auth");
-      });
-  }, [token, router]);
 
   const load = useCallback(async () => {
     if (!token || !active) return;
@@ -80,21 +76,8 @@ export default function WorldPage() {
 
   return (
     <>
-      <header className="topbar">
-        <div className="topbar-inner">
-          <a className="brand" href="/dashboard">
-            {t.common.brand}
-            <span className="brand-badge">{t.common.lkBadge}</span>
-          </a>
-          <div className="topbar-spacer" />
-          <LangSwitch />
-          <button className="btn btn-light btn-sm" onClick={onLogout}>
-            {t.common.logout}
-          </button>
-        </div>
-      </header>
 
-      <main className="shell-main">
+      <div className="k-legacy">
         <div className="dashboard-head">
           <div>
             <h1 className="dashboard-title">{t.world.title}</h1>
@@ -103,7 +86,7 @@ export default function WorldPage() {
             </p>
           </div>
           <div className="topbar-spacer" />
-          {profiles.length > 1 && (
+          {false && profiles.length > 1 && (
             <div className="profile-switch" role="tablist" aria-label={t.common.profilesAria}>
               {profiles.map((p) => (
                 <button
@@ -132,7 +115,7 @@ export default function WorldPage() {
           </div>
         ) : !progress.linked ? (
           <div className="card world-hero">
-            <div className="world-emoji" aria-hidden>🏰</div>
+            <div className="world-emoji" aria-hidden><Castle size={56} strokeWidth={2} /></div>
             <h2 className="card-title">{t.world.notStartedTitle}</h2>
             <p className="card-sub">
               {fmt(t.world.notStartedSub, { name: progress.child_name })}
@@ -157,7 +140,7 @@ export default function WorldPage() {
                 <div className="stat-label">{t.world.coins}</div>
               </div>
               <div className="stat-card">
-                <div className="stat-num">{progress.streak_days} 🔥</div>
+                <div className="stat-num">{progress.streak_days}</div>
                 <div className="stat-label">{t.world.streak}</div>
               </div>
             </div>
@@ -194,7 +177,7 @@ export default function WorldPage() {
             )}
 
             <div className="card world-hero">
-              <div className="world-emoji" aria-hidden>🏰</div>
+              <div className="world-emoji" aria-hidden><Castle size={56} strokeWidth={2} /></div>
               <p className="card-sub" style={{ marginBottom: 18 }}>
                 {fmt(t.world.enterSubLinked, { name: progress.child_name })}
               </p>
@@ -204,7 +187,7 @@ export default function WorldPage() {
             </div>
           </>
         )}
-      </main>
+      </div>
     </>
   );
 }
