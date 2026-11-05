@@ -59,8 +59,7 @@ def _phone_guard(fn, *a, **kw):
 def health_crm():
     """Есть ли доступ к пульту BigBen (вход по «Данным для входа», карточки при регистрации)."""
     from . import bigben_internal
-    out = bigben_internal.health()
-    return {"ok": out["ok"], "mode": out.get("mode", "")}
+    return bigben_internal.health()
 
 
 @router.post("/auth/login")

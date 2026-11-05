@@ -7,13 +7,20 @@
   PUT /user/students/{id} (разведка бандла пульта и карточки 2026-11-05);
 - создание карточки ученика: POST /user/students (как при записи в группу с сайта/бота).
 
-Токен — BIGBEN_INTERNAL_TOKEN (Bearer из пульта владельца), тот же, что у бота.
+Доступ (2026-11-05, чтобы вход в ЛК не зависел от срока жизни токена):
+- основной путь — учётная запись сотрудника пульта (BIGBEN_LK_LOGIN / BIGBEN_LK_PASSWORD):
+  ЛК сам входит в пульт (POST auth/login, как форма входа lk.bigbencrm.ru), продлевает
+  сессию (POST auth/refresh) и при ответе 401 входит заново — токен обновляется без людей;
+- запасной — постоянный BIGBEN_INTERNAL_TOKEN (тот же, что у бота).
 """
 from __future__ import annotations
 
 import hmac
 import logging
 import os
+import threading
+import time
+from datetime import datetime, timezone
 
 import httpx
 
@@ -27,25 +34,84 @@ class BigBenInternalError(Exception):
     pass
 
 
-def _token() -> str:
+HEADERS = {
+    # без этих заголовков пульт на ошибку отвечает редиректом на страницу входа
+    "Accept": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
+}
+_session: dict = {"token": "", "refresh": "", "expires": 0.0}
+_lock = threading.Lock()
+
+
+def _login_creds() -> tuple[str, str]:
+    return (os.environ.get("BIGBEN_LK_LOGIN", "").strip(), os.environ.get("BIGBEN_LK_PASSWORD", ""))
+
+
+def _static_token() -> str:
     return os.environ.get("BIGBEN_INTERNAL_TOKEN", "").strip()
 
 
 def configured() -> bool:
-    return bool(_token())
+    login, password = _login_creds()
+    return bool((login and password) or _static_token())
+
+
+def _parse_exp(value) -> float:
+    if not value:
+        return time.time() + 12 * 3600
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return time.time() + 12 * 3600
+
+
+def _auth_post(client: httpx.Client, path: str, body: dict) -> dict:
+    r = client.post(BASE + "/" + path, json=body, headers=HEADERS)
+    if r.status_code >= 400:
+        raise BigBenInternalError(f"{path}: HTTP {r.status_code}")
+    data = r.json()
+    data = data.get("data", data) if isinstance(data, dict) else {}
+    if not isinstance(data, dict) or not data.get("token"):
+        raise BigBenInternalError(f"{path}: нет токена в ответе")
+    return data
+
+
+def _new_session(client: httpx.Client) -> None:
+    """Вход в пульт учётной записью сотрудника; сначала пробуем продлить сессию."""
+    if _session["refresh"]:
+        try:
+            d = _auth_post(client, "auth/refresh", {"refreshToken": _session["refresh"]})
+            _session.update(token=d["token"], expires=_parse_exp(d.get("expiresAt")))
+            return
+        except (BigBenInternalError, httpx.HTTPError, ValueError) as exc:
+            log.info("bigben: продление сессии не удалось (%s), входим заново", exc)
+    login, password = _login_creds()
+    d = _auth_post(client, "auth/login", {"identifier": login, "password": password, "remember": True})
+    _session.update(token=d["token"], refresh=d.get("refreshToken") or "", expires=_parse_exp(d.get("expiresAt")))
+    log.info("bigben: вошли в пульт, сессия до %s", datetime.fromtimestamp(_session["expires"], timezone.utc))
+
+
+def _bearer(client: httpx.Client, force: bool = False) -> str:
+    login, password = _login_creds()
+    if not (login and password):
+        return _static_token()
+    with _lock:
+        if force or not _session["token"] or _session["expires"] - time.time() < 600:
+            _new_session(client)
+        return _session["token"]
 
 
 def _request(method: str, path: str, json_body: dict | None = None) -> dict:
     if not configured():
-        raise BigBenInternalError("BIGBEN_INTERNAL_TOKEN не задан")
+        raise BigBenInternalError("нет доступа к пульту BigBen (BIGBEN_LK_LOGIN/BIGBEN_LK_PASSWORD или BIGBEN_INTERNAL_TOKEN)")
     try:
         with httpx.Client(timeout=15) as client:
-            r = client.request(method, BASE + path, json=json_body, headers={
-                "Authorization": f"Bearer {_token()}",
-                # без этих заголовков пульт на ошибку отвечает редиректом на страницу входа
-                "Accept": "application/json",
-                "X-Requested-With": "XMLHttpRequest",
-            })
+            r = client.request(method, BASE + path, json=json_body,
+                               headers={**HEADERS, "Authorization": f"Bearer {_bearer(client)}"})
+            if r.status_code == 401 and all(_login_creds()):
+                # токен отозван или истёк раньше срока — входим заново и повторяем один раз
+                r = client.request(method, BASE + path, json=json_body,
+                                   headers={**HEADERS, "Authorization": f"Bearer {_bearer(client, force=True)}"})
     except httpx.HTTPError as exc:
         raise BigBenInternalError(f"сеть: {exc}") from exc
     if r.status_code >= 400:
@@ -111,3 +177,12 @@ def set_login_data(student_id: int, phone: str, password: str) -> None:
     """Записать «Данные для входа»: телефон и пароль ученика и родителя (видны администратору в карточке)."""
     _request("PUT", f"/user/students/{int(student_id)}",
              {"phone": phone, "password_raw": password, "parent_phone": phone, "parent_password": password})
+
+
+def health() -> dict:
+    """Проверка доступа к пульту (для мониторинга): ок/ошибка без персональных данных."""
+    try:
+        _request("GET", "/user/students?per_page=1")
+        return {"ok": True, "mode": "login" if all(_login_creds()) else "token"}
+    except BigBenInternalError as exc:
+        return {"ok": False, "error": str(exc)[:80]}
