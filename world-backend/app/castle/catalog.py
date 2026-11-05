@@ -10,11 +10,32 @@ WEATHERS = ("snow", "rain", "fireflies", "fog", "aurora", "petals")
 BANNER_COLORS = ("plum", "emerald", "gold", "azure", "rose")
 SCENES = ("garland", "lanterns", "pumpkins")
 
+# Темы оформления Мира (2026-11-05): готовый облик целиком — сезон, время суток, погода
+# и цветовое настроение сцены. Купленная тема открывает и свои сезон/время/погоду.
+THEMES: dict[str, dict] = {
+    "winter-tale": {"title_ru": "Зимняя сказка", "price": 200,
+                    "season": "winter", "time_of_day": "night", "weather": "snow"},
+    "lantern-fest": {"title_ru": "Праздник фонарей", "price": 220,
+                     "season": "autumn", "time_of_day": "dusk", "weather": "fireflies"},
+    "blossom": {"title_ru": "Цветущая весна", "price": 180,
+                "season": "spring", "time_of_day": "dawn", "weather": "petals"},
+    "golden-summer": {"title_ru": "Золотое лето", "price": 160,
+                      "season": "summer", "time_of_day": "day", "weather": None},
+    "misty-autumn": {"title_ru": "Туманная осень", "price": 160,
+                     "season": "autumn", "time_of_day": "dawn", "weather": "fog"},
+    "magic-dusk": {"title_ru": "Волшебные сумерки", "price": 220,
+                   "season": "summer", "time_of_day": "dusk", "weather": "fireflies"},
+    "rainy-day": {"title_ru": "Дождливый день", "price": 140,
+                  "season": "spring", "time_of_day": "day", "weather": "rain"},
+    "polar-night": {"title_ru": "Полярная ночь", "price": 300,
+                    "season": "winter", "time_of_day": "night", "weather": "aurora"},
+}
+
 
 @dataclass(frozen=True)
 class Item:
     id: str
-    kind: str              # season|time|weather|banner|decor|scene
+    kind: str              # theme|season|time|weather|banner|decor|scene
     title_ru: str
     price: int
     value: str             # что применяется: имя сезона, времени, погоды, цвета
@@ -85,13 +106,16 @@ def _items() -> dict[str, Item]:
     ]
     for item_id, title, value, price in scene_specs:
         items[item_id] = Item(id=item_id, kind="scene", title_ru=title, price=price, value=value)
+    for theme, spec in THEMES.items():
+        items[f"theme-{theme}"] = Item(id=f"theme-{theme}", kind="theme", title_ru=spec["title_ru"],
+                                       price=spec["price"], value=theme)
     return items
 
 
 ITEMS: dict[str, Item] = _items()
 
 # Бесплатно и всегда доступно: сезон по календарю, время «как за окном», сливовое знамя.
-FREE_VALUES = {"season": None, "time": None, "weather": None, "banner": "plum", "scene": None}
+FREE_VALUES = {"season": None, "time": None, "weather": None, "banner": "plum", "scene": None, "theme": None}
 
 
 def season_by_date(moment: datetime) -> str:

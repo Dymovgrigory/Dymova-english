@@ -3,9 +3,20 @@
 import { useEffect, useRef, useState, type ReactNode, type Ref } from "react";
 
 import { Icon, type IconName } from "@/design/Icon";
-import { FoxiMascot } from "@/foxi3d/FoxiMascot";
+import { Foxy, type FoxyPose } from "@/design/Foxy";
 import type { WalkOffset } from "@/foxi3d/walk";
 import { NODE_LABELS } from "@/lib/v2/pathLayout";
+
+/** Какой Фокси стоит у текущего окна: наряд и поза под этап урока. */
+const NODE_FOXI: Partial<Record<keyof typeof NODE_LABELS, FoxyPose>> = {
+  words: "school",
+  phonics: "listen",
+  grammar: "think",
+  reading: "read",
+  chest: "shop",
+  review: "yard",
+  module_test: "glory",
+};
 import type { LearningPath, NodeKind, PathModule, PathNode } from "@/lib/v2/types";
 
 /* Башня учебника в стиле «живой миниатюры»: башня-герой, этажи-диорамы, окна-уроки. */
@@ -64,7 +75,12 @@ function WindowSlot({ node, onPress, currentRef, registerSlot, walkFrom }: { nod
   const current = status === "current";
   return (
     <div ref={mergeSlotRef(node.id, registerSlot, currentRef)} className="relative flex flex-col items-center">
-      {current && <FoxiMascot walkFrom={walkFrom} />}
+      {/* Фокси у текущего окна: рисованный, в наряде по этапу урока (3D-ходьба убрана 2026-11-05) */}
+      {current && (
+        <span className="pointer-events-none absolute -left-[78px] top-[6px] z-10 animate-[foxi-bob_3.2s_ease-in-out_infinite] motion-reduce:animate-none" data-walk={walkFrom ? "1" : undefined}>
+          <Foxy pose={NODE_FOXI[node.kind] ?? "point"} size={84} className="drop-shadow-[0_4px_6px_rgb(0_0_0/0.6)]" />
+        </span>
+      )}
       <button
         type="button"
         onClick={() => onPress(node)}

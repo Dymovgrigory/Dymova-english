@@ -11,8 +11,7 @@ import {
   type Spot,
   type SpotId,
 } from "@/castle/buildings";
-import { effectiveAppearance, lightLayer, seasonByDate } from "@/castle/appearance";
-import { Banner } from "@/castle/Banner";
+import { THEME_LOOK, effectiveAppearance, lightLayer, seasonByDate } from "@/castle/appearance";
 import { hotspotsForSeason, sceneForSeason, spotsForSeason } from "@/castle/seasons";
 import { Weather } from "@/castle/Weather";
 import { fitScene } from "@/castle/scene";
@@ -80,12 +79,6 @@ function SpotHighlight({ spot, scene, active, pulse }: { spot: Spot; scene: stri
           filter: "brightness(1.14) saturate(1.06)",
         }}
       />
-      <span
-        className="mat-brass absolute left-1/2 -translate-x-1/2 -translate-y-[calc(100%+4px)] whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-extrabold leading-none shadow-lg lg:text-[13px]"
-        style={{ top: `${spot.labelTop}%` }}
-      >
-        {spot.title}
-      </span>
     </div>
   );
 }
@@ -127,14 +120,14 @@ export function CastleStage({
   openId,
   pulsing,
   appearance,
-  emblem,
   onOpen,
 }: {
   freeArea: HTMLElement | null;
   openId: SpotId | null;
   pulsing: SpotId[];
   appearance: Appearance | null;
-  emblem: string;
+  /** Больше не рисуется (знамёна убраны); оставлено для совместимости вызовов. */
+  emblem?: string;
   onOpen: (id: SpotId) => void;
 }) {
   const season = appearance?.season ?? seasonByDate(new Date());
@@ -209,7 +202,14 @@ export function CastleStage({
                 className="pointer-events-none absolute inset-0"
                 style={lightLayer(effectiveAppearance(appearance, new Date()).time) as CSSProperties}
               />
-              <Banner color={appearance.banner_color} emblem={emblem} />
+              {/* Флаги-знамёна убраны (2026-11-05): облик Мира — темы, погода и время суток. */}
+              {appearance.theme && THEME_LOOK[appearance.theme] ? (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+                  style={{ background: THEME_LOOK[appearance.theme].mood }}
+                />
+              ) : null}
               <Weather kind={effectiveAppearance(appearance, new Date()).weather} />
             </>
           ) : null}
@@ -222,6 +222,34 @@ export function CastleStage({
               pulse={pulsing.includes(spot.id)}
             />
           ))}
+          {/* Подписи прямо под зданиями: видны всегда, у выбранного/наведённого — подсвечены. Нажатие открывает здание. */}
+          {spots.map((spot) => {
+            const on = hovered === spot.id || focused === spot.id || openId === spot.id || pulsing.includes(spot.id);
+            return (
+              <button
+                key={`label-${spot.id}`}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onOpen(spot.id);
+                }}
+                onMouseEnter={() => setHovered(spot.id)}
+                onMouseLeave={() => setHovered(null)}
+                className={[
+                  "absolute -translate-x-1/2 whitespace-nowrap rounded-full px-2.5 py-1 text-[10px] font-extrabold leading-none shadow-lg transition-all duration-200 sm:text-[12px] lg:text-[13px]",
+                  on ? "mat-brass scale-110 ring-2 ring-[#ffd36e]" : "bg-[#241a30]/75 text-[#f6efe2] ring-1 ring-white/25 backdrop-blur-sm",
+                ].join(" ")}
+                style={{
+                  left: `${spot.area.left + spot.area.width / 2}%`,
+                  top: `calc(${spot.area.top + spot.area.height}% + 4px)`,
+                  zIndex: 300 + spot.index,
+                  boxShadow: on ? "0 0 14px rgb(255 211 110 / 0.9)" : undefined,
+                }}
+              >
+                {spot.title}
+              </button>
+            );
+          })}
           {/* Клавиатура и скринридеры: кнопки по областям зданий, мышь их не перехватывает. */}
           {spots.map((spot) => (
             <button

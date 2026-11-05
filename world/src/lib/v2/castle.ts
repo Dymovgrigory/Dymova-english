@@ -11,11 +11,13 @@ export type Appearance = {
   banner_color: string;
   banner_emblem: string;
   scene_set: string | null;
+  /** Тема оформления Мира (готовый облик целиком), null — классика. */
+  theme?: string | null;
 };
 
 export type CastleItem = {
   id: string;
-  kind: "season" | "time" | "weather" | "banner" | "decor" | "scene";
+  kind: "theme" | "season" | "time" | "weather" | "banner" | "decor" | "scene";
   title_ru: string;
   value: string;
   price: number;

@@ -15,7 +15,7 @@ from . import catalog, slots as slots_mod, state, titles
 
 _FIELD_KIND = {
     "season": "season", "time_of_day": "time", "weather": "weather",
-    "banner_color": "banner", "scene_set": "scene",
+    "banner_color": "banner", "scene_set": "scene", "theme": "theme",
 }
 
 
@@ -157,7 +157,22 @@ def apply(external_key: str, **fields) -> dict:
     if decor_place:
         state.set_decor_slots(player_id, slots)
 
+    # Тема оформления: выставляет сезон, время и погоду целиком; её слои открыты вместе с темой.
+    granted: set[tuple[str, str]] = set()
+    if fields.get("theme"):
+        spec = catalog.THEMES.get(fields["theme"])
+        if spec is None:
+            raise Conflict("unknown value for theme")
+        for key in ("season", "time_of_day", "weather"):
+            fields.setdefault(key, spec[key])
+            if spec[key] is not None and fields[key] == spec[key]:
+                granted.add((key, spec[key]))
+    elif "theme" not in fields and any(k in fields for k in ("season", "time_of_day", "weather")):
+        fields["theme"] = None           # слой поменяли вручную — тема больше не «целиком»
+
     for field, value in fields.items():
+        if (field, value) in granted:
+            continue
         kind = _FIELD_KIND.get(field)
         if kind is None or value is None or value == catalog.FREE_VALUES.get(kind):
             continue

@@ -3,6 +3,7 @@ import { Montserrat, Nunito, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { AppGate } from "@/features/gate/AppGate";
 import { SsoTokenCapture } from "@/features/gate/SsoTokenCapture";
+import { BackToLk } from "@/features/gate/BackToLk";
 import { Suspense } from "react";
 import "./globals.css";
 
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SsoTokenCapture />
         </Suspense>
         <AppGate>{children}</AppGate>
+        <BackToLk />
       </body>
     </html>
   );

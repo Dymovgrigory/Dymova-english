@@ -28,6 +28,7 @@ class AppearanceBody(BaseModel):
     banner_color: str | None = None
     banner_emblem: str | None = None
     scene_set: str | None = None
+    theme: str | None = None
     decor_on: list[str] | None = None
     decor_off: list[str] | None = None
     decor_place: list[DecorPlace] | None = None

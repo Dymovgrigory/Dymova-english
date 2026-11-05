@@ -10,7 +10,7 @@ import { FittingRoom } from "@/features/castle/FittingRoom";
 import { Workshop } from "@/features/castle/Workshop";
 import { Button } from "@/design/Button";
 import { ContentImage } from "@/design/ContentImage";
-import { Foxy } from "@/design/Foxy";
+import { Foxy, type FoxyPose } from "@/design/Foxy";
 import { Icon } from "@/design/Icon";
 import { Shell } from "@/design/Shell";
 import { StatPill } from "@/design/StatPill";
@@ -132,6 +132,15 @@ function AlbumSticker({ id, emoji }: { id: string; emoji?: string }) {
   );
 }
 
+/** В каждом здании свой Фокси — в наряде этого места (у остальных он стоит в плашке ниже). */
+const HEADER_FOXI: Partial<Record<string, FoxyPose>> = {
+  lexicon: "lexicon",
+  shop: "shop",
+  glory: "glory",
+  stickers: "stickers",
+  quests: "quests",
+};
+
 function RoomPanel({
   spot,
   data,
@@ -192,10 +201,13 @@ function RoomPanel({
       </div>
 
       <header className="fox-pad-top relative z-10 flex items-start justify-between gap-3 px-4 pb-2">
-        <div>
+        <div className="flex items-start gap-3">
+          {HEADER_FOXI[room] ? <Foxy pose={HEADER_FOXI[room]!} size={88} className="-mb-4 shrink-0 drop-shadow-[0_6px_10px_rgb(0_0_0/0.5)]" /> : null}
+          <div>
           <p className="text-[12px] font-bold uppercase tracking-[0.28em] text-[#7fd8c9]">Замок Фоксинбург</p>
           <h2 className="font-fairy text-[32px] font-black leading-tight text-[#ffd36e]">{spot.title}</h2>
           <p className="mt-1 text-[15px] font-semibold text-[#c9bfd8]">{spot.hint}</p>
+          </div>
         </div>
         <button
           type="button"
@@ -212,7 +224,7 @@ function RoomPanel({
         <div className="mat-parchment-veil max-h-[52dvh] overflow-y-auto rounded-[28px] px-5 py-4">
           {spot.kind === "tower" && spot.bookId && (
             <div className="flex flex-col items-center gap-4 text-center">
-              <Foxy pose="wave" size={84} />
+              <Foxy pose="tower" size={96} />
               <p className="text-[20px] font-extrabold text-ink">Башня учебника Spotlight {spot.bookId.replace("sp", "")}</p>
               <p className="text-[15px] font-semibold text-ink-soft">Здесь начинается путь {spot.bookId.replace("sp", "")} класса.</p>
               <Button block onClick={() => onOpenBook(spot.bookId!)}>
@@ -223,7 +235,7 @@ function RoomPanel({
 
           {room === "school" && (
             <div className="flex flex-col items-center gap-4 text-center">
-              <Foxy pose="wave" size={84} />
+              <Foxy pose="school" size={96} />
               <p className="text-[20px] font-extrabold text-ink">Здесь начинается путь по твоему учебнику.</p>
               <p className="text-[15px] font-semibold text-ink-soft">
                 Сейчас: {studyLabel}
@@ -249,7 +261,7 @@ function RoomPanel({
                   </Button>
                 )}
               </div>
-              <Foxy pose="think" size={84} />
+              <Foxy pose="yard" size={96} />
               <p className="text-[18px] font-extrabold text-ink">
                 {dueCount > 0 ? `Ждут повторения: ${dueCount}` : "Слова свежие — можно потренироваться всё равно"}
               </p>
@@ -385,7 +397,7 @@ function RoomPanel({
           {room === "nest" && (
             <div className="space-y-3">
               <div className="flex items-center gap-4">
-                <Foxy pose="cheer" size={84} />
+                <Foxy pose="nest" size={96} />
                 <div>
                   <p className="font-fairy text-[24px] font-black text-[#4a2a66]">
                     {player?.display_name || home.player.display_name}
@@ -663,27 +675,7 @@ export function CastleScreen() {
         {/* Свободная область: сюда вписывается замок */}
         <div ref={setFreeArea} className="min-h-0 flex-1" aria-hidden />
 
-        <nav aria-label="Локации замка" className="pointer-events-auto shrink-0 px-3 pb-3 lg:px-8 lg:pb-5">
-          <ul className="glass-dusk mx-auto grid max-w-5xl grid-cols-6 gap-1 rounded-2xl p-1.5 ring-1 ring-white/10 lg:grid-cols-12">
-            {SPOTS.map((spot) => (
-              <li key={spot.id}>
-                <button
-                  type="button"
-                  onClick={() => openRoom(spot.id)}
-                  className={[
-                    "flex w-full flex-col items-center gap-0.5 rounded-xl px-0.5 py-1 text-center",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36e]/70",
-                    openId === spot.id || pulse === spot.id ? "mat-brass" : "text-[#f6efe2] hover:bg-white/10",
-                  ].join(" ")}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={spot.art} alt="" className="h-7 w-7 object-contain lg:h-9 lg:w-9" draggable={false} />
-                  <span className="text-[10px] font-extrabold leading-tight lg:text-[11px]">{spot.short}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {/* Список зданий внизу убран: подписи стоят прямо под зданиями на сцене. */}
       </div>
 
       {openSpot && data ? (

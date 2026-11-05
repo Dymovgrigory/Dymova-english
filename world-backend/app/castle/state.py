@@ -6,7 +6,7 @@ import json
 from app.world.core import Conflict
 from app.world.db import get_conn
 
-from .catalog import BANNER_COLORS, ITEMS, SCENES, SEASONS, TIMES, WEATHERS
+from .catalog import BANNER_COLORS, ITEMS, SCENES, SEASONS, THEMES, TIMES, WEATHERS
 from .slots import default_slot
 
 _ALLOWED = {
@@ -15,18 +15,19 @@ _ALLOWED = {
     "weather": WEATHERS,
     "banner_color": BANNER_COLORS,
     "scene_set": SCENES,
+    "theme": tuple(THEMES),
 }
 
 
 def appearance(player_id: int) -> dict:
     row = get_conn().execute(
-        "SELECT season, time_of_day, weather, banner_color, banner_emblem, scene_set"
+        "SELECT season, time_of_day, weather, banner_color, banner_emblem, scene_set, theme"
         " FROM castle_appearance WHERE player_id=?",
         (player_id,),
     ).fetchone()
     if row is None:
         return {"season": None, "time_of_day": None, "weather": None,
-                "banner_color": "plum", "banner_emblem": "fox", "scene_set": None}
+                "banner_color": "plum", "banner_emblem": "fox", "scene_set": None, "theme": None}
     return {
         "season": row["season"],
         "time_of_day": row["time_of_day"],
@@ -34,6 +35,7 @@ def appearance(player_id: int) -> dict:
         "banner_color": row["banner_color"],
         "banner_emblem": row["banner_emblem"],
         "scene_set": row["scene_set"],
+        "theme": row["theme"],
     }
 
 
@@ -47,13 +49,13 @@ def set_appearance(player_id: int, **fields) -> dict:
             raise Conflict(f"bad value for {name}")
         current[name] = value
     get_conn().execute(
-        "INSERT INTO castle_appearance (player_id, season, time_of_day, weather, banner_color, banner_emblem, scene_set)"
-        " VALUES (?,?,?,?,?,?,?)"
+        "INSERT INTO castle_appearance (player_id, season, time_of_day, weather, banner_color, banner_emblem, scene_set, theme)"
+        " VALUES (?,?,?,?,?,?,?,?)"
         " ON CONFLICT(player_id) DO UPDATE SET season=excluded.season, time_of_day=excluded.time_of_day,"
         " weather=excluded.weather, banner_color=excluded.banner_color, banner_emblem=excluded.banner_emblem,"
-        " scene_set=excluded.scene_set, updated_at=datetime('now')",
+        " scene_set=excluded.scene_set, theme=excluded.theme, updated_at=datetime('now')",
         (player_id, current["season"], current["time_of_day"], current["weather"],
-         current["banner_color"], current["banner_emblem"], current["scene_set"]),
+         current["banner_color"], current["banner_emblem"], current["scene_set"], current["theme"]),
     )
     return current
 

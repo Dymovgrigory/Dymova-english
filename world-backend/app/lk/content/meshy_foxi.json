@@ -1,0 +1,32 @@
+[
+ {
+  "id": "foxi-places",
+  "poses": [
+   "school",
+   "lexicon",
+   "yard",
+   "nest",
+   "glory",
+   "quests",
+   "stickers",
+   "shop",
+   "tower"
+  ],
+  "prompt": "A 3x3 grid of nine separate square cells with thin white gutters. No text, no letters, no logos, no numbers, no watermarks anywhere. Every cell shows THE SAME cute cartoon mascot character Foxi, a young boy fox: big warm brown eyes, bright orange fur, cream-white muzzle and chest, dark brown paws, fluffy orange tail with a white tip, friendly smile. Pixar-style 3D cartoon render, soft studio light, high detail, consistent character design in all nine cells. Each cell: Foxi full body, centred, fully visible with empty margins around him, on a plain pure white background, no floor, no shadow, no scenery. Cells from left to right, top to bottom: 1) Foxi wearing a purple hoodie and a small blue school backpack, holding a yellow pencil, waving hello. 2) Foxi wearing a dark blue wizard-librarian cloak with stars, holding an open glowing book. 3) Foxi wearing a green sports tracksuit and sneakers, kicking a football, energetic pose. 4) Foxi wearing a white chef apron and a tall chef hat, holding a wooden spoon, happy. 5) Foxi wearing a red royal cape with a shiny gold medal on his chest, standing proudly, fists on hips. 6) Foxi dressed as an explorer with a safari hat and a satchel, holding a paper map and a compass. 7) Foxi wearing a red artist beret and a paint-splashed smock, holding a paint palette and a brush. 8) Foxi wearing a striped shopkeeper vest and a bow tie, holding up one big gold coin. 9) Foxi wearing cosy purple pyjamas, holding a small glowing lantern, smiling sleepily."
+ },
+ {
+  "id": "foxi-moods",
+  "poses": [
+   "cheer",
+   "think",
+   "oops",
+   "listen",
+   "speak",
+   "read",
+   "winter",
+   "summer",
+   "point"
+  ],
+  "prompt": "A 3x3 grid of nine separate square cells with thin white gutters. No text, no letters, no logos, no numbers, no watermarks anywhere. Every cell shows THE SAME cute cartoon mascot character Foxi, a young boy fox: big warm brown eyes, bright orange fur, cream-white muzzle and chest, dark brown paws, fluffy orange tail with a white tip, friendly smile. Pixar-style 3D cartoon render, soft studio light, high detail, consistent character design in all nine cells. Each cell: Foxi full body, centred, fully visible with empty margins around him, on a plain pure white background, no floor, no shadow, no scenery. Cells from left to right, top to bottom: 1) Foxi wearing a purple hoodie, jumping with both arms up, overjoyed. 2) Foxi wearing a purple hoodie and round glasses, hand on chin, thinking. 3) Foxi wearing a purple hoodie, shrugging with an embarrassed funny smile. 4) Foxi wearing a purple hoodie and big orange headphones, listening happily. 5) Foxi wearing a purple hoodie, holding a microphone and singing. 6) Foxi wearing a purple hoodie, sitting cross-legged and reading a book. 7) Foxi wearing a knitted red scarf and a winter hat with a pompom, holding a snowball. 8) Foxi wearing a yellow t-shirt, shorts and sunglasses, holding an ice cream cone. 9) Foxi wearing a purple hoodie, pointing to the right with one paw, explaining something."
+ }
+]

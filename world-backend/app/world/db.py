@@ -178,9 +178,11 @@ _TABLE_EXTRAS = {
         "decor_off": "TEXT NOT NULL DEFAULT '[]'",   # JSON-массив снятых украшений
         "scene_set": "TEXT",                         # запечённый набор сцены, NULL = нет набора
         "decor_slots": "TEXT NOT NULL DEFAULT '{}'",  # JSON {item_id: slot_id}
+        "theme": "TEXT",                             # тема оформления Мира, NULL = классика
     },
     "atom_mastery": {"learned_at": "TEXT"},  # московский день первого взятия порога силы 2
     "lk_learner_days": {"perfect": "INTEGER NOT NULL DEFAULT 0"},
+    "lk_learner_prefs": {"foxi": "TEXT NOT NULL DEFAULT ''"},  # «Создай своего Фокси»: JSON облика
     # вход в ЛК по паролю (pbkdf2) и номер заявки, отправленной в CRM при регистрации
     "lk_accounts": {"password_hash": "TEXT", "crm_lead_id": "TEXT NOT NULL DEFAULT ''"},  # уроки без ошибок за день
     "player_identity": {

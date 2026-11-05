@@ -2,33 +2,33 @@
 
 import { useState } from "react";
 
-import { BANNER_HEX } from "@/castle/Banner";
+import { THEME_LOOK } from "@/castle/appearance";
 import { CastleStage } from "@/features/castle/CastleStage";
 import { ApiError } from "@/lib/api";
 import { castleApi, type Appearance, type CastleItem, type CastleView } from "@/lib/v2/castle";
 
 const CATEGORY_TITLES: Record<string, string> = {
+  theme: "Темы Мира",
   season: "Сезон",
   time: "Время суток",
-  weather: "Погода",
-  banner: "Знамя",
+  weather: "Погода и эффекты",
 };
 
-type Field = "season" | "time_of_day" | "weather" | "banner_color";
+type Field = "theme" | "season" | "time_of_day" | "weather";
 
 const FIELD_BY_KIND: Record<string, Field> = {
+  theme: "theme",
   season: "season",
   time: "time_of_day",
   weather: "weather",
-  banner: "banner_color",
 };
 
 /** Один слой облика для POST /appearance: strict TS не даёт собрать объект вычисляемым ключом. */
 function fieldPatch(field: Field, value: string): Partial<Appearance> {
+  if (field === "theme") return { theme: value };
   if (field === "season") return { season: value };
   if (field === "time_of_day") return { time_of_day: value };
-  if (field === "weather") return { weather: value };
-  return { banner_color: value };
+  return { weather: value };
 }
 
 const TRACK_TITLES: Record<string, string> = {
@@ -39,14 +39,14 @@ const TRACK_TITLES: Record<string, string> = {
   stickers: "Собиратель",
 };
 
-/** Миниатюра варианта в ленте: картинка сезона, цвет знамени или подпись. */
+/** Миниатюра варианта в ленте: картинка сезона, цвет темы или подпись. */
 function Thumb({ item }: { item: CastleItem }) {
   if (item.kind === "season") {
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={`/content/castle/seasons/${item.value}.webp`} alt="" className="h-12 w-16 rounded-lg object-cover" />;
   }
-  if (item.kind === "banner") {
-    return <span className="block h-12 w-12 rounded-xl border-2 border-white/60" style={{ background: BANNER_HEX[item.value] }} />;
+  if (item.kind === "theme") {
+    return <span className="block h-12 w-16 rounded-xl border-2 border-white/60" style={{ background: THEME_LOOK[item.value]?.swatch }} />;
   }
   return null;
 }
@@ -65,7 +65,7 @@ export function FittingRoom({
   onClose: () => void;
 }) {
   const [preview, setPreview] = useState<Appearance>(view.appearance);
-  const [category, setCategory] = useState<string>("season");
+  const [category, setCategory] = useState<string>("theme");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [freeArea, setFreeArea] = useState<HTMLDivElement | null>(null);
@@ -74,7 +74,14 @@ export function FittingRoom({
   const emblem = view.titles.find((t) => t.worn)?.track ?? "fox";
 
   const show = (item: CastleItem) => {
-    setPreview((current) => ({ ...current, ...fieldPatch(FIELD_BY_KIND[item.kind], item.value) }));
+    if (item.kind === "theme") {
+      const look = THEME_LOOK[item.value];
+      if (look) {
+        setPreview((current) => ({ ...current, theme: item.value, season: look.season, time_of_day: look.time_of_day, weather: look.weather }));
+      }
+      return;
+    }
+    setPreview((current) => ({ ...current, theme: null, ...fieldPatch(FIELD_BY_KIND[item.kind], item.value) }));
   };
 
   const buy = async (item: CastleItem) => {
@@ -143,7 +150,7 @@ export function FittingRoom({
                   className="flex h-14 w-full items-center justify-center rounded-xl bg-black/20 px-1 text-center text-[12px] font-bold text-[#f6efe2]"
                 >
                   <Thumb item={item} />
-                  {!["season", "banner"].includes(item.kind) ? item.title_ru : null}
+                  {!["season", "theme"].includes(item.kind) ? item.title_ru : null}
                 </button>
                 <span className="max-w-full truncate text-[12px] font-extrabold text-[#f6efe2]">{item.title_ru}</span>
                 {item.owned ? (
