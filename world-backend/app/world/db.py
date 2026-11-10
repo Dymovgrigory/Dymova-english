@@ -746,4 +746,41 @@ CREATE TABLE IF NOT EXISTS lk_learner_events (
     created_at  TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (learner_key, event_key)
 );
+
+CREATE TABLE IF NOT EXISTS lk_learning_sessions (
+    id           TEXT PRIMARY KEY,
+    learner_key  TEXT NOT NULL,
+    unit_id      TEXT NOT NULL,
+    payload      TEXT NOT NULL,
+    pending      TEXT NOT NULL,
+    state        TEXT NOT NULL DEFAULT '{}',
+    status       TEXT NOT NULL DEFAULT 'active',
+    started_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    finished_at  TEXT,
+    result       TEXT
+);
+
+CREATE TABLE IF NOT EXISTS lk_learning_attempts (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id   TEXT NOT NULL,
+    learner_key  TEXT NOT NULL,
+    challenge_id TEXT NOT NULL,
+    kind         TEXT NOT NULL,
+    answer       TEXT NOT NULL DEFAULT '{}',
+    correct      INTEGER NOT NULL DEFAULT 0,
+    attempt_no   INTEGER NOT NULL DEFAULT 1,
+    created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (session_id, challenge_id, attempt_no)
+);
+
+CREATE TABLE IF NOT EXISTS lk_learning_mastery (
+    learner_key  TEXT NOT NULL,
+    unit_id      TEXT NOT NULL,
+    skill        TEXT NOT NULL,
+    level        INTEGER NOT NULL DEFAULT 0,
+    attempts     INTEGER NOT NULL DEFAULT 0,
+    correct      INTEGER NOT NULL DEFAULT 0,
+    updated_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (learner_key, unit_id, skill)
+);
 """

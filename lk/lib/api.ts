@@ -110,6 +110,14 @@ export type LearningUnit = {
   skills: string[];
   order: number;
 };
+export type LearningChallenge = {
+  id: string; index: number; kind: string; prompt: string; options: string[]; graded: boolean; audio?: string;
+};
+export type LearningSession = {
+  session_id: string; unit: LearningUnit; challenges: LearningChallenge[]; graded_total: number;
+};
+export type LearningAnswer = { correct: boolean; attempt_no: number; remaining: number; solution: string | null };
+export type LearningResult = { session_id: string; unit_id: string; accuracy: number; attempts: number; correct: number; points: number };
 export type WordStats = {
   seen_words: number;
   learned_words: number;
@@ -205,6 +213,16 @@ export const api = {
     `/api/lk/learning/catalog?${new URLSearchParams({ ...(level ? { level } : {}), ...(topic ? { topic } : {}) }).toString()}`,
     { token },
   ),
+  learningStart: (token: string, studentId: number, unitId: string) => request<LearningSession>("/api/lk/learning/sessions", {
+    method: "POST", token, body: { student_id: studentId, unit_id: unitId },
+  }),
+  learningAnswer: (token: string, studentId: number, sessionId: string, challengeId: string, answer: Record<string, unknown>) =>
+    request<LearningAnswer>(`/api/lk/learning/sessions/${sessionId}/answer`, {
+      method: "POST", token, body: { student_id: studentId, challenge_id: challengeId, answer },
+    }),
+  learningFinish: (token: string, studentId: number, sessionId: string) => request<LearningResult>(`/api/lk/learning/sessions/${sessionId}/finish`, {
+    method: "POST", token, body: { student_id: studentId },
+  }),
   wordSets: (token: string, studentId: number) =>
     request<{ student_id: number; child_name: string; sets: WordSet[] }>(
       `/api/lk/words/sets?student_id=${studentId}`,

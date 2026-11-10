@@ -8,6 +8,7 @@ from app.world import core
 
 from . import bridge, password_auth, service, words, world_link
 from .learning.catalog import available_units
+from .learning import sessions as learning_sessions
 from .schemas import ConfirmBot, LoginIn, MeOut, PasswordIn, RegisterIn, StartAuth
 
 router = APIRouter(prefix="/api/lk", tags=["lk"])
@@ -120,6 +121,30 @@ def learning_catalog(level: str | None = None, topic: str | None = None,
     if account is None:
         raise HTTPException(401, "unauthorized")
     return {"units": [item.__dict__ for item in available_units(level=level, topic=topic)]}
+
+
+def _learning_key(token: str, student_id: int) -> str:
+    _, profile = words._profile(token, student_id)
+    return words._learner_key(profile)
+
+
+@router.post("/learning/sessions")
+def learning_session_start(body: dict, authorization: str | None = Header(None)):
+    token = _token(authorization)
+    return _guard(learning_sessions.start, _learning_key(token, int(body.get("student_id") or 0)), str(body.get("unit_id") or ""))
+
+
+@router.post("/learning/sessions/{session_id}/answer")
+def learning_session_answer(session_id: str, body: dict, authorization: str | None = Header(None)):
+    token = _token(authorization)
+    return _guard(learning_sessions.answer, _learning_key(token, int(body.get("student_id") or 0)), session_id,
+                  str(body.get("challenge_id") or ""), body.get("answer") or {})
+
+
+@router.post("/learning/sessions/{session_id}/finish")
+def learning_session_finish(session_id: str, body: dict, authorization: str | None = Header(None)):
+    token = _token(authorization)
+    return _guard(learning_sessions.finish, _learning_key(token, int(body.get("student_id") or 0)), session_id)
 
 
 # ---------- Этап 3: тренажёр слов ----------
