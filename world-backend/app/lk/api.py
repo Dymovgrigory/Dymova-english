@@ -161,9 +161,20 @@ def learning_collection(student_id: int = 0, authorization: str | None = Header(
     token = _token(authorization)
     learner = _learning_key(token, student_id)
     progress = progression.summary(learner)
-    points = int(progress.get("points", {}).get("total", 0))
+    points = int(progress.get("points", 0))
+    conn = __import__("app.world.db", fromlist=["get_conn"]).get_conn()
+    completed_units = int(conn.execute(
+        "SELECT COUNT(*) FROM lk_learning_sessions WHERE learner_key=? AND status='completed'", (learner,)
+    ).fetchone()[0])
+    mastery = progress.get("mastery", [])
+    skill_levels = {str(row["skill"]): sum(1 for item in mastery if item["skill"] == row["skill"] and int(item["level"]) >= 1) for row in mastery}
     cards = collection_catalog()
-    unlocked_ids = set(collection_unlocked(points=points))
+    unlocked_ids = set(collection_unlocked(
+        points=points, units=completed_units, reading=skill_levels.get("reading", 0),
+        grammar=skill_levels.get("grammar", 0), listening=skill_levels.get("listening", 0),
+        writing=skill_levels.get("writing", 0), speaking=skill_levels.get("speaking", 0),
+        words=points,
+    ))
     return {"cards": [{**card, "unlocked": card["id"] in unlocked_ids} for card in cards],
             "total": len(cards), "unlocked": len(unlocked_ids)}
 
