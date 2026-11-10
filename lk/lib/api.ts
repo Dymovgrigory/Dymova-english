@@ -118,6 +118,7 @@ export type LearningSession = {
 };
 export type LearningAnswer = { correct: boolean; attempt_no: number; remaining: number; solution: string | null };
 export type LearningResult = { session_id: string; unit_id: string; accuracy: number; attempts: number; correct: number; points: number };
+export type LearningRank = { index: number; title: string; points: number; next_title: string; next_points: number | null };
 export type WordStats = {
   seen_words: number;
   learned_words: number;
@@ -223,6 +224,7 @@ export const api = {
   learningFinish: (token: string, studentId: number, sessionId: string) => request<LearningResult>(`/api/lk/learning/sessions/${sessionId}/finish`, {
     method: "POST", token, body: { student_id: studentId },
   }),
+  learningProgress: (token: string, studentId: number) => request<LearningRank>(`/api/lk/learning/progress?student_id=${studentId}`, { token }),
   wordSets: (token: string, studentId: number) =>
     request<{ student_id: number; child_name: string; sets: WordSet[] }>(
       `/api/lk/words/sets?student_id=${studentId}`,

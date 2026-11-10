@@ -783,4 +783,13 @@ CREATE TABLE IF NOT EXISTS lk_learning_mastery (
     updated_at   TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (learner_key, unit_id, skill)
 );
+
+CREATE TABLE IF NOT EXISTS lk_learning_points (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    learner_key TEXT NOT NULL,
+    event_key   TEXT NOT NULL UNIQUE,
+    source      TEXT NOT NULL,
+    points      INTEGER NOT NULL,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
 """

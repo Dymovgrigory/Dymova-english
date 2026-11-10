@@ -9,6 +9,7 @@ from app.world import core
 from . import bridge, password_auth, service, words, world_link
 from .learning.catalog import available_units
 from .learning import sessions as learning_sessions
+from .learning import progression
 from .schemas import ConfirmBot, LoginIn, MeOut, PasswordIn, RegisterIn, StartAuth
 
 router = APIRouter(prefix="/api/lk", tags=["lk"])
@@ -145,6 +146,12 @@ def learning_session_answer(session_id: str, body: dict, authorization: str | No
 def learning_session_finish(session_id: str, body: dict, authorization: str | None = Header(None)):
     token = _token(authorization)
     return _guard(learning_sessions.finish, _learning_key(token, int(body.get("student_id") or 0)), session_id)
+
+
+@router.get("/learning/progress")
+def learning_progress(student_id: int = 0, authorization: str | None = Header(None)):
+    token = _token(authorization)
+    return _guard(progression.summary, _learning_key(token, student_id))
 
 
 # ---------- Этап 3: тренажёр слов ----------

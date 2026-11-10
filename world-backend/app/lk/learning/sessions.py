@@ -11,6 +11,7 @@ from app.world.db import get_conn
 from .catalog import unit
 from .core import Challenge, grade
 from .tasks import tasks_for
+from . import progression
 
 SESSION_TTL_HOURS = 2
 
@@ -76,6 +77,15 @@ def answer(learner_key: str, session_id: str, challenge_id: str, payload: dict) 
         session["pending"].remove(challenge_index)
     conn.execute("UPDATE lk_learning_sessions SET pending=? WHERE id=?",
                  (json.dumps(session["pending"]), session_id))
+    skill = {"translate_choice": "vocabulary", "listen_choice": "listening", "read_true_false": "reading",
+             "write": "writing", "speak": "speaking", "grammar_choice": "grammar"}.get(
+                 session["challenges"][challenge_index].kind, "vocabulary")
+    conn.execute(
+        "INSERT INTO lk_learning_mastery (learner_key,unit_id,skill,level,attempts,correct) VALUES (?,?,?,?,?,?)"
+        " ON CONFLICT(learner_key,unit_id,skill) DO UPDATE SET level=MIN(5,level+excluded.correct),"
+        " attempts=attempts+excluded.attempts, correct=correct+excluded.correct, updated_at=datetime('now')",
+        (learner_key, session["row"]["unit_id"], skill, int(verdict.correct), 1, int(verdict.correct)),
+    )
     return {"correct": verdict.correct, "attempt_no": attempt_no,
             "remaining": len(session["pending"]), "solution": None if verdict.correct else "Попробуй ещё раз"}
 
@@ -90,6 +100,7 @@ def finish(learner_key: str, session_id: str) -> dict:
     result = {"session_id": session_id, "unit_id": session["row"]["unit_id"],
               "accuracy": round(correct / total, 3) if total else 1.0,
               "attempts": total, "correct": correct, "points": correct * 5}
+    result["rank"] = progression.add_points(learner_key, f"learning:{session_id}", session["row"]["unit_id"], correct * 5)
     conn.execute("UPDATE lk_learning_sessions SET status='completed',finished_at=?,result=? WHERE id=?",
                  (_now(), json.dumps(result), session_id))
     return result
