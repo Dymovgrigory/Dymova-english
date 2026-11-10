@@ -6,7 +6,7 @@ import { useCabinet } from "@/lib/cabinet";
 import { useI18n } from "@/lib/i18n";
 import { api, WordSet } from "@/lib/api";
 import { topicLook } from "@/lib/topics";
-import { ArrowRight, BookOpenText, ListChecks } from "lucide-react";
+import { ArrowRight, BookOpenText, Gift, ListChecks } from "lucide-react";
 
 export default function WordsPage() {
   return (
@@ -65,6 +65,22 @@ function Library() {
           <div><b>{stats && stats.answers_total ? Math.round((stats.answers_correct / stats.answers_total) * 100) : 0}%</b><span>{ru ? "точность" : "accuracy"}</span></div>
         </div>
       </section>
+
+      {(stats?.achievements?.length ?? 0) > 0 && (
+        <section className="k-panel g-collection k-words-collection">
+          <h2><Gift size={22} strokeWidth={2.4} />{ru ? `Коллекция героев · ${stats?.collection_cards?.length ?? 0} из ${stats?.collection_total ?? 0}` : `Character collection · ${stats?.collection_cards?.length ?? 0} of ${stats?.collection_total ?? 0}`}</h2>
+          <p className="k-panel-note">{ru ? "Каждая карточка открывается за учебное достижение — продолжай тренироваться." : "Each card unlocks for a learning achievement — keep practising."}</p>
+          <div className="g-medal-row">
+            {(stats?.achievements ?? []).map((a) => (
+              <div key={a.id} className={"g-medal" + (a.unlocked ? " is-on" : "")}>
+                <span className="g-medal-disc"><Gift size={28} strokeWidth={2.2} /></span>
+                <b>{a.title}</b>
+                <em>{a.unlocked ? (ru ? "Открыто" : "Unlocked") : (ru ? "Собери в уроках" : "Earn it in lessons")}</em>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {error && <div className="k-alert">{error}</div>}
 
