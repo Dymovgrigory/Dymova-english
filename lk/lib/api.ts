@@ -120,7 +120,8 @@ export type LearningAnswer = { correct: boolean; attempt_no: number; remaining: 
 export type LearningResult = { session_id: string; unit_id: string; accuracy: number; attempts: number; correct: number; points: number };
 export type CollectionCard = { id: string; collection_id: string; collection_title_ru: string; title_ru: string; title_en: string; rarity: string; unlock_kind: string; unlock_value: number; asset: string; unlocked: boolean };
 export type LearningCollection = { cards: CollectionCard[]; total: number; unlocked: number };
-export type LearningRank = { index: number; title: string; points: number; next_title: string; next_points: number | null };
+export type LearningMastery = { unit_id: string; skill: string; level: number; attempts: number; correct: number; updated_at: string };
+export type LearningRank = { index: number; title: string; points: number; next_title: string; next_points: number | null; mastery: LearningMastery[] };
 export type WordStats = {
   seen_words: number;
   learned_words: number;

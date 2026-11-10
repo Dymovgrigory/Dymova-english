@@ -19,6 +19,7 @@ function Learning() {
   const [index, setIndex] = useState(0);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
     if (!token || !active) return;
@@ -30,6 +31,7 @@ function Learning() {
     setMessage("");
     setSession(await api.learningStart(token, studentId, unit.id));
     setIndex(0);
+    setFinished(false);
   }
 
   async function answer(answer: Record<string, unknown>) {
@@ -40,7 +42,7 @@ function Learning() {
       const result = await api.learningAnswer(token, studentId, session.session_id, challenge.id, answer);
       setMessage(result.correct ? (ru ? "Верно!" : "Correct!") : (ru ? "Попробуй ещё раз." : "Try again."));
       if (result.correct) {
-        if (result.remaining === 0) await api.learningFinish(token, studentId, session.session_id);
+        if (result.remaining === 0) { await api.learningFinish(token, studentId, session.session_id); setFinished(true); }
         else setIndex((value) => value + 1);
       }
     } finally { setBusy(false); }
@@ -54,6 +56,7 @@ function Learning() {
     </div>
   );
 
+  if (finished) return <div className="k-page-grid"><section className="k-panel k-learning-task"><span className="k-set-icon">✓</span><h1>{ru ? "Урок завершён" : "Lesson complete"}</h1><p>{ru ? "Результат сохранён. Выбери следующий юнит или повтори этот урок." : "Your result is saved. Choose another unit or repeat this lesson."}</p><button className="k-btn k-btn-go" onClick={() => { setSession(null); setFinished(false); }}>{ru ? "К пути обучения" : "Back to learning path"}</button></section></div>;
   const challenge: LearningChallenge = session.challenges[index];
-  return <div className="k-page-grid"><div className="k-words-head"><div><a className="k-back" href="/learn">← {ru ? "Путь обучения" : "Learning path"}</a><h1>{ru ? session.unit.title_ru : session.unit.title_en}</h1><p>{index + 1} / {session.challenges.length}</p></div></div><section className="k-panel k-learning-task"><span className="k-task-kind">{challenge.kind.replaceAll("_", " ")}</span><h2>{challenge.prompt}</h2>{challenge.options.length > 0 && <div className="k-task-options">{challenge.options.map((option, i) => <button className="k-btn k-btn-light" key={option} disabled={busy} onClick={() => void answer({ index: i })}>{option}</button>)}</div>}{challenge.kind === "read_true_false" && <div className="k-task-options"><button className="k-btn k-btn-light" onClick={() => void answer({ value: true })}>True</button><button className="k-btn k-btn-light" onClick={() => void answer({ value: false })}>False</button></div>}{challenge.kind === "write" && <form onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); void answer({ text: String(form.get("text") || "") }); }}><input className="k-field-input" name="text" autoComplete="off" /><button className="k-btn k-btn-go" type="submit">{ru ? "Проверить" : "Check"}</button></form>}<p className="k-panel-note" aria-live="polite">{message}</p></section></div>;
+  return <div className="k-page-grid"><div className="k-words-head"><div><a className="k-back" href="/learn">← {ru ? "Путь обучения" : "Learning path"}</a><h1>{ru ? session.unit.title_ru : session.unit.title_en}</h1><p>{index + 1} / {session.challenges.length}</p></div></div><section className="k-panel k-learning-task"><span className="k-task-kind">{challenge.kind.replaceAll("_", " ")}</span><h2>{challenge.prompt}</h2>{challenge.options.length > 0 && <div className="k-task-options">{challenge.options.map((option, i) => <button className="k-btn k-btn-light" key={option} disabled={busy} onClick={() => void answer({ index: i })}>{option}</button>)}</div>}{challenge.kind === "read_true_false" && <div className="k-task-options"><button className="k-btn k-btn-light" onClick={() => void answer({ value: true })}>True</button><button className="k-btn k-btn-light" onClick={() => void answer({ value: false })}>False</button></div>}{(challenge.kind === "write" || challenge.kind === "speak") && <form onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); void answer(challenge.kind === "speak" ? { transcript: String(form.get("text") || "") } : { text: String(form.get("text") || "") }); }}><input className="k-field-input" name="text" autoComplete="off" placeholder={challenge.kind === "speak" ? (ru ? "Введи расшифровку ответа" : "Enter your transcript") : ""} /><button className="k-btn k-btn-go" type="submit">{ru ? "Проверить" : "Check"}</button></form>}<p className="k-panel-note" aria-live="polite">{message}</p></section></div>;
 }

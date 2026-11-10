@@ -29,5 +29,10 @@ def add_points(learner_key: str, event_key: str, source: str, points: int) -> di
 
 
 def summary(learner_key: str) -> dict:
-    row = get_conn().execute("SELECT COALESCE(SUM(points),0) AS points FROM lk_learning_points WHERE learner_key=?", (learner_key,)).fetchone()
-    return rank_for(int(row["points"] or 0))
+    conn = get_conn()
+    row = conn.execute("SELECT COALESCE(SUM(points),0) AS points FROM lk_learning_points WHERE learner_key=?", (learner_key,)).fetchone()
+    result = rank_for(int(row["points"] or 0))
+    result["mastery"] = [dict(item) for item in conn.execute(
+        "SELECT unit_id, skill, level, attempts, correct, updated_at FROM lk_learning_mastery WHERE learner_key=? ORDER BY unit_id, skill",
+        (learner_key,)).fetchall()]
+    return result
