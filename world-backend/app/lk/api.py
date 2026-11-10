@@ -10,6 +10,7 @@ from . import bridge, password_auth, service, words, world_link
 from .learning.catalog import available_units
 from .learning import sessions as learning_sessions
 from .learning import progression
+from .learning.collection_catalog import catalog as collection_catalog, unlocked as collection_unlocked
 from .schemas import ConfirmBot, LoginIn, MeOut, PasswordIn, RegisterIn, StartAuth
 
 router = APIRouter(prefix="/api/lk", tags=["lk"])
@@ -152,6 +153,19 @@ def learning_session_finish(session_id: str, body: dict, authorization: str | No
 def learning_progress(student_id: int = 0, authorization: str | None = Header(None)):
     token = _token(authorization)
     return _guard(progression.summary, _learning_key(token, student_id))
+
+
+@router.get("/learning/collection")
+def learning_collection(student_id: int = 0, authorization: str | None = Header(None)):
+    """Полный каталог коллекционной игры LMS и серверный статус разблокировки."""
+    token = _token(authorization)
+    learner = _learning_key(token, student_id)
+    progress = progression.summary(learner)
+    points = int(progress.get("points", {}).get("total", 0))
+    cards = collection_catalog()
+    unlocked_ids = set(collection_unlocked(points=points))
+    return {"cards": [{**card, "unlocked": card["id"] in unlocked_ids} for card in cards],
+            "total": len(cards), "unlocked": len(unlocked_ids)}
 
 
 # ---------- Этап 3: тренажёр слов ----------

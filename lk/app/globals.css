@@ -1541,3 +1541,4 @@ p.t-ru-sm { padding: 0; font-weight: 700; }
   background: #6a3fc4; color: #fff; font-weight: 800; font-size: 13px; padding: 7px 12px; border-radius: 999px;
   box-shadow: 0 6px 16px rgb(106 63 196 / 0.35); transition: transform .15s; }
 .k-hero-foxlink:hover .k-hero-foxcta { transform: translateX(-50%) scale(1.05); }
+.k-collection-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.k-collection-card{display:grid;gap:7px;color:var(--k-ink);font-size:13px}.k-collection-card small{color:var(--k-muted)}.k-collection-art{aspect-ratio:3/4;border-radius:16px;background:linear-gradient(145deg,#eef2f7,#dfe7f0);display:grid;place-items:center;overflow:hidden;color:#94a3b8;font-size:34px}.k-collection-art img{width:100%;height:100%;object-fit:cover}.k-collection-card:not(.is-unlocked){filter:grayscale(1);opacity:.65}@media(max-width:700px){.k-collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
