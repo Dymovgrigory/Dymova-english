@@ -39,3 +39,12 @@ def test_wrong_answer_is_retried_without_closing_challenge(learning_db):
     assert failed["remaining"] == 5
     with pytest.raises(core.Conflict, match="learning_session_not_complete"):
         sessions.finish("crm:1", started["session_id"])
+
+
+def test_finish_is_idempotent(learning_db):
+    started = sessions.start("crm:1", "pre-a1.school")
+    for challenge in started["challenges"]:
+        payload = {"index": 0} if challenge["kind"] in {"translate_choice", "listen_choice", "grammar_choice", "read_choice"} else ({"value": True} if challenge["kind"] == "read_true_false" else {"text": "pen"})
+        sessions.answer("crm:1", started["session_id"], challenge["id"], payload)
+    first = sessions.finish("crm:1", started["session_id"])
+    assert sessions.finish("crm:1", started["session_id"]) == first

@@ -48,6 +48,14 @@ def _load(learner_key: str, session_id: str) -> dict:
     ).fetchone()
     if row is None:
         raise core.Conflict("learning_session_not_found")
+    if row["status"] == "active":
+        expired = get_conn().execute(
+            "SELECT started_at <= datetime('now', ?) AS expired FROM lk_learning_sessions WHERE id=?",
+            (f"-{SESSION_TTL_HOURS} hours", session_id),
+        ).fetchone()["expired"]
+        if expired:
+            get_conn().execute("UPDATE lk_learning_sessions SET status='expired' WHERE id=?", (session_id,))
+            raise core.Conflict("learning_session_expired")
     challenges = [Challenge(**item) for item in json.loads(row["payload"])]
     return {"row": row, "challenges": challenges, "pending": json.loads(row["pending"]),
             "state": json.loads(row["state"])}
@@ -55,6 +63,8 @@ def _load(learner_key: str, session_id: str) -> dict:
 
 def answer(learner_key: str, session_id: str, challenge_id: str, payload: dict) -> dict:
     session = _load(learner_key, session_id)
+    if session["row"]["status"] != "active":
+        raise core.Conflict("learning_session_not_active")
     challenge_index = next((i for i, c in enumerate(session["challenges"]) if c.id == challenge_id), None)
     if challenge_index is None:
         raise core.Conflict("learning_challenge_not_found")
@@ -92,6 +102,10 @@ def answer(learner_key: str, session_id: str, challenge_id: str, payload: dict) 
 
 def finish(learner_key: str, session_id: str) -> dict:
     session = _load(learner_key, session_id)
+    if session["row"]["status"] == "completed" and session["row"]["result"]:
+        return json.loads(session["row"]["result"])
+    if session["row"]["status"] != "active":
+        raise core.Conflict("learning_session_not_active")
     if session["pending"]:
         raise core.Conflict("learning_session_not_complete")
     conn = get_conn()
