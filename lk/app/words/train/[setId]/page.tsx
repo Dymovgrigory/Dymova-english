@@ -314,12 +314,12 @@ function Trainer({ setId }: { setId: number }) {
       reported.current.add(step.word.id);
       const m = ["spell", "write", "missing"].includes(kind) ? "type" : ["listen_img", "listen_word"].includes(kind) ? "listen" : kind === "speak" ? "speak" : "";
       try {
-        const r = await api.wordAnswer(token, studentId, step.word.id, ok, m);
+        const r = await api.wordAnswer(token, studentId, step.word.id, ok, m, `word:${step.word.id}:step:${idx}:kind:${kind}`);
         if (r.coins) setScore((s) => ({ ...s, coins: s.coins + (r.coins ?? 0) }));
       } catch { /* тренировка продолжается */ }
     }
     if (mode === "sprint") setTimeout(() => { setFb(null); setPicked(null); setIdx((i) => i + 1); }, ok ? 450 : 1100);
-  }, [step, token, studentId, tr, mode]);
+  }, [step, token, studentId, tr, mode, idx]);
 
   function choose(o: PoolWord) {
     if (fb || !step) return;
@@ -348,7 +348,7 @@ function Trainer({ setId }: { setId: number }) {
   };
 
   if (error) return <Center><p>{error}</p><a className="k-btn k-btn-go" href="/words">{ru ? "К словарям" : "Back"}</a></Center>;
-  if (!tr) return <Center><img className="t-fox-bob" src="/foxi/guide.webp" alt="" width={120} height={198} /><p>{ru ? "Фокси собирает урок…" : "Foxi is preparing your lesson…"}</p></Center>;
+  if (!tr) return <Center><div className="t-loading-mark" aria-hidden="true">✦</div><p>{ru ? "Собираем урок…" : "Preparing your lesson…"}</p></Center>;
   if (!steps.length) {
     return (
       <Center>
@@ -365,8 +365,8 @@ function Trainer({ setId }: { setId: number }) {
     return (
       <div className="t-wrap t-done">
         <div className="t-center">
-          <motion.img initial={{ y: 40, scale: 0.8, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 220, damping: 14 }}
-            src="/foxi/guide.webp" alt={ru ? "Фокси радуется" : "Foxi is happy"} width={170} height={280} />
+          <motion.div className="t-complete-mark" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 220, damping: 14 }} aria-hidden="true">✦</motion.div>
           <h1>{done?.perfect ? "Perfect lesson!" : "Lesson complete!"}</h1>
           <p className="t-sub">{done?.perfect ? (ru ? "Без единой ошибки!" : "No mistakes!") : (ru ? "Урок пройден" : "Well done")}</p>
           <div className="t-results">

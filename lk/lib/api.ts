@@ -61,6 +61,9 @@ export type GameStats = {
   postcards: Postcard[];
   postcards_unlocked: number;
   medals: CambridgeMedal[];
+  collection_cards?: { id: string; title: string; rarity: string; condition: string }[];
+  collection_total?: number;
+  achievements?: { id: string; title: string; unlocked: boolean }[];
 };
 export type MyWord = SetWord & { strength: number; mistakes: number };
 export type SetWord = {
@@ -202,11 +205,11 @@ export const api = {
       token,
       body: { student_id: studentId, set_id: setId },
     }),
-  wordAnswer: (token: string, studentId: number, wordId: number, correct: boolean, mode = "") =>
+  wordAnswer: (token: string, studentId: number, wordId: number, correct: boolean, mode = "", eventKey = "") =>
     request<{ status: string; strength: number; coins?: number }>("/api/lk/words/answer", {
       method: "POST",
       token,
-      body: { student_id: studentId, word_id: wordId, correct, mode },
+      body: { student_id: studentId, word_id: wordId, correct, mode, event_key: eventKey },
     }),
   wordFinish: (token: string, studentId: number, setId: number, correct: number, total: number) =>
     request<GameStats & { bonus_coins: number; perfect: boolean }>("/api/lk/words/finish", {

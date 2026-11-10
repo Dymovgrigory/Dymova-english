@@ -210,6 +210,16 @@ def summary(learner: str, profile) -> dict:
              "done": progress >= target, "claimed": _claimed(learner, "quest", today), "reward": QUEST_COINS}
 
     cards, medals = collection(learner)
+    from .collection import card_catalog, unlocked_cards
+    sessions = sum(int(r.get("sessions") or 0) for r in days.values())
+    perfect = sum(int(r.get("perfect") or 0) for r in days.values())
+    collection_ids = unlocked_cards({
+        "lessons": sessions,
+        "learned_words": learned,
+        "perfect_lessons": perfect,
+        "streak_days": week_active,
+    })
+    collection_cards = [c for c in card_catalog() if c["id"] in collection_ids]
     return {
         "coins_today": int(t.get("xp") or 0),
         "coins_earned": sum(int(r.get("xp") or 0) for r in days.values()),
@@ -226,6 +236,10 @@ def summary(learner: str, profile) -> dict:
         "postcards": cards,
         "postcards_unlocked": sum(1 for c in cards if c["unlocked"]),
         "medals": medals,
+        "collection_cards": collection_cards,
+        "collection_total": len(card_catalog()),
+        "achievements": [{"id": c["id"], "title": c["title"], "unlocked": c["id"] in collection_ids}
+                         for c in card_catalog()],
     }
 
 

@@ -140,7 +140,8 @@ def words_train(body: dict, authorization: str | None = Header(None)):
 def words_answer(body: dict, authorization: str | None = Header(None)):
     return _guard(words.answer, _token(authorization),
                   int(body.get("student_id") or 0), int(body.get("word_id") or 0),
-                  bool(body.get("correct")), str(body.get("mode") or ""))
+                  bool(body.get("correct")), str(body.get("mode") or ""),
+                  str(body.get("event_key") or ""))
 
 
 @router.post("/words/finish")

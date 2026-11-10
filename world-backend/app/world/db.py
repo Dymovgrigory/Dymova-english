@@ -735,4 +735,15 @@ CREATE TABLE IF NOT EXISTS lk_word_progress (
     last_seen_at TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (learner_key, word_id)
 );
+
+-- Idempotency ledger for learner actions. Payload is retained so a retried request
+-- receives exactly the same result without applying progress or rewards twice.
+CREATE TABLE IF NOT EXISTS lk_learner_events (
+    learner_key TEXT NOT NULL,
+    event_key   TEXT NOT NULL,
+    event_type  TEXT NOT NULL,
+    payload     TEXT NOT NULL DEFAULT '{}',
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (learner_key, event_key)
+);
 """

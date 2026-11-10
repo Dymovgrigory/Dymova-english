@@ -2,7 +2,7 @@
 
 // Главная кабинета. Награды — своя система «Фоксинбурга» (не очки и «огонёк»):
 // монеты Мира, звание жителя, календарь Фокси, сундук недели, задание дня,
-// коллекция открыток тем и медали уровней Cambridge.
+// коллекция открыток тем, карточек героев и медали уровней Cambridge.
 import { useEffect, useMemo, useState } from "react";
 import CabinetPage from "@/components/cabinet-page";
 import { useCabinet } from "@/lib/cabinet";
@@ -255,6 +255,19 @@ function Dashboard() {
               <b>{m.name}</b><em>{m.cefr} · {m.learned} / {m.total}</em>
               <span className="g-card-bar"><i style={{ width: `${m.percent}%` }} /></span>
             </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="k-panel g-collection">
+        <h2><Gift size={22} strokeWidth={2.4} />{ru ? `Коллекция героев · ${s?.collection_cards?.length ?? 0} из ${s?.collection_total ?? 0}` : `Character collection · ${s?.collection_cards?.length ?? 0} of ${s?.collection_total ?? 0}`}</h2>
+        <p className="k-panel-note">{ru ? "Карточки открываются за реальные учебные достижения." : "Cards unlock for real learning achievements."}</p>
+        <div className="g-medal-row">
+          {(s?.achievements ?? []).map((a) => (
+            <div key={a.id} className={"g-medal" + (a.unlocked ? " is-on" : "")}>
+              <span className="g-medal-disc"><Gift size={30} strokeWidth={2.2} /></span>
+              <b>{a.title}</b><em>{a.unlocked ? (ru ? "Открыто" : "Unlocked") : (ru ? "Ещё впереди" : "Keep learning")}</em>
+            </div>
           ))}
         </div>
       </section>

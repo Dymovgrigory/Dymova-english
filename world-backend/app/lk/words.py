@@ -529,11 +529,18 @@ def _game_stats(learner: str, profile) -> dict:
     return rewards.summary(learner, profile)
 
 
-def answer(token: str, student_id: int, word_id: int, correct: bool, mode: str = "") -> dict:
+def answer(token: str, student_id: int, word_id: int, correct: bool, mode: str = "", event_key: str = "") -> dict:
     """Ответ ученика: двигаем силу слова по SRS и начисляем XP."""
     _, profile = _profile(token, student_id)
     learner = _learner_key(profile)
     conn = get_conn()
+    if event_key:
+        prior = conn.execute(
+            "SELECT payload FROM lk_learner_events WHERE learner_key=? AND event_key=?",
+            (learner, event_key[:160]),
+        ).fetchone()
+        if prior is not None:
+            return json.loads(prior["payload"])
     word = conn.execute(
         "SELECT id FROM lk_words WHERE id=? AND active=1", (word_id,)
     ).fetchone()
@@ -566,7 +573,13 @@ def answer(token: str, student_id: int, word_id: int, correct: bool, mode: str =
     coins = (rewards.COIN_CORRECT + (rewards.COIN_HARD if mode in ("type", "listen", "speak") else 0)) if correct else 0
     rewards.add_day(learner, coins=coins, answers=1, correct=1 if correct else 0, new_words=1 if row is None else 0)
     rewards.give_world_coins(profile, coins, f"lk:{learner}:answer:{uuid.uuid4().hex}")
-    return {"status": "ok", "strength": strength, "due_at": due, "coins": coins}
+    result = {"status": "ok", "strength": strength, "due_at": due, "coins": coins}
+    if event_key:
+        conn.execute(
+            "INSERT INTO lk_learner_events (learner_key,event_key,event_type,payload) VALUES (?,?,?,?)",
+            (learner, event_key[:160], "word_answer", json.dumps(result, ensure_ascii=False)),
+        )
+    return result
 
 
 def stats(token: str, student_id: int) -> dict:

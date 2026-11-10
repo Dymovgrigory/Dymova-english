@@ -150,6 +150,22 @@ def test_answer_moves_strength_and_due(lk_words_db):
     assert card["id"] in {c["id"] for c in out3["cards"]}
 
 
+def test_answer_event_key_is_idempotent(lk_words_db):
+    token = _token()
+    sid = _set_id("level:pre-a1")
+    card = words.start_training(token, STUDENTS[0]["id"], sid)["cards"][0]
+
+    first = words.answer(token, STUDENTS[0]["id"], card["id"], True, event_key="attempt-1")
+    second = words.answer(token, STUDENTS[0]["id"], card["id"], True, event_key="attempt-1")
+
+    assert second == first
+    row = get_conn().execute(
+        "SELECT seen_count FROM lk_word_progress WHERE learner_key=? AND word_id=?",
+        (f"crm:{STUDENTS[0]['id']}", card["id"]),
+    ).fetchone()
+    assert row["seen_count"] == 1
+
+
 def test_stats_tracks_progress(lk_words_db):
     token = _token()
     sid = _set_id("level:pre-a1")
@@ -260,6 +276,8 @@ def test_rewards_coins_world_wallet_quest_and_chest(lk_words_db):
     assert st["quest"]["title"] and st["quest"]["target"] >= 1
     assert st["postcards"] and all("percent" in c for c in st["postcards"])
     assert {m["name"] for m in st["medals"]} == {"Starters", "Movers", "Flyers"}
+    assert st["collection_total"] >= 4
+    assert any(a["id"] == "first-step" for a in st["achievements"])
     # сундук закрыт, пока нет 5 дней из 7; задание дня — пока не выполнено
     with pytest.raises(core.Conflict):
         words.claim_reward(token, STUDENTS[0]["id"], "chest")
