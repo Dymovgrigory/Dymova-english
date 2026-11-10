@@ -101,6 +101,15 @@ export type Training = {
   title?: string;
   topic?: string;
 };
+export type LearningUnit = {
+  id: string;
+  level: "pre-a1" | "a1" | "a2" | "b1";
+  topic: string;
+  title_ru: string;
+  title_en: string;
+  skills: string[];
+  order: number;
+};
 export type WordStats = {
   seen_words: number;
   learned_words: number;
@@ -192,6 +201,10 @@ export const api = {
       { token },
     ),
   // ---------- тренажёр слов ----------
+  learningCatalog: (token: string, level?: string, topic?: string) => request<{ units: LearningUnit[] }>(
+    `/api/lk/learning/catalog?${new URLSearchParams({ ...(level ? { level } : {}), ...(topic ? { topic } : {}) }).toString()}`,
+    { token },
+  ),
   wordSets: (token: string, studentId: number) =>
     request<{ student_id: number; child_name: string; sets: WordSet[] }>(
       `/api/lk/words/sets?student_id=${studentId}`,

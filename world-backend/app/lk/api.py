@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from app.world import core
 
 from . import bridge, password_auth, service, words, world_link
+from .learning.catalog import available_units
 from .schemas import ConfirmBot, LoginIn, MeOut, PasswordIn, RegisterIn, StartAuth
 
 router = APIRouter(prefix="/api/lk", tags=["lk"])
@@ -109,6 +110,16 @@ def attendance_ingest(body: dict):
 def group_members_ingest(body: dict):
     """Внутренний relay: бот пересылает сюда вебхук group.enrolled."""
     return _guard(service.ingest_membership, body)
+
+
+@router.get("/learning/catalog")
+def learning_catalog(level: str | None = None, topic: str | None = None,
+                     authorization: str | None = Header(None)):
+    """Каталог LMS-обучения; World-каталог намеренно не используется."""
+    account = service.resolve_session(_token(authorization))
+    if account is None:
+        raise HTTPException(401, "unauthorized")
+    return {"units": [item.__dict__ for item in available_units(level=level, topic=topic)]}
 
 
 # ---------- Этап 3: тренажёр слов ----------
