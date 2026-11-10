@@ -1,11 +1,16 @@
 # Деплой Foxinburg World
 
-Прод-домены (A → `89.169.132.104`):
+Прод-домены (A → `37.252.23.189`):
 
 - UI: https://world.dymova-english.ru (пока DNS нет — превью https://new.dymova-english.ru)
 - API: https://world-api.dymova-english.ru (на превью: тот же хост `new.` + `/api/world/*`)
 
 ## Docker на VM
+
+Актуальное подключение: `ssh root@37.252.23.189`. Рабочий каталог production:
+`/opt/foxinburg/Dymova-english`. Production-контейнеры подключены к сети
+`runtime_default`; старые инструкции с `yc-user`, `89.169.132.104` и `bot_default`
+устарели.
 
 Контейнеры `world-api` / `world-web` в сети `bot_default` (общая с Caddy).
 Caddy резолвит их по имени сервиса.
