@@ -19,13 +19,13 @@ class LearningUnit:
 
 
 _CATALOG = (
-    LearningUnit("pre-a1.family", "pre-a1", "family", "Моя семья", "My family", ("vocabulary", "listening", "reading"), 10),
-    LearningUnit("pre-a1.school", "pre-a1", "school", "В школе", "At school", ("vocabulary", "grammar", "listening"), 20),
-    LearningUnit("a1.family", "a1", "family", "Семья и друзья", "Family and friends", ("vocabulary", "grammar", "reading"), 30),
-    LearningUnit("a1.home", "a1", "home", "Мой дом", "My home", ("vocabulary", "grammar", "reading", "listening"), 40),
-    LearningUnit("a2.travel", "a2", "travel", "Путешествия", "Travel", ("vocabulary", "grammar", "reading", "listening"), 50),
-    LearningUnit("a2.health", "a2", "health", "Здоровье", "Health", ("vocabulary", "grammar", "reading", "listening"), 60),
-    LearningUnit("b1.adventures", "b1", "adventures", "Приключения", "Adventures", ("vocabulary", "grammar", "reading", "listening"), 70),
+    LearningUnit("pre-a1.family", "pre-a1", "family", "Моя семья", "My family", ("vocabulary", "grammar", "listening", "reading", "writing", "speaking"), 10),
+    LearningUnit("pre-a1.school", "pre-a1", "school", "В школе", "At school", ("vocabulary", "grammar", "listening", "reading", "writing", "speaking"), 20),
+    LearningUnit("a1.family", "a1", "family", "Семья и друзья", "Family and friends", ("vocabulary", "grammar", "reading", "listening", "writing", "speaking"), 30),
+    LearningUnit("a1.home", "a1", "home", "Мой дом", "My home", ("vocabulary", "grammar", "reading", "listening", "writing", "speaking"), 40),
+    LearningUnit("a2.travel", "a2", "travel", "Путешествия", "Travel", ("vocabulary", "grammar", "reading", "listening", "writing", "speaking"), 50),
+    LearningUnit("a2.health", "a2", "health", "Здоровье", "Health", ("vocabulary", "grammar", "reading", "listening", "writing", "speaking"), 60),
+    LearningUnit("b1.adventures", "b1", "adventures", "Приключения", "Adventures", ("vocabulary", "grammar", "reading", "listening", "writing", "speaking"), 70),
 )
 
 
