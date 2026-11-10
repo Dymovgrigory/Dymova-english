@@ -167,7 +167,10 @@ def learning_collection(student_id: int = 0, authorization: str | None = Header(
         "SELECT COUNT(*) FROM lk_learning_sessions WHERE learner_key=? AND status='completed'", (learner,)
     ).fetchone()[0])
     mastery = progress.get("mastery", [])
-    skill_levels = {str(row["skill"]): sum(1 for item in mastery if item["skill"] == row["skill"] and int(item["level"]) >= 1) for row in mastery}
+    skill_levels: dict[str, int] = {}
+    for item in mastery:
+        skill = str(item["skill"])
+        skill_levels[skill] = skill_levels.get(skill, 0) + int(item["level"])
     cards = collection_catalog()
     unlocked_ids = set(collection_unlocked(
         points=points, units=completed_units, reading=skill_levels.get("reading", 0),
